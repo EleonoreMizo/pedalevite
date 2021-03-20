@@ -1,7 +1,17 @@
 /*****************************************************************************
 
         FreqYin.h
-        Author: Laurent de Soras, 2016
+        Author: Laurent de Soras, 2021
+
+Template parameters:
+
+- PP: post-processing object, ValSmooth for example. Requires:
+	PP::PP ();
+	PP::~PP ();
+	void PP::proc_val (float f);
+		0 indicates that the frequency detection failed for the current frame.
+	float PP::get_val () const;
+	void PP::clear_buffers ();
 
 Based on:
 Alain de Chevigne, Hideki Kawahara
@@ -15,7 +25,7 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
@@ -35,7 +45,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/AllocAlign.h"
 #include "fstb/ToolsSimd.h"
-#include "mfx/dsp/ana/ValSmooth.h"
 
 #include <array>
 #include <vector>
@@ -51,6 +60,7 @@ namespace ana
 
 
 
+template <class PP>
 class FreqYin
 {
 
@@ -58,10 +68,13 @@ class FreqYin
 
 public:
 
+	typedef PP PreProcessor;
+
 	void           set_sample_freq (double sample_freq);
 	void           set_freq_bot (float f);
 	void           set_freq_top (float f);
-	void           set_smoothing (float responsiveness, float thr);
+	PP &           use_postproc ();
+	const PP &     use_postproc () const;
 	void           set_analysis_period (int per);
 	void           clear_buffers ();
 	float          process_block (const float spl_ptr [], int nbr_spl);
@@ -124,8 +137,7 @@ private:
 
 	float          _freq_bot    = _min_freq; // Hz, > 0
 	float          _freq_top    = 1000; // Hz, > _freq_bot
-	ValSmooth <float, 0>                // Value in Hz. 0 = not found (yet)
-	               _freq_smooth;
+	PP             _postproc;
 	DeltaArray     _delta_arr;
 
 
@@ -147,7 +159,7 @@ private:
 
 
 
-//#include "mfx/dsp/ana/FreqYin.hpp"
+#include "mfx/dsp/ana/FreqYin.hpp"
 
 
 

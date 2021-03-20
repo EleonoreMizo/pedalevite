@@ -27,6 +27,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/Approx.h"
 #include "fstb/def.h"
 #include "mfx/dsp/ana/FreqYin.h"
+#include "mfx/dsp/ana/ValSmooth.h"
 #include "mfx/FileOpWav.h"
 #include "test/TestAnalysisFreq.h"
 #include "test/TimerAccurate.h"
@@ -58,7 +59,7 @@ int	TestAnalysisFreq::perform_test ()
 		std::vector <float>  dst_pitch (len);
 		std::vector <float>  dst_sig (len);
 
-		mfx::dsp::ana::FreqYin  fdet;
+		mfx::dsp::ana::FreqYin <mfx::dsp::ana::ValSmooth <float, 0> >  fdet;
 		fdet.set_sample_freq (sample_freq);
 		fdet.set_freq_bot (30);
 		fdet.set_freq_top (1500);

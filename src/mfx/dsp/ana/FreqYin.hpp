@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        FreqYin.cpp
-        Author: Laurent de Soras, 2016
+        FreqYin.hpp
+        Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
 
@@ -9,23 +9,20 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
+#if ! defined (mfx_dsp_ana_FreqYin_CODEHEADER_INCLUDED)
+#define mfx_dsp_ana_FreqYin_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "mfx/dsp/ana/FreqYin.h"
 
 #include <algorithm>
 
@@ -48,7 +45,8 @@ namespace ana
 
 
 
-void	FreqYin::set_sample_freq (double sample_freq)
+template <class PP>
+void	FreqYin <PP>::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -59,7 +57,7 @@ void	FreqYin::set_sample_freq (double sample_freq)
 	_buf_mask    = _buf_len - 1;
 	_buf_pos_w   = _buf_pos_w & _buf_mask;
 	_delta_arr.resize ((win_len_max + 1 + (_vec_size - 1)) >> _vec_size_l2);
-	_freq_smooth.reset ();
+	_postproc.clear_buffers ();
 
 	update_freq_bot_param ();
 	update_freq_top_param ();
@@ -67,7 +65,8 @@ void	FreqYin::set_sample_freq (double sample_freq)
 
 
 
-void	FreqYin::set_freq_bot (float f)
+template <class PP>
+void	FreqYin <PP>::set_freq_bot (float f)
 {
 	_freq_bot = f;
 	if (_sample_freq > 0)
@@ -78,7 +77,8 @@ void	FreqYin::set_freq_bot (float f)
 
 
 
-void	FreqYin::set_freq_top (float f)
+template <class PP>
+void	FreqYin <PP>::set_freq_top (float f)
 {
 	_freq_top = f;
 	if (_sample_freq > 0)
@@ -89,19 +89,24 @@ void	FreqYin::set_freq_top (float f)
 
 
 
-void	FreqYin::set_smoothing (float responsiveness, float thr)
+template <class PP>
+PP &	FreqYin <PP>::use_postproc ()
 {
-	assert (responsiveness > 0);
-	assert (responsiveness <= 1);
-	assert (thr >= 0);
-
-	_freq_smooth.set_responsiveness (responsiveness);
-	_freq_smooth.set_threshold (thr);
+	return _postproc;
 }
 
 
 
-void	FreqYin::set_analysis_period (int per)
+template <class PP>
+const PP &	FreqYin <PP>::use_postproc () const
+{
+	return _postproc;
+}
+
+
+
+template <class PP>
+void	FreqYin <PP>::set_analysis_period (int per)
 {
 	assert (per > 0);
 
@@ -114,19 +119,21 @@ void	FreqYin::set_analysis_period (int per)
 
 
 
-void	FreqYin::clear_buffers ()
+template <class PP>
+void	FreqYin <PP>::clear_buffers ()
 {
 	std::fill (_buffer.begin (), _buffer.end (), 0.f);
 	_buf_pos_w = 0;
 	_ana_pos   = 0;
 	_sum_pos   = 0;
-	_freq_smooth.reset ();
+	_postproc.clear_buffers ();
 	std::fill (_delta_arr.begin (), _delta_arr.end (), Delta ());
 }
 
 
 
-float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
+template <class PP>
+float	FreqYin <PP>::process_block (const float spl_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -162,12 +169,13 @@ float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
 	}
 	while (pos_blk < nbr_spl);
 
-	return _freq_smooth.get_val ();
+	return _postproc.get_val ();
 }
 
 
 
-float	FreqYin::process_sample (float x)
+template <class PP>
+float	FreqYin <PP>::process_sample (float x)
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -184,7 +192,7 @@ float	FreqYin::process_sample (float x)
 	++ _ana_pos;
 	check_ana_position ();
 
-	return _freq_smooth.get_val ();
+	return _postproc.get_val ();
 }
 
 
@@ -197,7 +205,8 @@ float	FreqYin::process_sample (float x)
 
 
 
-void	FreqYin::update_freq_bot_param ()
+template <class PP>
+void	FreqYin <PP>::update_freq_bot_param ()
 {
 	assert (_sample_freq > 0);
 
@@ -214,7 +223,8 @@ void	FreqYin::update_freq_bot_param ()
 
 
 
-void	FreqYin::update_freq_top_param ()
+template <class PP>
+void	FreqYin <PP>::update_freq_top_param ()
 {
 	assert (_sample_freq > 0);
 
@@ -223,7 +233,8 @@ void	FreqYin::update_freq_top_param ()
 
 
 
-void	FreqYin::update_difference_functions ()
+template <class PP>
+void	FreqYin <PP>::update_difference_functions ()
 {
 	const int      buf_pos_r_m_1 = _buf_pos_w - _win_len - 1; // May be negative
 	int            p_ref_o = buf_pos_r_m_1;
@@ -271,7 +282,8 @@ void	FreqYin::update_difference_functions ()
 
 
 
-void	FreqYin::update_difference_functions_block (int nbr_spl)
+template <class PP>
+void	FreqYin <PP>::update_difference_functions_block (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_blk_size);
@@ -338,7 +350,8 @@ void	FreqYin::update_difference_functions_block (int nbr_spl)
 
 
 
-void	FreqYin::check_sum_position ()
+template <class PP>
+void	FreqYin <PP>::check_sum_position ()
 {
 	if (_sum_pos >= _win_len)
 	{
@@ -356,7 +369,8 @@ void	FreqYin::check_sum_position ()
 
 
 
-void	FreqYin::check_ana_position ()
+template <class PP>
+void	FreqYin <PP>::check_ana_position ()
 {
 	if (_ana_pos >= _ana_per)
 	{
@@ -367,7 +381,8 @@ void	FreqYin::check_ana_position ()
 
 
 
-void	FreqYin::analyse ()
+template <class PP>
+void	FreqYin <PP>::analyse ()
 {
 	float          freq    = 0; // 0 = not found yet
 	float          dif_sum = 0;
@@ -403,12 +418,13 @@ void	FreqYin::analyse ()
 		}
 	}
 
-	_freq_smooth.proc_val (freq);
+	_postproc.proc_val (freq);
 }
 
 
 
-float	FreqYin::get_cmndf (int delta) const
+template <class PP>
+float	FreqYin <PP>::get_cmndf (int delta) const
 {
 	assert (delta >= 0);
 	assert (delta <= _max_delta);
@@ -461,6 +477,10 @@ x = (r1 - r3) * 0.5 / (r1 + r3 - 2 * r2)
 }  // namespace ana
 }  // namespace dsp
 }  // namespace mfx
+
+
+
+#endif   // mfx_dsp_ana_FreqYin_CODEHEADER_INCLUDED
 
 
 

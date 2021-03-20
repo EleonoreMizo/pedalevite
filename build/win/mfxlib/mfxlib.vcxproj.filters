@@ -5019,6 +5019,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler8xSimd.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.hpp">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6385,9 +6388,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp">
       <Filter>mfx\pi\cdsp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp">
-      <Filter>mfx\dsp\ana</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
