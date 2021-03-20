@@ -6,9 +6,8 @@
 This object must be aligned on 16-byte boundaries!
 
 Algorithm from:
-Jorg Arndt, "Matters Computational", chapter 21.3.2 (Fast Transforms / The
-Fourier transform / Saving trigonometric computations / Recursive generation)
-http://www.jjj.de/fxt/fxtpage.html#fxtbook
+Martin Vicanek, A New Recursive Quadrature Oscillator, 2015-10-21
+https://vicanek.de/articles/QuadOsc.pdf
 
 --- Legal stuff ---
 
@@ -34,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
 
@@ -69,6 +69,7 @@ public:
 	               get_sin () const;
 
 	void           clear_buffers ();
+	void           correct_fast ();
 
 
 
@@ -82,7 +83,8 @@ protected:
 
 private:
 
-	inline void    step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta);
+	fstb_FORCEINLINE void
+	               step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta);
 
 	static inline void
 	               compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad);

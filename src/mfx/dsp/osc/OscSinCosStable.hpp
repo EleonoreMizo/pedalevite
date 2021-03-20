@@ -22,7 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 // 1 = Jorg Arndt
 // 2 = Martin Vicanek
-#define mfx_dsp_osc_OscSinCosStable_TYPE 1
+#define mfx_dsp_osc_OscSinCosStable_TYPE 2
 
 
 
@@ -107,6 +107,8 @@ void	OscSinCosStable <T>::clear_buffers ()
 
 
 
+// Given the stability of the oscillator, this function is almost useless.
+// If really needed, calling correct_fast() regularly is more than enough.
 template <class T>
 void	OscSinCosStable <T>::correct ()
 {

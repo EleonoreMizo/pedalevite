@@ -4,12 +4,17 @@
         Author: Laurent de Soras, 2019
 
 Algorithm from:
+Martin Vicanek, A New Recursive Quadrature Oscillator, 2015-10-21
+https://vicanek.de/articles/QuadOsc.pdf
+
+Previous implementation:
 Jorg Arndt, "Matters Computational", chapter 21.3.2 (Fast Transforms / The
 Fourier transform / Saving trigonometric computations / Recursive generation)
 http://www.jjj.de/fxt/fxtpage.html#fxtbook
 
-To do: compare with the Martin Vicanek's oscillator (A New Recursive Quadrature
-Oscillator), if it is fast and stable enough.
+The Arndt oscillator was very stable at low frequencies but suffered from
+instabilities at high frequencies > fs/4. Moreover, the Vicanek oscillator
+looks faster on ARM (but slower on x86/x64).
 
 --- Legal stuff ---
 
@@ -78,7 +83,8 @@ public:
 
 	void inline    clear_buffers ();
 	void inline    correct ();
-	void inline    correct_fast ();
+	void fstb_FORCEINLINE
+	               correct_fast ();
 
 
 

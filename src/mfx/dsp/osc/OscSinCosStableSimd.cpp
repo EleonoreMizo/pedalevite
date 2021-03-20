@@ -150,26 +150,45 @@ void	OscSinCosStableSimd::clear_buffers ()
 
 
 
+void	OscSinCosStableSimd::correct_fast ()
+{
+	auto           c       = fstb::ToolsSimd::load_f32 (&_pos_cos);
+	auto           s       = fstb::ToolsSimd::load_f32 (&_pos_sin);
+	const auto     norm_sq = fstb::ToolsSimd::fmadd (c * c, s, s);
+	const auto     c1_5    = fstb::ToolsSimd::set1_f32 (1.5f);
+	const auto     c0_5    = fstb::ToolsSimd::set1_f32 (0.5f);
+	const auto     mult    = c1_5 - norm_sq * c0_5;
+
+	c *= mult;
+	s *= mult;
+
+	fstb::ToolsSimd::store_f32 (&_pos_cos, c);
+	fstb::ToolsSimd::store_f32 (&_pos_sin, s);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta)
 {
-	const auto     old_cos = pos_cos;
-	const auto     old_sin = pos_sin;
-
-   pos_cos = old_cos - (alpha * old_cos + beta * old_sin);
-   pos_sin = old_sin - (alpha * old_sin - beta * old_cos);
+	const auto     tmp = pos_cos - alpha * pos_sin;
+	pos_sin += beta * tmp;
+	pos_cos  = tmp - alpha * pos_sin;
 }
 
 
 
 void	OscSinCosStableSimd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad)
 {
-   const float    s = float (sin (angle_rad * 0.5f));
-   alpha = fstb::ToolsSimd::set1_f32 (s * s * 2);
-   beta  = fstb::ToolsSimd::set1_f32 (float (sin (angle_rad)));
+   const double   a = tan (angle_rad * 0.5f);
+   alpha = fstb::ToolsSimd::set1_f32 (float (a));
+
+// const double   b = sin (angle_rad);
+	const double   b = 2 * a / (1 + a * a);
+   beta  = fstb::ToolsSimd::set1_f32 (float (b));
 }
 
 
