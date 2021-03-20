@@ -7,6 +7,12 @@ Template parameters:
 
 - T: audio data type (floating point)
 
+- P: additional processing class. The processing occurs within the feedback
+	loop of each delay. The class requires at least:
+	P::P ();
+	P::~P ();
+	T P::process_sample (T x);
+
 Ported from a code by Paul Batchelor
 https://pbat.ch/sndkit/bigverb/
 
@@ -88,12 +94,27 @@ namespace spat
 
 
 template <typename T>
+class ReverbSC_FdbkProcBypass
+{
+public:
+	T              process_sample (T x) { return x; }
+};
+
+
+
+template <typename T, typename P = ReverbSC_FdbkProcBypass <T> >
 class ReverbSC
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
+
+	typedef T DataType;
+	typedef P FdbkProc;
+
+	template <typename F>
+	void           config_fdbk_proc (F fnc);
 
 	void           set_sample_freq (double sample_freq);
 
@@ -163,6 +184,7 @@ private:
 		float          _dels     = 0;
 		float          _drift    = 0;
 		T              _y        = T (0);
+		P              _fdbk_proc;
 	};
 
 	float          _sr      = 0;

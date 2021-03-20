@@ -169,7 +169,8 @@ int	TestReverb::test_freeverb ()
 
 
 
-static void	TestReverb_process_reverbsc (mfx::dsp::spat::ReverbSC <float> &reverb, std::vector <std::vector <float> > &dst_arr, const std::vector <std::vector <float> > &src_arr, int len)
+template <class P>
+static void	TestReverb_process_reverbsc (mfx::dsp::spat::ReverbSC <float, P> &reverb, std::vector <std::vector <float> > &dst_arr, const std::vector <std::vector <float> > &src_arr, int len)
 {
 	for (int pos = 0; pos < len; ++pos)
 	{
@@ -184,13 +185,60 @@ static void	TestReverb_process_reverbsc (mfx::dsp::spat::ReverbSC <float> &rever
 
 int	TestReverb::test_reverbsc ()
 {
+	class FdbkProc
+	{
+	public:
+		float          process_sample (float x)
+		{
+			// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#if 0
+
+			constexpr float   lvl =  10.f;
+
+#if 1
+			if (fabsf (x) < lvl * (1.f / 64))
+			{
+#if 0
+				x += 0.625f * fabsf (x);
+				_old += 0.0001f * (x - _old);
+				x -= _old;
+#endif
+				x *= 1.125f;
+			}
+
+#endif
+			// .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+#if 0
+			constexpr float   c3  =  -128.f / (675    * fstb::ipowpc <2> (lvl));
+			constexpr float   c5  =  4096.f / (253125 * fstb::ipowpc <4> (lvl));
+			constexpr float   xma =  (15.f / 8) * lvl;
+			constexpr float   xmi = -xma;
+			x = fstb::limit (x, xmi, xma);
+			const float    x2 = x * x;
+			x = (c5 * x2 + c3) * x2 * x + x;
+#endif
+			// .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+#if 0
+			constexpr float   u = 32;
+			const float       z = fstb::round_int (x * (u / lvl)) * (lvl / u);
+			x += fabsf (z) * (z - x);
+#endif
+
+#endif
+			// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+			return x;
+		}	
+		float       _old = 0;
+	};
+
 	int            ret_val = 0;
 
 	printf ("mfx::dsp::spat::ReverbSC\n");
 
 	const double   sample_freq = 44100;
 
-	mfx::dsp::spat::ReverbSC <float> reverb;
+	mfx::dsp::spat::ReverbSC <float, FdbkProc> reverb;
 
 	reverb.set_sample_freq (sample_freq);
 	reverb.set_cutoff (float (sample_freq * 0.499));
@@ -209,6 +257,13 @@ int	TestReverb::test_reverbsc ()
 		src_arr [chn] [imp_pos] = vol;
 	}
 	src_arr [0] [len - imp_pos] = vol;
+
+#if 0
+	for (int pos = 0; pos < 5000; ++ pos)
+	{
+		src_arr [0] [imp_pos + pos] = 0.25f * float (sin (pos * 2 * fstb::PI * 440 / sample_freq));
+	}
+#endif
 
 	TestReverb_process_reverbsc (reverb, dst_arr, src_arr, len);
 

@@ -45,8 +45,21 @@ namespace spat
 
 
 
-template <typename T>
-void	ReverbSC <T>::set_sample_freq (double sample_freq)
+// void fnc (P &, int);
+template <typename T, typename P>
+template <typename F>
+void	ReverbSC <T, P>::config_fdbk_proc (F fnc)
+{
+	for (int dly_idx = 0; dly_idx < _nbr_delays; ++dly_idx)
+	{
+		fnc (_delay [dly_idx]._fdbk_proc, dly_idx);
+	}
+}
+
+
+
+template <typename T, typename P>
+void	ReverbSC <T, P>::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -73,8 +86,8 @@ void	ReverbSC <T>::set_sample_freq (double sample_freq)
 
 
 
-template <typename T>
-void	ReverbSC <T>::set_size (float size)
+template <typename T, typename P>
+void	ReverbSC <T, P>::set_size (float size)
 {
 	assert (_sr > 0);
 	assert (_size >= 0);
@@ -85,8 +98,8 @@ void	ReverbSC <T>::set_size (float size)
 
 
 
-template <typename T>
-void	ReverbSC <T>::set_cutoff (float cutoff)
+template <typename T, typename P>
+void	ReverbSC <T, P>::set_cutoff (float cutoff)
 {
 	assert (_sr > 0);
 	assert (cutoff > 0);
@@ -97,8 +110,8 @@ void	ReverbSC <T>::set_cutoff (float cutoff)
 
 
 
-template <typename T>
-void	ReverbSC <T>::process_sample (T *outL, T *outR, T inL, T inR)
+template <typename T, typename P>
+void	ReverbSC <T, P>::process_sample (T *outL, T *outR, T inL, T inR)
 {
 	assert (_sr > 0);
 
@@ -144,8 +157,8 @@ void	ReverbSC <T>::process_sample (T *outL, T *outR, T inL, T inR)
 
 
 
-template <typename T>
-void	ReverbSC <T>::clear_buffers ()
+template <typename T, typename P>
+void	ReverbSC <T, P>::clear_buffers ()
 {
 	for (auto &delay : _delay)
 	{
@@ -164,8 +177,8 @@ void	ReverbSC <T>::clear_buffers ()
 
 
 // Calculates the length of the delay line
-template <typename T>
-int	ReverbSC <T>::ParamSet::get_delay_size (float sr) const
+template <typename T, typename P>
+int	ReverbSC <T, P>::ParamSet::get_delay_size (float sr) const
 {
 	float          sz = _delay + _drift * 1.125f;
 
@@ -174,8 +187,8 @@ int	ReverbSC <T>::ParamSet::get_delay_size (float sr) const
 
 
 
-template <typename T>
-void	ReverbSC <T>::Delay::init (const ParamSet &p, int sz, float sr)
+template <typename T, typename P>
+void	ReverbSC <T, P>::Delay::init (const ParamSet &p, int sz, float sr)
 {
 	_buf.resize (sz);
 	_sz = sz;
@@ -197,8 +210,8 @@ void	ReverbSC <T>::Delay::init (const ParamSet &p, int sz, float sr)
 
 
 
-template <typename T>
-T	ReverbSC <T>::Delay::compute (T in, T fdbk, T filt, float sr)
+template <typename T, typename P>
+T	ReverbSC <T, P>::Delay::compute (T in, T fdbk, T filt, float sr)
 {
 	// Sends input signal and feedback to delay line
 	_buf [_wpos] = in - _y;
@@ -265,6 +278,9 @@ T	ReverbSC <T>::Delay::compute (T in, T fdbk, T filt, float sr)
 	// Updates buffer read position
 	_frpos += _inc;
 
+	// Additional processing
+	out = _fdbk_proc.process_sample (out);
+
 	// Applies feedback gain and lowpass filter
 	out *= fdbk;
 	out += (_y - out) * filt;
@@ -281,8 +297,8 @@ T	ReverbSC <T>::Delay::compute (T in, T fdbk, T filt, float sr)
 
 
 
-template <typename T>
-void	ReverbSC <T>::Delay::generate_next_line (float sr)
+template <typename T, typename P>
+void	ReverbSC <T, P>::Delay::generate_next_line (float sr)
 {
 	// Updates random seed
 	constexpr int  mul = fstb::ipowpc <6> (5); // 5^6;
@@ -314,16 +330,16 @@ void	ReverbSC <T>::Delay::generate_next_line (float sr)
 
 
 
-template <typename T>
-float	ReverbSC <T>::Delay::calculate_drift () const
+template <typename T, typename P>
+float	ReverbSC <T, P>::Delay::calculate_drift () const
 {
 	return _drift * float (_rng) / float (_rng_scale);
 }
 
 
 
-template <typename T>
-void	ReverbSC <T>::Delay::clear_buffers ()
+template <typename T, typename P>
+void	ReverbSC <T, P>::Delay::clear_buffers ()
 {
 	std::fill (_buf.begin (), _buf.end (), T (0));
 	_rng = _seed;
