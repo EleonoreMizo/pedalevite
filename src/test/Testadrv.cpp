@@ -86,11 +86,13 @@ int	Testadrv::perform_test ()
 		auto           t_cur = t_beg;
 		const auto     d_max = std::chrono::duration <double> { 10.0 }; // s
 		std::chrono::duration <double> t_dif = t_cur - t_beg;
+		int            dropout_count = 0;
 		while (! callback.is_exit_requested () && t_dif < d_max)
 		{
 			if (callback.check_dropout ())
 			{
-				printf ("Dropout!\n");
+				++ dropout_count;
+				printf ("Dropout! %d\n", dropout_count);
 			}
 			std::this_thread::sleep_for (std::chrono::milliseconds { 1 });
 			t_cur = clk.now ();
