@@ -1222,6 +1222,8 @@
     <ClInclude Include="..\..\..\src\mfx\hw\GpioPwm.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\IoWindows.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\LedPi3.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\MBox.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\MBox.hpp" />
     <ClInclude Include="..\..\..\src\mfx\hw\mcp23017.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.hpp" />
@@ -1876,6 +1878,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\IoWindows.cpp" />
     <ClCompile Include="..\..\..\src\mfx\hw\LedPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\MBox.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\MmapPtr.cpp">

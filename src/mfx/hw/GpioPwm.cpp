@@ -25,7 +25,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/bcm2837clk.h"
-#include "mfx/hw/bcm2837dma.h"
 #include "mfx/hw/GpioPwm.h"
 
 #include <bcm_host.h>
@@ -126,6 +125,10 @@ int	GpioPwm::init_chn (int chn, int subcycle_time)
 			chn, _periph_base_addr, subcycle_time, _granularity
 		));
 	}
+	catch (MBox::Error &err)
+	{
+		ret_val = Err_MAILBOX;
+	}
 	catch (const Err &err)
 	{
 		ret_val = int (err);
@@ -218,13 +221,13 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 ,	_nbr_cbs (_nbr_samples * 2)
 ,	_nbr_pages ((   (_nbr_cbs * 32 + _nbr_samples * 4 + PAGE_SIZE - 1)
 	             >> PAGE_SHIFT))
-,	_mbox (_nbr_pages << PAGE_SHIFT, MEM_FLAGS)
+,	_mbox (_nbr_pages << PAGE_SHIFT, MBox::MEM_FLAG_DIRECT) // MEM_FLAG_L1_NONALLOCATING for Pi 1.
 {
 	assert (periph_base_addr != 0);
 	assert (index >= 0);
 
 	DmaCtrlBlock * cb0_ptr     = &use_cb ();
-	uint32_t *     sample_ptr  = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
+	uint32_t *     sample_ptr  = _mbox.get_virt_ptr <uint32_t *> ();
 
 	// Reset complete per-sample gpio mask to 0
 	memset (sample_ptr, 0, sizeof (_nbr_samples * sizeof (*sample_ptr)));
@@ -235,33 +238,33 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	DmaCtrlBlock * cb_ptr = cb0_ptr;
 	for (int i = 0; i < int (_nbr_samples); ++ i)
 	{
-		cb_ptr->info   =
+		cb_ptr->_info   =
 			  bcm2837dma::_no_wide_b
 			| bcm2837dma::_wait_resp;
-		cb_ptr->src    = mem_virt_to_phys (sample_ptr + i);  // src contains mask of which gpios need change at this sample
-		cb_ptr->dst    = _bus_gpclr0; // set each sample to clear set gpios by default
-		cb_ptr->length = 4;
-		cb_ptr->stride = 0;
-		cb_ptr->next   = mem_virt_to_phys (cb_ptr + 1);
+		cb_ptr->_src    = mem_virt_to_phys (sample_ptr + i);  // src contains mask of which gpios need change at this sample
+		cb_ptr->_dst    = _bus_gpclr0; // set each sample to clear set gpios by default
+		cb_ptr->_length = 4;
+		cb_ptr->_stride = 0;
+		cb_ptr->_next   = mem_virt_to_phys (cb_ptr + 1);
 		++ cb_ptr;
 
 		// Delay
-		cb_ptr->info   =
+		cb_ptr->_info   =
 			  bcm2837dma::_no_wide_b
 			| bcm2837dma::_wait_resp
 			| bcm2837dma::_dest_dreq
 			| (bcm2837dma::Dreq_PWM << bcm2837dma::_permap);
-		cb_ptr->src    = mem_virt_to_phys (sample_ptr); // Any data will do
-		cb_ptr->dst    = _bus_fifo_adr;
-		cb_ptr->length = 4;
-		cb_ptr->stride = 0;
-		cb_ptr->next   = mem_virt_to_phys (cb_ptr + 1);
+		cb_ptr->_src    = mem_virt_to_phys (sample_ptr); // Any data will do
+		cb_ptr->_dst    = _bus_fifo_adr;
+		cb_ptr->_length = 4;
+		cb_ptr->_stride = 0;
+		cb_ptr->_next   = mem_virt_to_phys (cb_ptr + 1);
 		++ cb_ptr;
 	}
 
 	// The last control block links back to the first (= endless loop)
 	-- cb_ptr;
-	cb_ptr->next = mem_virt_to_phys (cb0_ptr);
+	cb_ptr->_next = mem_virt_to_phys (cb0_ptr);
 
 	// Initialize the DMA channel 0 (p46, 47)
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
@@ -297,9 +300,9 @@ GpioPwm::Channel::~Channel ()
 uint32_t	GpioPwm::Channel::mem_virt_to_phys (void *virt_ptr)
 {
 	const uint32_t offset =
-		reinterpret_cast <uint8_t *> (virt_ptr) - _mbox._virt_ptr;
+		reinterpret_cast <uint8_t *> (virt_ptr) - _mbox.get_virt_ptr ();
 
-	return _mbox._bus_adr + offset;
+	return _mbox.get_phys_adr () + offset;
 }
 
 
@@ -307,7 +310,7 @@ uint32_t	GpioPwm::Channel::mem_virt_to_phys (void *virt_ptr)
 GpioPwm::DmaCtrlBlock & GpioPwm::Channel::use_cb ()
 {
 	GpioPwm::DmaCtrlBlock *  ptr = reinterpret_cast <DmaCtrlBlock *> (
-		_mbox._virt_ptr + ((_nbr_samples + 7) & -8) * sizeof (uint32_t)
+		_mbox.get_virt_ptr () + ((_nbr_samples + 7) & -8) * sizeof (uint32_t)
 	);
 	assert ((reinterpret_cast <uint32_t> (ptr) & 0x1F) == 0);
 
@@ -318,15 +321,15 @@ GpioPwm::DmaCtrlBlock & GpioPwm::Channel::use_cb ()
 
 void	GpioPwm::Channel::clear ()
 {
-	assert (_mbox._virt_ptr != 0);
+	assert (_mbox.get_virt_ptr () != nullptr);
 
 	DmaCtrlBlock * cb_ptr      = &use_cb ();
-	uint32_t *     d_ptr       = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
+	uint32_t *     d_ptr       = _mbox.get_virt_ptr <uint32_t> ();
 
 	// First we have to stop all currently enabled pulses
 	for (int i = 0; i < int (_nbr_samples); ++i)
 	{
-		cb_ptr [i * 2].dst = _bus_gpclr0;
+		cb_ptr [i * 2]._dst = _bus_gpclr0;
 	}
 
 	// Let DMA do one cycle to actually clear them
@@ -343,10 +346,10 @@ void	GpioPwm::Channel::clear ()
 
 void	GpioPwm::Channel::clear (int pin)
 {
-	assert (_mbox._virt_ptr != 0);
+	assert (_mbox.get_virt_ptr () != nullptr);
 
 	const int      gpio  = ::physPinToGpio (pin);
-	uint32_t *     d_ptr = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
+	uint32_t *     d_ptr = _mbox.get_virt_ptr <uint32_t> ();
 
 	// Remove this gpio from all samples
 	for (int i = 0; i < int (_nbr_samples); i++)
@@ -369,7 +372,7 @@ void	GpioPwm::Channel::clear (int pin)
 // use multiple DMA channels.
 void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 {
-	assert (_mbox._virt_ptr != 0);
+	assert (_mbox.get_virt_ptr () != nullptr);
 	assert (width <= int (_nbr_samples));
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
@@ -382,7 +385,7 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 
 	int            pos    = start;
 	DmaCtrlBlock * cb_ptr = &use_cb ();
-	uint32_t *     d_ptr  = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
+	uint32_t *     d_ptr  = _mbox.get_virt_ptr <uint32_t> ();
 
 	bool           state_flag = false;
 	for (int i = 0; i < width; ++i)
@@ -391,13 +394,13 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 		{
 			// Enable or disable gpio at this point in the cycle
 			d_ptr [pos] |= 1 << gpio;
-			cb_ptr [pos * 2].dst = _bus_gpset0;
+			cb_ptr [pos * 2]._dst = _bus_gpset0;
 		}
 		else
 		{
 			if ((d_ptr [pos] & (1 << gpio)) != 0)
 			{
-				state_flag = (cb_ptr [pos * 2].dst == _bus_gpset0);
+				state_flag = (cb_ptr [pos * 2]._dst == _bus_gpset0);
 			}
 			d_ptr [pos] &= ~(1 << gpio);  // Set just this gpio's bit to 0
 		}
@@ -413,7 +416,7 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 	if (width < int (_nbr_samples) && ! state_flag)
 	{
 		d_ptr [pos] |= 1 << gpio;
-		cb_ptr [pos * 2].dst = _bus_gpclr0;
+		cb_ptr [pos * 2]._dst = _bus_gpclr0;
 	}
 }
 
@@ -421,7 +424,7 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 
 void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 {
-	assert (_mbox._virt_ptr != 0);
+	assert (_mbox.get_virt_ptr () != nullptr);
 	assert (width <= int (_nbr_samples));
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
@@ -434,27 +437,27 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 
 	int            pos    = start;
 	DmaCtrlBlock * cb_ptr = &use_cb ();
-	uint32_t *     d_ptr  = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
+	uint32_t *     d_ptr  = _mbox.get_virt_ptr <uint32_t> ();
 
 	for (int i = 0; i < int (_nbr_samples); ++i)
 	{
 		if (i == 0 && width > 0)
 		{
 			// Enable or disable gpio at this point in the cycle
-			cb_ptr [pos * 2].dst = _bus_gpset0;
+			cb_ptr [pos * 2]._dst = _bus_gpset0;
 			d_ptr [pos] |= 1 << gpio;
 		}
 		else if (i == width && width > 0)
 		{
 			// Clear GPIO at end
-			cb_ptr [pos * 2].dst = _bus_gpclr0;
+			cb_ptr [pos * 2]._dst = _bus_gpclr0;
 			d_ptr [pos] |= 1 << gpio;
 		}
 		else if (i > width)
 		{
 			if ((d_ptr [pos] & (1 << gpio)) != 0)
 			{
-				cb_ptr [pos * 2].dst = _bus_gpclr0;
+				cb_ptr [pos * 2]._dst = _bus_gpclr0;
 			}
 		}
 		else
@@ -494,7 +497,7 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 // Returns the level error.
 float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases, int phase, float level)
 {
-	assert (_mbox._virt_ptr != 0);
+	assert (_mbox.get_virt_ptr () != nullptr);
 	assert (nbr_cycles > 0);
 	assert (nbr_cycles * nbr_phases * 2 <= int (_nbr_samples));
 	assert (nbr_phases > 0);
@@ -510,7 +513,7 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 	}
 
 	DmaCtrlBlock * cb_ptr = &use_cb ();
-	uint32_t *     d_ptr  = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
+	uint32_t *     d_ptr  = _mbox.get_virt_ptr <uint32_t> ();
 
 	const int      nbr_pulses     = nbr_cycles * nbr_phases;
 	const int      max_duty_cycle = _nbr_samples - nbr_pulses;
@@ -581,7 +584,7 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 			}
 		}
 
-		cb_ptr [pos * 2].dst = set_or_clear;
+		cb_ptr [pos * 2]._dst = set_or_clear;
 
 		// Next sample
 		if (! pulse_slot_end_flag)
@@ -615,12 +618,11 @@ int	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool 
 {
 	const int      gpio = ::physPinToGpio (pin);
 	const DmaCtrlBlock * cb_ptr = &use_cb ();
-	const uint32_t *     d_ptr  =
-		reinterpret_cast <const uint32_t *> (_mbox._virt_ptr);
+	const uint32_t *     d_ptr  = _mbox.get_virt_ptr <const uint32_t> ();
 
 	const int      dir   = fwd_flag ? 1 : -1;
 	const uint32_t avoid = up_flag ? _bus_gpclr0 : _bus_gpset0;
-	while (   cb_ptr [pos * 2].dst == avoid
+	while (   cb_ptr [pos * 2]._dst == avoid
 		    && (d_ptr [pos] & ~(1 << gpio)) != 0)
 	{
 		pos += dir;
@@ -650,74 +652,6 @@ void	GpioPwm::Channel::init_gpio (int pin, int gpio)
 	::pinMode (pin, OUTPUT);
 	::digitalWrite (pin, 0);
 	_gpio_init |= 1 << gpio;
-}
-
-
-
-// Use the mailbox interface to request memory from the VideoCore
-// We specifiy (-1) for the handle rather than calling mbox_open()
-// so multiple users can share the resource.
-GpioPwm::Channel::MBox::MBox (int size, int mem_flag)
-:	_handle (-1) // mbox_open()
-,	_size (size)
-,	_mem_ref (mem_alloc (_handle, _size, 4096, mem_flag))
-,	_bus_adr (0)
-,	_virt_ptr (0)
-{
-	try
-	{
-		if (_mem_ref == static_cast <unsigned int> (-1))
-		{
-			throw Err_MEM_ALLOC; // Failed to alloc memory from VideoCore
-		}
-		_bus_adr = mem_lock (_handle, _mem_ref);
-		if (_bus_adr == static_cast <unsigned int> (~0))
-		{
-			throw Err_MEM_LOCK;  // Failed to lock memory
-		}
-		_virt_ptr = reinterpret_cast <uint8_t *> (
-			mapmem (_bus_adr & 0x3FFFFFFF, _size, DEV_MEM)
-		);
-		if (_virt_ptr == 0)
-		{
-			throw Err_MAPMEM;   // Cannot use the mailbox interface
-		}
-	}
-	catch (...)
-	{
-		cleanup ();
-		throw;
-	}
-}
-
-
-
-GpioPwm::Channel::MBox::~MBox ()
-{
-	cleanup ();
-}
-
-
-
-void	GpioPwm::Channel::MBox::cleanup ()
-{
-	if (_mem_ref != 0 && _mem_ref != static_cast <unsigned int> (-1))
-	{
-		if (_virt_ptr != 0)
-		{
-			unmapmem (_virt_ptr, _size);
-			_virt_ptr = 0;
-		}
-		mem_unlock (_handle, _mem_ref);
-		mem_free (_handle, _mem_ref);
-		_mem_ref = 0;
-	}
-
-	if (_handle >= 0)
-	{
-		mbox_close (_handle);
-		_handle = 0;
-	}
 }
 
 

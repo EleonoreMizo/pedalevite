@@ -156,6 +156,18 @@ enum Dreq
 	Dreq_NBR_ELT
 };
 
+class CtrlBlock
+{
+public:
+	uint32_t       _info;    // TI: transfer information
+	uint32_t       _src;     // SOURCE_AD
+	uint32_t       _dst;     // DEST_AD
+	uint32_t       _length;  // TXFR_LEN: transfer length
+	uint32_t       _stride;  // 2D stride mode
+	uint32_t       _next;    // NEXTCONBK
+	uint32_t       _pad [2]; // Reserved
+};
+
 
 
 }  // namespace bcm2837dma

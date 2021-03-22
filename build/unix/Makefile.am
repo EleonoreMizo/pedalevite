@@ -1660,6 +1660,9 @@ commonsrc += \
         ../../src/mfx/hw/GpioPwm.h \
         ../../src/mfx/hw/LedPi3.cpp \
         ../../src/mfx/hw/LedPi3.h \
+        ../../src/mfx/hw/MBox.cpp \
+        ../../src/mfx/hw/MBox.h \
+        ../../src/mfx/hw/MBox.hpp \
         ../../src/mfx/hw/mcp23017.h \
         ../../src/mfx/hw/MmapPtr.cpp \
         ../../src/mfx/hw/MmapPtr.h \

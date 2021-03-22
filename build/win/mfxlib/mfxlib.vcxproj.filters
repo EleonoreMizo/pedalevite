@@ -5034,6 +5034,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.hpp">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\MBox.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\MBox.hpp">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6406,6 +6412,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.cpp">
       <Filter>mfx\pi\pidet2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\MBox.cpp">
+      <Filter>mfx\hw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

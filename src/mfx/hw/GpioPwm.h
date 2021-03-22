@@ -18,6 +18,12 @@ Update 2019-07-20:
 These changes are probably related to the Pi 4 release. This needs more
 investigation.
 
+Update 2021-03-22:
+It is possible to retrieve the free DMA channels with the Broadcom mailbox,
+using tag 0x00060001 ("Get DMA channels") with mbox_property(), a private
+function from mailbox.c. See also:
+https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -43,8 +49,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/bcm2837.h"
+#include "mfx/hw/bcm2837dma.h"
 #include "mfx/hw/bcm2837gpio.h"
 #include "mfx/hw/bcm2837pwm.h"
+#include "mfx/hw/MBox.h"
 #include "mfx/hw/MmapPtr.h"
 
 #include <array>
@@ -72,9 +80,7 @@ public:
 	enum Err
 	{
 		Err_MMAP = -999,
-		Err_MEM_ALLOC,
-		Err_MEM_LOCK,
-		Err_MAPMEM,
+		Err_MAILBOX,
 
 		Err_GENERIC = -1,
 
@@ -105,34 +111,11 @@ protected:
 
 private:
 
-	class DmaCtrlBlock
-	{
-	public:
-		uint32_t info;    // TI: transfer information
-		uint32_t src;     // SOURCE_AD
-		uint32_t dst;     // DEST_AD
-		uint32_t length;  // TXFR_LEN: transfer length
-		uint32_t stride;  // 2D stride mode
-		uint32_t next;    // NEXTCONBK
-		uint32_t pad [2]; // _reserved_
-	};
+	using DmaCtrlBlock = bcm2837dma::CtrlBlock;
 
 	class Channel
 	{
 	public:
-
-		class MBox
-		{
-		public:
-			explicit       MBox (int size, int mem_flag);
-			virtual        ~MBox ();
-			void           cleanup ();
-			int            _handle   = 0; // From mbox_open()
-			uint32_t       _size     = 0; // Required size
-			unsigned int   _mem_ref  = 0; // From mem_alloc()
-			unsigned int   _bus_adr  = 0; // From mem_lock()
-			uint8_t *      _virt_ptr = 0; // From mapmem()
-		};
 
 		explicit       Channel (int index, uint32_t periph_base_addr, uint32_t subcycle_time, int granularity);
 		virtual        ~Channel ();
@@ -169,8 +152,8 @@ private:
 	typedef std::shared_ptr <Channel> ChannelSPtr;
 	typedef std::array <ChannelSPtr, _nbr_dma_chn> ChannelArray;
 
-	int            _granularity;   // Granularity in microseconds
-	uint32_t       _periph_base_addr;  // Value depends on the Pi version
+	int            _granularity;        // Granularity in microseconds
+	uint32_t       _periph_base_addr;   // Value depends on the Pi version
 	MmapPtr        _reg_pwm;
 	MmapPtr        _reg_clk;
 	MmapPtr        _reg_gpio;
@@ -180,8 +163,6 @@ private:
 	static const int  PAGE_SHIFT = 12;
 	static const int  PAGE_SIZE  = 1 << PAGE_SHIFT;
 	static const int  PAGE_MASK  = PAGE_SIZE - 1;
-
-	static const int  MEM_FLAGS  = 0x04;               // 0x0C for Pi 1.
 
 	// Bus addresses
 	static const uint32_t   _bus_gpclr0   =
