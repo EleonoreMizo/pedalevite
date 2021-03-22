@@ -310,7 +310,8 @@ void	DPvabI2s::main_loop ()
 		| _intstc_a_txw;
 	_pcm_mptr.at (_gray) = 0;
 
-	// Clears the FIFOs and errors, enables the PCM clock
+	// Clears the FIFOs and errors, enables the PCM clock, sets the SYNC bit
+	// that will be echoed back in the read value after 2 clocks.
 	_pcm_mptr.at (_cs_a) =
 		  status_mask
 		| _cs_a_sync
@@ -320,12 +321,12 @@ void	DPvabI2s::main_loop ()
 		| _cs_a_txclr;
 
 	// The FIFO requires 2 clock cycles before being cleared.
-#if 1
+#if 0
 	// Wait for 1 ms, which should be much more than 2 clock cycles.
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
-#else /*** To do: this does not seem to work. Check what's wrong. ***/
-	// Waits for the sync bit, so the FIFOs are actually cleared
-	while ((_pcm_mptr.at (_cs_a) & _cs_a_sync) != 0 && ! _exit_flag)
+#else // Is this working now?
+	// Waits for the SYNC bit, so the FIFOs are actually cleared
+	while ((_pcm_mptr.at (_cs_a) & _cs_a_sync) == 0 && ! _exit_flag)
 	{
 		continue;
 	}
@@ -359,28 +360,29 @@ void	DPvabI2s::main_loop ()
 
 		if ((status & _cs_a_rxerr) != 0 || (status & _cs_a_txerr) != 0)
 		{
+#if 0 /*** To do: this test does not work, we have to check exactly why. ***/
+			// Possible L/R sync errors, skips a frame to fix them
+			if (chn_pos == 0)
+			{
+				if ((status & _cs_a_rxsync) == 0)
+				{
+					dummy += _pcm_mptr.at (_fifo_a);
+				}
+				if ((status & _cs_a_txsync) == 0)
+				{
+					_pcm_mptr.at (_fifo_a) = 0;
+				}
+			}
+#endif
+
 			sync_err_flag = true;
 
 			// Clears error at the PCM interface level
 			_pcm_mptr.at (_cs_a) = status_mask | _cs_a_rxerr | _cs_a_txerr;
-		}
 
-#if 0 /*** To do: this test does not work, we have to check exactly why. ***/
-		// Possible L/R sync errors, skips a frame to fix them
-		if (chn_pos == 0)
-		{
-			if ((status & _cs_a_rxsync) == 0)
-			{
-				dummy += _pcm_mptr.at (_fifo_a);
-				sync_err_flag = true;
-			}
-			if ((status & _cs_a_txsync) == 0)
-			{
-				_pcm_mptr.at (_fifo_a) = 0;
-				sync_err_flag = true;
-			}
+			// Reads the status again
+			status = _pcm_mptr.at (_cs_a);
 		}
-#endif
 
 		// Can we read/write something ?
 		if (   (status & _cs_a_rxr) != 0

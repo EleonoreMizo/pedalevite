@@ -106,6 +106,10 @@ private:
 	// After initial filling, we sync on the RX queue (it should be always
 	// empty) and write the same number of read samples on the TX queue.
 	static const int  _prefill      = 4;
+	static_assert (
+		((_prefill % _nbr_chn) == 0),
+		"_prefill should be a multiple of the number of channels."
+	);
 
 	enum State
 	{
