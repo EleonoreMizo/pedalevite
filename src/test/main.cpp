@@ -57,6 +57,7 @@
 #include "test/DrawShapers.h"
 #include "test/EPSPlot.h"
 #include "test/Gridaxis.h"
+#include "test/Testadrv.h"
 #include "test/TestAnalysisFreq.h"
 #include "test/TestApprox.h"
 #include "test/TestBigMuffPi.h"
@@ -1891,6 +1892,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = Testadrv::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestOscSinCosStable::perform_test ();
 #endif
 
