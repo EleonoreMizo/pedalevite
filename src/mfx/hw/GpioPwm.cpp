@@ -227,7 +227,7 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	assert (index >= 0);
 
 	DmaCtrlBlock * cb0_ptr     = &use_cb ();
-	uint32_t *     sample_ptr  = _mbox.get_virt_ptr <uint32_t *> ();
+	uint32_t *     sample_ptr  = _mbox.get_virt_ptr <uint32_t> ();
 
 	// Reset complete per-sample gpio mask to 0
 	memset (sample_ptr, 0, sizeof (_nbr_samples * sizeof (*sample_ptr)));
