@@ -131,8 +131,6 @@ private:
 	               _exit_flag;
 	std::atomic <bool>            // Processing loop is required to exit ASAP.
 	               _proc_ex_flag;
-	std::atomic <bool>            // Something went wrong (sync error), but it looks recoverable
-	               _syncerr_flag;
 	std::atomic <int>             // Current buffer for I2S transfer, 0 or 1. The other buffer is for processing
 	               _cur_buf;
 	BufIntAlign    _buf_int_i;    // Double input buffer (interleaved stereo), integer data

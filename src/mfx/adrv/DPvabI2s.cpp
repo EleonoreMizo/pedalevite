@@ -79,7 +79,6 @@ DPvabI2s::DPvabI2s ()
 ,	_state (State_STOP)
 ,	_exit_flag (false)
 ,	_proc_ex_flag (false)
-,	_syncerr_flag (false)
 ,	_cur_buf (0)
 ,	_buf_int_i (_block_size_a * _nbr_chn * 2)
 ,	_buf_int_o (_block_size_a * _nbr_chn * 2)
@@ -92,7 +91,6 @@ DPvabI2s::DPvabI2s ()
 {
 	if (   ! _exit_flag.is_lock_free ()
 	    || ! _proc_ex_flag.is_lock_free ()
-	    || ! _syncerr_flag.is_lock_free ()
 	    || ! _cur_buf.is_lock_free ()
 	    || ! _proc_now_flag.is_lock_free ())
 	{
@@ -420,7 +418,6 @@ void	DPvabI2s::main_loop ()
 		else if (sync_err_flag)
 		{
 			_cb_ptr->notify_dropout ();
-			_syncerr_flag = false;
 		}
 	}
 
