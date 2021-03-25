@@ -1669,6 +1669,7 @@ commonsrc += \
         ../../src/mfx/hw/MmapPtr.hpp \
         ../../src/mfx/hw/RPiDmaBlocks.cpp \
         ../../src/mfx/hw/RPiDmaBlocks.h \
+        ../../src/mfx/hw/RPiDmaBlocks.hpp \
         ../../src/mfx/hw/ThreadLinux.cpp \
         ../../src/mfx/hw/ThreadLinux.h \
         ../../src/mfx/hw/UniqueRscLinux.cpp \

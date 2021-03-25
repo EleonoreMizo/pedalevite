@@ -61,7 +61,7 @@ public:
 		using system_error::system_error;
 	};
 
-	explicit       MBox (int size, int mem_flag);
+	explicit       MBox (int size, int mem_flag, int align);
 	               ~MBox ();
 
 	inline uint32_t

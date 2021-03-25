@@ -1228,6 +1228,7 @@
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.hpp" />
     <ClInclude Include="..\..\..\src\mfx\hw\RPiDmaBlocks.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\RPiDmaBlocks.hpp" />
     <ClInclude Include="..\..\..\src\mfx\hw\ThreadLinux.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\UniqueRscLinux.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\UserInputPi3.h" />

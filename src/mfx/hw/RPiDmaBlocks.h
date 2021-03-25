@@ -52,26 +52,30 @@ public:
 	static constexpr int _page_mask    = _page_size - 1;
 
 	static constexpr int _align_min    = 32; // Bytes, power of 2
-	static_assert (_align_min == sizeof (bcm2837dma::CtrlBlock));
+	static_assert (_align_min == sizeof (bcm2837dma::CtrlBlock), "");
 
 	explicit       RPiDmaBlocks (int nbr_blocks, int extra_bytes);
 	virtual        ~RPiDmaBlocks () = default;
 
-	int            get_nbr_blocks () const;
-	bcm2837dma::CtrlBlock &
+	inline int     get_nbr_blocks () const;
+	inline bcm2837dma::CtrlBlock &
 	               use_cb (int idx);
-	const bcm2837dma::CtrlBlock &
+	inline const bcm2837dma::CtrlBlock &
 	               use_cb (int idx) const;
 
-	int            get_buf_len () const;
-	uint8_t *      use_buf ();
-	const uint8_t* use_buf () const;
+	inline int     get_buf_len () const;
+	inline uint8_t *
+	               use_buf ();
+	inline const uint8_t *
+	               use_buf () const;
 	template <typename T>
-	T *            use_buf ();
+	inline T *     use_buf ();
 	template <typename T>
-	const T *      use_buf () const;
+	inline  const T *
+	               use_buf () const;
 
-	uint32_t       virt_to_phys (void *virt_ptr);
+	inline  uint32_t
+	               virt_to_phys (void *virt_ptr);
 
 
 
@@ -120,7 +124,7 @@ private:
 
 
 
-//#include "mfx/hw/RPiDmaBlocks.hpp"
+#include "mfx/hw/RPiDmaBlocks.hpp"
 
 
 

@@ -5043,6 +5043,9 @@
     <ClInclude Include="..\..\..\src\mfx\hw\RPiDmaBlocks.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\RPiDmaBlocks.hpp">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
