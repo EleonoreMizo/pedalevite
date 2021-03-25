@@ -31,7 +31,6 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/AllocAlign.h"
 #include "mfx/adrv/DriverInterface.h"
-#include "mfx/hw/bcm2837dma.h"
 #include "mfx/hw/GpioAccess.h"
 #include "mfx/hw/MmapPtr.h"
 #include "mfx/hw/RPiDmaBlocks.h"
@@ -162,7 +161,7 @@ private:
 	// sample frames
 	std::unique_ptr <hw::RPiDmaBlocks>
 	               _dma_uptr;
-	MmapPtr        _dma_reg;
+	hw::MmapPtr    _dma_reg;
 	std::array <uint32_t, _nbr_buf> // Physical address of the DMA block for the beginning of each buffer
 	               _dma_buf_beg_arr;
 

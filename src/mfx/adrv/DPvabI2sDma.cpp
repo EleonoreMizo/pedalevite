@@ -88,8 +88,8 @@ DPvabI2sDma::DPvabI2sDma ()
 ,	_thread_main ()
 ,	_dma_uptr ()
 ,	_dma_reg (
-		_periph_base_addr + bcm2837dma::_dma_ofs,
-		_dma_chn * bcm2837dma::_dma_chn_inc + bcm2837dma::_dma_chn_len,
+		_periph_base_addr + hw::bcm2837dma::_dma_ofs,
+		_dma_chn * hw::bcm2837dma::_dma_chn_inc + hw::bcm2837dma::_dma_chn_len,
 		"/dev/mem", O_RDWR | O_SYNC
 	)
 {
@@ -367,7 +367,7 @@ void	DPvabI2sDma::main_loop ()
 
 	// Starts the DMA
 	constexpr int  priority = 12; // 0-15
-	const auto     cb_adr   = _dma.virt_to_phys (_dma_uptr->use_cb (0));
+	const auto     cb_adr   = _dma_uptr->virt_to_phys (&_dma_uptr->use_cb (0));
 	_dma_reg.at (dma_base + _cs       ) = _int | _end;
 	_dma_reg.at (dma_base + _conblk_ad) = cb_adr;
 	_dma_reg.at (dma_base + _debug    ) = _all_errors; // Clears errors
@@ -383,7 +383,9 @@ void	DPvabI2sDma::main_loop ()
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
+#if 0
 	uint32_t       dummy = 0;
+#endif
 	_cur_buf = 0;
 	while (! _exit_flag)
 	{
@@ -476,7 +478,7 @@ void	DPvabI2sDma::build_dma_ctrl_block_list ()
 	int            blk_idx    = 0;
 	for (int buf_idx = 0; buf_idx < _nbr_buf; ++buf_idx)
 	{
-		const auto &   cb_first = _dma_ctrl_arr [blk_idx];
+		const auto &   cb_first = _dma_uptr->use_cb (blk_idx);
 		_dma_buf_beg_arr [buf_idx] = _dma_uptr->virt_to_phys (&cb_first);
 
 		for (int buf_pos = 0; buf_pos < _block_size; ++buf_pos)
@@ -487,14 +489,14 @@ void	DPvabI2sDma::build_dma_ctrl_block_list ()
 			// 0 = read, 1 = write
 			for (int dir_idx = 0; dir_idx < Dir_NBR_ELT; ++dir_idx)
 			{
-				auto &         cb          = _dma_ctrl_arr [blk_idx    ];
+				auto &         cb          = _dma_uptr->use_cb (blk_idx    );
 
-				const auto     blk_idx_nxt = (blk_idx_nxt + 1) % nbr_blocks;
-				auto &         cb_nxt      = _dma_ctrl_arr [blk_idx_nxt];
+				const auto     blk_idx_nxt = (blk_idx + 1) % nbr_blocks;
+				auto &         cb_nxt      = _dma_uptr->use_cb (blk_idx_nxt);
 
+				using namespace hw::bcm2837dma;
 				uint32_t       ti_base     = _no_wide_b | _wait_resp;
-				using hw::bcm2837dma;
-				if (dir == Dir_R)
+				if (dir_idx == Dir_R)
 				{
 					const auto     pm      = Dreq_PCM_RX << _permap;
 					const auto     buf_adr =
@@ -657,7 +659,10 @@ void	DPvabI2sDma::write_reg (uint8_t reg, uint8_t val)
 // Returns: buffer index, frame position
 std::array <int, 2>	DPvabI2sDma::get_dma_pos () const
 {
-	const uint32_t cur_adr = _dma_reg.at (dma_base + _conblk_ad);
+	using namespace hw::bcm2837dma;
+
+	const int      dma_base = _dma_chn * _dma_chn_inc;
+	const uint32_t cur_adr  = _dma_reg.at (dma_base + _conblk_ad);
 
 	// Finds the buffer index
 	int            buf_idx = _nbr_buf;
@@ -670,7 +675,7 @@ std::array <int, 2>	DPvabI2sDma::get_dma_pos () const
 	while (buf_idx > 0 && cur_adr < beg_adr);
 
 	// Finds the frame index
-	const int      frame_sz = (sizeof (bcm2837dma::CtrlBlock) * Dir_NBR_ELT);
+	const int      frame_sz = sizeof (hw::bcm2837dma::CtrlBlock) * Dir_NBR_ELT;
 	const int      spl_idx  = (cur_adr - beg_adr) / frame_sz;
 
 	return std::array <int, 2> { buf_idx, spl_idx };
