@@ -102,10 +102,10 @@ const T *	RPiDmaBlocks::use_buf () const
 
 
 
-uint32_t	RPiDmaBlocks::virt_to_phys (void *virt_ptr)
+uint32_t	RPiDmaBlocks::virt_to_phys (const void *virt_ptr)
 {
 	const ptrdiff_t   offset =
-		reinterpret_cast <uint8_t *> (virt_ptr) - _mbox.get_virt_ptr ();
+		reinterpret_cast <const uint8_t *> (virt_ptr) - _mbox.get_virt_ptr ();
 	assert (offset >= 0);
 	assert (offset < _tot_len);
 

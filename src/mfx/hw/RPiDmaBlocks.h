@@ -75,7 +75,7 @@ public:
 	               use_buf () const;
 
 	inline  uint32_t
-	               virt_to_phys (void *virt_ptr);
+	               virt_to_phys (const void *virt_ptr);
 
 
 
