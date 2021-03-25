@@ -31,8 +31,8 @@ http://www.wtfpl.net/ for more details.
 	constexpr int Testadrv_chn_idx_i = 2;
 	constexpr int Testadrv_chn_idx_o = 0;
 #elif fstb_SYS == fstb_SYS_LINUX
-	#include "mfx/adrv/DPvabI2s.h"
-	#define Testadrv_DRV_T mfx::adrv::DPvabI2s
+	#include "mfx/adrv/DPvabI2sDma.h"
+	#define Testadrv_DRV_T mfx::adrv::DPvabI2sDma
 	constexpr int Testadrv_chn_idx_i = 0;
 	constexpr int Testadrv_chn_idx_o = 0;
 #else
@@ -57,9 +57,11 @@ int	Testadrv::perform_test ()
 {
 	int            ret_val = 0;
 
-#define Testadrv_PRINT_MACRO( x) #x
+#define Testadrv_EXPAND_MACRO( x) #x
+#define Testadrv_PRINT_MACRO( x) Testadrv_EXPAND_MACRO (x)
 	printf ("Testing " Testadrv_PRINT_MACRO (Testadrv_DRV_T) "...\n");
 #undef Testadrv_PRINT_MACRO
+#undef Testadrv_EXPAND_MACRO
 
 	Testadrv_DRV_T snd_drv;
 	AdrvCallback   callback;
