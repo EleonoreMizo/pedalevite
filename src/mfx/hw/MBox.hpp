@@ -57,6 +57,13 @@ uint8_t *	MBox::get_virt_ptr () const
 
 
 
+uint32_t	MBox::get_size () const
+{
+   return _size;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

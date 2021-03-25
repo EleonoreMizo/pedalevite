@@ -70,6 +70,8 @@ public:
 	inline T *     get_virt_ptr () const;
 	inline uint8_t *
 	               get_virt_ptr () const;
+	inline uint32_t
+	               get_size () const;
 
 
 

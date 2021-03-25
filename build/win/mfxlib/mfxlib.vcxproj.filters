@@ -5040,6 +5040,9 @@
     <ClInclude Include="..\..\..\src\mfx\hw\MBox.hpp">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\RPiDmaBlocks.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6414,6 +6417,9 @@
       <Filter>mfx\pi\pidet2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\MBox.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\RPiDmaBlocks.cpp">
       <Filter>mfx\hw</Filter>
     </ClCompile>
   </ItemGroup>

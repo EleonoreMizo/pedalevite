@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <wiringPi.h>
 
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 
@@ -218,19 +219,16 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	)
 ,	_subcycle_time (subcycle_time)
 ,	_nbr_samples ((_subcycle_time + (granularity >> 1)) / granularity)
-,	_nbr_cbs (_nbr_samples * 2)
-,	_nbr_pages ((   (_nbr_cbs * 32 + _nbr_samples * 4 + PAGE_SIZE - 1)
-	             >> PAGE_SHIFT))
-,	_mbox (_nbr_pages << PAGE_SHIFT, MBox::MEM_FLAG_DIRECT) // MEM_FLAG_L1_NONALLOCATING for Pi 1.
+,	_dma (_nbr_samples * _nbr_blk_per_spl, _nbr_samples * sizeof (uint32_t))
 {
 	assert (periph_base_addr != 0);
 	assert (index >= 0);
 
-	DmaCtrlBlock * cb0_ptr     = &use_cb ();
-	uint32_t *     sample_ptr  = _mbox.get_virt_ptr <uint32_t> ();
+	DmaCtrlBlock * cb0_ptr     = _dma.use_cb (0);
+	uint32_t *     sample_ptr  = _dma.use_buf <uint32_t> ();
 
 	// Reset complete per-sample gpio mask to 0
-	memset (sample_ptr, 0, sizeof (_nbr_samples * sizeof (*sample_ptr)));
+	std::fill (sample_ptr, sample_ptr + _nbr_samples, 0);
 
 	// For each sample we add 2 control blocks:
 	// - first: clear gpio and jump to second
@@ -241,11 +239,12 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 		cb_ptr->_info   =
 			  bcm2837dma::_no_wide_b
 			| bcm2837dma::_wait_resp;
-		cb_ptr->_src    = mem_virt_to_phys (sample_ptr + i);  // src contains mask of which gpios need change at this sample
+		cb_ptr->_src    = _dma.virt_to_phys (sample_ptr + i);  // src contains mask of which gpios need change at this sample
 		cb_ptr->_dst    = _bus_gpclr0; // set each sample to clear set gpios by default
 		cb_ptr->_length = 4;
 		cb_ptr->_stride = 0;
-		cb_ptr->_next   = mem_virt_to_phys (cb_ptr + 1);
+		cb_ptr->_next   = _dma.virt_to_phys (cb_ptr + 1);
+		memset (cb_ptr->_pad, 0, sizeof (cb_ptr->_pad));
 		++ cb_ptr;
 
 		// Delay
@@ -254,17 +253,18 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 			| bcm2837dma::_wait_resp
 			| bcm2837dma::_dest_dreq
 			| (bcm2837dma::Dreq_PWM << bcm2837dma::_permap);
-		cb_ptr->_src    = mem_virt_to_phys (sample_ptr); // Any data will do
+		cb_ptr->_src    = _dma.virt_to_phys (sample_ptr); // Any data will do
 		cb_ptr->_dst    = _bus_fifo_adr;
 		cb_ptr->_length = 4;
 		cb_ptr->_stride = 0;
-		cb_ptr->_next   = mem_virt_to_phys (cb_ptr + 1);
+		cb_ptr->_next   = _dma.virt_to_phys (cb_ptr + 1);
+		memset (cb_ptr->_pad, 0, sizeof (cb_ptr->_pad));
 		++ cb_ptr;
 	}
 
 	// The last control block links back to the first (= endless loop)
 	-- cb_ptr;
-	cb_ptr->_next = mem_virt_to_phys (cb0_ptr);
+	cb_ptr->_next = _dma.virt_to_phys (cb0_ptr);
 
 	// Initialize the DMA channel 0 (p46, 47)
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
@@ -273,7 +273,7 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
 		bcm2837dma::_int | bcm2837dma::_end;
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_conblk_ad) =
-		mem_virt_to_phys (cb0_ptr);
+		_dma.virt_to_phys (cb0_ptr);
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_debug    ) =
 		bcm2837dma::_all_errors; // Clears errors
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
@@ -297,34 +297,10 @@ GpioPwm::Channel::~Channel ()
 
 
 
-uint32_t	GpioPwm::Channel::mem_virt_to_phys (void *virt_ptr)
-{
-	const uint32_t offset =
-		reinterpret_cast <uint8_t *> (virt_ptr) - _mbox.get_virt_ptr ();
-
-	return _mbox.get_phys_adr () + offset;
-}
-
-
-
-GpioPwm::DmaCtrlBlock & GpioPwm::Channel::use_cb ()
-{
-	GpioPwm::DmaCtrlBlock *  ptr = reinterpret_cast <DmaCtrlBlock *> (
-		_mbox.get_virt_ptr () + ((_nbr_samples + 7) & -8) * sizeof (uint32_t)
-	);
-	assert ((reinterpret_cast <uint32_t> (ptr) & 0x1F) == 0);
-
-	return *ptr;
-}
-
-
-
 void	GpioPwm::Channel::clear ()
 {
-	assert (_mbox.get_virt_ptr () != nullptr);
-
-	DmaCtrlBlock * cb_ptr      = &use_cb ();
-	uint32_t *     d_ptr       = _mbox.get_virt_ptr <uint32_t> ();
+	DmaCtrlBlock * cb_ptr = &_dma.use_cb (0);
+	uint32_t *     d_ptr  = _dma.use_buf <uint32_t> ();
 
 	// First we have to stop all currently enabled pulses
 	for (int i = 0; i < int (_nbr_samples); ++i)
@@ -346,10 +322,8 @@ void	GpioPwm::Channel::clear ()
 
 void	GpioPwm::Channel::clear (int pin)
 {
-	assert (_mbox.get_virt_ptr () != nullptr);
-
 	const int      gpio  = ::physPinToGpio (pin);
-	uint32_t *     d_ptr = _mbox.get_virt_ptr <uint32_t> ();
+	uint32_t *     d_ptr = _dma.use_buf <uint32_t> ();
 
 	// Remove this gpio from all samples
 	for (int i = 0; i < int (_nbr_samples); i++)
@@ -372,7 +346,6 @@ void	GpioPwm::Channel::clear (int pin)
 // use multiple DMA channels.
 void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 {
-	assert (_mbox.get_virt_ptr () != nullptr);
 	assert (width <= int (_nbr_samples));
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
@@ -384,8 +357,8 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 	}
 
 	int            pos    = start;
-	DmaCtrlBlock * cb_ptr = &use_cb ();
-	uint32_t *     d_ptr  = _mbox.get_virt_ptr <uint32_t> ();
+	DmaCtrlBlock * cb_ptr = &_dma.use_cb (0);
+	uint32_t *     d_ptr  = _dma.use_buf <uint32_t> ();
 
 	bool           state_flag = false;
 	for (int i = 0; i < width; ++i)
@@ -424,7 +397,6 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 
 void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 {
-	assert (_mbox.get_virt_ptr () != nullptr);
 	assert (width <= int (_nbr_samples));
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
@@ -436,8 +408,8 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 	}
 
 	int            pos    = start;
-	DmaCtrlBlock * cb_ptr = &use_cb ();
-	uint32_t *     d_ptr  = _mbox.get_virt_ptr <uint32_t> ();
+	DmaCtrlBlock * cb_ptr = &_dma.use_cb (0);
+	uint32_t *     d_ptr  = _dma.use_buf <uint32_t> ();
 
 	for (int i = 0; i < int (_nbr_samples); ++i)
 	{
@@ -497,7 +469,6 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 // Returns the level error.
 float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases, int phase, float level)
 {
-	assert (_mbox.get_virt_ptr () != nullptr);
 	assert (nbr_cycles > 0);
 	assert (nbr_cycles * nbr_phases * 2 <= int (_nbr_samples));
 	assert (nbr_phases > 0);
@@ -512,8 +483,8 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 		init_gpio (pin, gpio);
 	}
 
-	DmaCtrlBlock * cb_ptr = &use_cb ();
-	uint32_t *     d_ptr  = _mbox.get_virt_ptr <uint32_t> ();
+	DmaCtrlBlock * cb_ptr = &_dma.use_cb (0);
+	uint32_t *     d_ptr  = _dma.use_buf <uint32_t> ();
 
 	const int      nbr_pulses     = nbr_cycles * nbr_phases;
 	const int      max_duty_cycle = _nbr_samples - nbr_pulses;
@@ -617,8 +588,8 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 int	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool fwd_flag)
 {
 	const int      gpio = ::physPinToGpio (pin);
-	const DmaCtrlBlock * cb_ptr = &use_cb ();
-	const uint32_t *     d_ptr  = _mbox.get_virt_ptr <const uint32_t> ();
+	const DmaCtrlBlock * cb_ptr = &_dma.use_cb (0);
+	const uint32_t *     d_ptr  = _dma.use_buf <const uint32_t> ();
 
 	const int      dir   = fwd_flag ? 1 : -1;
 	const uint32_t avoid = up_flag ? _bus_gpclr0 : _bus_gpset0;

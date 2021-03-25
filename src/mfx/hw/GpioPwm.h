@@ -52,8 +52,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/hw/bcm2837dma.h"
 #include "mfx/hw/bcm2837gpio.h"
 #include "mfx/hw/bcm2837pwm.h"
-#include "mfx/hw/MBox.h"
 #include "mfx/hw/MmapPtr.h"
+#include "mfx/hw/RPiDmaBlocks.h"
 
 #include <array>
 #include <memory>
@@ -117,11 +117,10 @@ private:
 	{
 	public:
 
+		static constexpr int _nbr_blk_per_spl = 2;
+
 		explicit       Channel (int index, uint32_t periph_base_addr, uint32_t subcycle_time, int granularity);
 		virtual        ~Channel ();
-
-		DmaCtrlBlock & use_cb ();
-		uint32_t       mem_virt_to_phys (void *virt_ptr);
 
 		void           clear ();
 		void           clear (int pin);
@@ -141,10 +140,8 @@ private:
 
 		// Set by system
 		uint32_t       _nbr_samples;
-		uint32_t       _nbr_cbs;
-		uint32_t       _nbr_pages;
 
-		MBox           _mbox;
+		RPiDmaBlocks   _dma;
 
 		static uint32_t
 		               _gpio_init;
@@ -158,11 +155,6 @@ private:
 	MmapPtr        _reg_clk;
 	MmapPtr        _reg_gpio;
 	ChannelArray   _chn_arr;
-
-	// Standard page sizes
-	static const int  PAGE_SHIFT = 12;
-	static const int  PAGE_SIZE  = 1 << PAGE_SHIFT;
-	static const int  PAGE_MASK  = PAGE_SIZE - 1;
 
 	// Bus addresses
 	static const uint32_t   _bus_gpclr0   =

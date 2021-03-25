@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/hw/MBox.h"
 #include "mailbox.h"
 
@@ -46,13 +47,16 @@ namespace hw
 // Uses the mailbox interface to request memory from the VideoCore
 // We specifiy (-1) for the handle rather than calling mbox_open ()
 // so multiple users can share the resource.
-MBox::MBox (int size, int mem_flag)
+MBox::MBox (int size, int mem_flag, int align)
 :	_handle (-1)
 ,	_size (size)
-,	_mem_ref (mem_alloc (_handle, _size, 4096, mem_flag))
+,	_mem_ref (mem_alloc (_handle, _size, align, mem_flag))
 ,	_bus_adr (0)
 ,	_virt_ptr (nullptr)
 {
+	assert (align > 0);
+	assert (fstb::is_pow_2 (align));
+
 	try
 	{
 		if (_mem_ref == static_cast <unsigned int> (-1))

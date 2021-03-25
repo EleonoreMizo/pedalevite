@@ -1227,6 +1227,7 @@
     <ClInclude Include="..\..\..\src\mfx\hw\mcp23017.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\hw\RPiDmaBlocks.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\ThreadLinux.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\UniqueRscLinux.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\UserInputPi3.h" />
@@ -1884,6 +1885,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\MmapPtr.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\RPiDmaBlocks.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\ThreadLinux.cpp">
