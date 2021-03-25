@@ -709,6 +709,7 @@
     <ClInclude Include="..\..\..\src\mfx\adrv\DManual.h" />
     <ClInclude Include="..\..\..\src\mfx\adrv\DPvabDirect.h" />
     <ClInclude Include="..\..\..\src\mfx\adrv\DPvabI2s.h" />
+    <ClInclude Include="..\..\..\src\mfx\adrv\DPvabI2sDma.h" />
     <ClInclude Include="..\..\..\src\mfx\adrv\DriverInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\adrv\DJack.h" />
     <ClInclude Include="..\..\..\src\mfx\BufPack.h" />
@@ -1697,6 +1698,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\adrv\DPvabI2s.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\adrv\DPvabI2sDma.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\adrv\DriverInterface.cpp" />

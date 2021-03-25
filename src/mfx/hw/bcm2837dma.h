@@ -163,11 +163,23 @@ public:
 	uint32_t       _src;     // SOURCE_AD
 	uint32_t       _dst;     // DEST_AD
 	uint32_t       _length;  // TXFR_LEN: transfer length
-	uint32_t       _stride;  // 2D stride mode
+	uint32_t       _stride;  // 2D stride mode. Not used for DMA lite
 	uint32_t       _next;    // NEXTCONBK
 	uint32_t       _pad [2]; // Reserved
 };
 
+class CtrlBlock4
+{
+public:
+	uint32_t       _info;    // TI: transfer information
+	uint32_t       _src;     // SRC
+	uint32_t       _srci;    // SRCI
+	uint32_t       _dst;     // DEST
+	uint32_t       _dsti;    // DESTI
+	uint32_t       _length;  // LEN: transfer length
+	uint32_t       _next;    // NEXT_CB
+	uint32_t       _pad [1]; // Reserved
+};
 
 
 }  // namespace bcm2837dma

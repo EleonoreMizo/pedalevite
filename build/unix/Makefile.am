@@ -1638,6 +1638,8 @@ commonsrc += \
         ../../src/mfx/adrv/DPvabDirect.h \
         ../../src/mfx/adrv/DPvabI2s.cpp \
         ../../src/mfx/adrv/DPvabI2s.h \
+        ../../src/mfx/adrv/DPvabI2sDma.cpp \
+        ../../src/mfx/adrv/DPvabI2sDma.h \
         ../../src/mfx/hw/bcm2837.h \
         ../../src/mfx/hw/bcm2837clk.h \
         ../../src/mfx/hw/bcm2837dma.h \
