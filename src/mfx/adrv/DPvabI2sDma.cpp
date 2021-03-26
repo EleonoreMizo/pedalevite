@@ -36,6 +36,7 @@ http://www.wtfpl.net/ for more details.
 #endif
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/adrv/DPvabI2sDma.h"
+#include "mfx/hw/bcm2837.h"
 #include "mfx/hw/bcm2837dma.h"
 #include "mfx/hw/bcm2837pcm.h"
 #include "mfx/hw/cs4272.h"
@@ -53,6 +54,7 @@ http://www.wtfpl.net/ for more details.
 
 #include <cassert>
 #include <cstring>
+#include <ctime>
 
 
 
@@ -92,6 +94,9 @@ DPvabI2sDma::DPvabI2sDma ()
 		_dma_chn * hw::bcm2837dma::_dma_chn_inc + hw::bcm2837dma::_dma_chn_len,
 		"/dev/mem", O_RDWR | O_SYNC
 	)
+,	_dma_buf_beg_arr {}
+,	_spl_dur_ns (0)
+,	_min_dur_ns (0)
 {
 	if (! _exit_flag.is_lock_free ())
 	{
@@ -108,6 +113,65 @@ DPvabI2sDma::~DPvabI2sDma ()
 {
 	assert (_state == State_STOP);
 	close_i2c ();
+}
+
+
+
+// Returns: buffer index, frame position, channel
+DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const
+{
+	using namespace hw::bcm2837dma;
+
+	const int      dma_base = _dma_chn * _dma_chn_inc;
+	const uint32_t cur_adr  = _dma_reg.at (dma_base + _conblk_ad);
+
+	// Finds the buffer index
+	int            buf_idx = _nbr_buf;
+	uint32_t       beg_adr = 0;
+	do
+	{
+		-- buf_idx;
+		beg_adr = _dma_buf_beg_arr [buf_idx];
+	}
+	while (buf_idx > 0 && cur_adr < beg_adr);
+	const int      offset   = cur_adr - beg_adr;
+
+	// Finds the frame index
+	const int      frame_sz = sizeof (hw::bcm2837dma::CtrlBlock) * _nbr_chn * Dir_NBR_ELT;
+	const int      spl_idx  = offset / frame_sz;
+
+	// Channel index
+	const int      chn_idx  = (offset / Dir_NBR_ELT) % _nbr_chn;
+
+	return PosIO { buf_idx, spl_idx, chn_idx };
+}
+
+
+
+uint32_t	DPvabI2sDma::get_pcm_status () const
+{
+	return _pcm_mptr.at (hw::bcm2837pcm::_cs_a);
+}
+
+
+
+std::array <std::array <int32_t, DPvabI2sDma::_block_size * DPvabI2sDma::_nbr_chn>, DPvabI2sDma::_nbr_buf>	DPvabI2sDma::dump_buf_in () const
+{
+	std::array <std::array <int32_t, DPvabI2sDma::_block_size * DPvabI2sDma::_nbr_chn>, DPvabI2sDma::_nbr_buf> content;
+	for (int buf_idx = 0; buf_idx < _nbr_buf; ++buf_idx)
+	{
+		const SplType * src_ptr = _buf_int_i_ptr + _block_size_a * buf_idx;
+		for (int frame_idx = 0; frame_idx < _block_size; ++frame_idx)
+		{
+			for (int chn_idx = 0; chn_idx < _nbr_chn; ++chn_idx)
+			{
+				const int pos = frame_idx * _nbr_chn + chn_idx;
+				content [buf_idx] [pos] = src_ptr [pos];
+			}
+		}
+	}
+
+	return content;
 }
 
 
@@ -142,7 +206,7 @@ int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface 
 	_gpio.write (_pin_rst, 0);
 
 	// Allocates the memory used by the DMA
-	const int      nbr_blocks  = _nbr_buf * _block_size   * Dir_NBR_ELT;
+	const int      nbr_blocks  = _nbr_buf * _block_size   * _nbr_chn * Dir_NBR_ELT;
 	const int      buf_size_io = _nbr_buf * _block_size_a * _nbr_chn;
 	const int      nbr_spl     = Dir_NBR_ELT * buf_size_io;
 	_dma_uptr = std::make_unique <hw::RPiDmaBlocks> (
@@ -150,6 +214,13 @@ int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface 
 	);
 	_buf_int_i_ptr = _dma_uptr->use_buf <SplType> ();
 	_buf_int_o_ptr = _buf_int_i_ptr + buf_size_io;
+
+	// Computes the minimum time we have to give to the system, per block
+	const double   rt_ratio     = read_rt_ratio ();
+	const double   spl_dur_ns   = 1e9 / sample_freq;
+	_spl_dur_ns = fstb::round_int64 (spl_dur_ns);
+	const double   block_dur_ns = 1e9 * _block_size / sample_freq;
+	_min_dur_ns = fstb::round_int64 ((1 - rt_ratio) * block_dur_us);
 
 	return 0;
 }
@@ -281,8 +352,9 @@ void	DPvabI2sDma::main_loop ()
 	uint32_t       status_mask =
 		  _cs_a_stby
 		| _cs_a_rxsex
-		| _cs_a_rxthr_mid1
-		| _cs_a_txthr_mid1
+		| _cs_a_dmaen
+		| _cs_a_rxthr_one
+		| _cs_a_txthr_zero
 		| _cs_a_en;
 	_pcm_mptr.at (_mode_a) =
 		  _mode_a_clkm
@@ -355,12 +427,9 @@ void	DPvabI2sDma::main_loop ()
 	// Writes a few samples in advance
 	// Less samples = shorter latency
 	// More samples = better protection against thread interruptions
-	for (int k = 0; k < _prefill; ++k)
+	for (int k = 0; k < _prefill * _nbr_chn; ++k)
 	{
-		for (int chn = 0; chn < _nbr_chn; ++chn)
-		{
-			_pcm_mptr.at (_fifo_a) = 0;
-		}
+		_pcm_mptr.at (_fifo_a) = 0;
 	}
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -378,83 +447,95 @@ void	DPvabI2sDma::main_loop ()
 		| _active;
 
 	// Starts the PCM interface
-	status_mask |= _cs_a_txon | _cs_a_rxon | _cs_a_dmaen;
+	status_mask |= _cs_a_txon | _cs_a_rxon;
 	_pcm_mptr.at (_cs_a) = status_mask;
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-#if 0
 	uint32_t       dummy = 0;
-#endif
 	_cur_buf = 0;
 	while (! _exit_flag)
 	{
 		// Processes incoming data
 		process_block (1 - _cur_buf);
 
-/*** To do:
-How to make sure channels are not swapped? To test the _cs_a_?xsync flags
-correctly, we should have read/written an even 	number of samples.
-***/
-#if 0
-		// Checks if there are sync errors
-		uint32_t       status = _pcm_mptr.at (_cs_a);
-		if ((status & _cs_a_rxerr) != 0 || (status & _cs_a_txerr) != 0)
-		{
-			// Possible L/R sync errors, skips a frame to fix them
-			if ((status & _cs_a_rxsync) == 0)
-			{
-				dummy += _pcm_mptr.at (_fifo_a);
-			}
-			if ((status & _cs_a_txsync) == 0)
-			{
-				_pcm_mptr.at (_fifo_a) = 0;
-			}
-
-			_cb_ptr->notify_dropout ();
-
-			// Clears error at the PCM interface level
-			_pcm_mptr.at (_cs_a) = status_mask | _cs_a_rxerr | _cs_a_txerr;
-
-			/*** To do: maybe we should brutally restart the DMA and I2S. ***/
-		}
-#endif
-
 		// Checks where we are in the I/O block
 		auto           dma_pos = get_dma_pos ();
-		int            buf_idx = dma_pos [0];
-//		int            spl_idx = dma_pos [1];
 
-		if (buf_idx != _cur_buf)
+		// Checks if there are sync errors
+		if (dma_pos._chn == 0)
+		{
+			uint32_t       status = _pcm_mptr.at (_cs_a);
+			if ((status & _cs_a_rxerr) != 0 || (status & _cs_a_txerr) != 0)
+			{
+				// Possible L/R sync errors, skips a frame to fix them
+				if ((status & _cs_a_rxsync) == 0)
+				{
+					// Stores the result to make sure the read will not be
+					// optimised out
+					dummy += _pcm_mptr.at (_fifo_a);
+				}
+				if ((status & _cs_a_txsync) == 0)
+				{
+					_pcm_mptr.at (_fifo_a) = 0;
+				}
+
+				_cb_ptr->notify_dropout ();
+
+				// Clears error at the PCM interface level
+				_pcm_mptr.at (_cs_a) = status_mask | _cs_a_rxerr | _cs_a_txerr;
+
+				/*** To do: maybe we should brutally restart the DMA and I2S. ***/
+			}
+		}
+
+		if (dma_pos._buf != _cur_buf)
 		{
 			// We're already in another buffer
 			_cb_ptr->notify_dropout ();
 
 			// Makes it the current buffer
-			_cur_buf = buf_idx;
+			_cur_buf = dma_pos._buf;
 		}
 
-		// Waits for the next buffer (active polling)
-		/*** To do:
-		Computes the remaining number of microseconds with spl_id, sleeps a bit
-		less (subtracting ~50 us) to save CPU, then waits by active polling.
-		***/
-		while (! _exit_flag && _cur_buf == buf_idx)
+		// The scheduler only gives a fraction of 1 s periods to the real-time
+		// threads (default: 95 %). So if we don't want to get interrupted
+		// for 50 ms every second for no real reason, we have to release the
+		// CPU. This is not trivial because the system call to nanosleep()
+		// has some overhead in tens of us, making it difficult to handle
+		// very short blocks.
+
+		// Estimates the remaining time before the next block, in nanoseconds
+		const int      nbr_rem_frames = _block_size - dma_pos._frame;
+		const int64_t  rem_time_ns    = nbr_rem_frames * _spl_dur_ns;
+
+		// We won't sleep more than the amount of time that may make us miss
+		// the ideal start for the next block
+		const int64_t  sleep_ns = rem_time_ns - _nsleep_ovrhd_max;
+
+		if (sleep_ns > 0)
+		{
+			::timespec     slp;
+			slp.tv_sec  = 0;
+			slp.tv_nsec = long (sleep_ns);
+			nanosleep (&slp, nullptr);
+		}
+
+		// Now waits for the next buffer (active polling)
+		while (! _exit_flag && _cur_buf == dma_pos._buf)
 		{
 			dma_pos = get_dma_pos ();
-			buf_idx = dma_pos [0];
-//			spl_idx = dma_pos [1];
 		}
 
 		// We're done, we can process the new block
-		_cur_buf = buf_idx;
+		_cur_buf = dma_pos._buf;
 	}
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// The end
 
 	// Disables the PCM interface
-	_pcm_mptr.at (_cs_a) = 0;
+	_pcm_mptr.at (_cs_a) = 0 + int (dummy * 1e-300);
 
 	// Stops the DMA channel
 	_dma_reg.at (dma_base + _cs) = _abort | _reset;
@@ -471,9 +552,13 @@ void	DPvabI2sDma::build_dma_ctrl_block_list ()
 	assert (_buf_int_i_ptr != nullptr);
 	assert (_buf_int_o_ptr != nullptr);
 
-	const uint32_t fifo_adr   =
-		_periph_base_addr + hw::bcm2837pcm::_pcm_ofs + hw::bcm2837pcm::_fifo_a;
-	const int      nbr_blocks = _nbr_buf * _block_size * Dir_NBR_ELT;
+	// DMA uses "bus" (not physical) addresses for peripherals, so we have
+	// to convert our FIFO address into a bus address.
+	const uint32_t fifo_bus_adr =
+		  hw::bcm2837::_bus_base
+		+ hw::bcm2837pcm::_pcm_ofs
+		+ hw::bcm2837pcm::_fifo_a;
+	const int      nbr_blocks = _nbr_buf * _block_size * _nbr_chn * Dir_NBR_ELT;
 
 	int            blk_idx    = 0;
 	for (int buf_idx = 0; buf_idx < _nbr_buf; ++buf_idx)
@@ -483,43 +568,46 @@ void	DPvabI2sDma::build_dma_ctrl_block_list ()
 
 		for (int buf_pos = 0; buf_pos < _block_size; ++buf_pos)
 		{
-			// Position in mono samples within the in/out buffers
-			const auto     pos = (buf_idx * _block_size_a + buf_pos) * _nbr_chn;
-
-			// 0 = read, 1 = write
-			for (int dir_idx = 0; dir_idx < Dir_NBR_ELT; ++dir_idx)
+			for (int chn_idx = 0; chn_idx < _nbr_chn; ++chn_idx)
 			{
-				auto &         cb          = _dma_uptr->use_cb (blk_idx    );
+				// Position in mono samples within the in/out buffers
+				const auto     pos = (buf_idx * _block_size_a + buf_pos) * _nbr_chn + chn_idx;
 
-				const auto     blk_idx_nxt = (blk_idx + 1) % nbr_blocks;
-				auto &         cb_nxt      = _dma_uptr->use_cb (blk_idx_nxt);
-
-				using namespace hw::bcm2837dma;
-				uint32_t       ti_base     = _no_wide_b | _wait_resp;
-				if (dir_idx == Dir_R)
+				// 0 = read, 1 = write
+				for (int dir_idx = 0; dir_idx < Dir_NBR_ELT; ++dir_idx)
 				{
-					const auto     pm      = Dreq_PCM_RX << _permap;
-					const auto     buf_adr =
-						_dma_uptr->virt_to_phys (_buf_int_i_ptr + pos);
-					cb._info = ti_base | pm | _src_dreq; // TI: transfer information
-					cb._src  = fifo_adr; // SOURCE_AD
-					cb._dst  = buf_adr;  // DEST_AD
-				}
-				else
-				{
-					const auto     pm      = Dreq_PCM_TX << _permap;
-					const auto     buf_adr =
-						_dma_uptr->virt_to_phys (_buf_int_o_ptr + pos);
-					cb._info = ti_base | pm | _dest_dreq; // TI: transfer information
-					cb._src  = buf_adr;  // SOURCE_AD
-					cb._dst  = fifo_adr; // DEST_AD
-				}
-				cb._length = _nbr_chn * sizeof (SplType); // TXFR_LEN: transfer length
-				cb._stride = 0;  // 2D stride mode
-				cb._next   = _dma_uptr->virt_to_phys (&cb_nxt); // NEXTCONBK
-				memset (cb._pad, 0, sizeof (cb._pad));
+					auto &         cb          = _dma_uptr->use_cb (blk_idx    );
 
-				++ blk_idx;
+					const auto     blk_idx_nxt = (blk_idx + 1) % nbr_blocks;
+					auto &         cb_nxt      = _dma_uptr->use_cb (blk_idx_nxt);
+
+					using namespace hw::bcm2837dma;
+					uint32_t       ti_base     = _no_wide_b | _wait_resp;
+					if (dir_idx == Dir_R)
+					{
+						const auto     pm      = Dreq_PCM_RX << _permap;
+						const auto     buf_adr =
+							_dma_uptr->virt_to_phys (_buf_int_i_ptr + pos);
+						cb._info = ti_base | pm | _src_dreq; // TI: transfer information
+						cb._src  = fifo_bus_adr; // SOURCE_AD
+						cb._dst  = buf_adr;      // DEST_AD
+					}
+					else
+					{
+						const auto     pm      = Dreq_PCM_TX << _permap;
+						const auto     buf_adr =
+							_dma_uptr->virt_to_phys (_buf_int_o_ptr + pos);
+						cb._info = ti_base | pm | _dest_dreq; // TI: transfer information
+						cb._src  = buf_adr;      // SOURCE_AD
+						cb._dst  = fifo_bus_adr; // DEST_AD
+					}
+					cb._length = sizeof (SplType); // TXFR_LEN: transfer length
+					cb._stride = 0;  // 2D stride mode
+					cb._next   = _dma_uptr->virt_to_phys (&cb_nxt); // NEXTCONBK
+					memset (cb._pad, 0, sizeof (cb._pad));
+
+					++ blk_idx;
+				}
 			}
 		}
 	}
@@ -656,29 +744,66 @@ void	DPvabI2sDma::write_reg (uint8_t reg, uint8_t val)
 
 
 
-// Returns: buffer index, frame position
-std::array <int, 2>	DPvabI2sDma::get_dma_pos () const
+double	DPvabI2sDma::read_rt_ratio ()
 {
-	using namespace hw::bcm2837dma;
-
-	const int      dma_base = _dma_chn * _dma_chn_inc;
-	const uint32_t cur_adr  = _dma_reg.at (dma_base + _conblk_ad);
-
-	// Finds the buffer index
-	int            buf_idx = _nbr_buf;
-	uint32_t       beg_adr = 0;
-	do
+	double         ratio   = 1; // Default or error
+	int            ret_val = 0;
+	
+	long long      runtime = 0;
+	if (ret_val == 0)
 	{
-		-- buf_idx;
-		beg_adr = _dma_buf_beg_arr [buf_idx];
+		ret_val = read_value_from_file (
+			runtime, "/proc/sys/kernel/sched_rt_runtime_us"
+		);
 	}
-	while (buf_idx > 0 && cur_adr < beg_adr);
 
-	// Finds the frame index
-	const int      frame_sz = sizeof (hw::bcm2837dma::CtrlBlock) * Dir_NBR_ELT;
-	const int      spl_idx  = (cur_adr - beg_adr) / frame_sz;
+	// Negative runtime values mean 100 %
+	if (ret_val == 0 && runtime >= 0)
+	{
+		long long      period = 0;
+		ret_val = read_value_from_file (
+			period, "/proc/sys/kernel/sched_rt_period_us"
+		);
+		if (ret_val == 0)
+		{
+			ratio = double (runtime) / double (period);
+			ratio = fstb::limit (ratio, 0.0, 1.0);
+		}
+	}
 
-	return std::array <int, 2> { buf_idx, spl_idx };
+	return ratio;
+}
+
+
+
+int	DPvabI2sDma::read_value_from_file (long long &val, const char *filename_0)
+{
+	assert (filename_0 != nullptr);
+
+	int            ret_val = 0;
+
+	FILE *         f_ptr = fstb::fopen_utf8 (filename_0);
+	if (f_ptr == nullptr)
+	{
+		ret_val = -1;
+	}
+
+	if (ret_val == 0)
+	{
+		const int      nbr_read = fscanf (f_ptr, "%lld", &val);
+		if (nbr_read != 1)
+		{
+			ret_val = -1;
+		}
+	}
+
+	if (f_ptr != nullptr)
+	{
+		fclose (f_ptr);
+		f_ptr = nullptr;
+	}
+
+	return ret_val;
 }
 
 

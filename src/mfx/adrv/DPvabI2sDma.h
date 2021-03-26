@@ -67,7 +67,7 @@ public:
 	static const int  _block_size   = 64; // Buffer size in samples, for processing
 	static const int  _fs_code      =  1; // Sampling rate: 0 = 48 kHz, 1 = 44.1 kHz
 	static const int  _i2c_addr     = 0x10 + 0;
-	static const int  _dma_chn      =  8; // DMA channel. 8 is a DMA lite
+	static const int  _dma_chn      =  8; // DMA channel. 8 is a DMA lite, which is enough
 
 	// GPIO pins (BCM numbering, not WiringPi)
 	static const int  _pin_rst      =  5; // W - Reset pin (0 = reset, 1 = working)
@@ -77,8 +77,24 @@ public:
 	static const int  _pin_din      = 20; // R - I2S data input (codec to cpu)
 	static const int  _pin_dout     = 21; // W - I2S data output (cpu to codec)
 
+	static const int  _nbr_buf      =  2; // Double-buffering. Do not change this value, the constant just makes the calculations meaningful
+
+	class PosIO
+	{
+	public:
+		int            _buf   = 0;
+		int            _frame = 0;
+		int            _chn   = 0;
+	};
+
 	               DPvabI2sDma ();
 	virtual        ~DPvabI2sDma ();
+
+	// Debugging functions
+	PosIO          get_dma_pos () const;
+	uint32_t       get_pcm_status () const;
+	std::array <std::array <int32_t, _block_size * _nbr_chn>, _nbr_buf>
+	               dump_buf_in () const;
 
 
 
@@ -103,7 +119,8 @@ private:
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufFltAlign;
 
 	static const int  _block_size_a = (_block_size + 3) & ~3; // Aligned block size
-	static const int  _nbr_buf      = 2; // Double-buffering. Do not change this value, the constant just makes clear the calculations
+	static const int64_t _nsleep_ovrhd_min =  6'000; // Minimum overhead for nanosleep(), in ns
+	static const int64_t _nsleep_ovrhd_max = 50'000; // Maximum overhead for nanosleep(), in ns
 
 	enum Dir
 	{
@@ -112,13 +129,13 @@ private:
 		Dir_NBR_ELT
 	};
 
-	// Number of samples written in advance in the I2S TX queue. >= 1
-	// After initial filling, we sync on the RX queue (it should be always
+	// Number of sample frames written in advance in the I2S TX queue. >= 1
+	// After initial filling, we sync on the RX queue (we try to keep it always
 	// empty) and write the same number of read samples on the TX queue.
-	static const int  _prefill      = 4;
+	static const int  _prefill = 10;
 	static_assert (
-		((_prefill % _nbr_chn) == 0),
-		"_prefill should be a multiple of the number of channels."
+		_prefill * _nbr_chn <= 64,
+		"Prefill should fit in the TX FIFO."
 	);
 
 	enum State
@@ -134,8 +151,9 @@ private:
 	void           build_dma_ctrl_block_list ();
 	void           process_block (int buf_idx);
 	inline void    write_reg (uint8_t reg, uint8_t val);
-	inline std::array <int, 2>
-	               get_dma_pos () const;
+
+	static double  read_rt_ratio ();
+	static int     read_value_from_file (long long &val, const char *filename_0);
 
 	uint32_t       _periph_base_addr;   // Virtual base address for the peripherals
 	hw::MmapPtr    _pcm_mptr;           // Virtual base address for the PCM registers
@@ -164,6 +182,9 @@ private:
 	hw::MmapPtr    _dma_reg;
 	std::array <uint32_t, _nbr_buf> // Physical address of the DMA block for the beginning of each buffer
 	               _dma_buf_beg_arr;
+
+	int64_t        _spl_dur_ns;     // Duration of a sample frame, in ns
+	int64_t        _min_dur_ns;     // Minimum time we have to give back to the system per block, in ns. This value is not used at the moment.
 
 
 
