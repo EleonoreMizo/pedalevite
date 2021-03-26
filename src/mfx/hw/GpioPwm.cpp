@@ -224,7 +224,6 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	assert (periph_base_addr != 0);
 	assert (index >= 0);
 
-	DmaCtrlBlock * cb0_ptr     = &_dma.use_cb (0);
 	uint32_t *     sample_ptr  = _dma.use_buf <uint32_t> ();
 
 	// Reset complete per-sample gpio mask to 0
@@ -233,51 +232,52 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	// For each sample we add 2 control blocks:
 	// - first: clear gpio and jump to second
 	// - second: jump to next CB
-	DmaCtrlBlock * cb_ptr = cb0_ptr;
 	for (int i = 0; i < int (_nbr_samples); ++ i)
 	{
-		cb_ptr->_info   =
-			  bcm2837dma::_no_wide_b
+		DmaCtrlBlock & cb0 = _dma.use_cb (i * _nbr_blk_per_spl);
+		cb0._info   =
+		     bcm2837dma::_no_wide_b
 			| bcm2837dma::_wait_resp;
-		cb_ptr->_src    = _dma.virt_to_phys (sample_ptr + i);  // src contains mask of which gpios need change at this sample
-		cb_ptr->_dst    = _bus_gpclr0; // set each sample to clear set gpios by default
-		cb_ptr->_length = 4;
-		cb_ptr->_stride = 0;
-		cb_ptr->_next   = _dma.virt_to_phys (cb_ptr + 1);
-		memset (cb_ptr->_pad, 0, sizeof (cb_ptr->_pad));
-		++ cb_ptr;
+		cb0._src    = _dma.virt_to_phys (sample_ptr + i);  // src contains mask of which gpios need change at this sample
+		cb0._dst    = _bus_gpclr0; // set each sample to clear set gpios by default
+		cb0._length = 4;
+		cb0._stride = 0;
+		memset (cb0._pad, 0, sizeof (cb0._pad));
+
+		cb0._next   =
+			_dma.virt_to_phys (&_dma.use_cb (i * _nbr_blk_per_spl + 1));
 
 		// Delay
-		cb_ptr->_info   =
-			  bcm2837dma::_no_wide_b
+		DmaCtrlBlock & cb1 = _dma.use_cb (i * _nbr_blk_per_spl + 1);
+		cb1._info   =
+		     bcm2837dma::_no_wide_b
 			| bcm2837dma::_wait_resp
 			| bcm2837dma::_dest_dreq
 			| (bcm2837dma::Dreq_PWM << bcm2837dma::_permap);
-		cb_ptr->_src    = _dma.virt_to_phys (sample_ptr); // Any data will do
-		cb_ptr->_dst    = _bus_fifo_adr;
-		cb_ptr->_length = 4;
-		cb_ptr->_stride = 0;
-		cb_ptr->_next   = _dma.virt_to_phys (cb_ptr + 1);
-		memset (cb_ptr->_pad, 0, sizeof (cb_ptr->_pad));
-		++ cb_ptr;
+		cb1._src    = _dma.virt_to_phys (sample_ptr); // Any data will do
+		cb1._dst    = _bus_fifo_adr;
+		cb1._length = 4;
+		cb1._stride = 0;
+		memset (cb1._pad, 0, sizeof (cb1._pad));
+
+		// The last control block links back to the first (= endless loop)
+		cb1._next   = _dma.virt_to_phys (
+			&_dma.use_cb (((i + 1) % _nbr_samples) * _nbr_blk_per_spl)
+		);
 	}
 
-	// The last control block links back to the first (= endless loop)
-	-- cb_ptr;
-	cb_ptr->_next = _dma.virt_to_phys (cb0_ptr);
-
-	// Initialize the DMA channel 0 (p46, 47)
+	// Initialize the DMA channel (p46, 47)
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
 		bcm2837dma::_reset;
 	::delayMicroseconds (10);
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
 		bcm2837dma::_int | bcm2837dma::_end;
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_conblk_ad) =
-		_dma.virt_to_phys (cb0_ptr);
+		_dma.virt_to_phys (&_dma.use_cb (0));
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_debug    ) =
 		bcm2837dma::_all_errors; // Clears errors
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
-		  bcm2837dma::_waitfow
+	     bcm2837dma::_waitfow
 		| (8 << bcm2837dma::_panic_prio)
 		| (8 << bcm2837dma::_priority)
 		| bcm2837dma::_active;
@@ -305,7 +305,7 @@ void	GpioPwm::Channel::clear ()
 	// First we have to stop all currently enabled pulses
 	for (int i = 0; i < int (_nbr_samples); ++i)
 	{
-		cb_ptr [i * 2]._dst = _bus_gpclr0;
+		cb_ptr [i * _nbr_blk_per_spl]._dst = _bus_gpclr0;
 	}
 
 	// Let DMA do one cycle to actually clear them
@@ -367,13 +367,13 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 		{
 			// Enable or disable gpio at this point in the cycle
 			d_ptr [pos] |= 1 << gpio;
-			cb_ptr [pos * 2]._dst = _bus_gpset0;
+			cb_ptr [pos * _nbr_blk_per_spl]._dst = _bus_gpset0;
 		}
 		else
 		{
 			if ((d_ptr [pos] & (1 << gpio)) != 0)
 			{
-				state_flag = (cb_ptr [pos * 2]._dst == _bus_gpset0);
+				state_flag = (cb_ptr [pos * _nbr_blk_per_spl]._dst == _bus_gpset0);
 			}
 			d_ptr [pos] &= ~(1 << gpio);  // Set just this gpio's bit to 0
 		}
@@ -389,7 +389,7 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 	if (width < int (_nbr_samples) && ! state_flag)
 	{
 		d_ptr [pos] |= 1 << gpio;
-		cb_ptr [pos * 2]._dst = _bus_gpclr0;
+		cb_ptr [pos * _nbr_blk_per_spl]._dst = _bus_gpclr0;
 	}
 }
 
@@ -416,20 +416,20 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 		if (i == 0 && width > 0)
 		{
 			// Enable or disable gpio at this point in the cycle
-			cb_ptr [pos * 2]._dst = _bus_gpset0;
+			cb_ptr [pos * _nbr_blk_per_spl]._dst = _bus_gpset0;
 			d_ptr [pos] |= 1 << gpio;
 		}
 		else if (i == width && width > 0)
 		{
 			// Clear GPIO at end
-			cb_ptr [pos * 2]._dst = _bus_gpclr0;
+			cb_ptr [pos * _nbr_blk_per_spl]._dst = _bus_gpclr0;
 			d_ptr [pos] |= 1 << gpio;
 		}
 		else if (i > width)
 		{
 			if ((d_ptr [pos] & (1 << gpio)) != 0)
 			{
-				cb_ptr [pos * 2]._dst = _bus_gpclr0;
+				cb_ptr [pos * _nbr_blk_per_spl]._dst = _bus_gpclr0;
 			}
 		}
 		else
@@ -555,7 +555,7 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 			}
 		}
 
-		cb_ptr [pos * 2]._dst = set_or_clear;
+		cb_ptr [pos * _nbr_blk_per_spl]._dst = set_or_clear;
 
 		// Next sample
 		if (! pulse_slot_end_flag)
@@ -593,7 +593,7 @@ int	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool 
 
 	const int      dir   = fwd_flag ? 1 : -1;
 	const uint32_t avoid = up_flag ? _bus_gpclr0 : _bus_gpset0;
-	while (   cb_ptr [pos * 2]._dst == avoid
+	while (   cb_ptr [pos * _nbr_blk_per_spl]._dst == avoid
 		    && (d_ptr [pos] & ~(1 << gpio)) != 0)
 	{
 		pos += dir;

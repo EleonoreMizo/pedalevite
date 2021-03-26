@@ -24,6 +24,10 @@ using tag 0x00060001 ("Get DMA channels") with mbox_property(), a private
 function from mailbox.c. See also:
 https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
 
+0-6: standard DMA
+7-10: DMA lite
+11-14: DMA4
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
