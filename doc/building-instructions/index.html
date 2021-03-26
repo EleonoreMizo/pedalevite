@@ -1444,7 +1444,8 @@ case "$1" in
 	mount -o remount,rw /opt/pedalevite/
         echo "Starting Pedale Vite..."
         /opt/pedalevite/bin/pedalevite &
-        echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor > /dev/null
+        echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null
         systemctl stop getty@tty1.service
         ;;
     stop)
@@ -1646,6 +1647,18 @@ nameserver 80.67.169.40</pre>
 <p>Redémarrer la machine ou seulement les services adéquats.</p>
 <p><strong>Note importante&#8239;:</strong> il peut être nécessaire de refaire cette
 opération après une mise à jour du système.</p>
+
+<h5>Le son clique ou les canaux s’inversent régulièrement</h5>
+
+<p>Il s’agit probablement d’un problème lié à la répartition du temps pour les
+threads temps-réels.
+Enter les commandes suivantes et examiner leur résultat&#8239;:</p>
+<pre class="term">cat /proc/sys/kernel/sched_rt_period_us
+cat /proc/sys/kernel/sched_rt_runtime_us</pre>
+<p>La valeur de <code>runtime<code> devrait être égale à celle de
+<code>period</code>, ou alors <code>-1</code>.
+Si ce n’est pas le cas, exécuter la commande suivante&#8239;:</p>
+<pre class="term">echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null</pre>
 
 <h3><a id="source-code"></a>Code source</h3>
 
@@ -1896,6 +1909,12 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r9, 2021-03-26</b></p>
+<ul>
+<li>jouts dans la section des diagnostics concernant la fraction de temps
+attribuée aux threads temps-réels.</li>
+</ul>
 
 <p><b>r8, 2020-10-02</b></p>
 <ul>

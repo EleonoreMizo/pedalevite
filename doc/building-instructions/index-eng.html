@@ -1299,7 +1299,8 @@ case "$1" in
 	mount -o remount,rw /opt/pedalevite/
         echo "Starting Pedale Vite..."
         /opt/pedalevite/bin/pedalevite &
-        echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor > /dev/null
+        echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null
         systemctl stop getty@tty1.service
         ;;
     stop)
@@ -1483,7 +1484,16 @@ nameserver 1.1.1.1
 nameserver 1.0.0.1</pre>
 <p>Reboot or restart the services.</p>
 
+<h5>The audio clicks or channels are swapped very frequently</h5>
 
+<p>This is likely a scheduling issue with real-time threads.
+Type the following commands and check the results&#8239;:</p>
+<pre class="term">cat /proc/sys/kernel/sched_rt_period_us
+cat /proc/sys/kernel/sched_rt_runtime_us</pre>
+<p>The <code>runtime<code> value should be equal to the <code>period</code>,
+or <code>-1</code>.
+If this is not the case, type the following&#8239;:</p>
+<pre class="term">echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null</pre>
 
 <h3><a id="source-code"></a>Source code</h3>
 
@@ -1709,6 +1719,12 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r9, 2021-03-26</b></p>
+<ul>
+<li>More troubleshooting with the time slices allocated to real-time
+threads.</li>
+</ul>
 
 <p><b>r8, 2020-10-02</b></p>
 <ul>
