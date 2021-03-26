@@ -97,7 +97,7 @@
 	#elif (MAIN_API == MAIN_API_MANUAL)
 		#include "mfx/adrv/DManual.h"
 	#elif (MAIN_API == MAIN_API_PVAB)
-		#include "mfx/adrv/DPvabI2s.h"
+		#include "mfx/adrv/DPvabI2sDma.h"
 	#else
 		#error Wrong MAIN_API value
 	#endif // MAIN_API
@@ -840,7 +840,7 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 #elif (MAIN_API == MAIN_API_MANUAL)
 	mfx::adrv::DManual   snd_drv;
 #elif (MAIN_API == MAIN_API_PVAB)
-	mfx::adrv::DPvabI2s  snd_drv;
+	mfx::adrv::DPvabI2sDma  snd_drv;
 #else
 	#error
 #endif
