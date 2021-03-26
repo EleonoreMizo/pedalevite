@@ -335,12 +335,9 @@ void	DPvabI2s::main_loop ()
 	// Writes a few samples in advance
 	// Less samples = shorter latency
 	// More samples = better protection against thread interruptions
-	for (int k = 0; k < _prefill; ++k)
+	for (int k = 0; k < _prefill * _nbr_chn; ++k)
 	{
-		for (int chn = 0; chn < _nbr_chn; ++chn)
-		{
-			_pcm_mptr.at (_fifo_a) = 0;
-		}
+		_pcm_mptr.at (_fifo_a) = 0;
 	}
 
 	// Start

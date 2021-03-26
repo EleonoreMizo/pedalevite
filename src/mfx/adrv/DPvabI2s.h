@@ -102,13 +102,13 @@ private:
 
 	static const int  _block_size_a = (_block_size + 3) & ~3; // Aligned block size
 
-	// Number of samples written in advance in the I2S TX queue. >= 1
-	// After initial filling, we sync on the RX queue (it should be always
+	// Number of sample frames written in advance in the I2S TX queue. >= 1
+	// After initial filling, we sync on the RX queue (we try to keep it always
 	// empty) and write the same number of read samples on the TX queue.
-	static const int  _prefill      = 4;
+	static const int  _prefill = 4;
 	static_assert (
-		((_prefill % _nbr_chn) == 0),
-		"_prefill should be a multiple of the number of channels."
+		_prefill * _nbr_chn <= 64,
+		"Prefill should fit in the TX FIFO."
 	);
 
 	enum State
