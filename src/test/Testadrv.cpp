@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 #if fstb_SYS == fstb_SYS_WIN
 	#include "mfx/adrv/DAsio.h"
 	#define Testadrv_DRV_T mfx::adrv::DAsio
@@ -32,6 +33,9 @@ http://www.wtfpl.net/ for more details.
 	constexpr int Testadrv_chn_idx_o = 0;
 #elif fstb_SYS == fstb_SYS_LINUX
 	#include "mfx/adrv/DPvabI2sDma.h"
+	#include "mfx/hw/bcm2837dma.h"
+	#include "mfx/hw/bcm2837pcm.h"
+	#include "mfx/hw/ThreadLinux.h"
 	#define Testadrv_DRV_T mfx::adrv::DPvabI2sDma
 	constexpr int Testadrv_chn_idx_i = 0;
 	constexpr int Testadrv_chn_idx_o = 0;
@@ -40,12 +44,19 @@ http://www.wtfpl.net/ for more details.
 #endif
 #include "test/Testadrv.h"
 
+#if fstb_SYS == fstb_SYS_LINUX
+	#include <sys/time.h>
+#endif
+
+#include <array>
 #include <algorithm>
 #include <chrono>
 #include <thread>
 
 #include <cassert>
+#include <cstdint>
 #include <cstdio>
+#include <ctime>
 
 
 
@@ -62,6 +73,19 @@ int	Testadrv::perform_test ()
 	printf ("Testing " Testadrv_PRINT_MACRO (Testadrv_DRV_T) "...\n");
 #undef Testadrv_PRINT_MACRO
 #undef Testadrv_EXPAND_MACRO
+
+#if 0 && fstb_SYS == fstb_SYS_LINUX
+	printf ("\nPreliminary test: nanosleep() resolution.\n");
+
+	std::thread nt (&test_nanosleep);
+	mfx::hw::ThreadLinux::set_priority (nt, 0, nullptr);
+	nt.join ();
+
+	printf ("\nDriver test beginning now.\n");
+#endif
+
+	// Filters out repeated errors flooding the output
+	constexpr bool filter_diarrhea_flag = false;
 
 	Testadrv_DRV_T snd_drv;
 	AdrvCallback   callback;
@@ -89,13 +113,75 @@ int	Testadrv::perform_test ()
 		const auto     d_max = std::chrono::duration <double> { 10.0 }; // s
 		std::chrono::duration <double> t_dif = t_cur - t_beg;
 		int            dropout_count = 0;
+#if 1 && fstb_SYS == fstb_SYS_LINUX
+		int            pcmerr_count  = 0;
+#endif
 		while (! callback.is_exit_requested () && t_dif < d_max)
 		{
+#if 0 && fstb_SYS == fstb_SYS_LINUX
+			const auto     dma_pos = snd_drv.get_dma_pos ();
+			printf ("DMA: buf %d, spl %3d\n", dma_pos._buf, dma_pos._frame);
+#endif
+
+#if 1 && fstb_SYS == fstb_SYS_LINUX
+			const auto     cs_a    = snd_drv.get_pcm_status ();
+			using namespace mfx::hw::bcm2837pcm;
+			const bool     rxerr_flag = ((cs_a & _cs_a_rxerr) != 0);
+			const bool     txerr_flag = ((cs_a & _cs_a_txerr) != 0);
+			if (rxerr_flag || txerr_flag)
+			{
+				const bool     rxd = ((cs_a & _cs_a_rxd) != 0);
+				const bool     txd = ((cs_a & _cs_a_txd) != 0);
+				const bool     rxr = ((cs_a & _cs_a_rxr) != 0);
+				const bool     txw = ((cs_a & _cs_a_txw) != 0);
+				++ pcmerr_count;
+				if (! filter_diarrhea_flag || fstb::is_pow_2 (pcmerr_count))
+				{
+					printf (
+						"PCM errors: %s %s %d %s %s %s %s\n",
+						rxerr_flag ? "RX" : "  ",
+						txerr_flag ? "TX" : "  ",
+						pcmerr_count,
+						rxd ? "rxd" : "   ",
+						txd ? "txd" : "   ",
+						rxr ? "rxr" : "   ",
+						txw ? "txw" : "   "
+					);
+
+#if 0
+					const int buf_proc_cnt = snd_drv.get_buf_proc_cnt ();
+					printf ("Buffers processed: %d\n", buf_proc_cnt);
+
+					const auto content = snd_drv.dump_buf_in ();
+					for (const auto &buf : content)
+					{
+						for (int frame_idx = 0; frame_idx < snd_drv._block_size; ++frame_idx)
+						{
+							for (int chn_idx = 0; chn_idx < snd_drv._nbr_chn; ++chn_idx)
+							{
+								const int      pos =
+									frame_idx * snd_drv._nbr_chn + chn_idx;
+								const auto     spl = buf [pos];
+								printf ("%06X ", spl & 0xFFFFFF);
+							}
+							printf ("  ");
+						}
+						printf ("\n");
+					}
+#endif
+				}
+			}
+#endif // fstb_SYS_LINUX
+
 			if (callback.check_dropout ())
 			{
 				++ dropout_count;
-				printf ("Dropout! %d\n", dropout_count);
+				if (! filter_diarrhea_flag || fstb::is_pow_2 (dropout_count))
+				{
+					printf ("Dropout! %d\n", dropout_count);
+				}
 			}
+
 			std::this_thread::sleep_for (std::chrono::milliseconds { 1 });
 			t_cur = clk.now ();
 			t_dif = t_cur - t_beg;
@@ -161,6 +247,48 @@ void	Testadrv::AdrvCallback::do_notify_dropout ()
 void	Testadrv::AdrvCallback::do_request_exit ()
 {
 	_request_exit_flag.store (true);
+}
+
+
+
+void	Testadrv::test_nanosleep ()
+{
+#if fstb_SYS == fstb_SYS_LINUX
+	constexpr std::array <uint64_t, 7> us_tgt_arr {
+		1, 25, 50, 75, 100, 150, 200
+	};
+	for (auto us_tgt : us_tgt_arr)
+	{
+		uint64_t  us_max = 0;
+		uint64_t  us_min = UINT64_MAX;
+		uint64_t  us_sum = 0;
+		timespec slp;
+		slp.tv_sec  = 0;
+		slp.tv_nsec = us_tgt * 1000;
+		const uint64_t nbr_iter = 10'000'000 / (us_tgt + 6); // About 10 s per test
+		for (uint64_t iter_cnt = 0; iter_cnt < nbr_iter; ++iter_cnt)
+		{
+			timeval t_beg;
+			gettimeofday (&t_beg, nullptr);
+
+			nanosleep (&slp, nullptr);
+
+			timeval t_end;
+			gettimeofday (&t_end, nullptr);
+
+			const uint64_t us_dif = (t_end.tv_sec - t_beg.tv_sec) * 1'000'000 + t_end.tv_usec - t_beg.tv_usec;
+			us_sum += us_dif;
+			us_min  = std::min (us_min, us_dif);
+			us_max  = std::max (us_max, us_dif);
+		}
+		const uint64_t us_avg = (us_sum + (nbr_iter >> 1)) / nbr_iter;
+
+		printf (
+			"Target: %5lld, avg: %5lld, min: %5lld, max: %5lld\n",
+			us_tgt, us_avg, us_min, us_max
+		);
+	}
+#endif
 }
 
 

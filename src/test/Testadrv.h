@@ -69,6 +69,9 @@ private:
 		               _dropout_flag { false };
 	};
 
+	static void    test_nanosleep ();
+
+
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
