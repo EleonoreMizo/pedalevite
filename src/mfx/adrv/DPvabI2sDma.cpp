@@ -220,7 +220,7 @@ int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface 
 	const double   spl_dur_ns   = 1e9 / sample_freq;
 	_spl_dur_ns = fstb::round_int64 (spl_dur_ns);
 	const double   block_dur_ns = 1e9 * _block_size / sample_freq;
-	_min_dur_ns = fstb::round_int64 ((1 - rt_ratio) * block_dur_us);
+	_min_dur_ns = fstb::round_int64 ((1 - rt_ratio) * block_dur_ns);
 
 	return 0;
 }
@@ -782,7 +782,7 @@ int	DPvabI2sDma::read_value_from_file (long long &val, const char *filename_0)
 
 	int            ret_val = 0;
 
-	FILE *         f_ptr = fstb::fopen_utf8 (filename_0);
+	FILE *         f_ptr = fstb::fopen_utf8 (filename_0, "r");
 	if (f_ptr == nullptr)
 	{
 		ret_val = -1;
