@@ -416,7 +416,7 @@ void	DPvabI2sDma::main_loop ()
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 	// The FIFO requires 2 clock cycles before being cleared.
-#if 0
+#if 1
 	// Wait for 1 ms, which should be much more than 2 clock cycles.
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
 #else
@@ -463,29 +463,31 @@ void	DPvabI2sDma::main_loop ()
 		auto           dma_pos = get_dma_pos ();
 
 		// Checks if there are sync errors
-		if (dma_pos._chn == 0)
+		// For some unknown reason L/R sync check works better when we are on
+		// chn 1
+		if (dma_pos._chn == 1)
 		{
 			uint32_t       status = _pcm_mptr.at (_cs_a);
 			if ((status & _cs_a_rxerr) != 0 || (status & _cs_a_txerr) != 0)
 			{
-				// Possible L/R sync errors, skips a frame to fix them
-				if ((status & _cs_a_rxsync) == 0)
-				{
-					// Stores the result to make sure the read will not be
-					// optimised out
-					dummy += _pcm_mptr.at (_fifo_a);
-				}
-				if ((status & _cs_a_txsync) == 0)
-				{
-					_pcm_mptr.at (_fifo_a) = 0;
-				}
-
 				_cb_ptr->notify_dropout ();
 
 				// Clears error at the PCM interface level
 				_pcm_mptr.at (_cs_a) = status_mask | _cs_a_rxerr | _cs_a_txerr;
 
 				/*** To do: maybe we should brutally restart the DMA and I2S. ***/
+			}
+
+			// Possible L/R sync errors, skips a frame to fix them
+			if ((status & _cs_a_rxsync) == 0)
+			{
+				// Stores the result to make sure the read will not be
+				// optimised out
+				dummy += _pcm_mptr.at (_fifo_a);
+			}
+			if ((status & _cs_a_txsync) == 0)
+			{
+				_pcm_mptr.at (_fifo_a) = 0;
 			}
 		}
 
@@ -748,7 +750,7 @@ double	DPvabI2sDma::read_rt_ratio ()
 {
 	double         ratio   = 1; // Default or error
 	int            ret_val = 0;
-	
+
 	long long      runtime = 0;
 	if (ret_val == 0)
 	{
