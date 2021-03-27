@@ -117,14 +117,15 @@ void	Approx::cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSim
 // x in [-1 ; 1]
 // Max error: 2.411e-8
 // Original formula
-constexpr float	Approx::sin_rbj_halfpi (float x)
+template <typename T>
+constexpr T	Approx::sin_rbj_halfpi (T x)
 {
-	const float   a  =  0.0001530302f;
-	const float   b  = -0.0046768800f;
-	const float   c  =  0.0796915849f;
-	const float   d  = -0.6459640619f;
-	const float   e  =  1.5707963268f;
-	const float   x2 = x * x;
+	constexpr T    a  = T ( 0.0001530302);
+	constexpr T    b  = T (-0.0046768800);
+	constexpr T    c  = T ( 0.0796915849);
+	constexpr T    d  = T (-0.6459640619);
+	constexpr T    e  = T ( 1.5707963268);
+	const T        x2 = x * x;
 
 	return (((((a * x2 + b) * x2 + c) * x2 + d) * x2) + e) * x;
 
@@ -176,7 +177,7 @@ ToolsSimd::VectF32	Approx::sin_rbj_pi (ToolsSimd::VectF32 x)
 // Max error: 2.411e-8
 void	Approx::sin_rbj_halfpi_pi (float &sx, float &s2x, float x)
 {
-	const auto     xv = ToolsSimd::set_2f32 (x, 1 - fabs (1 - 2*x));
+	const auto     xv = ToolsSimd::set_2f32 (x, 1 - fabsf (1 - 2*x));
 	const auto     yv = sin_rbj_halfpi (xv);
 	sx  = ToolsSimd::Shift <0>::extract (yv);
 	s2x = ToolsSimd::Shift <1>::extract (yv);
@@ -187,14 +188,15 @@ void	Approx::sin_rbj_halfpi_pi (float &sx, float &s2x, float x)
 // f1(x) ~ sin (x)
 // x in [-pi ; pi]
 // Max error: 0.919e-3
-float	Approx::sin_nick (float x)
+template <typename T>
+T	Approx::sin_nick (T x)
 {
-	const float    b = float ( 4 /  fstb::PI);
-	const float    c = float (-4 / (fstb::PI * fstb::PI));
-	const float    d = 0.224008f;
+	constexpr T    b = T ( 4 /  fstb::PI);
+	constexpr T    c = T (-4 / (fstb::PI * fstb::PI));
+	constexpr T    d = 0.224008f;
 
-	const float    y = b * x + c * x * fabs (x);
-	const float    z = d * (y * fabs (y) - y) + y;
+	const T        y = b * x + c * x * std::abs (x);
+	const T        z = d * (y * std::abs (y) - y) + y;
 
 	return z;
 }
@@ -216,14 +218,15 @@ ToolsSimd::VectF32	Approx::sin_nick (ToolsSimd::VectF32 x)
 // f1(x) ~ sin (x * 2 * pi)
 // x in [-0.5 ; 0.5]
 // Max error: 0.919e-3
-float	Approx::sin_nick_2pi (float x)
+template <typename T>
+T	Approx::sin_nick_2pi (T x)
 {
-	const float    b =   8;
-	const float    c = -16;
-	const float    d =   0.224008f;
+	constexpr T    b = T (  8);
+	constexpr T    c = T (-16);
+	constexpr T    d = T (  0.224008);
 
-	const float    y = b * x + c * x * fabs (x);
-	const float    z = d * (y * fabs (y) - y) + y;
+	const float    y = b * x + c * x * std::abs (x);
+	const float    z = d * (y * std::abs (y) - y) + y;
 
 	return z;
 }
@@ -542,12 +545,13 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val)
 // below 0.01% up to pi/8
 // below 1.33% up to pi/4
 // https://www.desmos.com/calculator/6ghwlhxumj
-constexpr float	Approx::tan_taylor5 (float x)
+template <typename T>
+constexpr T	Approx::tan_taylor5 (T x)
 {
-	const float    x_2 = x * x;
-	const float    c_1 = 1;
-	const float    c_3 = 1.0f / 3;
-	const float    c_5 = 2.0f / 15;
+	const T        x_2 = x * x;
+	constexpr T    c_1 = T (1);
+	constexpr T    c_3 = T (1) / T (3);
+	constexpr T    c_5 = T (2) / T (15);
 
 	return ((c_5 * x_2 + c_3) * x_2 + c_1) * x;
 }
@@ -569,16 +573,17 @@ ToolsSimd::VectF32	Approx::tan_taylor5 (ToolsSimd::VectF32 x)
 // tan x = sin (x) / cos (x)
 //       = sin (x) / sqrt (1 - sin (x) ^ 2)
 // https://www.desmos.com/calculator/6ghwlhxumj
-float	Approx::tan_mystran (float x)
+template <typename T>
+T	Approx::tan_mystran (T x)
 {
-	const float    c1 =  1;
-	const float    c3 = -1.f / 6;
-	const float    c5 =  1.f / 120;
-	const float    c7 = -1.f / 5040;
+	constexpr T    c1 = T ( 1);
+	constexpr T    c3 = T (-1) / T (6);
+	constexpr T    c5 = T ( 1) / T (120);
+	constexpr T    c7 = T (-1) / T (5040);
 
-	const float    x2 = x * x;
-	const float    s  = (((c7 * x2 + c5) * x2 + c3) * x2 + c1) * x;
-	const float    c  = sqrt (1 - s * s);
+	const T        x2 = x * x;
+	const T        s  = (((c7 * x2 + c5) * x2 + c3) * x2 + c1) * x;
+	const T        c  = T (sqrt (1 - s * s));
 
 	return s / c;
 }
@@ -685,7 +690,7 @@ constexpr T	Approx::atan2_3th (T y, T x)
 	constexpr T    c3  = T (0.1834); // Original formula: 0.1963
 	constexpr T    c1  = - c0p - c3;
 
-	const T        ya = T (fabs (y)) + T (1e-10);
+	const T        ya = T (std::abs (y)) + T (1e-10);
 	T              c0 = T (0);
 	T              r  = T (0);
 	if (x < T (0))
@@ -745,17 +750,18 @@ ToolsSimd::VectF32	Approx::atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x
 // h3 (x) = s (x + 0.183 * x^3)
 // Max error: 3.64e-3
 // https://www.desmos.com/calculator/sjxol8khaz
-float	Approx::tanh_mystran (float x)
+template <typename T>
+T	Approx::tanh_mystran (T x)
 {
-	const float    p   = 0.183f;
+	constexpr T    p   = T (0.183);
 
 	// x <- x + 0.183 * x^3
-	float          x2 = x * x;
+	T              x2 = x * x;
 	x += x * x2 * p;
 
 	// x <- x / sqrt (1 + x^2)
 	x2 = x * x;
-	x /= sqrt (1 + x2);
+	x /= T (sqrt (T (1) + x2));
 
 	return x;
 }
@@ -782,24 +788,25 @@ ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x)
 // https://www.kvraudio.com/forum/viewtopic.php?p=7503081#p7503081
 // Max error: 3.14e-6
 // https://www.desmos.com/calculator/sjxol8khaz
-float	Approx::tanh_2dat (float x)
+template <typename T>
+T	Approx::tanh_2dat (T x)
 {
-	const float    n0      = 4.351839500e+06f;
-	const float    n1      = 5.605646250e+05f;
-	const float    n2      = 1.263485352e+04f;
-	const float    n3      = 4.751771164e+01f;
-	const float    d0      = n0;
-	const float    d1      = 2.011170000e+06f;
-	const float    d2      = 1.027901563e+05f;
-	const float    d3      = 1.009453430e+03f;
-	const float    max_val = 7.7539052963256836f;
+	constexpr T    n0      = T (4.351839500e+06);
+	constexpr T    n1      = T (5.605646250e+05);
+	constexpr T    n2      = T (1.263485352e+04);
+	constexpr T    n3      = T (4.751771164e+01);
+	constexpr T    d0      = n0;
+	constexpr T    d1      = T (2.011170000e+06);
+	constexpr T    d2      = T (1.027901563e+05);
+	constexpr T    d3      = T (1.009453430e+03);
+	constexpr T    max_val = T (7.7539052963256836);
 
-	const float    s   = x;
-	x = std::min (float (fabs (x)), max_val);
-	const float    x2  = x * x;
-	const float    xs  = (s < 0) ? -x : x;
-	float          num = (((     n3  * x2 + n2) * x2 + n1) * x2 + n0) * xs;
-	const float    den = (((x2 + d3) * x2 + d2) * x2 + d1) * x2 + d0;
+	const T        s   = x;
+	x = std::min (std::abs (x), max_val);
+	const T        x2  = x * x;
+	const T        xs  = (s < 0) ? -x : x;
+	const T        num = (((     n3  * x2 + n2) * x2 + n1) * x2 + n0) * xs;
+	const T        den = (((x2 + d3) * x2 + d2) * x2 + d1) * x2 + d0;
 
 	return num / den;
 }
@@ -848,11 +855,11 @@ T	Approx::tanh_andy (T x)
 {
 	x = fstb::limit (x, T (-4), T (+4));
 
-	const T        n3 = T (0.0812081221471);
-	const T        n1 = T (1);
-	const T        d4 = T (0.00624523306500);
-	const T        d2 = T (0.412523749044);
-	const T        d0 = T (1);
+	constexpr T    n3  = T (0.0812081221471);
+	constexpr T    n1  = T (1);
+	constexpr T    d4  = T (0.00624523306500);
+	constexpr T    d2  = T (0.412523749044);
+	constexpr T    d0  = T (1);
 
 	const T        x2  = x * x;
 	const T        num = (n3 * x2 + n1) * x;

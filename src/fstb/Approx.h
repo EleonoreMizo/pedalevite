@@ -51,8 +51,9 @@ public:
 	               cos_rbj (ToolsSimd::VectF32 x);
 	static inline void
 	               cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x);
-	static inline constexpr float
-	               sin_rbj_halfpi (float x);
+	template <typename T>
+	static inline constexpr T
+	               sin_rbj_halfpi (T x);
 	static inline ToolsSimd::VectF32
 	               sin_rbj_halfpi (ToolsSimd::VectF32 x);
 	static inline ToolsSimd::VectF32
@@ -60,12 +61,14 @@ public:
 	static inline void
 	               sin_rbj_halfpi_pi (float &sx, float &s2x, float x);
 
-	static inline float
-	               sin_nick (float x);
+	template <typename T>
+	static inline T
+	               sin_nick (T x);
 	static inline ToolsSimd::VectF32
 	               sin_nick (ToolsSimd::VectF32 x);
-	static inline float
-	               sin_nick_2pi (float x);
+	template <typename T>
+	static inline T
+	               sin_nick_2pi (T x);
 	static inline ToolsSimd::VectF32
 	               sin_nick_2pi (ToolsSimd::VectF32 x);
 
@@ -91,12 +94,14 @@ public:
 	static inline uint32_t
 	               fast_partial_exp2_int_16_to_int_32_4th (int val);
 
-	static inline constexpr float
-	               tan_taylor5 (float x);
+	template <typename T>
+	static inline constexpr T
+	               tan_taylor5 (T x);
 	static inline ToolsSimd::VectF32
 	               tan_taylor5 (ToolsSimd::VectF32 x);
-	static inline float
-	               tan_mystran (float x);
+	template <typename T>
+	static inline T
+	               tan_mystran (T x);
 	static inline ToolsSimd::VectF32
 	               tan_mystran (ToolsSimd::VectF32 x);
 
@@ -112,12 +117,14 @@ public:
 	static inline ToolsSimd::VectF32
 	               atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x);
 
-	static inline float
-	               tanh_mystran (float x);
+	template <typename T>
+	static inline T
+	               tanh_mystran (T x);
 	static inline ToolsSimd::VectF32
 	               tanh_mystran (ToolsSimd::VectF32 x);
-	static inline float
-	               tanh_2dat (float x);
+	template <typename T>
+	static inline T
+	               tanh_2dat (T x);
 	static inline ToolsSimd::VectF32
 	               tanh_2dat (ToolsSimd::VectF32 x);
 	template <typename T>
