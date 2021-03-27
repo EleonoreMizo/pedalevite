@@ -202,8 +202,6 @@ public:
 	               _thread_spi;
 #endif // fstb_SYS_LINUX
 	const int      _tuner_subspl  = 4;
-	std::vector <float, fstb::AllocAlign <float, 16 > >
-	               _buf_alig;
 
 	// Audio engine
 	mfx::ProcessingContext
@@ -303,7 +301,6 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
 #if (fstb_SYS == fstb_SYS_LINUX)
 ,	_thread_spi (std::chrono::milliseconds (10))
 #endif // fstb_SYS_LINUX
-,	_buf_alig (4096 * 4)
 ,	_proc_ctx ()
 ,	_queue_input_to_gui ()
 ,	_queue_input_to_cmd ()
