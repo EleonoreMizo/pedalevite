@@ -54,6 +54,7 @@ http://www.wtfpl.net/ for more details.
 #include <thread>
 
 #include <cassert>
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <ctime>
@@ -254,6 +255,8 @@ void	Testadrv::AdrvCallback::do_request_exit ()
 void	Testadrv::test_nanosleep ()
 {
 #if fstb_SYS == fstb_SYS_LINUX
+	const int nbr_sec = 300;
+	printf ("Please wait, %d seconds per test series. Time results in microseconds.\n", nbr_sec);
 	constexpr std::array <uint64_t, 7> us_tgt_arr {
 		1, 25, 50, 75, 100, 150, 200
 	};
@@ -262,30 +265,43 @@ void	Testadrv::test_nanosleep ()
 		uint64_t  us_max = 0;
 		uint64_t  us_min = UINT64_MAX;
 		uint64_t  us_sum = 0;
+		uint64_t  us_sum2 = 0;
 		timespec slp;
 		slp.tv_sec  = 0;
 		slp.tv_nsec = us_tgt * 1000;
-		const uint64_t nbr_iter = 10'000'000 / (us_tgt + 6); // About 10 s per test
-		for (uint64_t iter_cnt = 0; iter_cnt < nbr_iter; ++iter_cnt)
+		timeval t_ref;
+		timeval t_end;
+		gettimeofday (&t_ref, nullptr);
+		uint64_t nbr_iter = 0;
+		do
 		{
-			timeval t_beg;
-			gettimeofday (&t_beg, nullptr);
+			constexpr int nbr_iter_one_loop = 10000;
+			for (int iter_cnt = 0; iter_cnt < nbr_iter_one_loop; ++iter_cnt)
+			{
+				timeval t_beg;
+				gettimeofday (&t_beg, nullptr);
 
-			nanosleep (&slp, nullptr);
+				nanosleep (&slp, nullptr);
 
-			timeval t_end;
-			gettimeofday (&t_end, nullptr);
+				gettimeofday (&t_end, nullptr);
 
-			const uint64_t us_dif = (t_end.tv_sec - t_beg.tv_sec) * 1'000'000 + t_end.tv_usec - t_beg.tv_usec;
-			us_sum += us_dif;
-			us_min  = std::min (us_min, us_dif);
-			us_max  = std::max (us_max, us_dif);
+				const uint64_t us_dif = (t_end.tv_sec - t_beg.tv_sec) * 1'000'000 + t_end.tv_usec - t_beg.tv_usec;
+				us_sum  += us_dif;
+				us_sum2 += us_dif * us_dif;
+				us_min   = std::min (us_min, us_dif);
+				us_max   = std::max (us_max, us_dif);
+			}
+			nbr_iter += nbr_iter_one_loop;
 		}
-		const uint64_t us_avg = (us_sum + (nbr_iter >> 1)) / nbr_iter;
+		while (t_end.tv_sec - t_ref.tv_sec < nbr_sec);
+
+		const double us_avg = double (us_sum) / double (nbr_iter);
+		const double us_dev = sqrt (double (us_sum2) / double (nbr_iter) - us_avg * us_avg);
+		const double us_dif = us_avg - double (us_tgt);
 
 		printf (
-			"Target: %5lld, avg: %5lld, min: %5lld, max: %5lld\n",
-			us_tgt, us_avg, us_min, us_max
+			"Target: %4lld, avg: %6.1f, min: %4lld, max: %4lld, stddev: %5.1f, ovrhd: %5.1f\n",
+			us_tgt, us_avg, us_min, us_max, us_dev, us_dif
 		);
 	}
 #endif
