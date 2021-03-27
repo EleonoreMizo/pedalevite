@@ -3,7 +3,10 @@
         DPvabI2sDma.h
         Author: Laurent de Soras, 2019
 
-PCM/I2S interface in DMA mode
+PCM/I2S interface in DMA mode, but without interrupts.
+This driver specifically targets the Pedale Vite audio board, using a
+Cirrus Logic CS4272 codec and a custom master clock providing 44.1 and 48 kHz
+sampling rates.
 
 --- Legal stuff ---
 
@@ -60,24 +63,64 @@ class DPvabI2sDma final
 
 public:
 
-	static const int  _nbr_chn      =  2;
-	static const int  _bits_per_chn = 32; // Transmitted bits (meaningful + padding)
-	static const int  _resol        = 24; // Number of meaningful bits.
-	static const int  _transfer_lag =  1; // I2S data is one clock cycle after the LRCLK edge. >= 0
-	static const int  _block_size   = 64; // Buffer size in samples, for processing
-	static const int  _fs_code      =  1; // Sampling rate: 0 = 48 kHz, 1 = 44.1 kHz
-	static const int  _i2c_addr     = 0x10 + 0;
-	static const int  _dma_chn      =  8; // DMA channel. 8 is a DMA lite, which is enough
+	// Number of input and output channels. We don't actually support anything
+	// but stereo streams.
+	static constexpr int _nbr_chn      =  2;
 
+	// Number of meaningful bits per sample
+	static constexpr int _resol        = 24;
+
+	// Transmitted bits per sample in I2S frames (meaningful + padding)
+	static constexpr int _bits_per_chn = 32;
+
+	// I2S data is one clock cycle after the LRCLK edge. >= 0
+	static constexpr int _transfer_lag =  1;
+
+	// Buffer size in samples, for processing. Could be set as a variable
+	// instead of a constant.
+	static constexpr int _block_size   = 64;
+
+	// Custom setting of sampling rate: 0 = 48 kHz, 1 = 44.1 kHz
+	static constexpr int _fs_code      =  1;
+
+	// I2C address to drive the CS4272 codec
+	static constexpr int _i2c_addr     = 0x10 + 0;
+
+	// DMA channel. 8 is a DMA lite, which is enough
+	static constexpr int _dma_chn      =  8;
+
+	// Double-buffering. Do not change this value, the constant just makes the
+	// calculations meaningful.
+	static constexpr int _nbr_buf      =  2;
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// GPIO pins (BCM numbering, not WiringPi)
-	static const int  _pin_rst      =  5; // W - Reset pin (0 = reset, 1 = working)
-	static const int  _pin_freq     =  6; // W - Frequency selection (0 = 48 kHz, 1 = 44.1 kHz)
-	static const int  _pin_bclk     = 18; // R - I2S bit clock
-	static const int  _pin_lrck     = 19; // R - I2S word selection (0 = L, 1 = R)
-	static const int  _pin_din      = 20; // R - I2S data input (codec to cpu)
-	static const int  _pin_dout     = 21; // W - I2S data output (cpu to codec)
 
-	static const int  _nbr_buf      =  2; // Double-buffering. Do not change this value, the constant just makes the calculations meaningful
+	// W - Reset pin (0 = reset, 1 = working)
+	static constexpr int _pin_rst      =  5;
+
+	// W - Sampling rate selection (see _fs_code)
+	static constexpr int _pin_freq     =  6;
+
+	// R - I2S bit clock
+	static constexpr int _pin_bclk     = 18;
+
+	// R - I2S word selection (0 = L, 1 = R)
+	static constexpr int _pin_lrck     = 19;
+
+	// R - I2S data input (codec to CPU)
+	static constexpr int _pin_din      = 20;
+
+	// W - I2S data output (CPU to codec)
+	static constexpr int _pin_dout     = 21;
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+	               DPvabI2sDma ();
+	virtual        ~DPvabI2sDma ();
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Debugging stuff
 
 	class PosIO
 	{
@@ -87,14 +130,14 @@ public:
 		int            _chn   = 0;
 	};
 
-	               DPvabI2sDma ();
-	virtual        ~DPvabI2sDma ();
+	typedef std::array <
+		std::array <int32_t, _block_size * _nbr_chn>,
+		_nbr_buf
+	> BufferDump;
 
-	// Debugging functions
 	PosIO          get_dma_pos () const;
 	uint32_t       get_pcm_status () const;
-	std::array <std::array <int32_t, _block_size * _nbr_chn>, _nbr_buf>
-	               dump_buf_in () const;
+	BufferDump     dump_buf_in () const;
 
 
 
@@ -118,9 +161,14 @@ private:
 	typedef int32_t SplType;
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufFltAlign;
 
-	static const int  _block_size_a = (_block_size + 3) & ~3; // Aligned block size
-	static const int64_t _nsleep_ovrhd_min =  6'000; // Minimum overhead for nanosleep(), in ns
-	static const int64_t _nsleep_ovrhd_max = 50'000; // Maximum overhead for nanosleep(), in ns
+	static constexpr int _block_size_a = (_block_size + 3) & ~3; // Aligned block size
+
+	// Overhead for nanosleep(), in ns. This is a result from tests.
+	// The maximum is much higher, especially as we don't run on a RT kernel,
+	// but the important thing here is the averge value + standard deviation,
+	// because the positive deviation from a block may be recovered with the
+	// next blocks.
+	static constexpr int64_t   _nsleep_ovrhd_avg = 63'000;
 
 	enum Dir
 	{
@@ -132,11 +180,7 @@ private:
 	// Number of sample frames written in advance in the I2S TX queue. >= 1
 	// After initial filling, we sync on the RX queue (we try to keep it always
 	// empty) and write the same number of read samples on the TX queue.
-	static const int  _prefill = 10;
-	static_assert (
-		_prefill * _nbr_chn <= 64,
-		"Prefill should fit in the TX FIFO."
-	);
+	static constexpr int _prefill = 1;
 
 	enum State
 	{
@@ -155,23 +199,45 @@ private:
 	static double  read_rt_ratio ();
 	static int     read_value_from_file (long long &val, const char *filename_0);
 
-	uint32_t       _periph_base_addr;   // Virtual base address for the peripherals
-	hw::MmapPtr    _pcm_mptr;           // Virtual base address for the PCM registers
+	// Virtual base address for the peripherals
+	uint32_t       _periph_base_addr;
+
+	// Virtual base address for the PCM registers
+	hw::MmapPtr    _pcm_mptr;
+
+	// Virtual base address for the DMA registers
+	hw::MmapPtr    _dma_reg;
+
+	// Object to read and write the GPIO pins
 	hw::GpioAccess _gpio;
+
+	// Handle on I2C communications
 	int            _i2c_hnd;
-	CbInterface *  _cb_ptr;       // 0 = not set
+
+	// Audio processing callback. 0 = not set
+	CbInterface *  _cb_ptr;
+
+	// Current state of the driver
 	State          _state;
 
-	std::atomic <bool>            // Main loop is required to exit ASAP.
+	// Main loop is required to exit ASAP.
+	std::atomic <bool>
 	               _exit_flag;
-	int            _cur_buf;      // Current buffer for I2S transfer, 0 or 1. The other buffer is for processing
-	SplType *      _buf_int_i_ptr; // Double input buffer (interleaved stereo), integer data. 0 = not set
-	SplType *      _buf_int_o_ptr; // Double output buffer (interleaved stereo), integer data. 0 = not set
-	BufFltAlign    _buf_flt_i;    // Input buffer (soundchip to software processing), dual mono
-	BufFltAlign    _buf_flt_o;    // Output buffer (software processing to soundchip), dual mono
+
+	// Current buffer for I2S transfer, 0 or 1. The other buffer is for processing
+	int            _cur_buf;
+
+	// Double input and output buffers (interleaved stereo), integer data.
+	// 0 = not set
+	SplType *      _buf_int_i_ptr;
+	SplType *      _buf_int_o_ptr;
+
+	// Input and output buffer (soundchip to software processing), dual mono
+	BufFltAlign    _buf_flt_i;
+	BufFltAlign    _buf_flt_o;
+
+	// Processing thread, running at a real-time priority
 	std::thread    _thread_main;
-	std::condition_variable
-	               _blk_proc_cv;
 
 	// Control blocks for the DMA and integer buffers for sample input/output
 	// The buffer (extra-bytes) layout is: In_0, In_1, Out_0, Out_1.
@@ -179,12 +245,19 @@ private:
 	// sample frames
 	std::unique_ptr <hw::RPiDmaBlocks>
 	               _dma_uptr;
-	hw::MmapPtr    _dma_reg;
-	std::array <uint32_t, _nbr_buf> // Physical address of the DMA block for the beginning of each buffer
+
+	// Physical address of the DMA block for the beginning of each buffer.
+	// This helps to find where we are when the DMA is running.
+	std::array <uint32_t, _nbr_buf>
 	               _dma_buf_beg_arr;
 
-	int64_t        _spl_dur_ns;     // Duration of a sample frame, in ns
-	int64_t        _min_dur_ns;     // Minimum time we have to give back to the system per block, in ns. This value is not used at the moment.
+	// Duration of a sample frame, in ns. We use it to calculate how long we
+	// can sleep before the next block.
+	int64_t        _spl_dur_ns;
+
+	// Minimum time we have to give back to the system per block, in ns.
+	// This value is not used at the moment.
+	int64_t        _min_dur_ns;
 
 
 

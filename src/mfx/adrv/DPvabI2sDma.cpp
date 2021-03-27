@@ -74,8 +74,12 @@ DPvabI2sDma::DPvabI2sDma ()
 ,	_pcm_mptr (
 		_periph_base_addr + hw::bcm2837pcm::_pcm_ofs,
 		hw::bcm2837pcm::_pcm_len,
-		"/dev/mem",
-		O_RDWR | O_SYNC
+		"/dev/mem", O_RDWR | O_SYNC
+	)
+,	_dma_reg (
+		_periph_base_addr + hw::bcm2837dma::_dma_ofs,
+		_dma_chn * hw::bcm2837dma::_dma_chn_inc + hw::bcm2837dma::_dma_chn_len,
+		"/dev/mem", O_RDWR | O_SYNC
 	)
 ,	_gpio ()
 ,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
@@ -89,11 +93,6 @@ DPvabI2sDma::DPvabI2sDma ()
 ,	_buf_flt_o (_block_size_a * _nbr_chn)
 ,	_thread_main ()
 ,	_dma_uptr ()
-,	_dma_reg (
-		_periph_base_addr + hw::bcm2837dma::_dma_ofs,
-		_dma_chn * hw::bcm2837dma::_dma_chn_inc + hw::bcm2837dma::_dma_chn_len,
-		"/dev/mem", O_RDWR | O_SYNC
-	)
 ,	_dma_buf_beg_arr {}
 ,	_spl_dur_ns (0)
 ,	_min_dur_ns (0)
@@ -117,7 +116,7 @@ DPvabI2sDma::~DPvabI2sDma ()
 
 
 
-// Returns: buffer index, frame position, channel
+// Call this only when the driver is running
 DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const
 {
 	using namespace hw::bcm2837dma;
@@ -137,7 +136,8 @@ DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const
 	const int      offset   = cur_adr - beg_adr;
 
 	// Finds the frame index
-	const int      frame_sz = sizeof (hw::bcm2837dma::CtrlBlock) * _nbr_chn * Dir_NBR_ELT;
+	const int      frame_sz =
+		sizeof (hw::bcm2837dma::CtrlBlock) * _nbr_chn * Dir_NBR_ELT;
 	const int      spl_idx  = offset / frame_sz;
 
 	// Channel index
@@ -148,6 +148,7 @@ DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const
 
 
 
+// Call this only when the driver is running
 uint32_t	DPvabI2sDma::get_pcm_status () const
 {
 	return _pcm_mptr.at (hw::bcm2837pcm::_cs_a);
@@ -155,9 +156,10 @@ uint32_t	DPvabI2sDma::get_pcm_status () const
 
 
 
-std::array <std::array <int32_t, DPvabI2sDma::_block_size * DPvabI2sDma::_nbr_chn>, DPvabI2sDma::_nbr_buf>	DPvabI2sDma::dump_buf_in () const
+// Call this only when the driver is running
+DPvabI2sDma::BufferDump	DPvabI2sDma::dump_buf_in () const
 {
-	std::array <std::array <int32_t, DPvabI2sDma::_block_size * DPvabI2sDma::_nbr_chn>, DPvabI2sDma::_nbr_buf> content;
+	BufferDump     content;
 	for (int buf_idx = 0; buf_idx < _nbr_buf; ++buf_idx)
 	{
 		const SplType * src_ptr = _buf_int_i_ptr + _block_size_a * buf_idx;
@@ -427,6 +429,10 @@ void	DPvabI2sDma::main_loop ()
 	// Writes a few samples in advance
 	// Less samples = shorter latency
 	// More samples = better protection against thread interruptions
+	static_assert (
+		_prefill * _nbr_chn <= _fifo_len,
+		"Prefill should fit in the TX FIFO."
+	);
 	for (int k = 0; k < _prefill * _nbr_chn; ++k)
 	{
 		_pcm_mptr.at (_fifo_a) = 0;
@@ -463,19 +469,24 @@ void	DPvabI2sDma::main_loop ()
 		auto           dma_pos = get_dma_pos ();
 
 		// Checks if there are sync errors
-		// For some unknown reason L/R sync check works better when we are on
-		// chn 1
+		// For some unknown reason the L/R sync check works better when the DMA
+		// is on channel 1
+		bool           syncerr_flag = false;
 		if (dma_pos._chn == 1)
 		{
-			uint32_t       status = _pcm_mptr.at (_cs_a);
+			uint32_t       status       = _pcm_mptr.at (_cs_a);
 			if ((status & _cs_a_rxerr) != 0 || (status & _cs_a_txerr) != 0)
 			{
-				_cb_ptr->notify_dropout ();
+				syncerr_flag = true;
 
 				// Clears error at the PCM interface level
 				_pcm_mptr.at (_cs_a) = status_mask | _cs_a_rxerr | _cs_a_txerr;
 
-				/*** To do: maybe we should brutally restart the DMA and I2S. ***/
+				/***
+				To do: maybe we should brutally restart the DMA and I2S?
+				The driver seems to recover gracefully anyway once the CPU load
+				burst is over.
+				***/
 			}
 
 			// Possible L/R sync errors, skips a frame to fix them
@@ -484,20 +495,28 @@ void	DPvabI2sDma::main_loop ()
 				// Stores the result to make sure the read will not be
 				// optimised out
 				dummy += _pcm_mptr.at (_fifo_a);
+				syncerr_flag = true;
 			}
 			if ((status & _cs_a_txsync) == 0)
 			{
 				_pcm_mptr.at (_fifo_a) = 0;
+				syncerr_flag = true;
 			}
 		}
 
 		if (dma_pos._buf != _cur_buf)
 		{
 			// We're already in another buffer
-			_cb_ptr->notify_dropout ();
+			syncerr_flag = true;
 
 			// Makes it the current buffer
 			_cur_buf = dma_pos._buf;
+		}
+
+		// Notifies the host that there was an error
+		if (syncerr_flag)
+		{
+			_cb_ptr->notify_dropout ();
 		}
 
 		// The scheduler only gives a fraction of 1 s periods to the real-time
@@ -513,7 +532,7 @@ void	DPvabI2sDma::main_loop ()
 
 		// We won't sleep more than the amount of time that may make us miss
 		// the ideal start for the next block
-		const int64_t  sleep_ns = rem_time_ns - _nsleep_ovrhd_max;
+		const int64_t  sleep_ns = rem_time_ns - _nsleep_ovrhd_avg;
 
 		if (sleep_ns > 0)
 		{
@@ -546,8 +565,9 @@ void	DPvabI2sDma::main_loop ()
 
 
 // Builds the DMA control block list.
-// Each single block reads or write a pair of (stereo) samples.
-// We interleave read and write blocks for each sample frame index.
+// Each single block reads or write a single (mono) samples.
+// We interleave read and write for each sample of a stereo pair, it seems
+// that's the best way to keep everything in sync.
 // Sample data input and output buffers should be ready before the call.
 void	DPvabI2sDma::build_dma_ctrl_block_list ()
 {

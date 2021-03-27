@@ -136,6 +136,8 @@ static const uint32_t   _gray_flush       = 1 <<  2; // Flush the RX Buffer into
 static const uint32_t   _gray_clr         = 1 <<  1; // Clear the GRAY Mode Logic
 static const uint32_t   _gray_en          = 1 <<  0; // Enable GRAY Mode
 
+// Misc
+static const int        _fifo_len = 64; // TX and RX FIFO size in 32-bit words
 
 
 }  // namespace bcm2837pcm
