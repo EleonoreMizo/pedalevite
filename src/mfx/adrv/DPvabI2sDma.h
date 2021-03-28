@@ -206,7 +206,7 @@ private:
 	hw::MmapPtr    _pcm_mptr;
 
 	// Virtual base address for the DMA registers
-	hw::MmapPtr    _dma_reg;
+	hw::MmapPtr    _dma_mptr;
 
 	// Object to read and write the GPIO pins
 	hw::GpioAccess _gpio;

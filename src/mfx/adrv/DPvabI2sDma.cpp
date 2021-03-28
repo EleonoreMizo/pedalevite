@@ -76,7 +76,7 @@ DPvabI2sDma::DPvabI2sDma ()
 		hw::bcm2837pcm::_pcm_len,
 		"/dev/mem", O_RDWR | O_SYNC
 	)
-,	_dma_reg (
+,	_dma_mptr (
 		_periph_base_addr + hw::bcm2837dma::_dma_ofs,
 		_dma_chn * hw::bcm2837dma::_dma_chn_inc + hw::bcm2837dma::_dma_chn_len,
 		"/dev/mem", O_RDWR | O_SYNC
@@ -122,7 +122,7 @@ DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const
 	using namespace hw::bcm2837dma;
 
 	const int      dma_base = _dma_chn * _dma_chn_inc;
-	const uint32_t cur_adr  = _dma_reg.at (dma_base + _conblk_ad);
+	const uint32_t cur_adr  = _dma_mptr.at (dma_base + _conblk_ad);
 
 	// Finds the buffer index
 	int            buf_idx = _nbr_buf;
@@ -409,9 +409,9 @@ void	DPvabI2sDma::main_loop ()
 
 	build_dma_ctrl_block_list ();
 
-	_dma_reg.at (_enable) = _dma_reg.at (_enable) | (1 << _dma_chn);
+	_dma_mptr.at (_enable) = _dma_mptr.at (_enable) | (1 << _dma_chn);
 	const int      dma_base = _dma_chn * _dma_chn_inc;
-	_dma_reg.at (dma_base + _cs) = _reset;
+	_dma_mptr.at (dma_base + _cs) = _reset;
 	// We should probably wait a few us here but the next I2S operations
 	// have to wait too, so we do them before continuing with the DMA.
 
@@ -443,10 +443,10 @@ void	DPvabI2sDma::main_loop ()
 	// Starts the DMA
 	constexpr int  priority = 12; // 0-15
 	const auto     cb_adr   = _dma_uptr->virt_to_phys (&_dma_uptr->use_cb (0));
-	_dma_reg.at (dma_base + _cs       ) = _int | _end;
-	_dma_reg.at (dma_base + _conblk_ad) = cb_adr;
-	_dma_reg.at (dma_base + _debug    ) = _all_errors; // Clears errors
-	_dma_reg.at (dma_base + _cs       ) =
+	_dma_mptr.at (dma_base + _cs       ) = _int | _end;
+	_dma_mptr.at (dma_base + _conblk_ad) = cb_adr;
+	_dma_mptr.at (dma_base + _debug    ) = _all_errors; // Clears errors
+	_dma_mptr.at (dma_base + _cs       ) =
 		  _waitfow
 		| (priority << _panic_prio)
 		| (priority << _priority)
@@ -559,7 +559,7 @@ void	DPvabI2sDma::main_loop ()
 	_pcm_mptr.at (_cs_a) = 0 + int (dummy * 1e-300);
 
 	// Stops the DMA channel
-	_dma_reg.at (dma_base + _cs) = _abort | _reset;
+	_dma_mptr.at (dma_base + _cs) = _abort | _reset;
 }
 
 
