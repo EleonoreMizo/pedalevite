@@ -168,8 +168,8 @@ void	SplitAp5::update_filters ()
 	assert (_sample_freq > 0);
 	assert (_split_freq  > 0);
 
-	const float		x1 = _ka + _kb;
-	const float		x2 = _ka;
+	const float    x1 = _ka + _kb;
+	const float    x2 = _ka;
 
 	// Bilinear transform
 	const float    k =
