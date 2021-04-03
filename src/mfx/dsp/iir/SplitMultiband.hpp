@@ -64,6 +64,47 @@ namespace iir
 
 
 
+
+template <typename T, int O0, int O1>
+SplitMultiband <T, O0, O1>::SplitMultiband ()
+{
+	mix::Generic::setup ();
+}
+
+
+
+/*
+==============================================================================
+Name: reserve
+Description:
+	Reserves memory for a given maximum number of bands.
+	Once this function is called, set_nbr_band() should be allocation-free
+	for any specified number of bands lower or equal to this function
+	parameter.
+Input parameters:
+	- nbr_bands: Maximum number of preallocated bands, >= 2
+Throws: std::vector-related exceptions
+==============================================================================
+*/
+
+template <typename T, int O0, int O1>
+void	SplitMultiband <T, O0, O1>::reserve (int nbr_bands)
+{
+	assert (nbr_bands >= 2);
+
+	const int      nbr_split   = nbr_bands - 1;
+	const int      nbr_tmp_buf = calc_nbr_tmp_buf (nbr_bands);
+
+	_split_arr.reserve (nbr_split);
+	_comp_arr.reserve (nbr_bands * 2);
+	_buf_arr.reserve (nbr_tmp_buf);
+	_idx2ord_arr.reserve (nbr_split);
+	_node_arr.reserve (nbr_split);
+	_band_out_ptr_arr.reserve (nbr_bands);
+}
+
+
+
 /*
 ==============================================================================
 Name: set_nbr_bands
@@ -73,45 +114,33 @@ Description:
 	case the buffers a 1-sample long.
 	Important:
 	- This is a mandatory call before calling any other function.
-	- This function allocates memory so it is not RT-safe.
+	- This function allocates memory so it is not RT-safe. However it is
+		possible to preallocate memory with the reserve() function.
 Input parameters:
 	- nbr_bands: Number of bands, >= 2
 	- band_ptr_arr: array containing pointers on the output buffers for each
 		band. It should contain nbr_bands pointers.
-Throws: std::vector-related exceptions
+Throws: std::vector-related exceptions, if memory is allocated
 ==============================================================================
 */
 
 template <typename T, int O0, int O1>
 void	SplitMultiband <T, O0, O1>::set_nbr_bands (int nbr_bands, T * const band_ptr_arr [])
 {
-/*** To do:
-It is possible to make the function RT-safe with a kind of reserve() function,
-but the fact that _split_arr is a vector containing vectors makes it non-
-trivial to implement.
-***/
 	assert (nbr_bands >= 2);
 	assert (band_ptr_arr != nullptr);
 	assert (std::find (
 		band_ptr_arr, band_ptr_arr + nbr_bands, nullptr
 	) == band_ptr_arr + nbr_bands);
 
-	mix::Generic::setup ();
-
 	// Makes sure the array is filled with nullptr
 	_band_out_ptr_arr.assign (nbr_bands, nullptr);
 
 	const int      nbr_split = nbr_bands - 1;
 	_split_arr.resize (nbr_split);
+	_comp_arr.clear ();
 
-	// Depth of the split tree
-	const int      depth = fstb::get_next_pow_2 (nbr_bands);
-
-	// Number of required temporary buffers
-	// We need 2 output buffers per depth level, excepted for the last depth
-	// because the splitter outputs are the final bands.
-	// And one more buffer for temporary operations (filter input * 0.5)
-	const int      nbr_tmp_buf = _nbr_split_out * (depth - 1) + 1;
+	const int      nbr_tmp_buf = calc_nbr_tmp_buf (nbr_bands);
 	_buf_arr.resize (nbr_tmp_buf);
 
 	// Makes sure the array is filled with default-initialised data
@@ -152,7 +181,8 @@ trivial to implement.
 ==============================================================================
 Name: set_splitter_coef
 Description:
-	Sets the coefficients for the all-pass filters of a given splitter.
+	Sets the z-equation coefficients for the all-pass filters of a given
+	splitter.
 Input parameters:
 	- split_idx: splitter index, [0 ; nbr_bands-2]
 	- a0_arr: pointer on the coefficients of the first all-pass filter.
@@ -176,17 +206,11 @@ void	SplitMultiband <T, O0, O1>::set_splitter_coef (int split_idx, const T a0_ar
 	auto &         split_cur = _split_arr [split_ord];
 	split_cur._ap0.set_coefs (a0_arr);
 	split_cur._ap1.set_coefs (a1_arr);
-	for (auto &split : _split_arr)
+	for (auto &comp : _comp_arr)
 	{
-		for (auto &comp_arr : split._comp_arr)
+		if (comp._split_ord == split_ord)
 		{
-			for (auto &comp : comp_arr)
-			{
-				if (comp._split_ord == split_ord)
-				{
-					comp._apf.set_coefs (a0_arr);
-				}
-			}
+			comp._apf.set_coefs (a0_arr);
 		}
 	}
 }
@@ -296,14 +320,11 @@ void	SplitMultiband <T, O0, O1>::clear_buffers () noexcept
 	{
 		split._ap0.clear_buffers ();
 		split._ap1.clear_buffers ();
+	}
 
-		for (auto &comp_arr : split._comp_arr)
-		{
-			for (auto &comp : comp_arr)
-			{
-				comp._apf.clear_buffers ();
-			}
-		}
+	for (auto &comp : _comp_arr)
+	{
+		comp._apf.clear_buffers ();
 	}
 }
 
@@ -343,13 +364,17 @@ void	SplitMultiband <T, O0, O1>::process_sample (T x) noexcept
 		auto           hi = v0 - v1;
 
 		// Phase compensation
-		for (auto &comp : split._comp_arr [0])
+		for (int k = split._comp_ref_arr [0]._beg
+		;	k < split._comp_ref_arr [0]._end
+		;	++ k)
 		{
-			lo = comp._apf.process_sample (lo);
+			lo = _comp_arr [k]._apf.process_sample (lo);
 		}
-		for (auto &comp : split._comp_arr [1])
+		for (int k = split._comp_ref_arr [1]._beg
+		;	k < split._comp_ref_arr [1]._end
+		;	++ k)
 		{
-			hi = comp._apf.process_sample (hi);
+			hi = _comp_arr [k]._apf.process_sample (hi);
 		}
 
 		*lo_ptr = lo;
@@ -396,13 +421,17 @@ void	SplitMultiband <T, O0, O1>::process_block (const T src_ptr [], int nbr_spl)
 		mix::Generic::add_sub_ip_2_2 (lo_ptr, hi_ptr, nbr_spl);
 
 		// Phase compensation
-		for (auto &comp : split._comp_arr [0])
+		for (int k = split._comp_ref_arr [0]._beg
+		;	k < split._comp_ref_arr [0]._end
+		;	++ k)
 		{
-			comp._apf.process_block (lo_ptr, lo_ptr, nbr_spl);
+			_comp_arr [k]._apf.process_block (lo_ptr, lo_ptr, nbr_spl);
 		}
-		for (auto &comp : split._comp_arr [1])
+		for (int k = split._comp_ref_arr [1]._beg
+		;	k < split._comp_ref_arr [1]._end
+		;	++ k)
 		{
-			comp._apf.process_block (hi_ptr, hi_ptr, nbr_spl);
+			_comp_arr [k]._apf.process_block (hi_ptr, hi_ptr, nbr_spl);
 		}
 	}
 }
@@ -480,11 +509,14 @@ std::vector <int>	SplitMultiband <T, O0, O1>::collect_comp_rec (int node_idx)
 		{
 			const auto    child_list = collect_comp_rec (child._idx);
 			const int     nbr_comp   = int (child_list.size ());
-			auto &        comp_arr   = split._comp_arr [1 - child_cnt];
-			comp_arr.resize (nbr_comp);
+			auto &        comp_ref   = split._comp_ref_arr [1 - child_cnt];
+			comp_ref._beg = int (_comp_arr.size ());
+			comp_ref._end = comp_ref._beg + nbr_comp;
+			_comp_arr.resize (_comp_arr.size () + nbr_comp);
 			for (int comp_cnt = 0; comp_cnt < nbr_comp; ++comp_cnt)
 			{
-				comp_arr [comp_cnt]._split_ord = child_list [comp_cnt];
+				_comp_arr [comp_ref._beg + comp_cnt]._split_ord =
+					child_list [comp_cnt];
 			}
 
 			comp_list.insert (
@@ -497,6 +529,25 @@ std::vector <int>	SplitMultiband <T, O0, O1>::collect_comp_rec (int node_idx)
 	comp_list.push_back (node._ord);
 
 	return comp_list;
+}
+
+
+
+template <typename T, int O0, int O1>
+int	SplitMultiband <T, O0, O1>::calc_nbr_tmp_buf (int nbr_bands)
+{
+	assert (nbr_bands >= 2);
+
+	// Depth of the split tree
+	const int      depth       = fstb::get_next_pow_2 (nbr_bands);
+
+	// Number of required temporary buffers
+	// We need 2 output buffers per depth level, excepted for the last depth
+	// because the splitter outputs are the final bands.
+	// And one more buffer for temporary operations (filter input * 0.5)
+	const int      nbr_tmp_buf = _nbr_split_out * (depth - 1) + 1;
+
+	return nbr_tmp_buf;
 }
 
 

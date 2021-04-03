@@ -17,6 +17,15 @@ Template parameters:
 
 - O0, O1: order of the A0 and A1 allpass filters, > 0.
 
+Basic usage:
+
+- Possibly call reserve() first to preallocate memory
+- Call set_nbr_bands()
+- Call process_sample() or process_block() to split the input signal
+
+Once split, the bands can be summed directly for equal-magnitude
+reconstruction.
+
 Reference:
 
 Alexis Favrot, Christof Faller,
@@ -85,11 +94,12 @@ public:
 	typedef T DataType;
 	typedef SplitMultiband <T, O0, O1> ThisType;
 
-	               SplitMultiband ()                       = default;
+	               SplitMultiband ();
 	               SplitMultiband (SplitMultiband &&other) = default;
 	SplitMultiband &
 	               operator = (SplitMultiband &&other)     = default;
 
+	void           reserve (int nbr_bands);
 	void           set_nbr_bands (int nbr_bands, T * const band_ptr_arr []);
 
 	void           set_splitter_coef (int split_idx, const T a0_arr [O0], const T a1_arr [O1]) noexcept;
@@ -138,13 +148,21 @@ private:
 	};
 	typedef std::vector <Comp> CompArray;
 
+	class CompRef
+	{
+	public:
+		// For a given splitter, beginning and end indexes within a CompArray
+		int            _beg = 0;
+		int            _end = 0;
+	};
+
 	class Splitter
 	{
 	public:
 		ApfChain0      _ap0;
 		ApfChain1      _ap1;
-		std::array <CompArray, _nbr_split_out>
-		               _comp_arr;
+		std::array <CompRef, _nbr_split_out>
+		               _comp_ref_arr;
 
 		// Source buffer for the splitter
 		const T *     _src_ptr = nullptr;
@@ -191,8 +209,14 @@ private:
 	std::vector <int>
 	               collect_comp_rec (int node_idx);
 
+	static int     calc_nbr_tmp_buf (int nbr_bands);
+
 	// Splitters. Sorted by processing order
 	SplitterArray  _split_arr;
+
+	// Phase compensation filters. This array is shared by all the splitters,
+	// each splitter has a reference on a specific slice.
+	CompArray      _comp_arr;
 
 	// Temporary buffers
 	BufferArray    _buf_arr;
