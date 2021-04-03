@@ -893,6 +893,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass2p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass2p.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPassCascade.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPassCascade.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4.h" />
@@ -922,6 +924,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultiband.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultiband.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpBypass.h" />

@@ -94,6 +94,7 @@
 #include "test/TestSlidingOp.h"
 #include "test/TestSmooth.h"
 #include "test/TestSplitAp5.h"
+#include "test/TestSplitMultiband.h"
 #include "test/TestSplitThiele8.h"
 #include "test/TestSvf.h"
 #include "test/TestSvfAntisat.h"
@@ -1892,6 +1893,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestSplitMultiband::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = Testadrv::perform_test ();
 #endif
 

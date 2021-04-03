@@ -470,6 +470,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/AllPass2p.cpp \
         ../../src/mfx/dsp/iir/AllPass2p.h \
         ../../src/mfx/dsp/iir/AllPass2p.hpp \
+        ../../src/mfx/dsp/iir/AllPassCascade.h \
+        ../../src/mfx/dsp/iir/AllPassCascade.hpp \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
@@ -506,6 +508,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/SplitAp5.cpp \
         ../../src/mfx/dsp/iir/SplitAp5.h \
         ../../src/mfx/dsp/iir/SplitAp5.hpp \
+        ../../src/mfx/dsp/iir/SplitMultiband.h \
+        ../../src/mfx/dsp/iir/SplitMultiband.hpp \
         ../../src/mfx/dsp/iir/SplitThiele8.cpp \
         ../../src/mfx/dsp/iir/SplitThiele8.h \
         ../../src/mfx/dsp/iir/SplitThiele8.hpp \
@@ -1804,6 +1808,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSmooth.h \
         ../../src/test/TestSplitAp5.cpp \
         ../../src/test/TestSplitAp5.h \
+        ../../src/test/TestSplitMultiband.cpp \
+        ../../src/test/TestSplitMultiband.h \
         ../../src/test/TestSplitThiele8.cpp \
         ../../src/test/TestSplitThiele8.h \
         ../../src/test/TestSvf.cpp \
