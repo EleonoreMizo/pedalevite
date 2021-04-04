@@ -43,7 +43,9 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#include "mfx/dsp/mix/Generic.h"
+#if defined (mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC)
+	#include "mfx/dsp/mix/Generic.h"
+#endif // mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC
 
 #include <algorithm>
 
@@ -68,7 +70,9 @@ namespace iir
 template <typename T, int O0, int O1>
 SplitMultiband <T, O0, O1>::SplitMultiband ()
 {
+#if defined (mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC)
 	mix::Generic::setup ();
+#endif // mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC
 }
 
 
@@ -111,11 +115,14 @@ Name: set_nbr_bands
 Description:
 	Sets the number of bands and the corresponding output buffers.
 	Output buffers are required even for single-sample processing, in which
-	case the buffers a 1-sample long.
-	Important:
+	case the buffers are 1-sample long.
+	Important notes:
 	- This is a mandatory call before calling any other function.
 	- This function allocates memory so it is not RT-safe. However it is
 		possible to preallocate memory with the reserve() function.
+	- If the number of bands is changed, there is not signal continuity.
+		You should rebuild the crossover filters with as many calls to
+		set_splitter_coef() as necessary.
 Input parameters:
 	- nbr_bands: Number of bands, >= 2
 	- band_ptr_arr: array containing pointers on the output buffers for each
@@ -133,46 +140,74 @@ void	SplitMultiband <T, O0, O1>::set_nbr_bands (int nbr_bands, T * const band_pt
 		band_ptr_arr, band_ptr_arr + nbr_bands, nullptr
 	) == band_ptr_arr + nbr_bands);
 
-	// Makes sure the array is filled with nullptr
-	_band_out_ptr_arr.assign (nbr_bands, nullptr);
-
-	const int      nbr_split = nbr_bands - 1;
-	_split_arr.resize (nbr_split);
-	_comp_arr.clear ();
-
-	const int      nbr_tmp_buf = calc_nbr_tmp_buf (nbr_bands);
-	_buf_arr.resize (nbr_tmp_buf);
-
-	// Makes sure the array is filled with default-initialised data
-	_node_arr.assign (nbr_split, Node ());
-	_idx2ord_arr.assign (nbr_split, -1);
-
-	// Initialises the tree structure. Root is index 0
-	for (int k = 1; k < nbr_split; ++k)
+	if (nbr_bands != int (_band_out_ptr_arr.size ()))
 	{
-		const int      src = (k - 1) >> 1;
-		const int      chl = (k - 1) &  1;
-		_node_arr [src]._children [chl] = SplitOut { SplitOut::Type::SPLIT, k };
+		// Makes sure the array is filled with nullptr
+		_band_out_ptr_arr.assign (nbr_bands, nullptr);
+
+		const int      nbr_split = nbr_bands - 1;
+		_split_arr.resize (nbr_split);
+		_comp_arr.clear ();
+
+		const int      nbr_tmp_buf = calc_nbr_tmp_buf (nbr_bands);
+		_buf_arr.resize (nbr_tmp_buf);
+
+		// Makes sure the array is filled with default-initialised data
+		_node_arr.assign (nbr_split, Node ());
+		_idx2ord_arr.assign (nbr_split, -1);
+
+		// Initialises the tree structure. Root is index 0
+		for (int k = 1; k < nbr_split; ++k)
+		{
+			const int      src = (k - 1) >> 1;
+			const int      chl = (k - 1) &  1;
+			_node_arr [src]._children [chl] =
+				SplitOut { SplitOut::Type::SPLIT, k };
+		}
+
+		// Finds the processing order for all the nodes and finds the
+		// output band indexes
+		int           split_ord = 0;
+		int           band_idx  = 0;
+		build_layout_rec (split_ord, band_idx, 0, 0, 0);
+		assert (split_ord == nbr_split);
+		assert (band_idx == nbr_bands);
+		assert (std::count_if (
+			_idx2ord_arr.begin (),
+			_idx2ord_arr.end (),
+			[] (int x) { return (x < 0); }
+		) == 0);
+
+		// Builds the compensation filters
+		collect_comp_rec (0);
+
+		// Sets the band output buffers
+		set_band_ptr (band_ptr_arr);
+
+		// Wipes all the filter states.
+		clear_buffers ();
 	}
+}
 
-	// Finds the processing order for all the nodes and finds the
-	// output band indexes
-	int           split_ord = 0;
-	int           band_idx  = 0;
-	build_layout_rec (split_ord, band_idx, 0, 0, 0);
-	assert (split_ord == nbr_split);
-	assert (band_idx == nbr_bands);
-	assert (std::count_if (
-		_idx2ord_arr.begin (),
-		_idx2ord_arr.end (),
-		[] (int x) { return (x < 0); }
-	) == 0);
 
-	// Builds the compensation filters
-	collect_comp_rec (0);
 
-	// Sets the band output buffers
-	set_band_ptr (band_ptr_arr);
+/*
+==============================================================================
+Name: get_nbr_bands
+Description:
+	Returns the current number of bands.
+	It must have been explicitly set before.
+Returns: The number of bands, >= 2
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename T, int O0, int O1>
+int	SplitMultiband <T, O0, O1>::get_nbr_bands () const noexcept
+{
+	assert (! _band_out_ptr_arr.empty ());
+
+	return int (_band_out_ptr_arr.size ());
 }
 
 
@@ -182,12 +217,13 @@ void	SplitMultiband <T, O0, O1>::set_nbr_bands (int nbr_bands, T * const band_pt
 Name: set_splitter_coef
 Description:
 	Sets the z-equation coefficients for the all-pass filters of a given
-	splitter.
+	crossover splitter. For consistent results, splitters should be kept sorted
+	by ascending cutoff frequencies.
 Input parameters:
 	- split_idx: splitter index, [0 ; nbr_bands-2]
 	- a0_arr: pointer on the coefficients of the first all-pass filter.
 		First come the 2nd order coefficients by pairs of { b0, b1 }, if any.
-		Then the 1st order coefficient b0, if any.
+		Then the 1st order coefficient b0, if the filter order is odd.
 	- a1_arr: pointer on the coefficients of the second all-pass filter.
 		Layout is the same as a0_arr.
 Throws: Nothing
@@ -390,8 +426,6 @@ Name: process_block
 Description:
 	Splits a block of samples into several bands. The output blocks are stored
 	in the band output buffers; make sure they are large enough.
-	Note: this function seems slower than multiple process_sample() calls with
-	companion offset_band_ptr().
 Input parameters:
 	- src_ptr: Pointer on the input samples.
 	- nbr_spl: Number of samples to process, > 0.
@@ -406,34 +440,68 @@ void	SplitMultiband <T, O0, O1>::process_block (const T src_ptr [], int nbr_spl)
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	_split_arr [0]._src_ptr = src_ptr;
+#if defined (mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC)
+
+	// Slow version kept for reference
 	auto           tmp_ptr  = _buf_arr.back ().data ();
-
-	for (auto &split : _split_arr)
+	int            pos      = 0;
+	do
 	{
-		auto           lo_ptr  = split._dst_ptr_arr [0];
-		auto           hi_ptr  = split._dst_ptr_arr [1];
+		const int      work_len = std::min (nbr_spl - pos, _max_buf_size);
+		_split_arr [0]._src_ptr = src_ptr + pos;
 
-		// Band splitting
-		mix::Generic::copy_1_1_v (tmp_ptr, split._src_ptr, nbr_spl, 0.5f);
-		split._ap0.process_block (lo_ptr, tmp_ptr, nbr_spl);
-		split._ap1.process_block (hi_ptr, tmp_ptr, nbr_spl);
-		mix::Generic::add_sub_ip_2_2 (lo_ptr, hi_ptr, nbr_spl);
+		for (auto &split : _split_arr)
+		{
+			auto           lo_ptr  = split._dst_ptr_arr [0];
+			auto           hi_ptr  = split._dst_ptr_arr [1];
 
-		// Phase compensation
-		for (int k = split._comp_ref_arr [0]._beg
-		;	k < split._comp_ref_arr [0]._end
-		;	++ k)
-		{
-			_comp_arr [k]._apf.process_block (lo_ptr, lo_ptr, nbr_spl);
+			// Band splitting
+			mix::Generic::copy_1_1_v (tmp_ptr, split._src_ptr, work_len, 0.5f);
+			split._ap0.process_block (lo_ptr, tmp_ptr, work_len);
+			split._ap1.process_block (hi_ptr, tmp_ptr, work_len);
+			mix::Generic::add_sub_ip_2_2 (lo_ptr, hi_ptr, work_len);
+
+			// Phase compensation
+			for (int k = split._comp_ref_arr [0]._beg
+			;	k < split._comp_ref_arr [0]._end
+			;	++ k)
+			{
+				_comp_arr [k]._apf.process_block (lo_ptr, lo_ptr, work_len);
+			}
+			for (int k = split._comp_ref_arr [1]._beg
+			;	k < split._comp_ref_arr [1]._end
+			;	++ k)
+			{
+				_comp_arr [k]._apf.process_block (hi_ptr, hi_ptr, work_len);
+			}
 		}
-		for (int k = split._comp_ref_arr [1]._beg
-		;	k < split._comp_ref_arr [1]._end
-		;	++ k)
+
+		// Next sub-block
+		const int      pos_next = pos + work_len;
+		if (pos_next < nbr_spl)
 		{
-			_comp_arr [k]._apf.process_block (hi_ptr, hi_ptr, nbr_spl);
+			offset_band_ptr (work_len);
 		}
+		else if (nbr_spl > _max_buf_size && pos > 0)
+		{
+			offset_band_ptr (-pos);
+		}
+		pos = pos_next;
 	}
+	while (pos < nbr_spl);
+
+#else // mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC
+
+	// This version is actually faster than the true block processing
+	process_sample (src_ptr [0]);
+	for (int pos = 1; pos < nbr_spl; ++pos)
+	{
+		offset_band_ptr (1);
+		process_sample (src_ptr [pos]);
+	}
+	offset_band_ptr (1 - nbr_spl);
+
+#endif // mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC
 }
 
 

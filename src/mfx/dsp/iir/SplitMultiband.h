@@ -19,9 +19,12 @@ Template parameters:
 
 Basic usage:
 
-- Possibly call reserve() first to preallocate memory
-- Call set_nbr_bands()
-- Call process_sample() or process_block() to split the input signal
+1. Setup
+	- Possibly call reserve() first to preallocate memory
+	- Call set_nbr_bands() to set the number of bands
+	- Call set_splitter_coef() to configure the crossover filters
+2. Processing
+	- Call process_sample() or process_block() to split the input signal
 
 Once split, the bands can be summed directly for equal-magnitude
 reconstruction.
@@ -72,6 +75,12 @@ http://www.wtfpl.net/ for more details.
 
 
 
+// True block processing is actually disabled because it is slower than
+// multiple sample processing.
+#undef mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC
+
+
+
 namespace mfx
 {
 namespace dsp
@@ -101,11 +110,12 @@ public:
 
 	void           reserve (int nbr_bands);
 	void           set_nbr_bands (int nbr_bands, T * const band_ptr_arr []);
+	inline int     get_nbr_bands () const noexcept;
 
 	void           set_splitter_coef (int split_idx, const T a0_arr [O0], const T a1_arr [O1]) noexcept;
 	void           set_band_ptr_one (int band_idx, T *out_ptr) noexcept;
 	void           set_band_ptr (T * const band_ptr_arr []) noexcept;
-	void           offset_band_ptr (ptrdiff_t offset) noexcept;
+	inline void    offset_band_ptr (ptrdiff_t offset) noexcept;
 
 	void           clear_buffers () noexcept;
 	inline void    process_sample (T x) noexcept;
@@ -123,8 +133,12 @@ protected:
 
 private:
 
-	// Internal buffer size for block processing
+	// Internal buffer size for block processing, in samples. > 0
+#if defined (mfx_dsp_iir_SplitMultiband_TRUE_BLOCK_PROC)
 	static constexpr int _max_buf_size  = 64;
+#else
+	static constexpr int _max_buf_size  = 1;
+#endif
 
 	// Number of output for each splitter (convenience constant)
 	static constexpr int _nbr_split_out = 2;
