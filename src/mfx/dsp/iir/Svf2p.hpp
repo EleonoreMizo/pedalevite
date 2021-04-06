@@ -162,6 +162,59 @@ float	Svf2p::get_v2m () const
 
 
 
+/*
+H(s) = (b2 * s^2 + b1 * s + b0) / (s^2 * a2  + s * a1      + 1)
+     = (b2 * s^2 + b1 * s + b0) / (s^2 / f^2 + s * (f * q) + 1)
+
+f = sqrt (1 / a2)
+q = sqrt (a2) / a1
+
+low  =               v2
+band =          v1
+high = v0 - k * v1 - v2
+
+result = v0 * v0m + v1 * v1m  + v2 * v2m
+
+result = b0 * low + b1 * f * band + b2 * high
+		 = b0 * v2 +  b1 * f * v1   + b2 * (v0 - k * v1 - v2)
+		 = v0 * b2 + v1 * (b1 * f - k * b2) + v2 * (b0 - b2)
+v0m = b2
+v1m = b1 * f - k * b2
+v2m = b0 - b2
+*/
+
+template <typename TE>
+void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const TE b [3], const TE a [3], double freq, double fs)
+{
+	assert (b != nullptr);
+	assert (a != nullptr);
+	assert (a [0] != 0);
+	assert (freq > 0);
+	assert (fs > 0);
+	assert (freq < 0.5 * fs);
+
+	// Normalizes to make a0 = 1
+	const double      a0i = 1.0 / a [0];
+
+	const double      a1 = a [1] * a0i;
+	const double      a2 = a [2] * a0i;
+	const double      b0 = b [0] * a0i;
+	const double      b1 = b [1] * a0i;
+	const double      b2 = b [2] * a0i;
+
+	const double      t0 = sqrt (a2);
+	const double      f0 =  1 / t0;
+	const double      k  = a1 / t0;
+
+	conv_poles (g0, g1, g2, freq * f0 / fs, float (k));
+
+	v0m = float (                   b2);
+	v1m = float (     b1 * f0 - k * b2);
+	v2m = float (b0           -     b2);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
