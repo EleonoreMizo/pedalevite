@@ -58,7 +58,17 @@ void	DelaySimple <T>::setup (int max_dly, int max_block_len)
 
 
 template <typename T>
-void	DelaySimple <T>::set_delay (int d)
+int	DelaySimple <T>::get_max_delay () const noexcept
+{
+	assert (_max_dly > 0);
+
+	return _max_dly;
+}
+
+
+
+template <typename T>
+void	DelaySimple <T>::set_delay (int d) noexcept
 {
 	assert (d >= 0);
 	assert (d <= _max_dly);
@@ -69,7 +79,7 @@ void	DelaySimple <T>::set_delay (int d)
 
 
 template <typename T>
-T	DelaySimple <T>::read_at (int d) const
+T	DelaySimple <T>::read_at (int d) const noexcept
 {
 	assert (d >= 0);
 	assert (d <= _max_dly);
@@ -80,12 +90,11 @@ T	DelaySimple <T>::read_at (int d) const
 
 
 template <typename T>
-T	DelaySimple <T>::process_sample (T x)
+T	DelaySimple <T>::process_sample (T x) noexcept
 {
-	_buf [_pos_w] = x;
+	write_sample (x);
 	const T        y = _buf [delay (_pos_w)];
-
-	_pos_w = (_pos_w + 1) & _mask;
+	step (1);
 
 	return y;
 }
@@ -93,7 +102,15 @@ T	DelaySimple <T>::process_sample (T x)
 
 
 template <typename T>
-void	DelaySimple <T>::read_block_at (T dst_ptr [], int d, int nbr_spl) const
+void	DelaySimple <T>::write_sample (T x) noexcept
+{
+	_buf [_pos_w] = x;
+}
+
+
+
+template <typename T>
+void	DelaySimple <T>::read_block_at (T dst_ptr [], int d, int nbr_spl) const noexcept
 {
 	assert (d >= 0);
 	assert (d <= _max_dly);
@@ -115,7 +132,7 @@ void	DelaySimple <T>::read_block_at (T dst_ptr [], int d, int nbr_spl) const
 
 // Can work in-place
 template <typename T>
-void	DelaySimple <T>::process_block (T dst_ptr [], const T src_ptr [], int nbr_spl)
+void	DelaySimple <T>::process_block (T dst_ptr [], const T src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -146,35 +163,34 @@ void	DelaySimple <T>::process_block (T dst_ptr [], const T src_ptr [], int nbr_s
 
 
 template <typename T>
-void	DelaySimple <T>::push_block (const T src_ptr [], int nbr_spl)
+void	DelaySimple <T>::write_block (const T src_ptr [], int nbr_spl) noexcept
 {
-	assert (src_ptr != nullptr);
-	assert (nbr_spl > 0);
-	assert (nbr_spl <= _max_block_len);
-
-	int            pos     = 0;
-	T * const      buf_ptr = _buf.data ();
-	RingBufVectorizer rbv (_len);
-
-	for (rbv.start (nbr_spl, _pos_w)
-	;	rbv.end ()
-	;	rbv.next ())
-	{
-		const int      work_len = rbv.get_seg_len ();
-		const int      pos_w    = rbv.get_curs_pos (0);
-
-		fstb::copy_no_overlap (buf_ptr + pos_w, src_ptr + pos, work_len);
-
-		pos += work_len;
-	}
-
-	_pos_w = rbv.get_curs_pos (0);
+	write_block_internal (src_ptr, nbr_spl);
 }
 
 
 
 template <typename T>
-void	DelaySimple <T>::clear_buffers ()
+void	DelaySimple <T>::push_block (const T src_ptr [], int nbr_spl) noexcept
+{
+	_pos_w = write_block_internal (src_ptr, nbr_spl);
+}
+
+
+
+template <typename T>
+void	DelaySimple <T>::step (int nbr_spl)
+{
+	assert (nbr_spl >= 0);
+	assert (nbr_spl <= _max_block_len);
+
+	_pos_w = (_pos_w + nbr_spl) & _mask;
+}
+
+
+
+template <typename T>
+void	DelaySimple <T>::clear_buffers () noexcept
 {
 	std::fill (_buf.data (), _buf.data () + _buf.size (), DataType (0.f));
 	_pos_w = 0;
@@ -183,7 +199,7 @@ void	DelaySimple <T>::clear_buffers ()
 
 
 template <typename T>
-void	DelaySimple <T>::clear_buffers_quick ()
+void	DelaySimple <T>::clear_buffers_quick () noexcept
 {
 	if (_dly > 0)
 	{
@@ -215,9 +231,37 @@ void	DelaySimple <T>::update_buf ()
 
 
 template <typename T>
-int	DelaySimple <T>::delay (int pos) const
+int	DelaySimple <T>::delay (int pos) const noexcept
 {
 	return (pos - _dly) & _mask;
+}
+
+
+
+template <typename T>
+int	DelaySimple <T>::write_block_internal (const T src_ptr [], int nbr_spl) noexcept
+{
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= _max_block_len);
+
+	int            pos     = 0;
+	T * const      buf_ptr = _buf.data ();
+	RingBufVectorizer rbv (_len);
+
+	for (rbv.start (nbr_spl, _pos_w)
+	;	rbv.end ()
+	;	rbv.next ())
+	{
+		const int      work_len = rbv.get_seg_len ();
+		const int      pos_w    = rbv.get_curs_pos (0);
+
+		fstb::copy_no_overlap (buf_ptr + pos_w, src_ptr + pos, work_len);
+
+		pos += work_len;
+	}
+
+	return rbv.get_curs_pos (0);
 }
 
 

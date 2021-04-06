@@ -58,17 +58,25 @@ public:
 
 	// Mandatory call
 	void           setup (int max_dly, int max_block_len);
+	inline int     get_max_delay () const noexcept;
 
-	void           set_delay (int d);
+	void           set_delay (int d) noexcept;
 	fstb_FORCEINLINE T
-	               read_at (int d) const;
+	               read_at (int d) const noexcept;
 	fstb_FORCEINLINE T
-	               process_sample (T x);
-	void           read_block_at (T dst_ptr [], int d, int nbr_spl) const;
-	void           process_block (T dst_ptr [], const T src_ptr [], int nbr_spl);
-	void           push_block (const T src_ptr [], int nbr_spl);
-	void           clear_buffers ();
-	void           clear_buffers_quick ();
+	               process_sample (T x) noexcept;
+	fstb_FORCEINLINE void
+	               write_sample (T x) noexcept;
+	void           read_block_at (T dst_ptr [], int d, int nbr_spl) const noexcept;
+	void           process_block (T dst_ptr [], const T src_ptr [], int nbr_spl) noexcept;
+	fstb_FORCEINLINE void
+	               write_block (const T src_ptr [], int nbr_spl) noexcept;
+	fstb_FORCEINLINE void
+	               push_block (const T src_ptr [], int nbr_spl) noexcept;
+	fstb_FORCEINLINE void
+	               step (int nbr_spl);
+	void           clear_buffers () noexcept;
+	void           clear_buffers_quick () noexcept;
 
 
 
@@ -86,7 +94,8 @@ private:
 
 	void           update_buf ();
 	fstb_FORCEINLINE int
-	               delay (int pos) const;
+	               delay (int pos) const noexcept;
+	int            write_block_internal (const T src_ptr [], int nbr_spl) noexcept;
 
 	Buffer         _buf           = Buffer (64, 0);
 	int            _len           = 64; // Buffer length in samples, power of 2, > 0
