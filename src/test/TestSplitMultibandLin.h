@@ -46,6 +46,9 @@ protected:
 
 private:
 
+	template <class S>
+	static int     perform_test_class (const char *classname_0, const char *filename_0, int nbr_bands, bool block_flag, bool save_flag);
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

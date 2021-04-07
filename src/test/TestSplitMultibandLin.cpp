@@ -26,6 +26,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/dsp/iir/SplitMultibandLin.h"
+#include "mfx/dsp/iir/SplitMultibandLinSimd.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/FileOpWav.h"
@@ -46,7 +47,53 @@ int	TestSplitMultibandLin::perform_test ()
 {
 	int            ret_val = 0;
 
-	printf ("Testing mfx::dsp::iir::SplitMultibandLin...\n");
+	if (ret_val == 0)
+	{
+		ret_val = perform_test_class <
+			mfx::dsp::iir::SplitMultibandLin <float, 4>
+		> (
+			"mfx::dsp::iir::SplitMultibandLin",
+			"splitmultibandlin",
+			11,
+			true, // block_flag
+			true  // save_flag
+		);
+	}
+	if (ret_val == 0)
+	{
+		ret_val = perform_test_class <
+			mfx::dsp::iir::SplitMultibandLinSimd <4>
+		> (
+			"mfx::dsp::iir::SplitMultibandLinSimd",
+			"splitmultibandlinsimd",
+			11,
+			true, // block_flag
+			true  // save_flag
+		);
+	}
+
+	return ret_val;
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <class S>
+int	TestSplitMultibandLin::perform_test_class (const char *classname_0, const char *filename_0, int nbr_bands, bool block_flag, bool save_flag)
+{
+	assert (classname_0 != nullptr);
+	assert (filename_0  != nullptr);
+
+	int            ret_val = 0;
+
+	printf ("Testing %s...\n", classname_0);
 
 	mfx::dsp::mix::Generic::setup ();
 
@@ -58,16 +105,14 @@ int	TestSplitMultibandLin::perform_test ()
 	mfx::dsp::osc::SweepingSin ssin (sample_freq, 20.0, 20000.0);
 	ssin.generate (src.data (), len);
 
-	constexpr int  order     = 4;
-	constexpr int  nbr_biq   = order / 2;
-	constexpr int  nbr_onep  = order - nbr_biq * 2; // Not used actually
-	mfx::dsp::iir::SplitMultibandLin <float, order> splitter;
-	constexpr int  nbr_bands = 11;
+	S              splitter;
+	constexpr int  nbr_biq   = S::_nbr_2p;
+	constexpr int  nbr_onep  = S::_nbr_1p;
 
 	typedef std::array <float, buf_size> Buffer;
-	std::array <Buffer, nbr_bands> buf_arr;
+	std::vector <Buffer> buf_arr (nbr_bands);
 
-	std::array <float *, nbr_bands> band_ptr_arr;
+	std::vector <float *> band_ptr_arr (nbr_bands);
 	for (int k = 0; k < nbr_bands; ++k)
 	{
 		band_ptr_arr [k] = buf_arr [k].data ();
@@ -85,6 +130,7 @@ int	TestSplitMultibandLin::perform_test ()
 	const double      d1 = 0.5 * sqrt (8 + k4);
 	const float       r1 = float (sqrt (d0 + d1));
 	const float       r2 = float (sqrt (d0 - d1));
+	static_assert (nbr_biq == 2 && nbr_onep == 0, "Not implemented yet");
 	const std::array <float, (nbr_biq * 3 + nbr_onep * 2) * 2> coef_arr =
 	{
 		1, 0, float (k2), // Biq 0, num
@@ -115,7 +161,7 @@ int	TestSplitMultibandLin::perform_test ()
 	);
 
 	std::vector <float>  dst (len);
-	std::array <std::vector <float>, nbr_bands> band_dst;
+	std::vector <std::vector <float> > band_dst (nbr_bands);
 	for (auto &v : band_dst)
 	{
 		v.resize (len);
@@ -125,7 +171,19 @@ int	TestSplitMultibandLin::perform_test ()
 	do
 	{
 		const int      nbr_spl = std::min (len - pos, buf_size);
-		splitter.process_block (&src [pos], nbr_spl);
+		if (block_flag)
+		{
+			splitter.process_block (&src [pos], nbr_spl);
+		}
+		else
+		{
+			for (int k = 0; k < nbr_spl; ++k)
+			{
+				splitter.process_sample (src [pos + k]);
+				splitter.offset_band_ptr (1);
+			}
+			splitter.offset_band_ptr (-nbr_spl);
+		}
 		for (int band_cnt = 0; band_cnt < nbr_bands; ++band_cnt)
 		{
 			mfx::dsp::mix::Generic::mix_1_1 (
@@ -136,7 +194,7 @@ int	TestSplitMultibandLin::perform_test ()
 		pos += nbr_spl;
 	}
 	while (pos < len);
-
+	
 	mfx::dsp::mix::Generic::copy_1_1 (dst.data (), band_dst [0].data(), len);
 	for (int band_cnt = 1; band_cnt < nbr_bands; ++band_cnt)
 	{
@@ -145,14 +203,20 @@ int	TestSplitMultibandLin::perform_test ()
 		);
 	}
 
-	mfx::FileOpWav::save ("results/splitmultibandlin-sum.wav", dst, sample_freq, 0.5f);
-	for (int band_cnt = 0; band_cnt < nbr_bands; ++band_cnt)
+	if (save_flag)
 	{
-		char           filename_0 [1023+1];
-		fstb::snprintf4all (filename_0, sizeof (filename_0),
-			"results/splitmultibandlin-%02d.wav", band_cnt
+		char           pathname_0 [1023+1];
+		fstb::snprintf4all (pathname_0, sizeof (pathname_0),
+			"results/%s-sum.wav", filename_0
 		);
-		mfx::FileOpWav::save (filename_0, band_dst [band_cnt], sample_freq, 0.5f);
+		mfx::FileOpWav::save (pathname_0, dst, sample_freq, 0.5f);
+		for (int band_cnt = 0; band_cnt < nbr_bands; ++band_cnt)
+		{
+			fstb::snprintf4all (pathname_0, sizeof (pathname_0),
+				"results/%s-%02d.wav", filename_0, band_cnt
+			);
+			mfx::FileOpWav::save (pathname_0, band_dst [band_cnt], sample_freq, 0.5f);
+		}
 	}
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -163,23 +227,31 @@ int	TestSplitMultibandLin::perform_test ()
 
 	tim.start ();
 	pos = 0;
-	do
+	if (block_flag)
 	{
-#if 1
-		const int      nbr_spl = std::min (len - pos, buf_size);
-		splitter.process_block (&src [pos], nbr_spl);
-		pos += nbr_spl;
-#else
-		// Processing samples is faster
-		splitter.process_sample (src [pos]);
-		splitter.offset_band_ptr (1);
-		++ pos;
-		splitter.process_sample (src [pos]);
-		splitter.offset_band_ptr (-1);
-		++ pos;
-#endif
+		do
+		{
+			const int      nbr_spl = std::min (len - pos, buf_size);
+			splitter.process_block (&src [pos], nbr_spl);
+			pos += nbr_spl;
+		}
+		while (pos < len);
 	}
-	while (pos < len);
+	else
+	{
+		assert ((len & 1) == 0);
+		do
+		{
+			// Processing samples is faster
+			splitter.process_sample (src [pos]);
+			splitter.offset_band_ptr (1);
+			++ pos;
+			splitter.process_sample (src [pos]);
+			splitter.offset_band_ptr (-1);
+			++ pos;
+		}
+		while (pos < len);
+	}
 	tim.stop ();
 
 	// Makes sure the results are not optimized out by the compiler
@@ -198,14 +270,6 @@ int	TestSplitMultibandLin::perform_test ()
 
 	return ret_val;
 }
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

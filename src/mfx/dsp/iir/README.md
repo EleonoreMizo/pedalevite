@@ -18,6 +18,7 @@
 - **`OnePole`**: Direct Form 2 implementation of 1st order filter.
 - **`SplitAp5`**: 5th-order crossover filter using complementary pairs of all-pass filters.
 - **`SplitMultiband`**: Filterbank with equal-magnitude reconstruction using complementary pairs of all-pass filters (any order, variable number of bands).
+- **`SplitMultibandLin*`**: Filterbank with perfect phase-linear reconstruction using IIR filters.
 - **`SplitThiele8`**: Linkwitz-Riley or Thiele 8th-order crossover filter.
 - **`SqueezerSimd`**: 4-pole Moog low-pass filter emulation with optional, custom dirt. **`SqueezerOpDefect`** (radical shaping and polarity inversion) can be used for this purpose.
 - **`Svf2p`**: class to design SVFs from basic parameters or s-plane equations
