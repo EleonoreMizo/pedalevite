@@ -38,7 +38,7 @@ namespace iir
 
 
 
-class alignas (16) Biquad4SimdData
+class Biquad4SimdData
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

@@ -168,7 +168,7 @@ private:
 	void				process_block_serial_immediate_pre (const float in_ptr []);
 	void				process_block_2x2_immediate_pre (const float in_ptr []);
 
-	Biquad4SimdData
+	alignas (16) Biquad4SimdData
 	               _data;
 
 
