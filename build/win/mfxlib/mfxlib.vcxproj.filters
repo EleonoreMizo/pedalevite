@@ -5067,6 +5067,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLin.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole4Simd.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole4Simd.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole4SimdData.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

@@ -505,6 +505,9 @@ commonsrc = \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
+        ../../src/mfx/dsp/iir/OnePole4Simd.h \
+        ../../src/mfx/dsp/iir/OnePole4Simd.hpp \
+        ../../src/mfx/dsp/iir/OnePole4SimdData.h \
         ../../src/mfx/dsp/iir/SplitAp5.cpp \
         ../../src/mfx/dsp/iir/SplitAp5.h \
         ../../src/mfx/dsp/iir/SplitAp5.hpp \

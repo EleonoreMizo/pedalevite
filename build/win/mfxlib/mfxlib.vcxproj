@@ -922,6 +922,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Lpf1p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole4Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole4Simd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole4SimdData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultiband.h" />
