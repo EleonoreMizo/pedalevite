@@ -9,9 +9,9 @@ In ---+----------------------> LPF0 -----+----------> Band 0, low
       |                                        v -
       +---> Delay D0-D1 -----> LPF1 -----+--->(+)--->
       |                                  |   +
-		:                                  :
-		:                                  :
-		:                                  :
+      :                                  :
+      :                                  :
+      :                                  :
       |                                  `-----.
       |                                        v -
       +---> Delay D0-Dn-2 ---> LPFn-2 ---+--->(+)--->
@@ -480,9 +480,7 @@ void	SplitMultibandLin <T, O>::process_sample (T x) noexcept
 	assert (_sample_freq > 0);
 	assert (! _band_arr.empty ());
 
-	const int      nbr_bands = get_nbr_bands ();
 	const int      nbr_split = int (_split_arr.size ());
-	assert (nbr_bands == nbr_split + 1);
 
 	_delay.write_sample (x);
 
@@ -548,9 +546,7 @@ void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) n
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	const int      nbr_bands = get_nbr_bands ();
 	const int      nbr_split = int (_split_arr.size ());
-	assert (nbr_bands == nbr_split + 1);
 
 	int            pos = 0;
 	do
@@ -682,7 +678,7 @@ void	SplitMultibandLin <T, O>::update_single_splitter (int split_idx)
 		// Group delay at DC
 		// Eq. 22 with bilinear frequency prewarping
 		split._freq_warp = T (TransSZBilin::prewarp_freq (f, _sample_freq));
-		split._dly_comp  = T (split._b1 / (2 * split._freq_warp));
+		split._dly_comp  = split._b1 / (2 * split._freq_warp);
 		split._dly_comp *= 1 + split._dly_ofs;
 
 		split._dly_int   = fstb::round_int (float (split._dly_comp));
@@ -694,10 +690,7 @@ void	SplitMultibandLin <T, O>::update_single_splitter (int split_idx)
 		// Evaluates the actual cutoff frequency corresponding to this
 		// rounded delay time
 		T              ratio = 1;
-		if (split._dly_int > 0)
-		{
-			ratio = split._dly_comp / split._dly_int;
-		}
+		ratio = split._dly_comp / split._dly_int;
 		split._freq_act = split._freq_warp * ratio;
 
 		// Produces the z-plane coefficients using the bilinear transform
@@ -764,7 +757,7 @@ void	SplitMultibandLin <T, O>::update_post ()
 // - Assumes a0 == 1 and aN == 1
 // f0_pi_fs = f0 * pi / fs
 template <typename T, int O>
-void	SplitMultibandLin <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs)
+void	SplitMultibandLin <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs) noexcept
 {
 	assert (fstb::is_eq (eq_s._a [0], T (1)));
 	assert (fstb::is_eq (eq_s._a [2], T (1)));
@@ -802,7 +795,7 @@ void	SplitMultibandLin <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_p
 
 
 template <typename T, int O>
-void	SplitMultibandLin <T, O>::bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs)
+void	SplitMultibandLin <T, O>::bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs) noexcept
 {
 	assert (fstb::is_eq (eq_s._a [0], T (1)));
 	assert (fstb::is_eq (eq_s._a [1], T (1)));

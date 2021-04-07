@@ -216,8 +216,8 @@ private:
 	void           update_single_splitter (int split_idx);
 	void           update_post ();
 
-	void           bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs);
-	void           bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs);
+	void           bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs) noexcept;
+	void           bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs) noexcept;
 
 	// Sampling frequency, Hz, > 0. 0 = not set
 	T              _sample_freq = 0;
