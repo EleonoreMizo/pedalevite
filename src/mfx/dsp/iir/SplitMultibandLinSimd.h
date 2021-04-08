@@ -218,9 +218,10 @@ private:
 	// Maximum delay time, s
 	static const double  _max_dly_time;
 
-	void           update_all ();
-	void           update_single_splitter (int split_idx);
-	void           update_post ();
+	void           update_all () noexcept;
+	bool           update_single_splitter (int split_idx) noexcept;
+	void           update_xover_coefs (int split_idx) noexcept;
+	void           update_post () noexcept;
 
 	void           bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, float f0_pi_fs) noexcept;
 	void           bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, float f0_pi_fs) noexcept;

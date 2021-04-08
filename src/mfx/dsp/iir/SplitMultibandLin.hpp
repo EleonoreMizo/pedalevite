@@ -42,6 +42,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/def.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/mix/Fpu.h"
 #include "mfx/dsp/mix/Generic.h"
 
 #include <algorithm>
@@ -125,6 +126,7 @@ void	SplitMultibandLin <T, O>::reserve (int nbr_bands)
 	const int      nbr_split = nbr_bands - 1;
 	_band_arr.reserve (nbr_bands);
 	_split_arr.reserve (nbr_split);
+	_filter_arr.reserve (nbr_split);
 }
 
 
@@ -164,6 +166,7 @@ void	SplitMultibandLin <T, O>::set_nbr_bands (int nbr_bands, T * const band_ptr_
 	const int      nbr_split = nbr_bands - 1;
 	_band_arr.resize (nbr_bands);
 	_split_arr.resize (nbr_split);
+	_filter_arr.resize (nbr_split);
 
 	for (int band_idx = 0; band_idx < nbr_bands; ++band_idx)
 	{
@@ -228,11 +231,11 @@ Input parameters:
 			each group consisting of a numerator followed by a denominator:
 			{ b0, b1, b2, a0, a1, a2 }
 			The numbers are the coefficient orders.
-			a0 and a2 are expected to be 1.
+			a0 is expected to be 1.
 		- Then the coefficients for the 1st-order section, if the global filter
 			order is odd. Numerator followed by the denominator:
 			{ b0, b1, a0, a1 }
-			Here again, a0 and a1 are expected to be 1.
+			Here a0 is expected to be 1.
 		The product of the higher-order coefficients (a2 for 2nd order, a1
 		for 1st order) should also be 1 so the equation is a normalised monic
 		form, as specified in eq. 21 (Lipshitz83).
@@ -268,14 +271,18 @@ void	SplitMultibandLin <T, O>::set_splitter_coef (int split_idx, T freq, const T
 
 	// Stores the coefficients at the right places
 	int            coef_ofs = 0;
-	for (auto &filt : split._f2p_arr)
+	T              a_n      = 1;
+	for (auto &eq : split._eq_2p)
 	{
-		coef_ofs += filt._eq_s.fill_with (coef_arr + coef_ofs);
+		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
+		a_n *= eq._a [2];
 	}
-	for (auto &filt : split._f1p_arr)
+	for (auto &eq : split._eq_1p)
 	{
-		coef_ofs += filt._eq_s.fill_with (coef_arr + coef_ofs);
+		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
+		a_n *= eq._a [1];
 	}
+	assert (fstb::is_eq (a_n, T (1)));
 
 	// Computes the 1st-order coefficient for the denominator of the whole
 	// filter. This is b1 in eq. 21
@@ -289,15 +296,18 @@ void	SplitMultibandLin <T, O>::set_splitter_coef (int split_idx, T freq, const T
 			const int      order = (j == k) ? 1 : 0;
 			const T        coef  =
 				  (j < _nbr_2p)
-				? split._f2p_arr [j          ]._eq_s._a [order]
-				: split._f1p_arr [j - _nbr_2p]._eq_s._a [order];
+				? split._eq_2p [j          ]._a [order]
+				: split._eq_1p [j - _nbr_2p]._a [order];
 			prod *= coef;
 		}
 		b1 += prod;
 	}
 	split._b1 = b1;
 
-	update_single_splitter (split_idx);
+	if (update_single_splitter (split_idx))
+	{
+		update_xover_coefs (split_idx);
+	}
 	update_post ();
 }
 
@@ -447,15 +457,15 @@ template <typename T, int O>
 void	SplitMultibandLin <T, O>::clear_buffers () noexcept
 {
 	_delay.clear_buffers ();
-	for (auto &split : _split_arr)
+	for (auto &filter : _filter_arr)
 	{
-		for (auto &filter : split._f2p_arr)
+		for (auto &unit : filter._f2p_arr)
 		{
-			filter._flt.clear_buffers ();
+			unit.clear_buffers ();
 		}
-		for (auto &filter : split._f1p_arr)
+		for (auto &unit : filter._f1p_arr)
 		{
-			filter._flt.clear_buffers ();
+			unit.clear_buffers ();
 		}
 	}
 }
@@ -499,16 +509,16 @@ void	SplitMultibandLin <T, O>::process_sample (T x) noexcept
 	// Filter
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
-		Splitter &     split = _split_arr [split_idx];
-		Band &         band  = _band_arr [split_idx];
-		auto           y     = band._buf_tmp [0];
-		for (auto &filter : split._f2p_arr)
+		Filter &       filter = _filter_arr [split_idx];
+		Band &         band   = _band_arr [split_idx];
+		auto           y      = band._buf_tmp [0];
+		for (auto &unit : filter._f2p_arr)
 		{
-			y = filter._flt.process_sample (y);
+			y = unit.process_sample (y);
 		}
-		for (auto &filter : split._f1p_arr)
+		for (auto &unit : filter._f1p_arr)
 		{
-			y = filter._flt.process_sample (y);
+			y = unit.process_sample (y);
 		}
 		band._buf_tmp [0] = y;
 	}
@@ -572,17 +582,17 @@ void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) n
 		// Filter
 		for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 		{
-			Splitter &     split = _split_arr [split_idx];
-			Band &         band  = _band_arr [split_idx];
-			for (auto &filter : split._f2p_arr)
+			Filter &       filter = _filter_arr [split_idx];
+			Band &         band   = _band_arr [split_idx];
+			for (auto &unit : filter._f2p_arr)
 			{
-				filter._flt.process_block (
+				unit.process_block (
 					band._buf_tmp.data (), band._buf_tmp.data (), work_len
 				);
 			}
-			for (auto &filter : split._f1p_arr)
+			for (auto &unit : filter._f1p_arr)
 			{
-				filter._flt.process_block (
+				unit.process_block (
 					band._buf_tmp.data (), band._buf_tmp.data (), work_len
 				);
 			}
@@ -594,15 +604,15 @@ void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) n
 		);
 		for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 		{
-			const Band &   b0 = _band_arr [split_idx    ];
-			const Band &   b1 = _band_arr [split_idx + 1];
-			const float * fstb_RESTRICT   b0_ptr  = b0._buf_tmp.data ();
-			const float * fstb_RESTRICT   b1_ptr  = b1._buf_tmp.data ();
-			float * fstb_RESTRICT         out_ptr = b1._out_ptr + pos;
-			for (int k = 0; k < work_len; ++k)
-			{
-				out_ptr [k] = b1_ptr [k] - b0_ptr [k];
-			}
+			const Band &   b0      = _band_arr [split_idx    ];
+			const Band &   b1      = _band_arr [split_idx + 1];
+			const float *  b0_ptr  = b0._buf_tmp.data ();
+			const float *  b1_ptr  = b1._buf_tmp.data ();
+			float *        out_ptr = b1._out_ptr + pos;
+			mix::Fpu::vec_op_2_1 (
+				out_ptr, b1_ptr, b0_ptr, work_len,
+				[] (const auto &lhs, const auto &rhs) { return lhs - rhs; }
+			);
 		}
 
 		// Next sub-block
@@ -636,8 +646,7 @@ int	SplitMultibandLin <T, O>::FilterEq <N>::fill_with (const T coef_ptr [SplitMu
 		_b [k] = coef_ptr [    k];
 		_a [k] = coef_ptr [N + k];
 	}
-	assert (fstb::is_eq (_a [0    ], T (1)));
-	assert (fstb::is_eq (_a [N - 1], T (1)));
+	assert (fstb::is_eq (_a [0], T (1)));
 
 	return _nbr_coef;
 }
@@ -645,14 +654,17 @@ int	SplitMultibandLin <T, O>::FilterEq <N>::fill_with (const T coef_ptr [SplitMu
 
 
 template <typename T, int O>
-void	SplitMultibandLin <T, O>::update_all ()
+void	SplitMultibandLin <T, O>::update_all () noexcept
 {
 	assert (_sample_freq > 0);
 
 	const int      nbr_split = int (_split_arr.size ());
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
-		update_single_splitter (split_idx);
+		if (update_single_splitter (split_idx))
+		{
+			update_xover_coefs (split_idx);
+		}
 	}
 
 	update_post ();
@@ -662,18 +674,18 @@ void	SplitMultibandLin <T, O>::update_all ()
 
 // update_post() must be called afterwards
 template <typename T, int O>
-void	SplitMultibandLin <T, O>::update_single_splitter (int split_idx)
+bool	SplitMultibandLin <T, O>::update_single_splitter (int split_idx) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (split_idx >= 0);
 	assert (split_idx < int (_split_arr.size ()));
 
 	auto &         split = _split_arr [split_idx];
-
-	const T        f = split._freq_tgt; // Hz
+	const T        f     = split._freq_tgt; // Hz
 
 	// Is the band already set?
-	if (f > 0)
+	const bool     ok_flag = (f > 0);
+	if (ok_flag)
 	{
 		// Group delay at DC
 		// Eq. 22 with bilinear frequency prewarping
@@ -692,24 +704,43 @@ void	SplitMultibandLin <T, O>::update_single_splitter (int split_idx)
 		T              ratio = 1;
 		ratio = split._dly_comp / split._dly_int;
 		split._freq_act = split._freq_warp * ratio;
+	}
 
-		// Produces the z-plane coefficients using the bilinear transform
+	return ok_flag;
+}
 
-		// 2-pole sections
-		for (auto &filt : split._f2p_arr)
-		{
-			Eq2p           eq_z;
-			bilinear_2p (eq_z, filt._eq_s, split._freq_act);
-			filt._flt.set_z_eq (eq_z._b.data (), eq_z._a.data ());
-		}
 
-		// 1-pole sections
-		for (auto &filt : split._f1p_arr)
-		{
-			Eq1p           eq_z;
-			bilinear_1p (eq_z, filt._eq_s, split._freq_act);
-			filt._flt.set_z_eq (eq_z._b.data (), eq_z._a.data ());
-		}
+
+// Produces the z-plane coefficients using the bilinear transform
+template <typename T, int O>
+void	SplitMultibandLin <T, O>::update_xover_coefs (int split_idx) noexcept
+{
+	assert (_sample_freq > 0);
+	assert (split_idx >= 0);
+	assert (split_idx < int (_split_arr.size ()));
+	assert (_split_arr [split_idx]._freq_tgt > 0);
+
+	auto &         split  = _split_arr [split_idx];
+	auto &         filter = _filter_arr [split_idx];
+
+	// 2-pole sections
+	for (int flt_idx = 0; flt_idx < _nbr_2p; ++flt_idx)
+	{
+		const auto &   eq_s = split._eq_2p [flt_idx];
+		auto &         flt  = filter._f2p_arr [flt_idx];
+		Eq2p           eq_z;
+		bilinear_2p (eq_z, eq_s, split._freq_act);
+		flt.set_z_eq (eq_z._b.data (), eq_z._a.data ());
+	}
+
+	// 1-pole sections
+	for (int flt_idx = 0; flt_idx < _nbr_1p; ++flt_idx)
+	{
+		const auto &   eq_s = split._eq_1p [flt_idx];
+		auto &         flt  = filter._f1p_arr [flt_idx];
+		Eq1p           eq_z;
+		bilinear_1p (eq_z, eq_s, split._freq_act);
+		flt.set_z_eq (eq_z._b.data (), eq_z._a.data ());
 	}
 }
 
@@ -720,7 +751,7 @@ void	SplitMultibandLin <T, O>::update_single_splitter (int split_idx)
 // frequencies according to these changes.
 // Then we can compute the z-plane equations for all filters.
 template <typename T, int O>
-void	SplitMultibandLin <T, O>::update_post ()
+void	SplitMultibandLin <T, O>::update_post () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -754,13 +785,12 @@ void	SplitMultibandLin <T, O>::update_post ()
 
 // Simplified bilinear transforms:
 // - No frequency prewarping
-// - Assumes a0 == 1 and aN == 1
+// - Assumes a0 == 1
 // f0_pi_fs = f0 * pi / fs
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs) noexcept
 {
 	assert (fstb::is_eq (eq_s._a [0], T (1)));
-	assert (fstb::is_eq (eq_s._a [2], T (1)));
 
 	const double   k  = 1 / f0_pi_fs;
 	const double   kk = k*k;
@@ -773,7 +803,7 @@ void	SplitMultibandLin <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_p
 	const double   b1z = 2 * (eq_s._b [0] - b2kk);
 
 	const double   a1k  = eq_s._a [1] * k;
-	const double   a2kk = kk;
+	const double   a2kk = eq_s._a [2] * kk;
 	const double   a2kk_plus_a0 = a2kk + 1;
 	const double   a0z = a2kk_plus_a0 + a1k;
 	const double   a2z = a2kk_plus_a0 - a1k;
@@ -798,14 +828,13 @@ template <typename T, int O>
 void	SplitMultibandLin <T, O>::bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs) noexcept
 {
 	assert (fstb::is_eq (eq_s._a [0], T (1)));
-	assert (fstb::is_eq (eq_s._a [1], T (1)));
 
 	const double   k   = 1 / f0_pi_fs;
 	const double   b1k = eq_s._b [1] * k;
 	const double   b1z = eq_s._b [0] - b1k;
 	const double   b0z = eq_s._b [0] + b1k;
 
-	const double   a1k = k;
+	const double   a1k = eq_s._a [1] * k;
 	const double   a1z = 1 - a1k;
 	const double   a0z = 1 + a1k;
 

@@ -144,20 +144,11 @@ private:
 	typedef FilterEq <2> Eq1p;
 
 	// Filters and their normalized s-plane spec
-	class Filter2p
-	{
-	public:
-		Eq2p           _eq_s;
-		Biquad         _flt;
-	};
-	class Filter1p
-	{
-	public:
-		Eq1p           _eq_s;
-		OnePole        _flt;
-	};
-	typedef std::array <Filter2p, _nbr_2p> F2pArray;
-	typedef std::array <Filter1p, _nbr_1p> F1pArray;
+	typedef std::array <Biquad , _nbr_2p> F2pArray;
+	typedef std::array <OnePole, _nbr_1p> F1pArray;
+
+	typedef std::array <Eq2p, _nbr_2p> Eq2pArray;
+	typedef std::array <Eq1p, _nbr_1p> Eq1pArray;
 
 	// Internal buffer size, samples, > 0
 	static constexpr int _max_buf_size = 64;
@@ -183,9 +174,9 @@ private:
 		// Delay offset, relative to the main delay value. 0 = neutral
 		T              _dly_ofs  = 0;
 
-		// Filters
-		F2pArray       _f2p_arr;
-		F1pArray       _f1p_arr;
+		// Filter s-plane equations (normalised cutoff frequencies)
+		Eq2pArray      _eq_2p;
+		Eq1pArray      _eq_1p;
 
 		// Warped version of the target frequency, for the bilinear transform
 		// This value is relative to Fs/pi
@@ -209,12 +200,21 @@ private:
 	};
 	typedef std::vector <Splitter> SplitterArray;
 
+	class Filter
+	{
+	public:
+		F2pArray       _f2p_arr;
+		F1pArray       _f1p_arr;
+	};
+	typedef std::vector <Filter> FilterArray;
+
 	// Maximum delay time, s
 	static const double  _max_dly_time;
 
-	void           update_all ();
-	void           update_single_splitter (int split_idx);
-	void           update_post ();
+	void           update_all () noexcept;
+	bool           update_single_splitter (int split_idx) noexcept;
+	void           update_xover_coefs (int split_idx) noexcept;
+	void           update_post () noexcept;
 
 	void           bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs) noexcept;
 	void           bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs) noexcept;
@@ -225,8 +225,11 @@ private:
 	// Band data. Empty = not initialised yet.
 	BandArray      _band_arr;
 
-	// Crossover filters. Empty = not initialized yet.
+	// Crossover filter specs. Empty = not initialized yet.
 	SplitterArray  _split_arr;
+
+	// Crossover Filters
+	FilterArray    _filter_arr;
 
 	// Multi-tap compensation delay. Used for all bands excepted the highest-
 	// frequency one.
