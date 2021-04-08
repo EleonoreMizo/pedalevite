@@ -515,6 +515,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/SplitMultiband.hpp \
         ../../src/mfx/dsp/iir/SplitMultibandLin.h \
         ../../src/mfx/dsp/iir/SplitMultibandLin.hpp \
+        ../../src/mfx/dsp/iir/SplitMultibandLinBase.h \
+        ../../src/mfx/dsp/iir/SplitMultibandLinBase.hpp \
         ../../src/mfx/dsp/iir/SplitMultibandLinSimd.h \
         ../../src/mfx/dsp/iir/SplitMultibandLinSimd.hpp \
         ../../src/mfx/dsp/iir/SplitThiele8.cpp \

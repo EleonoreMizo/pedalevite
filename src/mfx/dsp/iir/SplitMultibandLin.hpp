@@ -89,14 +89,7 @@ Throws: std::vector-related exceptions
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::set_sample_freq (double sample_freq)
 {
-	assert (sample_freq > 0);
-
-	_sample_freq = T (sample_freq);
-	const int      max_dly_time_spl =
-		fstb::round_int (float (_max_dly_time * _sample_freq));
-	_delay.setup (max_dly_time_spl, _max_buf_size);
-	
-	if (! _split_arr.empty ())
+	if (this->set_sample_freq_internal (sample_freq, _max_buf_size))
 	{
 		update_all ();
 	}
@@ -125,7 +118,7 @@ void	SplitMultibandLin <T, O>::reserve (int nbr_bands)
 
 	const int      nbr_split = nbr_bands - 1;
 	_band_arr.reserve (nbr_bands);
-	_split_arr.reserve (nbr_split);
+	this->_split_arr.reserve (nbr_split);
 	_filter_arr.reserve (nbr_split);
 }
 
@@ -165,7 +158,7 @@ void	SplitMultibandLin <T, O>::set_nbr_bands (int nbr_bands, T * const band_ptr_
 
 	const int      nbr_split = nbr_bands - 1;
 	_band_arr.resize (nbr_bands);
-	_split_arr.resize (nbr_split);
+	this->_split_arr.resize (nbr_split);
 	_filter_arr.resize (nbr_split);
 
 	for (int band_idx = 0; band_idx < nbr_bands; ++band_idx)
@@ -174,7 +167,7 @@ void	SplitMultibandLin <T, O>::set_nbr_bands (int nbr_bands, T * const band_ptr_
 		band._out_ptr = band_ptr_arr [band_idx];
 	}
 
-	if (_sample_freq > 0)
+	if (this->_sample_freq > 0)
 	{
 		update_all ();
 	}
@@ -256,110 +249,13 @@ Throws: Nothing
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::set_splitter_coef (int split_idx, T freq, const T coef_arr [O], T dly_ofs) noexcept
 {
-	assert (_sample_freq > 0);
-	assert (split_idx >= 0);
-	assert (split_idx < int (_split_arr.size ()));
-	assert (freq > 0);
-	assert (freq < _sample_freq * 0.5f);
-	assert (coef_arr != nullptr);
-	assert (dly_ofs > -1);
+	this->set_splitter_coef_internal (split_idx, freq, coef_arr, dly_ofs);
 
-	Splitter &     split = _split_arr [split_idx];
-
-	split._freq_tgt = freq;
-	split._dly_ofs  = dly_ofs;
-
-	// Stores the coefficients at the right places
-	int            coef_ofs = 0;
-	T              a_n      = 1;
-	for (auto &eq : split._eq_2p)
-	{
-		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
-		a_n *= eq._a [2];
-	}
-	for (auto &eq : split._eq_1p)
-	{
-		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
-		a_n *= eq._a [1];
-	}
-	assert (fstb::is_eq (a_n, T (1)));
-
-	// Computes the 1st-order coefficient for the denominator of the whole
-	// filter. This is b1 in eq. 21
-	T              b1 = 0;
-	static constexpr int _nbr_flt = _nbr_2p + _nbr_1p;
-	for (int k = 0; k < _nbr_flt; ++k)
-	{
-		T              prod = 1;
-		for (int j = 0; j < _nbr_flt; ++j)
-		{
-			const int      order = (j == k) ? 1 : 0;
-			const T        coef  =
-				  (j < _nbr_2p)
-				? split._eq_2p [j          ]._a [order]
-				: split._eq_1p [j - _nbr_2p]._a [order];
-			prod *= coef;
-		}
-		b1 += prod;
-	}
-	split._b1 = b1;
-
-	if (update_single_splitter (split_idx))
+	if (this->update_single_splitter (split_idx))
 	{
 		update_xover_coefs (split_idx);
 	}
-	update_post ();
-}
-
-
-
-/*
-==============================================================================
-Name: get_actual_xover_freq
-Description:
-	Retrieves the actual crossover frequency, after the splitter target
-	frequency has been set.
-Input parameters:
-	- split_idx: Crossover index, >= 0.
-Returns:
-	The actual crossover frequency, in Hz.
-Throws: Nothing
-==============================================================================
-*/
-
-template <typename T, int O>
-T	SplitMultibandLin <T, O>::get_actual_xover_freq (int split_idx) const noexcept
-{
-	assert (_sample_freq > 0);
-	assert (split_idx >= 0);
-	assert (split_idx < int (_split_arr.size ()));
-
-	const Splitter &  split = _split_arr [split_idx];
-	assert (split._freq_act > 0);
-
-	return T (TransSZBilin::unwarp_freq (split._freq_act, _sample_freq));
-}
-
-
-
-/*
-==============================================================================
-Name: get_global_delay
-Description:
-	Retrieves the global filterbank delay. Effective only when all crossover
-	have been set.
-Returns: The delay, in samples. > 0
-Throws: Nothing
-==============================================================================
-*/
-
-template <typename T, int O>
-int	SplitMultibandLin <T, O>::get_global_delay () const noexcept
-{
-	assert (_sample_freq > 0);
-	assert (! _band_arr.empty ());
-
-	return _max_delay;
+	this->update_post ();
 }
 
 
@@ -456,7 +352,7 @@ Throws: Nothing
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::clear_buffers () noexcept
 {
-	_delay.clear_buffers ();
+	this->_delay.clear_buffers ();
 	for (auto &filter : _filter_arr)
 	{
 		for (auto &unit : filter._f2p_arr)
@@ -487,12 +383,12 @@ Throws: Nothing
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::process_sample (T x) noexcept
 {
-	assert (_sample_freq > 0);
+	assert (this->_sample_freq > 0);
 	assert (! _band_arr.empty ());
 
-	const int      nbr_split = int (_split_arr.size ());
+	const int      nbr_split = int (this->_split_arr.size ());
 
-	_delay.write_sample (x);
+	this->_delay.write_sample (x);
 
 	// Special case for the lowest frequency band
 	_band_arr [0]._buf_tmp [0] = x;
@@ -500,11 +396,11 @@ void	SplitMultibandLin <T, O>::process_sample (T x) noexcept
 	// Delays, on bands 1 to N-1
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
-		Splitter &     split = _split_arr [split_idx];
+		Splitter &     split = this->_split_arr [split_idx];
 		Band &         band  = _band_arr [split_idx + 1];
-		band._buf_tmp [0] = _delay.read_at (split._dly_b);
+		band._buf_tmp [0] = this->_delay.read_at (split._dly_b);
 	}
-	_delay.step (1);
+	this->_delay.step (1);
 
 	// Filter
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
@@ -551,19 +447,19 @@ Throws: Nothing
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) noexcept
 {
-	assert (_sample_freq > 0);
+	assert (this->_sample_freq > 0);
 	assert (! _band_arr.empty ());
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	const int      nbr_split = int (_split_arr.size ());
+	const int      nbr_split = int (this->_split_arr.size ());
 
 	int            pos = 0;
 	do
 	{
 		const int      work_len = std::min (nbr_spl - pos, _max_buf_size);
 
-		_delay.write_block (src_ptr + pos, work_len);
+		this->_delay.write_block (src_ptr + pos, work_len);
 
 		// Special case for the lowest frequency band
 		mix::Generic::copy_1_1 (
@@ -573,11 +469,13 @@ void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) n
 		// Delays, on bands 1 to N-1
 		for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 		{
-			Splitter &     split = _split_arr [split_idx];
+			Splitter &     split = this->_split_arr [split_idx];
 			Band &         band  = _band_arr [split_idx + 1];
-			_delay.read_block_at (band._buf_tmp.data (), split._dly_b, work_len);
+			this->_delay.read_block_at (
+				band._buf_tmp.data (), split._dly_b, work_len
+			);
 		}
-		_delay.step (work_len);
+		this->_delay.step (work_len);
 
 		// Filter
 		for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
@@ -631,82 +529,21 @@ void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) n
 
 
 
-// 100 ms should be enough for most uses.
-template <typename T, int O>
-const double	SplitMultibandLin <T, O>::_max_dly_time = 0.100;
-
-
-
-template <typename T, int O>
-template <int N>
-int	SplitMultibandLin <T, O>::FilterEq <N>::fill_with (const T coef_ptr [SplitMultibandLin <T, O>::FilterEq <N>::_nbr_coef]) noexcept
-{
-	for (int k = 0; k < N; ++k)
-	{
-		_b [k] = coef_ptr [    k];
-		_a [k] = coef_ptr [N + k];
-	}
-	assert (fstb::is_eq (_a [0], T (1)));
-
-	return _nbr_coef;
-}
-
-
-
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::update_all () noexcept
 {
-	assert (_sample_freq > 0);
+	assert (this->_sample_freq > 0);
 
-	const int      nbr_split = int (_split_arr.size ());
+	const int      nbr_split = int (this->_split_arr.size ());
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
-		if (update_single_splitter (split_idx))
+		if (this->update_single_splitter (split_idx))
 		{
 			update_xover_coefs (split_idx);
 		}
 	}
 
-	update_post ();
-}
-
-
-
-// update_post() must be called afterwards
-template <typename T, int O>
-bool	SplitMultibandLin <T, O>::update_single_splitter (int split_idx) noexcept
-{
-	assert (_sample_freq > 0);
-	assert (split_idx >= 0);
-	assert (split_idx < int (_split_arr.size ()));
-
-	auto &         split = _split_arr [split_idx];
-	const T        f     = split._freq_tgt; // Hz
-
-	// Is the band already set?
-	const bool     ok_flag = (f > 0);
-	if (ok_flag)
-	{
-		// Group delay at DC
-		// Eq. 22 with bilinear frequency prewarping
-		split._freq_warp = T (TransSZBilin::prewarp_freq (f, _sample_freq));
-		split._dly_comp  = split._b1 / (2 * split._freq_warp);
-		split._dly_comp *= 1 + split._dly_ofs;
-
-		split._dly_int   = fstb::round_int (float (split._dly_comp));
-
-		// For the highest frequencies, the rounded delay may be 0.
-		// Keep it greater than 0.
-		split._dly_int   = std::max (split._dly_int, 1);
-
-		// Evaluates the actual cutoff frequency corresponding to this
-		// rounded delay time
-		T              ratio = 1;
-		ratio = split._dly_comp / split._dly_int;
-		split._freq_act = split._freq_warp * ratio;
-	}
-
-	return ok_flag;
+	this->update_post ();
 }
 
 
@@ -715,12 +552,12 @@ bool	SplitMultibandLin <T, O>::update_single_splitter (int split_idx) noexcept
 template <typename T, int O>
 void	SplitMultibandLin <T, O>::update_xover_coefs (int split_idx) noexcept
 {
-	assert (_sample_freq > 0);
+	assert (this->_sample_freq > 0);
 	assert (split_idx >= 0);
-	assert (split_idx < int (_split_arr.size ()));
-	assert (_split_arr [split_idx]._freq_tgt > 0);
+	assert (split_idx < int (this->_split_arr.size ()));
+	assert (this->_split_arr [split_idx]._freq_tgt > 0);
 
-	auto &         split  = _split_arr [split_idx];
+	auto &         split  = this->_split_arr [split_idx];
 	auto &         filter = _filter_arr [split_idx];
 
 	// 2-pole sections
@@ -729,7 +566,7 @@ void	SplitMultibandLin <T, O>::update_xover_coefs (int split_idx) noexcept
 		const auto &   eq_s = split._eq_2p [flt_idx];
 		auto &         flt  = filter._f2p_arr [flt_idx];
 		Eq2p           eq_z;
-		bilinear_2p (eq_z, eq_s, split._freq_act);
+		this->bilinear_2p (eq_z, eq_s, split._freq_act);
 		flt.set_z_eq (eq_z._b.data (), eq_z._a.data ());
 	}
 
@@ -739,114 +576,9 @@ void	SplitMultibandLin <T, O>::update_xover_coefs (int split_idx) noexcept
 		const auto &   eq_s = split._eq_1p [flt_idx];
 		auto &         flt  = filter._f1p_arr [flt_idx];
 		Eq1p           eq_z;
-		bilinear_1p (eq_z, eq_s, split._freq_act);
+		this->bilinear_1p (eq_z, eq_s, split._freq_act);
 		flt.set_z_eq (eq_z._b.data (), eq_z._a.data ());
 	}
-}
-
-
-
-// We need to compute the maximum delay time for the whole filterbank,
-// take all the actual delays into account and recompute the crossover
-// frequencies according to these changes.
-// Then we can compute the z-plane equations for all filters.
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::update_post () noexcept
-{
-	assert (_sample_freq > 0);
-
-	_max_delay = _split_arr [0]._dly_int;
-	assert (_max_delay <= _delay.get_max_delay ());
-
-	T              freq_tgt_old = 0;
-	const int      nbr_split    = int (_split_arr.size ());
-	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
-	{
-		Splitter &     split = _split_arr [split_idx];
-		if (split._freq_tgt <= freq_tgt_old)
-		{
-			// Splitter not set or invalid set of frequencies: stop updating
-			break;
-		}
-
-		// The difference between the maximum delay and LPF DC group delay
-		// on the upper band.
-		split._dly_b = _max_delay;
-		if (split_idx + 1 < nbr_split)
-		{
-			split._dly_b -= _split_arr [split_idx + 1]._dly_int;
-		}
-
-		freq_tgt_old = split._freq_tgt;
-	}
-}
-
-
-
-// Simplified bilinear transforms:
-// - No frequency prewarping
-// - Assumes a0 == 1
-// f0_pi_fs = f0 * pi / fs
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs) noexcept
-{
-	assert (fstb::is_eq (eq_s._a [0], T (1)));
-
-	const double   k  = 1 / f0_pi_fs;
-	const double   kk = k*k;
-
-	const double   b1k  = eq_s._b [1] * k;
-	const double   b2kk = eq_s._b [2] * kk;
-	const double   b2kk_plus_b0 = b2kk + eq_s._b [0];
-	const double   b0z = b2kk_plus_b0 + b1k;
-	const double   b2z = b2kk_plus_b0 - b1k;
-	const double   b1z = 2 * (eq_s._b [0] - b2kk);
-
-	const double   a1k  = eq_s._a [1] * k;
-	const double   a2kk = eq_s._a [2] * kk;
-	const double   a2kk_plus_a0 = a2kk + 1;
-	const double   a0z = a2kk_plus_a0 + a1k;
-	const double   a2z = a2kk_plus_a0 - a1k;
-	const double   a1z = 2 * (1 - a2kk);
-
-	// IIR coefficients
-	assert (! fstb::is_null (a0z));
-	const double	mult = 1 / a0z;
-
-	eq_z._b [0] = T (b0z * mult);
-	eq_z._b [1] = T (b1z * mult);
-	eq_z._b [2] = T (b2z * mult);
-
-	eq_z._a [0] = T (1);
-	eq_z._a [1] = T (a1z * mult);
-	eq_z._a [2] = T (a2z * mult);
-}
-
-
-
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs) noexcept
-{
-	assert (fstb::is_eq (eq_s._a [0], T (1)));
-
-	const double   k   = 1 / f0_pi_fs;
-	const double   b1k = eq_s._b [1] * k;
-	const double   b1z = eq_s._b [0] - b1k;
-	const double   b0z = eq_s._b [0] + b1k;
-
-	const double   a1k = eq_s._a [1] * k;
-	const double   a1z = 1 - a1k;
-	const double   a0z = 1 + a1k;
-
-	// IIR coefficients
-	assert (! fstb::is_null (a0z));
-	const double   mult = 1 / a0z;
-
-	eq_z._b [0] = T (b0z * mult);
-	eq_z._b [1] = T (b1z * mult);
-
-	eq_z._a [0] = T (1);
-	eq_z._a [1] = T (a1z * mult);
 }
 
 

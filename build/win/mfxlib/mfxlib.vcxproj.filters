@@ -5085,6 +5085,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.hpp">
       <Filter>mfx\dsp\mix</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLinBase.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLinBase.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
