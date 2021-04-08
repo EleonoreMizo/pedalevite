@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 #include "mfx/dsp/iir/DesignEq2p.h"
 
 #include <algorithm>
@@ -229,7 +230,7 @@ std::complex <double>	DesignEq2p::compute_butter_pole (int order, int biq)
 ==============================================================================
 Name: compute_butter_coef_a1
 Description:
-	Computes the a1 coefficients for a butterworth filter.
+	Computes the s-plane a1 coefficients for a butterworth filter.
 
 	Even order:
 
@@ -248,7 +249,7 @@ Input parameters:
 	- order: order of the butterworth filter (k), >= 2
 	- biq: biquad index, in [0 ; (order - 1) / 2[
 Returns:
-	a1[k] coefficient for the denominator
+	a1 coefficient for the denominator
 Throws: Nothing
 ==============================================================================
 */
@@ -260,6 +261,108 @@ double	DesignEq2p::compute_butter_coef_a1 (int order, int biq)
 	assert (biq < order / 2);
 
 	return -2 * cos (fstb::PI * 0.5 * (2 * biq + 1 + order) / order);
+}
+
+
+
+/*
+==============================================================================
+Name: compute_thiele_coef_a1
+Description:
+	Computes the s-plane a1 coefficients for a Thiele crossover filter.
+	See also description of compute_butter_coef_a1().
+	For a LPF, numerators are always b0 = 1 and other coefficients are null,
+	excepted for one biquad where b2 = k * k.
+	This is the same for a HPF, bn = 1 and bn-2 = k * k for one of the biquads.
+Input parameters:
+	- order: order of the Thiele filter, in [3 ; 8]
+	- biq: biquad index, in [0 ; (order - 1) / 2[
+	- k: Thiele parameter, [0 ; 1[. When set to 0, filters are standard
+		Linkwitz-Riley crossover filters.
+Returns:
+	a1 coefficient for the denominator
+Throws: Nothing
+==============================================================================
+*/
+
+// Odd order 1-pole coefficients are always 1.
+double	DesignEq2p::compute_thiele_coef_a1 (int order, int biq, double k)
+{
+	assert (order >= 3);
+	assert (order <= 8);
+	assert (biq >= 0);
+	assert (biq < order / 2);
+	assert (k >= 0);
+	assert (k < 1);
+
+	const double   k2 = k * k;
+
+	double         a1 = 1;
+	switch (order)
+	{
+	case 3:
+		a1 = 1 - k2;
+		break;
+	case 4:
+		a1 = sqrt (2 - 2 * k2);
+		break;
+	case 5:
+		a1 = 0.5 * (sqrt (5 - 4 * k) - 1) + biq;
+		break;
+	case 6:
+		a1 = sqrt (1 - k2);
+		break;
+	case 7:
+	{
+		// Coefficients are the absolute values of the roots of:
+		// x^3 - x^2 - (2 - k^2) * x + (1 - k^2) = 0
+		const auto     s3 = sqrt (3);
+		const auto     a  = ((4 * k2 - 16) * k2 + 56) * k2 - 49;
+		const auto     b  = std::sqrt (std::complex <double> (a, 0)) * (3 * s3);
+		const auto     c  = 1.0 / 3;
+		const auto     d  = std::pow (18 * k2 - 7 + b, c);
+		const auto     e  = 3 * k2 - 7;
+		const auto     f1 = pow (2, c);
+		const auto     f2 = pow (2, c * 2);
+		const auto     gp = std::complex <double> (1, +s3);
+		const auto     gn = std::complex <double> (1, -s3);
+
+		std::complex <double> x { 1, 0 };
+		switch (biq)
+		{
+		case 0:
+			x = c - f1 * e / (d * 3.0) + d / (f1 * 3);
+			break;
+		case 1:
+			x = c + gp * e / (d * 3.0 * f2) - gn * d / (f1 * 6);
+			break;
+		case 2:
+			x = c + gn * e / (d * 3.0 * f2) - gp * d / (f1 * 6);
+			break;
+		default:
+			assert (false);
+			break;
+		}
+
+		assert (fstb::is_null (x.imag ()));
+		a1 = fabs (x.real ());
+		break;
+	}
+	case 8:
+	{
+		const auto     k4 =  k2 * k2;
+		const auto     d0 = 0.5 *      (4 - k2);
+		const auto     d1 = 0.5 * sqrt (8 + k4);
+		const int      s  = 1 - 2 * (biq & 1);
+		a1 = sqrt (d0 + d1 * s);
+		break;
+	}
+	default:
+		assert (false);
+		break;
+	}
+
+	return a1;
 }
 
 
