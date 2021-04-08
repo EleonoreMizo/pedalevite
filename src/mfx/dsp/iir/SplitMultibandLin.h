@@ -88,6 +88,8 @@ public:
 	typedef SplitMultibandLin <T, O> ThisType;
 	typedef SplitMultibandLinBase <T, O> Inherited;
 
+	static constexpr int _order  = O;
+
 	// Number of 2- and 1-pole sections
 	static constexpr int _nbr_2p = Inherited::_nbr_2p;
 	static constexpr int _nbr_1p = Inherited::_nbr_1p;
