@@ -27,6 +27,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/iir/SplitMultibandLin.h"
 #include "mfx/dsp/iir/SplitMultibandLinSimd.h"
+#include "mfx/dsp/iir/DesignEq2p.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/FileOpWav.h"
@@ -125,19 +126,26 @@ int	TestSplitMultibandLin::perform_test_class (const char *classname_0, const ch
 	printf ("Target frequencies: ");
 	constexpr double  thiele_k = 0.0f;
 	const double      k2 = thiele_k * thiele_k;
-	const double      k4 = k2 * k2;
-	const double      d0 = 0.5 *      (4 - k2);
-	const double      d1 = 0.5 * sqrt (8 + k4);
-	const float       r1 = float (sqrt (d0 + d1));
-	const float       r2 = float (sqrt (d0 - d1));
-	static_assert (nbr_biq == 2 && nbr_onep == 0, "Not implemented yet");
-	const std::array <float, (nbr_biq * 3 + nbr_onep * 2) * 2> coef_arr =
+	std::array <float, (nbr_biq * 3 + nbr_onep * 2) * 2> coef_arr;
+	for (int biq = 0; biq < nbr_biq; ++biq)
 	{
-		1, 0, float (k2), // Biq 0, num
-		1, r1, 1,         // Biq 0, den
-		1, 0, 0,          // Biq 1, num
-		1, r2, 1          // Biq 1, den
-	};
+		const double   a1 = mfx::dsp::iir::DesignEq2p::compute_thiele_coef_a1 (
+			S::_order, biq, thiele_k
+		);
+		coef_arr [biq * 6    ] = 1;
+		coef_arr [biq * 6 + 1] = 0;
+		coef_arr [biq * 6 + 2] = (biq == 0) ? float (k2) : 0;
+		coef_arr [biq * 6 + 3] = 1;
+		coef_arr [biq * 6 + 4] = float (a1);
+		coef_arr [biq * 6 + 5] = 1;
+	}
+	if (nbr_onep > 0)
+	{
+		coef_arr [nbr_biq * 6    ] = 1;
+		coef_arr [nbr_biq * 6 + 1] = 0;
+		coef_arr [nbr_biq * 6 + 2] = 1;
+		coef_arr [nbr_biq * 6 + 3] = 1;
+	}
 	for (int split_idx = 0; split_idx < nbr_bands - 1; ++split_idx)
 	{
 		constexpr double fmin =    20.0;
