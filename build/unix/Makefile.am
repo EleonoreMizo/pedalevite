@@ -556,6 +556,7 @@ commonsrc = \
         ../../src/mfx/dsp/mix/Align.h \
         ../../src/mfx/dsp/mix/Fpu.cpp \
         ../../src/mfx/dsp/mix/Fpu.h \
+        ../../src/mfx/dsp/mix/Fpu.hpp \
         ../../src/mfx/dsp/mix/Generic.cpp \
         ../../src/mfx/dsp/mix/Generic.h \
         ../../src/mfx/dsp/mix/Simd.h \

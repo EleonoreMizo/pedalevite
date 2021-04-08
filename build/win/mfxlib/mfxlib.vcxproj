@@ -966,6 +966,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Align.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Generic.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.hpp" />

@@ -4352,6 +4352,78 @@ void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_
 
 
 
+template <class VD, class VS>
+template <typename OPS, typename OPV>
+void	Simd <VD, VS>::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OPS op_s, OPV op_v)
+{
+	assert (V128Dst::check_ptr (dst_ptr));
+	assert (V128Src::check_ptr (src_ptr));
+	assert (dst_ptr != src_ptr);
+	assert (nbr_spl > 0);
+
+	const int      n16 = nbr_spl & ~15;
+	for (int k = 0; k < n16; k += 16)
+	{
+		const auto     xa = V128Src::load_f32 (src_ptr + k     );
+		const auto     xb = V128Src::load_f32 (src_ptr + k +  4);
+		const auto     xc = V128Src::load_f32 (src_ptr + k +  8);
+		const auto     xd = V128Src::load_f32 (src_ptr + k + 12);
+		const auto     ya  = op_v (xa);
+		const auto     yb  = op_v (xb);
+		const auto     yc  = op_v (xc);
+		const auto     yd  = op_v (xd);
+		V128Dst::store_f32 (dst_ptr + k     , ya);
+		V128Dst::store_f32 (dst_ptr + k +  4, yb);
+		V128Dst::store_f32 (dst_ptr + k +  8, yc);
+		V128Dst::store_f32 (dst_ptr + k + 12, yd);
+	}
+	for (int k = n16; k < nbr_spl; ++k)
+	{
+		dst_ptr [k] = op_s (src_ptr [k]);
+	}
+}
+
+
+
+template <class VD, class VS>
+template <typename OPS, typename OPV>
+void	Simd <VD, VS>::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OPS op_s, OPV op_v)
+{
+	assert (V128Dst::check_ptr (dst_ptr));
+	assert (V128Src::check_ptr (lhs_ptr));
+	assert (V128Src::check_ptr (rhs_ptr));
+	assert (lhs_ptr != dst_ptr);
+	assert (rhs_ptr != dst_ptr);
+	assert (nbr_spl > 0);
+
+	const int      n16 = nbr_spl & ~15;
+	for (int k = 0; k < n16; k += 16)
+	{
+		const auto     xal = V128Src::load_f32 (lhs_ptr + k     );
+		const auto     xbl = V128Src::load_f32 (lhs_ptr + k +  4);
+		const auto     xcl = V128Src::load_f32 (lhs_ptr + k +  8);
+		const auto     xdl = V128Src::load_f32 (lhs_ptr + k + 12);
+		const auto     xar = V128Src::load_f32 (rhs_ptr + k     );
+		const auto     xbr = V128Src::load_f32 (rhs_ptr + k +  4);
+		const auto     xcr = V128Src::load_f32 (rhs_ptr + k +  8);
+		const auto     xdr = V128Src::load_f32 (rhs_ptr + k + 12);
+		const auto     ya  = op_v (xal, xar);
+		const auto     yb  = op_v (xbl, xbr);
+		const auto     yc  = op_v (xcl, xcr);
+		const auto     yd  = op_v (xdl, xdr);
+		V128Dst::store_f32 (dst_ptr + k     , ya);
+		V128Dst::store_f32 (dst_ptr + k +  4, yb);
+		V128Dst::store_f32 (dst_ptr + k +  8, yc);
+		V128Dst::store_f32 (dst_ptr + k + 12, yd);
+	}
+	for (int k = n16; k < nbr_spl; ++k)
+	{
+		dst_ptr [k] = op_s (lhs_ptr [k], rhs_ptr [k]);
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
