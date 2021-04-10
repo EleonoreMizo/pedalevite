@@ -49,7 +49,7 @@ namespace iir
 
 template <int O>
 class SplitMultibandLinSimd
-:	public SplitMultibandLinBase <float, O>
+:	public SplitMultibandLinBase <O>
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -57,7 +57,7 @@ class SplitMultibandLinSimd
 public:
 
 	typedef SplitMultibandLinSimd <O> ThisType;
-	typedef SplitMultibandLinBase <float, O> Inherited;
+	typedef SplitMultibandLinBase <O> Inherited;
 
 	static constexpr int _order  = O;
 

@@ -65,8 +65,8 @@ namespace iir
 
 
 
-template <typename T, int O>
-SplitMultibandLin <T, O>::SplitMultibandLin ()
+template <int O>
+SplitMultibandLin <O>::SplitMultibandLin ()
 {
 	mix::Generic::setup ();
 }
@@ -86,8 +86,8 @@ Throws: std::vector-related exceptions
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::set_sample_freq (double sample_freq)
+template <int O>
+void	SplitMultibandLin <O>::set_sample_freq (double sample_freq)
 {
 	if (this->set_sample_freq_internal (sample_freq, _max_buf_size))
 	{
@@ -111,8 +111,8 @@ Throws: std::vector-related exceptions
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::reserve (int nbr_bands)
+template <int O>
+void	SplitMultibandLin <O>::reserve (int nbr_bands)
 {
 	assert (nbr_bands >= 2);
 
@@ -147,8 +147,8 @@ Throws: std::vector-related exceptions, if memory is allocated
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::set_nbr_bands (int nbr_bands, T * const band_ptr_arr [])
+template <int O>
+void	SplitMultibandLin <O>::set_nbr_bands (int nbr_bands, float * const band_ptr_arr [])
 {
 	assert (nbr_bands >= 2);
 	assert (band_ptr_arr != nullptr);
@@ -186,8 +186,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-int	SplitMultibandLin <T, O>::get_nbr_bands () const noexcept
+template <int O>
+int	SplitMultibandLin <O>::get_nbr_bands () const noexcept
 {
 	assert (! _band_arr.empty ());
 
@@ -239,15 +239,12 @@ Input parameters:
 		Positive values increase the delay, negative ones decrease it.
 		The offset value should be kept small (a few percents).
 		0 is the neutral value (recommended).
-Returns:
-	The actual crossover frequency, in Hz. It might have been changed to take
-	delay constraints into account.
 Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::set_splitter_coef (int split_idx, T freq, const T coef_arr [O], T dly_ofs) noexcept
+template <int O>
+void	SplitMultibandLin <O>::set_splitter_coef (int split_idx, float freq, const float coef_arr [O], float dly_ofs) noexcept
 {
 	this->set_splitter_coef_internal (split_idx, freq, coef_arr, dly_ofs);
 
@@ -272,8 +269,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::set_band_ptr_one (int band_idx, T *out_ptr) noexcept
+template <int O>
+void	SplitMultibandLin <O>::set_band_ptr_one (int band_idx, float *out_ptr) noexcept
 {
 	assert (band_idx >= 0);
 	assert (band_idx < get_nbr_bands ());
@@ -296,8 +293,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::set_band_ptr (T * const band_ptr_arr []) noexcept
+template <int O>
+void	SplitMultibandLin <O>::set_band_ptr (float * const band_ptr_arr []) noexcept
 {
 	assert (! _band_arr.empty ());
 	assert (band_ptr_arr != nullptr);
@@ -319,15 +316,15 @@ void	SplitMultibandLin <T, O>::set_band_ptr (T * const band_ptr_arr []) noexcept
 Name: offset_band_ptr
 Description:
 	Adds a value to the pointers of all the band output buffers.
-	Important: the offset is measured in T, not bytes.
+	Important: the offset is measured in samples, not bytes.
 Input parameters:
 	- offset: value to add to the pointers
 Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::offset_band_ptr (ptrdiff_t offset) noexcept
+template <int O>
+void	SplitMultibandLin <O>::offset_band_ptr (ptrdiff_t offset) noexcept
 {
 	assert (! _band_arr.empty ());
 
@@ -349,8 +346,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::clear_buffers () noexcept
+template <int O>
+void	SplitMultibandLin <O>::clear_buffers () noexcept
 {
 	this->_delay.clear_buffers ();
 	for (auto &filter : _filter_arr)
@@ -380,8 +377,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::process_sample (T x) noexcept
+template <int O>
+void	SplitMultibandLin <O>::process_sample (float x) noexcept
 {
 	assert (this->_sample_freq > 0);
 	assert (! _band_arr.empty ());
@@ -444,8 +441,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) noexcept
+template <int O>
+void	SplitMultibandLin <O>::process_block (const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (this->_sample_freq > 0);
 	assert (! _band_arr.empty ());
@@ -529,8 +526,8 @@ void	SplitMultibandLin <T, O>::process_block (const T src_ptr [], int nbr_spl) n
 
 
 
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::update_all () noexcept
+template <int O>
+void	SplitMultibandLin <O>::update_all () noexcept
 {
 	assert (this->_sample_freq > 0);
 
@@ -549,8 +546,8 @@ void	SplitMultibandLin <T, O>::update_all () noexcept
 
 
 // Produces the z-plane coefficients using the bilinear transform
-template <typename T, int O>
-void	SplitMultibandLin <T, O>::update_xover_coefs (int split_idx) noexcept
+template <int O>
+void	SplitMultibandLin <O>::update_xover_coefs (int split_idx) noexcept
 {
 	assert (this->_sample_freq > 0);
 	assert (split_idx >= 0);

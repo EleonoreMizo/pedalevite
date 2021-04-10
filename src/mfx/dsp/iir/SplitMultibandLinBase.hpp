@@ -56,8 +56,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-T	SplitMultibandLinBase <T, O>::get_actual_xover_freq (int split_idx) const noexcept
+template <int O>
+float	SplitMultibandLinBase <O>::get_actual_xover_freq (int split_idx) const noexcept
 {
 	assert (_sample_freq > 0);
 	assert (split_idx >= 0);
@@ -66,7 +66,7 @@ T	SplitMultibandLinBase <T, O>::get_actual_xover_freq (int split_idx) const noex
 	const Splitter &  split = _split_arr [split_idx];
 	assert (split._freq_act > 0);
 
-	return T (TransSZBilin::unwarp_freq (split._freq_act, _sample_freq));
+	return float (TransSZBilin::unwarp_freq (split._freq_act, _sample_freq));
 }
 
 
@@ -82,8 +82,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, int O>
-int	SplitMultibandLinBase <T, O>::get_global_delay () const noexcept
+template <int O>
+int	SplitMultibandLinBase <O>::get_global_delay () const noexcept
 {
 	assert (_sample_freq > 0);
 	assert (! _split_arr.empty ());
@@ -98,33 +98,33 @@ int	SplitMultibandLinBase <T, O>::get_global_delay () const noexcept
 
 
 // 100 ms should be enough for most uses.
-template <typename T, int O>
-const double	SplitMultibandLinBase <T, O>::_max_dly_time = 0.100;
+template <int O>
+const double	SplitMultibandLinBase <O>::_max_dly_time = 0.100;
 
 
 
-template <typename T, int O>
+template <int O>
 template <int N>
-int	SplitMultibandLinBase <T, O>::FilterEq <N>::fill_with (const T coef_ptr [SplitMultibandLinBase <T, O>::FilterEq <N>::_nbr_coef]) noexcept
+int	SplitMultibandLinBase <O>::FilterEq <N>::fill_with (const float coef_ptr [SplitMultibandLinBase <O>::FilterEq <N>::_nbr_coef]) noexcept
 {
 	for (int k = 0; k < N; ++k)
 	{
 		_b [k] = coef_ptr [    k];
 		_a [k] = coef_ptr [N + k];
 	}
-	assert (fstb::is_eq (_a [0], T (1)));
+	assert (fstb::is_eq (_a [0], 1.f));
 
 	return _nbr_coef;
 }
 
 
 
-template <typename T, int O>
-bool	SplitMultibandLinBase <T, O>::set_sample_freq_internal (double sample_freq, int max_buf_size)
+template <int O>
+bool	SplitMultibandLinBase <O>::set_sample_freq_internal (double sample_freq, int max_buf_size)
 {
 	assert (sample_freq > 0);
 
-	_sample_freq = T (sample_freq);
+	_sample_freq = float (sample_freq);
 
 	const int      max_dly_time_spl =
 		fstb::round_int (float (_max_dly_time * _sample_freq));
@@ -135,8 +135,8 @@ bool	SplitMultibandLinBase <T, O>::set_sample_freq_internal (double sample_freq,
 
 
 
-template <typename T, int O>
-void	SplitMultibandLinBase <T, O>::set_splitter_coef_internal (int split_idx, T freq, const T coef_arr [O], T dly_ofs) noexcept
+template <int O>
+void	SplitMultibandLinBase <O>::set_splitter_coef_internal (int split_idx, float freq, const float coef_arr [O], float dly_ofs) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (split_idx >= 0);
@@ -153,7 +153,7 @@ void	SplitMultibandLinBase <T, O>::set_splitter_coef_internal (int split_idx, T 
 
 	// Stores the coefficients at the right places
 	int            coef_ofs = 0;
-	T              a_n      = 1;
+	float          a_n      = 1;
 	for (auto &eq : split._eq_2p)
 	{
 		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
@@ -164,19 +164,19 @@ void	SplitMultibandLinBase <T, O>::set_splitter_coef_internal (int split_idx, T 
 		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
 		a_n *= eq._a [1];
 	}
-	assert (fstb::is_eq (a_n, T (1)));
+	assert (fstb::is_eq (a_n, 1.f));
 
 	// Computes the 1st-order coefficient for the denominator of the whole
 	// filter. This is b1 in eq. 21
-	T              b1 = 0;
+	float          b1 = 0;
 	static constexpr int nbr_flt = _nbr_2p + _nbr_1p;
 	for (int k = 0; k < nbr_flt; ++k)
 	{
-		T              prod = 1;
+		float          prod = 1;
 		for (int j = 0; j < nbr_flt; ++j)
 		{
 			const int      order = (j == k) ? 1 : 0;
-			const T        coef  =
+			const float    coef  =
 				  (j < _nbr_2p)
 				? split._eq_2p [j          ]._a [order]
 				: split._eq_1p [j - _nbr_2p]._a [order];
@@ -190,15 +190,15 @@ void	SplitMultibandLinBase <T, O>::set_splitter_coef_internal (int split_idx, T 
 
 
 // update_post() must be called afterwards
-template <typename T, int O>
-bool	SplitMultibandLinBase <T, O>::update_single_splitter (int split_idx) noexcept
+template <int O>
+bool	SplitMultibandLinBase <O>::update_single_splitter (int split_idx) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (split_idx >= 0);
 	assert (split_idx < int (_split_arr.size ()));
 
 	auto &         split = _split_arr [split_idx];
-	const T        f     = split._freq_tgt; // Hz
+	const float    f     = split._freq_tgt; // Hz
 
 	// Is the band already set?
 	const bool     ok_flag = (f > 0);
@@ -206,7 +206,7 @@ bool	SplitMultibandLinBase <T, O>::update_single_splitter (int split_idx) noexce
 	{
 		// Group delay at DC
 		// Eq. 22 with bilinear frequency prewarping
-		split._freq_warp = T (TransSZBilin::prewarp_freq (f, _sample_freq));
+		split._freq_warp = float (TransSZBilin::prewarp_freq (f, _sample_freq));
 		split._dly_comp  = split._b1 / (2 * split._freq_warp);
 		split._dly_comp *= 1 + split._dly_ofs;
 
@@ -218,7 +218,7 @@ bool	SplitMultibandLinBase <T, O>::update_single_splitter (int split_idx) noexce
 
 		// Evaluates the actual cutoff frequency corresponding to this
 		// rounded delay time
-		T              ratio = 1;
+		float          ratio = 1;
 		ratio = split._dly_comp / split._dly_int;
 		split._freq_act = split._freq_warp * ratio;
 	}
@@ -232,15 +232,15 @@ bool	SplitMultibandLinBase <T, O>::update_single_splitter (int split_idx) noexce
 // take all the actual delays into account and recompute the crossover
 // frequencies according to these changes.
 // Then we can compute the z-plane equations for all filters.
-template <typename T, int O>
-void	SplitMultibandLinBase <T, O>::update_post () noexcept
+template <int O>
+void	SplitMultibandLinBase <O>::update_post () noexcept
 {
 	assert (_sample_freq > 0);
 
 	_max_delay = _split_arr [0]._dly_int;
 	assert (_max_delay <= _delay.get_max_delay ());
 
-	T              freq_tgt_old = 0;
+	float          freq_tgt_old = 0;
 	const int      nbr_split    = int (_split_arr.size ());
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
@@ -269,10 +269,10 @@ void	SplitMultibandLinBase <T, O>::update_post () noexcept
 // - No frequency prewarping
 // - Assumes a0 == 1
 // f0_pi_fs = f0 * pi / fs
-template <typename T, int O>
-void	SplitMultibandLinBase <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T f0_pi_fs) noexcept
+template <int O>
+void	SplitMultibandLinBase <O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, double f0_pi_fs) noexcept
 {
-	assert (fstb::is_eq (eq_s._a [0], T (1)));
+	assert (fstb::is_eq (eq_s._a [0], 1.f));
 
 	const double   k  = 1 / f0_pi_fs;
 	const double   kk = k*k;
@@ -295,21 +295,21 @@ void	SplitMultibandLinBase <T, O>::bilinear_2p (Eq2p &eq_z, const Eq2p &eq_s, T 
 	assert (! fstb::is_null (a0z));
 	const double	mult = 1 / a0z;
 
-	eq_z._b [0] = T (b0z * mult);
-	eq_z._b [1] = T (b1z * mult);
-	eq_z._b [2] = T (b2z * mult);
+	eq_z._b [0] = float (b0z * mult);
+	eq_z._b [1] = float (b1z * mult);
+	eq_z._b [2] = float (b2z * mult);
 
-	eq_z._a [0] = T (1);
-	eq_z._a [1] = T (a1z * mult);
-	eq_z._a [2] = T (a2z * mult);
+	eq_z._a [0] = 1.f;
+	eq_z._a [1] = float (a1z * mult);
+	eq_z._a [2] = float (a2z * mult);
 }
 
 
 
-template <typename T, int O>
-void	SplitMultibandLinBase <T, O>::bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T f0_pi_fs) noexcept
+template <int O>
+void	SplitMultibandLinBase <O>::bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, double f0_pi_fs) noexcept
 {
-	assert (fstb::is_eq (eq_s._a [0], T (1)));
+	assert (fstb::is_eq (eq_s._a [0], 1.f));
 
 	const double   k   = 1 / f0_pi_fs;
 	const double   b1k = eq_s._b [1] * k;
@@ -324,11 +324,11 @@ void	SplitMultibandLinBase <T, O>::bilinear_1p (Eq1p &eq_z, const Eq1p &eq_s, T 
 	assert (! fstb::is_null (a0z));
 	const double   mult = 1 / a0z;
 
-	eq_z._b [0] = T (b0z * mult);
-	eq_z._b [1] = T (b1z * mult);
+	eq_z._b [0] = float (b0z * mult);
+	eq_z._b [1] = float (b1z * mult);
 
-	eq_z._a [0] = T (1);
-	eq_z._a [1] = T (a1z * mult);
+	eq_z._a [0] = 1.f;
+	eq_z._a [1] = float (a1z * mult);
 }
 
 

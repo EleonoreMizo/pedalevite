@@ -51,7 +51,7 @@ int	TestSplitMultibandLin::perform_test ()
 	if (ret_val == 0)
 	{
 		ret_val = perform_test_class <
-			mfx::dsp::iir::SplitMultibandLin <float, 4>
+			mfx::dsp::iir::SplitMultibandLin <4>
 		> (
 			"mfx::dsp::iir::SplitMultibandLin",
 			"splitmultibandlin",
@@ -194,7 +194,7 @@ int	TestSplitMultibandLin::perform_test_class (const char *classname_0, const ch
 		}
 		for (int band_cnt = 0; band_cnt < nbr_bands; ++band_cnt)
 		{
-			mfx::dsp::mix::Generic::mix_1_1 (
+			mfx::dsp::mix::Generic::copy_1_1 (
 				&band_dst [band_cnt] [pos], buf_arr [band_cnt].data (), nbr_spl
 			);
 		}

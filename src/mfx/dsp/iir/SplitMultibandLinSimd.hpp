@@ -269,9 +269,6 @@ Input parameters:
 		Positive values increase the delay, negative ones decrease it.
 		The offset value should be kept small (a few percents).
 		0 is the neutral value (recommended).
-Returns:
-	The actual crossover frequency, in Hz. It might have been changed to take
-	delay constraints into account.
 Throws: Nothing
 ==============================================================================
 */

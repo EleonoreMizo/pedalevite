@@ -17,8 +17,6 @@ designed in the s plane.
 
 Template parameters:
 
-- T: data type, floating point
-
 - O: order of the low-pass filter, >= 2
 
 Basic usage:
@@ -76,17 +74,17 @@ namespace iir
 
 
 
-template <typename T, int O>
+template <int O>
 class SplitMultibandLin
-:	public SplitMultibandLinBase <T, O>
+:	public SplitMultibandLinBase <O>
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	typedef SplitMultibandLin <T, O> ThisType;
-	typedef SplitMultibandLinBase <T, O> Inherited;
+	typedef SplitMultibandLin <O> ThisType;
+	typedef SplitMultibandLinBase <O> Inherited;
 
 	static constexpr int _order  = O;
 
@@ -104,17 +102,17 @@ public:
 
 	void           set_sample_freq (double sample_freq);
 	void           reserve (int nbr_bands);
-	void           set_nbr_bands (int nbr_bands, T * const band_ptr_arr []);
+	void           set_nbr_bands (int nbr_bands, float * const band_ptr_arr []);
 	inline int     get_nbr_bands () const noexcept;
 
-	void           set_splitter_coef (int split_idx, T freq, const T coef_arr [O], T dly_ofs) noexcept;
-	void           set_band_ptr_one (int band_idx, T *out_ptr) noexcept;
-	void           set_band_ptr (T * const band_ptr_arr []) noexcept;
+	void           set_splitter_coef (int split_idx, float freq, const float coef_arr [O], float dly_ofs) noexcept;
+	void           set_band_ptr_one (int band_idx, float *out_ptr) noexcept;
+	void           set_band_ptr (float * const band_ptr_arr []) noexcept;
 	inline void    offset_band_ptr (ptrdiff_t offset) noexcept;
 
 	void           clear_buffers () noexcept;
-	inline void    process_sample (T x) noexcept;
-	void           process_block (const T src_ptr [], int nbr_spl) noexcept;
+	inline void    process_sample (float x) noexcept;
+	void           process_block (const float src_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -142,13 +140,13 @@ private:
 	// Internal buffer size, samples, > 0
 	static constexpr int _max_buf_size = 64;
 
-	typedef std::array <T, _max_buf_size> Buffer;
+	typedef std::array <float, _max_buf_size> Buffer;
 
 	class Band
 	{
 	public:
 		// Output buffer, provided by class user. 0 = not set
-		T *            _out_ptr = nullptr;
+		float *        _out_ptr = nullptr;
 
 		Buffer         _buf_tmp;
 	};
