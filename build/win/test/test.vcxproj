@@ -169,6 +169,7 @@
     <ClCompile Include="..\..\..\src\test\TestSmooth.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitAp5.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitMultiband.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestSplitMultibandBustad.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitMultibandLin.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitThiele8.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSvf.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="..\..\..\src\test\TestSmooth.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitAp5.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitMultiband.h" />
+    <ClInclude Include="..\..\..\src\test\TestSplitMultibandBustad.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitMultibandLin.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitThiele8.h" />
     <ClInclude Include="..\..\..\src\test\TestSvf.h" />

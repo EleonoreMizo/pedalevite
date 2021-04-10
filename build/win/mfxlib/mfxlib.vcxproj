@@ -929,6 +929,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultiband.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultiband.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandBustad.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandBustad.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLin.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLinBase.h" />

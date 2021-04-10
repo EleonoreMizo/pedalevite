@@ -513,6 +513,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/SplitAp5.hpp \
         ../../src/mfx/dsp/iir/SplitMultiband.h \
         ../../src/mfx/dsp/iir/SplitMultiband.hpp \
+        ../../src/mfx/dsp/iir/SplitMultibandBustad.h \
+        ../../src/mfx/dsp/iir/SplitMultibandBustad.hpp \
         ../../src/mfx/dsp/iir/SplitMultibandLin.h \
         ../../src/mfx/dsp/iir/SplitMultibandLin.hpp \
         ../../src/mfx/dsp/iir/SplitMultibandLinBase.h \
@@ -1820,6 +1822,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSplitAp5.h \
         ../../src/test/TestSplitMultiband.cpp \
         ../../src/test/TestSplitMultiband.h \
+        ../../src/test/TestSplitMultibandBustad.cpp \
+        ../../src/test/TestSplitMultibandBustad.h \
         ../../src/test/TestSplitMultibandLin.cpp \
         ../../src/test/TestSplitMultibandLin.h \
         ../../src/test/TestSplitThiele8.cpp \
