@@ -422,6 +422,59 @@ double	DesignEq2p::compute_group_delay (const T bz [3], const T az [3], double s
 
 
 
+/*
+==============================================================================
+Name: compute_group_delay_1p
+Description:
+	Computes the group delay for a first-order digital section at a given
+	frequency.
+Input parameters:
+	- bz: Num. of the equation in the Z plane, index is the power of 1/z.
+	- az: Denom. of the equation in the Z plane. az [0] must be set.
+	- sample_freq: sampling frequency, Hz. > 0
+	- f0: frequency at which the group delay should be evaluated.
+		Hz, in ]0 ; sample_freq[
+Returns: The group delay, in samples. >= 0.
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename T>
+double	DesignEq2p::compute_group_delay_1p (const T bz [2], const T az [2], double sample_freq, double f0)
+{
+	assert (bz != nullptr);
+	assert (az != nullptr);
+	assert (az [0] != 0);
+	assert (sample_freq > 0);
+	assert (f0 > 0);
+	assert (f0 < sample_freq * 0.5f);
+
+	const double   w  = 2 * fstb::PI * f0 / sample_freq;
+	const double   c1 = cos (w);
+
+	const T        b0 = bz [0];
+	const T        b1 = bz [1];
+	const T        a0 = az [0];
+	const T        a1 = az [1];
+
+	const double   b1_b1    = b1 * b1;
+	const double   a1_a1    = a1 * a1;
+	const double   b0_b1_c1 = b0 * b1 * c1;
+	const double   a0_a1_c1 = a1 * a0 * c1;
+	const double   num1     = b0_b1_c1 + b1_b1;
+	const double   den1     = b0 * b0 + b0_b1_c1 + num1;
+	const double   num2     = a0_a1_c1 + a1_a1;
+	const double   den2     = a0 * a0 + a0_a1_c1 + num2;
+	assert (den1 != 0);
+	assert (den2 != 0);
+	const double   gd = num1 / den1 - num2 / den2;
+	assert (gd >= 0);
+
+	return gd;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

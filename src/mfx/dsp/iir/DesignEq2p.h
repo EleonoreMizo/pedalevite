@@ -83,6 +83,8 @@ public:
 
 	template <typename T>
 	static double  compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0);
+	template <typename T>
+	static double  compute_group_delay_1p (const T bz [2], const T az [2], double sample_freq, double f0);
 
 
 
