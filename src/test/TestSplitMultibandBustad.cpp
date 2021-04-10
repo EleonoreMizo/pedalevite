@@ -27,6 +27,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/iir/SplitMultibandBustad.h"
 #include "mfx/dsp/iir/DesignEq2p.h"
+#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/FileOpWav.h"
@@ -106,7 +107,6 @@ int	TestSplitMultibandBustad::perform_test_class (const char *classname_0, const
 		band_ptr_arr [k] = buf_arr [k].data ();
 	}
 
-	splitter.set_sample_freq (sample_freq);
 	splitter.set_nbr_bands (nbr_bands, band_ptr_arr.data ());
 
 	// Filter design
@@ -115,37 +115,6 @@ int	TestSplitMultibandBustad::perform_test_class (const char *classname_0, const
 	const double      k2 = thiele_k * thiele_k;
 	std::array <float, (nbr_biq * 3 + nbr_onep * 2) * 2> coef_lpf_arr;
 	std::array <float, (nbr_biq * 3 + nbr_onep * 2) * 2> coef_hpf_arr;
-	for (int biq = 0; biq < nbr_biq; ++biq)
-	{
-		const double   a1 = mfx::dsp::iir::DesignEq2p::compute_thiele_coef_a1 (
-			S::_order, biq, thiele_k
-		);
-		coef_lpf_arr [biq * 6    ] = 1;
-		coef_lpf_arr [biq * 6 + 1] = 0;
-		coef_lpf_arr [biq * 6 + 2] = (biq == 0) ? float (k2) : 0;
-		coef_lpf_arr [biq * 6 + 3] = 1;
-		coef_lpf_arr [biq * 6 + 4] = float (a1);
-		coef_lpf_arr [biq * 6 + 5] = 1;
-
-		coef_hpf_arr [biq * 6    ] = (biq == 0) ? float (k2) : 0;
-		coef_hpf_arr [biq * 6 + 1] = 0;
-		coef_hpf_arr [biq * 6 + 2] = 1;
-		coef_hpf_arr [biq * 6 + 3] = 1;
-		coef_hpf_arr [biq * 6 + 4] = float (a1);
-		coef_hpf_arr [biq * 6 + 5] = 1;
-	}
-	if (nbr_onep > 0)
-	{
-		coef_lpf_arr [nbr_biq * 6    ] = 1;
-		coef_lpf_arr [nbr_biq * 6 + 1] = 0;
-		coef_lpf_arr [nbr_biq * 6 + 2] = 1;
-		coef_lpf_arr [nbr_biq * 6 + 3] = 1;
-
-		coef_hpf_arr [nbr_biq * 6    ] = 0;
-		coef_hpf_arr [nbr_biq * 6 + 1] = 1;
-		coef_hpf_arr [nbr_biq * 6 + 2] = 1;
-		coef_hpf_arr [nbr_biq * 6 + 3] = 1;
-	}
 	for (int split_idx = 0; split_idx < nbr_bands - 1; ++split_idx)
 	{
 		constexpr double fmin =    20.0;
@@ -153,9 +122,41 @@ int	TestSplitMultibandBustad::perform_test_class (const char *classname_0, const
 		const double     f    =
 			fmin * pow (fmax / fmin, double (split_idx + 1) / nbr_bands);
 		printf ("%7.1f ", f);
+
+		for (int biq = 0; biq < nbr_biq; ++biq)
+		{
+			const double   a1 = mfx::dsp::iir::DesignEq2p::compute_thiele_coef_a1 (
+				S::_order, biq, thiele_k
+			);
+			const double   c_a_s [3] = { 1, a1, 1 };
+			const double   l_b_s [3] = { 1, 0, (biq == 0) ? k2 : 0 };
+			const double   h_b_s [3] = { (biq == 0) ? k2 : 0, 0, 1 };
+			mfx::dsp::iir::TransSZBilin::map_s_to_z (
+				&coef_lpf_arr [biq * 6], &coef_lpf_arr [biq * 6 + 3],
+				l_b_s, c_a_s, f, sample_freq
+			);
+			mfx::dsp::iir::TransSZBilin::map_s_to_z (
+				&coef_hpf_arr [biq * 6], &coef_hpf_arr [biq * 6 + 3],
+				h_b_s, c_a_s, f, sample_freq
+			);
+		}
+		if (nbr_onep > 0)
+		{
+			const double   c_a_s [2] = { 1, 1 };
+			const double   l_b_s [2] = { 1, 0 };
+			const double   h_b_s [2] = { 0, 1 };
+			mfx::dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+				&coef_lpf_arr [nbr_biq * 6], &coef_lpf_arr [nbr_biq * 6 + 2],
+				l_b_s, c_a_s, f, sample_freq
+			);
+			mfx::dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+				&coef_hpf_arr [nbr_biq * 6], &coef_hpf_arr [nbr_biq * 6 + 2],
+				h_b_s, c_a_s, f, sample_freq
+			);
+		}
+
 		splitter.set_splitter_coef (
-			split_idx, float (f),
-			coef_lpf_arr.data (), coef_hpf_arr.data ()
+			split_idx, coef_lpf_arr.data (), coef_hpf_arr.data ()
 		);
 	}
 	double         latency = 0;
@@ -163,7 +164,7 @@ int	TestSplitMultibandBustad::perform_test_class (const char *classname_0, const
 	for (int k = 0; k < nbr_test_lat; ++k)
 	{
 		const double   f  = sample_freq * 0.5 * k / nbr_test_lat + 1e-3;
-		const double   gd = splitter.compute_group_delay (float (f));
+		const double   gd = splitter.compute_group_delay (float (f / sample_freq));
 		latency = std::max (latency, gd);
 	}
 	const double   latency_ms = latency * 1000.0 / sample_freq;

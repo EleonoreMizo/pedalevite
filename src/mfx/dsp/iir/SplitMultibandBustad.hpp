@@ -24,7 +24,6 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/DataAlign.h"
 #include "mfx/dsp/iir/DesignEq2p.h"
-#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Simd.h"
 
 #include <cassert>
@@ -43,35 +42,6 @@ namespace iir
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*
-==============================================================================
-Name: set_sample_freq
-Description:
-	Sets the sampling rate. Call this before anything else.
-	When the sampling rate of a working filterbank is changed, the crossover
-	frequencies may shift because of the quantization.
-Input parameters:
-	- sample_freq: sampling rate, in Hz. > 0
-Throws: std::vector-related exceptions
-==============================================================================
-*/
-
-template <int O>
-void	SplitMultibandBustad <O>::set_sample_freq (double sample_freq)
-{
-	assert (sample_freq > 0);
-
-	_sample_freq = float (    sample_freq);
-	_inv_fs      = float (1 / sample_freq);
-
-	if (! _split_arr.empty ())
-	{
-		update_all ();
-	}
-}
 
 
 
@@ -97,7 +67,6 @@ void	SplitMultibandBustad <O>::reserve (int nbr_bands)
 	const int      nbr_split = nbr_bands - 1;
 	_band_arr.reserve (nbr_bands);
 	_split_arr.reserve (nbr_split);
-	_filter_arr.reserve (nbr_split);
 }
 
 
@@ -110,8 +79,7 @@ Description:
 	Output buffers are required even for single-sample processing, in which
 	case the buffers are 1-sample long.
 	Important notes:
-	- This is a mandatory call before calling any other function excepted
-		set_sample_freq().
+	- This is a mandatory call before calling any other function.
 	- This function allocates memory so it is not RT-safe. However it is
 		possible to preallocate memory with the reserve() function.
 	- If the number of bands is changed, the lower bands are preserved.
@@ -137,17 +105,11 @@ void	SplitMultibandBustad <O>::set_nbr_bands (int nbr_bands, float * const band_
 	const int      nbr_split = nbr_bands - 1;
 	_band_arr.resize (nbr_bands);
 	_split_arr.resize (nbr_split);
-	_filter_arr.resize (nbr_split);
 
 	for (int band_idx = 0; band_idx < nbr_bands; ++band_idx)
 	{
 		Band &         band = _band_arr [band_idx];
 		band._spl_ptr = band_ptr_arr [band_idx];
-	}
-
-	if (_sample_freq > 0)
-	{
-		update_all ();
 	}
 }
 
@@ -178,15 +140,11 @@ int	SplitMultibandBustad <O>::get_nbr_bands () const noexcept
 ==============================================================================
 Name: set_splitter_coef
 Description:
-	Sets the s-plane coefficients for a given crossover filter. The
-	coefficients are normalized in frequency, meaning that the filter is
-	centered around the unit frequency, and transposed with the freq parameter.
-	So it's possible to call the function with the same coefficients for all
-	the crossover splitters, only varying the freq parameter.
+	Sets the z-plane coefficients for a given crossover filter.
+	The splitters should be sorted by ascending cutoff frequencies.
 Input parameters:
 	- split_idx: Crossover index, >= 0. Crossovers should be sorted by
 		ascending frequencies.
-	- freq: Target crossover frequency, Hz
 	- lpf_coef_arr: Pointer on an array containing the filter coefficients
 		for the low-pass filter of the crossover. Layout:
 		- First come groups of coefficients for the 2nd-order sections (if any),
@@ -203,22 +161,39 @@ Throws: Nothing
 */
 
 template <int O>
-void	SplitMultibandBustad <O>::set_splitter_coef (int split_idx, float freq, const float lpf_coef_arr [O], const float hpf_coef_arr [O]) noexcept
+void	SplitMultibandBustad <O>::set_splitter_coef (int split_idx, const float lpf_coef_arr [O], const float hpf_coef_arr [O]) noexcept
 {
-	assert (_sample_freq > 0);
 	assert (split_idx >= 0);
 	assert (split_idx < int (_split_arr.size ()));
-	assert (freq > 0);
-	assert (freq < _sample_freq * 0.5f);
 	assert (lpf_coef_arr != nullptr);
 	assert (hpf_coef_arr != nullptr);
 
-	Split &        split = _split_arr [split_idx];
-	split._freq = freq;
-	split._lpf.fill_with (lpf_coef_arr);
-	split._hpf.fill_with (hpf_coef_arr);
+	Split &        split    = _split_arr [split_idx];
+	int            coef_pos = 0;
 
-	update_xover_coefs (split_idx);
+	// 2nd-order sections
+	for (int unit_cnt = 0; unit_cnt < _nbr_2p; ++unit_cnt)
+	{
+		auto &         lpf = split._lpf._f2p_arr [unit_cnt];
+		auto &         fix = split._fix._f2p_arr [unit_cnt];
+		auto &         hpf = split._hpf._f2p_arr [unit_cnt];
+		lpf.set_z_eq (lpf_coef_arr + coef_pos, lpf_coef_arr + coef_pos + 3);
+		fix.set_z_eq (lpf_coef_arr + coef_pos, lpf_coef_arr + coef_pos + 3);
+		hpf.set_z_eq (hpf_coef_arr + coef_pos, hpf_coef_arr + coef_pos + 3);
+		coef_pos += 6;
+	}
+
+	// 1st-order sections
+	for (int unit_cnt = 0; unit_cnt < _nbr_1p; ++unit_cnt)
+	{
+		auto &         lpf = split._lpf._f1p_arr [unit_cnt];
+		auto &         fix = split._fix._f1p_arr [unit_cnt];
+		auto &         hpf = split._hpf._f1p_arr [unit_cnt];
+		lpf.set_z_eq (lpf_coef_arr + coef_pos, lpf_coef_arr + coef_pos + 2);
+		fix.set_z_eq (lpf_coef_arr + coef_pos, lpf_coef_arr + coef_pos + 2);
+		hpf.set_z_eq (hpf_coef_arr + coef_pos, hpf_coef_arr + coef_pos + 2);
+		coef_pos += 4;
+	}
 }
 
 
@@ -235,39 +210,44 @@ Throws: Nothing
 */
 
 template <int O>
-float	SplitMultibandBustad <O>::compute_group_delay (float freq) const noexcept
+float	SplitMultibandBustad <O>::compute_group_delay (float f0_fs) const noexcept
 {
-	assert (_sample_freq > 0);
 	assert (! _split_arr.empty ());
-	assert (freq >= 0);
+	assert (f0_fs > 0);
+	assert (f0_fs < 0.5f);
 
 	double         latency = 0;
 	const int      nbr_split = int (_split_arr.size ());
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
-		const Split &        split = _split_arr [split_idx];
-		const SplitFilter &  sfilt = _filter_arr [split_idx];
+		const Split &  split = _split_arr [split_idx];
 
 		using DesEq = mfx::dsp::iir::DesignEq2p;
 
-		const Filter & filter = (split._freq < freq) ? sfilt._hpf : sfilt._lpf;
-		for (auto &unit : filter._f2p_arr)
+		// Builds an all-pass from the poles of the LPF. The exact formula is
+		// more complicated, but this one should be correct in most cases.
+		for (auto &unit : split._lpf._f2p_arr)
 		{
 			float          bz [3] { 1 };
 			float          az [3] { 1 };
 			unit.get_z_eq (bz, az);
+			bz [0] = az [2];
+			bz [1] = az [1];
+			bz [2] = az [0];
 			const double      gd = DesEq::compute_group_delay (
-				bz, az, _sample_freq, freq
+				bz, az, 1, f0_fs
 			);
 			latency += gd;
 		}
-		for (auto &unit : filter._f1p_arr)
+		for (auto &unit : split._lpf._f1p_arr)
 		{
 			float          bz [2] { 1 };
 			float          az [2] { 1 };
 			unit.get_z_eq (bz, az);
+			bz [0] = az [1];
+			bz [1] = az [0];
 			const double      gd = DesEq::compute_group_delay_1p (
-				bz, az, _sample_freq, freq
+				bz, az, 1, f0_fs
 			);
 			latency += gd;
 		}
@@ -370,11 +350,11 @@ Throws: Nothing
 template <int O>
 void	SplitMultibandBustad <O>::clear_buffers () noexcept
 {
-	for (auto &split_filter : _filter_arr)
+	for (auto &split : _split_arr)
 	{
-		split_filter._lpf.clear_buffers ();
-		split_filter._hpf.clear_buffers ();
-		split_filter._fix.clear_buffers ();
+		split._lpf.clear_buffers ();
+		split._hpf.clear_buffers ();
+		split._fix.clear_buffers ();
 	}
 }
 
@@ -395,15 +375,14 @@ Throws: Nothing
 template <int O>
 void	SplitMultibandBustad <O>::process_sample_split (float x) noexcept
 {
-	assert (_sample_freq > 0);
 	assert (! _split_arr.empty ());
 
 	const int      nbr_split = int (_split_arr.size ());
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
-		SplitFilter &  filter = _filter_arr [split_idx];
-		const float    lo     = filter._lpf.process_sample (x);
-		x = filter._hpf.process_sample (x);
+		Split &        split = _split_arr [split_idx];
+		const float    lo    = split._lpf.process_sample (x);
+		x = split._hpf.process_sample (x);
 		*(_band_arr [split_idx]._spl_ptr) = lo;
 	}
 	*(_band_arr [nbr_split]._spl_ptr) = x;
@@ -425,17 +404,16 @@ Throws: Nothing
 template <int O>
 float	SplitMultibandBustad <O>::process_sample_merge () noexcept
 {
-	assert (_sample_freq > 0);
 	assert (! _split_arr.empty ());
 
 	float          x = *(_band_arr [0]._spl_ptr);
 	const int      nbr_split = int (_split_arr.size ());
 	for (int split_idx = 1; split_idx < nbr_split; ++split_idx)
 	{
-		SplitFilter &  filter = _filter_arr [split_idx];
-		const Band &   band   = _band_arr [split_idx];
+		Split &        split = _split_arr [split_idx];
+		const Band &   band  = _band_arr [split_idx];
 
-		x  = filter._fix.process_sample (x);
+		x  = split._fix.process_sample (x);
 		x += *(band._spl_ptr);
 	}
 
@@ -462,7 +440,6 @@ Throws: Nothing
 template <int O>
 void	SplitMultibandBustad <O>::process_block_split (const float src_ptr [], int nbr_spl) noexcept
 {
-	assert (_sample_freq > 0);
 	assert (! _split_arr.empty ());
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -470,15 +447,15 @@ void	SplitMultibandBustad <O>::process_block_split (const float src_ptr [], int 
 	const int      nbr_split = int (_split_arr.size ());
 	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
 	{
-		SplitFilter &  filter = _filter_arr [split_idx];
+		Split &        split = _split_arr [split_idx];
 
 		// The lower part goes to the current band, and the higher part
 		// propagates to the next band
 		float *        lo_ptr = _band_arr [split_idx    ]._spl_ptr;
 		float *        hi_ptr = _band_arr [split_idx + 1]._spl_ptr;
 
-		filter._hpf.process_block (hi_ptr, src_ptr, nbr_spl);
-		filter._lpf.process_block (lo_ptr, src_ptr, nbr_spl);
+		split._hpf.process_block (hi_ptr, src_ptr, nbr_spl);
+		split._lpf.process_block (lo_ptr, src_ptr, nbr_spl);
 
 		// Next bands will be filtered in-place.
 		src_ptr = hi_ptr;
@@ -504,7 +481,6 @@ Throws: Nothing
 template <int O>
 void	SplitMultibandBustad <O>::process_block_merge (float dst_ptr [], int nbr_spl) noexcept
 {
-	assert (_sample_freq > 0);
 	assert (! _split_arr.empty ());
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -521,11 +497,11 @@ void	SplitMultibandBustad <O>::process_block_merge (float dst_ptr [], int nbr_sp
 		float *        sum_ptr  = _band_arr [0]._spl_ptr + pos;
 		for (int split_idx = 1; split_idx < nbr_split; ++split_idx)
 		{
-			SplitFilter &  filter = _filter_arr [split_idx];
-			const Band &   band   = _band_arr [split_idx];
+			Split &        split = _split_arr [split_idx];
+			const Band &   band  = _band_arr [split_idx];
 
 			// Fix
-			filter._fix.process_block (buf_fix.data (), sum_ptr, work_len);
+			split._fix.process_block (buf_fix.data (), sum_ptr, work_len);
 
 			// Mix
 			float *        cur_ptr = band._spl_ptr + pos;
@@ -562,37 +538,6 @@ void	SplitMultibandBustad <O>::process_block_merge (float dst_ptr [], int nbr_sp
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-template <int O>
-template <int N>
-int	SplitMultibandBustad <O>::FilterEq <N>::fill_with (const float coef_ptr [SplitMultibandBustad <O>::FilterEq <N>::_nbr_coef]) noexcept
-{
-	for (int k = 0; k < N; ++k)
-	{
-		_b [k] = coef_ptr [    k];
-		_a [k] = coef_ptr [N + k];
-	}
-
-	return _nbr_coef;
-}
-
-
-
-template <int O>
-void	SplitMultibandBustad <O>::Spec::fill_with (const float coef_arr []) noexcept
-{
-	int            coef_ofs = 0;
-	for (auto &eq : _eq_2p)
-	{
-		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
-	}
-	for (auto &eq : _eq_1p)
-	{
-		coef_ofs += eq.fill_with (coef_arr + coef_ofs);
-	}
-}
 
 
 
@@ -640,79 +585,6 @@ void	SplitMultibandBustad <O>::Filter::process_block (float dst_ptr [], const fl
 	{
 		unit.process_block (dst_ptr, src_ptr, nbr_spl);
 		src_ptr = dst_ptr;
-	}
-}
-
-
-
-template <int O>
-void	SplitMultibandBustad <O>::update_all () noexcept
-{
-	const int      nbr_split = int (_split_arr.size ());
-	for (int split_idx = 0; split_idx < nbr_split; ++split_idx)
-	{
-		update_xover_coefs (split_idx);
-	}
-}
-
-
-
-template <int O>
-void	SplitMultibandBustad <O>::update_xover_coefs (int split_idx) noexcept
-{
-	const Split &  split  = _split_arr [split_idx];
-	SplitFilter &  filter = _filter_arr [split_idx];
-
-	const float    f      = split._freq * _inv_fs;
-	const float    k      = TransSZBilin::compute_k_approx (f);
-
-	// LPF
-	set_filter_coefs (
-		split._lpf._eq_2p, filter._lpf._f2p_arr, &filter._fix._f2p_arr,
-		&TransSZBilin::map_s_to_z_approx, k
-	);
-	set_filter_coefs (
-		split._lpf._eq_1p, filter._lpf._f1p_arr, &filter._fix._f1p_arr,
-		&TransSZBilin::map_s_to_z_one_pole_approx, k
-	);
-
-	// HPF
-	decltype (&filter._hpf._f2p_arr) n2_ptr = nullptr;
-	set_filter_coefs (
-		split._hpf._eq_2p, filter._hpf._f2p_arr, n2_ptr,
-		&TransSZBilin::map_s_to_z_approx, k
-	);
-	decltype (&filter._hpf._f1p_arr) n1_ptr = nullptr;
-	set_filter_coefs (
-		split._hpf._eq_1p, filter._hpf._f1p_arr, n1_ptr,
-		&TransSZBilin::map_s_to_z_one_pole_approx, k
-	);
-}
-
-
-
-template <int O>
-template <typename EQS, typename FILT>
-void	SplitMultibandBustad <O>::set_filter_coefs (const EQS &eq_arr, FILT &filt_arr, FILT *filt2_arr_ptr, void (*blt) (float*, float*, const float*, const float*, float), float k)
-{
-	typename EQS::value_type   eq_z;
-	for (int unit_idx = 0; unit_idx < int (eq_arr.size ()); ++unit_idx)
-	{
-		const auto &   eq_s = eq_arr [unit_idx];
-		blt (
-			eq_z._b.data (), eq_z._a.data (),
-			eq_s._b.data (), eq_s._a.data (),
-			k
-		);
-		filt_arr [unit_idx].set_z_eq (
-			eq_z._b.data (), eq_z._a.data ()
-		);
-		if (filt2_arr_ptr != nullptr)
-		{
-			(*filt2_arr_ptr) [unit_idx].set_z_eq (
-				eq_z._b.data (), eq_z._a.data ()
-			);
-		}
 	}
 }
 

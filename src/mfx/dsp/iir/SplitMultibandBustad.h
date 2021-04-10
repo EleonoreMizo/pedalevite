@@ -103,13 +103,12 @@ public:
 
 	static constexpr int _order  = O;
 
-	void           set_sample_freq (double sample_freq);
 	void           reserve (int nbr_bands);
 	void           set_nbr_bands (int nbr_bands, float * const band_ptr_arr []);
 	inline int     get_nbr_bands () const noexcept;
 
-	void           set_splitter_coef (int split_idx, float freq, const float lpf_coef_arr [O], const float hpf_coef_arr [O]) noexcept;
-	float          compute_group_delay (float freq) const noexcept;
+	void           set_splitter_coef (int split_idx, const float lpf_coef_arr [O], const float hpf_coef_arr [O]) noexcept;
+	float          compute_group_delay (float f0_fs) const noexcept;
 	void           set_band_ptr_one (int band_idx, float *band_ptr) noexcept;
 	void           set_band_ptr (float * const band_ptr_arr []) noexcept;
 	inline void    offset_band_ptr (ptrdiff_t offset) noexcept;
@@ -137,42 +136,9 @@ private:
 
 	typedef std::array <float, _max_buf_size> Buffer;
 
-	template <int N>
-	class FilterEq
-	{
-	public:
-		std::array <float, N> _b { 1 }; // Numerator
-		std::array <float, N> _a { 1 }; // Denominator
-		static constexpr int _nbr_coef = N * 2;
-		int            fill_with (const float coef_ptr [_nbr_coef]) noexcept;
-	};
-	typedef FilterEq <3> Eq2p;
-	typedef FilterEq <2> Eq1p;
-
-	// Normalized s-plane spec
-	typedef std::array <Eq2p, _nbr_2p> Eq2pArray;
-	typedef std::array <Eq1p, _nbr_1p> Eq1pArray;
-
 	// Crossover filter realisations
 	typedef std::array <Biquad , _nbr_2p> F2pArray;
 	typedef std::array <OnePole, _nbr_1p> F1pArray;
-
-	class Spec
-	{
-	public:
-		void           fill_with (const float coef_arr []) noexcept;
-		Eq2pArray      _eq_2p;
-		Eq1pArray      _eq_1p;
-	};
-
-	class Split
-	{
-	public:
-		float          _freq = 0;
-		Spec           _lpf;
-		Spec           _hpf;
-	};
-	typedef std::vector <Split> SplitArray;
 
 	class Filter
 	{
@@ -185,14 +151,14 @@ private:
 		F1pArray       _f1p_arr;
 	};
 
-	class SplitFilter
+	class Split
 	{
 	public:
 		Filter         _lpf;
 		Filter         _hpf;
-		Filter         _fix; // LPF
+		Filter         _fix; // Same as LPF
 	};
-	typedef std::vector <SplitFilter> FilterArray;
+	typedef std::vector <Split> SplitArray;
 
 	class Band
 	{
@@ -201,20 +167,7 @@ private:
 	};
 	typedef std::vector <Band> BandArray;
 
-	void           update_all () noexcept;
-	void           update_xover_coefs (int split_idx) noexcept;
-
-	template <typename EQS, typename FILT>
-	static void    set_filter_coefs (const EQS &eq_arr, FILT &filt_arr, FILT *filt2_arr_ptr, void (*blt) (float*, float*, const float*, const float*, float), float k);
-
-	// Sample frequency, Hz. > 0. 0 = not set
-	float          _sample_freq = 0;
-
-	// Sampling period, 1 / Fs. > 0. 0 = not set
-	float          _inv_fs      = 0;
-
 	SplitArray     _split_arr;
-	FilterArray    _filter_arr;
 	BandArray      _band_arr;
 
 
