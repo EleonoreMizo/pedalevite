@@ -103,6 +103,12 @@ public:
 	typedef T DataType;
 	typedef SplitMultiband <T, O0, O1> ThisType;
 
+	// Number of 2-pole and 1-pole sections for each all-pass filter
+	static constexpr int _nbr_2p_0 = O0 / 2;
+	static constexpr int _nbr_1p_0 = O0 & 1;
+	static constexpr int _nbr_2p_1 = O1 / 2;
+	static constexpr int _nbr_1p_1 = O1 & 1;
+
 	               SplitMultiband ();
 	               SplitMultiband (SplitMultiband &&other) = default;
 	SplitMultiband &
@@ -142,12 +148,6 @@ private:
 
 	// Number of output for each splitter (convenience constant)
 	static constexpr int _nbr_split_out = 2;
-
-	// Number of 2-pole and 1-pole sections for each all-pass filter
-	static constexpr int _nbr_2p_0 = O0 / 2;
-	static constexpr int _nbr_1p_0 = O0 & 1;
-	static constexpr int _nbr_2p_1 = O1 / 2;
-	static constexpr int _nbr_1p_1 = O1 & 1;
 
 	typedef AllPassCascade <T, _nbr_2p_0, _nbr_1p_0> ApfChain0;
 	typedef AllPassCascade <T, _nbr_2p_1, _nbr_1p_1> ApfChain1;
