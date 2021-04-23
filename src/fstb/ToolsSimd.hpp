@@ -371,6 +371,8 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3) n
 	return _mm_set_ps (a3, a2, a1, a0);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
  #if 1
+	return float32x4_t { a0, a1, a2, a3 };
+ #elif 0
 	float32x2_t    v01 = vdup_n_f32 (a0);
 	float32x2_t    v23 = vdup_n_f32 (a2);
 	v01 = vset_lane_f32 (a1, v01, 1);
@@ -399,11 +401,15 @@ ToolsSimd::VectS32	ToolsSimd::set_s32 (int32_t a0, int32_t a1, int32_t a2, int32
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set_epi32 (a3, a2, a1, a0);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
+ #if 1
+	return float32x4_t { a0, a1, a2, a3 };
+ #else
 	int32x2_t      v01 = vdup_n_s32 (a0);
 	int32x2_t      v23 = vdup_n_s32 (a2);
 	v01 = vset_lane_s32 (a1, v01, 1);
 	v23 = vset_lane_s32 (a3, v23, 1);
 	return vcombine_s32 (v01, v23);
+ #endif
 #endif // fstb_ARCHI
 }
 
@@ -664,8 +670,10 @@ float	ToolsSimd::sum_h_flt (VectF32 v) noexcept
 #if ! defined (fstb_HAS_SIMD)
 	return (v._ [0] + v._ [2]) + (v._ [1] + v._ [3]);
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	v = _mm_add_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
-	return _mm_cvtss_f32 (_mm_add_ss (v, _mm_shuffle_ps (v, v, 1)));
+	// s = v3,v2,v1,v0
+	const auto s = _mm_shuffle_ps (v, v, (3 << 0) | (2 << 2) | (1 << 4) | (0 << 6));
+	v = _mm_add_ps (v, s); // v0+v3,v1+v2,v2+v1,v3+v0
+	return _mm_cvtss_f32 (_mm_add_ss (v, _mm_movehl_ps (s, v)));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x2_t    v2 = vadd_f32 (vget_high_f32 (v), vget_low_f32 (v));
 	return vget_lane_f32 (vpadd_f32 (v2, v2), 0);
@@ -1896,7 +1904,7 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1) noexce
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { p0._ [0], p0._ [1], p1._ [0], p1._ [1] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (p0, p1, (1<<6) + (0<<4) + (1<<2) + (0<<0));
+	return _mm_shuffle_ps (p0, p1, (0<<0) + (1<<2) + (0<<4) + (1<<6));
 	// return _mm_movelh_ps (p0, p1);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t  p0x = vget_low_f32 (p0);
@@ -1913,7 +1921,7 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_hi (VectF32 p0, VectF32 p1) noexce
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { p0._ [2], p0._ [3], p1._ [2], p1._ [3] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (p0, p1, (3<<6) + (2<<4) + (3<<2) + (2<<0));
+	return _mm_shuffle_ps (p0, p1, (2<<0) + (3<<2) + (2<<4) + (3<<6));
 	// return _mm_movehl_ps (p1, p0);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t  p0x = vget_high_f32 (p0);
@@ -1959,8 +1967,8 @@ void	ToolsSimd::deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 
 	p0._ [3] = i1._ [2];
 	p1._ [3] = i1._ [3];
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	p0 = _mm_shuffle_ps (i0, i1, 0x88);
-	p1 = _mm_shuffle_ps (i0, i1, 0xDD);
+	p0 = _mm_shuffle_ps (i0, i1, (0<<0) | (2<<2) | (0<<4) | (2<<6));
+	p1 = _mm_shuffle_ps (i0, i1, (1<<0) | (3<<2) | (1<<4) | (3<<6));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x4x2_t  tmp = vuzpq_f32 (i0, i1);
 	p0 = tmp.val [0];
@@ -1975,7 +1983,7 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_lo (VectF32 i0, VectF32 i1) noexc
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { i0._ [0], i0._ [2], i1._ [0], i1._ [2] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (i0, i1, 0x88);
+	return _mm_shuffle_ps (i0, i1, (0<<0) | (2<<2) | (0<<4) | (2<<6));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vuzpq_f32 (i0, i1).val [0];
 #endif // fstb_ARCHI
@@ -1988,7 +1996,7 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_hi (VectF32 i0, VectF32 i1) noexc
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { i0._ [1], i0._ [3], i1._ [1], i1._ [3] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (i0, i1, 0xDD);
+	return _mm_shuffle_ps (i0, i1, (1<<0) | (3<<2) | (1<<4) | (3<<6));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vuzpq_f32 (i0, i1).val [1];
 #endif // fstb_ARCHI
