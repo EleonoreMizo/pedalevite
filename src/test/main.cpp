@@ -97,6 +97,7 @@
 #include "test/TestSplitMultiband.h"
 #include "test/TestSplitMultibandBustad.h"
 #include "test/TestSplitMultibandLin.h"
+#include "test/TestSplitMultibandSimdGen.h"
 #include "test/TestSplitThiele8.h"
 #include "test/TestSvf.h"
 #include "test/TestSvfAntisat.h"
@@ -1895,10 +1896,14 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestSplitMultibandSimdGen::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestSplitMultibandBustad::perform_test ();
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestSplitMultibandLin::perform_test ();
 #endif
 
@@ -2179,7 +2184,13 @@ int main (int argc, char *argv [])
 
 	if (ret_val == 0)
 	{
+#if 0
 		printf ("Everything is OK.\n");
+#endif
+	}
+	else
+	{
+		printf ("There were errors.\n");
 	}
 
 	return ret_val;

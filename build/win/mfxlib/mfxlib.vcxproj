@@ -937,6 +937,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLinBase.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLinSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandLinSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitMultibandSimdGen.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpBypass.h" />
@@ -1825,6 +1826,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\OnePole.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitAp5.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitMultibandSimdGen.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Svf2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\TransS.cpp" />

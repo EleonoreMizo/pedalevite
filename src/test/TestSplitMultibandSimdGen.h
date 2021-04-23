@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestSplitMultiband.h
+        TestSplitMultibandSimdGen.h
         Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (TestSplitMultiband_HEADER_INCLUDED)
-#define TestSplitMultiband_HEADER_INCLUDED
+#if ! defined (TestSplitMultibandSimdGen_HEADER_INCLUDED)
+#define TestSplitMultibandSimdGen_HEADER_INCLUDED
 
 
 
@@ -25,7 +25,7 @@ http://www.wtfpl.net/ for more details.
 
 
 
-class TestSplitMultiband
+class TestSplitMultibandSimdGen
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -46,34 +46,31 @@ protected:
 
 private:
 
-	template <class S, typename FB>
-	static int     perform_test_class (const char *classname_0, const char *filename_0, int nbr_bands, bool block_flag, bool save_flag, FB set_band_fnc);
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	               TestSplitMultiband ()                               = delete;
-	               TestSplitMultiband (const TestSplitMultiband &other) = delete;
-	               TestSplitMultiband (TestSplitMultiband &&other)      = delete;
-	TestSplitMultiband &
-	               operator = (const TestSplitMultiband &other)        = delete;
-	TestSplitMultiband &
-	               operator = (TestSplitMultiband &&other)             = delete;
-	bool           operator == (const TestSplitMultiband &other) const = delete;
-	bool           operator != (const TestSplitMultiband &other) const = delete;
+	               TestSplitMultibandSimdGen ()                               = delete;
+	               TestSplitMultibandSimdGen (const TestSplitMultibandSimdGen &other) = delete;
+	               TestSplitMultibandSimdGen (TestSplitMultibandSimdGen &&other)      = delete;
+	TestSplitMultibandSimdGen &
+	               operator = (const TestSplitMultibandSimdGen &other)        = delete;
+	TestSplitMultibandSimdGen &
+	               operator = (TestSplitMultibandSimdGen &&other)             = delete;
+	bool           operator == (const TestSplitMultibandSimdGen &other) const = delete;
+	bool           operator != (const TestSplitMultibandSimdGen &other) const = delete;
 
-}; // class TestSplitMultiband
-
-
-
-//#include "test/TestSplitMultiband.hpp"
+}; // class TestSplitMultibandSimdGen
 
 
 
-#endif   // TestSplitMultiband_HEADER_INCLUDED
+//#include "test/TestSplitMultibandSimdGen.hpp"
+
+
+
+#endif   // TestSplitMultibandSimdGen_HEADER_INCLUDED
 
 
 

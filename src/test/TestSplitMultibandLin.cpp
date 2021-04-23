@@ -250,7 +250,6 @@ int	TestSplitMultibandLin::perform_test_class (const char *classname_0, const ch
 		assert ((len & 1) == 0);
 		do
 		{
-			// Processing samples is faster
 			splitter.process_sample (src [pos]);
 			splitter.offset_band_ptr (1);
 			++ pos;

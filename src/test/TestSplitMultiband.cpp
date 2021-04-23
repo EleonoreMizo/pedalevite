@@ -22,6 +22,10 @@ http://www.wtfpl.net/ for more details.
 
 
 
+#undef test_TestSplitMultiband_AUTOGEN
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
@@ -32,6 +36,10 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/FileOpWav.h"
 #include "test/TestSplitMultiband.h"
 #include "test/TimerAccurate.h"
+
+#if defined (test_TestSplitMultiband_AUTOGEN)
+	#include "test/TestSplitMultiband_generated.h"
+#endif // test_TestSplitMultiband_AUTOGEN
 
 #include <cassert>
 #include <cmath>
@@ -47,7 +55,64 @@ int	TestSplitMultiband::perform_test ()
 {
 	int            ret_val = 0;
 
-	printf ("Testing mfx::dsp::iir::SplitMultiband...\n");
+	if (ret_val == 0)
+	{
+		ret_val = perform_test_class <
+			mfx::dsp::iir::SplitMultiband <float, 2, 3>
+		> (
+			"mfx::dsp::iir::SplitMultiband",
+			"splitmultiband",
+			11,
+			false, // block_flag
+			true,  // save_flag
+			[] (auto &s, int nbr_bands, float * const ptr_arr [])
+			{
+				s.set_nbr_bands (nbr_bands, ptr_arr);
+			}
+		);
+	}
+
+#if defined (test_TestSplitMultiband_AUTOGEN)
+	if (ret_val == 0)
+	{
+		ret_val = perform_test_class <
+			SplitMultibandSimd
+		> (
+			"SplitMultibandSimd",
+			"splitmultibandsimd",
+			SplitMultibandSimd::_nbr_bands,
+			false, // block_flag
+			true,  // save_flag
+			[] (auto &s, int /*nbr_bands*/, float * const ptr_arr [])
+			{
+				s.set_band_ptr (ptr_arr);
+			}
+		);
+	}
+#endif // test_TestSplitMultiband_AUTOGEN
+
+	return ret_val;
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <class S, typename FB>
+int	TestSplitMultiband::perform_test_class (const char *classname_0, const char *filename_0, int nbr_bands, bool block_flag, bool save_flag, FB set_band_fnc)
+{
+	assert (classname_0 != nullptr);
+	assert (filename_0  != nullptr);
+
+	int            ret_val = 0;
+
+	printf ("Testing %s...\n", classname_0);
 
 	mfx::dsp::mix::Generic::setup ();
 
@@ -59,21 +124,20 @@ int	TestSplitMultiband::perform_test ()
 	mfx::dsp::osc::SweepingSin ssin (sample_freq, 20.0, 20000.0);
 	ssin.generate (src.data (), len);
 
-	constexpr int  order_ap0 = 2;
-	constexpr int  order_ap1 = 3;
-	mfx::dsp::iir::SplitMultiband <float, order_ap0, order_ap1> splitter;
-	constexpr int  nbr_bands = 11;
+	S              splitter;
+	constexpr int  order_ap0 = S::_nbr_2p_0 * 2 + S::_nbr_1p_0;
+	constexpr int  order_ap1 = S::_nbr_2p_1 * 2 + S::_nbr_1p_1;
 
 	typedef std::array <float, buf_size> Buffer;
-	std::array <Buffer, nbr_bands> buf_arr;
+	std::vector <Buffer> buf_arr (nbr_bands);
 
-	std::array <float *, nbr_bands> band_ptr_arr;
+	std::vector <float *> band_ptr_arr (nbr_bands);
 	for (int k = 0; k < nbr_bands; ++k)
 	{
 		band_ptr_arr [k] = buf_arr [k].data ();
 	}
 
-	splitter.set_nbr_bands (nbr_bands, band_ptr_arr.data ());
+	set_band_fnc (splitter, nbr_bands, band_ptr_arr.data ());
 
 	// Filter design
 	printf ("Split frequencies: ");
@@ -116,8 +180,10 @@ int	TestSplitMultiband::perform_test ()
 	}
 	printf ("\n");
 
+	/*** To do: evaluate group delay ***/
+
 	std::vector <float>  dst (len);
-	std::array <std::vector <float>, nbr_bands> band_dst;
+	std::vector <std::vector <float> > band_dst (nbr_bands);
 	for (auto &v : band_dst)
 	{
 		v.resize (len);
@@ -127,10 +193,22 @@ int	TestSplitMultiband::perform_test ()
 	do
 	{
 		const int      nbr_spl = std::min (len - pos, buf_size);
-		splitter.process_block (&src [pos], nbr_spl);
+		if (block_flag)
+		{
+			splitter.process_block (&src [pos], nbr_spl);
+		}
+		else
+		{
+			for (int k = 0; k < nbr_spl; ++k)
+			{
+				splitter.process_sample (src [pos + k]);
+				splitter.offset_band_ptr (1);
+			}
+			splitter.offset_band_ptr (-nbr_spl);
+		}
 		for (int band_cnt = 0; band_cnt < nbr_bands; ++band_cnt)
 		{
-			mfx::dsp::mix::Generic::mix_1_1 (
+			mfx::dsp::mix::Generic::copy_1_1 (
 				&band_dst [band_cnt] [pos], buf_arr [band_cnt].data (), nbr_spl
 			);
 		}
@@ -147,14 +225,20 @@ int	TestSplitMultiband::perform_test ()
 		);
 	}
 
-	mfx::FileOpWav::save ("results/splitmultiband-sum.wav", dst, sample_freq, 0.5f);
-	for (int band_cnt = 0; band_cnt < nbr_bands; ++band_cnt)
+	if (save_flag)
 	{
-		char           filename_0 [1023+1];
-		fstb::snprintf4all (filename_0, sizeof (filename_0),
-			"results/splitmultiband-%02d.wav", band_cnt
+		char           pathname_0 [1023+1];
+		fstb::snprintf4all (pathname_0, sizeof (pathname_0),
+			"results/%s-sum.wav", filename_0
 		);
-		mfx::FileOpWav::save (filename_0, band_dst [band_cnt], sample_freq, 0.5f);
+		mfx::FileOpWav::save (pathname_0, dst, sample_freq, 0.5f);
+		for (int band_cnt = 0; band_cnt < nbr_bands; ++band_cnt)
+		{
+			fstb::snprintf4all (pathname_0, sizeof (pathname_0),
+				"results/%s-%02d.wav", filename_0, band_cnt
+			);
+			mfx::FileOpWav::save (pathname_0, band_dst [band_cnt], sample_freq, 0.5f);
+		}
 	}
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -165,23 +249,30 @@ int	TestSplitMultiband::perform_test ()
 
 	tim.start ();
 	pos = 0;
-	do
+	if (block_flag)
 	{
-#if 0
-		const int      nbr_spl = std::min (len - pos, buf_size);
-		splitter.process_block (&src [pos], nbr_spl);
-		pos += nbr_spl;
-#else
-		// Processing samples is faster
-		splitter.process_sample (src [pos]);
-		splitter.offset_band_ptr (1);
-		++ pos;
-		splitter.process_sample (src [pos]);
-		splitter.offset_band_ptr (-1);
-		++ pos;
-#endif
+		do
+		{
+			const int      nbr_spl = std::min (len - pos, buf_size);
+			splitter.process_block (&src [pos], nbr_spl);
+			pos += nbr_spl;
+		}
+		while (pos < len);
 	}
-	while (pos < len);
+	else
+	{
+		assert ((len & 1) == 0);
+		do
+		{
+			splitter.process_sample (src [pos]);
+			splitter.offset_band_ptr (1);
+			++ pos;
+			splitter.process_sample (src [pos]);
+			splitter.offset_band_ptr (-1);
+			++ pos;
+		}
+		while (pos < len);
+	}
 	tim.stop ();
 
 	// Makes sure the results are not optimized out by the compiler
@@ -200,14 +291,6 @@ int	TestSplitMultiband::perform_test ()
 
 	return ret_val;
 }
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
