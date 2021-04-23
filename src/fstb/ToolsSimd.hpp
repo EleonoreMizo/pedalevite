@@ -546,6 +546,29 @@ ToolsSimd::VectS32	ToolsSimd::reverse_s32 (VectS32 x) noexcept
 
 
 
+void	ToolsSimd::explode (float &a0, float &a1, float &a2, float &a3, VectF32 x) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	a0 = x._ [0];
+	a1 = x._ [1];
+	a2 = x._ [2];
+	a3 = x._ [3];
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto     tmp = _mm_movehl_ps (x, x);
+	a0 = _mm_cvtss_f32 (x);
+	a2 = _mm_cvtss_f32 (tmp);
+	a1 = _mm_cvtss_f32 (_mm_shuffle_ps (x, x, (1<<0)));
+	a3 = _mm_cvtss_f32 (_mm_shuffle_ps (tmp, tmp, (1<<0)));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	a0 = vgetq_lane_f32 (x, 0);
+	a1 = vgetq_lane_f32 (x, 1);
+	a2 = vgetq_lane_f32 (x, 2);
+	a3 = vgetq_lane_f32 (x, 3);
+#endif // fstb_ARCHI
+}
+
+
+
 void	ToolsSimd::mac (VectF32 &s, VectF32 a, VectF32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -1895,6 +1918,71 @@ unsigned int	ToolsSimd::movemask_f32 (VectF32 x) noexcept
 	);
 	return (vget_lane_u32 (vreinterpret_u32_u64 (tmp2), 0) & 0xF);
 #endif // fstb_ARCHI
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::cast_f32 (VectS32 x) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return *reinterpret_cast <const VectF32 *> (&x);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_castsi128_ps (x);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vreinterpretq_f32_s32 (x);
+#endif
+}
+
+
+
+// a, b, c, d -> a+c, b+d, a-c, b-d
+ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w64 (VectF32 x) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return ToolsSimd::VectF32 { {
+		x._ [0] + x._ [2],
+		x._ [1] + x._ [3],
+		x._ [0] - x._ [2],
+		x._ [1] - x._ [3]
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 0, 1 << 31, 1 << 31));
+	const auto x0   = _mm_shuffle_ps (x, x, (2<<0) + (3<<2) + (0<<4) + (1<<6)); // c, d, a, b
+	const auto x1   = _mm_xor_ps (x, sign); // a, b, -c, -d
+	return x0 + x1;
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const auto sign = int32x4_t { 0, 0, -1 << 31, -1 << 31 };
+	const auto x0   = vcombine_f32 (vget_high_f32 (x), vget_low_f32 (x)); // c, d, a, b
+	const auto x1   = // a, b, -c, -d
+		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (a), sign));
+	return x0 + x1;
+#endif
+}
+
+
+
+// a, b, c, d -> a+b, a-b, c+d, c-d
+ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w32 (VectF32 x) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return ToolsSimd::VectF32 { {
+		x._ [0] + x._ [1],
+		x._ [0] + x._ [1],
+		x._ [2] - x._ [3],
+		x._ [2] - x._ [3]
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 1 << 31, 0, 1 << 31));
+	const auto x0   = _mm_shuffle_ps (x, x, (1<<0) + (0<<2) + (3<<4) + (2<<6)); // b, a, d, c
+	const auto x1   = _mm_xor_ps (x, sign); // a, -b, c, -d
+	return x0 + x1;
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const auto sign = int32x4_t { 0, -1 << 31, 0, -1 << 31 };
+	const auto x0   = vrev64q_f32 (x); // b, a, d, c
+	const auto x1   = // a, -b, c, -d
+		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (a), sign));
+	return x0 + x1;
+#endif
 }
 
 

@@ -183,6 +183,9 @@ public:
 	               reverse_s32 (VectS32 x) noexcept;
 
 	static inline void
+	               explode (float &a0, float &a1, float &a2, float &a3, VectF32 x) noexcept;
+
+	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b) noexcept;
 	static inline void
 	               msu (VectF32 &s, VectF32 a, VectF32 b) noexcept;
@@ -283,6 +286,13 @@ public:
 	               count_bits (VectS32 x) noexcept;
 	static inline unsigned int
 	               movemask_f32 (VectF32 x) noexcept;
+	static inline VectF32
+	               cast_f32 (VectS32 x) noexcept;
+
+	static inline VectF32
+	               butterfly_f32_w64 (VectF32 x) noexcept;
+	static inline VectF32
+	               butterfly_f32_w32 (VectF32 x) noexcept;
 
 	static inline VectF32
 	               interleave_2f32_lo (VectF32 p0, VectF32 p1) noexcept;
