@@ -380,7 +380,7 @@ Input parameters:
 	- sample_freq: sampling frequency, Hz. > 0
 	- f0: frequency at which the group delay should be evaluated.
 		Hz, in ]0 ; sample_freq[
-Returns: The group delay, in samples. >= 0.
+Returns: The group delay, in samples.
 Throws: Nothing
 ==============================================================================
 */
@@ -415,7 +415,6 @@ double	DesignEq2p::compute_group_delay (const T bz [3], const T az [3], double s
 	assert (den1 != 0);
 	assert (den2 != 0);
 	const double   gd   = num1 / den1 - num2 / den2;
-	assert (gd >= 0);
 
 	return gd;
 }
@@ -434,7 +433,7 @@ Input parameters:
 	- sample_freq: sampling frequency, Hz. > 0
 	- f0: frequency at which the group delay should be evaluated.
 		Hz, in ]0 ; sample_freq[
-Returns: The group delay, in samples. >= 0.
+Returns: The group delay, in samples.
 Throws: Nothing
 ==============================================================================
 */
@@ -468,7 +467,6 @@ double	DesignEq2p::compute_group_delay_1p (const T bz [2], const T az [2], doubl
 	assert (den1 != 0);
 	assert (den2 != 0);
 	const double   gd = num1 / den1 - num2 / den2;
-	assert (gd >= 0);
 
 	return gd;
 }
