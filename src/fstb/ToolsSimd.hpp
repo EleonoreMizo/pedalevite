@@ -377,6 +377,7 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3) n
 	float32x2_t    v23 = vdup_n_f32 (a2);
 	v01 = vset_lane_f32 (a1, v01, 1);
 	v23 = vset_lane_f32 (a3, v23, 1);
+	return vcombine_f32 (v01, v23);
  #else // Not tested
 	const float32x2_t    v01 = vcreate_f32 (
 		  (uint64_t (*reinterpret_cast <const uint32_t *> (&a0))      )
@@ -386,8 +387,8 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3) n
 		  (uint64_t (*reinterpret_cast <const uint32_t *> (&a2))      )
 		| (uint64_t (*reinterpret_cast <const uint32_t *> (&a3)) << 32)
 	);
- #endif
 	return vcombine_f32 (v01, v23);
+ #endif
 #endif // fstb_ARCHI
 }
 
@@ -402,7 +403,7 @@ ToolsSimd::VectS32	ToolsSimd::set_s32 (int32_t a0, int32_t a1, int32_t a2, int32
 	return _mm_set_epi32 (a3, a2, a1, a0);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
  #if 1
-	return float32x4_t { a0, a1, a2, a3 };
+	return int32x4_t { a0, a1, a2, a3 };
  #else
 	int32x2_t      v01 = vdup_n_s32 (a0);
 	int32x2_t      v23 = vdup_n_s32 (a2);
