@@ -1951,10 +1951,10 @@ ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w64 (VectF32 x) noexcept
 	const auto x1   = _mm_xor_ps (x, sign); // a, b, -c, -d
 	return x0 + x1;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	const auto sign = int32x4_t { 0, 0, -1 << 31, -1 << 31 };
+	const auto sign = int32x4_t { 0, 0, -(1<<31), -(1<<31) };
 	const auto x0   = vcombine_f32 (vget_high_f32 (x), vget_low_f32 (x)); // c, d, a, b
 	const auto x1   = // a, b, -c, -d
-		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (a), sign));
+		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (x), sign));
 	return x0 + x1;
 #endif
 }
@@ -1977,10 +1977,10 @@ ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w32 (VectF32 x) noexcept
 	const auto x1   = _mm_xor_ps (x, sign); // a, -b, c, -d
 	return x0 + x1;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	const auto sign = int32x4_t { 0, -1 << 31, 0, -1 << 31 };
+	const auto sign = int32x4_t { 0, -(1<<31), 0, -(1<<31) };
 	const auto x0   = vrev64q_f32 (x); // b, a, d, c
 	const auto x1   = // a, -b, c, -d
-		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (a), sign));
+		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (x), sign));
 	return x0 + x1;
 #endif
 }
