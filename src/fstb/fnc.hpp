@@ -965,6 +965,26 @@ constexpr T	lerp (T v0, T v1, T p)
 
 
 
+namespace detail
+{
+	template <typename T, std::size_t... IS>
+	constexpr std::array <T, sizeof... (IS)>
+	make_array (const T &init_val, std::index_sequence <IS...>)
+	{
+		return {{ (static_cast <void> (IS), init_val)... }};
+	}
+}
+
+// Default-initializes an array with a specified value
+// Source: https://stackoverflow.com/a/41259045
+template <std::size_t N, typename T>
+constexpr std::array <T, N> make_array (const T &init_val)
+{
+	return detail::make_array (init_val, std::make_index_sequence <N> ());
+}
+
+
+
 template <class T>
 T	read_unalign (const void *ptr)
 {

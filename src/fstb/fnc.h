@@ -29,8 +29,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#include <array>
 #include <string>
 
+#include <cstddef>
 #include <cstdint>
 #include <cstdio>
 
@@ -93,6 +95,9 @@ template <class T>
 inline constexpr T       rcp_uint (int x);
 template <class T>
 inline constexpr T       lerp (T v0, T v1, T p);
+
+template <std::size_t N, typename T>
+constexpr std::array <T, N> make_array (const T &init_val);
 
 template <class T>
 inline T       read_unalign (const void *ptr);
