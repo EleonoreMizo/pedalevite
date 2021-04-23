@@ -102,254 +102,254 @@ public:
 		uint16_t       _u16 [8];
 	};
 
-	static void    disable_denorm ();
+	static void    disable_denorm () noexcept;
 
 	template <typename MEM>
 	static inline VectF32
-	               load_f32 (const MEM *ptr);
+	               load_f32 (const MEM *ptr) noexcept;
 	template <typename MEM>
 	static inline VectS32
-	               load_s32 (const MEM *ptr);
+	               load_s32 (const MEM *ptr) noexcept;
 	template <typename MEM>
 	static inline void
-	               store_f32 (MEM *ptr, VectF32 v);
+	               store_f32 (MEM *ptr, VectF32 v) noexcept;
 	template <typename MEM>
 	static inline void
-	               store_s32 (MEM *ptr, VectS32 v);
+	               store_s32 (MEM *ptr, VectS32 v) noexcept;
 	template <typename MEM>
 	static inline void
-	               store_f32_part (MEM *ptr, VectF32 v, int n);
+	               store_f32_part (MEM *ptr, VectF32 v, int n) noexcept;
 	template <typename MEM>
 	static inline VectF32
-	               loadu_f32 (const MEM *ptr);
+	               loadu_f32 (const MEM *ptr) noexcept;
 	template <typename MEM>
 	static inline VectS32
-	               loadu_s32 (const MEM *ptr);
+	               loadu_s32 (const MEM *ptr) noexcept;
 	template <typename MEM>
 	static inline VectF32
-	               loadu_f32_part (const MEM *ptr, int n);
+	               loadu_f32_part (const MEM *ptr, int n) noexcept;
 	template <typename MEM>
 	static inline void
-	               storeu_f32 (MEM *ptr, VectF32 v);
+	               storeu_f32 (MEM *ptr, VectF32 v) noexcept;
 	template <typename MEM>
 	static inline void
-	               storeu_s32 (MEM *ptr, VectS32 v);
+	               storeu_s32 (MEM *ptr, VectS32 v) noexcept;
 	template <typename MEM>
 	static inline void
-	               storeu_f32_part (MEM *ptr, VectF32 v, int n);
+	               storeu_f32_part (MEM *ptr, VectF32 v, int n) noexcept;
 	template <typename MEM>
 	static inline void
-	               storeu_s32_part (MEM *ptr, VectS32 v, int n);
+	               storeu_s32_part (MEM *ptr, VectS32 v, int n) noexcept;
 
 	template <typename MEM>
 	static inline VectF32
-	               loadu_2f32 (const MEM *ptr);
+	               loadu_2f32 (const MEM *ptr) noexcept;
 	template <typename MEM>
 	static inline void
-	               storeu_2f32 (MEM *ptr, VectF32 v);
+	               storeu_2f32 (MEM *ptr, VectF32 v) noexcept;
 
 	template <typename MEM>
 	static inline void
-	               storeu_1f32 (MEM *ptr, VectF32 v);
+	               storeu_1f32 (MEM *ptr, VectF32 v) noexcept;
 
 	static inline VectF32
-	               set_f32_zero ();
+	               set_f32_zero () noexcept;
 	static inline VectS32
-	               set_s32_zero ();
+	               set_s32_zero () noexcept;
 	static inline VectF32
-	               set1_f32 (float a);
+	               set1_f32 (float a) noexcept;
 	static inline VectS32
-	               set1_s32 (int32_t a);
+	               set1_s32 (int32_t a) noexcept;
 	static inline VectF32
-	               set_f32 (float a0, float a1, float a2, float a3);
+	               set_f32 (float a0, float a1, float a2, float a3) noexcept;
 	static inline VectS32
-	               set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3);
+	               set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept;
 	static inline VectF32
-	               set_2f32 (float a0, float a1);
+	               set_2f32 (float a0, float a1) noexcept;
 	static inline VectF32
-	               set_2f32_fill (float a02, float a13);
+	               set_2f32_fill (float a02, float a13) noexcept;
 	static inline VectF32
-	               set_2f32_dbl (float a01, float a23);
+	               set_2f32_dbl (float a01, float a23) noexcept;
 	static inline VectF32
-	               swap_2f32 (VectF32 v);
+	               swap_2f32 (VectF32 v) noexcept;
 	static inline void
-	               extract_2f32 (float &a0, float &a1, VectF32 v);
+	               extract_2f32 (float &a0, float &a1, VectF32 v) noexcept;
 	static inline void
-	               spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v);
+	               spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v) noexcept;
 
 	static inline VectF32
-	               reverse_f32 (VectF32 x);
+	               reverse_f32 (VectF32 x) noexcept;
 	static inline VectS32
-	               reverse_s32 (VectS32 x);
+	               reverse_s32 (VectS32 x) noexcept;
 
 	static inline void
-	               mac (VectF32 &s, VectF32 a, VectF32 b);
+	               mac (VectF32 &s, VectF32 a, VectF32 b) noexcept;
 	static inline void
-	               msu (VectF32 &s, VectF32 a, VectF32 b);
+	               msu (VectF32 &s, VectF32 a, VectF32 b) noexcept;
 	static inline VectF32
-	               fmadd (VectF32 x, VectF32 a, VectF32 b);
+	               fmadd (VectF32 x, VectF32 a, VectF32 b) noexcept;
 	static inline VectF32
-	               fmsub (VectF32 x, VectF32 a, VectF32 b);
+	               fmsub (VectF32 x, VectF32 a, VectF32 b) noexcept;
 	static inline VectF32
-	               min_f32 (VectF32 lhs, VectF32 rhs);
+	               min_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectF32
-	               max_f32 (VectF32 lhs, VectF32 rhs);
+	               max_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline float
-	               sum_h_flt (VectF32 v);
+	               sum_h_flt (VectF32 v) noexcept;
 	static inline float
-	               min_h_flt (VectF32 v);
+	               min_h_flt (VectF32 v) noexcept;
 	static inline float
-	               max_h_flt (VectF32 v);
+	               max_h_flt (VectF32 v) noexcept;
 	static inline VectF32
-	               round (VectF32 v);
+	               round (VectF32 v) noexcept;
 	static inline VectF32
-	               abs (VectF32 v);
+	               abs (VectF32 v) noexcept;
 	static inline VectF32
-	               signbit (VectF32 v);
+	               signbit (VectF32 v) noexcept;
 	static inline VectF32
-	               signbit_mask_f32 ();
+	               signbit_mask_f32 () noexcept;
 	static inline VectF32
-	               rcp_approx (VectF32 v);
+	               rcp_approx (VectF32 v) noexcept;
 	static inline VectF32
-	               rcp_approx2 (VectF32 v);
+	               rcp_approx2 (VectF32 v) noexcept;
 	static inline VectF32
-	               div_approx (VectF32 n, VectF32 d);
+	               div_approx (VectF32 n, VectF32 d) noexcept;
 	static inline VectF32
-	               div_approx2 (VectF32 n, VectF32 d);
+	               div_approx2 (VectF32 n, VectF32 d) noexcept;
 	static inline VectF32
-	               sqrt (VectF32 v);
+	               sqrt (VectF32 v) noexcept;
 	static inline VectF32
-	               sqrt_approx (VectF32 v);
+	               sqrt_approx (VectF32 v) noexcept;
 	static inline VectF32
-	               rsqrt_approx (VectF32 v);
+	               rsqrt_approx (VectF32 v) noexcept;
 	static inline VectF32
-	               rsqrt_approx2 (VectF32 v);
+	               rsqrt_approx2 (VectF32 v) noexcept;
 	static inline VectF32
-	               log2_approx (VectF32 v);
+	               log2_approx (VectF32 v) noexcept;
 	static inline VectF32
-	               log2_approx2 (VectF32 v);
+	               log2_approx2 (VectF32 v) noexcept;
 	static inline VectF32
-	               exp2_approx (VectF32 v);
+	               exp2_approx (VectF32 v) noexcept;
 	static inline VectF32
-	               exp2_approx2 (VectF32 v);
+	               exp2_approx2 (VectF32 v) noexcept;
 
 	static inline VectF32
-	               select (VectF32 cond, VectF32 v_t, VectF32 v_f);
+	               select (VectF32 cond, VectF32 v_t, VectF32 v_f) noexcept;
 	static inline std::tuple <VectF32, VectF32>
-	               swap_cond (VectF32 cond, VectF32 lhs, VectF32 rhs);
+	               swap_cond (VectF32 cond, VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectF32
-	               cmp_gt_f32 (VectF32 lhs, VectF32 rhs);
+	               cmp_gt_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectS32
-	               cmp_gt_s32 (VectS32 lhs, VectS32 rhs);
+	               cmp_gt_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectF32
-	               cmp_lt_f32 (VectF32 lhs, VectF32 rhs);
+	               cmp_lt_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectS32
-	               cmp_lt_s32 (VectS32 lhs, VectS32 rhs);
+	               cmp_lt_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectF32
-	               cmp_lt0_f32 (VectF32 lhs);
+	               cmp_lt0_f32 (VectF32 lhs) noexcept;
 	static inline VectS32
-	               cmp_lt0_s32 (VectS32 lhs);
+	               cmp_lt0_s32 (VectS32 lhs) noexcept;
 	static inline VectF32
-	               cmp_eq_f32 (VectF32 lhs, VectF32 rhs);
+	               cmp_eq_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectS32
-	               cmp_eq_s32 (VectS32 lhs, VectS32 rhs);
+	               cmp_eq_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectF32
-	               cmp_ne_f32 (VectF32 lhs, VectF32 rhs);
+	               cmp_ne_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectS32
-	               cmp_ne_s32 (VectS32 lhs, VectS32 rhs);
+	               cmp_ne_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectF32
-	               and_f32 (VectF32 lhs, VectF32 rhs);
+	               and_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectS32
-	               and_s32 (VectS32 lhs, VectS32 rhs);
+	               and_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectF32
-	               or_f32 (VectF32 lhs, VectF32 rhs);
+	               or_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectS32
-	               or_s32 (VectS32 lhs, VectS32 rhs);
+	               or_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectF32
-	               xor_f32 (VectF32 lhs, VectF32 rhs);
+	               xor_f32 (VectF32 lhs, VectF32 rhs) noexcept;
 	static inline VectS32
-	               xor_s32 (VectS32 lhs, VectS32 rhs);
+	               xor_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline bool
-	               and_h (VectF32 cond);
+	               and_h (VectF32 cond) noexcept;
 	static inline bool
-	               and_h (VectS32 cond);
+	               and_h (VectS32 cond) noexcept;
 	static inline bool
-	               or_h (VectF32 cond);
+	               or_h (VectF32 cond) noexcept;
 	static inline bool
-	               or_h (VectS32 cond);
+	               or_h (VectS32 cond) noexcept;
 	static inline VectF32
-	               set_mask_f32 (bool m0, bool m1, bool m2, bool m3);
+	               set_mask_f32 (bool m0, bool m1, bool m2, bool m3) noexcept;
 	static inline int
-	               count_bits (VectS32 x);
+	               count_bits (VectS32 x) noexcept;
 	static inline unsigned int
-	               movemask_f32 (VectF32 x);
+	               movemask_f32 (VectF32 x) noexcept;
 
 	static inline VectF32
-	               interleave_2f32_lo (VectF32 p0, VectF32 p1);
+	               interleave_2f32_lo (VectF32 p0, VectF32 p1) noexcept;
 	static inline VectF32
-	               interleave_2f32_hi (VectF32 p0, VectF32 p1);
+	               interleave_2f32_hi (VectF32 p0, VectF32 p1) noexcept;
 	static inline void
-	               interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1);
+	               interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1) noexcept;
 	static inline void
-	               deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 i1);
+	               deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 i1) noexcept;
 	static inline VectF32
-	               deinterleave_f32_lo (VectF32 i0, VectF32 i1);
+	               deinterleave_f32_lo (VectF32 i0, VectF32 i1) noexcept;
 	static inline VectF32
-	               deinterleave_f32_hi (VectF32 i0, VectF32 i1);
+	               deinterleave_f32_hi (VectF32 i0, VectF32 i1) noexcept;
 	static inline void
-	               transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3);
+	               transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3) noexcept;
 
 	static inline VectF32
-	               monofy_2f32_lo (VectF32 v);
+	               monofy_2f32_lo (VectF32 v) noexcept;
 	static inline VectF32
-	               monofy_2f32_hi (VectF32 v);
+	               monofy_2f32_hi (VectF32 v) noexcept;
 
 	static inline VectS32
-	               conv_f32_to_s32 (VectF32 x);
+	               conv_f32_to_s32 (VectF32 x) noexcept;
 	static inline VectS32
-	               round_f32_to_s32 (VectF32 x);
+	               round_f32_to_s32 (VectF32 x) noexcept;
 	static inline VectS32
-	               floor_f32_to_s32 (VectF32 x);
+	               floor_f32_to_s32 (VectF32 x) noexcept;
 	static inline VectF32
-	               conv_s32_to_f32 (VectS32 x);
+	               conv_s32_to_f32 (VectS32 x) noexcept;
 
 	static inline void
-	               start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, float val_end, int size);
+	               start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, float val_end, int size) noexcept;
 
 	static inline VectS32
-	               select (VectS32 cond, VectS32 v_t, VectS32 v_f);
+	               select (VectS32 cond, VectS32 v_t, VectS32 v_f) noexcept;
 	static inline std::tuple <VectS32, VectS32>
-	               swap_cond (VectS32 cond, VectS32 lhs, VectS32 rhs);
+	               swap_cond (VectS32 cond, VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectS32
-	               min_s32 (VectS32 lhs, VectS32 rhs);
+	               min_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectS32
-	               max_s32 (VectS32 lhs, VectS32 rhs);
+	               max_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 
 	template <int SHIFT>
 	class Shift
 	{
 	public:
 		static inline VectF32
-		               rotate (VectF32 a);
+		               rotate (VectF32 a) noexcept;
 		static inline float
-		               extract (VectF32 a);
+		               extract (VectF32 a) noexcept;
 		static inline VectF32
-		               insert (VectF32 a, float val);
+		               insert (VectF32 a, float val) noexcept;
 		static inline VectF32
-		               spread (VectF32 a);
+		               spread (VectF32 a) noexcept;
 		static inline VectF32
-		               compose (VectF32 a, VectF32 b);
+		               compose (VectF32 a, VectF32 b) noexcept;
 
 		static inline VectS32
-		               rotate (VectS32 a);
+		               rotate (VectS32 a) noexcept;
 		static inline int32_t
-		               extract (VectS32 a);
+		               extract (VectS32 a) noexcept;
 		static inline VectS32
-		               insert (VectS32 a, int32_t val);
+		               insert (VectS32 a, int32_t val) noexcept;
 		static inline VectS32
-		               spread (VectS32 a);
+		               spread (VectS32 a) noexcept;
 		static inline VectS32
-		               compose (VectS32 a, VectS32 b);
+		               compose (VectS32 a, VectS32 b) noexcept;
 	};
 
 
@@ -371,13 +371,13 @@ private:
 
 	template <typename MEM>
 	static inline void
-	               store_f32_part_n13 (MEM *ptr, VectF32 v, int n);
+	               store_f32_part_n13 (MEM *ptr, VectF32 v, int n) noexcept;
 	template <typename MEM>
 	static inline void
-	               store_s32_part_n13 (MEM *ptr, VectS32 v, int n);
+	               store_s32_part_n13 (MEM *ptr, VectS32 v, int n) noexcept;
 	template <typename MEM>
 	static inline VectF32
-	               load_f32_part_n13 (const MEM *ptr, int n);
+	               load_f32_part_n13 (const MEM *ptr, int n) noexcept;
 
 
 
@@ -428,25 +428,25 @@ https://stackoverflow.com/questions/5195512/namespaces-and-operator-resolution
 
 fstb_ToolsSimd_OPNS_BEG
 
-inline fstb_ToolsSimd_OPNS (VectF32) & operator += (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectF32) & operator -= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectF32) & operator *= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectF32) & operator += (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectF32) & operator -= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectF32) & operator *= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept;
 
-inline fstb_ToolsSimd_OPNS (VectF32) operator + (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectF32) operator - (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectF32) operator * (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectF32) operator + (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectF32) operator - (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectF32) operator * (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept;
 
-inline fstb_ToolsSimd_OPNS (VectS32) & operator += (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectS32) & operator -= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectS32) & operator *= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectS32) & operator >>= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar);
-inline fstb_ToolsSimd_OPNS (VectS32) & operator <<= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar);
+inline fstb_ToolsSimd_OPNS (VectS32) & operator += (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) & operator -= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) & operator *= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) & operator >>= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) & operator <<= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar) noexcept;
 
-inline fstb_ToolsSimd_OPNS (VectS32) operator + (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectS32) operator - (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectS32) operator * (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
-inline fstb_ToolsSimd_OPNS (VectS32) operator >> (fstb_ToolsSimd_OPNS (VectS32) x, int scalar);
-inline fstb_ToolsSimd_OPNS (VectS32) operator << (fstb_ToolsSimd_OPNS (VectS32) x, int scalar);
+inline fstb_ToolsSimd_OPNS (VectS32) operator + (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) operator - (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) operator * (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) operator >> (fstb_ToolsSimd_OPNS (VectS32) x, int scalar) noexcept;
+inline fstb_ToolsSimd_OPNS (VectS32) operator << (fstb_ToolsSimd_OPNS (VectS32) x, int scalar) noexcept;
 
 fstb_ToolsSimd_OPNS_END
 

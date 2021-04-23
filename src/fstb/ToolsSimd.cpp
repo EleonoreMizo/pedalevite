@@ -45,7 +45,7 @@ namespace fstb
 
 
 
-void	ToolsSimd::disable_denorm ()
+void	ToolsSimd::disable_denorm () noexcept
 {
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 
