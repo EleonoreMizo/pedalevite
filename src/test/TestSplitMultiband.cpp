@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/dsp/iir/DesignEq2p.h"
 #include "mfx/dsp/iir/SplitMultiband.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Generic.h"
@@ -141,6 +142,7 @@ int	TestSplitMultiband::perform_test_class (const char *classname_0, const char 
 
 	// Filter design
 	printf ("Split frequencies: ");
+	std::vector <std::array <float, 2> > eq0_arr;
 	for (int split_idx = 0; split_idx < nbr_bands - 1; ++split_idx)
 	{
 		constexpr double fmin =    20.0;
@@ -177,11 +179,35 @@ int	TestSplitMultiband::perform_test_class (const char *classname_0, const char 
 		};
 
 		splitter.set_splitter_coef (split_idx, eq_0.data (), eq_1.data ());
+		eq0_arr.push_back (eq_0);
 	}
 	printf ("\n");
 
-	/*** To do: evaluate group delay ***/
+	// Group delay
+	double         group_delay  = 0;
+	constexpr int  nbr_test_lat = 100;
+	for (int k = 0; k < nbr_test_lat; ++k)
+	{
+		const double   f    = sample_freq * 0.5 * k / nbr_test_lat + 1e-3;
+		double         gd_f = 0;
+		for (const auto &eq0 : eq0_arr)
+		{
+			const std::array <float, 3> bz { eq0 [0], eq0 [1],       1 };
+			const std::array <float, 3> az {       1, eq0 [1], eq0 [0] };
+			const auto     gd_split = mfx::dsp::iir::DesignEq2p::compute_group_delay (
+				bz.data (), az.data (), sample_freq, f
+			);
+			gd_f += gd_split;
+		}
+		group_delay = std::max (group_delay, gd_f);
+	}
+	const double   group_delay_ms = group_delay * 1000.0 / sample_freq;
+	printf (
+		"Group delay: %.1f ms (%.1f samples @ %.0f Hz)\n",
+		group_delay_ms, group_delay, sample_freq
+	);
 
+	// Tests
 	std::vector <float>  dst (len);
 	std::vector <std::vector <float> > band_dst (nbr_bands);
 	for (auto &v : band_dst)
