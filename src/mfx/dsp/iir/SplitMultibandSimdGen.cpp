@@ -438,6 +438,19 @@ int	SplitMultibandSimdGen::factorize_gain_rec (int node_idx)
 
 
 
+/*
+Pack several splitters into a single SIMD operation.
+Splitters are packed:
+- vertically: chained splitters and phase compensations, generating
+multiple channels from a single source.
+- horizontally, if there is room enough, to process multiple source
+channels. This is mostly for the deepest levels, generating the final
+band outputs.
+To pack splitters, we start from the root. We pack everything at a given
+level before packing splitters from the subsequent levels. This brings a
+natural causal ordering for processing.
+*/
+
 void	SplitMultibandSimdGen::build_simd_group_array ()
 {
 	LevelArray     rem_nodes (_lvl_arr);
@@ -447,11 +460,16 @@ void	SplitMultibandSimdGen::build_simd_group_array ()
 	{
 		const LevelContent & lvl_cont = rem_nodes [lvl_base];
 		SimdGroup      group;
+
+		// Indicatest that the group is full or finished and that we have to
+		// store it in the list, and start a new one if required.
 		bool           validate_flag = false;
 
 		while (! lvl_cont.empty () || ! group._path_list.empty ())
 		{
 			const int      footprint_group = group.compute_footprint ();
+
+			// Validates the group if required
 			if (footprint_group >= _simd_w || validate_flag)
 			{
 				assert (! group._path_list.empty ());
@@ -478,10 +496,15 @@ void	SplitMultibandSimdGen::build_simd_group_array ()
 				group         = SimdGroup {};
 				validate_flag = false;
 			}
+
+			// Level done: validates the group if it is not empty, so we'll
+			// start the next level with a fresh group.
 			else if (lvl_cont.empty ())
 			{
 				validate_flag = (! group._path_list.empty ());
 			}
+
+			// Keeps on filling the current group with splitters.
 			else
 			{
 				const int      node_idx         = lvl_cont.front ();
@@ -575,6 +598,12 @@ void	SplitMultibandSimdGen::erase_subtree (LevelArray &rem_nodes, int node_idx, 
 }
 
 
+
+/*
+Here, we create a table showing channel processing for each processing level.
+The number of channels in _proc_map doubles each level.
+_band_flag_arr is filled too.
+*/
 
 void	SplitMultibandSimdGen::create_group_proc_map (int group_idx)
 {
@@ -804,6 +833,7 @@ void	SplitMultibandSimdGen::optimize_group_gain (int group_idx)
 
 
 
+// Makes a filter realisation layout from the SIMD group info.
 void	SplitMultibandSimdGen::create_group_spec (int group_idx)
 {
 	assert (group_idx >= 0);
@@ -1371,11 +1401,15 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 				const int      lane = coord_arr [0]._lane_idx;
 				if (lane == 0)
 				{
-					r._cinl += vi_beg + "fstb::ToolsSimd::deinterleave_f32_lo (" + vo0 + ", " + vo0 + ");\n";
+					r._cinl +=
+						  vi_beg + "fstb::ToolsSimd::deinterleave_f32_lo ("
+						+ vo0 + ", " + vo0 + ");\n";
 				}
 				else if (lane == 1)
 				{
-					r._cinl += vi_beg + "fstb::ToolsSimd::deinterleave_f32_hi (" + vo0 + ", " + vo0 + ");\n";
+					r._cinl +=
+						  vi_beg + "fstb::ToolsSimd::deinterleave_f32_hi ("
+						+ vo0 + ", " + vo0 + ");\n";
 				}
 				else
 				{
@@ -1399,12 +1433,16 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 					assert (coord_arr [0]._lane_idx < _max_nbr_chn);
 					if (lane == 0)
 					{
-						r._cinl += vi_beg + "fstb::ToolsSimd::deinterleave_f32_lo (" + vo0 + ", " + vo0 + ");\n";
+						r._cinl +=
+							  vi_beg + "fstb::ToolsSimd::deinterleave_f32_lo ("
+							+ vo0 + ", " + vo0 + ");\n";
 					}
 					else
 					{
 						assert (lane == 1);
-						r._cinl += vi_beg + "fstb::ToolsSimd::deinterleave_f32_hi (" + vo0 + ", " + vo0 + ");\n";
+						r._cinl +=
+							  vi_beg + "fstb::ToolsSimd::deinterleave_f32_hi ("
+							+ vo0 + ", " + vo0 + ");\n";
 					}
 				}
 
@@ -1703,6 +1741,7 @@ std::string	SplitMultibandSimdGen::generate_include ()
 
 
 
+// Turns a filter spec list into code
 SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassSpec &spec_list, const std::string &class_scope)
 {
 	std::string    pub_code; // Code of public functions

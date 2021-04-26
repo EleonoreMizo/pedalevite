@@ -68,6 +68,7 @@ public:
 
 	Result         print_code () const;
 
+	// Debugging function
 	std::string    print_state () const;
 
 
