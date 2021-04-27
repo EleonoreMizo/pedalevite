@@ -910,6 +910,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DcKiller1p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DcKiller2p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DcKiller2p.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\DesignElliptic.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler4xSimd.h" />
@@ -969,6 +970,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Zpk.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Align.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.hpp" />
@@ -1823,6 +1825,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad4.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DcKiller1p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DcKiller2p.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignElliptic.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\OnePole.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitAp5.cpp" />
@@ -1831,6 +1834,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Svf2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\TransS.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\TransSZBilin.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\Zpk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Align.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Generic.cpp" />

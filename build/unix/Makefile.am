@@ -494,6 +494,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/DesignEq2p.cpp \
         ../../src/mfx/dsp/iir/DesignEq2p.h \
         ../../src/mfx/dsp/iir/DesignEq2p.hpp \
+        ../../src/mfx/dsp/iir/DesignElliptic.cpp \
+        ../../src/mfx/dsp/iir/DesignElliptic.h \
         ../../src/mfx/dsp/iir/Downsampler4xSimd.h \
         ../../src/mfx/dsp/iir/Downsampler4xSimd.hpp \
         ../../src/mfx/dsp/iir/Downsampler8xSimd.h \
@@ -558,6 +560,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/TransSZMatched.hpp \
         ../../src/mfx/dsp/iir/Upsampler4xSimd.h \
         ../../src/mfx/dsp/iir/Upsampler4xSimd.hpp \
+        ../../src/mfx/dsp/iir/Zpk.cpp \
+        ../../src/mfx/dsp/iir/Zpk.h \
         ../../src/mfx/dsp/mix/Align.cpp \
         ../../src/mfx/dsp/mix/Align.h \
         ../../src/mfx/dsp/mix/Fpu.cpp \
