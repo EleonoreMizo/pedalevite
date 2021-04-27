@@ -105,6 +105,8 @@ void	BankMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
+	const int      win_h = _menu_sptr->get_bounding_box ().get_size () [1];
+	_page_ptr->set_page_step (win_h / h_m);
 
 	_orga_sptr  ->set_coord (Vec2d (x_mid, 0 * h_m));
 	_import_sptr->set_coord (Vec2d (x_mid, 1 * h_m));

@@ -309,8 +309,10 @@ MsgHandlerInterface::EvtProp	ParamEdit::change_param (int dir)
 	const int      slot_id = _loc_edit._slot_id;
 	const PiType   type    = _loc_edit._pi_type;
 	const int      index   = _loc_edit._param_index;
+	const int      step_scale =
+		_page_ptr->get_shift (PageMgrInterface::Shift::R) ? 1 : 0;
 	const float    step    =
-		float (Cst::_step_param / pow (10, _step_index));
+		float (Cst::_step_param / pow (10, _step_index + step_scale));
 
 	return Tools::change_param (
 		*_model_ptr, *_view_ptr, slot_id, type,

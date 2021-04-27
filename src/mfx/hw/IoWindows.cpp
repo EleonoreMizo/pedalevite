@@ -613,11 +613,7 @@ bool	IoWindows::process_switch (::HWND hwnd, ::WPARAM wparam)
 
 	const int      index = int (wparam);
 	const SwLoc *  loc_ptr = find_sw_from_index (index);
-	if (loc_ptr == nullptr)
-	{
-		assert (false);
-	}
-	else
+	if (loc_ptr != nullptr)
 	{
 		int            sw_x;
 		int            sw_y;

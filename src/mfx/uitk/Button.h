@@ -46,6 +46,8 @@ enum Button
 	Button_D,     // Down
 	Button_L,     // Left
 	Button_R,     // Right
+	Button_SHL,   // Left shift
+	Button_SHR,   // Right shift
 
 	Button_NBR_ELT
 

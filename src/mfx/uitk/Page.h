@@ -86,6 +86,8 @@ protected:
 	void           do_set_nav_layout (const NavLocList &nav_list) override;
 	void           do_jump_to (int node_id) override;
 	void           do_set_timer (int node_id, bool enable_flag) override;
+	bool           do_get_shift (Shift key) const override;
+	void           do_set_page_step (int step) override;
 	void           do_reset_display () override;
 
 	// mfx::uitk::ParentInterface via mfx::uitk::PageMgrInterface
@@ -120,6 +122,9 @@ private:
 	int            find_nav_node (int node_id) const;
 	bool           check_curs (bool send_msg_flag);
 	bool           process_nav (Button but);
+	int            compute_jump_pos (int cur_pos, int dir);
+	bool           is_page_step () const;
+	int            get_default_page_step () const;
 
 	Model &        _model;
 	View &         _view;
@@ -146,6 +151,9 @@ private:
 	std::chrono::microseconds           // Microseconds, beginning of the hold position
 	               _but_hold_date;
 	int            _but_hold_count;     // Number of elapsed repetitions
+	std::array <bool, _nbr_shift>       // Current state of the shift buttons
+	               _shift_arr {};
+	int            _page_step;
 
 	std::list <SetPageContent>
 	               _rec_spc;

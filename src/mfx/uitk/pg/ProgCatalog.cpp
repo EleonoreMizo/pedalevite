@@ -86,6 +86,8 @@ void	ProgCatalog::do_connect (Model &model, const View &view, PageMgrInterface &
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
+	const int      win_h = _menu_sptr->get_bounding_box ().get_size () [1];
+	_page_ptr->set_page_step (win_h / h_m);
 	_page_ptr->push_back (_menu_sptr);
 
 	PageMgrInterface::NavLocList  nav_list;

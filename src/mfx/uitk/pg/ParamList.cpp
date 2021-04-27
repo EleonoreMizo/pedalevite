@@ -349,6 +349,9 @@ void	ParamList::set_param_info ()
 	_param_list.resize (nbr_param_tot * 2);
 	_menu_sptr->clear_all_nodes ();
 
+	const int      win_h = _menu_sptr->get_bounding_box ().get_size () [1];
+	_page_ptr->set_page_step (win_h / h_m);
+
 	int            pos_base = 1;
 	_menu_sptr->push_back (_fx_setup_sptr);
 	PageMgrInterface::add_nav (nav_list, Entry_FX_SETUP);
@@ -517,9 +520,11 @@ MsgHandlerInterface::EvtProp	ParamList::change_param (int node_id, int dir)
 	conv_node_id_to_param (type, index, node_id);
 	if (index >= 0)
 	{
+		const int      step_scale =
+			_page_ptr->get_shift (PageMgrInterface::Shift::R) ? 1 : 0;
 		ret_val = Tools::change_param (
 			*_model_ptr, *_view_ptr, _loc_edit._slot_id, type,
-			index, float (Cst::_step_param), 0, dir
+			index, float (Cst::_step_param / pow (10, step_scale)), 0, dir
 		);
 	}
 

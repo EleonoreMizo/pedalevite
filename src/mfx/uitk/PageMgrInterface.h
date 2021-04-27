@@ -49,11 +49,23 @@ class PageMgrInterface
 
 public:
 
+	// Shift buttons
+	enum class Shift
+	{
+		INVALID = -1,
+		L       = 0,
+		R,
+		NBR_ELT
+	};
+	static constexpr int _nbr_shift = int (Shift::NBR_ELT);
+
 	typedef std::vector <NavLoc> NavLocList;
 
 	void           set_nav_layout (const NavLocList &nav_list);
 	void           jump_to (int node_id);
 	void           set_timer (int node_id, bool enable_flag);
+	bool           get_shift (Shift key) const;
+	void           set_page_step (int step);
 	void           reset_display ();
 
 	// Utility functions
@@ -68,6 +80,8 @@ protected:
 	virtual void   do_set_nav_layout (const NavLocList &nav_list) = 0;
 	virtual void   do_jump_to (int node_id) = 0;
 	virtual void   do_set_timer (int node_id, bool enable_flag) = 0;
+	virtual bool   do_get_shift (Shift key) const = 0;
+	virtual void   do_set_page_step (int step) = 0;
 	virtual void   do_reset_display () = 0;
 
 

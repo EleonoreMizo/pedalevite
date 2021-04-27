@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/View.h"
 
 #include <cassert>
+#include <cstdlib>
 #include <cstring>
 
 
@@ -69,6 +70,8 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 ,	_but_hold (Button_INVALID)
 ,	_but_hold_date (INT64_MIN)
 ,	_but_hold_count (0)
+,	_shift_arr {}
+,	_page_step (get_default_page_step ())
 ,	_rec_spc ()
 ,	_recursive_flag (false)
 ,	_first_refresh_date (INT64_MIN)
@@ -165,6 +168,8 @@ void	Page::clear (bool evt_flag)
 	{
 		_screen.erase (pos);
 	}
+
+	_page_step = get_default_page_step ();
 }
 
 
@@ -243,6 +248,20 @@ void	Page::do_set_timer (int node_id, bool enable_flag)
 			_timer_mod_flag = true;
 		}
 	}
+}
+
+
+
+bool	Page::do_get_shift (Shift key) const
+{
+	return _shift_arr [int (key)];
+}
+
+
+
+void	Page::do_set_page_step (int step)
+{
+	_page_step = step;
 }
 
 
@@ -344,6 +363,8 @@ bool	Page::process_input ()
 			case ui::UserInputType_SW:
 				{
 					Button         but = Button_INVALID;
+					Shift          shf = Shift::INVALID;
+
 					switch (index)
 					{
 					/*** To do: a better map ***/
@@ -353,10 +374,23 @@ bool	Page::process_input ()
 					case 11: but = Button_D; break;
 					case 12: but = Button_L; break;
 					case 13: but = Button_R; break;
-					case 18: but = Button_S; break;
-					case 19: but = Button_S; break;
+					case 18: but = Button_SHL; shf = Shift::L; break;
+					case 19: but = Button_SHR; shf = Shift::R; break;
 					}
-					if (but != Button_INVALID)
+
+					// Special case for shift buttons
+					if (shf != Shift::INVALID)
+					{
+						const bool    press_flag = (val >= 0.5f);
+						_shift_arr [int (shf)] = press_flag;
+						if (press_flag)
+						{
+							send_button (node_id, but);
+						}
+					}
+
+					// Standard buttons
+					else if (but != Button_INVALID)
 					{
 						if (val < 0.5f)
 						{
@@ -585,15 +619,14 @@ bool	Page::process_nav (Button but)
 		}
 		else if (jump_id == NavLoc::OvrAction_DEFAULT)
 		{
-			const int      nbr_nav = int (_nav_list.size ());
 			if (but == Button_U)
 			{
-				jump_pos = (_curs_pos + nbr_nav - 1) % nbr_nav;
+				jump_pos = compute_jump_pos (_curs_pos, -1);
 				jump_id  = _nav_list [jump_pos]._node_id;
 			}
 			else if (but == Button_D)
 			{
-				jump_pos = (_curs_pos           + 1) % nbr_nav;
+				jump_pos = compute_jump_pos (_curs_pos, +1);
 				jump_id  = _nav_list [jump_pos]._node_id;
 			}
 			else
@@ -624,6 +657,61 @@ bool	Page::process_nav (Button but)
 	}
 
 	return pass_flag;
+}
+
+
+
+int	Page::compute_jump_pos (int curs_pos, int dir)
+{
+	assert (std::abs (dir) == 1);
+	assert (curs_pos >= 0);
+
+	const int      nbr_nav = int (_nav_list.size ());
+
+	// Page mode
+	if (is_page_step ())
+	{
+		// If we're at a page boundary, we just jump to the opposite boundary
+		// to make the navigation more intuitive
+		if (dir < 0 && curs_pos <= 0)
+		{
+			curs_pos = nbr_nav - 1;
+		}
+		else if (dir > 0 && curs_pos >= nbr_nav - 1)
+		{
+			curs_pos = 0;
+		}
+
+		// Otherwise, we just stop at the boundary if we reach it
+		else
+		{
+			curs_pos += _page_step * dir;
+			curs_pos  = fstb::limit (curs_pos, 0, nbr_nav - 1);
+		}
+	}
+
+	// Single step mode
+	else
+	{
+		curs_pos += dir;
+		curs_pos = (curs_pos + nbr_nav) % nbr_nav;
+	}
+
+	return curs_pos;
+}
+
+
+
+bool	Page::is_page_step () const
+{
+	return (_shift_arr [int (Shift::L)]);
+}
+
+
+
+int	Page::get_default_page_step () const
+{
+	return 10;
 }
 
 

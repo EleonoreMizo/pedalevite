@@ -819,7 +819,10 @@ void	FxPEq::change_param (int dir)
 
 	else
 	{
-		float          step    = float (Cst::_step_param / pow (10, _prec_idx));
+		const int      step_scale =
+			_page_ptr->get_shift (PageMgrInterface::Shift::R) ? 1 : 0;
+		float          step    =
+			float (Cst::_step_param / pow (10, _prec_idx + step_scale));
 		int            slot_id = -1;
 		PiType         type    = PiType_INVALID;
 		int            index   = -1;

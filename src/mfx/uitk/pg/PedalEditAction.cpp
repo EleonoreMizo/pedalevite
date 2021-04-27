@@ -1203,8 +1203,11 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_param (int node_id, int dir
 					pi_desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
 				if (action._index >= 0 && action._index < nbr_param)
 				{
+					const int      step_scale =
+						_page_ptr->get_shift (PageMgrInterface::Shift::R) ? 1 : 0;
 					action._val = float (Tools::change_param (
-						action._val, pi_desc, action._index, Cst::_step_param, dir
+						action._val, pi_desc, action._index,
+						Cst::_step_param * pow (10, step_scale), dir
 					));
 					done_flag = true;
 				}

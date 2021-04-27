@@ -66,6 +66,22 @@ void	PageMgrInterface::set_timer (int node_id, bool enable_flag)
 
 
 
+bool	PageMgrInterface::get_shift (Shift key) const
+{
+	return do_get_shift (key);
+}
+
+
+
+void	PageMgrInterface::set_page_step (int step)
+{
+	assert (step > 0);
+
+	do_set_page_step (step);
+}
+
+
+
 void	PageMgrInterface::reset_display ()
 {
 	do_reset_display ();

@@ -469,7 +469,10 @@ void	FxCpx::display_scales ()
 
 void	FxCpx::change_param (int dir)
 {
-	float          step    = float (Cst::_step_param / pow (10, _prec_idx));
+	const int      step_scale =
+		_page_ptr->get_shift (PageMgrInterface::Shift::R) ? 1 : 0;
+	float          step    =
+		float (Cst::_step_param / pow (10, _prec_idx + step_scale));
 	int            slot_id = _loc_edit._slot_id;
 	PiType         type    = PiType_MAIN;
 	int            index   = _cur_param - Param_BASE;

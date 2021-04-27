@@ -946,8 +946,10 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 	const int      slot_id    = _loc_edit._slot_id;
 	const PiType   type       = _loc_edit._pi_type;
 	const int      index      = _loc_edit._param_index;
+	const int      step_scale =
+		_page_ptr->get_shift (PageMgrInterface::Shift::R) ? 1 : 0;
 	const float    step       =
-		float (Cst::_step_param / pow (10, step_index));
+		float (Cst::_step_param / pow (10, step_index + step_scale));
 
 	if (_loc_edit._ctrl_abs_flag)
 	{
@@ -995,10 +997,15 @@ void	CtrlEdit::change_clip_val (int clip_index, int dir)
 	doc::CtrlLinkSet  cls (_cls);
 	doc::CtrlLink &   cl (use_ctrl_link (cls));
 
+	const int      scale =
+		  _page_ptr->get_shift (PageMgrInterface::Shift::R) ? 5000
+		: _page_ptr->get_shift (PageMgrInterface::Shift::L) ?   10
+		:                                                      100;
+
 	float          val   = use_clip_val (cl, clip_index);
-	int            val_i = fstb::round_int (val * 100);
+	int            val_i = fstb::round_int (val * scale);
 	val_i += dir;
-	val = val_i / 100.0f;
+	val = float (val_i) / float (scale);
 	val = fstb::limit (val, -4.0f, 4.0f);
 
 	if (check_new_clip_val (cl, clip_index, val))
