@@ -871,15 +871,17 @@ void	CtrlEdit::change_step (int dir)
 	else
 	{
 		const int      nbr_steps = fstb::round_int (1.0 / cl._step);
-		static const int  step_list_size = 24;
+		static const int  step_list_size = 30;
 		static const std::array <int, step_list_size>   step_list =
 		{{
 			1, 2, 3, 4, 5, 6, 7, 8, 9,
-			10, 12, 16,
-			20, 24, 32,
-			40, 48, 64,
-			80, 96, 128,
-			160, 192, 256
+			 10,  12,   16,
+			 20,  25,   32,
+			 40,  50,   64,
+			 80, 100,  128,
+			160, 200,  256,
+			320, 400,  512,
+			640, 800, 1024
 		}};
 		assert (dir == 1 || dir == -1);
 		int            nbr_steps_new = -1;
