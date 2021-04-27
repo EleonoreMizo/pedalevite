@@ -1490,7 +1490,7 @@ nameserver 1.0.0.1</pre>
 Type the following commands and check the results&#8239;:</p>
 <pre class="term">cat /proc/sys/kernel/sched_rt_period_us
 cat /proc/sys/kernel/sched_rt_runtime_us</pre>
-<p>The <code>runtime<code> value should be equal to the <code>period</code>,
+<p>The <code>runtime</code> value should be equal to the <code>period</code>,
 or <code>-1</code>.
 If this is not the case, type the following&#8239;:</p>
 <pre class="term">echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null</pre>

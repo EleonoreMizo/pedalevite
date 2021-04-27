@@ -1655,7 +1655,7 @@ threads temps-réels.
 Enter les commandes suivantes et examiner leur résultat&#8239;:</p>
 <pre class="term">cat /proc/sys/kernel/sched_rt_period_us
 cat /proc/sys/kernel/sched_rt_runtime_us</pre>
-<p>La valeur de <code>runtime<code> devrait être égale à celle de
+<p>La valeur de <code>runtime</code> devrait être égale à celle de
 <code>period</code>, ou alors <code>-1</code>.
 Si ce n’est pas le cas, exécuter la commande suivante&#8239;:</p>
 <pre class="term">echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null</pre>
