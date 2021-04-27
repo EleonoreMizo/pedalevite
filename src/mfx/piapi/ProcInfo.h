@@ -3,6 +3,13 @@
         ProcInfo.h
         Author: Laurent de Soras, 2019
 
+Rules for the buffers:
+- Input and output buffers are always separate (no "in-place" processing)
+- Different input channels can refer to the same buffer
+- Different output channels can refer to the same buffer too, but in this
+case the content is undefined and the result cannot be kept by the host
+("trash" buffer)
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
