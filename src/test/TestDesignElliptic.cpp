@@ -53,7 +53,6 @@ int	TestDesignElliptic::perform_test ()
 	printf ("Testing mfx::dsp::iir::DesignElliptic...\n");
 
 	constexpr double  sample_freq = 44100;
-	constexpr int     buf_size    = 64;
 	const int         len         = fstb::round_int (sample_freq * 10);
 
 	std::vector <float>  src (len);
@@ -61,7 +60,7 @@ int	TestDesignElliptic::perform_test ()
 	ssin.generate (src.data (), len);
 
 	mfx::dsp::iir::DesignElliptic ellip;
-	const double   pb_r =  0.25;  // dB
+	const double   pb_r =  0.25; // dB
 	const double   pb_f =  0.75; // relative frequency
 	const double   sb_r = 80.0;  // dB
 	const double   sb_f =  1.25; // relative frequency
