@@ -1762,6 +1762,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestBigMuffPi.h \
         ../../src/test/TestConvolverFft.cpp \
         ../../src/test/TestConvolverFft.h \
+        ../../src/test/TestDesignElliptic.cpp \
+        ../../src/test/TestDesignElliptic.h \
         ../../src/test/TestDiodeClipDAngelo.cpp \
         ../../src/test/TestDiodeClipDAngelo.h \
         ../../src/test/TestDiodeClipJcm.cpp \

@@ -62,6 +62,7 @@
 #include "test/TestApprox.h"
 #include "test/TestBigMuffPi.h"
 #include "test/TestConvolverFft.h"
+#include "test/TestDesignElliptic.h"
 #include "test/TestDiodeClipDAngelo.h"
 #include "test/TestDiodeClipJcm.h"
 #include "test/TestDiodeClipScreamer.h"
@@ -1896,6 +1897,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestDesignElliptic::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestSplitMultibandSimdGen::perform_test ();
 #endif
 

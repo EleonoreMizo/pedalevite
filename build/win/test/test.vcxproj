@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\..\src\test\Testadrv.cpp" />
     <ClCompile Include="..\..\..\src\test\TestAnalysisFreq.cpp" />
     <ClCompile Include="..\..\..\src\test\TestBigMuffPi.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestDesignElliptic.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\test\DrawShapers.cpp" />
     <ClCompile Include="..\..\..\src\test\GraphPrim.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="..\..\..\src\test\Testadrv.h" />
     <ClInclude Include="..\..\..\src\test\TestAnalysisFreq.h" />
     <ClInclude Include="..\..\..\src\test\TestBigMuffPi.h" />
+    <ClInclude Include="..\..\..\src\test\TestDesignElliptic.h" />
     <ClInclude Include="..\..\..\src\test\TestDiodeClipDAngelo.h" />
     <ClInclude Include="..\..\..\src\test\DrawShapers.h" />
     <ClInclude Include="..\..\..\src\test\EPSPlot.h" />
