@@ -5106,6 +5106,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DesignElliptic.h">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\DesignPhaseMin.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6496,6 +6499,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignElliptic.cpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\DesignPhaseMin.cpp">
+      <Filter>mfx\dsp\fir</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

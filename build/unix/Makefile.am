@@ -447,6 +447,8 @@ commonsrc = \
         ../../src/mfx/dsp/dly/SCPower.hpp \
         ../../src/mfx/dsp/fir/ConvolverFft.cpp \
         ../../src/mfx/dsp/fir/ConvolverFft.h \
+        ../../src/mfx/dsp/fir/DesignPhaseMin.cpp \
+        ../../src/mfx/dsp/fir/DesignPhaseMin.h \
         ../../src/mfx/dsp/fir/MovingSum.h \
         ../../src/mfx/dsp/fir/MovingSum.hpp \
         ../../src/mfx/dsp/fir/RankSelA.cpp \
@@ -1764,6 +1766,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestConvolverFft.h \
         ../../src/test/TestDesignElliptic.cpp \
         ../../src/test/TestDesignElliptic.h \
+        ../../src/test/TestDesignPhaseMin.cpp \
+        ../../src/test/TestDesignPhaseMin.h \
         ../../src/test/TestDiodeClipDAngelo.cpp \
         ../../src/test/TestDiodeClipDAngelo.h \
         ../../src/test/TestDiodeClipJcm.cpp \
