@@ -47,7 +47,7 @@ int	TestDesignPhaseMin::perform_test ()
 
 	// Design
 	mfx::dsp::fir::DesignPhaseMin designer;
-	const int      opt_fft_len = designer.compute_optimal_fft_length (0.25, 7, 1e-3);
+	const int      opt_fft_len = designer.compute_optimal_fft_length (0.25, 7, 2e-4);
 	printf ("Optimal FFT length: %d\n", opt_fft_len);
 	designer.set_fft_len (opt_fft_len);
 
