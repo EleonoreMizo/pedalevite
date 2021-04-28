@@ -11,6 +11,7 @@
 - **`BiquadPackSimd`**: Processes N channels with M biquads, for an almost optimal usage of the SIMD instructions. The (N, M) configuration can be smoothly changed, as well as each filter coefficient. This is the core engine of any complex equalizer.
 - **`DcKiller1p`**: single-pole DC removal.
 - **`DcKiller2p`**: 2-pole DC removal.
+- **`DesignElliptic`**: Elliptic low-pass filter design in the s-plane.
 - **`DesignEq2p`**: s-plane design functions for basic filters (butterworth, equalizer…), including Orfanidis’ corrected filters at Nyquist frequency.
 - **`Downsampler?xSimd`**, **`Upsampler?xSimd`**: Convenience wrappers on the HIIR functions to achieve fast and high-quality 4x-up and downsampling.
 - **`FilterComb`**: Sub-sample comb filter with custom interpolator.
