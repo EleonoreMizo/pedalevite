@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/ToolsSimd.h"
 
+#include <complex>
+
 
 
 namespace mfx
@@ -52,6 +54,8 @@ public:
 	static double  prewarp_freq_rel_1 (double f0, double fref, double fs);
 	static double  prewarp_freq_rel (double f0, double fref, double fs);
 	static double  prewarp_freq_rel_mul (double f0, double fref, double fs);
+	static std::complex <double>
+	               prewarp_root_rel (const std::complex <double> &root, double fref, double fs);
 	static void    prewarp_biquad (double b [3], double a [3], double fref, double fs);
 	static inline double
 	               unwarp_freq (double f_w, double fs);

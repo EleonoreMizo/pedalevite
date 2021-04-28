@@ -138,6 +138,38 @@ double	TransSZBilin::prewarp_freq_rel_mul (double f0, double fref, double fs)
 
 /*
 ==============================================================================
+Name: prewarp_root_rel
+Description:
+	Prewarp a (complex conjugate) root (pole or zero) for a filter whose main
+	frequency is normalized (centered on 1). The output is suitable to be
+	directly converted to coefficients of an s equation centered on 1.
+Input parameters:
+	- root: The root to be warped, relative to fref.
+	- fref: Reference filter frequency, in ]0 ; fs/2[
+	- fs: Sampling frequency, > 0.
+Returns: the warped root
+Throws: Nothing
+==============================================================================
+*/
+
+std::complex <double>	TransSZBilin::prewarp_root_rel (const std::complex <double> &root, double fref, double fs)
+{
+	assert (fs > 0);
+	assert (root.real () <= 0);
+	assert (fref > 0);
+	assert (fref < fs * 0.5);
+
+	const double   f0    = std::abs (root) * fref;
+	assert (f0 > 0);
+	const double   scale = prewarp_freq_rel_mul (f0, fref, fs);
+
+	return root * scale;
+}
+
+
+
+/*
+==============================================================================
 Name: prewarp_biquad
 Description:
 	Changes the coefficient of a biquad in order to make a certain frequency
