@@ -170,6 +170,13 @@ double	Zpk::get_gain () const noexcept
 
 
 
+int	Zpk::get_order () const
+{
+	return int (std::max (_p.size (), _z.size ()));
+}
+
+
+
 void	Zpk::clear () noexcept
 {
 	_z.clear ();

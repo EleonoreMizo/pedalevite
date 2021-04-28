@@ -72,6 +72,8 @@ public:
 	void           set_gain (double val) noexcept;
 	double         get_gain () const noexcept;
 
+	int            get_order () const;
+
 	void           clear () noexcept;
 
 	bool           has_real_coefs () const noexcept;
