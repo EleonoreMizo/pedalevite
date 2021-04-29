@@ -123,7 +123,10 @@ int	PitchShift1::do_reset (double sample_freq, int max_buf_len, int &latency)
 	// When the delay is set to the maximum, we need room to push first
 	// the new data, then read the delayed data.
 	const double   add_dly = max_buf_len / sample_freq;
-	const double   max_dly = Cst::_max_win_size / 1000.0 + add_dly;
+	// Shifted by Cst::_max_pitch_up because at +1 octave, we read the line
+	// at twice the speed.
+	const double   max_dly =
+		(Cst::_max_win_size << Cst::_max_pitch_up) / 1000.0 + add_dly;
 	for (auto &chn : _chn_arr)
 	{
 		chn._reader.set_tmp_buf (&_tmp_buf [0], int (_tmp_buf.size ()));

@@ -45,7 +45,9 @@ class Cst
 
 public:
 
-	static const int  _max_win_size = 320;   // ms
+	static constexpr int  _max_pitch_dw = -1;    // octave
+	static constexpr int  _max_pitch_up = +1;    // octave
+	static constexpr int  _max_win_size = 320;   // ms
 
 
 

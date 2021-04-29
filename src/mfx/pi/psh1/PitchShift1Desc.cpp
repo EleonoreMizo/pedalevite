@@ -59,7 +59,7 @@ PitchShift1Desc::PitchShift1Desc ()
 
 	// Pitch
 	auto           lin_sptr = std::make_shared <param::TplLin> (
-		-1, 1,
+		Cst::_max_pitch_dw, Cst::_max_pitch_up,
 		"Pitch\nPtch\nP",
 		"%",
 		0,
