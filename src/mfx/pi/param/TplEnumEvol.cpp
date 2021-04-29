@@ -273,6 +273,7 @@ double	TplEnumEvol::do_conv_nat_to_nrm (double nat) const
 void	TplEnumEvol::build_table (int nbr_splits, int nbr_elt)
 {
 	assert (nbr_elt > 0);
+	assert (nbr_splits >= 2);
 
 	const int		nbr_intervals    = nbr_splits - 1;
 	const int		max_layer_val    = (nbr_elt - 2) / nbr_intervals;
@@ -317,6 +318,7 @@ double	TplEnumEvol::conv_int_to_flt (int val, int nbr_splits) const
 {
 	assert (val >= 0);
 	assert (val < int (_name_list.size ()));
+	assert (nbr_splits >= 2);
 
 	double         result = 0;
 	const int      nbr_intervals = nbr_splits - 1;
@@ -349,6 +351,7 @@ int	TplEnumEvol::conv_flt_to_int (double val, int nbr_splits, int nbr_val, int h
 {
 	assert (val >= 0);
 	assert (val <= 1);
+	assert (nbr_splits >= 2);
 
 	const int		pos = fstb::round_int (val * total_split_size);
 	const int		subdiv = pos / nbr_subintervals;
