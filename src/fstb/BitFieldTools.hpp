@@ -38,7 +38,7 @@ namespace fstb
 
 
 template <typename T, int DL2>
-int	BitFieldTools <T, DL2>::calculate_nbr_groups (int nbr_elt)
+int	BitFieldTools <T, DL2>::calculate_nbr_groups (int nbr_elt) noexcept
 {
 	assert (nbr_elt > 0);
 
@@ -51,7 +51,7 @@ int	BitFieldTools <T, DL2>::calculate_nbr_groups (int nbr_elt)
 
 
 template <typename T, int DL2>
-void	BitFieldTools <T, DL2>::calculate_group_and_pos (int &group, int &gpos, int pos)
+void	BitFieldTools <T, DL2>::calculate_group_and_pos (int &group, int &gpos, int pos) noexcept
 {
 	assert (pos >= 0);
 
@@ -62,7 +62,7 @@ void	BitFieldTools <T, DL2>::calculate_group_and_pos (int &group, int &gpos, int
 
 
 template <typename T, int DL2>
-void	BitFieldTools <T, DL2>::calculate_group_and_mask (int &group, GroupType &mask, int pos)
+void	BitFieldTools <T, DL2>::calculate_group_and_mask (int &group, GroupType &mask, int pos) noexcept
 {
 	assert (pos >= 0);
 
@@ -74,7 +74,7 @@ void	BitFieldTools <T, DL2>::calculate_group_and_mask (int &group, GroupType &ma
 
 
 template <typename T, int DL2>
-bool	BitFieldTools <T, DL2>::get_bit (const GroupType bit_arr [], int pos)
+bool	BitFieldTools <T, DL2>::get_bit (const GroupType bit_arr [], int pos) noexcept
 {
 	assert (pos >= 0);
 
@@ -88,7 +88,7 @@ bool	BitFieldTools <T, DL2>::get_bit (const GroupType bit_arr [], int pos)
 
 
 template <typename T, int DL2>
-void	BitFieldTools <T, DL2>::set_bit (GroupType bit_arr [], int pos, bool flag)
+void	BitFieldTools <T, DL2>::set_bit (GroupType bit_arr [], int pos, bool flag) noexcept
 {
 	assert (bit_arr != nullptr);
 	assert (pos >= 0);
@@ -110,7 +110,7 @@ void	BitFieldTools <T, DL2>::set_bit (GroupType bit_arr [], int pos, bool flag)
 
 
 template <typename T, int DL2>
-void	BitFieldTools <T, DL2>::clear_bit (GroupType bit_arr [], int pos)
+void	BitFieldTools <T, DL2>::clear_bit (GroupType bit_arr [], int pos) noexcept
 {
 	assert (bit_arr != nullptr);
 	assert (pos >= 0);
@@ -124,7 +124,7 @@ void	BitFieldTools <T, DL2>::clear_bit (GroupType bit_arr [], int pos)
 
 
 template <typename T, int DL2>
-void	BitFieldTools <T, DL2>::fill_bit (GroupType bit_arr [], int pos)
+void	BitFieldTools <T, DL2>::fill_bit (GroupType bit_arr [], int pos) noexcept
 {
 	assert (bit_arr != nullptr);
 	assert (pos >= 0);
@@ -138,7 +138,7 @@ void	BitFieldTools <T, DL2>::fill_bit (GroupType bit_arr [], int pos)
 
 
 template <typename T, int DL2>
-void	BitFieldTools <T, DL2>::activate_range (GroupType bit_arr [], int pos, int nbr_elt)
+void	BitFieldTools <T, DL2>::activate_range (GroupType bit_arr [], int pos, int nbr_elt) noexcept
 {
 	assert (bit_arr != nullptr);
 	assert (pos >= 0);
@@ -181,7 +181,7 @@ void	BitFieldTools <T, DL2>::activate_range (GroupType bit_arr [], int pos, int 
 
 
 template <typename T, int DL2>
-void	BitFieldTools <T, DL2>::deactivate_range (GroupType bit_arr [], int pos, int nbr_elt)
+void	BitFieldTools <T, DL2>::deactivate_range (GroupType bit_arr [], int pos, int nbr_elt) noexcept
 {
 	assert (bit_arr != nullptr);
 	assert (pos >= 0);
@@ -226,7 +226,7 @@ void	BitFieldTools <T, DL2>::deactivate_range (GroupType bit_arr [], int pos, in
 
 // Returns Err_NOT_FOUND if not found
 template <typename T, int DL2>
-int	BitFieldTools <T, DL2>::get_next_bit_set_from (const GroupType bit_arr [], int pos, int length)
+int	BitFieldTools <T, DL2>::get_next_bit_set_from (const GroupType bit_arr [], int pos, int length) noexcept
 {
 	assert (bit_arr != nullptr);
 	assert (pos >= 0);

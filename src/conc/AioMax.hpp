@@ -45,9 +45,9 @@ AioMax <T>::AioMax (T operand)
 
 
 template <class T>
-T	AioMax <T>::operator () (T old_val) const
+T	AioMax <T>::operator () (T old_val) const noexcept
 {
-	return (std::max (old_val, _operand));
+	return std::max (old_val, _operand);
 }
 
 

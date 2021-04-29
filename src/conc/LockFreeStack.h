@@ -67,8 +67,8 @@ public:
 	               LockFreeStack ();
 	virtual        ~LockFreeStack () = default;
 
-	void           push (CellType &cell);
-	CellType *     pop ();
+	void           push (CellType &cell) noexcept;
+	CellType *     pop () noexcept;
 
 
 

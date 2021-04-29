@@ -47,16 +47,16 @@ public:
 	typedef	T	DataType;
 
 	ffft_FORCEINLINE void
-						set_step (double angle_rad);
+						set_step (double angle_rad) noexcept;
 
 	ffft_FORCEINLINE DataType
-						get_cos () const;
+						get_cos () const noexcept;
 	ffft_FORCEINLINE DataType
-						get_sin () const;
+						get_sin () const noexcept;
 	ffft_FORCEINLINE void
-						step ();
+						step () noexcept;
 	ffft_FORCEINLINE void
-						clear_buffers ();
+						clear_buffers () noexcept;
 
 
 

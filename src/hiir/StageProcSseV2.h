@@ -47,14 +47,14 @@ class StageProcSseV2
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (__m128 &x, StageDataSse *stage_arr);
+	               process_sample_pos (__m128 &x, StageDataSse *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (__m128 &x, StageDataSse *stage_arr);
+	               process_sample_neg (__m128 &x, StageDataSse *stage_arr) noexcept;
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos_rec (__m128 &x, StageDataSse *stage_arr);
+	               process_sample_pos_rec (__m128 &x, StageDataSse *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg_rec (__m128 &x, StageDataSse *stage_arr);
+	               process_sample_neg_rec (__m128 &x, StageDataSse *stage_arr) noexcept;
 
 
 

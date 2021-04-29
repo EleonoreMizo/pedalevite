@@ -47,14 +47,14 @@ class StageProcF64Sse2
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (__m128d &x, StageDataF64Sse2 *stage_arr);
+	               process_sample_pos (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (__m128d &x, StageDataF64Sse2 *stage_arr);
+	               process_sample_neg (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept;
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos_rec (__m128d &x, StageDataF64Sse2 *stage_arr);
+	               process_sample_pos_rec (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg_rec (__m128d &x, StageDataF64Sse2 *stage_arr);
+	               process_sample_neg_rec (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept;
 
 
 

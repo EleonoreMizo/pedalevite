@@ -39,12 +39,12 @@ class Crc32
 
 public:
 
-	inline void    reset ();
-	inline void    process_byte (int data_byte);
+	inline void    reset () noexcept;
+	inline void    process_byte (int data_byte) noexcept;
 	template <typename T>
-	inline void    process (T data);
+	inline void    process (T data) noexcept;
 	inline uint32_t
-	               get_val () const;
+	               get_val () const noexcept;
 
 
 

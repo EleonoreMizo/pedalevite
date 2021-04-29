@@ -63,7 +63,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	PolyphaseIir2Designer::compute_nbr_coefs_from_proto (double attenuation, double transition)
+int	PolyphaseIir2Designer::compute_nbr_coefs_from_proto (double attenuation, double transition) noexcept
 {
 	assert (attenuation > 0);
 	assert (transition > 0);
@@ -95,7 +95,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_atten_from_order_tbw (int nbr_coefs, double transition)
+double	PolyphaseIir2Designer::compute_atten_from_order_tbw (int nbr_coefs, double transition) noexcept
 {
 	assert (nbr_coefs > 0);
 	assert (transition > 0);
@@ -131,7 +131,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	PolyphaseIir2Designer::compute_coefs (double coef_arr [], double attenuation, double transition)
+int	PolyphaseIir2Designer::compute_coefs (double coef_arr [], double attenuation, double transition) noexcept
 {
 	assert (attenuation > 0);
 	assert (transition > 0);
@@ -174,7 +174,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	PolyphaseIir2Designer::compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition)
+void	PolyphaseIir2Designer::compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition) noexcept
 {
 	assert (nbr_coefs > 0);
 	assert (transition > 0);
@@ -237,7 +237,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_gdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double group_delay, double f_rel, double prec, double atten_lb, double atten_ub, double trans_lb, double trans_ub)
+PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_gdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double group_delay, double f_rel, double prec, double atten_lb, double atten_ub, double trans_lb, double trans_ub) noexcept
 {
 	assert (nbr_coefs > 0);
 	assert (nbr_coefs <= _max_order);
@@ -353,7 +353,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_phase_delay (double a, double f_fs)
+double	PolyphaseIir2Designer::compute_phase_delay (double a, double f_fs) noexcept
 {
 	assert (a >= 0);
 	assert (a <= 1);
@@ -397,7 +397,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_group_delay (double a, double f_fs, bool ph_flag)
+double	PolyphaseIir2Designer::compute_group_delay (double a, double f_fs, bool ph_flag) noexcept
 {
 	assert (a >= 0);
 	assert (a <= 1);
@@ -433,7 +433,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag)
+double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag) noexcept
 {
 	assert (nbr_coefs > 0);
 	assert (f_fs >= 0);
@@ -459,7 +459,7 @@ double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int
 
 
 
-void	PolyphaseIir2Designer::compute_transition_param (double &k, double &q, double transition)
+void	PolyphaseIir2Designer::compute_transition_param (double &k, double &q, double transition) noexcept
 {
 	assert (transition > 0);
 	assert (transition < 0.5);
@@ -478,7 +478,7 @@ void	PolyphaseIir2Designer::compute_transition_param (double &k, double &q, doub
 
 
 
-int	PolyphaseIir2Designer::compute_order (double attenuation, double q)
+int	PolyphaseIir2Designer::compute_order (double attenuation, double q) noexcept
 {
 	assert (attenuation > 0);
 	assert (q > 0);
@@ -500,7 +500,7 @@ int	PolyphaseIir2Designer::compute_order (double attenuation, double q)
 
 
 
-double	PolyphaseIir2Designer::compute_atten (double q, int order)
+double	PolyphaseIir2Designer::compute_atten (double q, int order) noexcept
 {
 	assert (q > 0);
 	assert (order > 0);
@@ -517,7 +517,7 @@ double	PolyphaseIir2Designer::compute_atten (double q, int order)
 
 
 
-double	PolyphaseIir2Designer::compute_coef (int index, double k, double q, int order)
+double	PolyphaseIir2Designer::compute_coef (int index, double k, double q, int order) noexcept
 {
 	assert (index >= 0);
 	assert (index * 2 < order);
@@ -536,7 +536,7 @@ double	PolyphaseIir2Designer::compute_coef (int index, double k, double q, int o
 
 
 
-double	PolyphaseIir2Designer::compute_acc_num (double q, int order, int c)
+double	PolyphaseIir2Designer::compute_acc_num (double q, int order, int c) noexcept
 {
 	assert (c >= 1);
 	assert (c < order * 2);
@@ -561,7 +561,7 @@ double	PolyphaseIir2Designer::compute_acc_num (double q, int order, int c)
 
 
 
-double	PolyphaseIir2Designer::compute_acc_den (double q, int order, int c)
+double	PolyphaseIir2Designer::compute_acc_den (double q, int order, int c) noexcept
 {
 	assert (c >= 1);
 	assert (c < order * 2);

@@ -56,9 +56,9 @@ class StageProcFpu
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept;
 
 
 
@@ -98,9 +98,9 @@ class StageProcFpu <0, DT>
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept;
 
 private:
 
@@ -125,9 +125,9 @@ class StageProcFpu <1, DT>
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept;
 
 private:
 

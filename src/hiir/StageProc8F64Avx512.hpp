@@ -47,7 +47,7 @@ namespace hiir
 
 
 template <>
-hiir_FORCEINLINE void	StageProc8F64Avx512 <1>::process_sample_pos (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr)
+hiir_FORCEINLINE void	StageProc8F64Avx512 <1>::process_sample_pos (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -69,7 +69,7 @@ hiir_FORCEINLINE void	StageProc8F64Avx512 <1>::process_sample_pos (const int nbr
 
 
 template <>
-hiir_FORCEINLINE void	StageProc8F64Avx512 <0>::process_sample_pos (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr)
+hiir_FORCEINLINE void	StageProc8F64Avx512 <0>::process_sample_pos (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -80,7 +80,7 @@ hiir_FORCEINLINE void	StageProc8F64Avx512 <0>::process_sample_pos (const int nbr
 
 
 template <int REMAINING>
-void	StageProc8F64Avx512 <REMAINING>::process_sample_pos (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr)
+void	StageProc8F64Avx512 <REMAINING>::process_sample_pos (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
@@ -116,7 +116,7 @@ void	StageProc8F64Avx512 <REMAINING>::process_sample_pos (const int nbr_coefs, _
 
 
 template <>
-hiir_FORCEINLINE void	StageProc8F64Avx512 <1>::process_sample_neg (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr)
+hiir_FORCEINLINE void	StageProc8F64Avx512 <1>::process_sample_neg (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -138,7 +138,7 @@ hiir_FORCEINLINE void	StageProc8F64Avx512 <1>::process_sample_neg (const int nbr
 
 
 template <>
-hiir_FORCEINLINE void	StageProc8F64Avx512 <0>::process_sample_neg (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr)
+hiir_FORCEINLINE void	StageProc8F64Avx512 <0>::process_sample_neg (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -149,7 +149,7 @@ hiir_FORCEINLINE void	StageProc8F64Avx512 <0>::process_sample_neg (const int nbr
 
 
 template <int REMAINING>
-void	StageProc8F64Avx512 <REMAINING>::process_sample_neg (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr)
+void	StageProc8F64Avx512 <REMAINING>::process_sample_neg (const int nbr_coefs, __m512d &spl_0, __m512d &spl_1, StageDataF64Avx512 *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 

@@ -45,7 +45,7 @@ namespace ffft
 
 
 
-static inline ffft_CONSTEXPR14 bool	FFTReal_is_pow2 (long x)
+static inline ffft_CONSTEXPR14 bool	FFTReal_is_pow2 (long x) noexcept
 {
 	assert (x > 0);
 
@@ -54,7 +54,7 @@ static inline ffft_CONSTEXPR14 bool	FFTReal_is_pow2 (long x)
 
 
 
-static inline ffft_CONSTEXPR14 int	FFTReal_get_next_pow2 (long x)
+static inline ffft_CONSTEXPR14 int	FFTReal_get_next_pow2 (long x) noexcept
 {
 	--x;
 
@@ -124,7 +124,7 @@ Throws: Nothing
 */
 
 template <class DT>
-long	FFTReal <DT>::get_length () const
+long	FFTReal <DT>::get_length () const noexcept
 {
 	return _length;
 }
@@ -148,7 +148,7 @@ Throws: Nothing
 */
 
 template <class DT>
-void	FFTReal <DT>::do_fft (DataType f [], const DataType x []) const
+void	FFTReal <DT>::do_fft (DataType f [], const DataType x []) const noexcept
 {
 	assert (f != nullptr);
 	assert (f != use_buffer ());
@@ -209,7 +209,7 @@ Throws: Nothing
 */
 
 template <class DT>
-void	FFTReal <DT>::do_ifft (const DataType f [], DataType x []) const
+void	FFTReal <DT>::do_ifft (const DataType f [], DataType x []) const noexcept
 {
 	assert (f != nullptr);
 	assert (f != use_buffer ());
@@ -264,7 +264,7 @@ Throws: Nothing
 */
 
 template <class DT>
-void	FFTReal <DT>::rescale (DataType x []) const
+void	FFTReal <DT>::rescale (DataType x []) const noexcept
 {
 	const DataType	mul = DataType (1.0 / _length);
 
@@ -315,7 +315,7 @@ Throws: Nothing
 */
 
 template <class DT>
-typename FFTReal <DT>::DataType *	FFTReal <DT>::use_buffer () const
+typename FFTReal <DT>::DataType *	FFTReal <DT>::use_buffer () const noexcept
 {
 	return _buffer.data ();
 }
@@ -405,7 +405,7 @@ void	FFTReal <DT>::init_trigo_osc ()
 
 
 template <class DT>
-const long *	FFTReal <DT>::get_br_ptr () const
+const long *	FFTReal <DT>::get_br_ptr () const noexcept
 {
 	return (&_br_lut [0]);
 }
@@ -413,7 +413,7 @@ const long *	FFTReal <DT>::get_br_ptr () const
 
 
 template <class DT>
-const typename FFTReal <DT>::DataType *	FFTReal <DT>::get_trigo_ptr (int level) const
+const typename FFTReal <DT>::DataType *	FFTReal <DT>::get_trigo_ptr (int level) const noexcept
 {
 	assert (level >= 3);
 
@@ -423,7 +423,7 @@ const typename FFTReal <DT>::DataType *	FFTReal <DT>::get_trigo_ptr (int level) 
 
 
 template <class DT>
-long	FFTReal <DT>::get_trigo_level_index (int level) const
+long	FFTReal <DT>::get_trigo_level_index (int level) const noexcept
 {
 	assert (level >= 3);
 
@@ -434,7 +434,7 @@ long	FFTReal <DT>::get_trigo_level_index (int level) const
 
 // Transform in several passes
 template <class DT>
-void	FFTReal <DT>::compute_fft_general (DataType f [], const DataType x []) const
+void	FFTReal <DT>::compute_fft_general (DataType f [], const DataType x []) const noexcept
 {
 	assert (f != nullptr);
 	assert (f != use_buffer ());
@@ -472,7 +472,7 @@ void	FFTReal <DT>::compute_fft_general (DataType f [], const DataType x []) cons
 
 
 template <class DT>
-void	FFTReal <DT>::compute_direct_pass_1_2 (DataType df [], const DataType x []) const
+void	FFTReal <DT>::compute_direct_pass_1_2 (DataType df [], const DataType x []) const noexcept
 {
 	assert (df != nullptr);
 	assert (x  != nullptr);
@@ -505,7 +505,7 @@ void	FFTReal <DT>::compute_direct_pass_1_2 (DataType df [], const DataType x [])
 
 
 template <class DT>
-void	FFTReal <DT>::compute_direct_pass_3 (DataType df [], const DataType sf []) const
+void	FFTReal <DT>::compute_direct_pass_3 (DataType df [], const DataType sf []) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -538,7 +538,7 @@ void	FFTReal <DT>::compute_direct_pass_3 (DataType df [], const DataType sf []) 
 
 
 template <class DT>
-void	FFTReal <DT>::compute_direct_pass_n (DataType df [], const DataType sf [], int pass) const
+void	FFTReal <DT>::compute_direct_pass_n (DataType df [], const DataType sf [], int pass) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -559,7 +559,7 @@ void	FFTReal <DT>::compute_direct_pass_n (DataType df [], const DataType sf [], 
 
 
 template <class DT>
-void	FFTReal <DT>::compute_direct_pass_n_lut (DataType df [], const DataType sf [], int pass) const
+void	FFTReal <DT>::compute_direct_pass_n_lut (DataType df [], const DataType sf [], int pass) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -611,7 +611,7 @@ void	FFTReal <DT>::compute_direct_pass_n_lut (DataType df [], const DataType sf 
 
 
 template <class DT>
-void	FFTReal <DT>::compute_direct_pass_n_osc (DataType df [], const DataType sf [], int pass) const
+void	FFTReal <DT>::compute_direct_pass_n_osc (DataType df [], const DataType sf [], int pass) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -667,7 +667,7 @@ void	FFTReal <DT>::compute_direct_pass_n_osc (DataType df [], const DataType sf 
 
 // Transform in several pass
 template <class DT>
-void	FFTReal <DT>::compute_ifft_general (const DataType f [], DataType x []) const
+void	FFTReal <DT>::compute_ifft_general (const DataType f [], DataType x []) const noexcept
 {
 	assert (f != nullptr);
 	assert (f != use_buffer ());
@@ -714,7 +714,7 @@ void	FFTReal <DT>::compute_ifft_general (const DataType f [], DataType x []) con
 
 
 template <class DT>
-void	FFTReal <DT>::compute_inverse_pass_n (DataType df [], const DataType sf [], int pass) const
+void	FFTReal <DT>::compute_inverse_pass_n (DataType df [], const DataType sf [], int pass) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -735,7 +735,7 @@ void	FFTReal <DT>::compute_inverse_pass_n (DataType df [], const DataType sf [],
 
 
 template <class DT>
-void	FFTReal <DT>::compute_inverse_pass_n_lut (DataType df [], const DataType sf [], int pass) const
+void	FFTReal <DT>::compute_inverse_pass_n_lut (DataType df [], const DataType sf [], int pass) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -786,7 +786,7 @@ void	FFTReal <DT>::compute_inverse_pass_n_lut (DataType df [], const DataType sf
 
 
 template <class DT>
-void	FFTReal <DT>::compute_inverse_pass_n_osc (DataType df [], const DataType sf [], int pass) const
+void	FFTReal <DT>::compute_inverse_pass_n_osc (DataType df [], const DataType sf [], int pass) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -840,7 +840,7 @@ void	FFTReal <DT>::compute_inverse_pass_n_osc (DataType df [], const DataType sf
 
 
 template <class DT>
-void	FFTReal <DT>::compute_inverse_pass_3 (DataType df [], const DataType sf []) const
+void	FFTReal <DT>::compute_inverse_pass_3 (DataType df [], const DataType sf []) const noexcept
 {
 	assert (df != nullptr);
 	assert (sf != nullptr);
@@ -872,7 +872,7 @@ void	FFTReal <DT>::compute_inverse_pass_3 (DataType df [], const DataType sf [])
 
 
 template <class DT>
-void	FFTReal <DT>::compute_inverse_pass_1_2 (DataType x [], const DataType sf []) const
+void	FFTReal <DT>::compute_inverse_pass_1_2 (DataType x [], const DataType sf []) const noexcept
 {
 	assert (x  != nullptr);
 	assert (sf != nullptr);

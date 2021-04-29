@@ -54,20 +54,20 @@ public:
 	               operator = (const BitFieldSparse &other)     = default;
 
 	void           set_nbr_elt (int nbr_elt);
-	int            get_nbr_elt () const;
-	void           clear ();
-	void           fill ();
+	int            get_nbr_elt () const noexcept;
+	void           clear () noexcept;
+	void           fill () noexcept;
 
-   bool           get_bit (int pos) const;
-   void           set_bit (int pos, bool flag);
-   void           clear_bit (int pos);
-   void           fill_bit (int pos);
+   bool           get_bit (int pos) const noexcept;
+   void           set_bit (int pos, bool flag) noexcept;
+   void           clear_bit (int pos) noexcept;
+   void           fill_bit (int pos) noexcept;
 
-   void           activate_range (int pos, int nbr_elt);
-   void           deactivate_range (int pos, int nbr_elt);
+   void           activate_range (int pos, int nbr_elt) noexcept;
+   void           deactivate_range (int pos, int nbr_elt) noexcept;
 
-   int            get_next_bit_set_from (int pos, int stop_pos = -1) const;
-	bool           has_a_bit_set () const;
+   int            get_next_bit_set_from (int pos, int stop_pos = -1) const noexcept;
+	bool           has_a_bit_set () const noexcept;
 
 
 
@@ -96,7 +96,7 @@ private:
 
 	typedef std::vector <BfLevel> LevelArray;
 
-	int            get_next_bit_set_from_rec (int lvl_index, int start, int stop) const;
+	int            get_next_bit_set_from_rec (int lvl_index, int start, int stop) const noexcept;
 
 	LevelArray     _lvl_arr;
 

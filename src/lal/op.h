@@ -43,19 +43,19 @@ template <typename T>
 inline void    res_sub (T &y, T x) { y -= x; }
 
 template <typename T>
-MatView <T>    vec_to_matview (std::vector <T> &v, Dir dir);
+MatView <T>    vec_to_matview (std::vector <T> &v, Dir dir) noexcept;
 template <typename T>
-MatViewConst <T> vec_to_matview (const std::vector <T> &v, Dir dir);
+MatViewConst <T> vec_to_matview (const std::vector <T> &v, Dir dir) noexcept;
 template <typename T, typename D>
 void           vec_to_mat (D &dst, const std::vector <T> &v, Dir dir);
 
 template <typename T>
-T              norm_inf (const std::vector <T> &v);
+T              norm_inf (const std::vector <T> &v) noexcept;
 
 template <typename T>
-void           fill (MatInterface <T> &dst, T val);
+void           fill (MatInterface <T> &dst, T val) noexcept;
 template <typename T>
-void           fill (std::vector <T> &dst, T val);
+void           fill (std::vector <T> &dst, T val) noexcept;
 template <typename T, typename D>
 void           transpose (D &dst, const MatConstInterface <T> &other);
 template <typename T, typename D>
@@ -96,9 +96,9 @@ template <typename T, typename D>
 void           mul_transp_rhs (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs, decltype (res_assign <T>) fnc = res_assign <T>);
 
 template <typename T, typename FR, typename FC>
-void           decompose_lu (MatInterface <T> &mat, FR fnc_r, FC fnc_c);
+void           decompose_lu (MatInterface <T> &mat, FR fnc_r, FC fnc_c) noexcept;
 template <typename T>
-void           decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr);
+void           decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr) noexcept;
 template <typename T, typename FR, typename FC>
 void           traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> &b, const MatConstInterface <T> &mat, FR fnc_r, FC fnc_c);
 template <typename T>

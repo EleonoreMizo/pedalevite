@@ -51,7 +51,7 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	               Upsampler2xF64Sse2 ();
+	               Upsampler2xF64Sse2 () noexcept;
 	               Upsampler2xF64Sse2 (const Upsampler2xF64Sse2 <NC> &other) = default;
 	               Upsampler2xF64Sse2 (Upsampler2xF64Sse2 <NC> &&other)      = default;
 
@@ -60,13 +60,13 @@ public:
 	Upsampler2xF64Sse2 <NC> &
 	               operator = (Upsampler2xF64Sse2 <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample (double &out_0, double &out_1, double input);
-	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample (double &out_0, double &out_1, double input) noexcept;
+	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

@@ -36,7 +36,7 @@ namespace conc
 
 
 template <int SL2>
-typename AtomicMem <SL2>::DataType	AtomicMem <SL2>::swap (volatile DataType &dest, DataType excg)
+typename AtomicMem <SL2>::DataType	AtomicMem <SL2>::swap (volatile DataType &dest, DataType excg) noexcept
 {
 	static_assert ((SL2 >= 0 && SL2 <= 2), "");
 
@@ -46,7 +46,7 @@ typename AtomicMem <SL2>::DataType	AtomicMem <SL2>::swap (volatile DataType &des
 
 
 template <int SL2>
-typename AtomicMem <SL2>::DataType	AtomicMem <SL2>::cas (volatile DataType &dest, DataType excg, DataType comp)
+typename AtomicMem <SL2>::DataType	AtomicMem <SL2>::cas (volatile DataType &dest, DataType excg, DataType comp) noexcept
 {
 	static_assert ((SL2 >= 0 && SL2 <= 2), "");
 
@@ -55,14 +55,14 @@ typename AtomicMem <SL2>::DataType	AtomicMem <SL2>::cas (volatile DataType &dest
 
 
 
-AtomicMem <3>::DataType	AtomicMem <3>::swap (volatile DataType &dest, DataType excg)
+AtomicMem <3>::DataType	AtomicMem <3>::swap (volatile DataType &dest, DataType excg) noexcept
 {
 	return (Interlocked::swap (dest, excg));
 }
 
 
 
-AtomicMem <3>::DataType	AtomicMem <3>::cas (volatile DataType &dest, DataType excg, DataType comp)
+AtomicMem <3>::DataType	AtomicMem <3>::cas (volatile DataType &dest, DataType excg, DataType comp) noexcept
 {
 	return (Interlocked::cas (dest, excg, comp));
 }
@@ -73,7 +73,7 @@ AtomicMem <3>::DataType	AtomicMem <3>::cas (volatile DataType &dest, DataType ex
 
 
 
-AtomicMem <4>::DataType	AtomicMem <4>::swap (volatile DataType &dest, DataType excg)
+AtomicMem <4>::DataType	AtomicMem <4>::swap (volatile DataType &dest, DataType excg) noexcept
 {
 	Interlocked::Data128 old;
 
@@ -90,7 +90,7 @@ AtomicMem <4>::DataType	AtomicMem <4>::swap (volatile DataType &dest, DataType e
 
 
 
-AtomicMem <4>::DataType	AtomicMem <4>::cas (volatile DataType &dest, DataType excg, DataType comp)
+AtomicMem <4>::DataType	AtomicMem <4>::cas (volatile DataType &dest, DataType excg, DataType comp) noexcept
 {
 	Interlocked::Data128 old;
 

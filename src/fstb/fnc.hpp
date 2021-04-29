@@ -60,7 +60,7 @@ namespace fstb
 
 
 template <class T>
-constexpr int	sgn (T x)
+constexpr int	sgn (T x) noexcept
 {
 	return x < T (0) ? -1 : x > T (0) ? 1 : 0;
 }
@@ -68,7 +68,7 @@ constexpr int	sgn (T x)
 
 
 template <class T>
-constexpr T	limit (T x, T mi, T ma)
+constexpr T	limit (T x, T mi, T ma) noexcept
 {
 	return (x < mi) ? mi : ((x > ma) ? ma : x);
 }
@@ -76,7 +76,7 @@ constexpr T	limit (T x, T mi, T ma)
 
 
 template <class T>
-constexpr void	sort_2_elt (T &mi, T &ma, T a, T b)
+constexpr void	sort_2_elt (T &mi, T &ma, T a, T b) noexcept
 {
 	if (a < b)
 	{
@@ -93,28 +93,28 @@ constexpr void	sort_2_elt (T &mi, T &ma, T a, T b)
 
 
 template <class T>
-constexpr bool	is_pow_2 (T x)
+constexpr bool	is_pow_2 (T x) noexcept
 {
 	return ((x & -x) == x);
 }
 
 
 
-double	round (double x)
+double	round (double x) noexcept
 {
 	return floor (x + 0.5f);
 }
 
 
 
-float	round (float x)
+float	round (float x) noexcept
 {
 	return floorf (x + 0.5f);
 }
 
 
 
-int	round_int (float x)
+int	round_int (float x) noexcept
 {
 	assert (x <= double (INT_MAX));
 	assert (x >= static_cast <double> (INT_MIN));
@@ -151,14 +151,14 @@ int	round_int (float x)
 
 
 
-int	round_int (double x)
+int	round_int (double x) noexcept
 {
 	return round_int (float (x));
 }
 
 
 
-int	round_int_accurate (double x)
+int	round_int_accurate (double x) noexcept
 {
 	assert (x <= double (INT_MAX));
 	assert (x >= static_cast <double> (INT_MIN));
@@ -234,7 +234,7 @@ int	round_int_accurate (double x)
 
 
 
-int64_t round_int64 (double x)
+int64_t round_int64 (double x) noexcept
 {
 	return int64_t (round (x));
 }
@@ -242,7 +242,7 @@ int64_t round_int64 (double x)
 
 
 // May not give the right result for very small negative values.
-int	floor_int (float x)
+int	floor_int (float x) noexcept
 {
 	assert (x <= double (INT_MAX));
 	assert (x >= static_cast <double> (INT_MIN));
@@ -304,7 +304,7 @@ int	floor_int (float x)
 
 
 
-int	floor_int (double x)
+int	floor_int (double x) noexcept
 {
 	return floor_int (float (x));
 }
@@ -312,7 +312,7 @@ int	floor_int (double x)
 
 
 // May not give the right result for very small negative values.
-int	floor_int_accurate (double x)
+int	floor_int_accurate (double x) noexcept
 {
 	assert (x <= double (INT_MAX));
 	assert (x >= static_cast <double> (INT_MIN));
@@ -383,7 +383,7 @@ int	floor_int_accurate (double x)
 
 
 
-int64_t	floor_int64 (double x)
+int64_t	floor_int64 (double x) noexcept
 {
 	return int64_t (floor (x));
 }
@@ -391,7 +391,7 @@ int64_t	floor_int64 (double x)
 
 
 // May not give the right result for very small positive values.
-int	ceil_int (double x)
+int	ceil_int (double x) noexcept
 {
 	assert (x <= double (INT_MAX));
 	assert (x >= static_cast <double> (INT_MIN));
@@ -462,7 +462,7 @@ int	ceil_int (double x)
 
 
 template <class T>
-int	trunc_int (T x)
+int	trunc_int (T x) noexcept
 {
 #if (fstb_ARCHI == fstb_ARCHI_X86) && (defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64)
 	return _mm_cvtt_ss2si (_mm_set1_ps (float (x)));
@@ -474,7 +474,7 @@ int	trunc_int (T x)
 
 
 template <class T>
-int	conv_int_fast (T x)
+int	conv_int_fast (T x) noexcept
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 
@@ -529,7 +529,7 @@ int	conv_int_fast (T x)
 
 
 template <class T>
-constexpr bool	is_null (T val, T eps)
+constexpr bool	is_null (T val, T eps) noexcept
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 	assert (eps >= 0);
@@ -540,7 +540,7 @@ constexpr bool	is_null (T val, T eps)
 
 
 template <class T>
-constexpr bool	is_eq (T v1, T v2, T eps)
+constexpr bool	is_eq (T v1, T v2, T eps) noexcept
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 	assert (eps >= 0);
@@ -551,7 +551,7 @@ constexpr bool	is_eq (T v1, T v2, T eps)
 
 
 template <class T>
-constexpr bool	is_eq_rel (T v1, T v2, T tol)
+constexpr bool	is_eq_rel (T v1, T v2, T tol) noexcept
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 	assert (tol >= 0);
@@ -578,7 +578,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	get_prev_pow_2 (uint32_t x)
+int	get_prev_pow_2 (uint32_t x) noexcept
 {
 	assert (x > 0);
 
@@ -641,7 +641,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	get_next_pow_2 (uint32_t x)
+int	get_next_pow_2 (uint32_t x) noexcept
 {
 	assert (x > 0);
 
@@ -709,7 +709,7 @@ int	get_next_pow_2 (uint32_t x)
 
 
 
-constexpr double	sinc (double x)
+constexpr double	sinc (double x) noexcept
 {
 	if (x == 0)
 	{
@@ -723,7 +723,7 @@ constexpr double	sinc (double x)
 
 
 
-double  pseudo_exp (double x, double c)
+double  pseudo_exp (double x, double c) noexcept
 {
 	assert (x >= 0);
 	assert (c > 0);
@@ -736,7 +736,7 @@ double  pseudo_exp (double x, double c)
 
 
 
-double  pseudo_log (double y, double c)
+double  pseudo_log (double y, double c) noexcept
 {
 	assert (y >= 0);
 	assert (c > 0);
@@ -753,25 +753,25 @@ class fnc_ShiftGeneric
 {
 public:
 	static_assert (S < int (sizeof (T) * CHAR_BIT), "Shift too large");
-	static constexpr T sh (T x) { return x << S; }
+	static constexpr T sh (T x) noexcept { return x << S; }
 };
 template <class T, int S>
 class fnc_ShiftGeneric <T, S, false>
 {
 public:
 	static_assert (S < int (sizeof (T) * CHAR_BIT), "Shift too large");
-	static constexpr T sh (T x) { return x >> S; }
+	static constexpr T sh (T x) noexcept { return x >> S; }
 };
 
 template <class T, int S>
-constexpr T	sshift_l (T x)
+constexpr T	sshift_l (T x) noexcept
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
 	return fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S > 0)>::sh (x);
 }
 
 template <class T, int S>
-constexpr T	sshift_r (T x)
+constexpr T	sshift_r (T x) noexcept
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
 	return fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S < 0)>::sh (x);
@@ -780,7 +780,7 @@ constexpr T	sshift_r (T x)
 
 
 template <class T>
-constexpr T	sq (T x)
+constexpr T	sq (T x) noexcept
 {
 	return x * x;
 }
@@ -788,7 +788,7 @@ constexpr T	sq (T x)
 
 
 template <class T>
-constexpr T	cube (T x)
+constexpr T	cube (T x) noexcept
 {
 	return x * x * x;
 }
@@ -797,7 +797,7 @@ constexpr T	cube (T x)
 
 // U must be a signed integer type
 template <class T, class U>
-constexpr T	ipow (T x, U n)
+constexpr T	ipow (T x, U n) noexcept
 {
 	const U			abs_n = std::abs (n);
 	const T			z (ipowp (x, abs_n));
@@ -809,7 +809,7 @@ constexpr T	ipow (T x, U n)
 
 // U must be an integer type (signed or not)
 template <class T, class U>
-constexpr T	ipowp (T x, U n)
+constexpr T	ipowp (T x, U n) noexcept
 {
 	assert (! (n < U (0)));
 
@@ -842,7 +842,7 @@ constexpr T	ipowp (T x, U n)
 
 // Result looks optimal with all optimisations enabled
 template <int N, class T>
-constexpr T	ipowpc (T x)
+constexpr T	ipowpc (T x) noexcept
 {
 	static_assert (N >= 0, "N must be positive or null.");
 
@@ -874,8 +874,10 @@ constexpr T	ipowpc (T x)
 
 
 template <class T>
-constexpr T	rcp_uint (int x)
+constexpr T	rcp_uint (int x) noexcept
 {
+	static_assert (std::is_floating_point <T>::value, "T must be floating point");
+
 	constexpr int  table_len           = 256;
 	constexpr T    rcp_arr [table_len] =
 	{
@@ -958,7 +960,7 @@ constexpr T	rcp_uint (int x)
 
 
 template <class T>
-constexpr T	lerp (T v0, T v1, T p)
+constexpr T	lerp (T v0, T v1, T p) noexcept
 {
 	return v0 + p * (v1 - v0);
 }
@@ -986,8 +988,11 @@ constexpr std::array <T, N> make_array (const T &init_val)
 
 
 template <class T>
-T	read_unalign (const void *ptr)
+T	read_unalign (const void *ptr) noexcept
 {
+	static_assert (
+		std::is_trivially_copyable <T>::value, "T must be trivially copiable"
+	);
 	assert (ptr != nullptr);
 
 	T              val;
@@ -998,8 +1003,11 @@ T	read_unalign (const void *ptr)
 
 
 template <class T>
-void	write_unalign (void *ptr, T val)
+void	write_unalign (void *ptr, T val) noexcept
 {
+	static_assert (
+		std::is_trivially_copyable <T>::value, "T must be trivially copiable"
+	);
 	assert (ptr != nullptr);
 
 	memcpy (ptr, &val, sizeof (val));
@@ -1010,7 +1018,7 @@ void	write_unalign (void *ptr, T val)
 // std::copy is already optimized like this but uses memmove instead of
 // memcpy.
 template <typename T>
-void    copy_no_overlap (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, int nbr_elt)
+void    copy_no_overlap (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, int nbr_elt) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -1029,7 +1037,7 @@ void    copy_no_overlap (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_
 
 
 template <typename T>
-bool	is_ptr_align_nz (const T *ptr, int a)
+bool	is_ptr_align_nz (const T *ptr, int a) noexcept
 {
 	assert (a > 0);
 	assert (is_pow_2 (a));

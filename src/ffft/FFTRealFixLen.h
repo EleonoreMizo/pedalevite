@@ -63,10 +63,10 @@ public:
 	FFTRealFixLen&	operator = (const FFTRealFixLen &other)    = default;
 	FFTRealFixLen&	operator = (FFTRealFixLen &&other)         = default;
 
-	inline long		get_length () const;
-	void				do_fft (DataType f [], const DataType x []);
-	void				do_ifft (const DataType f [], DataType x []);
-	void				rescale (DataType x []) const;
+	inline long		get_length () const noexcept;
+	void				do_fft (DataType f [], const DataType x []) noexcept;
+	void				do_ifft (const DataType f [], DataType x []) noexcept;
+	void				rescale (DataType x []) const noexcept;
 
 
 
@@ -99,9 +99,9 @@ private:
 	static constexpr int TRIGO_OSC_ARR_SIZE =
 		(NBR_TRIGO_OSC > 0) ? NBR_TRIGO_OSC : 1;
 
-	void				build_br_lut ();
-	void				build_trigo_lut ();
-	void				build_trigo_osc ();
+	void				build_br_lut () noexcept;
+	void				build_trigo_lut () noexcept;
+	void				build_trigo_osc () noexcept;
 
 	std::vector <DataType>
 						_buffer;

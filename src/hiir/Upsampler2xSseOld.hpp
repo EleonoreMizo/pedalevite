@@ -52,7 +52,7 @@ Throws: Nothing
 */
 
 template <int NC>
-Upsampler2xSseOld <NC>::Upsampler2xSseOld ()
+Upsampler2xSseOld <NC>::Upsampler2xSseOld () noexcept
 :	_filter ()
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
@@ -85,7 +85,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xSseOld <NC>::set_coefs (const double coef_arr [NBR_COEFS])
+void	Upsampler2xSseOld <NC>::set_coefs (const double coef_arr [NBR_COEFS]) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -114,7 +114,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xSseOld <NC>::process_sample (float &out_0, float &out_1, float input)
+void	Upsampler2xSseOld <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
 	const __m128   spl_in  = _mm_set_ss (input);
 	const __m128   spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
@@ -151,7 +151,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xSseOld <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Upsampler2xSseOld <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -180,7 +180,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xSseOld <NC>::clear_buffers ()
+void	Upsampler2xSseOld <NC>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
 	{

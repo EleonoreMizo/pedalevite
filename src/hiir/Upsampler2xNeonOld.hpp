@@ -47,7 +47,7 @@ Throws: Nothing
 */
 
 template <int NC>
-Upsampler2xNeonOld <NC>::Upsampler2xNeonOld ()
+Upsampler2xNeonOld <NC>::Upsampler2xNeonOld () noexcept
 :	_filter ()
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
@@ -80,7 +80,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xNeonOld <NC>::set_coefs (const double coef_arr [NBR_COEFS])
+void	Upsampler2xNeonOld <NC>::set_coefs (const double coef_arr [NBR_COEFS]) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -109,7 +109,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xNeonOld <NC>::process_sample (float &out_0, float &out_1, float input)
+void	Upsampler2xNeonOld <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
 	const float32x2_t spl_in = vdup_n_f32 (input);
 	const float32x2_t spl_m  = vget_low_f32 (load4a (_filter [NBR_STAGES]._mem));
@@ -140,7 +140,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xNeonOld <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Upsampler2xNeonOld <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -169,7 +169,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xNeonOld <NC>::clear_buffers ()
+void	Upsampler2xNeonOld <NC>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
 	{

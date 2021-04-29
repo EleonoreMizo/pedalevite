@@ -66,7 +66,7 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	               PhaseHalfPiSse ();
+	               PhaseHalfPiSse () noexcept;
 	               PhaseHalfPiSse (const PhaseHalfPiSse <NC> &other) = default;
 	               PhaseHalfPiSse (PhaseHalfPiSse <NC> &&other)      = default;
 	               ~PhaseHalfPiSse ()                                = default;
@@ -76,13 +76,13 @@ public:
 	PhaseHalfPiSse <NC> &
 	               operator = (PhaseHalfPiSse <NC> &&other)          = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample (float &out_0, float &out_1, float input);
-	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (float &out_0, float &out_1, float input) noexcept;
+	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

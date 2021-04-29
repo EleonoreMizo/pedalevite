@@ -47,7 +47,7 @@ LockFreeQueue <T>::LockFreeQueue ()
 
 
 template <class T>
-void	LockFreeQueue <T>::enqueue (CellType &cell)
+void	LockFreeQueue <T>::enqueue (CellType &cell) noexcept
 {
 	cell._next_ptr = nullptr;  // set the cell next pointer to NULL
 
@@ -83,7 +83,7 @@ void	LockFreeQueue <T>::enqueue (CellType &cell)
 
 // Returns 0 if the queue is empty.
 template <class T>
-typename LockFreeQueue <T>::CellType *	LockFreeQueue <T>::dequeue ()
+typename LockFreeQueue <T>::CellType *	LockFreeQueue <T>::dequeue () noexcept
 {
 	constexpr int  max_loop = 100;
 	int            loop_cnt = 0;

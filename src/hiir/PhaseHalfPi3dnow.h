@@ -59,7 +59,7 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	               PhaseHalfPi3dnow ();
+	               PhaseHalfPi3dnow () noexcept;
 	               PhaseHalfPi3dnow (const PhaseHalfPi3dnow <NC> &other) = default;
 	               PhaseHalfPi3dnow (PhaseHalfPi3dnow <NC> &&other)      = default;
 	               ~PhaseHalfPi3dnow ()                            = default;
@@ -69,13 +69,13 @@ public:
 	PhaseHalfPi3dnow <NC> &
 	               operator = (PhaseHalfPi3dnow <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample (float &out_0, float &out_1, float input);
-	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (float &out_0, float &out_1, float input) noexcept;
+	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

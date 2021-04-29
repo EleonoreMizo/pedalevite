@@ -46,109 +46,109 @@ class Approx
 public:
 
 	static inline ToolsSimd::VectF32
-	               sin_rbj (ToolsSimd::VectF32 x);
+	               sin_rbj (ToolsSimd::VectF32 x) noexcept;
 	static inline ToolsSimd::VectF32
-	               cos_rbj (ToolsSimd::VectF32 x);
+	               cos_rbj (ToolsSimd::VectF32 x) noexcept;
 	static inline void
-	               cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x);
+	               cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
 	static inline constexpr T
-	               sin_rbj_halfpi (T x);
+	               sin_rbj_halfpi (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               sin_rbj_halfpi (ToolsSimd::VectF32 x);
+	               sin_rbj_halfpi (ToolsSimd::VectF32 x) noexcept;
 	static inline ToolsSimd::VectF32
-	               sin_rbj_pi (ToolsSimd::VectF32 x);
+	               sin_rbj_pi (ToolsSimd::VectF32 x) noexcept;
 	static inline void
-	               sin_rbj_halfpi_pi (float &sx, float &s2x, float x);
+	               sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept;
 
 	template <typename T>
 	static inline T
-	               sin_nick (T x);
+	               sin_nick (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               sin_nick (ToolsSimd::VectF32 x);
+	               sin_nick (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
 	static inline T
-	               sin_nick_2pi (T x);
+	               sin_nick_2pi (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               sin_nick_2pi (ToolsSimd::VectF32 x);
+	               sin_nick_2pi (ToolsSimd::VectF32 x) noexcept;
 
 	static inline float
-	               log2 (float val);
+	               log2 (float val) noexcept;
 	static inline float
-	               log2_crude (float val);
+	               log2_crude (float val) noexcept;
 	static inline float
-	               exp2 (float val);
+	               exp2 (float val) noexcept;
 	static inline float
-	               exp2_crude (float val);
+	               exp2_crude (float val) noexcept;
 	static inline float
-	               exp2_5th (float val);
+	               exp2_5th (float val) noexcept;
 	template <int A, typename T>
 	static inline T
-	               exp_m (T val);
+	               exp_m (T val) noexcept;
 
 	static inline double
-	               pow (double a, double b);
+	               pow (double a, double b) noexcept;
 
 	static inline uint32_t
-	               fast_partial_exp2_int_16_to_int_32 (int val);
+	               fast_partial_exp2_int_16_to_int_32 (int val) noexcept;
 	static inline uint32_t
-	               fast_partial_exp2_int_16_to_int_32_4th (int val);
+	               fast_partial_exp2_int_16_to_int_32_4th (int val) noexcept;
 
 	template <typename T>
 	static inline constexpr T
-	               tan_taylor5 (T x);
+	               tan_taylor5 (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               tan_taylor5 (ToolsSimd::VectF32 x);
+	               tan_taylor5 (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
 	static inline T
-	               tan_mystran (T x);
+	               tan_mystran (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               tan_mystran (ToolsSimd::VectF32 x);
+	               tan_mystran (ToolsSimd::VectF32 x) noexcept;
 
 	template <typename T>
 	static inline constexpr T
-	               tan_pade55 (T x);
+	               tan_pade55 (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               tan_pade55 (ToolsSimd::VectF32 x);
+	               tan_pade55 (ToolsSimd::VectF32 x) noexcept;
 
 	template <typename T>
 	static inline constexpr T
-	               atan2_3th (T y, T x);
+	               atan2_3th (T y, T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x);
+	               atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept;
 
 	template <typename T>
 	static inline T
-	               tanh_mystran (T x);
+	               tanh_mystran (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               tanh_mystran (ToolsSimd::VectF32 x);
+	               tanh_mystran (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
 	static inline T
-	               tanh_2dat (T x);
+	               tanh_2dat (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               tanh_2dat (ToolsSimd::VectF32 x);
+	               tanh_2dat (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
 	static inline T
-	               tanh_andy (T x);
+	               tanh_andy (T x) noexcept;
 
 	template <int P = 1>
 	static inline float
-	               rsqrt (float x);
+	               rsqrt (float x) noexcept;
 	template <int P = 1>
 	static inline double
-	               rsqrt (double x);
+	               rsqrt (double x) noexcept;
 
 	template <typename T>
 	static inline T
-	               wright_omega_3 (T x);
+	               wright_omega_3 (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               wright_omega_3 (ToolsSimd::VectF32 x);
+	               wright_omega_3 (ToolsSimd::VectF32 x) noexcept;
 
 	template <typename T>
 	static inline T
-	               wright_omega_4 (T x);
+	               wright_omega_4 (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               wright_omega_4 (ToolsSimd::VectF32 x);
+	               wright_omega_4 (ToolsSimd::VectF32 x) noexcept;
 
 
 
@@ -169,9 +169,9 @@ private:
 	};
 
 	static inline ToolsSimd::VectF32
-	               restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp);
+	               restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp) noexcept;
 	static inline ToolsSimd::VectF32
-	               restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p);
+	               restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p) noexcept;
 
 
 

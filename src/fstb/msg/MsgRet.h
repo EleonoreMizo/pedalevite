@@ -5,8 +5,8 @@
 
 Template parameters:
 
-- T: the message's payload. Should implement void T::clear(); to explicitely
-free the allocated resources, if any.
+- T: the message's payload. Should implement void T::clear () noexcept; to
+explicitely free the allocated resources, if any.
 
 --- Legal stuff ---
 
@@ -58,10 +58,10 @@ public:
 	typedef conc::LockFreeCell <MsgRet <T> > CellType;
 	typedef std::shared_ptr <QueueType> QueueSPtr;
 
-	void           clear ();
-	void           set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell);
-	void           ret ();
-	bool           is_attached_to_queue () const;
+	void           clear () noexcept;
+	void           set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell) noexcept;
+	void           ret () noexcept;
+	bool           is_attached_to_queue () const noexcept;
 
 	T              _content;
 

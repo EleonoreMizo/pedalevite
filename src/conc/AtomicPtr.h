@@ -48,18 +48,18 @@ class AtomicPtr
 
 public:
 
-	inline         AtomicPtr ();
-	inline         AtomicPtr (T *ptr);
+	inline         AtomicPtr () noexcept;
+	inline         AtomicPtr (T *ptr) noexcept;
 	inline AtomicPtr <T> &
-	               operator = (T *other_ptr);
+	               operator = (T *other_ptr) noexcept;
 
-	inline         operator T * () const;
+	inline         operator T * () const noexcept;
 
-	bool           operator == (T *other_ptr) const;
-	bool           operator != (T *other_ptr) const;
+	bool           operator == (T *other_ptr) const noexcept;
+	bool           operator != (T *other_ptr) const noexcept;
 
-	inline T *     swap (T *other_ptr);
-	inline T *     cas (T *other_ptr, T *comp_ptr);
+	inline T *     swap (T *other_ptr) noexcept;
+	inline T *     cas (T *other_ptr, T *comp_ptr) noexcept;
 
 
 
@@ -73,7 +73,7 @@ protected:
 
 private:
 
-	inline T *     read_ptr () const;
+	inline T *     read_ptr () const noexcept;
 
 #if (conc_ARCHI == conc_ARCHI_X86)
 

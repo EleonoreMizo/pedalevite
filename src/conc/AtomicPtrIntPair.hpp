@@ -36,7 +36,7 @@ namespace conc
 
 
 template <class T>
-AtomicPtrIntPair <T>::AtomicPtrIntPair ()
+AtomicPtrIntPair <T>::AtomicPtrIntPair () noexcept
 :	_data ()
 {
 	set (nullptr, 0);
@@ -44,7 +44,7 @@ AtomicPtrIntPair <T>::AtomicPtrIntPair ()
 
 
 template <class T>
-void	AtomicPtrIntPair <T>::set (T * ptr, intptr_t val)
+void	AtomicPtrIntPair <T>::set (T * ptr, intptr_t val) noexcept
 {
 	const RealContent content = { ptr, val };
 
@@ -62,7 +62,7 @@ void	AtomicPtrIntPair <T>::set (T * ptr, intptr_t val)
 
 
 template <class T>
-void	AtomicPtrIntPair <T>::get (T * &ptr, intptr_t &val) const
+void	AtomicPtrIntPair <T>::get (T * &ptr, intptr_t &val) const noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
@@ -90,7 +90,7 @@ void	AtomicPtrIntPair <T>::get (T * &ptr, intptr_t &val) const
 
 
 template <class T>
-T *	AtomicPtrIntPair <T>::get_ptr () const
+T *	AtomicPtrIntPair <T>::get_ptr () const noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
@@ -108,7 +108,7 @@ T *	AtomicPtrIntPair <T>::get_ptr () const
 
 
 template <class T>
-intptr_t	AtomicPtrIntPair <T>::get_val () const
+intptr_t	AtomicPtrIntPair <T>::get_val () const noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
@@ -126,7 +126,7 @@ intptr_t	AtomicPtrIntPair <T>::get_val () const
 
 
 template <class T>
-bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, intptr_t new_val, T *comp_ptr, intptr_t comp_val)
+bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, intptr_t new_val, T *comp_ptr, intptr_t comp_val) noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
@@ -168,7 +168,7 @@ bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, intptr_t new_val, T *comp_ptr, intp
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 template <class T>
-void	AtomicPtrIntPair <T>::cas_combi (Combi &old, Combi &dest, const Combi &excg, const Combi &comp)
+void	AtomicPtrIntPair <T>::cas_combi (Combi &old, Combi &dest, const Combi &excg, const Combi &comp) noexcept
 {
 #if (conc_WORD_SIZE == 64)
 

@@ -40,7 +40,7 @@ namespace msg
 
 
 template <class M>
-QueueRetMgr <M>::~QueueRetMgr ()
+QueueRetMgr <M>::~QueueRetMgr () noexcept
 {
 	// Client should ensure that all queues are flushed and all cells are
 	// returned to the pool before the object is destructed. This code is only
@@ -102,7 +102,7 @@ void	QueueRetMgr <M>::kill_ret_queue (QueueSPtr &queue_sptr)
 
 
 template <class M>
-typename QueueRetMgr <M>::Pool &	QueueRetMgr <M>::use_pool ()
+typename QueueRetMgr <M>::Pool &	QueueRetMgr <M>::use_pool () noexcept
 {
 	return _pool;
 }
@@ -110,7 +110,7 @@ typename QueueRetMgr <M>::Pool &	QueueRetMgr <M>::use_pool ()
 
 
 template <class M>
-void	QueueRetMgr <M>::enqueue (CellType &cell, QueueSPtr ret_queue_sptr)
+void	QueueRetMgr <M>::enqueue (CellType &cell, QueueSPtr ret_queue_sptr) noexcept
 {
 	assert (find_queue (*ret_queue_sptr) != _queue_list.end ());
 
@@ -121,7 +121,7 @@ void	QueueRetMgr <M>::enqueue (CellType &cell, QueueSPtr ret_queue_sptr)
 
 
 template <class M>
-typename QueueRetMgr <M>::CellType *	QueueRetMgr <M>::dequeue ()
+typename QueueRetMgr <M>::CellType *	QueueRetMgr <M>::dequeue () noexcept
 {
 	return _queue_fwd.dequeue ();
 }
@@ -129,7 +129,7 @@ typename QueueRetMgr <M>::CellType *	QueueRetMgr <M>::dequeue ()
 
 
 template <class M>
-void	QueueRetMgr <M>::flush_ret_queue (Queue &queue)
+void	QueueRetMgr <M>::flush_ret_queue (Queue &queue) noexcept
 {
 	assert (find_queue (queue) != _queue_list.end ());
 
@@ -158,7 +158,7 @@ void	QueueRetMgr <M>::flush_ret_queue (Queue &queue)
 
 
 template <class M>
-typename QueueRetMgr <M>::QueueList::iterator	QueueRetMgr <M>::find_queue (Queue &queue)
+typename QueueRetMgr <M>::QueueList::iterator	QueueRetMgr <M>::find_queue (Queue &queue) noexcept
 {
 	return std::find_if (
 		_queue_list.begin (),

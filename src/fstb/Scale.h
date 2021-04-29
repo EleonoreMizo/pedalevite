@@ -59,7 +59,7 @@ class Scale
 public:
 	template <typename T>
 	static fstb_FORCEINLINE T
-	               mul (T a, T b);
+	               mul (T a, T b) noexcept;
 }; // class Scale
 
 

@@ -50,110 +50,110 @@ public:
 		NO = 0
 	};
 
-	inline         FixedPoint ();
+	inline         FixedPoint () noexcept;
 	               FixedPoint (const FixedPoint &other) = default;
 	inline explicit
-	               FixedPoint (int32_t int_val);
+	               FixedPoint (int32_t int_val) noexcept;
 	inline explicit
-	               FixedPoint (int32_t int_val, uint32_t frac_val);
+	               FixedPoint (int32_t int_val, uint32_t frac_val) noexcept;
 	inline explicit
-	               FixedPoint (double val);
+	               FixedPoint (double val) noexcept;
 	inline explicit
-	               FixedPoint (NoInit dummy);
+	               FixedPoint (NoInit dummy) noexcept;
 
 	FixedPoint &   operator = (const FixedPoint &other) = default;
 
 	inline constexpr void
-	               clear ();
-	inline void    set_val (double val);
+	               clear () noexcept;
+	inline void    set_val (double val) noexcept;
 	inline constexpr void
-		            set_val (int32_t int_val, uint32_t frac_val);
+		            set_val (int32_t int_val, uint32_t frac_val) noexcept;
 	inline constexpr void
-		            set_val_int64 (int64_t val);
+		            set_val_int64 (int64_t val) noexcept;
 	inline constexpr double
-		            get_val_dbl () const;
+		            get_val_dbl () const noexcept;
 	inline constexpr float
-		            get_val_flt () const;
+		            get_val_flt () const noexcept;
 	inline constexpr int64_t
-	               get_val_int64 () const;
+	               get_val_int64 () const noexcept;
 
 	inline constexpr void
-	               set_int_val (int32_t int_val);
+	               set_int_val (int32_t int_val) noexcept;
 	inline constexpr int32_t
-	               get_int_val () const;
+	               get_int_val () const noexcept;
 	inline constexpr int32_t
-	               get_round () const;
+	               get_round () const noexcept;
 	inline constexpr int32_t
-	               get_ceil () const;
+	               get_ceil () const noexcept;
 	inline constexpr void
-	               set_frac_val (uint32_t frac_val);
+	               set_frac_val (uint32_t frac_val) noexcept;
 	inline constexpr uint32_t
-	               get_frac_val () const;
+	               get_frac_val () const noexcept;
 	inline constexpr double
-	               get_frac_val_dbl () const;
+	               get_frac_val_dbl () const noexcept;
 	inline constexpr float
-	               get_frac_val_flt () const;
+	               get_frac_val_flt () const noexcept;
 
 	inline constexpr void
-	               neg ();
+	               neg () noexcept;
 	inline constexpr void
-	               abs ();
+	               abs () noexcept;
 
 	inline constexpr void
-	               bound (int32_t len);
+	               bound (int32_t len) noexcept;
 	inline constexpr void
-	               bound_positive (int32_t len);
+	               bound_positive (int32_t len) noexcept;
 	inline constexpr void
-	               bound_and (int32_t and_val);
+	               bound_and (int32_t and_val) noexcept;
 
 	inline constexpr void
-	               add (const FixedPoint &val);
+	               add (const FixedPoint &val) noexcept;
 	inline constexpr void
-	               add (const FixedPoint &val, int32_t and_val);
+	               add (const FixedPoint &val, int32_t and_val) noexcept;
 	inline constexpr void
-	               add_int (int32_t int_val);
+	               add_int (int32_t int_val) noexcept;
 	inline constexpr void
-	               add_int (int32_t int_val, int32_t and_val);
+	               add_int (int32_t int_val, int32_t and_val) noexcept;
 	inline constexpr void
-	               add_frac (uint32_t frac_val);
+	               add_frac (uint32_t frac_val) noexcept;
 	inline constexpr void
-	               add_frac (uint32_t frac_val, int32_t and_val);
+	               add_frac (uint32_t frac_val, int32_t and_val) noexcept;
 	inline constexpr FixedPoint &
-	               operator += (const FixedPoint &other);
+	               operator += (const FixedPoint &other) noexcept;
 	inline constexpr FixedPoint &
-	               operator += (int32_t int_val);
+	               operator += (int32_t int_val) noexcept;
 
 	inline constexpr void
-	               sub (const FixedPoint &val);
+	               sub (const FixedPoint &val) noexcept;
 	inline constexpr void
-	               sub (const FixedPoint &val, int32_t and_val);
+	               sub (const FixedPoint &val, int32_t and_val) noexcept;
 	inline constexpr void
-	               sub_int (int32_t int_val);
+	               sub_int (int32_t int_val) noexcept;
 	inline constexpr void
-	               sub_int (int32_t int_val, int32_t and_val);
+	               sub_int (int32_t int_val, int32_t and_val) noexcept;
 	inline constexpr void
-	               sub_frac (uint32_t frac_val);
+	               sub_frac (uint32_t frac_val) noexcept;
 	inline constexpr void
-	               sub_frac (uint32_t frac_val, int32_t and_val);
+	               sub_frac (uint32_t frac_val, int32_t and_val) noexcept;
 	inline constexpr FixedPoint &
-	               operator -= (const FixedPoint &other);
+	               operator -= (const FixedPoint &other) noexcept;
 	inline constexpr FixedPoint &
-	               operator -= (int32_t int_val);
+	               operator -= (int32_t int_val) noexcept;
 
 	inline constexpr void
-	               shift (int nbr_bits);
+	               shift (int nbr_bits) noexcept;
 	inline constexpr void
-	               shift_left (int nbr_bits);
+	               shift_left (int nbr_bits) noexcept;
 	inline constexpr void
-	               shift_right (int nbr_bits);
+	               shift_right (int nbr_bits) noexcept;
 	inline constexpr FixedPoint &
-	               operator <<= (int nbr_bits);
+	               operator <<= (int nbr_bits) noexcept;
 	inline constexpr FixedPoint &
-	               operator >>= (int nbr_bits);
+	               operator >>= (int nbr_bits) noexcept;
 
 	inline constexpr void
-	               mul_int (int32_t val);
-	inline void    mul_flt (double val);
+	               mul_int (int32_t val) noexcept;
+	inline void    mul_flt (double val) noexcept;
 
 
 
@@ -185,12 +185,12 @@ private:
 
 	Fixed3232      _val;
 
-	friend bool	operator == (const FixedPoint &left, const FixedPoint &right); 
-	friend bool	operator != (const FixedPoint &left, const FixedPoint &right); 
-	friend bool	operator < (const FixedPoint &left, const FixedPoint &right); 
-	friend bool	operator <= (const FixedPoint &left, const FixedPoint &right); 
-	friend bool	operator > (const FixedPoint &left, const FixedPoint &right); 
-	friend bool	operator >= (const FixedPoint &left, const FixedPoint &right); 
+	friend bool	operator == (const FixedPoint &left, const FixedPoint &right) noexcept; 
+	friend bool	operator != (const FixedPoint &left, const FixedPoint &right) noexcept; 
+	friend bool	operator < (const FixedPoint &left, const FixedPoint &right) noexcept; 
+	friend bool	operator <= (const FixedPoint &left, const FixedPoint &right) noexcept; 
+	friend bool	operator > (const FixedPoint &left, const FixedPoint &right) noexcept; 
+	friend bool	operator >= (const FixedPoint &left, const FixedPoint &right) noexcept; 
 
 
 
@@ -204,15 +204,15 @@ private:
 
 /*\\\ GLOBAL OPERATOR PROTOTYPES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-inline bool	operator == (const FixedPoint &left, const FixedPoint &right); 
-inline bool	operator != (const FixedPoint &left, const FixedPoint &right); 
-inline bool	operator < (const FixedPoint &left, const FixedPoint &right); 
-inline bool	operator <= (const FixedPoint &left, const FixedPoint &right); 
-inline bool	operator > (const FixedPoint &left, const FixedPoint &right); 
-inline bool	operator >= (const FixedPoint &left, const FixedPoint &right); 
+inline bool	operator == (const FixedPoint &left, const FixedPoint &right) noexcept; 
+inline bool	operator != (const FixedPoint &left, const FixedPoint &right) noexcept; 
+inline bool	operator < (const FixedPoint &left, const FixedPoint &right) noexcept; 
+inline bool	operator <= (const FixedPoint &left, const FixedPoint &right) noexcept; 
+inline bool	operator > (const FixedPoint &left, const FixedPoint &right) noexcept; 
+inline bool	operator >= (const FixedPoint &left, const FixedPoint &right) noexcept; 
 
-inline FixedPoint	operator + (FixedPoint left, const FixedPoint &right);
-inline FixedPoint	operator - (FixedPoint left, const FixedPoint &right);
+inline FixedPoint	operator + (FixedPoint left, const FixedPoint &right) noexcept;
+inline FixedPoint	operator - (FixedPoint left, const FixedPoint &right) noexcept;
 
 
 

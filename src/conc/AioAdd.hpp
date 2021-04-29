@@ -43,9 +43,9 @@ AioAdd <T>::AioAdd (T operand)
 
 
 template <class T>
-T	AioAdd <T>::operator () (T old_val) const
+T	AioAdd <T>::operator () (T old_val) const noexcept
 {
-	return (old_val + _operand);
+	return old_val + _operand;
 }
 
 

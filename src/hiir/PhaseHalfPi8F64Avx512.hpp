@@ -45,7 +45,7 @@ Throws: Nothing
 */
 
 template <int NC>
-PhaseHalfPi8F64Avx512 <NC>::PhaseHalfPi8F64Avx512 ()
+PhaseHalfPi8F64Avx512 <NC>::PhaseHalfPi8F64Avx512 () noexcept
 :	_bifilter ()
 ,	_phase (0)
 {
@@ -75,7 +75,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi8F64Avx512 <NC>::set_coefs (const double coef_arr [])
+void	PhaseHalfPi8F64Avx512 <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -105,7 +105,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi8F64Avx512 <NC>::process_sample (__m512d &out_0, __m512d &out_1, __m512d input)
+void	PhaseHalfPi8F64Avx512 <NC>::process_sample (__m512d &out_0, __m512d &out_1, __m512d input) noexcept
 {
 	out_0 = input;                   // Even coefs
 	out_1 = _mm512_load_pd (_prev);  // Odd coefs
@@ -142,7 +142,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi8F64Avx512 <NC>::process_block (double out_0_ptr [], double out_1_ptr [], const double in_ptr [], long nbr_spl)
+void	PhaseHalfPi8F64Avx512 <NC>::process_block (double out_0_ptr [], double out_1_ptr [], const double in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -218,7 +218,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi8F64Avx512 <NC>::clear_buffers ()
+void	PhaseHalfPi8F64Avx512 <NC>::clear_buffers () noexcept
 {
 	_phase = 0;
 	for (int i = 0; i < NBR_COEFS + 2; ++i)

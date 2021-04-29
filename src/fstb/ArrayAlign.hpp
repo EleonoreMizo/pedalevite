@@ -131,7 +131,7 @@ ArrayAlign <T, LEN, AL> &	ArrayAlign <T, LEN, AL>::operator = (const ArrayAlign 
 
 
 template <typename T, long LEN, long AL>
-const typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::operator [] (long pos) const
+const typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::operator [] (long pos) const noexcept
 {
 	assert (_data_ptr != 0);
 	assert (pos >= 0);
@@ -143,7 +143,7 @@ const typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::opera
 
 
 template <typename T, long LEN, long AL>
-typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::operator [] (long pos)
+typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::operator [] (long pos) noexcept
 {
 	assert (_data_ptr != 0);
 	assert (pos >= 0);
@@ -155,7 +155,7 @@ typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::operator []
 
 
 template <typename T, long LEN, long AL>
-const typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data () const
+const typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data () const noexcept
 {
 	assert (_data_ptr != 0);
 
@@ -165,7 +165,7 @@ const typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data 
 
 
 template <typename T, long LEN, long AL>
-typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data ()
+typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data () noexcept
 {
 	assert (_data_ptr != 0);
 
@@ -175,7 +175,7 @@ typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data ()
 
 
 template <typename T, long LEN, long AL>
-long	ArrayAlign <T, LEN, AL>::size ()
+long	ArrayAlign <T, LEN, AL>::size () noexcept
 {
 	return NBR_ELT;
 }
@@ -183,7 +183,7 @@ long	ArrayAlign <T, LEN, AL>::size ()
 
 
 template <typename T, long LEN, long AL>
-long	ArrayAlign <T, LEN, AL>::length ()
+long	ArrayAlign <T, LEN, AL>::length () noexcept
 {
 	return NBR_ELT;
 }
@@ -191,7 +191,7 @@ long	ArrayAlign <T, LEN, AL>::length ()
 
 
 template <typename T, long LEN, long AL>
-long	ArrayAlign <T, LEN, AL>::get_alignment ()
+long	ArrayAlign <T, LEN, AL>::get_alignment () noexcept
 {
 	return ALIGNMENT;
 }

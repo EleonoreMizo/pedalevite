@@ -34,31 +34,31 @@ namespace fstb
 
 
 template <bool A>
-bool	DataAlign <A>::check_ptr (const void *ptr)
+bool	DataAlign <A>::check_ptr (const void *ptr) noexcept
 {
 	return is_ptr_align_nz (ptr, 16);
 }
 
 template <bool A>
-ToolsSimd::VectF32	DataAlign <A>::load_f32 (const void *ptr)
+ToolsSimd::VectF32	DataAlign <A>::load_f32 (const void *ptr) noexcept
 {
 	return ToolsSimd::load_f32 (ptr);
 }
 
 template <bool A>
-ToolsSimd::VectS32	DataAlign <A>::load_s32 (const void *ptr)
+ToolsSimd::VectS32	DataAlign <A>::load_s32 (const void *ptr) noexcept
 {
 	return ToolsSimd::load_s32 (ptr);
 }
 
 template <bool A>
-void	DataAlign <A>::store_f32 (void *ptr, ToolsSimd::VectF32 v)
+void	DataAlign <A>::store_f32 (void *ptr, ToolsSimd::VectF32 v) noexcept
 {
 	ToolsSimd::store_f32 (ptr, v);
 }
 
 template <bool A>
-void	DataAlign <A>::store_s32 (void *ptr, ToolsSimd::VectS32 v)
+void	DataAlign <A>::store_s32 (void *ptr, ToolsSimd::VectS32 v) noexcept
 {
 	ToolsSimd::store_s32 (ptr, v);
 }
@@ -66,31 +66,31 @@ void	DataAlign <A>::store_s32 (void *ptr, ToolsSimd::VectS32 v)
 
 
 template <>
-inline bool	DataAlign <false>::check_ptr (const void *ptr)
+inline bool	DataAlign <false>::check_ptr (const void *ptr) noexcept
 {
 	return (ptr != nullptr);
 }
 
 template <>
-inline ToolsSimd::VectF32	DataAlign <false>::load_f32 (const void *ptr)
+inline ToolsSimd::VectF32	DataAlign <false>::load_f32 (const void *ptr) noexcept
 {
 	return ToolsSimd::loadu_f32 (ptr);
 }
 
 template <>
-inline ToolsSimd::VectS32	DataAlign <false>::load_s32 (const void *ptr)
+inline ToolsSimd::VectS32	DataAlign <false>::load_s32 (const void *ptr) noexcept
 {
 	return ToolsSimd::loadu_s32 (ptr);
 }
 
 template <>
-inline void	DataAlign <false>::store_f32 (void *ptr, ToolsSimd::VectF32 v)
+inline void	DataAlign <false>::store_f32 (void *ptr, ToolsSimd::VectF32 v) noexcept
 {
 	ToolsSimd::storeu_f32 (ptr, v);
 }
 
 template <>
-inline void	DataAlign <false>::store_s32 (void *ptr, ToolsSimd::VectS32 v)
+inline void	DataAlign <false>::store_s32 (void *ptr, ToolsSimd::VectS32 v) noexcept
 {
 	ToolsSimd::storeu_s32 (ptr, v);
 }

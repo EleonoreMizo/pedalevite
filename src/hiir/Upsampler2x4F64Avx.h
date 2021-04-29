@@ -64,7 +64,7 @@ public:
 	static constexpr int _nbr_chn  = 4;
 	static constexpr int NBR_COEFS = NC;
 
-	               Upsampler2x4F64Avx ();
+	               Upsampler2x4F64Avx () noexcept;
 	               Upsampler2x4F64Avx (const Upsampler2x4F64Avx <NC> &other) = default;
 	               Upsampler2x4F64Avx (Upsampler2x4F64Avx <NC> &&other)      = default;
 	               ~Upsampler2x4F64Avx ()                            = default;
@@ -74,11 +74,11 @@ public:
 	Upsampler2x4F64Avx <NC> &
 	               operator = (Upsampler2x4F64Avx <NC> &&other)      = default;
 
-	void				set_coefs (const double coef_arr [NBR_COEFS]);
+	void				set_coefs (const double coef_arr [NBR_COEFS]) noexcept;
 	hiir_FORCEINLINE void
-	               process_sample (__m256d &out_0, __m256d &out_1, __m256d input);
-	void				process_block (double out_ptr [], const double in_ptr [], long nbr_spl);
-	void				clear_buffers ();
+	               process_sample (__m256d &out_0, __m256d &out_1, __m256d input) noexcept;
+	void				process_block (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept;
+	void				clear_buffers () noexcept;
 
 
 

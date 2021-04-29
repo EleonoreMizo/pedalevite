@@ -59,7 +59,7 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	               Upsampler2xNeon ();
+	               Upsampler2xNeon () noexcept;
 	               Upsampler2xNeon (const Upsampler2xNeon <NC> &other) = default;
 	               Upsampler2xNeon (Upsampler2xNeon <NC> &&other)      = default;
 	               ~Upsampler2xNeon ()                                 = default;
@@ -69,10 +69,10 @@ public:
 	Upsampler2xNeon <NC> &
 	               operator = (Upsampler2xNeon <NC> &&other)           = default;
 
-	void           set_coefs (const double coef_arr [NBR_COEFS]);
-	inline void    process_sample (float &out_0, float &out_1, float input);
-	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
-	void           clear_buffers ();
+	void           set_coefs (const double coef_arr [NBR_COEFS]) noexcept;
+	inline void    process_sample (float &out_0, float &out_1, float input) noexcept;
+	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
 
 
 

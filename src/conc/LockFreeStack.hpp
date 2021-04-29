@@ -43,7 +43,7 @@ LockFreeStack <T>::LockFreeStack ()
 
 
 template <class T>
-void	LockFreeStack <T>::push (CellType &cell)
+void	LockFreeStack <T>::push (CellType &cell) noexcept
 {
 	CellType *     head_ptr = nullptr;
 	intptr_t       count    = 0;
@@ -60,7 +60,7 @@ void	LockFreeStack <T>::push (CellType &cell)
 
 // Returns 0 if the stack is empty.
 template <class T>
-typename LockFreeStack <T>::CellType *	LockFreeStack <T>::pop ()
+typename LockFreeStack <T>::CellType *	LockFreeStack <T>::pop () noexcept
 {
 	CellType *     cell_ptr  = nullptr;
 	bool           cont_flag = true;

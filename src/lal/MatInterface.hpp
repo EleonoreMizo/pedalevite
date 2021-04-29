@@ -36,7 +36,7 @@ namespace lal
 
 
 template <typename T>
-const T &	MatInterface <T>::operator () (int r, int c) const
+const T &	MatInterface <T>::operator () (int r, int c) const noexcept
 {
 	return Inherited::operator () (r, c);
 }
@@ -44,7 +44,7 @@ const T &	MatInterface <T>::operator () (int r, int c) const
 
 
 template <typename T>
-T &	MatInterface <T>::operator () (int r, int c)
+T &	MatInterface <T>::operator () (int r, int c) noexcept
 {
 	assert (r >= 0);
 	assert (c >= 0);
@@ -55,7 +55,7 @@ T &	MatInterface <T>::operator () (int r, int c)
 
 
 template <typename T>
-const T *	MatInterface <T>::get_data () const
+const T *	MatInterface <T>::get_data () const noexcept
 {
 	return Inherited::get_data ();
 }
@@ -63,7 +63,7 @@ const T *	MatInterface <T>::get_data () const
 
 
 template <typename T>
-T *	MatInterface <T>::get_data ()
+T *	MatInterface <T>::get_data () noexcept
 {
 	T *            ptr = do_get_data ();
 	assert (ptr != nullptr);

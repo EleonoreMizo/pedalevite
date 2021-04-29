@@ -46,7 +46,7 @@ Throws: Nothing
 */
 
 template <int NC>
-PhaseHalfPiNeon <NC>::PhaseHalfPiNeon ()
+PhaseHalfPiNeon <NC>::PhaseHalfPiNeon () noexcept
 :	_filter ()
 ,	_prev (0)
 ,	_phase (0)
@@ -84,7 +84,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiNeon <NC>::set_coefs (const double coef_arr [])
+void	PhaseHalfPiNeon <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -116,7 +116,7 @@ Throws: Nothing
 */
 
 template <int NC>
-hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float &out_1, float input)
+hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
 	StageDataNeonV4 * filter_ptr = &_filter [_phase] [0];
 
@@ -161,7 +161,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiNeon <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
+void	PhaseHalfPiNeon <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -193,7 +193,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiNeon <NC>::clear_buffers ()
+void	PhaseHalfPiNeon <NC>::clear_buffers () noexcept
 {
    for (int phase = 0; phase < NBR_PHASES; ++phase)
    {

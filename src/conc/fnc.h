@@ -35,11 +35,11 @@ namespace conc
 
 
 template <class T>
-bool	is_ptr_aligned (const T *ptr, int align);
+bool	is_ptr_aligned (const T *ptr, int align) noexcept;
 template <class T>
-bool	is_ptr_aligned_nz (const T *ptr, int align);
+bool	is_ptr_aligned_nz (const T *ptr, int align) noexcept;
 template <class T>
-bool	is_ptr_aligned_nz (const T *ptr);
+bool	is_ptr_aligned_nz (const T *ptr) noexcept;
 
 
 

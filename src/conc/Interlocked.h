@@ -46,14 +46,14 @@ class Interlocked
 public:
 
 	static conc_FORCEINLINE int32_t
-	               swap (int32_t volatile &dest, int32_t excg);
+	               swap (int32_t volatile &dest, int32_t excg) noexcept;
 	static conc_FORCEINLINE int32_t
-	               cas (int32_t volatile &dest, int32_t excg, int32_t comp);
+	               cas (int32_t volatile &dest, int32_t excg, int32_t comp) noexcept;
 
 	static conc_FORCEINLINE int64_t
-	               swap (int64_t volatile &dest, int64_t excg);
+	               swap (int64_t volatile &dest, int64_t excg) noexcept;
 	static conc_FORCEINLINE int64_t
-	               cas (int64_t volatile &dest, int64_t excg, int64_t comp);
+	               cas (int64_t volatile &dest, int64_t excg, int64_t comp) noexcept;
 
 #if defined (conc_HAS_CAS_128)
 
@@ -82,16 +82,16 @@ public:
  #endif
 
 	static conc_FORCEINLINE void
-	               swap (Data128 &old, volatile Data128 &dest, const Data128 &excg);
+	               swap (Data128 &old, volatile Data128 &dest, const Data128 &excg) noexcept;
 	static conc_FORCEINLINE void
-	               cas (Data128 &old, volatile Data128 &dest, const Data128 &excg, const Data128 &comp);
+	               cas (Data128 &old, volatile Data128 &dest, const Data128 &excg, const Data128 &comp) noexcept;
 
 #endif
 
 	static conc_FORCEINLINE void *
-	               swap (void * volatile &dest_ptr, void *excg_ptr);
+	               swap (void * volatile &dest_ptr, void *excg_ptr) noexcept;
 	static conc_FORCEINLINE void *
-	               cas (void * volatile &dest_ptr, void *excg_ptr, void *comp_ptr);
+	               cas (void * volatile &dest_ptr, void *excg_ptr, void *comp_ptr) noexcept;
 
 
 

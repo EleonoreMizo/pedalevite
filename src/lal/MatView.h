@@ -41,7 +41,7 @@ class MatView
 
 public:
 
-	void           setup (int rows, int cols, T *data_ptr, int stride);
+	void           setup (int rows, int cols, T *data_ptr, int stride) noexcept;
 
 
 
@@ -50,15 +50,15 @@ public:
 protected:
 
 	// lal::MatConstInterface
-	int            do_get_rows () const override;
-	int            do_get_cols () const override;
-	T &            do_at (int r, int c) override;
-	const T &      do_at (int r, int c) const override;
+	int            do_get_rows () const noexcept override;
+	int            do_get_cols () const noexcept override;
+	T &            do_at (int r, int c) noexcept override;
+	const T &      do_at (int r, int c) const noexcept override;
 
 	// lal::MatInterface
-	T *            do_get_data () override;
-	const T *      do_get_data () const override;
-	int            do_get_stride () const override;
+	T *            do_get_data () noexcept override;
+	const T *      do_get_data () const noexcept override;
+	int            do_get_stride () const noexcept override;
 
 
 
@@ -66,7 +66,7 @@ protected:
 
 private:
 
-	int           conv_coord_to_pos (int r, int c) const;
+	int           conv_coord_to_pos (int r, int c) const noexcept;
 
 	int            _rows       = 0;
 	int            _cols       = 0;

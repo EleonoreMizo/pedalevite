@@ -59,7 +59,7 @@ public:
 	static constexpr int _nbr_chn  = 16;
 	static constexpr int NBR_COEFS = NC;
 
-	               PhaseHalfPi16Avx512 ();
+	               PhaseHalfPi16Avx512 () noexcept;
 	               PhaseHalfPi16Avx512 (const PhaseHalfPi16Avx512 <NC> &other) = default;
 	               PhaseHalfPi16Avx512 (PhaseHalfPi16Avx512 <NC> &&other)      = default;
 	               ~PhaseHalfPi16Avx512 ()                                 = default;
@@ -69,13 +69,13 @@ public:
 	PhaseHalfPi16Avx512 <NC> &
 	               operator = (PhaseHalfPi16Avx512 <NC> &&other)           = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample (__m512 &out_0, __m512 &out_1, __m512 input);
-	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (__m512 &out_0, __m512 &out_1, __m512 input) noexcept;
+	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

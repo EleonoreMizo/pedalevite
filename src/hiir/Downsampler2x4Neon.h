@@ -63,7 +63,7 @@ public:
 	static constexpr int  _nbr_chn  = 4;
 	static constexpr int  NBR_COEFS = NC;
 
-	               Downsampler2x4Neon ();
+	               Downsampler2x4Neon () noexcept;
 	               Downsampler2x4Neon (const Downsampler2x4Neon <NC> &other) = default;
 	               Downsampler2x4Neon (Downsampler2x4Neon <NC> &&other) = default;
 	               ~Downsampler2x4Neon ()                            = default;
@@ -73,21 +73,21 @@ public:
 	Downsampler2x4Neon <NC> &
 	               operator = (Downsampler2x4Neon <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE float32x4_t
-	               process_sample (const float in_ptr [8]);
+	               process_sample (const float in_ptr [8]) noexcept;
 	hiir_FORCEINLINE float32x4_t
-	               process_sample (float32x4_t in_0, float32x4_t in_1);
-	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (float32x4_t in_0, float32x4_t in_1) noexcept;
+	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample_split (float32x4_t &low, float32x4_t &high, const float in_ptr [8]);
+	               process_sample_split (float32x4_t &low, float32x4_t &high, const float in_ptr [8]) noexcept;
 	hiir_FORCEINLINE void
-	               process_sample_split (float32x4_t &low, float32x4_t &high, float32x4_t in_0, float32x4_t in_1);
-	void           process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample_split (float32x4_t &low, float32x4_t &high, float32x4_t in_0, float32x4_t in_1) noexcept;
+	void           process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

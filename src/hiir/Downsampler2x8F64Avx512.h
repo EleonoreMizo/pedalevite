@@ -63,7 +63,7 @@ public:
 	static constexpr int _nbr_chn  = 8;
 	static constexpr int NBR_COEFS = NC;
 
-	               Downsampler2x8F64Avx512 ();
+	               Downsampler2x8F64Avx512 () noexcept;
 	               Downsampler2x8F64Avx512 (const Downsampler2x8F64Avx512 <NC> &other) = default;
 	               Downsampler2x8F64Avx512 (Downsampler2x8F64Avx512 <NC> &&other) = default;
 	               ~Downsampler2x8F64Avx512 ()                            = default;
@@ -76,18 +76,18 @@ public:
 	void           set_coefs (const double coef_arr []);
 
 	hiir_FORCEINLINE __m512d
-	               process_sample (const double in_ptr [_nbr_chn * 2]);
+	               process_sample (const double in_ptr [_nbr_chn * 2]) noexcept;
 	hiir_FORCEINLINE __m512d
-	               process_sample (__m512d in_0, __m512d in_1);
-	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample (__m512d in_0, __m512d in_1) noexcept;
+	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample_split (__m512d &low, __m512d &high, const double in_ptr [_nbr_chn * 2]);
+	               process_sample_split (__m512d &low, __m512d &high, const double in_ptr [_nbr_chn * 2]) noexcept;
 	hiir_FORCEINLINE void
-	               process_sample_split (__m512d &low, __m512d &high, __m512d in_0, __m512d in_1);
-	void           process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample_split (__m512d &low, __m512d &high, __m512d in_0, __m512d in_1) noexcept;
+	void           process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

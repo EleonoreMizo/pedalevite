@@ -46,7 +46,7 @@ public:
 	               AioAdd (T operand);
 	virtual        ~AioAdd () = default;
 
-	inline T       operator () (T old_val) const;
+	inline T       operator () (T old_val) const noexcept;
 
 
 

@@ -211,7 +211,7 @@ namespace fstb
 
 
 // Convenient helper to declare unused function parameters
-template <typename... T> inline void unused (T &&...) {}
+template <typename... T> inline void unused (T &&...) noexcept {}
 
 
 

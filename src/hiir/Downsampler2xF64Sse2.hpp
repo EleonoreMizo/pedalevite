@@ -45,7 +45,7 @@ Throws: Nothing
 */
 
 template <int NC>
-Downsampler2xF64Sse2 <NC>::Downsampler2xF64Sse2 ()
+Downsampler2xF64Sse2 <NC>::Downsampler2xF64Sse2 () noexcept
 {
 	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
@@ -76,7 +76,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xF64Sse2 <NC>::set_coefs (const double coef_arr [])
+void	Downsampler2xF64Sse2 <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -103,7 +103,7 @@ Throws: Nothing
 */
 
 template <int NC>
-double	Downsampler2xF64Sse2 <NC>::process_sample (const double in_ptr [2])
+double	Downsampler2xF64Sse2 <NC>::process_sample (const double in_ptr [2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
@@ -133,7 +133,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xF64Sse2 <NC>::process_block (double out_ptr [], const double in_ptr [], long nbr_spl)
+void	Downsampler2xF64Sse2 <NC>::process_block (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr  != nullptr);
 	assert (out_ptr != nullptr);
@@ -174,7 +174,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xF64Sse2 <NC>::process_sample_split (double &low, double &high, const double in_ptr [2])
+void	Downsampler2xF64Sse2 <NC>::process_sample_split (double &low, double &high, const double in_ptr [2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
@@ -213,7 +213,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xF64Sse2 <NC>::process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl)
+void	Downsampler2xF64Sse2 <NC>::process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr    != nullptr);
 	assert (out_l_ptr != nullptr);
@@ -248,7 +248,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xF64Sse2 <NC>::clear_buffers ()
+void	Downsampler2xF64Sse2 <NC>::clear_buffers () noexcept
 {
 	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{

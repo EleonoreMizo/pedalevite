@@ -61,11 +61,11 @@ public:
 	FFTReal &		operator = (const FFTReal &other) = default;
 	FFTReal &		operator = (FFTReal &&other)      = default;
 
-	long				get_length () const;
-	void				do_fft (DataType f [], const DataType x []) const;
-	void				do_ifft (const DataType f [], DataType x []) const;
-	void				rescale (DataType x []) const;
-	DataType *		use_buffer () const;
+	long				get_length () const noexcept;
+	void				do_fft (DataType f [], const DataType x []) const noexcept;
+	void				do_ifft (const DataType f [], DataType x []) const noexcept;
+	void				rescale (DataType x []) const noexcept;
+	DataType *		use_buffer () const noexcept;
 
 
 
@@ -89,25 +89,25 @@ private:
 	void				init_trigo_osc ();
 
 	ffft_FORCEINLINE const long *
-						get_br_ptr () const;
+						get_br_ptr () const noexcept;
 	ffft_FORCEINLINE const DataType	*
-						get_trigo_ptr (int level) const;
+						get_trigo_ptr (int level) const noexcept;
 	ffft_FORCEINLINE long
-						get_trigo_level_index (int level) const;
+						get_trigo_level_index (int level) const noexcept;
 
-	inline void		compute_fft_general (DataType f [], const DataType x []) const;
-	inline void		compute_direct_pass_1_2 (DataType df [], const DataType x []) const;
-	inline void		compute_direct_pass_3 (DataType df [], const DataType sf []) const;
-	inline void		compute_direct_pass_n (DataType df [], const DataType sf [], int pass) const;
-	inline void		compute_direct_pass_n_lut (DataType df [], const DataType sf [], int pass) const;
-	inline void		compute_direct_pass_n_osc (DataType df [], const DataType sf [], int pass) const;
+	inline void		compute_fft_general (DataType f [], const DataType x []) const noexcept;
+	inline void		compute_direct_pass_1_2 (DataType df [], const DataType x []) const noexcept;
+	inline void		compute_direct_pass_3 (DataType df [], const DataType sf []) const noexcept;
+	inline void		compute_direct_pass_n (DataType df [], const DataType sf [], int pass) const noexcept;
+	inline void		compute_direct_pass_n_lut (DataType df [], const DataType sf [], int pass) const noexcept;
+	inline void		compute_direct_pass_n_osc (DataType df [], const DataType sf [], int pass) const noexcept;
 
-	inline void		compute_ifft_general (const DataType f [], DataType x []) const;
-	inline void		compute_inverse_pass_n (DataType df [], const DataType sf [], int pass) const;
-	inline void		compute_inverse_pass_n_osc (DataType df [], const DataType sf [], int pass) const;
-	inline void		compute_inverse_pass_n_lut (DataType df [], const DataType sf [], int pass) const;
-	inline void		compute_inverse_pass_3 (DataType df [], const DataType sf []) const;
-	inline void		compute_inverse_pass_1_2 (DataType x [], const DataType sf []) const;
+	inline void		compute_ifft_general (const DataType f [], DataType x []) const noexcept;
+	inline void		compute_inverse_pass_n (DataType df [], const DataType sf [], int pass) const noexcept;
+	inline void		compute_inverse_pass_n_osc (DataType df [], const DataType sf [], int pass) const noexcept;
+	inline void		compute_inverse_pass_n_lut (DataType df [], const DataType sf [], int pass) const noexcept;
+	inline void		compute_inverse_pass_3 (DataType df [], const DataType sf []) const noexcept;
+	inline void		compute_inverse_pass_1_2 (DataType x [], const DataType sf []) const noexcept;
 
 	const long		_length;
 	const int		_nbr_bits;

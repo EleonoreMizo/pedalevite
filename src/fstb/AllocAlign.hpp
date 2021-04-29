@@ -41,7 +41,7 @@ namespace fstb
 
 
 template <class T, long ALIG>
-typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::address (reference r)
+typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::address (reference r) noexcept
 {
 	return &r;
 }
@@ -49,7 +49,7 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::address (reference 
 
 
 template <class T, long ALIG>
-typename AllocAlign <T, ALIG>::const_pointer	AllocAlign <T, ALIG>::address (const_reference r)
+typename AllocAlign <T, ALIG>::const_pointer	AllocAlign <T, ALIG>::address (const_reference r) noexcept
 {
 	return &r;
 }
@@ -119,7 +119,7 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 
 
 template <class T, long ALIG>
-void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n)
+void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n) noexcept
 {
 	fstb::unused (n);
 
@@ -161,7 +161,7 @@ void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n)
 
 
 template <class T, long ALIG>
-typename AllocAlign <T, ALIG>::size_type	AllocAlign <T, ALIG>::max_size () const
+typename AllocAlign <T, ALIG>::size_type	AllocAlign <T, ALIG>::max_size () const noexcept
 {
 	static_assert ((static_cast <size_type> (-1) > 0), "");
 
@@ -191,7 +191,7 @@ void	AllocAlign <T, ALIG>::destroy (pointer ptr)
 
 
 template <class T, long ALIG>
-bool	AllocAlign <T, ALIG>::operator == (AllocAlign <T, ALIG> const &other)
+bool	AllocAlign <T, ALIG>::operator == (AllocAlign <T, ALIG> const &other) noexcept
 {
 	fstb::unused (other);
 
@@ -201,7 +201,7 @@ bool	AllocAlign <T, ALIG>::operator == (AllocAlign <T, ALIG> const &other)
 
 
 template <class T, long ALIG>
-bool	AllocAlign <T, ALIG>::operator != (AllocAlign <T, ALIG> const &other)
+bool	AllocAlign <T, ALIG>::operator != (AllocAlign <T, ALIG> const &other) noexcept
 {
 	return (! operator == (other));
 }

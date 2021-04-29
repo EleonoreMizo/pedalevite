@@ -47,7 +47,7 @@ namespace hiir
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
+hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -69,7 +69,7 @@ hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_pos (const int nbr_coefs
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
+hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -80,7 +80,7 @@ hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_pos (const int nbr_coefs
 
 
 template <int REMAINING>
-void	StageProc4Sse <REMAINING>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
+void	StageProc4Sse <REMAINING>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
@@ -116,7 +116,7 @@ void	StageProc4Sse <REMAINING>::process_sample_pos (const int nbr_coefs, __m128 
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
+hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -138,7 +138,7 @@ hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_neg (const int nbr_coefs
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
+hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -149,7 +149,7 @@ hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_neg (const int nbr_coefs
 
 
 template <int REMAINING>
-void	StageProc4Sse <REMAINING>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
+void	StageProc4Sse <REMAINING>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 

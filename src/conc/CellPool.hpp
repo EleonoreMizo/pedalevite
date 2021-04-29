@@ -167,7 +167,7 @@ typename CellPool <T>::CellType *	CellPool <T>::take_cell (bool autogrow_flag)
 
 // Thread-safe
 template <class T>
-void	CellPool <T>::return_cell (CellType &cell)
+void	CellPool <T>::return_cell (CellType &cell) noexcept
 {
 	_cell_stack.push (cell);
 

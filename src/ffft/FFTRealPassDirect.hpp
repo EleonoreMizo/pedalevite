@@ -41,7 +41,7 @@ namespace ffft
 
 
 template <>
-inline void	FFTRealPassDirect <1>::process (long len, DataType dest_ptr [], DataType /*src_ptr*/ [], const DataType x_ptr [], const DataType /*cos_ptr*/ [], long /*cos_len*/, const long br_ptr [], OscType /*osc_list*/ [])
+inline void	FFTRealPassDirect <1>::process (long len, DataType dest_ptr [], DataType /*src_ptr*/ [], const DataType x_ptr [], const DataType /*cos_ptr*/ [], long /*cos_len*/, const long br_ptr [], OscType /*osc_list*/ []) noexcept
 {
 	// First and second pass at once
 	const long		qlen = len >> 2;
@@ -71,7 +71,7 @@ inline void	FFTRealPassDirect <1>::process (long len, DataType dest_ptr [], Data
 }
 
 template <>
-inline void	FFTRealPassDirect <2>::process (long len, DataType dest_ptr [], DataType src_ptr [], const DataType x_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list [])
+inline void	FFTRealPassDirect <2>::process (long len, DataType dest_ptr [], DataType src_ptr [], const DataType x_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []) noexcept
 {
 	// Executes "previous" passes first. Inverts source and destination buffers
 	FFTRealPassDirect <1>::process (
@@ -112,7 +112,7 @@ inline void	FFTRealPassDirect <2>::process (long len, DataType dest_ptr [], Data
 }
 
 template <int PASS>
-void	FFTRealPassDirect <PASS>::process (long len, DataType dest_ptr [], DataType src_ptr [], const DataType x_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list [])
+void	FFTRealPassDirect <PASS>::process (long len, DataType dest_ptr [], DataType src_ptr [], const DataType x_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []) noexcept
 {
 	// Executes "previous" passes first. Inverts source and destination buffers
 	FFTRealPassDirect <PASS - 1>::process (

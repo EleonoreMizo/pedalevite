@@ -52,7 +52,7 @@ namespace hiir
 
 
 template <int CUR>
-void	StageProc3dnow <CUR>::process_sample_pos ()
+void	StageProc3dnow <CUR>::process_sample_pos () noexcept
 {
 	StageProc3dnow <CUR - 1>::process_sample_pos ();
 
@@ -71,7 +71,7 @@ void	StageProc3dnow <CUR>::process_sample_pos ()
 }
 
 template <>
-hiir_FORCEINLINE void	StageProc3dnow <0>::process_sample_pos ()
+hiir_FORCEINLINE void	StageProc3dnow <0>::process_sample_pos () noexcept
 {
 	// Nothing, stops the recursion
 }
@@ -79,7 +79,7 @@ hiir_FORCEINLINE void	StageProc3dnow <0>::process_sample_pos ()
 
 
 template <int CUR>
-void	StageProc3dnow <CUR>::process_sample_neg ()
+void	StageProc3dnow <CUR>::process_sample_neg () noexcept
 {
 	StageProc3dnow <CUR - 1>::process_sample_neg ();
 
@@ -98,7 +98,7 @@ void	StageProc3dnow <CUR>::process_sample_neg ()
 }
 
 template <>
-hiir_FORCEINLINE void	StageProc3dnow <0>::process_sample_neg ()
+hiir_FORCEINLINE void	StageProc3dnow <0>::process_sample_neg () noexcept
 {
 	// Nothing, stops the recursion
 }

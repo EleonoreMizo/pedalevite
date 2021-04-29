@@ -36,7 +36,7 @@ namespace lal
 
 
 template <typename T>
-void	MatViewConst <T>::setup (int rows, int cols, T *data_ptr, int stride)
+void	MatViewConst <T>::setup (int rows, int cols, T *data_ptr, int stride) noexcept
 {
 	assert (rows >= 0);
 	assert (cols >= 0);
@@ -55,7 +55,7 @@ void	MatViewConst <T>::setup (int rows, int cols, T *data_ptr, int stride)
 
 
 template <typename T>
-int	MatViewConst <T>::do_get_rows () const
+int	MatViewConst <T>::do_get_rows () const noexcept
 {
 	return _rows;
 }
@@ -63,7 +63,7 @@ int	MatViewConst <T>::do_get_rows () const
 
 
 template <typename T>
-int	MatViewConst <T>::do_get_cols () const
+int	MatViewConst <T>::do_get_cols () const noexcept
 {
 	return _cols;
 }
@@ -71,7 +71,7 @@ int	MatViewConst <T>::do_get_cols () const
 
 
 template <typename T>
-const T &	MatViewConst <T>::do_at (int r, int c) const
+const T &	MatViewConst <T>::do_at (int r, int c) const noexcept
 {
 	assert (r < _rows);
 	assert (c < _cols);
@@ -84,7 +84,7 @@ const T &	MatViewConst <T>::do_at (int r, int c) const
 
 
 template <typename T>
-const T *	MatViewConst <T>::do_get_data () const
+const T *	MatViewConst <T>::do_get_data () const noexcept
 {
 	return _data_ptr;
 }
@@ -92,7 +92,7 @@ const T *	MatViewConst <T>::do_get_data () const
 
 
 template <typename T>
-int	MatViewConst <T>::do_get_stride () const
+int	MatViewConst <T>::do_get_stride () const noexcept
 {
 	return _stride;
 }
@@ -104,7 +104,7 @@ int	MatViewConst <T>::do_get_stride () const
 
 
 template <typename T>
-int	MatViewConst <T>::conv_coord_to_pos (int r, int c) const
+int	MatViewConst <T>::conv_coord_to_pos (int r, int c) const noexcept
 {
 	assert (r >= 0);
 	assert (r < _rows);

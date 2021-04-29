@@ -48,7 +48,7 @@ namespace hiir
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4F64Avx <1>::process_sample_pos (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr)
+hiir_FORCEINLINE void	StageProc4F64Avx <1>::process_sample_pos (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -70,7 +70,7 @@ hiir_FORCEINLINE void	StageProc4F64Avx <1>::process_sample_pos (const int nbr_co
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4F64Avx <0>::process_sample_pos (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr)
+hiir_FORCEINLINE void	StageProc4F64Avx <0>::process_sample_pos (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -81,7 +81,7 @@ hiir_FORCEINLINE void	StageProc4F64Avx <0>::process_sample_pos (const int nbr_co
 
 
 template <int REMAINING>
-void	StageProc4F64Avx <REMAINING>::process_sample_pos (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr)
+void	StageProc4F64Avx <REMAINING>::process_sample_pos (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
@@ -117,7 +117,7 @@ void	StageProc4F64Avx <REMAINING>::process_sample_pos (const int nbr_coefs, __m2
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4F64Avx <1>::process_sample_neg (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr)
+hiir_FORCEINLINE void	StageProc4F64Avx <1>::process_sample_neg (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -139,7 +139,7 @@ hiir_FORCEINLINE void	StageProc4F64Avx <1>::process_sample_neg (const int nbr_co
 
 
 template <>
-hiir_FORCEINLINE void	StageProc4F64Avx <0>::process_sample_neg (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr)
+hiir_FORCEINLINE void	StageProc4F64Avx <0>::process_sample_neg (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -150,7 +150,7 @@ hiir_FORCEINLINE void	StageProc4F64Avx <0>::process_sample_neg (const int nbr_co
 
 
 template <int REMAINING>
-void	StageProc4F64Avx <REMAINING>::process_sample_neg (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr)
+void	StageProc4F64Avx <REMAINING>::process_sample_neg (const int nbr_coefs, __m256d &spl_0, __m256d &spl_1, StageDataF64Avx *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 

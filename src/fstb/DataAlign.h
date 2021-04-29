@@ -49,15 +49,15 @@ public:
 	typedef std::integral_constant <bool, A> Alignment;
 
 	static inline bool
-		            check_ptr (const void *ptr);
+		            check_ptr (const void *ptr) noexcept;
 	static inline ToolsSimd::VectF32
-		            load_f32 (const void *ptr);
+		            load_f32 (const void *ptr) noexcept;
 	static inline ToolsSimd::VectS32
-		            load_s32 (const void *ptr);
+		            load_s32 (const void *ptr) noexcept;
 	static inline void
-		            store_f32 (void *ptr, ToolsSimd::VectF32 v);
+		            store_f32 (void *ptr, ToolsSimd::VectF32 v) noexcept;
 	static inline void
-		            store_s32 (void *ptr, ToolsSimd::VectS32 v);
+		            store_s32 (void *ptr, ToolsSimd::VectS32 v) noexcept;
 
 
 

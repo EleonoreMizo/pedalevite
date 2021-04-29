@@ -51,7 +51,7 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	               Downsampler2xF64Sse2 ();
+	               Downsampler2xF64Sse2 () noexcept;
 	               Downsampler2xF64Sse2 (const Downsampler2xF64Sse2 <NC> &other) = default;
 	               Downsampler2xF64Sse2 (Downsampler2xF64Sse2 <NC> &&other)      = default;
 
@@ -60,17 +60,17 @@ public:
 	Downsampler2xF64Sse2 <NC> &
 	               operator = (Downsampler2xF64Sse2 <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE double
-	               process_sample (const double in_ptr [2]);
-	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample (const double in_ptr [2]) noexcept;
+	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample_split (double &low, double &high, const double in_ptr [2]);
-	void           process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample_split (double &low, double &high, const double in_ptr [2]) noexcept;
+	void           process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

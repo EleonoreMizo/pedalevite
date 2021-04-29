@@ -60,7 +60,7 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	               Downsampler2xNeon ();
+	               Downsampler2xNeon () noexcept;
 	               Downsampler2xNeon (const Downsampler2xNeon <NC> &other) = default;
 	               Downsampler2xNeon (Downsampler2xNeon <NC> &&other)      = default;
 	               ~Downsampler2xNeon ()                            = default;
@@ -70,17 +70,17 @@ public:
 	Downsampler2xNeon <NC> &
 	               operator = (Downsampler2xNeon <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE float
-	               process_sample (const float in_ptr [2]);
-	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (const float in_ptr [2]) noexcept;
+	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample_split (float &low, float &high, const float in_ptr [2]);
-	void           process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample_split (float &low, float &high, const float in_ptr [2]) noexcept;
+	void           process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

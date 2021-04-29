@@ -51,11 +51,11 @@ public:
 	typedef	OscSinCos <DataType>	OscType;
 
 	ffft_FORCEINLINE static void
-						process (long len, DataType dest_ptr [], DataType src_ptr [], const DataType f_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []);
+						process (long len, DataType dest_ptr [], DataType src_ptr [], const DataType f_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []) noexcept;
 	ffft_FORCEINLINE static void
-						process_rec (long len, DataType dest_ptr [], DataType src_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []);
+						process_rec (long len, DataType dest_ptr [], DataType src_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []) noexcept;
 	ffft_FORCEINLINE static void
-						process_internal (long len, DataType dest_ptr [], const DataType src_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []);
+						process_internal (long len, DataType dest_ptr [], const DataType src_ptr [], const DataType cos_ptr [], long cos_len, const long br_ptr [], OscType osc_list []) noexcept;
 
 
 

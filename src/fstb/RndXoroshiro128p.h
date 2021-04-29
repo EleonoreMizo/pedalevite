@@ -68,12 +68,12 @@ public:
 	static constexpr uint64_t  _seed_0_def = 0x0123456789ABCDEFULL;
 	static constexpr uint64_t  _seed_1_def = 0xB50A4F93E82D71C6ULL;
 
-	inline void    set_seed (uint64_t s0 = _seed_0_def, uint64_t s1 = _seed_1_def);
+	inline void    set_seed (uint64_t s0 = _seed_0_def, uint64_t s1 = _seed_1_def) noexcept;
 	inline uint64_t
-	               gen_int ();
-	inline float   gen_flt ();
-	inline void    jump_2_64 ();
-	inline void    jump_2_96 ();
+	               gen_int () noexcept;
+	inline float   gen_flt () noexcept;
+	inline void    jump_2_64 () noexcept;
+	inline void    jump_2_96 () noexcept;
 
 
 
@@ -93,9 +93,9 @@ private:
 
 	typedef std::array <uint64_t, 2> Storage;
 
-	inline void    compute_jump (const Storage &jump);
+	inline void    compute_jump (const Storage &jump) noexcept;
 	static inline uint64_t
-	               rotl (uint64_t x, int k);
+	               rotl (uint64_t x, int k) noexcept;
 
 	Storage        _s {{ _seed_0_def, _seed_1_def }};
 

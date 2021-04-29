@@ -45,7 +45,7 @@ public:
 	explicit inline
 	               AioMax (T operand);
 
-	inline T       operator () (T old_val) const;
+	inline T       operator () (T old_val) const noexcept;
 
 
 

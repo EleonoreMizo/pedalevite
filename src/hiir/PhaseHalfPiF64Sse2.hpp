@@ -45,7 +45,7 @@ Throws: Nothing
 */
 
 template <int NC>
-PhaseHalfPiF64Sse2 <NC>::PhaseHalfPiF64Sse2 ()
+PhaseHalfPiF64Sse2 <NC>::PhaseHalfPiF64Sse2 () noexcept
 :	_bifilter ()
 ,	_prev (0)
 ,	_phase (0)
@@ -82,7 +82,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiF64Sse2 <NC>::set_coefs (const double coef_arr [])
+void	PhaseHalfPiF64Sse2 <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -114,7 +114,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiF64Sse2 <NC>::process_sample (double &out_0, double &out_1, double input)
+void	PhaseHalfPiF64Sse2 <NC>::process_sample (double &out_0, double &out_1, double input) noexcept
 {
 	auto           x = _mm_set_pd (input, _prev);
 	StageProcF64Sse2 <_nbr_stages>::process_sample_neg (
@@ -147,7 +147,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiF64Sse2 <NC>::process_block (double out_0_ptr [], double out_1_ptr [], const double in_ptr [], long nbr_spl)
+void	PhaseHalfPiF64Sse2 <NC>::process_block (double out_0_ptr [], double out_1_ptr [], const double in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -209,7 +209,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiF64Sse2 <NC>::clear_buffers ()
+void	PhaseHalfPiF64Sse2 <NC>::clear_buffers () noexcept
 {
 	for (int phase = 0; phase < _nbr_phases; ++phase)
 	{

@@ -34,7 +34,7 @@ namespace conc
 
 
 template <class T, class F>
-void	AtomicIntOp::exec (AtomicInt <T> &atom, F &ftor)
+void	AtomicIntOp::exec (AtomicInt <T> &atom, F &ftor) noexcept
 {
 	T              val_new;
 	T              val_old;
@@ -44,7 +44,7 @@ void	AtomicIntOp::exec (AtomicInt <T> &atom, F &ftor)
 
 
 template <class T, class F>
-T	AtomicIntOp::exec_old (AtomicInt <T> &atom, F &ftor)
+T	AtomicIntOp::exec_old (AtomicInt <T> &atom, F &ftor) noexcept
 {
 	T              val_new;
 	T              val_old;
@@ -56,7 +56,7 @@ T	AtomicIntOp::exec_old (AtomicInt <T> &atom, F &ftor)
 
 
 template <class T, class F>
-T	AtomicIntOp::exec_new (AtomicInt <T> &atom, F &ftor)
+T	AtomicIntOp::exec_new (AtomicInt <T> &atom, F &ftor) noexcept
 {
 	T              val_new;
 	T              val_old;
@@ -68,7 +68,7 @@ T	AtomicIntOp::exec_new (AtomicInt <T> &atom, F &ftor)
 
 
 template <class T, class F>
-void	AtomicIntOp::exec_both (AtomicInt <T> &atom, F &ftor, T &val_old, T &val_new)
+void	AtomicIntOp::exec_both (AtomicInt <T> &atom, F &ftor, T &val_old, T &val_new) noexcept
 {
 	T              val_cur;
 	do

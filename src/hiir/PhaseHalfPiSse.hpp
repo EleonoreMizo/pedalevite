@@ -52,7 +52,7 @@ Throws: Nothing
 */
 
 template <int NC>
-PhaseHalfPiSse <NC>::PhaseHalfPiSse ()
+PhaseHalfPiSse <NC>::PhaseHalfPiSse () noexcept
 :	_filter ()
 ,	_prev (0)
 ,	_phase (0)
@@ -90,7 +90,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiSse <NC>::set_coefs (const double coef_arr [])
+void	PhaseHalfPiSse <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -122,7 +122,7 @@ Throws: Nothing
 */
 
 template <int NC>
-hiir_FORCEINLINE void	PhaseHalfPiSse <NC>::process_sample (float &out_0, float &out_1, float input)
+hiir_FORCEINLINE void	PhaseHalfPiSse <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
 	StageDataSse * filter_ptr = &_filter [_phase] [0];
 
@@ -168,7 +168,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiSse <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
+void	PhaseHalfPiSse <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -200,7 +200,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiSse <NC>::clear_buffers ()
+void	PhaseHalfPiSse <NC>::clear_buffers () noexcept
 {
 	for (int phase = 0; phase < NBR_PHASES; ++phase)
 	{

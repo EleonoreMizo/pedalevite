@@ -75,7 +75,7 @@ SingleObj <T, A>::~SingleObj ()
 
 
 template <class T, class A>
-T *	SingleObj <T, A>::operator -> () const
+T *	SingleObj <T, A>::operator -> () const noexcept
 {
 	assert (_obj_ptr != nullptr);
 
@@ -85,7 +85,7 @@ T *	SingleObj <T, A>::operator -> () const
 
 
 template <class T, class A>
-T &	SingleObj <T, A>::operator * () const
+T &	SingleObj <T, A>::operator * () const noexcept
 {
 	assert (_obj_ptr != 0);
 

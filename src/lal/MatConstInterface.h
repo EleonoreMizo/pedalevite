@@ -43,13 +43,13 @@ public:
 	               MatConstInterface ()  = default;
 	virtual        ~MatConstInterface () = default;
 
-	int            get_rows () const;
-	int            get_cols () const;
+	int            get_rows () const noexcept;
+	int            get_cols () const noexcept;
 
-	const T &      operator () (int r, int c) const;
+	const T &      operator () (int r, int c) const noexcept;
 
-	const T *      get_data () const;
-	int            get_stride () const;
+	const T *      get_data () const noexcept;
+	int            get_stride () const noexcept;
 
 
 
@@ -57,13 +57,13 @@ public:
 
 protected:
 
-	virtual int    do_get_rows () const = 0;
-	virtual int    do_get_cols () const = 0;
+	virtual int    do_get_rows () const noexcept = 0;
+	virtual int    do_get_cols () const noexcept = 0;
 	virtual const T &
-	               do_at (int r, int c) const = 0;
+	               do_at (int r, int c) const noexcept = 0;
 	virtual const T *
-	               do_get_data () const = 0;
-	virtual int    do_get_stride () const = 0;
+	               do_get_data () const noexcept = 0;
+	virtual int    do_get_stride () const noexcept = 0;
 
 	static T       _dummy_scalar;
 

@@ -32,7 +32,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
-#include <cstring>
 
 
 
@@ -108,14 +107,14 @@ void	BitFieldSparse::set_nbr_elt (int nbr_elt)
 
 
 
-int	BitFieldSparse::get_nbr_elt () const
+int	BitFieldSparse::get_nbr_elt () const noexcept
 {
 	return _lvl_arr [0]._nbr_elt;
 }
 
 
 
-void	BitFieldSparse::clear ()
+void	BitFieldSparse::clear () noexcept
 {
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
@@ -127,19 +126,15 @@ void	BitFieldSparse::clear ()
 		if (lvl._nbr_elt > 0)
 		{
 			const int      nbr_groups = Tools::calculate_nbr_groups (lvl._nbr_elt);
-			memset (
-				&lvl._group_arr [0],
-				0,
-				nbr_groups * sizeof (lvl._group_arr [0])
-			);
+			const auto     it_beg     = lvl._group_arr.begin ();
+			std::fill (it_beg, it_beg + nbr_groups, GroupType (0));
 		}
 	}
 }
 
 
 
-// Throws: Nothing
-void	BitFieldSparse::fill ()
+void	BitFieldSparse::fill () noexcept
 {
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
@@ -157,8 +152,7 @@ void	BitFieldSparse::fill ()
 
 
 
-// Throws: Nothing
-bool	BitFieldSparse::get_bit (int pos) const
+bool	BitFieldSparse::get_bit (int pos) const noexcept
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -173,8 +167,7 @@ bool	BitFieldSparse::get_bit (int pos) const
 
 
 
-// Throws: Nothing
-void	BitFieldSparse::set_bit (int pos, bool flag)
+void	BitFieldSparse::set_bit (int pos, bool flag) noexcept
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -191,8 +184,7 @@ void	BitFieldSparse::set_bit (int pos, bool flag)
 
 
 
-// Throws: Nothing
-void	BitFieldSparse::clear_bit (int pos)
+void	BitFieldSparse::clear_bit (int pos) noexcept
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -225,8 +217,7 @@ void	BitFieldSparse::clear_bit (int pos)
 
 
 
-// Throws: Nothing
-void	BitFieldSparse::fill_bit (int pos)
+void	BitFieldSparse::fill_bit (int pos) noexcept
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -258,8 +249,7 @@ void	BitFieldSparse::fill_bit (int pos)
 
 
 
-// Throws: Nothing
-void	BitFieldSparse::activate_range (int pos, int nbr_elt)
+void	BitFieldSparse::activate_range (int pos, int nbr_elt) noexcept
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -279,8 +269,7 @@ void	BitFieldSparse::activate_range (int pos, int nbr_elt)
 
 
 
-// Throws: Nothing
-void	BitFieldSparse::deactivate_range (int pos, int nbr_elt)
+void	BitFieldSparse::deactivate_range (int pos, int nbr_elt) noexcept
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -302,8 +291,7 @@ void	BitFieldSparse::deactivate_range (int pos, int nbr_elt)
 
 // Returns Err_NOT_FOUND if not found
 // If found, returns something in [pos, stop_pos[.
-// Throws: Nothing
-int	BitFieldSparse::get_next_bit_set_from (int pos, int stop_pos) const
+int	BitFieldSparse::get_next_bit_set_from (int pos, int stop_pos) const noexcept
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -321,7 +309,7 @@ int	BitFieldSparse::get_next_bit_set_from (int pos, int stop_pos) const
 
 
 
-bool	BitFieldSparse::has_a_bit_set () const
+bool	BitFieldSparse::has_a_bit_set () const noexcept
 {
 	bool           bit_flag = false;
 
@@ -346,7 +334,7 @@ bool	BitFieldSparse::has_a_bit_set () const
 
 
 
-int	BitFieldSparse::get_next_bit_set_from_rec (int lvl_index, int pos, int stop) const
+int	BitFieldSparse::get_next_bit_set_from_rec (int lvl_index, int pos, int stop) const noexcept
 {
 	assert (lvl_index >= 0);
 	assert (lvl_index < int (_lvl_arr.size ()));

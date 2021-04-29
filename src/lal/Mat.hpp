@@ -40,7 +40,7 @@ namespace lal
 
 
 template <typename T>
-MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w)
+MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w) noexcept
 {
 	assert (r >= 0);
 	assert (c >= 0);
@@ -65,7 +65,7 @@ MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w)
 
 
 template <typename T>
-MatViewConst <T>	Mat <T>::make_sub (int r, int c, int h, int w) const
+MatViewConst <T>	Mat <T>::make_sub (int r, int c, int h, int w) const noexcept
 {
 	assert (r >= 0);
 	assert (c >= 0);
@@ -90,7 +90,7 @@ MatViewConst <T>	Mat <T>::make_sub (int r, int c, int h, int w) const
 
 
 template <typename T>
-void	Mat <T>::set_zero ()
+void	Mat <T>::set_zero () noexcept
 {
 	std::fill (_data.begin (), _data.end (), T (0));
 }
@@ -98,7 +98,7 @@ void	Mat <T>::set_zero ()
 
 
 template <typename T>
-void	Mat <T>::set_id ()
+void	Mat <T>::set_id () noexcept
 {
 	set_zero ();
 	const int      len      = std::min (_rows, _cols);
@@ -119,7 +119,7 @@ void	Mat <T>::set_id ()
 
 
 template <typename T>
-int	Mat <T>::do_get_rows () const
+int	Mat <T>::do_get_rows () const noexcept
 {
 	return _rows;
 }
@@ -127,7 +127,7 @@ int	Mat <T>::do_get_rows () const
 
 
 template <typename T>
-int	Mat <T>::do_get_cols () const
+int	Mat <T>::do_get_cols () const noexcept
 {
 	return _cols;
 }
@@ -135,7 +135,7 @@ int	Mat <T>::do_get_cols () const
 
 
 template <typename T>
-const T &	Mat <T>::do_at (int r, int c) const
+const T &	Mat <T>::do_at (int r, int c) const noexcept
 {
 	assert (r < _rows);
 	assert (c < _cols);
@@ -148,7 +148,7 @@ const T &	Mat <T>::do_at (int r, int c) const
 
 
 template <typename T>
-const T *	Mat <T>::do_get_data () const
+const T *	Mat <T>::do_get_data () const noexcept
 {
 	return _data.data ();
 }
@@ -156,7 +156,7 @@ const T *	Mat <T>::do_get_data () const
 
 
 template <typename T>
-int	Mat <T>::do_get_stride () const
+int	Mat <T>::do_get_stride () const noexcept
 {
 	return _cols;
 }
@@ -164,7 +164,7 @@ int	Mat <T>::do_get_stride () const
 
 
 template <typename T>
-T &	Mat <T>::do_at (int r, int c)
+T &	Mat <T>::do_at (int r, int c) noexcept
 {
 	assert (r < _rows);
 	assert (c < _cols);
@@ -177,7 +177,7 @@ T &	Mat <T>::do_at (int r, int c)
 
 
 template <typename T>
-T *	Mat <T>::do_get_data ()
+T *	Mat <T>::do_get_data () noexcept
 {
 	return _data.data ();
 }
@@ -235,7 +235,7 @@ void	Mat <T>::do_resize (int n, Dir dir)
 
 
 template <typename T>
-int	Mat <T>::conv_coord_to_pos (int r, int c) const
+int	Mat <T>::conv_coord_to_pos (int r, int c) const noexcept
 {
 	assert (r >= 0);
 	assert (c >= 0);

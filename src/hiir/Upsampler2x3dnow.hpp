@@ -52,7 +52,7 @@ Throws: Nothing
 */
 
 template <int NC>
-Upsampler2x3dnow <NC>::Upsampler2x3dnow ()
+Upsampler2x3dnow <NC>::Upsampler2x3dnow () noexcept
 :	_filter ()
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
@@ -85,7 +85,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x3dnow <NC>::set_coefs (const double coef_arr [NBR_COEFS])
+void	Upsampler2x3dnow <NC>::set_coefs (const double coef_arr [NBR_COEFS]) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -114,7 +114,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float input)
+void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
 	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
 
@@ -157,7 +157,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -207,7 +207,7 @@ void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr 
 
 // We could write the same specialisation for <7>
 template <>
-void	Upsampler2x3dnow <8>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Upsampler2x3dnow <8>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	StageData3dnow *	filter_ptr = &_filter [0];
 
@@ -288,7 +288,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x3dnow <NC>::clear_buffers ()
+void	Upsampler2x3dnow <NC>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
 	{

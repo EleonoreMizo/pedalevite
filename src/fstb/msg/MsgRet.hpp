@@ -38,7 +38,7 @@ namespace msg
 
 
 template <class T>
-void	MsgRet <T>::clear ()
+void	MsgRet <T>::clear () noexcept
 {
 	_content.clear ();
 }
@@ -46,7 +46,7 @@ void	MsgRet <T>::clear ()
 
 
 template <class T>
-void	MsgRet <T>::set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell)
+void	MsgRet <T>::set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell) noexcept
 {
 	assert (_ret_queue_sptr.get () == nullptr);
 	assert (ret_queue_sptr.get ()  != nullptr);
@@ -59,7 +59,7 @@ void	MsgRet <T>::set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell)
 
 
 template <class T>
-void	MsgRet <T>::ret ()
+void	MsgRet <T>::ret () noexcept
 {
 	assert (_ret_queue_sptr.get () != nullptr);
 	assert (_cell_ptr              != nullptr);
@@ -72,7 +72,7 @@ void	MsgRet <T>::ret ()
 
 
 template <class T>
-bool	MsgRet <T>::is_attached_to_queue () const
+bool	MsgRet <T>::is_attached_to_queue () const noexcept
 {
 	return (_ret_queue_sptr.get () != nullptr);
 }

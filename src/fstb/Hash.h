@@ -50,14 +50,14 @@ class Hash
 public:
 
 	static fstb_FORCEINLINE constexpr uint32_t
-	               hash (uint32_t x);
+	               hash (uint32_t x) noexcept;
 	static fstb_FORCEINLINE constexpr uint32_t
-	               hash_inv (uint32_t x);
+	               hash_inv (uint32_t x) noexcept;
 
 	static fstb_FORCEINLINE constexpr uint64_t
-	               hash (uint64_t x);
+	               hash (uint64_t x) noexcept;
 	static fstb_FORCEINLINE constexpr uint64_t
-	               hash_inv (uint64_t x);
+	               hash_inv (uint64_t x) noexcept;
 
 
 

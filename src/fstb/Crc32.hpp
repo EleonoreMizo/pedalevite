@@ -33,7 +33,7 @@ namespace fstb
 
 
 
-void	Crc32::reset ()
+void	Crc32::reset () noexcept
 {
 	_val = 0xFFFFFFFF;
 }
@@ -52,7 +52,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Crc32::process_byte (int data_byte)
+void	Crc32::process_byte (int data_byte) noexcept
 {
 	_val = _lut [(_val ^ data_byte) & 0xFF] ^ (_val >> 8);
 }
@@ -61,7 +61,7 @@ void	Crc32::process_byte (int data_byte)
 
 // Decompose data as bytes, LSB first (little endian).
 template <typename T>
-void	Crc32::process (T data)
+void	Crc32::process (T data) noexcept
 {
 	for (int k = 0; k < int (sizeof (T)); ++k)
 	{
@@ -72,7 +72,7 @@ void	Crc32::process (T data)
 
 
 
-uint32_t	Crc32::get_val () const
+uint32_t	Crc32::get_val () const noexcept
 {
 	return _val ^ 0xFFFFFFFF;
 }

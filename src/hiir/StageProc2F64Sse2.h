@@ -55,9 +55,9 @@ class StageProc2F64Sse2
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, __m128d &spl_0, __m128d &spl_1, StageDataF64Sse2 *stage_arr);
+	               process_sample_pos (const int nbr_coefs, __m128d &spl_0, __m128d &spl_1, StageDataF64Sse2 *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, __m128d &spl_0, __m128d &spl_1, StageDataF64Sse2 *stage_arr);
+	               process_sample_neg (const int nbr_coefs, __m128d &spl_0, __m128d &spl_1, StageDataF64Sse2 *stage_arr) noexcept;
 
 
 

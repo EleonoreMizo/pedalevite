@@ -45,7 +45,7 @@ Throws: Nothing
 */
 
 template <int NC>
-Upsampler2xF64Sse2 <NC>::Upsampler2xF64Sse2 ()
+Upsampler2xF64Sse2 <NC>::Upsampler2xF64Sse2 () noexcept
 :	_filter ()
 {
 	for (int i = 0; i < _nbr_stages + 1; ++i)
@@ -78,7 +78,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xF64Sse2 <NC>::set_coefs (const double coef_arr [])
+void	Upsampler2xF64Sse2 <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -107,7 +107,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xF64Sse2 <NC>::process_sample (double &out_0, double &out_1, double input)
+void	Upsampler2xF64Sse2 <NC>::process_sample (double &out_0, double &out_1, double input) noexcept
 {
 	auto           x = _mm_set1_pd (input);
 	StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
@@ -133,7 +133,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xF64Sse2 <NC>::process_block (double out_ptr [], const double in_ptr [], long nbr_spl)
+void	Upsampler2xF64Sse2 <NC>::process_block (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -159,7 +159,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2xF64Sse2 <NC>::clear_buffers ()
+void	Upsampler2xF64Sse2 <NC>::clear_buffers () noexcept
 {
 	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{

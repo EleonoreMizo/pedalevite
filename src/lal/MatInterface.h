@@ -44,10 +44,10 @@ public:
 	               MatInterface ()  = default;
 	virtual        ~MatInterface () = default;
 
-	const T &      operator () (int r, int c) const;
-	T &            operator () (int r, int c);
-	const T *      get_data () const;
-	T *            get_data ();
+	const T &      operator () (int r, int c) const noexcept;
+	T &            operator () (int r, int c) noexcept;
+	const T *      get_data () const noexcept;
+	T *            get_data () noexcept;
 
 
 
@@ -56,11 +56,11 @@ public:
 protected:
 
 	const virtual T &
-	               do_at (int r, int c) const = 0;
-	virtual T &    do_at (int r, int c) = 0;
+	               do_at (int r, int c) const noexcept = 0;
+	virtual T &    do_at (int r, int c) noexcept = 0;
 	const virtual T *
-	               do_get_data () const = 0;
-	virtual T *    do_get_data () = 0;
+	               do_get_data () const noexcept = 0;
+	virtual T *    do_get_data () noexcept = 0;
 
 
 

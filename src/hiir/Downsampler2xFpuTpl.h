@@ -58,17 +58,17 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE DataType
-	               process_sample (const DataType in_ptr [2]);
-	void           process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl);
+	               process_sample (const DataType in_ptr [2]) noexcept;
+	void           process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample_split (DataType &low, DataType &high, const DataType in_ptr [2]);
-	void           process_block_split (DataType out_l_ptr [], DataType out_h_ptr [], const DataType in_ptr [], long nbr_spl);
+	               process_sample_split (DataType &low, DataType &high, const DataType in_ptr [2]) noexcept;
+	void           process_block_split (DataType out_l_ptr [], DataType out_h_ptr [], const DataType in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

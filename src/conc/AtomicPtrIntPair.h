@@ -60,13 +60,13 @@ class AtomicPtrIntPair
 
 public:
 
-	               AtomicPtrIntPair ();
+	               AtomicPtrIntPair () noexcept;
 
-	void           set (T * ptr, intptr_t val);
-	void           get (T * &ptr, intptr_t &val) const;
-	T *            get_ptr () const;
-	intptr_t       get_val () const;
-	bool           cas2 (T *new_ptr, intptr_t new_val, T *comp_ptr, intptr_t comp_val);
+	void           set (T * ptr, intptr_t val) noexcept;
+	void           get (T * &ptr, intptr_t &val) const noexcept;
+	T *            get_ptr () const noexcept;
+	intptr_t       get_val () const noexcept;
+	bool           cas2 (T *new_ptr, intptr_t new_val, T *comp_ptr, intptr_t comp_val) noexcept;
 
 
 
@@ -112,7 +112,7 @@ private:
 		RealContent    _content;
 	};
 
-	static void    cas_combi (Combi &old, Combi &dest, const Combi &excg, const Combi &comp);
+	static void    cas_combi (Combi &old, Combi &dest, const Combi &excg, const Combi &comp) noexcept;
 
 	Combi          _data;
 

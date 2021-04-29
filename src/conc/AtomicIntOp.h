@@ -61,16 +61,16 @@ public:
 
 	template <class T, class F>
 	static inline void
-	               exec (AtomicInt <T> &atom, F &ftor);
+	               exec (AtomicInt <T> &atom, F &ftor) noexcept;
 	template <class T, class F>
 	static inline T
-	               exec_old (AtomicInt <T> &atom, F &ftor);
+	               exec_old (AtomicInt <T> &atom, F &ftor) noexcept;
 	template <class T, class F>
 	static inline T
-	               exec_new (AtomicInt <T> &atom, F &ftor);
+	               exec_new (AtomicInt <T> &atom, F &ftor) noexcept;
 	template <class T, class F>
 	static inline void
-	               exec_both (AtomicInt <T> &atom, F &ftor, T &val_old, T &val_new);
+	               exec_both (AtomicInt <T> &atom, F &ftor, T &val_old, T &val_new) noexcept;
 
 
 

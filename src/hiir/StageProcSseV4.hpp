@@ -45,7 +45,7 @@ namespace hiir
 
 
 template <int CUR>
-void	StageProcSseV4 <CUR>::process_sample_pos (StageDataSse *stage_ptr, __m128 &y, __m128 &mem)
+void	StageProcSseV4 <CUR>::process_sample_pos (StageDataSse *stage_ptr, __m128 &y, __m128 &mem) noexcept
 {
 	StageProcSseV4 <CUR - 1>::process_sample_pos (stage_ptr, y, mem);
 
@@ -60,7 +60,7 @@ void	StageProcSseV4 <CUR>::process_sample_pos (StageDataSse *stage_ptr, __m128 &
 }
 
 template <>
-hiir_FORCEINLINE void	StageProcSseV4 <0>::process_sample_pos (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */)
+hiir_FORCEINLINE void	StageProcSseV4 <0>::process_sample_pos (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */) noexcept
 {
 	// Nothing, stops the recursion
 }
@@ -68,7 +68,7 @@ hiir_FORCEINLINE void	StageProcSseV4 <0>::process_sample_pos (StageDataSse * /* 
 
 
 template <int CUR>
-void	StageProcSseV4 <CUR>::process_sample_neg (StageDataSse *stage_ptr, __m128 &y, __m128 &mem)
+void	StageProcSseV4 <CUR>::process_sample_neg (StageDataSse *stage_ptr, __m128 &y, __m128 &mem) noexcept
 {
 	StageProcSseV4 <CUR - 1>::process_sample_neg (stage_ptr, y, mem);
 
@@ -83,7 +83,7 @@ void	StageProcSseV4 <CUR>::process_sample_neg (StageDataSse *stage_ptr, __m128 &
 }
 
 template <>
-hiir_FORCEINLINE void	StageProcSseV4 <0>::process_sample_neg (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */)
+hiir_FORCEINLINE void	StageProcSseV4 <0>::process_sample_neg (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */) noexcept
 {
 	// Nothing, stops the recursion
 }

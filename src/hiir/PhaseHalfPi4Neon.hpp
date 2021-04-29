@@ -46,7 +46,7 @@ Throws: Nothing
 */
 
 template <int NC>
-PhaseHalfPi4Neon <NC>::PhaseHalfPi4Neon ()
+PhaseHalfPi4Neon <NC>::PhaseHalfPi4Neon () noexcept
 :	_bifilter ()
 ,	_phase (0)
 {
@@ -76,7 +76,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi4Neon <NC>::set_coefs (const double coef_arr [])
+void	PhaseHalfPi4Neon <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -106,7 +106,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi4Neon <NC>::process_sample (float32x4_t &out_0, float32x4_t &out_1, float32x4_t input)
+void	PhaseHalfPi4Neon <NC>::process_sample (float32x4_t &out_0, float32x4_t &out_1, float32x4_t input) noexcept
 {
 	out_0 = input;          // Even coefs
 	out_1 = load4a (_prev); // Odd coefs
@@ -143,7 +143,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi4Neon <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
+void	PhaseHalfPi4Neon <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -219,7 +219,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi4Neon <NC>::clear_buffers ()
+void	PhaseHalfPi4Neon <NC>::clear_buffers () noexcept
 {
 	_phase = 0;
 	for (int i = 0; i < NBR_COEFS + 2; ++i)

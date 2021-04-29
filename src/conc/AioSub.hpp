@@ -43,9 +43,9 @@ AioSub <T>::AioSub (T operand)
 
 
 template <class T>
-T	AioSub <T>::operator () (T old_val) const
+T	AioSub <T>::operator () (T old_val) const noexcept
 {
-	return (old_val - _operand);
+	return old_val - _operand;
 }
 
 

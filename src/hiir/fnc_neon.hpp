@@ -33,14 +33,14 @@ namespace hiir
 
 
 
-float32x4_t load4a (const float *ptr)
+float32x4_t load4a (const float *ptr) noexcept
 {
    return vld1q_f32 (ptr);
 }
 
 
 
-float32x4_t load4u (const float *ptr)
+float32x4_t load4u (const float *ptr) noexcept
 {
    return vreinterpretq_f32_u8 (vld1q_u8 (
       reinterpret_cast <const uint8_t *> (ptr)
@@ -49,14 +49,14 @@ float32x4_t load4u (const float *ptr)
 
 
 
-float32x2_t load2a (const float *ptr)
+float32x2_t load2a (const float *ptr) noexcept
 {
    return vld1_f32 (ptr);
 }
 
 
 
-float32x2_t load2u (const float *ptr)
+float32x2_t load2u (const float *ptr) noexcept
 {
    return vreinterpret_f32_u8 (vld1_u8 (
       reinterpret_cast <const uint8_t *> (ptr)
@@ -65,28 +65,28 @@ float32x2_t load2u (const float *ptr)
 
 
 
-void  storea (float *ptr, float32x4_t x)
+void  storea (float *ptr, float32x4_t x) noexcept
 {
    vst1q_f32 (ptr, x);
 }
 
 
 
-void  storeu (float *ptr, float32x4_t x)
+void  storeu (float *ptr, float32x4_t x) noexcept
 {
    vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_f32 (x));
 }
 
 
 
-void  storea (float *ptr, float32x2_t x)
+void  storea (float *ptr, float32x2_t x) noexcept
 {
    vst1_f32 (ptr, x);
 }
 
 
 
-void  storeu (float *ptr, float32x2_t x)
+void  storeu (float *ptr, float32x2_t x) noexcept
 {
    vst1_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpret_u8_f32 (x));
 }

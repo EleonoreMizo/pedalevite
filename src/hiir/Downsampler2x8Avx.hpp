@@ -46,7 +46,7 @@ Throws: Nothing
 */
 
 template <int NC>
-Downsampler2x8Avx <NC>::Downsampler2x8Avx ()
+Downsampler2x8Avx <NC>::Downsampler2x8Avx () noexcept
 :	_filter ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
@@ -74,7 +74,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2x8Avx <NC>::set_coefs (const double coef_arr [])
+void	Downsampler2x8Avx <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -102,7 +102,7 @@ Throws: Nothing
 */
 
 template <int NC>
-__m256	Downsampler2x8Avx <NC>::process_sample (const float in_ptr [_nbr_chn * 2])
+__m256	Downsampler2x8Avx <NC>::process_sample (const float in_ptr [_nbr_chn * 2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
@@ -129,7 +129,7 @@ Throws: Nothing
 */
 
 template <int NC>
-__m256	Downsampler2x8Avx <NC>::process_sample (__m256 in_0, __m256 in_1)
+__m256	Downsampler2x8Avx <NC>::process_sample (__m256 in_0, __m256 in_1) noexcept
 {
 	__m256         spl_0 = in_1;
 	__m256         spl_1 = in_0;
@@ -164,7 +164,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2x8Avx <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Downsampler2x8Avx <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr  != nullptr);
 	assert (out_ptr != nullptr);
@@ -204,7 +204,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2x8Avx <NC>::process_sample_split (__m256 &low, __m256 &high, const float in_ptr [_nbr_chn * 2])
+void	Downsampler2x8Avx <NC>::process_sample_split (__m256 &low, __m256 &high, const float in_ptr [_nbr_chn * 2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
@@ -238,7 +238,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2x8Avx <NC>::process_sample_split (__m256 &low, __m256 &high, __m256 in_0, __m256 in_1)
+void	Downsampler2x8Avx <NC>::process_sample_split (__m256 &low, __m256 &high, __m256 in_0, __m256 in_1) noexcept
 {
 	__m256         spl_0 = in_1;
 	__m256         spl_1 = in_0;
@@ -282,7 +282,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2x8Avx <NC>::process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl)
+void	Downsampler2x8Avx <NC>::process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr    != nullptr);
 	assert (out_l_ptr != nullptr);
@@ -318,7 +318,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2x8Avx <NC>::clear_buffers ()
+void	Downsampler2x8Avx <NC>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{

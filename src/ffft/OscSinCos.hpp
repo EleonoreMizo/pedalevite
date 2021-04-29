@@ -43,7 +43,7 @@ namespace ffft
 
 
 template <class T>
-void	OscSinCos <T>::set_step (double angle_rad)
+void	OscSinCos <T>::set_step (double angle_rad) noexcept
 {
 	_step_cos = static_cast <DataType> (cos (angle_rad));
 	_step_sin = static_cast <DataType> (sin (angle_rad));
@@ -52,7 +52,7 @@ void	OscSinCos <T>::set_step (double angle_rad)
 
 
 template <class T>
-typename OscSinCos <T>::DataType	OscSinCos <T>::get_cos () const
+typename OscSinCos <T>::DataType	OscSinCos <T>::get_cos () const noexcept
 {
 	return (_pos_cos);
 }
@@ -60,7 +60,7 @@ typename OscSinCos <T>::DataType	OscSinCos <T>::get_cos () const
 
 
 template <class T>
-typename OscSinCos <T>::DataType	OscSinCos <T>::get_sin () const
+typename OscSinCos <T>::DataType	OscSinCos <T>::get_sin () const noexcept
 {
 	return (_pos_sin);
 }
@@ -68,7 +68,7 @@ typename OscSinCos <T>::DataType	OscSinCos <T>::get_sin () const
 
 
 template <class T>
-void	OscSinCos <T>::step ()
+void	OscSinCos <T>::step () noexcept
 {
 	const DataType	old_cos = _pos_cos;
 	const DataType	old_sin = _pos_sin;
@@ -80,7 +80,7 @@ void	OscSinCos <T>::step ()
 
 
 template <class T>
-void	OscSinCos <T>::clear_buffers ()
+void	OscSinCos <T>::clear_buffers () noexcept
 {
 	_pos_cos = static_cast <DataType> (1);
 	_pos_sin = static_cast <DataType> (0);

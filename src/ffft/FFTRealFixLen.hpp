@@ -63,7 +63,7 @@ FFTRealFixLen <LL2>::FFTRealFixLen ()
 
 
 template <int LL2>
-long	FFTRealFixLen <LL2>::get_length () const
+long	FFTRealFixLen <LL2>::get_length () const noexcept
 {
 	return (FFT_LEN);
 }
@@ -72,7 +72,7 @@ long	FFTRealFixLen <LL2>::get_length () const
 
 // General case
 template <int LL2>
-void	FFTRealFixLen <LL2>::do_fft (DataType f [], const DataType x [])
+void	FFTRealFixLen <LL2>::do_fft (DataType f [], const DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -97,7 +97,7 @@ void	FFTRealFixLen <LL2>::do_fft (DataType f [], const DataType x [])
 
 // 4-point FFT
 template <>
-inline void	FFTRealFixLen <2>::do_fft (DataType f [], const DataType x [])
+inline void	FFTRealFixLen <2>::do_fft (DataType f [], const DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -115,7 +115,7 @@ inline void	FFTRealFixLen <2>::do_fft (DataType f [], const DataType x [])
 
 // 2-point FFT
 template <>
-inline void	FFTRealFixLen <1>::do_fft (DataType f [], const DataType x [])
+inline void	FFTRealFixLen <1>::do_fft (DataType f [], const DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -127,7 +127,7 @@ inline void	FFTRealFixLen <1>::do_fft (DataType f [], const DataType x [])
 
 // 1-point FFT
 template <>
-inline void	FFTRealFixLen <0>::do_fft (DataType f [], const DataType x [])
+inline void	FFTRealFixLen <0>::do_fft (DataType f [], const DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -139,7 +139,7 @@ inline void	FFTRealFixLen <0>::do_fft (DataType f [], const DataType x [])
 
 // General case
 template <int LL2>
-void	FFTRealFixLen <LL2>::do_ifft (const DataType f [], DataType x [])
+void	FFTRealFixLen <LL2>::do_ifft (const DataType f [], DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -168,7 +168,7 @@ void	FFTRealFixLen <LL2>::do_ifft (const DataType f [], DataType x [])
 
 // 4-point IFFT
 template <>
-inline void	FFTRealFixLen <2>::do_ifft (const DataType f [], DataType x [])
+inline void	FFTRealFixLen <2>::do_ifft (const DataType f [], DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -185,7 +185,7 @@ inline void	FFTRealFixLen <2>::do_ifft (const DataType f [], DataType x [])
 
 // 2-point IFFT
 template <>
-inline void	FFTRealFixLen <1>::do_ifft (const DataType f [], DataType x [])
+inline void	FFTRealFixLen <1>::do_ifft (const DataType f [], DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -197,7 +197,7 @@ inline void	FFTRealFixLen <1>::do_ifft (const DataType f [], DataType x [])
 
 // 1-point IFFT
 template <>
-inline void	FFTRealFixLen <0>::do_ifft (const DataType f [], DataType x [])
+inline void	FFTRealFixLen <0>::do_ifft (const DataType f [], DataType x []) noexcept
 {
 	assert (f != nullptr);
 	assert (x != nullptr);
@@ -210,7 +210,7 @@ inline void	FFTRealFixLen <0>::do_ifft (const DataType f [], DataType x [])
 
 
 template <int LL2>
-void	FFTRealFixLen <LL2>::rescale (DataType x []) const
+void	FFTRealFixLen <LL2>::rescale (DataType x []) const noexcept
 {
 	assert (x != nullptr);
 
@@ -263,7 +263,7 @@ constexpr int	FFTRealFixLen <LL2>::FFT_LEN;
 
 
 template <int LL2>
-void	FFTRealFixLen <LL2>::build_br_lut ()
+void	FFTRealFixLen <LL2>::build_br_lut () noexcept
 {
 	_br_data [0] = 0;
 	for (long cnt = 1; cnt < BR_ARR_SIZE; ++cnt)
@@ -289,7 +289,7 @@ void	FFTRealFixLen <LL2>::build_br_lut ()
 
 
 template <int LL2>
-void	FFTRealFixLen <LL2>::build_trigo_lut ()
+void	FFTRealFixLen <LL2>::build_trigo_lut () noexcept
 {
 	const double	mul = (0.5 * PI) / TRIGO_TABLE_ARR_SIZE;
 	for (long i = 0; i < TRIGO_TABLE_ARR_SIZE; ++ i)
@@ -303,7 +303,7 @@ void	FFTRealFixLen <LL2>::build_trigo_lut ()
 
 
 template <int LL2>
-void	FFTRealFixLen <LL2>::build_trigo_osc ()
+void	FFTRealFixLen <LL2>::build_trigo_osc () noexcept
 {
 	for (int i = 0; i < NBR_TRIGO_OSC; ++i)
 	{

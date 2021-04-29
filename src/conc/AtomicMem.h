@@ -53,9 +53,9 @@ public:
 	conc_TYPEDEF_ALIGN (4, DataType, DataTypeAlign);
 
 	conc_FORCEINLINE static DataType
-	               swap (volatile DataType &dest, DataType excg);
+	               swap (volatile DataType &dest, DataType excg) noexcept;
 	conc_FORCEINLINE static DataType
-	               cas (volatile DataType &dest, DataType excg, DataType comp);
+	               cas (volatile DataType &dest, DataType excg, DataType comp) noexcept;
 };	// class AtomicMem
 
 
@@ -68,9 +68,9 @@ public:
 	conc_TYPEDEF_ALIGN (8, DataType, DataTypeAlign);
 
 	conc_FORCEINLINE static DataType
-	               swap (volatile DataType &dest, DataType excg);
+	               swap (volatile DataType &dest, DataType excg) noexcept;
 	conc_FORCEINLINE static DataType
-	               cas (volatile DataType &dest, DataType excg, DataType comp);
+	               cas (volatile DataType &dest, DataType excg, DataType comp) noexcept;
 };	// class AtomicMem <3>
 
 
@@ -85,9 +85,9 @@ public:
 	conc_TYPEDEF_ALIGN (16, DataType, DataTypeAlign);
 
 	conc_FORCEINLINE static DataType
-	               swap (volatile DataType &dest, DataType excg);
+	               swap (volatile DataType &dest, DataType excg) noexcept;
 	conc_FORCEINLINE static DataType
-	               cas (volatile DataType &dest, DataType excg, DataType comp);
+	               cas (volatile DataType &dest, DataType excg, DataType comp) noexcept;
 };	// class AtomicMem <4>
 
 #endif	// conc_HAS_CAS_128

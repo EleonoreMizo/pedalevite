@@ -47,8 +47,8 @@ public:
 	               SingleObj ();
 	virtual        ~SingleObj ();
 
-	T *            operator -> () const;
-	T &            operator * () const;
+	T *            operator -> () const noexcept;
+	T &            operator * () const noexcept;
 
 
 

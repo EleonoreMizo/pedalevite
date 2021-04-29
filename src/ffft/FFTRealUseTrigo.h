@@ -50,9 +50,9 @@ public:
 	typedef	OscSinCos <DataType>	OscType;
 
 	ffft_FORCEINLINE static void
-						prepare (OscType &osc);
+						prepare (OscType &osc) noexcept;
 	ffft_FORCEINLINE	static void
-						iterate (OscType &osc, DataType &c, DataType &s, const DataType cos_ptr [], long index_c, long index_s);
+						iterate (OscType &osc, DataType &c, DataType &s, const DataType cos_ptr [], long index_c, long index_s) noexcept;
 
 
 

@@ -34,14 +34,14 @@ namespace hiir
 
 
 
-hiir_FORCEINLINE float32x4_t  load4a (const float *ptr);
-hiir_FORCEINLINE float32x4_t  load4u (const float *ptr);
-hiir_FORCEINLINE float32x2_t  load2a (const float *ptr);
-hiir_FORCEINLINE float32x2_t  load2u (const float *ptr);
-hiir_FORCEINLINE void         storea (float *ptr, float32x4_t x);
-hiir_FORCEINLINE void         storeu (float *ptr, float32x4_t x);
-hiir_FORCEINLINE void         storea (float *ptr, float32x2_t x);
-hiir_FORCEINLINE void         storeu (float *ptr, float32x2_t x);
+hiir_FORCEINLINE float32x4_t  load4a (const float *ptr) noexcept;
+hiir_FORCEINLINE float32x4_t  load4u (const float *ptr) noexcept;
+hiir_FORCEINLINE float32x2_t  load2a (const float *ptr) noexcept;
+hiir_FORCEINLINE float32x2_t  load2u (const float *ptr) noexcept;
+hiir_FORCEINLINE void         storea (float *ptr, float32x4_t x) noexcept;
+hiir_FORCEINLINE void         storeu (float *ptr, float32x4_t x) noexcept;
+hiir_FORCEINLINE void         storea (float *ptr, float32x2_t x) noexcept;
+hiir_FORCEINLINE void         storeu (float *ptr, float32x2_t x) noexcept;
 
 
 

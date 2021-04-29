@@ -44,15 +44,15 @@ class BitFieldSparseIterator
 public:
 
 	explicit inline
-	               BitFieldSparseIterator (BitFieldSparse &bfs);
+	               BitFieldSparseIterator (const BitFieldSparse &bfs) noexcept;
 	               BitFieldSparseIterator (const BitFieldSparseIterator &other) = default;
 	               BitFieldSparseIterator (BitFieldSparseIterator &&other)      = default;
 
-	inline void    start (int pos_start = 0, int pos_end = -1);
-	inline bool    is_rem_elt () const;
-	inline void    iterate ();
+	inline void    start (int pos_start = 0, int pos_end = -1) noexcept;
+	inline bool    is_rem_elt () const noexcept;
+	inline void    iterate () noexcept;
 
-	inline int     get_bit_index () const;
+	inline int     get_bit_index () const noexcept;
 
 
 
@@ -66,10 +66,10 @@ protected:
 
 private:
 
-	BitFieldSparse &
+	const BitFieldSparse &
 	               _bfs;
-	int            _bit_index; // Negative: terminated
-	int            _pos_end;
+	int            _bit_index = -1; // Negative: terminated
+	int            _pos_end   =  0;
 
 
 

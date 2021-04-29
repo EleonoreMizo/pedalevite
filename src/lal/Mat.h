@@ -46,12 +46,12 @@ class Mat
 
 public:
 
-	MatView <T>    make_sub (int r, int c, int h, int w);
+	MatView <T>    make_sub (int r, int c, int h, int w) noexcept;
 	MatViewConst <T>
-	               make_sub (int r, int c, int h, int w) const;
+	               make_sub (int r, int c, int h, int w) const noexcept;
 
-	void           set_zero ();
-	void           set_id ();
+	void           set_zero () noexcept;
+	void           set_id () noexcept;
 
 
 
@@ -60,15 +60,15 @@ public:
 protected:
 
 	// lal::MatConstInterface
-	int            do_get_rows () const override;
-	int            do_get_cols () const override;
-	const T &      do_at (int r, int c) const override;
-	const T *      do_get_data () const override;
-	int            do_get_stride () const override;
+	int            do_get_rows () const noexcept override;
+	int            do_get_cols () const noexcept override;
+	const T &      do_at (int r, int c) const noexcept override;
+	const T *      do_get_data () const noexcept override;
+	int            do_get_stride () const noexcept override;
 
 	// lal::MatInterface
-	T &            do_at (int r, int c) override;
-	T *            do_get_data () override;
+	T &            do_at (int r, int c) noexcept override;
+	T *            do_get_data () noexcept override;
 
 	// lal::MatResizableInterface
 	void           do_reserve (int r, int c) override;
@@ -81,7 +81,7 @@ protected:
 
 private:
 
-	int            conv_coord_to_pos (int r, int c) const;
+	int            conv_coord_to_pos (int r, int c) const noexcept;
 
 	int            _rows = 0;  // >= 0
 	int            _cols = 0;  // >= 0

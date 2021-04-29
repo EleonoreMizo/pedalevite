@@ -65,7 +65,7 @@ public:
 
 	inline CellType *
 	               take_cell (bool autogrow_flag = false);
-	inline void    return_cell (CellType &cell);
+	inline void    return_cell (CellType &cell) noexcept;
 
 
 

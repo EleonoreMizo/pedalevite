@@ -75,13 +75,13 @@ public:
 	Upsampler2xSseOld <NC> &
 	               operator = (Upsampler2xSseOld <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr [NBR_COEFS]);
+	void           set_coefs (const double coef_arr [NBR_COEFS]) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample (float &out_0, float &out_1, float input);
-	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (float &out_0, float &out_1, float input) noexcept;
+	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

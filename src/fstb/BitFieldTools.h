@@ -57,21 +57,21 @@ public:
 
 	static_assert (BITDEPTH <= sizeof (GroupType) * CHAR_BIT, "BITDEPTH");
 
-	static int     calculate_nbr_groups (int nbr_elt);
+	static int     calculate_nbr_groups (int nbr_elt) noexcept;
    static inline void
-                  calculate_group_and_pos (int &group, int &gpos, int pos);
+                  calculate_group_and_pos (int &group, int &gpos, int pos) noexcept;
    static inline void
-                  calculate_group_and_mask (int &group, GroupType &mask, int pos);
+                  calculate_group_and_mask (int &group, GroupType &mask, int pos) noexcept;
 
-   static bool    get_bit (const GroupType bit_arr [], int pos);
-   static void    set_bit (GroupType bit_arr [], int pos, bool flag);
-   static void    clear_bit (GroupType bit_arr [], int pos);
-   static void    fill_bit (GroupType bit_arr [], int pos);
+   static bool    get_bit (const GroupType bit_arr [], int pos) noexcept;
+   static void    set_bit (GroupType bit_arr [], int pos, bool flag) noexcept;
+   static void    clear_bit (GroupType bit_arr [], int pos) noexcept;
+   static void    fill_bit (GroupType bit_arr [], int pos) noexcept;
 
-   static void    activate_range (GroupType bit_arr [], int pos, int nbr_elt);
-   static void    deactivate_range (GroupType bit_arr [], int pos, int nbr_elt);
+   static void    activate_range (GroupType bit_arr [], int pos, int nbr_elt) noexcept;
+   static void    deactivate_range (GroupType bit_arr [], int pos, int nbr_elt) noexcept;
 
-   static int     get_next_bit_set_from (const GroupType bit_arr [], int pos, int length);
+   static int     get_next_bit_set_from (const GroupType bit_arr [], int pos, int length) noexcept;
 
 
 

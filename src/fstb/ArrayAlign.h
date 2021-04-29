@@ -63,21 +63,21 @@ public:
 	ArrayAlign &   operator = (const ArrayAlign &other);
 
 	inline const Element &
-	               operator [] (long pos) const;
+	               operator [] (long pos) const noexcept;
 	inline Element &
-	               operator [] (long pos);
+	               operator [] (long pos) noexcept;
 
 	inline const Element *
-	               data () const;
+	               data () const noexcept;
 	inline Element *
-	               data ();
+	               data () noexcept;
 
 	static inline long
-	               size ();
+	               size () noexcept;
 	static inline long
-	               length ();
+	               length () noexcept;
 	static inline long
-	               get_alignment ();
+	               get_alignment () noexcept;
 
 
 

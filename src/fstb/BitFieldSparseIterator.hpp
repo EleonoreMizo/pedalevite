@@ -37,17 +37,15 @@ namespace fstb
 
 
 
-BitFieldSparseIterator::BitFieldSparseIterator (BitFieldSparse &bfs)
+BitFieldSparseIterator::BitFieldSparseIterator (const BitFieldSparse &bfs) noexcept
 :	_bfs (bfs)
-,	_bit_index (-1)
-,	_pos_end (0)
 {
 	// Nothing
 }
 
 
 
-void	BitFieldSparseIterator::start (int pos_start, int pos_end)
+void	BitFieldSparseIterator::start (int pos_start, int pos_end) noexcept
 {
 	assert (pos_start >= 0);
 	assert (pos_end < _bfs.get_nbr_elt ());
@@ -73,14 +71,14 @@ void	BitFieldSparseIterator::start (int pos_start, int pos_end)
 
 
 
-bool	BitFieldSparseIterator::is_rem_elt () const
+bool	BitFieldSparseIterator::is_rem_elt () const noexcept
 {
 	return (_bit_index >= 0);
 }
 
 
 
-void	BitFieldSparseIterator::iterate ()
+void	BitFieldSparseIterator::iterate () noexcept
 {
 	assert (is_rem_elt ());
 
@@ -97,7 +95,7 @@ void	BitFieldSparseIterator::iterate ()
 
 
 
-int	BitFieldSparseIterator::get_bit_index () const
+int	BitFieldSparseIterator::get_bit_index () const noexcept
 {
 	return _bit_index;
 }

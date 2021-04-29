@@ -36,7 +36,7 @@ namespace hiir
 
 
 template <>
-inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
+inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2 - 1;
 
@@ -56,7 +56,7 @@ inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32
 
 
 template <>
-inline void	StageProc4Neon <0>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
+inline void	StageProc4Neon <0>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -67,7 +67,7 @@ inline void	StageProc4Neon <0>::process_sample_pos (const int nbr_coefs, float32
 
 
 template <int REMAINING>
-void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
+void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2 - REMAINING;
 
@@ -99,7 +99,7 @@ void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float3
 
 
 template <>
-inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
+inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2 - 1;
 
@@ -116,7 +116,7 @@ inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32
 }
 
 template <>
-inline void	StageProc4Neon <0>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
+inline void	StageProc4Neon <0>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -125,7 +125,7 @@ inline void	StageProc4Neon <0>::process_sample_neg (const int nbr_coefs, float32
 }
 
 template <int REMAINING>
-void	StageProc4Neon <REMAINING>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
+void	StageProc4Neon <REMAINING>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2 - REMAINING;
 

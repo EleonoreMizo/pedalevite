@@ -67,9 +67,9 @@ public:
 	               ObjPool ();
 	virtual        ~ObjPool ();
 
-	void           set_factory (Factory &fact);
-	Factory &      use_factory () const;
-	void           cleanup ();
+	void           set_factory (Factory &fact) noexcept;
+	Factory &      use_factory () const noexcept;
+	void           cleanup () noexcept;
 
 	T *            take_obj ();
 	void           return_obj (T &obj);
@@ -90,7 +90,7 @@ private:
 	typedef	typename PtrPool::CellType	PtrCell;
 	typedef	LockFreeStack <ObjType *>	PtrStack;
 
-	int            delete_obj_stack (PtrStack &ptr_stack, bool destroy_flag);
+	int            delete_obj_stack (PtrStack &ptr_stack, bool destroy_flag) noexcept;
 
 	Factory *      _factory_ptr = 0;    // 0 = not set
 	PtrStack       _stack_free;

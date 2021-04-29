@@ -37,7 +37,7 @@ namespace hiir
 
 
 template <int CUR>
-void	StageProcNeonV2 <CUR>::process_sample_pos (float32x2_t &x, StageDataNeonV2 *stage_ptr)
+void	StageProcNeonV2 <CUR>::process_sample_pos (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept
 {
 	StageProcNeonV2 <CUR>::process_sample_pos_rec (x, stage_ptr);
 	storea (stage_ptr [CUR]._mem, x);
@@ -46,7 +46,7 @@ void	StageProcNeonV2 <CUR>::process_sample_pos (float32x2_t &x, StageDataNeonV2 
 
 
 template <int CUR>
-void	StageProcNeonV2 <CUR>::process_sample_neg (float32x2_t &x, StageDataNeonV2 *stage_ptr)
+void	StageProcNeonV2 <CUR>::process_sample_neg (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept
 {
 	StageProcNeonV2 <CUR>::process_sample_neg_rec (x, stage_ptr);
 	storea (stage_ptr [CUR]._mem, x);
@@ -55,7 +55,7 @@ void	StageProcNeonV2 <CUR>::process_sample_neg (float32x2_t &x, StageDataNeonV2 
 
 
 template <int CUR>
-void	StageProcNeonV2 <CUR>::process_sample_pos_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr)
+void	StageProcNeonV2 <CUR>::process_sample_pos_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept
 {
 	StageProcNeonV2 <CUR - 1>::process_sample_pos_rec (x, stage_ptr);
 
@@ -70,7 +70,7 @@ void	StageProcNeonV2 <CUR>::process_sample_pos_rec (float32x2_t &x, StageDataNeo
 }
 
 template <>
-hiir_FORCEINLINE void	StageProcNeonV2 <0>::process_sample_pos_rec (float32x2_t &/* x */, StageDataNeonV2 * /* stage_ptr */)
+hiir_FORCEINLINE void	StageProcNeonV2 <0>::process_sample_pos_rec (float32x2_t &/* x */, StageDataNeonV2 * /* stage_ptr */) noexcept
 {
 	// Nothing, stops the recursion
 }
@@ -78,7 +78,7 @@ hiir_FORCEINLINE void	StageProcNeonV2 <0>::process_sample_pos_rec (float32x2_t &
 
 
 template <int CUR>
-void	StageProcNeonV2 <CUR>::process_sample_neg_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr)
+void	StageProcNeonV2 <CUR>::process_sample_neg_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept
 {
 	StageProcNeonV2 <CUR - 1>::process_sample_neg_rec (x, stage_ptr);
 
@@ -91,7 +91,7 @@ void	StageProcNeonV2 <CUR>::process_sample_neg_rec (float32x2_t &x, StageDataNeo
 }
 
 template <>
-hiir_FORCEINLINE void	StageProcNeonV2 <0>::process_sample_neg_rec (float32x2_t &/* x */, StageDataNeonV2 * /* stage_ptr */)
+hiir_FORCEINLINE void	StageProcNeonV2 <0>::process_sample_neg_rec (float32x2_t &/* x */, StageDataNeonV2 * /* stage_ptr */) noexcept
 {
 	// Nothing, stops the recursion
 }

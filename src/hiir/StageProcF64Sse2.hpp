@@ -34,7 +34,7 @@ namespace hiir
 
 
 template <int CUR>
-void  StageProcF64Sse2 <CUR>::process_sample_pos (__m128d &x, StageDataF64Sse2 *stage_arr)
+void  StageProcF64Sse2 <CUR>::process_sample_pos (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept
 {
   StageProcF64Sse2 <CUR>::process_sample_pos_rec (x, stage_arr);
 	_mm_store_pd (stage_arr [CUR]._mem, x);
@@ -43,7 +43,7 @@ void  StageProcF64Sse2 <CUR>::process_sample_pos (__m128d &x, StageDataF64Sse2 *
 
 
 template <int CUR>
-void  StageProcF64Sse2 <CUR>::process_sample_neg (__m128d &x, StageDataF64Sse2 *stage_arr)
+void  StageProcF64Sse2 <CUR>::process_sample_neg (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept
 {
   StageProcF64Sse2 <CUR>::process_sample_neg_rec (x, stage_arr);
 	_mm_store_pd (stage_arr [CUR]._mem, x);
@@ -52,7 +52,7 @@ void  StageProcF64Sse2 <CUR>::process_sample_neg (__m128d &x, StageDataF64Sse2 *
 
 
 template <int CUR>
-void  StageProcF64Sse2 <CUR>::process_sample_pos_rec (__m128d &x, StageDataF64Sse2 *stage_arr)
+void  StageProcF64Sse2 <CUR>::process_sample_pos_rec (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept
 {
    StageProcF64Sse2 <CUR - 1>::process_sample_pos_rec (x, stage_arr);
 
@@ -65,7 +65,7 @@ void  StageProcF64Sse2 <CUR>::process_sample_pos_rec (__m128d &x, StageDataF64Ss
 }
 
 template <>
-hiir_FORCEINLINE void  StageProcF64Sse2 <0>::process_sample_pos_rec (__m128d & /*x*/, StageDataF64Sse2 * /*stage_arr*/)
+hiir_FORCEINLINE void  StageProcF64Sse2 <0>::process_sample_pos_rec (__m128d & /*x*/, StageDataF64Sse2 * /*stage_arr*/) noexcept
 {
 	// Nothing, stops the recursion
 }
@@ -73,7 +73,7 @@ hiir_FORCEINLINE void  StageProcF64Sse2 <0>::process_sample_pos_rec (__m128d & /
 
 
 template <int CUR>
-void  StageProcF64Sse2 <CUR>::process_sample_neg_rec (__m128d &x, StageDataF64Sse2 *stage_arr)
+void  StageProcF64Sse2 <CUR>::process_sample_neg_rec (__m128d &x, StageDataF64Sse2 *stage_arr) noexcept
 {
    StageProcF64Sse2 <CUR - 1>::process_sample_neg_rec (x, stage_arr);
 
@@ -86,7 +86,7 @@ void  StageProcF64Sse2 <CUR>::process_sample_neg_rec (__m128d &x, StageDataF64Ss
 }
 
 template <>
-hiir_FORCEINLINE void  StageProcF64Sse2 <0>::process_sample_neg_rec (__m128d & /*x*/, StageDataF64Sse2 * /*stage_arr*/)
+hiir_FORCEINLINE void  StageProcF64Sse2 <0>::process_sample_neg_rec (__m128d & /*x*/, StageDataF64Sse2 * /*stage_arr*/) noexcept
 {
 	// Nothing, stops the recursion
 }

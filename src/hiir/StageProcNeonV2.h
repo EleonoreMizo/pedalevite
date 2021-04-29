@@ -52,14 +52,14 @@ class StageProcNeonV2
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (float32x2_t &x, StageDataNeonV2 *stage_ptr);
+	               process_sample_pos (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (float32x2_t &x, StageDataNeonV2 *stage_ptr);
+	               process_sample_neg (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept;
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr);
+	               process_sample_pos_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr);
+	               process_sample_neg_rec (float32x2_t &x, StageDataNeonV2 *stage_ptr) noexcept;
 
 
 

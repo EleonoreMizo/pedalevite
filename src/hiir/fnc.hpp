@@ -52,7 +52,7 @@ int	ceil_int (double x)
 
 
 template <class T>
-T	ipowp (T x, long n)
+T	ipowp (T x, long n) noexcept
 {
 	assert (n >= 0);
 

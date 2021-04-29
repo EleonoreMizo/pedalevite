@@ -64,7 +64,7 @@ public:
 	static constexpr int  _nbr_chn  = 2;
 	static constexpr int  NBR_COEFS = NC;
 
-	               Downsampler2x2F64Sse2 ();
+	               Downsampler2x2F64Sse2 () noexcept;
 	               Downsampler2x2F64Sse2 (const Downsampler2x2F64Sse2 <NC> &other) = default;
 	               Downsampler2x2F64Sse2 (Downsampler2x2F64Sse2 <NC> &&other) = default;
 	               ~Downsampler2x2F64Sse2 ()                            = default;
@@ -74,21 +74,21 @@ public:
 	Downsampler2x2F64Sse2 <NC> &
 	               operator = (Downsampler2x2F64Sse2 <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE __m128d
-	               process_sample (const double in_ptr [_nbr_chn * 2]);
+	               process_sample (const double in_ptr [_nbr_chn * 2]) noexcept;
 	hiir_FORCEINLINE __m128d
-	               process_sample (__m128d in_0, __m128d in_1);
-	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample (__m128d in_0, __m128d in_1) noexcept;
+	void           process_block (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample_split (__m128d &low, __m128d &high, const double in_ptr [_nbr_chn * 2]);
+	               process_sample_split (__m128d &low, __m128d &high, const double in_ptr [_nbr_chn * 2]) noexcept;
 	hiir_FORCEINLINE void
-	               process_sample_split (__m128d &low, __m128d &high, __m128d in_0, __m128d in_1);
-	void           process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample_split (__m128d &low, __m128d &high, __m128d in_0, __m128d in_1) noexcept;
+	void           process_block_split (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

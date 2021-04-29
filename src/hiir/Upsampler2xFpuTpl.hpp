@@ -57,7 +57,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr [NBR_COEFS])
+void	Upsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr [NBR_COEFS]) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -84,7 +84,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_1, DataType input)
+void	Upsampler2xFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_1, DataType input) noexcept
 {
 	DataType       even = input;
 	DataType       odd  = input;
@@ -116,7 +116,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl)
+void	Upsampler2xFpuTpl <NC, DT>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -149,7 +149,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::clear_buffers ()
+void	Upsampler2xFpuTpl <NC, DT>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{

@@ -50,9 +50,9 @@ class StageProc3dnow
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos ();
+	               process_sample_pos () noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg ();
+	               process_sample_neg () noexcept;
 
 
 

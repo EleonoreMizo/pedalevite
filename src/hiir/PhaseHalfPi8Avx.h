@@ -59,7 +59,7 @@ public:
 	static constexpr int _nbr_chn  = 8;
 	static constexpr int NBR_COEFS = NC;
 
-	               PhaseHalfPi8Avx ();
+	               PhaseHalfPi8Avx () noexcept;
 	               PhaseHalfPi8Avx (const PhaseHalfPi8Avx <NC> &other) = default;
 	               PhaseHalfPi8Avx (PhaseHalfPi8Avx <NC> &&other)      = default;
 	               ~PhaseHalfPi8Avx ()                                 = default;
@@ -69,13 +69,13 @@ public:
 	PhaseHalfPi8Avx <NC> &
 	               operator = (PhaseHalfPi8Avx <NC> &&other)           = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample (__m256 &out_0, __m256 &out_1, __m256 input);
-	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (__m256 &out_0, __m256 &out_1, __m256 input) noexcept;
+	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

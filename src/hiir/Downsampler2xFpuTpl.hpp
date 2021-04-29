@@ -57,7 +57,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr [])
+void	Downsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -82,7 +82,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-typename Downsampler2xFpuTpl <NC, DT>::DataType	Downsampler2xFpuTpl <NC, DT>::process_sample (const DataType in_ptr [2])
+typename Downsampler2xFpuTpl <NC, DT>::DataType	Downsampler2xFpuTpl <NC, DT>::process_sample (const DataType in_ptr [2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
@@ -114,7 +114,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl)
+void	Downsampler2xFpuTpl <NC, DT>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr != nullptr);
 	assert (out_ptr != nullptr);
@@ -153,7 +153,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::process_sample_split (DataType &low, DataType &high, const DataType in_ptr [2])
+void	Downsampler2xFpuTpl <NC, DT>::process_sample_split (DataType &low, DataType &high, const DataType in_ptr [2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
@@ -195,7 +195,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::process_block_split (DataType out_l_ptr [], DataType out_h_ptr [], const DataType in_ptr [], long nbr_spl)
+void	Downsampler2xFpuTpl <NC, DT>::process_block_split (DataType out_l_ptr [], DataType out_h_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr    != nullptr);
 	assert (out_l_ptr != nullptr);
@@ -231,7 +231,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::clear_buffers ()
+void	Downsampler2xFpuTpl <NC, DT>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{

@@ -52,7 +52,7 @@ Throws: Nothing
 */
 
 template <int NC>
-PhaseHalfPi3dnow <NC>::PhaseHalfPi3dnow ()
+PhaseHalfPi3dnow <NC>::PhaseHalfPi3dnow () noexcept
 :	_filter ()
 ,	_prev (0)
 ,	_phase (0)
@@ -90,7 +90,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi3dnow <NC>::set_coefs (const double coef_arr [])
+void	PhaseHalfPi3dnow <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -122,7 +122,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float input)
+void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
 	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]);
 
@@ -177,7 +177,7 @@ Throws: Nothing
 #endif
 
 template <int NC>
-void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
+void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -275,7 +275,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPi3dnow <NC>::clear_buffers ()
+void	PhaseHalfPi3dnow <NC>::clear_buffers () noexcept
 {
 	for (int phase = 0; phase < NBR_PHASES; ++phase)
 	{

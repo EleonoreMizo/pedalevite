@@ -43,7 +43,7 @@ namespace hiir
 
 
 template <int REMAINING, typename DT>
-void	StageProcFpu <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr)
+void	StageProcFpu <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
@@ -72,7 +72,7 @@ void	StageProcFpu <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &
 }
 
 template <typename DT>
-void	StageProcFpu <1, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr)
+void	StageProcFpu <1, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -89,7 +89,7 @@ void	StageProcFpu <1, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, D
 }
 
 template <typename DT>
-void	StageProcFpu <0, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr)
+void	StageProcFpu <0, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -100,7 +100,7 @@ void	StageProcFpu <0, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, D
 
 
 template <int REMAINING, typename DT>
-void	StageProcFpu <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr)
+void	StageProcFpu <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
@@ -129,7 +129,7 @@ void	StageProcFpu <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &
 }
 
 template <typename DT>
-void	StageProcFpu <1, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr)
+void	StageProcFpu <1, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -146,7 +146,7 @@ void	StageProcFpu <1, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, D
 }
 
 template <typename DT>
-void	StageProcFpu <0, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr)
+void	StageProcFpu <0, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 

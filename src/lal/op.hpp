@@ -149,7 +149,7 @@ void	op_binary (std::vector <T> &dst, const std::vector <T> &lhs, const std::vec
 
 
 template <typename T>
-MatView <T>	vec_to_matview (std::vector <T> &v, Dir dir)
+MatView <T>	vec_to_matview (std::vector <T> &v, Dir dir) noexcept
 {
 	assert (dir != Dir::D);
 
@@ -165,7 +165,7 @@ MatView <T>	vec_to_matview (std::vector <T> &v, Dir dir)
 
 
 template <typename T>
-MatViewConst <T>	vec_to_matview (const std::vector <T> &v, Dir dir)
+MatViewConst <T>	vec_to_matview (const std::vector <T> &v, Dir dir) noexcept
 {
 	assert (dir != Dir::D);
 
@@ -209,7 +209,7 @@ void	vec_to_mat (D &dst, const std::vector <T> &v, Dir dir)
 
 
 template <typename T>
-T	norm_inf (const std::vector <T> &v)
+T	norm_inf (const std::vector <T> &v) noexcept
 {
 	T              norm { 0 };
 
@@ -224,7 +224,7 @@ T	norm_inf (const std::vector <T> &v)
 
 
 template <typename T>
-void	fill (MatInterface <T> &dst, T val)
+void	fill (MatInterface <T> &dst, T val) noexcept
 {
 	const int      rows     = dst.get_rows ();
 	const int      cols     = dst.get_cols ();
@@ -244,7 +244,7 @@ void	fill (MatInterface <T> &dst, T val)
 
 
 template <typename T>
-void	fill (std::vector <T> &dst, T val)
+void	fill (std::vector <T> &dst, T val) noexcept
 {
 	std::fill (dst.begin (), dst.end (), val);
 }
@@ -571,7 +571,7 @@ void	mul_transp_rhs (D &dst, const MatConstInterface <T> &lhs, const MatConstInt
 // The result cells keep the same order as mat, so the matrices do not look
 // triangular. fnc_r and fnc_c must be used to retrieve the triangular forms.
 template <typename T, typename FR, typename FC>
-void	decompose_lu (MatInterface <T> &mat, FR fnc_r, FC fnc_c)
+void	decompose_lu (MatInterface <T> &mat, FR fnc_r, FC fnc_c) noexcept
 {
 	const int      n = mat.get_rows ();
 	assert (mat.get_cols () == n);
@@ -612,7 +612,7 @@ void	decompose_lu (MatInterface <T> &mat, FR fnc_r, FC fnc_c)
 // r_arr and c_arr are pre-filled reordering vectors for the rows and columns,
 // same size as mat.
 template <typename T>
-void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
+void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr) noexcept
 {
 #if ! defined (NDEBUG)
 	const int      n = mat.get_rows ();
@@ -625,8 +625,8 @@ void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const 
 
 	decompose_lu (
 		mat,
-		[&r_arr] (int r) { return r_arr [r]; },
-		[&c_arr] (int c) { return c_arr [c]; }
+		[&r_arr] (int r) noexcept { return r_arr [r]; },
+		[&c_arr] (int c) noexcept { return c_arr [c]; }
 	);
 }
 

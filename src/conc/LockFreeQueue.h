@@ -75,8 +75,8 @@ public:
 	               LockFreeQueue ();
 	virtual        ~LockFreeQueue () = default;
 
-	void           enqueue (CellType &cell);
-	CellType *     dequeue ();
+	void           enqueue (CellType &cell) noexcept;
+	CellType *     dequeue () noexcept;
 
 
 

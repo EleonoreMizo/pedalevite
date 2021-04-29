@@ -86,7 +86,7 @@ Throws: Nothing
 */
 
 template <class T>
-void	ObjPool <T>::set_factory (Factory &fact)
+void	ObjPool <T>::set_factory (Factory &fact) noexcept
 {
 	_factory_ptr = &fact;
 }
@@ -94,11 +94,41 @@ void	ObjPool <T>::set_factory (Factory &fact)
 
 
 template <class T>
-typename ObjPool <T>::Factory &	ObjPool <T>::use_factory () const
+typename ObjPool <T>::Factory &	ObjPool <T>::use_factory () const noexcept
 {
 	assert (_factory_ptr != 0);
 
 	return (*_factory_ptr);
+}
+
+
+
+/*
+==============================================================================
+Name: cleanup
+Description:
+	Preliminary deletion of the pool content, also used during the pool
+	destruction.
+	Do not call it if some objects are still out of the pool!
+	Use with care.
+Throws: Nothing
+==============================================================================
+*/
+
+template <class T>
+void	ObjPool <T>::cleanup () noexcept
+{
+#if ! defined (NDEBUG)
+	const int      count_free =
+#endif
+		delete_obj_stack  (_stack_free, false);
+#if ! defined (NDEBUG)
+	const int      count_all  =
+#endif
+		delete_obj_stack  (_stack_all,  true);
+
+	// False would mean that some cells are still out, in use.
+	assert (count_free == count_all);
 }
 
 
@@ -113,7 +143,7 @@ Description:
 Returns:
 	A pointer on the object, or 0 if no object is available and cannot be
 	created for any reason.
-Throws: Nothing
+Throws: Depends on the factory
 ==============================================================================
 */
 
@@ -175,7 +205,7 @@ Description:
 	- Do not return an object you didn't get from take_obj()
 Input parameters:
 	- obj: Reference on the returned object.
-Throws: Nothing
+Throws: std::runtime_error
 ==============================================================================
 */
 
@@ -205,36 +235,6 @@ void	ObjPool <T>::return_obj (T &obj)
 
 
 
-/*
-==============================================================================
-Name: cleanup
-Description:
-	Preliminary deletion of the pool content, also used during the pool
-	destruction.
-	Do not call it if some objects are still out of the pool!
-	Use with care.
-Throws: Nothing
-==============================================================================
-*/
-
-template <class T>
-void	ObjPool <T>::cleanup ()
-{
-#if ! defined (NDEBUG)
-	const int      count_free =
-#endif
-		delete_obj_stack  (_stack_free, false);
-#if ! defined (NDEBUG)
-	const int      count_all  =
-#endif
-		delete_obj_stack  (_stack_all,  true);
-
-	// False would mean that some cells are still out, in use.
-	assert (count_free == count_all);
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -244,7 +244,7 @@ void	ObjPool <T>::cleanup ()
 
 
 template <class T>
-int	ObjPool <T>::delete_obj_stack (PtrStack &ptr_stack, bool destroy_flag)
+int	ObjPool <T>::delete_obj_stack (PtrStack &ptr_stack, bool destroy_flag) noexcept
 {
 	typename PtrStack::CellType *   cell_ptr = 0;
 	int            count = 0;

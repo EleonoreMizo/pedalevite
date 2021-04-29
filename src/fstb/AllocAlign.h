@@ -65,19 +65,19 @@ public:
 
 	// Address
 	[[deprecated]] inline pointer
-	               address (reference r);
+	               address (reference r) noexcept;
 	[[deprecated]] inline const_pointer
-	               address (const_reference r);
+	               address (const_reference r) noexcept;
 
 	// Memory allocation
 	[[deprecated]] inline pointer
 	               allocate (size_type n, const void *ptr);
 	inline pointer allocate (size_type n);
-	inline void    deallocate (pointer p, size_type n);
+	inline void    deallocate (pointer p, size_type n) noexcept;
 
 	// Size
 	[[deprecated]] inline size_type
-	               max_size () const;
+	               max_size () const noexcept;
 
 	// Construction/destruction
 	[[deprecated]] inline void
@@ -85,8 +85,8 @@ public:
 	[[deprecated]] inline void
 	               destroy (pointer ptr);
 
-	inline bool    operator == (AllocAlign <T, ALIG> const &other);
-	inline bool    operator != (AllocAlign <T, ALIG> const &other);
+	inline bool    operator == (AllocAlign <T, ALIG> const &other) noexcept;
+	inline bool    operator != (AllocAlign <T, ALIG> const &other) noexcept;
 
 	template <typename U>
 	struct rebind

@@ -51,9 +51,9 @@ class StageProc4Neon
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr);
+	               process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr);
+	               process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr) noexcept;
 
 
 

@@ -103,18 +103,18 @@ public:
 	typedef conc::CellPool <M> Pool;
 
 	               QueueRetMgr () = default;
-	virtual        ~QueueRetMgr ();
+	virtual        ~QueueRetMgr () noexcept;
 
 	QueueSPtr      create_new_ret_queue ();
 	void           kill_ret_queue (QueueSPtr &queue_sptr);
-	Pool &         use_pool ();
+	Pool &         use_pool () noexcept;
 
 	// Forward
-	void           enqueue (CellType &cell, QueueSPtr ret_queue_sptr);
-	CellType *     dequeue ();
+	void           enqueue (CellType &cell, QueueSPtr ret_queue_sptr) noexcept;
+	CellType *     dequeue () noexcept;
 
 	// Return
-	void           flush_ret_queue (Queue &queue);
+	void           flush_ret_queue (Queue &queue) noexcept;
 
 
 
@@ -131,7 +131,7 @@ private:
 	typedef std::vector <QueueSPtr> QueueList;
 
 	typename QueueList::iterator
-	               find_queue (Queue &queue);
+	               find_queue (Queue &queue) noexcept;
 
 	Pool           _pool;
 	Queue          _queue_fwd;

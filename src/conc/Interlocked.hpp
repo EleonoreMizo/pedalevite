@@ -47,7 +47,7 @@ namespace conc
 
 
 
-int32_t	Interlocked::swap (int32_t volatile &dest, int32_t excg)
+int32_t	Interlocked::swap (int32_t volatile &dest, int32_t excg) noexcept
 {
 	assert (is_ptr_aligned_nz (&dest));
 
@@ -80,7 +80,7 @@ int32_t	Interlocked::swap (int32_t volatile &dest, int32_t excg)
 
 
 
-int32_t	Interlocked::cas (int32_t volatile &dest, int32_t excg, int32_t comp)
+int32_t	Interlocked::cas (int32_t volatile &dest, int32_t excg, int32_t comp) noexcept
 {
 	assert (is_ptr_aligned_nz (&dest));
 
@@ -121,7 +121,7 @@ int32_t	Interlocked::cas (int32_t volatile &dest, int32_t excg, int32_t comp)
 
 
 
-int64_t	Interlocked::swap (int64_t volatile &dest, int64_t excg)
+int64_t	Interlocked::swap (int64_t volatile &dest, int64_t excg) noexcept
 {
 	assert (is_ptr_aligned_nz (&dest));
 
@@ -178,7 +178,7 @@ int64_t	Interlocked::swap (int64_t volatile &dest, int64_t excg)
 
 
 
-int64_t	Interlocked::cas (int64_t volatile &dest, int64_t excg, int64_t comp)
+int64_t	Interlocked::cas (int64_t volatile &dest, int64_t excg, int64_t comp) noexcept
 {
 	assert (is_ptr_aligned_nz (&dest));
 
@@ -239,7 +239,7 @@ int64_t	Interlocked::cas (int64_t volatile &dest, int64_t excg, int64_t comp)
 
 
 
-void	Interlocked::swap (Data128 &old, volatile Data128 &dest, const Data128 &excg)
+void	Interlocked::swap (Data128 &old, volatile Data128 &dest, const Data128 &excg) noexcept
 {
 	assert (is_ptr_aligned_nz (&dest));
 
@@ -254,7 +254,7 @@ void	Interlocked::swap (Data128 &old, volatile Data128 &dest, const Data128 &exc
 
 
 
-void	Interlocked::cas (Data128 &old, volatile Data128 &dest, const Data128 &excg, const Data128 &comp)
+void	Interlocked::cas (Data128 &old, volatile Data128 &dest, const Data128 &excg, const Data128 &comp) noexcept
 {
 	assert (is_ptr_aligned_nz (&dest));
 
@@ -322,13 +322,13 @@ void	Interlocked::cas (Data128 &old, volatile Data128 &dest, const Data128 &excg
 
 #if defined (_MSC_VER)
 
-bool	Interlocked::Data128::operator == (const Data128 & other) const
+bool	Interlocked::Data128::operator == (const Data128 & other) const noexcept
 {
 	return (   _data [0] == other._data [0]
 	        && _data [1] == other._data [1]);
 }
 
-bool	Interlocked::Data128::operator != (const Data128 & other) const
+bool	Interlocked::Data128::operator != (const Data128 & other) const noexcept
 {
 	return (   _data [0] != other._data [0]
 	        || _data [1] != other._data [1]);
@@ -345,7 +345,7 @@ bool	Interlocked::Data128::operator != (const Data128 & other) const
 	#pragma warning (4 : 4311 4312)
 #endif
 
-void *	Interlocked::swap (void * volatile &dest_ptr, void *excg_ptr)
+void *	Interlocked::swap (void * volatile &dest_ptr, void *excg_ptr) noexcept
 {
 	return (reinterpret_cast <void *> (
 		swap (
@@ -357,7 +357,7 @@ void *	Interlocked::swap (void * volatile &dest_ptr, void *excg_ptr)
 
 
 
-void *	Interlocked::cas (void * volatile &dest_ptr, void *excg_ptr, void *comp_ptr)
+void *	Interlocked::cas (void * volatile &dest_ptr, void *excg_ptr, void *comp_ptr) noexcept
 {
 	return (reinterpret_cast <void *> (
 		cas (

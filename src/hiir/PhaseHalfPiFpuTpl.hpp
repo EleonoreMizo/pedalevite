@@ -55,7 +55,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::set_coefs (const double coef_arr [])
+void	PhaseHalfPiFpuTpl <NC, DT>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -84,7 +84,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_1, DataType input)
+void	PhaseHalfPiFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_1, DataType input) noexcept
 {
 	out_0 = input;   // Even coefs
 	out_1 = _prev;   // Odd coefs
@@ -117,7 +117,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType out_1_ptr [], const DataType in_ptr [], long nbr_spl)
+void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType out_1_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -181,7 +181,7 @@ Throws: Nothing
 */
 
 template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::clear_buffers ()
+void	PhaseHalfPiFpuTpl <NC, DT>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{

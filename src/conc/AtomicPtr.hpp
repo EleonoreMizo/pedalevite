@@ -41,7 +41,7 @@ namespace conc
 
 
 template <class T>
-AtomicPtr <T>::AtomicPtr ()
+AtomicPtr <T>::AtomicPtr () noexcept
 :	_ptr ()
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
@@ -52,7 +52,7 @@ AtomicPtr <T>::AtomicPtr ()
 
 
 template <class T>
-AtomicPtr <T>::AtomicPtr (T *ptr)
+AtomicPtr <T>::AtomicPtr (T *ptr) noexcept
 #if (conc_ARCHI == conc_ARCHI_X86)
 :	_ptr ()
 #else  // conc_ARCHI
@@ -68,7 +68,7 @@ AtomicPtr <T>::AtomicPtr (T *ptr)
 
 
 template <class T>
-AtomicPtr <T> &	AtomicPtr <T>::operator = (T *other_ptr)
+AtomicPtr <T> &	AtomicPtr <T>::operator = (T *other_ptr) noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
 	Interlocked::swap (_ptr._void_ptr, other_ptr);
@@ -82,7 +82,7 @@ AtomicPtr <T> &	AtomicPtr <T>::operator = (T *other_ptr)
 
 
 template <class T>
-AtomicPtr <T>::operator T * () const
+AtomicPtr <T>::operator T * () const noexcept
 {
 	return (read_ptr ());
 }
@@ -90,7 +90,7 @@ AtomicPtr <T>::operator T * () const
 
 
 template <class T>
-bool	AtomicPtr <T>::operator == (T *other_ptr) const
+bool	AtomicPtr <T>::operator == (T *other_ptr) const noexcept
 {
 	const T *      ptr = read_ptr ();
 
@@ -100,7 +100,7 @@ bool	AtomicPtr <T>::operator == (T *other_ptr) const
 
 
 template <class T>
-bool	AtomicPtr <T>::operator != (T *other_ptr) const
+bool	AtomicPtr <T>::operator != (T *other_ptr) const noexcept
 {
 	return (! ((*this) == other_ptr));
 }
@@ -108,7 +108,7 @@ bool	AtomicPtr <T>::operator != (T *other_ptr) const
 
 
 template <class T>
-T *	AtomicPtr <T>::swap (T *other_ptr)
+T *	AtomicPtr <T>::swap (T *other_ptr) noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
 	return (static_cast <T *> (Interlocked::swap (
@@ -123,7 +123,7 @@ T *	AtomicPtr <T>::swap (T *other_ptr)
 
 
 template <class T>
-T *	AtomicPtr <T>::cas (T *other_ptr, T *comp_ptr)
+T *	AtomicPtr <T>::cas (T *other_ptr, T *comp_ptr) noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
 	return (static_cast <T *> (Interlocked::cas (
@@ -150,7 +150,7 @@ T *	AtomicPtr <T>::cas (T *other_ptr, T *comp_ptr)
 
 
 template <class T>
-T *	AtomicPtr <T>::read_ptr () const
+T *	AtomicPtr <T>::read_ptr () const noexcept
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
 	return _ptr._t_ptr;

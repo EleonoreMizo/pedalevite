@@ -59,7 +59,7 @@ public:
 	static constexpr int _nbr_chn  = 2;
 	static constexpr int NBR_COEFS = NC;
 
-	               PhaseHalfPi2F64Sse2 ();
+	               PhaseHalfPi2F64Sse2 () noexcept;
 	               PhaseHalfPi2F64Sse2 (const PhaseHalfPi2F64Sse2 <NC> &other) = default;
 	               PhaseHalfPi2F64Sse2 (PhaseHalfPi2F64Sse2 <NC> &&other)      = default;
 	               ~PhaseHalfPi2F64Sse2 ()                            = default;
@@ -69,13 +69,13 @@ public:
 	PhaseHalfPi2F64Sse2 <NC> &
 	               operator = (PhaseHalfPi2F64Sse2 <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE void
-	               process_sample (__m128d &out_0, __m128d &out_1, __m128d input);
-	void           process_block (double out_0_ptr [], double out_1_ptr [], const double in_ptr [], long nbr_spl);
+	               process_sample (__m128d &out_0, __m128d &out_1, __m128d input) noexcept;
+	void           process_block (double out_0_ptr [], double out_1_ptr [], const double in_ptr [], long nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

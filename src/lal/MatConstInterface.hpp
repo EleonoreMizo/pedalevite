@@ -36,7 +36,7 @@ namespace lal
 
 
 template <typename T>
-int	MatConstInterface <T>::get_rows () const
+int	MatConstInterface <T>::get_rows () const noexcept
 {
 	const int      rows = do_get_rows ();
 	assert (rows >= 0);
@@ -47,7 +47,7 @@ int	MatConstInterface <T>::get_rows () const
 
 
 template <typename T>
-int	MatConstInterface <T>::get_cols () const
+int	MatConstInterface <T>::get_cols () const noexcept
 {
 	const int      cols = do_get_cols ();
 	assert (cols >= 0);
@@ -58,7 +58,7 @@ int	MatConstInterface <T>::get_cols () const
 
 
 template <typename T>
-const T &	MatConstInterface <T>::operator () (int r, int c) const
+const T &	MatConstInterface <T>::operator () (int r, int c) const noexcept
 {
 	assert (r >= 0);
 	assert (c >= 0);
@@ -69,7 +69,7 @@ const T &	MatConstInterface <T>::operator () (int r, int c) const
 
 
 template <typename T>
-const T *	MatConstInterface <T>::get_data () const
+const T *	MatConstInterface <T>::get_data () const noexcept
 {
 	const T *      ptr = do_get_data ();
 	assert (do_get_rows () == 0 || do_get_cols () == 0 || ptr != nullptr);
@@ -80,7 +80,7 @@ const T *	MatConstInterface <T>::get_data () const
 
 
 template <typename T>
-int	MatConstInterface <T>::get_stride () const
+int	MatConstInterface <T>::get_stride () const noexcept
 {
 	return do_get_stride ();
 }

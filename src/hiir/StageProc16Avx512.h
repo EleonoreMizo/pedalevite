@@ -54,9 +54,9 @@ class StageProc16Avx512
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, __m512 &spl_0, __m512 &spl_1, StageDataAvx512 *stage_arr);
+	               process_sample_pos (const int nbr_coefs, __m512 &spl_0, __m512 &spl_1, StageDataAvx512 *stage_arr) noexcept;
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, __m512 &spl_0, __m512 &spl_1, StageDataAvx512 *stage_arr);
+	               process_sample_neg (const int nbr_coefs, __m512 &spl_0, __m512 &spl_1, StageDataAvx512 *stage_arr) noexcept;
 
 
 
