@@ -57,14 +57,6 @@ namespace skel
 
 
 Eton::Eton ()
-:	_state (State_CREATED)
-,	_desc ()
-,	_state_set ()
-,	_param_proc (_state_set)
-,	_sample_freq (0)
-,	_inv_fs (0)
-,	_param_change_flag ()
-,	_chn_arr ()
 {
 	dsp::mix::Align::setup ();
 

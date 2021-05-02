@@ -84,14 +84,14 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
-	State          _state;
+	State          _state = State_CREATED;
 
 	EtonDesc       _desc;
 	ParamStateSet  _state_set;
 	ParamProcSimple
-	               _param_proc;
-	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
-	float          _inv_fs;             // 1 / _sample_freq
+	               _param_proc { _state_set };
+	float          _sample_freq = 0;    // Hz, > 0. <= 0: not initialized
+	float          _inv_fs      = 0;    // 1 / _sample_freq
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
