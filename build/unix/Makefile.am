@@ -848,6 +848,8 @@ commonsrc = \
         ../../src/mfx/dsp/wnd/HannPoisson.hpp \
         ../../src/mfx/dsp/wnd/Kaiser.h \
         ../../src/mfx/dsp/wnd/Kaiser.hpp \
+        ../../src/mfx/dsp/wnd/ProcHalfSine.h \
+        ../../src/mfx/dsp/wnd/ProcHalfSine.hpp \
         ../../src/mfx/dsp/wnd/Taylor.h \
         ../../src/mfx/dsp/wnd/Taylor.hpp \
         ../../src/mfx/dsp/wnd/Ultraspherical.h \
