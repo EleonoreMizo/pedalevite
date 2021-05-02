@@ -65,7 +65,6 @@ public:
 	               StftHelper ();
 	virtual        ~StftHelper () = default;
 
-	void           set_rate_mode (bool opt_flag);
 	void           set_hop_size (int nbr_spl);
 	void           set_win (const float win_ptr [FftType::FFT_LEN]);
 	void           clear_buffers ();
@@ -93,7 +92,6 @@ private:
 	int            _buf_pos;            // Write position within the raw input buffer
 	int            _hop_size;
 	int            _hop_pos;
-	bool           _opt_flag;
 
 
 

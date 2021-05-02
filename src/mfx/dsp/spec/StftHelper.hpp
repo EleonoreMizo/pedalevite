@@ -50,19 +50,10 @@ StftHelper <FFT>::StftHelper ()
 ,	_buf_in (FftType::FFT_LEN)
 ,	_hop_size (FftType::FFT_LEN / 2)
 ,	_hop_pos (0)
-,	_opt_flag (false)
 {
 	_buf_acc.set_sample_freq (1);
 	_buf_acc.set_max_delay_time (FftType::FFT_LEN);
 	_buf_acc.update_buffer_size ();
-}
-
-
-
-template <class FFT>
-void	StftHelper <FFT>::set_rate_mode (bool opt_flag)
-{
-	_opt_flag = opt_flag;
 }
 
 
