@@ -1336,6 +1336,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\scrush\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\scrush\SpectralCrusher.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\scrush\SpectralCrusherDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\LfoType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMood.h" />
@@ -2054,6 +2057,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\Ramp.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\scrush\SpectralCrusher.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\scrush\SpectralCrusherDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\skel\Eton.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>

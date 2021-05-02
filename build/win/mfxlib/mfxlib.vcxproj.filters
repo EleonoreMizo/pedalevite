@@ -454,6 +454,9 @@
     <Filter Include="mfx\pi\pidet2">
       <UniqueIdentifier>{45d3e4e1-552e-44a9-975c-15e8f4ca9dc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\scrush">
+      <UniqueIdentifier>{76962640-4435-42df-a137-41c7af04d485}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5109,6 +5112,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\DesignPhaseMin.h">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\scrush\Param.h">
+      <Filter>mfx\pi\scrush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\scrush\SpectralCrusher.h">
+      <Filter>mfx\pi\scrush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\scrush\SpectralCrusherDesc.h">
+      <Filter>mfx\pi\scrush</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapAna.h">
       <Filter>mfx\dsp\spec</Filter>
     </ClInclude>
@@ -6520,6 +6532,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\fir\DesignPhaseMin.cpp">
       <Filter>mfx\dsp\fir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\scrush\SpectralCrusher.cpp">
+      <Filter>mfx\pi\scrush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\scrush\SpectralCrusherDesc.cpp">
+      <Filter>mfx\pi\scrush</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

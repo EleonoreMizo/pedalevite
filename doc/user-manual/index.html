@@ -77,6 +77,7 @@
 	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
+	<li><a href="#fx-spec-crush">Spectral Crusher — Quantification spectrale</a></li>
 	<li><a href="#fx-pan">Stereo Panning — Balance stéréo</a></li>
 	<li><a href="#fx-testgen">Test Generator — Générateur de tonalités de test</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
@@ -3061,6 +3062,54 @@ et l’autre cananl sur un ampli de guitare.</p>
 
 
 
+<h3><a id="fx-spec-crush"></a>Spectral Crusher — Quantification spectrale</h3>
+
+<p>Spectral Crusher est un effet de quantification opérant dans le domaine
+fréquentiel.
+Le signal est divisé en une multitude de composantes spectrales.
+Chaque composante est quantifiée individuellement, puis le signal est
+reconstitué.</p>
+
+<p class="var">Step</p>
+<p>Hauteur du pas de quantification, en dB.
+Plus celui-ci est élevé, plus l’effet sera marqué.</p>
+
+<p class="var">Rounding bias</p>
+<p>Mode d’arrondi de la quantification, en pourcentage.
+Quand ce paramètre est faible, la quantification se fait vers le bas, ce qui
+a tendance à réduire le volume général, mais réduit la remontée des parasites.
+Quand il est élevé, la quantification se fait vers le haut, ce qui augmente
+le volume.</p>
+
+<p class="var">Threshold</p>
+<p>Seuil approximatif et progressif en-dessous duquel la quantification
+n’opère plus, en dB.</p>
+
+<p class="var">Quantification shape</p>
+<p>Différence entre le signal quantifié et la source, en pourcentage.
+À 0, il n’y a pas de quantification, à 100 est elle est normale (forme en
+marches d’escaliers), et à 200 elle est doublée (forme en dents de scie
+descendantes).</p>
+
+<p class="var">Linear difference</p>
+<p>Une fois les composantes quantifiées, ce paramètre indique quelle est
+la proportion (en pourcent) du signal d’origine à soustraire au résultat.</p>
+
+<p class="var">Lowest frequency</p>
+<p>Fréquence minimum en Hz au-dessus de laquelle les composantes spectrales
+sont traitées.
+Les fréquences inférieures ne sont pas touchées.
+Comme la décomposition spectrale est linéaire en Hz, les composantes basse
+fréquence ont une résolution assez faible.
+Ce paramètre est donc assez peu précis à basses fréquence.</p>
+
+<p class="var">Highest frequency</p>
+<p>Fréquence maximum en Hz au-dessous de laquelle les composantes spectrales
+sont traitées.
+Les fréquences supérieures ne sont pas touchées.</p>
+
+
+
 <h3><a id="fx-pan"></a>Stereo Panning — Balance stéréo</h3>
 
 <p>Cet effet permet d’ajuster la balance stéréo d’un signal mono ou stéréo,
@@ -3579,6 +3628,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r42, 2021-05-02</b></p>
+<ul>
+<li>Ajout de l’effet Spectral Crusher.</li>
+</ul>
 
 <p><b>r41, 2021-04-27</b></p>
 <ul>

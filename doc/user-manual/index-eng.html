@@ -77,6 +77,7 @@
 	<li><a href="#fx-sgirlz">SiemensGirlz — Creative delay</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator</a></li>
+	<li><a href="#fx-spec-crush">Spectral Crusher</a></li>
 	<li><a href="#fx-pan">Stereo Panning</a></li>
 	<li><a href="#fx-testgen">Test Generator — Test signal generator</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
@@ -2858,6 +2859,49 @@ a guitar amp.</p>
 
 
 
+<h3><a id="fx-spec-crush"></a>Spectral Crusher</h3>
+
+<p>Spectral Crusher is a bitcrusher (signal quantisation) operating in the
+frequency domain.
+The signal is divided into a lot of frequency components.
+Each component is quantised individually, then the signal is rebuilt.</p>
+
+<p class="var">Step</p>
+<p>Height of the quantisation step, in dB.
+The higher, the stronger the effect.</p>
+
+<p class="var">Rounding bias</p>
+<p>Rounding mode for the quantisation, in percent.
+When set to a low value, the quantisation rounds down, which tends to reduce
+the volume, but keeps the noise away.
+When set to a high value, the quantisation rounds up, which tends to increase
+the volume.</p>
+
+<p class="var">Threshold</p>
+<p>Approximative and progressive threshold in dB below which the quantisation
+is disabled.</p>
+
+<p class="var">Quantification shape</p>
+<p>Difference in percent between the quantised signal and the source.
+At 0, there is no quantisation.
+At 100, the quantisation is normal (stairstep shape).
+At 200, the quantisation difference is doubled (downwards sawtooth shape).</p>
+
+<p class="var">Linear difference</p>
+<p>Once the spectral components are quantified, this parameter controls
+which amount of the original signal is subtracted from the result.</p>
+
+<p class="var">Lowest frequency</p>
+<p>Frequency in Hz below which the spectral processing is bypassed.
+Because the spectral decomposition is linear in Hz, the lowest component
+have a poor resolution.
+Therefore this parameter is not accurate in the lowest frequency range.</p>
+
+<p class="var">Highest frequency</p>
+<p>Frequency in Hz above which the spectral processing is bypassed.</p>
+
+
+
 <h3><a id="fx-pan"></a>Stereo Panning</h3>
 
 <p>This effect sets the stereo balance of a signal, and sets the position of
@@ -3344,6 +3388,11 @@ This precision can be changed with <span class="key">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r42, 2021-05-02</b></p>
+<ul>
+<li>Added the Spectral Crusher effect.</li>
+</ul>
 
 <p><b>r41, 2021-04-27</b></p>
 <ul>
