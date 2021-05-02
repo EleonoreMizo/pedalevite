@@ -758,6 +758,10 @@ commonsrc = \
         ../../src/mfx/dsp/spat/ReverbDattorro.h \
         ../../src/mfx/dsp/spat/ReverbSc.h \
         ../../src/mfx/dsp/spat/ReverbSc.hpp \
+        ../../src/mfx/dsp/spec/FrameOverlapAna.h \
+        ../../src/mfx/dsp/spec/FrameOverlapAna.hpp \
+        ../../src/mfx/dsp/spec/FrameOverlapSyn.h \
+        ../../src/mfx/dsp/spec/FrameOverlapSyn.hpp \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/dkm/Flt.h \

@@ -1139,6 +1139,10 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeReverb.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeStereo.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeStereo.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapAna.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapAna.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapSyn.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapSyn.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.h" />

@@ -5109,6 +5109,18 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\DesignPhaseMin.h">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapAna.h">
+      <Filter>mfx\dsp\spec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapAna.hpp">
+      <Filter>mfx\dsp\spec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapSyn.h">
+      <Filter>mfx\dsp\spec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapSyn.hpp">
+      <Filter>mfx\dsp\spec</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
