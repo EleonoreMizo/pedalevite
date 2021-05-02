@@ -96,6 +96,8 @@ public:
 	// Other tags
 	static const char *  _control_gen_0;
 	static const char *  _mixing_0;
+	static const char *  _spectral_0;
+	static const char *  _granular_0;
 
 
 

@@ -55,7 +55,7 @@ SpectralCrusherDesc::SpectralCrusherDesc ()
 {
 	_info._unique_id = "specrush";
 	_info._name      = "Spectral crusher\nSpectral crush\nSpec crush\nSpeCru";
-	_info._tag_list  = { piapi::Tag::_distortion_0 };
+	_info._tag_list  = { piapi::Tag::_spectral_0, piapi::Tag::_distortion_0 };
 	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Step

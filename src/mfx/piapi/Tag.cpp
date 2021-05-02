@@ -92,6 +92,8 @@ const char *	Tag::_vocal_0                  = "vocal";
 
 const char *	Tag::_control_gen_0            = "control-gen";
 const char *	Tag::_mixing_0                 = "mixing";
+const char *	Tag::_spectral_0               = "spectral";
+const char *	Tag::_granular_0               = "granular";
 
 
 

@@ -60,7 +60,8 @@ NoiseChlorineDesc::NoiseChlorineDesc ()
 	_info._name      = "Noise chlorine\nNoise cl\nNoisCl";
 	_info._tag_list  = {
 		piapi::Tag::_noise_reduction_0,
-		piapi::Tag::_dyn_gate_expander_0
+		piapi::Tag::_dyn_gate_expander_0,
+		piapi::Tag::_multiband_0
 	};
 	_info._chn_pref  = piapi::ChnPref::NONE;
 

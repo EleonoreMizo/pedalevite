@@ -66,7 +66,7 @@ PEqDesc <NB>::PEqDesc ()
 			+ "\nParam Eq "             + s
 			+ "\nPEq "                  + s;
 	}
-	_info._tag_list = { piapi::Tag::_eq_parametric_0 };
+	_info._tag_list = { piapi::Tag::_eq_parametric_0, piapi::Tag::_multiband_0 };
 	_info._chn_pref = piapi::ChnPref::NONE;
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
