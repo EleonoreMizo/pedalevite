@@ -142,21 +142,7 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 
 
 
-MeterResultSet &	WorldAudio::use_meters ()
-{
-	return _meter_result;
-}
-
-
-
-float	WorldAudio::get_audio_period_ratio () const
-{
-	return _period_now;
-}
-
-
-
-void	WorldAudio::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+void	WorldAudio::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept
 {
 	assert (dst_arr != nullptr);
 	assert (dst_arr [0] != nullptr);
@@ -243,6 +229,20 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	}
 
 	_proc_date_end = _input_device.get_cur_date ();
+}
+
+
+
+MeterResultSet &	WorldAudio::use_meters () noexcept
+{
+	return _meter_result;
+}
+
+
+
+float	WorldAudio::get_audio_period_ratio () const noexcept
+{
+	return _period_now;
 }
 
 

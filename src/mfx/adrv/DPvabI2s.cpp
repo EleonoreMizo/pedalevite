@@ -114,7 +114,7 @@ DPvabI2s::~DPvabI2s ()
 
 
 
-int	DPvabI2s::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DPvabI2s::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
 	fstb::unused (driver_0, chn_idx_in, chn_idx_out);
 	assert (chn_idx_in == 0);
@@ -144,7 +144,7 @@ int	DPvabI2s::do_init (double &sample_freq, int &max_block_size, CbInterface &ca
 
 
 
-int	DPvabI2s::do_start ()
+int	DPvabI2s::do_start () noexcept
 {
 	int            ret_val = 0;
 
@@ -194,8 +194,15 @@ int	DPvabI2s::do_start ()
 
 	// Initializes threads and stuff
 	_exit_flag   = false;
-	_thread_main = std::thread (&DPvabI2s::main_loop, this);
-	hw::ThreadLinux::set_priority (_thread_main, 0, nullptr);
+	try
+	{
+		_thread_main = std::thread (&DPvabI2s::main_loop, this);
+		hw::ThreadLinux::set_priority (_thread_main, 0, nullptr);
+	}
+	catch (...)
+	{
+		ret_val = -1;
+	}
 
 	if (ret_val == 0)
 	{
@@ -207,14 +214,21 @@ int	DPvabI2s::do_start ()
 
 
 
-int	DPvabI2s::do_stop ()
+int	DPvabI2s::do_stop () noexcept
 {
 	int            ret_val = 0;
 
 	if (_state == State_RUN)
 	{
 		_exit_flag = true;
-		_thread_main.join ();
+		try
+		{
+			_thread_main.join ();
+		}
+		catch (...)
+		{
+			ret_val = -1;
+		}
 	}
 
 	_state = State_STOP;
@@ -224,7 +238,7 @@ int	DPvabI2s::do_stop ()
 
 
 
-void	DPvabI2s::do_restart ()
+void	DPvabI2s::do_restart () noexcept
 {
 	do_stop ();
 	do_start ();
@@ -243,7 +257,7 @@ std::string	DPvabI2s::do_get_last_error () const
 
 
 
-void	DPvabI2s::close_i2c ()
+void	DPvabI2s::close_i2c () noexcept
 {
 	if (_i2c_hnd != -1)
 	{
@@ -254,12 +268,14 @@ void	DPvabI2s::close_i2c ()
 
 
 
-void	DPvabI2s::main_loop ()
+void	DPvabI2s::main_loop () noexcept
 {
 	_proc_ex_flag  = false;
 	_proc_now_flag = false;
 	_cur_buf       = 0;
 
+	try
+	{
 	std::thread    thread_proc (&DPvabI2s::proc_loop, this);
 	hw::ThreadLinux::set_priority (thread_proc, -1, nullptr);
 
@@ -428,6 +444,12 @@ void	DPvabI2s::main_loop ()
 
 	// Waits for the processing thread to terminate
 	thread_proc.join ();
+	}
+	catch (...)
+	{
+		// Nothing
+		assert (false);
+	}
 }
 
 
@@ -568,7 +590,7 @@ void	DPvabI2s::proc_loop ()
 
 
 
-void	DPvabI2s::write_reg (uint8_t reg, uint8_t val)
+void	DPvabI2s::write_reg (uint8_t reg, uint8_t val) noexcept
 {
 	assert (_i2c_hnd != -1);
 

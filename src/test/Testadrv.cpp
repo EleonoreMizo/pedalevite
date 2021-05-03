@@ -220,7 +220,7 @@ bool	Testadrv::AdrvCallback::check_dropout ()
 
 
 
-void	Testadrv::AdrvCallback::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+void	Testadrv::AdrvCallback::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept
 {
 	assert (dst_arr != nullptr);
 	assert (src_arr != nullptr);
@@ -238,14 +238,14 @@ void	Testadrv::AdrvCallback::do_process_block (float * const * dst_arr, const fl
 
 
 
-void	Testadrv::AdrvCallback::do_notify_dropout ()
+void	Testadrv::AdrvCallback::do_notify_dropout () noexcept
 {
 	_dropout_flag.store (true);
 }
 
 
 
-void	Testadrv::AdrvCallback::do_request_exit ()
+void	Testadrv::AdrvCallback::do_request_exit () noexcept
 {
 	_request_exit_flag.store (true);
 }

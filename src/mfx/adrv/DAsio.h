@@ -61,10 +61,10 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
-	int            do_start () final;
-	int            do_stop () final;
-	void           do_restart () final;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept final;
+	int            do_start () noexcept final;
+	int            do_stop () noexcept final;
+	void           do_restart () noexcept final;
 	std::string    do_get_last_error () const final;
 
 
@@ -84,7 +84,7 @@ private:
 		State_NBR_ELT
 	};
 
-	void           process_block (long buf_index);
+	void           process_block (long buf_index) noexcept;
 
 	static void    process_asio (long doubleBufferIndex, ::ASIOBool directProcess);
 	static void    samplerate_did_change (::ASIOSampleRate sRate);

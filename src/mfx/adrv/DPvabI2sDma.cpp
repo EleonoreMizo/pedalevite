@@ -117,7 +117,7 @@ DPvabI2sDma::~DPvabI2sDma ()
 
 
 // Call this only when the driver is running
-DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const
+DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const noexcept
 {
 	using namespace hw::bcm2837dma;
 
@@ -149,7 +149,7 @@ DPvabI2sDma::PosIO	DPvabI2sDma::get_dma_pos () const
 
 
 // Call this only when the driver is running
-uint32_t	DPvabI2sDma::get_pcm_status () const
+uint32_t	DPvabI2sDma::get_pcm_status () const noexcept
 {
 	return _pcm_mptr.at (hw::bcm2837pcm::_cs_a);
 }
@@ -157,7 +157,7 @@ uint32_t	DPvabI2sDma::get_pcm_status () const
 
 
 // Call this only when the driver is running
-DPvabI2sDma::BufferDump	DPvabI2sDma::dump_buf_in () const
+DPvabI2sDma::BufferDump	DPvabI2sDma::dump_buf_in () const noexcept
 {
 	BufferDump     content;
 	for (int buf_idx = 0; buf_idx < _nbr_buf; ++buf_idx)
@@ -182,8 +182,10 @@ DPvabI2sDma::BufferDump	DPvabI2sDma::dump_buf_in () const
 
 
 
-int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
+	int            ret_val = 0;
+
 	fstb::unused (driver_0, chn_idx_in, chn_idx_out);
 	assert (chn_idx_in == 0);
 	assert (chn_idx_out == 0);
@@ -211,25 +213,32 @@ int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface 
 	const int      nbr_blocks  = _nbr_buf * _block_size   * _nbr_chn * Dir_NBR_ELT;
 	const int      buf_size_io = _nbr_buf * _block_size_a * _nbr_chn;
 	const int      nbr_spl     = Dir_NBR_ELT * buf_size_io;
-	_dma_uptr = std::make_unique <hw::RPiDmaBlocks> (
-		nbr_blocks, nbr_spl * sizeof (SplType)
-	);
-	_buf_int_i_ptr = _dma_uptr->use_buf <SplType> ();
-	_buf_int_o_ptr = _buf_int_i_ptr + buf_size_io;
+	try
+	{
+		_dma_uptr = std::make_unique <hw::RPiDmaBlocks> (
+			nbr_blocks, nbr_spl * sizeof (SplType)
+		);
+		_buf_int_i_ptr = _dma_uptr->use_buf <SplType> ();
+		_buf_int_o_ptr = _buf_int_i_ptr + buf_size_io;
 
-	// Computes the minimum time we have to give to the system, per block
-	const double   rt_ratio     = read_rt_ratio ();
-	const double   spl_dur_ns   = 1e9 / sample_freq;
-	_spl_dur_ns = fstb::round_int64 (spl_dur_ns);
-	const double   block_dur_ns = 1e9 * _block_size / sample_freq;
-	_min_dur_ns = fstb::round_int64 ((1 - rt_ratio) * block_dur_ns);
+		// Computes the minimum time we have to give to the system, per block
+		const double   rt_ratio     = read_rt_ratio ();
+		const double   spl_dur_ns   = 1e9 / sample_freq;
+		_spl_dur_ns = fstb::round_int64 (spl_dur_ns);
+		const double   block_dur_ns = 1e9 * _block_size / sample_freq;
+		_min_dur_ns = fstb::round_int64 ((1 - rt_ratio) * block_dur_ns);
+	}
+	catch (...)
+	{
+		ret_val = -1;
+	}
 
-	return 0;
+	return ret_val;
 }
 
 
 
-int	DPvabI2sDma::do_start ()
+int	DPvabI2sDma::do_start () noexcept
 {
 	int            ret_val = 0;
 
@@ -279,8 +288,15 @@ int	DPvabI2sDma::do_start ()
 
 	// Initializes threads and stuff
 	_exit_flag   = false;
-	_thread_main = std::thread (&DPvabI2sDma::main_loop, this);
-	hw::ThreadLinux::set_priority (_thread_main, 0, nullptr);
+	try
+	{
+		_thread_main = std::thread (&DPvabI2sDma::main_loop, this);
+		hw::ThreadLinux::set_priority (_thread_main, 0, nullptr);
+	}
+	catch (...)
+	{
+		ret_val = -1;
+	}
 
 	if (ret_val == 0)
 	{
@@ -292,14 +308,21 @@ int	DPvabI2sDma::do_start ()
 
 
 
-int	DPvabI2sDma::do_stop ()
+int	DPvabI2sDma::do_stop () noexcept
 {
 	int            ret_val = 0;
 
 	if (_state == State_RUN)
 	{
 		_exit_flag = true;
-		_thread_main.join ();
+		try
+		{
+			_thread_main.join ();
+		}
+		catch (...)
+		{
+			ret_val = -1;
+		}
 	}
 
 	_state = State_STOP;
@@ -309,7 +332,7 @@ int	DPvabI2sDma::do_stop ()
 
 
 
-void	DPvabI2sDma::do_restart ()
+void	DPvabI2sDma::do_restart () noexcept
 {
 	do_stop ();
 	do_start ();
@@ -328,7 +351,7 @@ std::string	DPvabI2sDma::do_get_last_error () const
 
 
 
-void	DPvabI2sDma::close_i2c ()
+void	DPvabI2sDma::close_i2c () noexcept
 {
 	if (_i2c_hnd != -1)
 	{
@@ -339,7 +362,7 @@ void	DPvabI2sDma::close_i2c ()
 
 
 
-void	DPvabI2sDma::main_loop ()
+void	DPvabI2sDma::main_loop () noexcept
 {
 	// Clears integer buffers
 	const int      buf_size = _block_size_a * _nbr_chn * Dir_NBR_ELT;
@@ -569,7 +592,7 @@ void	DPvabI2sDma::main_loop ()
 // We interleave read and write for each sample of a stereo pair, it seems
 // that's the best way to keep everything in sync.
 // Sample data input and output buffers should be ready before the call.
-void	DPvabI2sDma::build_dma_ctrl_block_list ()
+void	DPvabI2sDma::build_dma_ctrl_block_list () noexcept
 {
 	assert (_buf_int_i_ptr != nullptr);
 	assert (_buf_int_o_ptr != nullptr);
@@ -638,7 +661,7 @@ void	DPvabI2sDma::build_dma_ctrl_block_list ()
 
 
 
-void	DPvabI2sDma::process_block (int buf_idx)
+void	DPvabI2sDma::process_block (int buf_idx) noexcept
 {
 	assert (buf_idx >= 0);
 	assert (buf_idx < _nbr_buf);
@@ -757,7 +780,7 @@ void	DPvabI2sDma::process_block (int buf_idx)
 
 
 
-void	DPvabI2sDma::write_reg (uint8_t reg, uint8_t val)
+void	DPvabI2sDma::write_reg (uint8_t reg, uint8_t val) noexcept
 {
 	assert (_i2c_hnd != -1);
 
@@ -766,7 +789,7 @@ void	DPvabI2sDma::write_reg (uint8_t reg, uint8_t val)
 
 
 
-double	DPvabI2sDma::read_rt_ratio ()
+double	DPvabI2sDma::read_rt_ratio () noexcept
 {
 	double         ratio   = 1; // Default or error
 	int            ret_val = 0;
@@ -798,7 +821,7 @@ double	DPvabI2sDma::read_rt_ratio ()
 
 
 
-int	DPvabI2sDma::read_value_from_file (long long &val, const char *filename_0)
+int	DPvabI2sDma::read_value_from_file (long long &val, const char *filename_0) noexcept
 {
 	assert (filename_0 != nullptr);
 

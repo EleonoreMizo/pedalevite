@@ -85,10 +85,10 @@ public:
 protected:
 
 	// DriverInterface
-	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
-	int            do_start () final;
-	int            do_stop () final;
-	void           do_restart () final;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept final;
+	int            do_start () noexcept final;
+	int            do_stop () noexcept final;
+	void           do_restart () noexcept final;
 	std::string    do_get_last_error () const final;
 
 
@@ -119,10 +119,10 @@ private:
 		State_NBR_ELT
 	};
 
-	void           close_i2c ();
-	void           main_loop ();
+	void           close_i2c () noexcept;
+	void           main_loop () noexcept;
 	void           proc_loop ();
-	inline void    write_reg (uint8_t reg, uint8_t val);
+	inline void    write_reg (uint8_t reg, uint8_t val) noexcept;
 
 	uint32_t       _periph_base_addr;   // Virtual base address for the peripherals
 	hw::MmapPtr    _pcm_mptr;           // Virtual base address for the PCM registers

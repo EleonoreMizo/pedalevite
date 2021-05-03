@@ -42,7 +42,7 @@ namespace adrv
 
 
 
-void	DManual::get_buffers (float * in_ptr_arr [_nbr_chn], const float * out_ptr_arr [_nbr_chn])
+void	DManual::get_buffers (float * in_ptr_arr [_nbr_chn], const float * out_ptr_arr [_nbr_chn]) noexcept
 {
 	assert (_state >= State_INIT);
 	assert (in_ptr_arr  != nullptr);
@@ -57,7 +57,7 @@ void	DManual::get_buffers (float * in_ptr_arr [_nbr_chn], const float * out_ptr_
 
 
 
-void	DManual::process_block ()
+void	DManual::process_block () noexcept
 {
 	assert (_state == State_RUN);
 
@@ -76,7 +76,7 @@ void	DManual::process_block ()
 
 
 
-size_t	DManual::get_sample_index () const
+size_t	DManual::get_sample_index () const noexcept
 {
 	assert (_state >= State_INIT);
 
@@ -89,37 +89,48 @@ size_t	DManual::get_sample_index () const
 
 
 
-int	DManual::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DManual::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
 	fstb::unused (driver_0, chn_idx_in, chn_idx_out);
 	assert (_state == State_LOADED);
 
-	sample_freq     = 44100;
-	max_block_size  = 64;
+	int            ret_val = 0;
 
-	_sample_freq    = sample_freq;
-	_max_block_size = max_block_size;
-	_cb_ptr         = &callback;
-	_sample_index   = 0;
-
-	const int      mbs_align = (max_block_size + 3) & -4;
-	for (int chn = 0; chn < _nbr_chn; ++chn)
+	try
 	{
-		for (int dir = 0; dir < Dir_NBR_ELT; ++dir)
+		sample_freq     = 44100;
+		max_block_size  = 64;
+
+		_sample_freq    = sample_freq;
+		_max_block_size = max_block_size;
+		_cb_ptr         = &callback;
+		_sample_index   = 0;
+
+		const int      mbs_align = (max_block_size + 3) & -4;
+		for (int chn = 0; chn < _nbr_chn; ++chn)
 		{
-			_chn_buf_arr [dir] [chn].clear ();
-			_chn_buf_arr [dir] [chn].resize (mbs_align, 0);
+			for (int dir = 0; dir < Dir_NBR_ELT; ++dir)
+			{
+				_chn_buf_arr [dir] [chn].clear ();
+				_chn_buf_arr [dir] [chn].resize (mbs_align, 0);
+			}
 		}
+
+		_state = State_INIT;
 	}
 
-	_state = State_INIT;
+	catch (...)
+	{
+		assert (false);
+		ret_val = -1;
+	}
 
-	return 0;
+	return ret_val;
 }
 
 
 
-int	DManual::do_start ()
+int	DManual::do_start () noexcept
 {
 	assert (_state == State_INIT);
 
@@ -130,7 +141,7 @@ int	DManual::do_start ()
 
 
 
-int	DManual::do_stop ()
+int	DManual::do_stop () noexcept
 {
 	assert (_state == State_RUN);
 
@@ -141,7 +152,7 @@ int	DManual::do_stop ()
 
 
 
-void	DManual::do_restart ()
+void	DManual::do_restart () noexcept
 {
 	assert (_state == State_RUN);
 }

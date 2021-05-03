@@ -229,14 +229,14 @@ int	FileOpWav::close_file ()
 
 
 
-bool	FileOpWav::is_open () const
+bool	FileOpWav::is_open () const noexcept
 {
 	return (_f_ptr != nullptr);
 }
 
 
 
-int64_t	FileOpWav::get_size_frames () const
+int64_t	FileOpWav::get_size_frames () const noexcept
 {
 	return _len;
 }

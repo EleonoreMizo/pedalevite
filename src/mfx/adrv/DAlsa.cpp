@@ -98,7 +98,7 @@ DAlsa::~DAlsa ()
 // http://www.alsa-project.org/alsa-doc/alsa-lib/group___p_c_m.html
 // http://www.saunalahti.fi/~s7l/blog/2005/08/21/Full%20Duplex%20ALSA
 // http://jzu.blog.free.fr/public/SLAB/slab.c
-int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
 	int            ret_val = 0;
 
@@ -159,7 +159,7 @@ int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 
 
 
-int	DAlsa::do_start ()
+int	DAlsa::do_start () noexcept
 {
 	int            ret_val = 0;
 
@@ -187,9 +187,16 @@ int	DAlsa::do_start ()
 
 	if (ret_val == 0)
 	{
-		_quit_flag    = false;
-		_thread_audio = std::thread (&DAlsa::process_audio, this);
-		ret_val = hw::ThreadLinux::set_priority (_thread_audio, -1, stderr);
+		_quit_flag = false;
+		try
+		{
+			_thread_audio = std::thread (&DAlsa::process_audio, this);
+			ret_val = hw::ThreadLinux::set_priority (_thread_audio, -1, stderr);
+		}
+		catch (...)
+		{
+			ret_val = -1;
+		}
 	}
 
 	if (ret_val == 0)
@@ -202,20 +209,27 @@ int	DAlsa::do_start ()
 
 
 
-int	DAlsa::do_stop ()
+int	DAlsa::do_stop () noexcept
 {
 	int            ret_val = 0;
 
-	if (_thread_audio.joinable ())
+	try
 	{
-		_quit_flag = true;
-		_thread_audio.join ();
+		if (_thread_audio.joinable ())
+		{
+			_quit_flag = true;
+			_thread_audio.join ();
+		}
+	}
+	catch
+	{
+		ret_val = -1;
 	}
 
 	for (int dir = 0; dir < Dir_NBR_ELT; ++ dir)
 	{
-		ret_val = ::snd_pcm_drop (_handle_arr [dir]);
-		if (ret_val != 0)
+		const int      ret_val_drop = ::snd_pcm_drop (_handle_arr [dir]);
+		if (ret_val == 0 && ret_val_drop != 0)
 		{
 			fprintf (
 				stderr,
@@ -223,13 +237,15 @@ int	DAlsa::do_stop ()
 				_dir_name_0_arr [dir],
 				::snd_strerror (ret_val)
 			);
+			ret_val = -1;
 		}
 	}
 
-	ret_val = ::snd_pcm_unlink (_handle_arr [Dir_IN]);
-	if (ret_val < 0)
+	const int      ret_val_unlink = ::snd_pcm_unlink (_handle_arr [Dir_IN]);
+	if (ret_val == 0 && ret_val_unlink < 0)
 	{
 		fprintf (stderr, "Error: cannot unlink input and output streams.\n");
+		ret_val = -1;
 	}
 
 	return ret_val;
@@ -237,7 +253,7 @@ int	DAlsa::do_stop ()
 
 
 
-void	DAlsa::do_restart ()
+void	DAlsa::do_restart () noexcept
 {
 	do_stop ();
 	for (int dir = 0; dir < Dir_NBR_ELT; ++ dir)
@@ -451,7 +467,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 
 
 
-void	DAlsa::process_audio ()
+void	DAlsa::process_audio () noexcept
 {
 	int             nbr_initial_write = _nbr_periods_actual + 1;
 	while (! _quit_flag)
@@ -472,7 +488,7 @@ void	DAlsa::process_audio ()
 
 
 
-void	DAlsa::process_block (bool read_flag, bool write_flag)
+void	DAlsa::process_block (bool read_flag, bool write_flag) noexcept
 {
 	std::array <std::array <float *, _nbr_chn>, Dir_NBR_ELT> buf_ptr_arr;
 	const int      ofs_r    = 0;

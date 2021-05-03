@@ -53,8 +53,8 @@ public:
 	int            write_data (const float * const chn_arr [], int nbr_spl);
 	int            write_data (const float frame_arr_ptr [], int nbr_spl);
 	int            close_file ();
-	bool           is_open () const;
-	int64_t        get_size_frames () const;
+	bool           is_open () const noexcept;
+	int64_t        get_size_frames () const noexcept;
 
 	static int     load (const char *filename_0, std::vector <std::vector <float> > &chn_arr, double &sample_freq);
 	static int     save (const char *filename_0, const std::vector <float> &chn, double sample_freq, float scale = 1);

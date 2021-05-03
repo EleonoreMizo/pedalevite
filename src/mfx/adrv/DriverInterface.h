@@ -55,10 +55,10 @@ public:
 	               DriverInterface ()  = default;
 	virtual        ~DriverInterface () = default;
 
-	int            init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
-	int            start ();
-	int            stop ();
-	void           restart ();
+	int            init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept;
+	int            start () noexcept;
+	int            stop () noexcept;
+	void           restart () noexcept;
 	std::string    get_last_error () const;
 
 
@@ -67,10 +67,10 @@ public:
 
 protected:
 
-	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) = 0;
-	virtual int    do_start () = 0;
-	virtual int    do_stop () = 0;
-	virtual void   do_restart () = 0;
+	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept = 0;
+	virtual int    do_start () noexcept = 0;
+	virtual int    do_stop () noexcept = 0;
+	virtual void   do_restart () noexcept = 0;
 	virtual std::string
 	               do_get_last_error () const = 0;
 

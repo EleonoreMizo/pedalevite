@@ -67,10 +67,10 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
-	int            do_start () final;
-	int            do_stop () final;
-	void           do_restart () final;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept final;
+	int            do_start () noexcept final;
+	int            do_stop () noexcept final;
+	void           do_restart () noexcept final;
 	std::string    do_get_last_error () const final;
 
 
@@ -79,9 +79,9 @@ protected:
 
 private:
 
-	int            configure_alsa_audio (int dir);
-	void           process_audio ();
-	void           process_block (bool read_flag, bool write_flag);
+	int            configure_alsa_audio (int dir) noexcept;
+	void           process_audio () noexcept;
+	void           process_block (bool read_flag, bool write_flag) noexcept;
 
 	CbInterface *  _cb_ptr;
 	int            _block_size;

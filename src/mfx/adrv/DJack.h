@@ -61,10 +61,10 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
-	int            do_start () final;
-	int            do_stop () final;
-	void           do_restart () final;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept final;
+	int            do_start () noexcept final;
+	int            do_stop () noexcept final;
+	void           do_restart () noexcept final;
 	std::string    do_get_last_error () const final;
 
 
@@ -73,11 +73,11 @@ protected:
 
 private:
 
-	void           process_block (int nbr_spl);
+	void           process_block (int nbr_spl) noexcept;
 
-	static void    jack_shutdown (void *arg);
-	static int     notify_audio_dropout (void *arg);
-	static int     process_jack (::jack_nframes_t nbr_spl, void *arg);
+	static void    jack_shutdown (void *arg) noexcept;
+	static int     notify_audio_dropout (void *arg) noexcept;
+	static int     process_jack (::jack_nframes_t nbr_spl, void *arg) noexcept;
 
 	CbInterface *  _cb_ptr;
 	std::array <int, Dir_NBR_ELT>

@@ -54,9 +54,9 @@ public:
 	virtual CbInterface &
 	               operator = (CbInterface &&other)       = default;
 
-	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
-	void           notify_dropout ();
-	void           request_exit ();
+	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept;
+	void           notify_dropout () noexcept;
+	void           request_exit () noexcept;
 
 
 
@@ -64,9 +64,9 @@ public:
 
 protected:
 
-	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) = 0;
-	virtual void   do_notify_dropout () = 0;
-	virtual void   do_request_exit () = 0;
+	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept = 0;
+	virtual void   do_notify_dropout () noexcept = 0;
+	virtual void   do_request_exit () noexcept = 0;
 
 
 

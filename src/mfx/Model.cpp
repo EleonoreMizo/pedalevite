@@ -148,30 +148,30 @@ void	Model::set_process_info (double sample_freq, int max_block_size)
 
 
 
-double	Model::get_sample_freq () const
+double	Model::get_sample_freq () const noexcept
 {
 	assert (_sample_freq > 0);
 
-	return (_sample_freq);
+	return _sample_freq;
 }
 
 
 
-void	Model::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+void	Model::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept
 {
 	_central.process_block (dst_arr, src_arr, nbr_spl);
 }
 
 
 
-MeterResultSet &	Model::use_meters ()
+MeterResultSet &	Model::use_meters () noexcept
 {
 	return _central.use_meters ();
 }
 
 
 
-float	Model::get_audio_period_ratio () const
+float	Model::get_audio_period_ratio () const noexcept
 {
 	return _central.get_audio_period_ratio ();
 }

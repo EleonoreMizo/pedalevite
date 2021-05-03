@@ -219,7 +219,7 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 
 
 
-void	Central::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+void	Central::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept
 {
 	_audio.process_block (dst_arr, src_arr, nbr_spl);
 
@@ -239,14 +239,14 @@ void	Central::process_block (float * const * dst_arr, const float * const * src_
 
 
 
-MeterResultSet &	Central::use_meters ()
+MeterResultSet &	Central::use_meters () noexcept
 {
 	return _audio.use_meters ();
 }
 
 
 
-float	Central::get_audio_period_ratio () const
+float	Central::get_audio_period_ratio () const noexcept
 {
 	return _audio.get_audio_period_ratio ();
 }

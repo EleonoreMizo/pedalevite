@@ -41,7 +41,7 @@ namespace adrv
 
 
 
-void	CbInterface::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+void	CbInterface::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept
 {
 	assert (dst_arr != nullptr);
 	assert (src_arr != nullptr);
@@ -52,14 +52,14 @@ void	CbInterface::process_block (float * const * dst_arr, const float * const * 
 
 
 
-void	CbInterface::notify_dropout ()
+void	CbInterface::notify_dropout () noexcept
 {
 	do_notify_dropout ();
 }
 
 
 
-void	CbInterface::request_exit ()
+void	CbInterface::request_exit () noexcept
 {
 	do_request_exit ();
 }

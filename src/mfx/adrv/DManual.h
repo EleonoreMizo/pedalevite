@@ -50,9 +50,9 @@ class DManual final
 
 public:
 
-	void           get_buffers (float * in_ptr_arr [_nbr_chn], const float * out_ptr_arr [_nbr_chn]);
-	void           process_block ();
-	size_t         get_sample_index () const;
+	void           get_buffers (float * in_ptr_arr [_nbr_chn], const float * out_ptr_arr [_nbr_chn]) noexcept;
+	void           process_block () noexcept;
+	size_t         get_sample_index () const noexcept;
 
 
 
@@ -61,10 +61,10 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
-	int            do_start () final;
-	int            do_stop () final;
-	void           do_restart () final;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept final;
+	int            do_start () noexcept final;
+	int            do_stop () noexcept final;
+	void           do_restart () noexcept final;
 	std::string    do_get_last_error () const final;
 
 

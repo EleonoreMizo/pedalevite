@@ -121,11 +121,11 @@ public:
 
 	// Audio
 	void           set_process_info (double sample_freq, int max_block_size);
-	double         get_sample_freq () const;
-	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
+	double         get_sample_freq () const noexcept;
+	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept;
 	MeterResultSet &
-	               use_meters ();
-	float          get_audio_period_ratio () const;
+	               use_meters () noexcept;
+	float          get_audio_period_ratio () const noexcept;
 
 	// Regular commands
 	void           create_plugin_lists ();

@@ -169,21 +169,21 @@ std::pair <bool, int>	RecD2d::process_messages ()
 
 
 
-bool	RecD2d::is_recording () const
+bool	RecD2d::is_recording () const noexcept
 {
 	return _write_flag;
 }
 
 
 
-int64_t	RecD2d::get_size_frames () const
+int64_t	RecD2d::get_size_frames () const noexcept
 {
 	return _file_writer.get_size_frames ();
 }
 
 
 
-void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
+void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl) noexcept
 {
 	assert (chn_arr != nullptr);
 	assert (nbr_spl > 0);
@@ -199,7 +199,15 @@ void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 				// Autogrow flag is set so the call to this function will not be
 				// RT-safe in case of cell starvation, but data won't be lost at
 				// this level.
-				c_ptr = _queue_mgr.use_pool ().take_cell (true);
+				try
+				{
+					c_ptr = _queue_mgr.use_pool ().take_cell (true);
+				}
+				catch (...)
+				{
+					assert (false);
+					c_ptr = nullptr;
+				}
 				if (c_ptr == nullptr)
 				{
 					assert (false);

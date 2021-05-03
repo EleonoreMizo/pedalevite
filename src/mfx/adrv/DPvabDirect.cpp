@@ -134,7 +134,7 @@ DPvabDirect::~DPvabDirect ()
 
 
 
-int	DPvabDirect::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DPvabDirect::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
 	fstb::unused (driver_0, chn_idx_in, chn_idx_out);
 	assert (chn_idx_in == 0);
@@ -164,7 +164,7 @@ int	DPvabDirect::do_init (double &sample_freq, int &max_block_size, CbInterface 
 
 
 
-int	DPvabDirect::do_start ()
+int	DPvabDirect::do_start () noexcept
 {
 	int            ret_val = 0;
 
@@ -227,12 +227,19 @@ int	DPvabDirect::do_start ()
 
 	// Initializes threads and stuff
 	_exit_flag   = false;
-	_thread_main = std::thread (&DPvabDirect::main_loop, this);
+	try
+	{
+		_thread_main = std::thread (&DPvabDirect::main_loop, this);
 #if defined (mfx_adrv_DPvabDirect_TEST)
-	_gpio.run ();
+		_gpio.run ();
 #else // mfx_adrv_DPvabDirect_TEST
-	hw::ThreadLinux::set_priority (_thread_main, 0, nullptr);
+		hw::ThreadLinux::set_priority (_thread_main, 0, nullptr);
 #endif // mfx_adrv_DPvabDirect_TEST
+	}
+	catch (...)
+	{
+		ret_val = -1;
+	}
 
 	if (ret_val == 0)
 	{
@@ -244,17 +251,24 @@ int	DPvabDirect::do_start ()
 
 
 
-int	DPvabDirect::do_stop ()
+int	DPvabDirect::do_stop () noexcept
 {
 	int            ret_val = 0;
 
 	if (_state == State_RUN)
 	{
 		_exit_flag = true;
-		_thread_main.join ();
+		try
+		{
+			_thread_main.join ();
 #if defined (mfx_adrv_DPvabDirect_TEST)
-		_gpio.stop ();
+			_gpio.stop ();
 #endif // mfx_adrv_DPvabDirect_TEST
+		}
+		catch (...)
+		{
+			ret_val = -1;
+		}
 	}
 
 	_state = State_STOP;
@@ -264,7 +278,7 @@ int	DPvabDirect::do_stop ()
 
 
 
-void	DPvabDirect::do_restart ()
+void	DPvabDirect::do_restart () noexcept
 {
 	do_stop ();
 	do_start ();
@@ -296,7 +310,7 @@ DPvabDirect::GpioAccess::GpioAccess ()
 
 
 // This function requires atomic compare-and-swap to be thread-safe.
-void	DPvabDirect::GpioAccess::set_fnc (int gpio, PinFnc fnc) const
+void	DPvabDirect::GpioAccess::set_fnc (int gpio, PinFnc fnc) const noexcept
 {
 	assert (fnc >= 0);
 	assert (fnc < PinFnc_NBR_ELT);
@@ -321,7 +335,7 @@ void	DPvabDirect::GpioAccess::set_fnc (int gpio, PinFnc fnc) const
 
 
 
-void	DPvabDirect::GpioAccess::clear (int gpio) const
+void	DPvabDirect::GpioAccess::clear (int gpio) const noexcept
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -339,7 +353,7 @@ void	DPvabDirect::GpioAccess::clear (int gpio) const
 
 
 
-void	DPvabDirect::GpioAccess::set (int gpio) const
+void	DPvabDirect::GpioAccess::set (int gpio) const noexcept
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -357,7 +371,7 @@ void	DPvabDirect::GpioAccess::set (int gpio) const
 
 
 
-void	DPvabDirect::GpioAccess::write (int gpio, int val) const
+void	DPvabDirect::GpioAccess::write (int gpio, int val) const noexcept
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -374,7 +388,7 @@ void	DPvabDirect::GpioAccess::write (int gpio, int val) const
 
 
 
-int	DPvabDirect::GpioAccess::read (int gpio) const
+int	DPvabDirect::GpioAccess::read (int gpio) const noexcept
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -390,14 +404,14 @@ int	DPvabDirect::GpioAccess::read (int gpio) const
 
 
 
-int	DPvabDirect::GpioAccess::read_cached (int gpio) const
+int	DPvabDirect::GpioAccess::read_cached (int gpio) const noexcept
 {
 	return (_last_read >> gpio) & 1;
 }
 
 
 
-void	DPvabDirect::GpioAccess::pull (int gpio, Pull p) const
+void	DPvabDirect::GpioAccess::pull (int gpio, Pull p) const noexcept
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -434,7 +448,7 @@ void	DPvabDirect::GpioAccess::stop ()
 	_test_thread.join ();
 }
 
-void	DPvabDirect::GpioAccess::fake_data_loop ()
+void	DPvabDirect::GpioAccess::fake_data_loop () noexcept
 {
 	printf ("Device Event   Pos Chn Data\n");
 
@@ -502,7 +516,7 @@ void	DPvabDirect::GpioAccess::fake_data_loop ()
 	}
 }
 
-void	DPvabDirect::GpioAccess::set_fake_bit (int gpio, int val)
+void	DPvabDirect::GpioAccess::set_fake_bit (int gpio, int val) noexcept
 {
 	const uint32_t mask = uint32_t (1) << gpio;
 	if ((_gpio_read & mask) != 0)
@@ -518,7 +532,7 @@ void	DPvabDirect::GpioAccess::set_fake_bit (int gpio, int val)
 	}
 }
 
-void	DPvabDirect::GpioAccess::print_gpio () const
+void	DPvabDirect::GpioAccess::print_gpio () const noexcept
 {
 #if 0 // Very verbose...
 	const uint32_t state = _gpio_state;
@@ -568,7 +582,7 @@ volatile uint32_t *	DPvabDirect::GpioAccess::map_periph (uint32_t base, uint32_t
 
 
 
-void	DPvabDirect::GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio)
+void	DPvabDirect::GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio) noexcept
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -583,6 +597,8 @@ void	DPvabDirect::GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpi
 
 void	DPvabDirect::main_loop ()
 {
+	try
+	{
 	_lrclk_cur     = 0;
 	_btclk_cur     = 0;
 	_clk_cnt       = 0;
@@ -773,6 +789,12 @@ void	DPvabDirect::main_loop ()
 
 	// Waits for the processing thread to terminate
 	thread_proc.join ();
+	}
+	catch (...)
+	{
+		// Nothing
+		assert (false);
+	}
 }
 
 
@@ -780,7 +802,7 @@ void	DPvabDirect::main_loop ()
 // dir:
 // +1: rising edge
 // -1: falling edge
-void	DPvabDirect::sync_to_bclk_edge (int dir)
+void	DPvabDirect::sync_to_bclk_edge (int dir) noexcept
 {
 	assert (dir == 1 || dir == -1);
 
@@ -943,7 +965,7 @@ void	DPvabDirect::proc_loop ()
 
 
 
-void	DPvabDirect::write_reg (uint8_t reg, uint8_t val)
+void	DPvabDirect::write_reg (uint8_t reg, uint8_t val) noexcept
 {
 	assert (_i2c_hnd != -1);
 

@@ -112,10 +112,10 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
-	int            do_start () final;
-	int            do_stop () final;
-	void           do_restart () final;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept final;
+	int            do_start () noexcept final;
+	int            do_stop () noexcept final;
+	void           do_restart () noexcept final;
 	std::string    do_get_last_error () const final;
 
 
@@ -157,22 +157,22 @@ private:
 		};
 		               GpioAccess ();
 		virtual        ~GpioAccess () = default;
-		inline void    set_fnc (int gpio, PinFnc fnc) const;
-		inline void    clear (int gpio) const;
-		inline void    set (int gpio) const;
-		inline void    write (int gpio, int val) const;
-		inline int     read (int gpio) const;
-		inline int     read_cached (int gpio) const;
-		inline void    pull (int gpio, Pull p) const;
+		inline void    set_fnc (int gpio, PinFnc fnc) const noexcept;
+		inline void    clear (int gpio) const noexcept;
+		inline void    set (int gpio) const noexcept;
+		inline void    write (int gpio, int val) const noexcept;
+		inline int     read (int gpio) const noexcept;
+		inline int     read_cached (int gpio) const noexcept;
+		inline void    pull (int gpio, Pull p) const noexcept;
 #if defined (mfx_adrv_DPvabDirect_TEST)
 		void           run ();
 		void           stop ();
 #endif
 	private:
 #if defined (mfx_adrv_DPvabDirect_TEST)
-		void           fake_data_loop ();
-		void           set_fake_bit (int gpio, int val);
-		void           print_gpio () const;
+		void           fake_data_loop () noexcept;
+		void           set_fake_bit (int gpio, int val) noexcept;
+		void           print_gpio () const noexcept;
 #else
 		volatile uint32_t *
 		               map_periph (uint32_t base, uint32_t len);
@@ -230,7 +230,7 @@ private:
 		               _last_read;
 
 		static inline void
-		               find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio);
+		               find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio) noexcept;
 	}; // class GpioAccess
 
 	enum State
@@ -244,13 +244,13 @@ private:
 	static const int  _bclk_timeout = 1 * 1000 * 1000 * 1000; // Number of loops
 	static const int  _block_size_a = (_block_size + 3) & ~3; // Aligned block size
 
-	void           main_loop ();
-	inline void    sync_to_bclk_edge (int dir);
+	void           main_loop () noexcept;
+	inline void    sync_to_bclk_edge (int dir) noexcept;
 	void           proc_loop ();
 
 #if ! defined (mfx_adrv_DPvabDirect_TEST)
 	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
-	void           write_reg (uint8_t reg, uint8_t val);
+	void           write_reg (uint8_t reg, uint8_t val) noexcept;
 	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 #endif
 

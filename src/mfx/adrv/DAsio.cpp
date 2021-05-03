@@ -94,10 +94,13 @@ DAsio::~DAsio ()
 
 
 
-int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
 	assert (_state == State_UNLOADED);
 	int            ret_val = 0;
+
+	try
+	{
 	::ASIOError    err     = ::ASE_OK;
 
 	_msg_err.clear ();
@@ -308,6 +311,12 @@ int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 		}
 	}
 
+	}
+	catch (...)
+	{
+		ret_val = -1;
+	}
+
 	if (ret_val == 0)
 	{
 		_sample_freq = sample_freq;
@@ -319,7 +328,7 @@ int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 
 
 
-int	DAsio::do_start ()
+int	DAsio::do_start () noexcept
 {
 	assert (_state == State_PREPARED);
 
@@ -338,7 +347,7 @@ int	DAsio::do_start ()
 
 
 
-int	DAsio::do_stop ()
+int	DAsio::do_stop () noexcept
 {
 	_msg_err.clear ();
 
@@ -380,7 +389,7 @@ int	DAsio::do_stop ()
 
 
 
-void	DAsio::do_restart ()
+void	DAsio::do_restart () noexcept
 {
 	/*** To do ***/
 }
@@ -398,7 +407,7 @@ std::string	DAsio::do_get_last_error () const
 
 
 
-void	DAsio::process_block (long buf_index)
+void	DAsio::process_block (long buf_index) noexcept
 {
 	const int      buf_alig_sz = (_block_size + 3) & -4;
 

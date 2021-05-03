@@ -52,9 +52,9 @@ public:
 		SHUTDOWN
 	};
 
-	CmdLine &      use_cmd_line ();
-	void           request (Type type);
-	bool           is_exit_requested () const;
+	CmdLine &      use_cmd_line () noexcept;
+	void           request (Type type) noexcept;
+	bool           is_exit_requested () const noexcept;
 	void           process_request ();
 
 

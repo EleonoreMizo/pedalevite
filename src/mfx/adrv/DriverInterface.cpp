@@ -41,7 +41,7 @@ namespace adrv
 
 
 
-int	DriverInterface::init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DriverInterface::init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
 	assert (driver_0 == nullptr || driver_0 [0] != '\0');
 	assert (chn_idx_in  >= 0);
@@ -63,21 +63,21 @@ int	DriverInterface::init (double &sample_freq, int &max_block_size, CbInterface
 
 
 
-int	DriverInterface::start ()
+int	DriverInterface::start () noexcept
 {
 	return do_start ();
 }
 
 
 
-int	DriverInterface::stop ()
+int	DriverInterface::stop () noexcept
 {
 	return do_stop ();
 }
 
 
 
-void	DriverInterface::restart ()
+void	DriverInterface::restart () noexcept
 {
 	do_restart ();
 }

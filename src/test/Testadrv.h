@@ -59,9 +59,9 @@ private:
 		bool           is_exit_requested () const;
 		bool           check_dropout ();
 	protected:
-		void           do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) override;
-		void           do_notify_dropout () override;
-		void           do_request_exit () override;
+		void           do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept override;
+		void           do_notify_dropout () noexcept override;
+		void           do_request_exit () noexcept override;
 	private:
 		std::atomic <bool>
 		               _request_exit_flag { false };

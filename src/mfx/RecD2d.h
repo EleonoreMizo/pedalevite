@@ -60,11 +60,11 @@ public:
 	int            close_file ();
 	std::pair <bool, int>
 	               process_messages ();
-	bool           is_recording () const;
-	int64_t        get_size_frames () const;
+	bool           is_recording () const noexcept;
+	int64_t        get_size_frames () const noexcept;
 
 	// RT thread
-	void           write_data (const float * const chn_arr [], int nbr_spl);
+	void           write_data (const float * const chn_arr [], int nbr_spl) noexcept;
 
 
 

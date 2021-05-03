@@ -89,10 +89,10 @@ public:
 
 	// Audio
 	void           set_process_info (double sample_freq, int max_block_size);
-	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
+	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept;
 	MeterResultSet &
-	               use_meters ();
-	float          get_audio_period_ratio () const;
+	               use_meters () noexcept;
+	float          get_audio_period_ratio () const noexcept;
 
 	// Transactionnal operations
 	void           commit ();

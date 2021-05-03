@@ -270,9 +270,9 @@ protected:
 	// mfx::ModelObserverDefault
 	void           do_set_tuner (bool active_flag) final;
 	// mfx::adrv:CbInterface
-	void           do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) final;
-	void           do_notify_dropout () final;
-	void           do_request_exit () final;
+	void           do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept final;
+	void           do_notify_dropout () noexcept final;
+	void           do_request_exit () noexcept final;
 private:
 	static void    init_empty_bank (mfx::doc::Bank &bank);
 #if (fstb_SYS == fstb_SYS_LINUX)
@@ -485,14 +485,14 @@ void	Context::do_set_tuner (bool active_flag)
 
 
 
-void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept
 {
 	_model.process_block (dst_arr, src_arr, nbr_spl);
 }
 
 
 
-void	Context::do_notify_dropout ()
+void	Context::do_notify_dropout () noexcept
 {
 	mfx::MeterResultSet &   meters = _model.use_meters ();
 	meters._dsp_overload_flag.exchange (true);
@@ -500,7 +500,7 @@ void	Context::do_notify_dropout ()
 
 
 
-void	Context::do_request_exit ()
+void	Context::do_request_exit () noexcept
 {
 	_stop.request (mfx::Stop::Type::QUIT);
 }

@@ -1529,18 +1529,18 @@ public:
 	CbDPvabDirect () = default;
 	virtual ~CbDPvabDirect () = default;
 protected:
-	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) noexcept
 	{
 		// Copies input to output
 		mfx::dsp::mix::Generic::copy_2_2 (
 			dst_arr [0], dst_arr [1], src_arr [0], src_arr [1], nbr_spl
 		);
 	}
-	virtual void   do_notify_dropout ()
+	virtual void   do_notify_dropout () noexcept
 	{
 		// Nothing
 	}
-	virtual void   do_request_exit ()
+	virtual void   do_request_exit () noexcept
 	{
 		// Nothing
 	}

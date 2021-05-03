@@ -47,21 +47,21 @@ namespace mfx
 
 
 
-CmdLine &	Stop::use_cmd_line ()
+CmdLine &	Stop::use_cmd_line () noexcept
 {
 	return _cmd_line;
 }
 
 
 
-void	Stop::request (Type type)
+void	Stop::request (Type type) noexcept
 {
 	_request.store (type);
 }
 
 
 
-bool	Stop::is_exit_requested () const
+bool	Stop::is_exit_requested () const noexcept
 {
 	return (_request.load () != Type::NONE);
 }

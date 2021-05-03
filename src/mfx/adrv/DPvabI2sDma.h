@@ -135,9 +135,9 @@ public:
 		_nbr_buf
 	> BufferDump;
 
-	PosIO          get_dma_pos () const;
-	uint32_t       get_pcm_status () const;
-	BufferDump     dump_buf_in () const;
+	PosIO          get_dma_pos () const noexcept;
+	uint32_t       get_pcm_status () const noexcept;
+	BufferDump     dump_buf_in () const noexcept;
 
 
 
@@ -146,10 +146,10 @@ public:
 protected:
 
 	// DriverInterface
-	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
-	int            do_start () final;
-	int            do_stop () final;
-	void           do_restart () final;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept final;
+	int            do_start () noexcept final;
+	int            do_stop () noexcept final;
+	void           do_restart () noexcept final;
 	std::string    do_get_last_error () const final;
 
 
@@ -190,14 +190,14 @@ private:
 		State_NBR_ELT
 	};
 
-	void           close_i2c ();
-	void           main_loop ();
-	void           build_dma_ctrl_block_list ();
-	void           process_block (int buf_idx);
-	inline void    write_reg (uint8_t reg, uint8_t val);
+	void           close_i2c () noexcept;
+	void           main_loop () noexcept;
+	void           build_dma_ctrl_block_list () noexcept;
+	void           process_block (int buf_idx) noexcept;
+	inline void    write_reg (uint8_t reg, uint8_t val) noexcept;
 
-	static double  read_rt_ratio ();
-	static int     read_value_from_file (long long &val, const char *filename_0);
+	static double  read_rt_ratio () noexcept;
+	static int     read_value_from_file (long long &val, const char *filename_0) noexcept;
 
 	// Virtual base address for the peripherals
 	uint32_t       _periph_base_addr;

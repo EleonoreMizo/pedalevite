@@ -76,7 +76,7 @@ DJack::~DJack ()
 
 
 
-int	DJack::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DJack::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) noexcept
 {
 	fstb::unused (driver_0);
 
@@ -119,7 +119,7 @@ int	DJack::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 
 
 
-int	DJack::do_start ()
+int	DJack::do_start () noexcept
 {
 	int            ret_val = 0;
 
@@ -263,14 +263,14 @@ int	DJack::do_start ()
 
 
 
-void	DJack::do_restart ()
+void	DJack::do_restart () noexcept
 {
 	/*** To do ***/
 }
 
 
 
-int	DJack::do_stop ()
+int	DJack::do_stop () noexcept
 {
 	_msg_err.clear ();
 
@@ -296,7 +296,7 @@ std::string	DJack::do_get_last_error () const
 
 
 
-void	DJack::process_block (int nbr_spl)
+void	DJack::process_block (int nbr_spl) noexcept
 {
 	std::array <const jack_default_audio_sample_t *, _nbr_chn>  src_arr;
 	std::array <      jack_default_audio_sample_t *, _nbr_chn>  dst_arr;
@@ -315,7 +315,7 @@ void	DJack::process_block (int nbr_spl)
 
 
 
-void	DJack::jack_shutdown (void *arg)
+void	DJack::jack_shutdown (void *arg) noexcept
 {
 	fprintf (stderr, "\nJack exited, exiting too...\n");
 	DJack &        obj = *reinterpret_cast <DJack *> (arg);
@@ -324,7 +324,7 @@ void	DJack::jack_shutdown (void *arg)
 
 
 
-int	DJack::notify_audio_dropout (void *arg)
+int	DJack::notify_audio_dropout (void *arg) noexcept
 {
 	DJack &        obj = *reinterpret_cast <DJack *> (arg);
 	obj._cb_ptr->notify_dropout ();
@@ -334,7 +334,7 @@ int	DJack::notify_audio_dropout (void *arg)
 
 
 
-int	DJack::process_jack (::jack_nframes_t nbr_spl, void *arg)
+int	DJack::process_jack (::jack_nframes_t nbr_spl, void *arg) noexcept
 {
 	DJack &        obj = *reinterpret_cast <DJack *> (arg);
 	obj.process_block (nbr_spl);
