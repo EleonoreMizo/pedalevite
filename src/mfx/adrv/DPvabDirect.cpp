@@ -595,7 +595,7 @@ void	DPvabDirect::GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpi
 
 
 
-void	DPvabDirect::main_loop ()
+void	DPvabDirect::main_loop () noexcept
 {
 	try
 	{

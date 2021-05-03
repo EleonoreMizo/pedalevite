@@ -221,7 +221,7 @@ int	DAlsa::do_stop () noexcept
 			_thread_audio.join ();
 		}
 	}
-	catch
+	catch (...)
 	{
 		ret_val = -1;
 	}
@@ -293,7 +293,7 @@ std::string	DAlsa::do_get_last_error () const
 
 
 
-int	DAlsa::configure_alsa_audio (int dir)
+int	DAlsa::configure_alsa_audio (int dir) noexcept
 {
 	int            ret_val = 0;
 
