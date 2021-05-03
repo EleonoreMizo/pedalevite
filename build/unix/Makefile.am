@@ -864,6 +864,8 @@ commonsrc = \
         ../../src/mfx/dsp/wnd/XFadeEqAmpPoly3.hpp \
         ../../src/mfx/dsp/wnd/XFadeEqAmpSin.h \
         ../../src/mfx/dsp/wnd/XFadeEqAmpSin.hpp \
+        ../../src/mfx/dsp/wnd/XFadeEqPowC2.h \
+        ../../src/mfx/dsp/wnd/XFadeEqPowC2.hpp \
         ../../src/mfx/dsp/wnd/XFadeEqPowPoly8.h \
         ../../src/mfx/dsp/wnd/XFadeEqPowPoly8.hpp \
         ../../src/mfx/dsp/BandSplitAllPassPair.h \

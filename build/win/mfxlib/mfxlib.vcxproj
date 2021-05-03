@@ -1225,6 +1225,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpPoly3.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpSin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpSin.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowC2.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowC2.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowPoly8.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowPoly8.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpLin.h" />
