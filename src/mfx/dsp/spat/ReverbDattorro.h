@@ -64,23 +64,23 @@ public:
 
 	void           set_sample_freq (double sample_freq);
 
-	void           set_room_size (float sz);
-	void           set_decay (float decay);
-	void           set_shimmer_pitch (float cents, bool all_flag);
-	void           set_diffusion_input (float amount);
-	void           set_diffusion_tank (float amount);
-	void           set_filter_input_bp (float lo, float hi);
-	void           set_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
-	void           set_filter_tank_bp (float lo, float hi);
-	void           set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m, bool override_freeze_flag = false);
-	void           freeze_tank (bool freeze_flag);
+	void           set_room_size (float sz) noexcept;
+	void           set_decay (float decay) noexcept;
+	void           set_shimmer_pitch (float cents, bool all_flag) noexcept;
+	void           set_diffusion_input (float amount) noexcept;
+	void           set_diffusion_tank (float amount) noexcept;
+	void           set_filter_input_bp (float lo, float hi) noexcept;
+	void           set_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept;
+	void           set_filter_tank_bp (float lo, float hi) noexcept;
+	void           set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m, bool override_freeze_flag = false) noexcept;
+	void           freeze_tank (bool freeze_flag) noexcept;
 	
 	std::pair <float, float>
-	               process_sample (float xl, float xr);
-	void           process_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl);
-	void           flush_tank ();
+	               process_sample (float xl, float xr) noexcept;
+	void           process_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl) noexcept;
+	void           flush_tank () noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -163,19 +163,19 @@ private:
 		float          _v2m  = 0;
 	};
 
-	void           update_diffusion_input ();
-	void           update_diffusion_tank ();
-	void           update_delay_times ();
-	void           compute_update_filter (FilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m));
-	void           compute_filter_coef (FilterSpec &spec) const;
-	void           update_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
-	void           update_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
-	void           reset_lfo ();
-	inline void    process_predelay (float &xl, float &xr);
-	void           process_predelay_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl);
-	float          process_modulation (ModDlyState &mds);
-	void           process_modulation_block (int32_t dly_ptr [], ModDlyState &mds, int nbr_spl);
-	inline void    check_mod_counters (ModDlyState &mds);
+	void           update_diffusion_input () noexcept;
+	void           update_diffusion_tank () noexcept;
+	void           update_delay_times () noexcept;
+	void           compute_update_filter (FilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m)) noexcept;
+	void           compute_filter_coef (FilterSpec &spec) const noexcept;
+	void           update_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept;
+	void           update_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept;
+	void           reset_lfo () noexcept;
+	inline void    process_predelay (float &xl, float &xr) noexcept;
+	void           process_predelay_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl) noexcept;
+	float          process_modulation (ModDlyState &mds) noexcept;
+	void           process_modulation_block (int32_t dly_ptr [], ModDlyState &mds, int nbr_spl) noexcept;
+	inline void    check_mod_counters (ModDlyState &mds) noexcept;
 
 	float          _sample_freq = 0; // Hz, > 0. 0 = not set
 	float          _inv_fs      = 0; // s, > 0. 0 = not set

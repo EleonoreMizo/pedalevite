@@ -66,12 +66,12 @@ public:
 	FreeverbCore & operator = (FreeverbCore &&other)        = default;
 
 	void           reset (double sample_freq, int max_buf_len);
-	void           set_reflectivity (float fdbk);
-	void           set_reflectivity (float fdbk, int chn_index);
-	void           set_damp (float damp);
-	void           set_damp (float damp, int chn_index);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, int chn_index);
-	void           clear_buffers ();
+	void           set_reflectivity (float fdbk) noexcept;
+	void           set_reflectivity (float fdbk, int chn_index) noexcept;
+	void           set_damp (float damp) noexcept;
+	void           set_damp (float damp, int chn_index) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, int chn_index) noexcept;
+	void           clear_buffers () noexcept;
 
 	static const float
 	               _scalewet;
@@ -105,7 +105,7 @@ private:
 
 	typedef std::array <Channel, _max_nbr_chn> ChnArray;
 
-	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
+	double         _sample_freq = 0;    // Hz, > 0. <= 0: not initialized
 	ChnArray       _chn_arr;
 	std::vector <float, fstb::AllocAlign <float, 16> >
 	               _buf;

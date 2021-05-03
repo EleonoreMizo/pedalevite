@@ -43,7 +43,7 @@ namespace shape
 
 
 
-void	DistAttract::set_sample_freq (double sample_freq)
+void	DistAttract::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -56,7 +56,7 @@ void	DistAttract::set_sample_freq (double sample_freq)
 
 
 
-void	DistAttract::clear_buffers ()
+void	DistAttract::clear_buffers () noexcept
 {
 	_mad_flag = false;
 	_cur_val = 0;
@@ -65,7 +65,7 @@ void	DistAttract::clear_buffers ()
 
 
 
-void	DistAttract::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DistAttract::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);

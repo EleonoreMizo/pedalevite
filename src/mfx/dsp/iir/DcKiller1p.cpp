@@ -44,7 +44,7 @@ namespace iir
 
 
 
-void	DcKiller1p::set_sample_freq (double sample_freq)
+void	DcKiller1p::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -55,7 +55,7 @@ void	DcKiller1p::set_sample_freq (double sample_freq)
 
 
 
-void	DcKiller1p::set_cutoff_freq (float f0)
+void	DcKiller1p::set_cutoff_freq (float f0) noexcept
 {
 	assert (f0 > 0);
 
@@ -68,7 +68,7 @@ void	DcKiller1p::set_cutoff_freq (float f0)
 
 
 
-void	DcKiller1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DcKiller1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);
@@ -80,7 +80,7 @@ void	DcKiller1p::process_block (float dst_ptr [], const float src_ptr [], int nb
 
 
 
-void	DcKiller1p::clear_buffers ()
+void	DcKiller1p::clear_buffers () noexcept
 {
 	_filter.clear_buffers ();
 }
@@ -95,7 +95,7 @@ void	DcKiller1p::clear_buffers ()
 
 
 
-void	DcKiller1p::update_z_eq ()
+void	DcKiller1p::update_z_eq () noexcept
 {
 	assert (_sample_freq > 0);
 

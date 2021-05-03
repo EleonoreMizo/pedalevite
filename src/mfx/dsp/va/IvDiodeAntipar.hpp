@@ -41,7 +41,7 @@ namespace va
 
 
 
-void	IvDiodeAntipar::set_d1_is (float is)
+void	IvDiodeAntipar::set_d1_is (float is) noexcept
 {
 	assert (is >= 1e-20f);
 	assert (is <= 0.1f);
@@ -51,7 +51,7 @@ void	IvDiodeAntipar::set_d1_is (float is)
 
 
 
-void	IvDiodeAntipar::set_d2_is (float is)
+void	IvDiodeAntipar::set_d2_is (float is) noexcept
 {
 	assert (is >= 1e-20f);
 	assert (is <= 0.1f);
@@ -61,7 +61,7 @@ void	IvDiodeAntipar::set_d2_is (float is)
 
 
 
-void	IvDiodeAntipar::set_d1_n (float n)
+void	IvDiodeAntipar::set_d1_n (float n) noexcept
 {
 	assert (n > 0);
 
@@ -72,7 +72,7 @@ void	IvDiodeAntipar::set_d1_n (float n)
 
 
 
-void	IvDiodeAntipar::set_d2_n (float n)
+void	IvDiodeAntipar::set_d2_n (float n) noexcept
 {
 	assert (n > 0);
 
@@ -83,7 +83,7 @@ void	IvDiodeAntipar::set_d2_n (float n)
 
 
 
-void	IvDiodeAntipar::eval (float &y, float &dy, float x) const
+void	IvDiodeAntipar::eval (float &y, float &dy, float x) const noexcept
 {
 	const float    me = (x >= 0) ? _is1 : -_is2;
 	const float    mv = (x >= 0) ? _mv1 :  _mv2;
@@ -93,7 +93,7 @@ void	IvDiodeAntipar::eval (float &y, float &dy, float x) const
 
 
 
-float	IvDiodeAntipar::get_max_step (float x) const
+float	IvDiodeAntipar::get_max_step (float x) const noexcept
 {
 	return (x < 0) ? _max_step_1 : _max_step_2;
 }
@@ -108,14 +108,14 @@ float	IvDiodeAntipar::get_max_step (float x) const
 
 
 
-float	IvDiodeAntipar::compute_max_step (float n) const
+float	IvDiodeAntipar::compute_max_step (float n) const noexcept
 {
 	return _vt * n * 4;
 }
 
 
 
-float	IvDiodeAntipar::compute_mv (float n) const
+float	IvDiodeAntipar::compute_mv (float n) const noexcept
 {
 	return 1 / (_vt * n);
 }

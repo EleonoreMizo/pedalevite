@@ -52,16 +52,16 @@ public:
 	               ~AllPass1p ()                       = default;
 	AllPass1p &    operator = (const AllPass1p &other) = default;
 
-	inline void    set_coef (float b0);
-	inline float   get_coef () const;
-	inline void    copy_z_eq (const AllPass1p &other);
+	inline void    set_coef (float b0) noexcept;
+	inline float   get_coef () const noexcept;
+	inline void    copy_z_eq (const AllPass1p &other) noexcept;
 
-	inline float   process_sample (float x);
-	inline float   process_sample (float x, float inc_b0);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float inc_b0);
+	inline float   process_sample (float x) noexcept;
+	inline float   process_sample (float x, float inc_b0) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float inc_b0) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -75,7 +75,7 @@ protected:
 
 private:
 
-	inline void    step_z_eq (float inc_b0);
+	inline void    step_z_eq (float inc_b0) noexcept;
 
 	float          _eq_z_b0 = 0;  // Direct coefficients, order 0
 

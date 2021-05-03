@@ -40,7 +40,7 @@ namespace va
 
 
 
-void	AntisatAtanh::eval (float &y, float &dy, float x)
+void	AntisatAtanh::eval (float &y, float &dy, float x) noexcept
 {
 	const float    th = tanh_fast (x);
 	y  =     th;
@@ -49,7 +49,7 @@ void	AntisatAtanh::eval (float &y, float &dy, float x)
 
 
 
-float AntisatAtanh::eval_inv (float y)
+float AntisatAtanh::eval_inv (float y) noexcept
 {
 	assert (y > -1);
 	assert (y <  1);
@@ -67,7 +67,7 @@ float AntisatAtanh::eval_inv (float y)
 
 
 
-float	AntisatAtanh::tanh_fast (float x)
+float	AntisatAtanh::tanh_fast (float x) noexcept
 {
 	const float    e2x = fstb::Approx::exp2 (x * float (2 * fstb::LOG2_E));
 	const float    th  = (e2x - 1) / (e2x + 1);
@@ -77,7 +77,7 @@ float	AntisatAtanh::tanh_fast (float x)
 
 
 
-float	AntisatAtanh::atanh_fast (float x)
+float	AntisatAtanh::atanh_fast (float x) noexcept
 {
 	const float    u     = (1 + x) / (1 - x);
 	const float    log2u = fstb::Approx::log2 (u);

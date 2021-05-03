@@ -66,19 +66,19 @@ public:
 
 	static const int  _max_reso = 4;
 
-	void           set_sample_freq (double sample_freq);
+	void           set_sample_freq (double sample_freq) noexcept;
 
-	void           set_freq (float freq);
-	void           set_reso (float reso);
-	void           set_gain_comp (float gc);
-	void           set_freq_comp (bool comp_flag);
-	float          process_sample (float x);
-	float          process_sample (float x, float stage_in_ptr [4]);
-	float          process_sample_pitch_mod (float x, float m);
-	float          process_sample_pitch_mod (float x, float m, float stage_in_ptr [4]);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl);
-	void           clear_buffers ();
+	void           set_freq (float freq) noexcept;
+	void           set_reso (float reso) noexcept;
+	void           set_gain_comp (float gc) noexcept;
+	void           set_freq_comp (bool comp_flag) noexcept;
+	float          process_sample (float x) noexcept;
+	float          process_sample (float x, float stage_in_ptr [4]) noexcept;
+	float          process_sample_pitch_mod (float x, float m) noexcept;
+	float          process_sample_pitch_mod (float x, float m, float stage_in_ptr [4]) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -95,13 +95,13 @@ private:
 	typedef std::array <float, 4> StateArray;
 
 	fstb_FORCEINLINE float
-	               process_sample_internal (float x, float f, float &xx, float &y0, float &y1, float &y2);
-	inline void    update_gaincomp ();
-	inline void    update_cutoff ();
-	float          compute_alpha (float k) const;
+	               process_sample_internal (float x, float f, float &xx, float &y0, float &y1, float &y2) noexcept;
+	inline void    update_gaincomp () noexcept;
+	inline void    update_cutoff () noexcept;
+	float          compute_alpha (float k) const noexcept;
 
 	static inline constexpr float
-	               tanh_xdx (float x);
+	               tanh_xdx (float x) noexcept;
 
 	float          _sample_freq = 0;    // Sampling rate, Hz. 0 = not set
 	float          _piofs       = 0;    // pi / fs. 0 = not set

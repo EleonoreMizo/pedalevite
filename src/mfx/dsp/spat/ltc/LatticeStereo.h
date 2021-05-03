@@ -59,15 +59,15 @@ public:
 	typedef typename Delay::DataType DataType;
 
 	fstb_FORCEINLINE D &
-	               use_delay (int chn, int idx);
+	               use_delay (int chn, int idx) noexcept;
 	fstb_FORCEINLINE void
-	               set_coef (int chn, int idx, DataType c);
+	               set_coef (int chn, int idx, DataType c) noexcept;
 	fstb_FORCEINLINE void
-	               set_cross_feedback (DataType cf);
+	               set_cross_feedback (DataType cf) noexcept;
 
 	fstb_FORCEINLINE std::pair <DataType, DataType>
-	               process_sample (DataType xl, DataType xr);
-	void           clear_buffers ();
+	               process_sample (DataType xl, DataType xr) noexcept;
+	void           clear_buffers () noexcept;
 
 
 

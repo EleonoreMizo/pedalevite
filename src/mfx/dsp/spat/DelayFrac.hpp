@@ -42,7 +42,7 @@ namespace spat
 
 
 template <typename T>
-static void	DelayFrac_interpolate_block_std (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
+static void	DelayFrac_interpolate_block_std (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len) noexcept
 {
 	const T        i0 { phase_ptr [0] };
 	const T        i1 { phase_ptr [1] };
@@ -81,7 +81,7 @@ static void	DelayFrac_interpolate_block_std (T * fstb_RESTRICT dst_ptr, const T 
 
 
 template <typename T>
-static fstb_FORCEINLINE void	DelayFrac_interpolate_block (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
+static fstb_FORCEINLINE void	DelayFrac_interpolate_block (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len) noexcept
 {
 	DelayFrac_interpolate_block_std (dst_ptr, src_ptr, phase_ptr, len);
 }
@@ -89,7 +89,7 @@ static fstb_FORCEINLINE void	DelayFrac_interpolate_block (T * fstb_RESTRICT dst_
 #if defined (fstb_HAS_SIMD)
 
 template <>
-inline void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
+inline void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len) noexcept
 {
 	const auto     i0 = fstb::ToolsSimd::set1_f32 (phase_ptr [0]);
 	const auto     i1 = fstb::ToolsSimd::set1_f32 (phase_ptr [1]);
@@ -203,7 +203,7 @@ void	DelayFrac <T, NPL2>::set_max_len (int len)
 
 
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::set_delay_flt (float len_spl)
+void	DelayFrac <T, NPL2>::set_delay_flt (float len_spl) noexcept
 {
 	set_delay_fix (fstb::conv_int_fast (len_spl * _nbr_phases));
 }
@@ -212,7 +212,7 @@ void	DelayFrac <T, NPL2>::set_delay_flt (float len_spl)
 
 // len_fixp = samples * _nbr_phases
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::set_delay_fix (int len_fixp)
+void	DelayFrac <T, NPL2>::set_delay_fix (int len_fixp) noexcept
 {
 	assert (len_fixp >= _delay_min * _nbr_phases);
 
@@ -223,7 +223,7 @@ void	DelayFrac <T, NPL2>::set_delay_fix (int len_fixp)
 
 // Returns the integer part of the current delay.
 template <typename T, int NPL2>
-int	DelayFrac <T, NPL2>::get_delay_len_int () const
+int	DelayFrac <T, NPL2>::get_delay_len_int () const noexcept
 {
 	assert (_phase_ptr != nullptr);
 
@@ -233,7 +233,7 @@ int	DelayFrac <T, NPL2>::get_delay_len_int () const
 
 
 template <typename T, int NPL2>
-T	DelayFrac <T, NPL2>::read () const
+T	DelayFrac <T, NPL2>::read () const noexcept
 {
 	assert (_phase_ptr != nullptr);
 
@@ -245,7 +245,7 @@ T	DelayFrac <T, NPL2>::read () const
 // Non-interpolated read at random position
 // Not constrained by the current delay length
 template <typename T, int NPL2>
-T	DelayFrac <T, NPL2>::read_at (int delay) const
+T	DelayFrac <T, NPL2>::read_at (int delay) const noexcept
 {
 	assert (delay > 0);
 	assert (delay <= _delay_len);
@@ -256,7 +256,7 @@ T	DelayFrac <T, NPL2>::read_at (int delay) const
 
 
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::write (T x)
+void	DelayFrac <T, NPL2>::write (T x) noexcept
 {
 	assert (_phase_ptr != nullptr);
 
@@ -266,7 +266,7 @@ void	DelayFrac <T, NPL2>::write (T x)
 
 
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::step ()
+void	DelayFrac <T, NPL2>::step () noexcept
 {
 	assert (_phase_ptr != nullptr);
 
@@ -276,7 +276,7 @@ void	DelayFrac <T, NPL2>::step ()
 
 
 template <typename T, int NPL2>
-T	DelayFrac <T, NPL2>::process_sample (T x)
+T	DelayFrac <T, NPL2>::process_sample (T x) noexcept
 {
 	assert (_phase_ptr != nullptr);
 
@@ -291,7 +291,7 @@ T	DelayFrac <T, NPL2>::process_sample (T x)
 
 // Returns the maximum block length when processing with feedback
 template <typename T, int NPL2>
-int	DelayFrac <T, NPL2>::get_max_block_len () const
+int	DelayFrac <T, NPL2>::get_max_block_len () const noexcept
 {
 	assert (_phase_ptr != nullptr);
 
@@ -301,7 +301,7 @@ int	DelayFrac <T, NPL2>::get_max_block_len () const
 
 
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::read_block (T dst_ptr [], int len) const
+void	DelayFrac <T, NPL2>::read_block (T dst_ptr [], int len) const noexcept
 {
 	assert (_phase_ptr != nullptr);
 	assert (len > 0);
@@ -347,7 +347,7 @@ void	DelayFrac <T, NPL2>::read_block (T dst_ptr [], int len) const
 
 // Delay is updated with the last dly_fix_ptr value
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::read_block_var_dly (T dst_ptr [], const int32_t dly_fix_ptr [], int len)
+void	DelayFrac <T, NPL2>::read_block_var_dly (T dst_ptr [], const int32_t dly_fix_ptr [], int len) noexcept
 {
 	assert (_phase_ptr != nullptr);
 	assert (len > 0);
@@ -373,7 +373,7 @@ void	DelayFrac <T, NPL2>::read_block_var_dly (T dst_ptr [], const int32_t dly_fi
 // Non-interpolated read at random position
 // Not constrained by the current delay length
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const
+void	DelayFrac <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const noexcept
 {
 	assert (delay >= 0);
 	assert (delay <= _delay_len);
@@ -395,7 +395,7 @@ void	DelayFrac <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const
 
 
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::write_block (const T src_ptr [], int len)
+void	DelayFrac <T, NPL2>::write_block (const T src_ptr [], int len) noexcept
 {
 	assert (_phase_ptr != nullptr);
 	assert (src_ptr != 0);
@@ -416,7 +416,7 @@ void	DelayFrac <T, NPL2>::write_block (const T src_ptr [], int len)
 
 
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::step_block (int len)
+void	DelayFrac <T, NPL2>::step_block (int len) noexcept
 {
 	assert (_phase_ptr != nullptr);
 	assert (len > 0);
@@ -428,7 +428,7 @@ void	DelayFrac <T, NPL2>::step_block (int len)
 
 
 template <typename T, int NPL2>
-void	DelayFrac <T, NPL2>::clear_buffers ()
+void	DelayFrac <T, NPL2>::clear_buffers () noexcept
 {
 	std::fill (_buffer.begin (), _buffer.end (), T (0.f));
 	_pos_write = 0;
@@ -462,7 +462,7 @@ typename DelayFrac <T, NPL2>::PhaseArray	DelayFrac <T, NPL2>::_phase_arr;
 
 
 template <typename T, int NPL2>
-T	DelayFrac <T, NPL2>::read_safe (int pos_read, const Phase &phase) const
+T	DelayFrac <T, NPL2>::read_safe (int pos_read, const Phase &phase) const noexcept
 {
 	const T        v0 { _buffer [(pos_read - 2) & _buf_msk] };
 	const T        v1 { _buffer [(pos_read - 1) & _buf_msk] };
@@ -490,7 +490,7 @@ T	DelayFrac <T, NPL2>::read_safe (int pos_read, const Phase &phase) const
 
 
 template <typename T, int NPL2>
-T	DelayFrac <T, NPL2>::read_nocheck (int pos_read, const Phase &phase) const
+T	DelayFrac <T, NPL2>::read_nocheck (int pos_read, const Phase &phase) const noexcept
 {
 	const T        v0 { _buffer [pos_read - 2] };
 	const T        v1 { _buffer [pos_read - 1] };
@@ -509,7 +509,7 @@ T	DelayFrac <T, NPL2>::read_nocheck (int pos_read, const Phase &phase) const
 
 
 template <typename T, int NPL2>
-void  DelayFrac <T, NPL2>::find_phase_and_delay (const Phase * &phase_ptr, int &delay_int, int &delay_frc, int len_fixp) const
+void  DelayFrac <T, NPL2>::find_phase_and_delay (const Phase * &phase_ptr, int &delay_int, int &delay_frc, int len_fixp) const noexcept
 {
 	assert (len_fixp >= _delay_min * _nbr_phases);
 
@@ -522,7 +522,7 @@ void  DelayFrac <T, NPL2>::find_phase_and_delay (const Phase * &phase_ptr, int &
 
 
 template <typename T, int NPL2>
-void  DelayFrac <T, NPL2>::init_interpolator ()
+void  DelayFrac <T, NPL2>::init_interpolator () noexcept
 {
 	// We use a cubic hermite interpolator to build the FIR.
 	// Probably not optimal but close enough to rock'n'roll.

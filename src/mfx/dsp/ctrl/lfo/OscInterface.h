@@ -65,20 +65,20 @@ public:
 	virtual OscInterface &
 	               operator = (OscInterface &&other)        = default;
 
-	inline void    set_sample_freq (double sample_freq);
-	inline void    set_period (double per);
-	inline void    set_phase (double phase);
-	inline void    set_chaos (double chaos);
-	inline void    set_phase_dist (double dist);
-	inline void    set_phase_dist_offset (double ofs);
-	inline void    set_sign (bool inv_flag);
-	inline void    set_polarity (bool unipolar_flag);
-	inline void    set_variation (int param, double val);
-	inline bool    is_using_variation (int param) const;
-	inline void    tick (int nbr_spl);
-	inline double  get_val () const;
-	inline double  get_phase () const;
-	inline void    clear_buffers ();
+	inline void    set_sample_freq (double sample_freq) noexcept;
+	inline void    set_period (double per) noexcept;
+	inline void    set_phase (double phase) noexcept;
+	inline void    set_chaos (double chaos) noexcept;
+	inline void    set_phase_dist (double dist) noexcept;
+	inline void    set_phase_dist_offset (double ofs) noexcept;
+	inline void    set_sign (bool inv_flag) noexcept;
+	inline void    set_polarity (bool unipolar_flag) noexcept;
+	inline void    set_variation (int param, double val) noexcept;
+	inline bool    is_using_variation (int param) const noexcept;
+	inline void    tick (int nbr_spl) noexcept;
+	inline double  get_val () const noexcept;
+	inline double  get_phase () const noexcept;
+	inline void    clear_buffers () noexcept;
 
 
 
@@ -87,19 +87,19 @@ public:
 protected:
 
 	virtual void   do_set_sample_freq (double sample_freq) = 0;
-	virtual void   do_set_period (double per) = 0;
-	virtual void   do_set_phase (double phase) = 0;
-	virtual void   do_set_chaos (double chaos) = 0;
-	virtual void   do_set_phase_dist (double dist) = 0;
-	virtual void   do_set_phase_dist_offset (double ofs) = 0;
-	virtual void   do_set_sign (bool inv_flag) = 0;
-	virtual void   do_set_polarity (bool unipolar_flag) = 0;
-	virtual void   do_set_variation (int param, double val) = 0;
-	virtual bool   do_is_using_variation (int param) const = 0;
-	virtual void   do_tick (int nbr_spl) = 0;
-	virtual double do_get_val () const = 0;
-	virtual double do_get_phase () const = 0;
-	virtual void   do_clear_buffers () = 0;
+	virtual void   do_set_period (double per) noexcept = 0;
+	virtual void   do_set_phase (double phase) noexcept = 0;
+	virtual void   do_set_chaos (double chaos) noexcept = 0;
+	virtual void   do_set_phase_dist (double dist) noexcept = 0;
+	virtual void   do_set_phase_dist_offset (double ofs) noexcept = 0;
+	virtual void   do_set_sign (bool inv_flag) noexcept = 0;
+	virtual void   do_set_polarity (bool unipolar_flag) noexcept = 0;
+	virtual void   do_set_variation (int param, double val) noexcept = 0;
+	virtual bool   do_is_using_variation (int param) const noexcept = 0;
+	virtual void   do_tick (int nbr_spl) noexcept = 0;
+	virtual double do_get_val () const noexcept = 0;
+	virtual double do_get_phase () const noexcept = 0;
+	virtual void   do_clear_buffers () noexcept = 0;
 
 
 

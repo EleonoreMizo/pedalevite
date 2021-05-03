@@ -55,14 +55,14 @@ class EnvFollowerARHelper
 
 public:
 
-	void           set_atk_coef (float coef);
-	void           set_rls_coef (float coef);
+	void           set_atk_coef (float coef) noexcept;
+	void           set_rls_coef (float coef) noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	               process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

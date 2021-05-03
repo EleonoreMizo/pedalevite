@@ -56,13 +56,13 @@ public:
 	virtual DelayLineReadInterface &
 	               operator = (DelayLineReadInterface &&other)      = default;
 
-	double         get_sample_freq () const;
-	int            get_ovrspl_l2 () const;
-	double         get_min_delay_time () const;
-	double         get_max_delay_time () const;
-	int            estimate_max_one_shot_proc_w_feedback (double min_delay_time) const;
-	void           read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const;
-	float          read_sample (float delay) const;
+	double         get_sample_freq () const noexcept;
+	int            get_ovrspl_l2 () const noexcept;
+	double         get_min_delay_time () const noexcept;
+	double         get_max_delay_time () const noexcept;
+	int            estimate_max_one_shot_proc_w_feedback (double min_delay_time) const noexcept;
+	void           read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const noexcept;
+	float          read_sample (float delay) const noexcept;
 
 
 
@@ -70,13 +70,13 @@ public:
 
 protected:
 
-	virtual double do_get_sample_freq () const = 0;
-	virtual int    do_get_ovrspl_l2 () const = 0;
-	virtual double do_get_min_delay_time () const = 0;
-	virtual double do_get_max_delay_time () const = 0;
-	virtual int    do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const = 0;
-	virtual void   do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const = 0;
-	virtual float  do_read_sample (float dly) const = 0;
+	virtual double do_get_sample_freq () const noexcept = 0;
+	virtual int    do_get_ovrspl_l2 () const noexcept = 0;
+	virtual double do_get_min_delay_time () const noexcept = 0;
+	virtual double do_get_max_delay_time () const noexcept = 0;
+	virtual int    do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const noexcept = 0;
+	virtual void   do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const noexcept = 0;
+	virtual float  do_read_sample (float dly) const noexcept = 0;
 
 
 

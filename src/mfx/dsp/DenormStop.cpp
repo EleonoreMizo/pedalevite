@@ -49,14 +49,14 @@ namespace dsp
 
 
 
-float	DenormStop::process_sample (float x)
+float	DenormStop::process_sample (float x) noexcept
 {
 	return x + gen_new_rnd_val ();
 }
 
 
 
-void	DenormStop::process_block (float buf_ptr [], int nbr_spl)
+void	DenormStop::process_block (float buf_ptr [], int nbr_spl) noexcept
 {
 	assert (buf_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -77,7 +77,7 @@ void	DenormStop::process_block (float buf_ptr [], int nbr_spl)
 
 
 // 2 interleaved channels
-void	DenormStop::process_block_2chn (float buf_ptr [], int nbr_frames)
+void	DenormStop::process_block_2chn (float buf_ptr [], int nbr_frames) noexcept
 {
 	assert (buf_ptr != nullptr);
 	assert (nbr_frames > 0);
@@ -103,7 +103,7 @@ void	DenormStop::process_block_2chn (float buf_ptr [], int nbr_frames)
 
 
 // 4 interleaved channels
-void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames)
+void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames) noexcept
 {
 	assert (buf_ptr != nullptr);
 	assert (nbr_frames > 0);
@@ -157,7 +157,7 @@ void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames)
 
 
 
-float	DenormStop::gen_new_rnd_val ()
+float	DenormStop::gen_new_rnd_val () noexcept
 {
 	// Not thread-safe at all, but for this purpose we don't care.
 	const uint32_t new_rnd_val = _rnd_val * 1234567 + 890123;

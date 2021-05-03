@@ -81,15 +81,15 @@ public:
 	void           reserve (int nbr_stages, int nbr_chn);
 	void           set_buf_len (int nbr_spl);
 
-	void           set_ramp_time (int nbr_spl);
+	void           set_ramp_time (int nbr_spl) noexcept;
 	void           adapt_config (int nbr_stages, int nbr_chn);
-	void           set_biquad (int stage, int chn, const float b [3], const float a [3], bool ramp_flag = false);
-	void           get_biquad (int stage, int chn, float b [3], float a [3]) const;
-	void           get_biquad_target (int stage, int chn, float b [3], float a [3]) const;
-	void           process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
-	void           process_block (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end);
-	void           clear_buffers ();
-	void           clear_buffers_one (int stage, int chn);
+	void           set_biquad (int stage, int chn, const float b [3], const float a [3], bool ramp_flag = false) noexcept;
+	void           get_biquad (int stage, int chn, float b [3], float a [3]) const noexcept;
+	void           get_biquad_target (int stage, int chn, float b [3], float a [3]) const noexcept;
+	void           process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           process_block (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end) noexcept;
+	void           clear_buffers () noexcept;
+	void           clear_buffers_one (int stage, int chn) noexcept;
 
 
 
@@ -131,21 +131,21 @@ private:
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > Buffer;
 
-	void           find_biq (int &pack_index, int &biq_index, int stage, int chn) const;
+	void           find_biq (int &pack_index, int &biq_index, int stage, int chn) const noexcept;
 	void           set_config_internal (int nbr_stages, int nbr_chn);
-	void           save_info ();
-	void           load_info (int nbr_stages, int nbr_chn);
+	void           save_info () noexcept;
+	void           load_info (int nbr_stages, int nbr_chn) noexcept;
 
-	void           process_block_parallel (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end, bool mono_source_flag);
-	void           process_block_serial (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
-	void           process_block_serial (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end);
-	void           process_block_serial_one_chn (float out_ptr [], const float in_ptr [], int pos_beg, int pos_end, int &pack_index);
-	void           process_block_2x2 (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
-	void           process_block_2x2 (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end);
+	void           process_block_parallel (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end, bool mono_source_flag) noexcept;
+	void           process_block_serial (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           process_block_serial (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end) noexcept;
+	void           process_block_serial_one_chn (float out_ptr [], const float in_ptr [], int pos_beg, int pos_end, int &pack_index) noexcept;
+	void           process_block_2x2 (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           process_block_2x2 (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end) noexcept;
 
 	static ProcConf
-	               compute_proc_conf (int nbr_stages, int nbr_chn);
-	static void    compute_config_info (ProcConf &proc_conf, int &nbr_packs, int &group_size, int nbr_stages, int nbr_chn);
+	               compute_proc_conf (int nbr_stages, int nbr_chn) noexcept;
+	static void    compute_config_info (ProcConf &proc_conf, int &nbr_packs, int &group_size, int nbr_stages, int nbr_chn) noexcept;
 
 	PackList       _pack_list;
 	Buffer         _tmp_buf;      // Capacity: _buf_len * 4

@@ -71,39 +71,39 @@ public:
 	typedef CDT CalcDataType;
 	typedef typename SD::DataType StorageDataType;
 
-	void           set_sample_data (const SampleTable &sample_data);
+	void           set_sample_data (const SampleTable &sample_data) noexcept;
 	const SampleTable &
-						use_sample_data () const;
-	SampleTable &  use_sample_data ();
+						use_sample_data () const noexcept;
+	SampleTable &  use_sample_data () noexcept;
 
-	void           set_bandlimit (int32_t limit);
+	void           set_bandlimit (int32_t limit) noexcept;
 	fstb_FORCEINLINE int32_t
-	               get_bandlimit () const;
+	               get_bandlimit () const noexcept;
 
 	fstb_FORCEINLINE void
-	               set_pitch (int32_t pitch);
+	               set_pitch (int32_t pitch) noexcept;
 	fstb_FORCEINLINE int32_t
-	               get_pitch () const;
+	               get_pitch () const noexcept;
 	fstb_FORCEINLINE void
-	               get_table_rate (fstb::FixedPoint &rate) const;
+	               get_table_rate (fstb::FixedPoint &rate) const noexcept;
 
 	fstb_FORCEINLINE int
-	               get_cur_table () const;
+	               get_cur_table () const noexcept;
 	fstb_FORCEINLINE void
-	               set_playback_pos (const fstb::FixedPoint &pos);
+	               set_playback_pos (const fstb::FixedPoint &pos) noexcept;
 	fstb_FORCEINLINE void
-	               get_playback_pos (fstb::FixedPoint &pos) const;
+	               get_playback_pos (fstb::FixedPoint &pos) const noexcept;
 	fstb_FORCEINLINE void
-	               set_playback_pos_in_cur_table (const fstb::FixedPoint &pos);
+	               set_playback_pos_in_cur_table (const fstb::FixedPoint &pos) noexcept;
 	fstb_FORCEINLINE void
-	               get_playback_pos_in_cur_table (fstb::FixedPoint &pos) const;
+	               get_playback_pos_in_cur_table (fstb::FixedPoint &pos) const noexcept;
 
 	fstb_FORCEINLINE CalcDataType
-	               get_sample_in_cur_table (const fstb::FixedPoint &pos) const;
+	               get_sample_in_cur_table (const fstb::FixedPoint &pos) const noexcept;
 	fstb_FORCEINLINE CalcDataType
-	               process_sample ();
-	void           process_block (CalcDataType data_ptr [], int nbr_spl);
-	void           process_block_mix (CalcDataType data_ptr [], int nbr_spl);
+	               process_sample () noexcept;
+	void           process_block (CalcDataType data_ptr [], int nbr_spl) noexcept;
+	void           process_block_mix (CalcDataType data_ptr [], int nbr_spl) noexcept;
 
 
 

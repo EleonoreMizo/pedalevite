@@ -90,15 +90,15 @@ public:
 
 	void           prepare (double sample_freq);
 
-	void           process_sample ();
-	Flt            get_node_voltage (IdNode nid) const;
+	void           process_sample () noexcept;
+	Flt            get_node_voltage (IdNode nid) const noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 	// Information
-	int            get_matrix_size () const;
-	int            get_nbr_nodes () const;
-	int            get_nbr_src_v () const;
+	int            get_matrix_size () const noexcept;
+	int            get_nbr_nodes () const noexcept;
+	int            get_nbr_src_v () const noexcept;
 	std::vector <Flt>
 	               get_matrix () const;
 	std::vector <Flt>
@@ -118,11 +118,11 @@ protected:
 	// SimulInterface
 	PartInterface::IdNode
 	               do_allocate_node () final;
-	bool           do_is_node_gnd (int node_idx) const final;
-	Flt            do_get_voltage (int node_idx) const final;
-	Flt            do_get_voltage (int n1_idx, int n2_idx) const final;
-	void           do_add_coef_mat (int row, int col, Flt val) final;
-	void           do_add_coef_vec (int row, Flt val) final;
+	bool           do_is_node_gnd (int node_idx) const noexcept final;
+	Flt            do_get_voltage (int node_idx) const noexcept final;
+	Flt            do_get_voltage (int n1_idx, int n2_idx) const noexcept final;
+	void           do_add_coef_mat (int row, int col, Flt val) noexcept final;
+	void           do_add_coef_vec (int row, Flt val) noexcept final;
 
 
 
@@ -133,7 +133,7 @@ private:
 	typedef lal::Mat <Flt> TypeMatrix;
 	typedef std::vector <Flt> TypeVector;
 
-	void           build_matrix (int it_cnt);
+	void           build_matrix (int it_cnt) noexcept;
 
 	std::vector <PartSPtr>
 	               _part_arr;

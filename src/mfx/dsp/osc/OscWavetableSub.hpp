@@ -61,7 +61,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::set_wavetable (const WavetableDataType &wavetable)
+>::set_wavetable (const WavetableDataType &wavetable) noexcept
 {
 	_wavetable_pos_ptr = &wavetable;
 	_wavetable_neg_ptr = &wavetable;
@@ -85,7 +85,7 @@ const typename OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::WavetableDataType &	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::use_wavetable () const
+>::use_wavetable () const noexcept
 {
 	assert (_wavetable_pos_ptr != 0);
 	assert (_wavetable_neg_ptr != 0);
@@ -113,7 +113,7 @@ hrows: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::set_wavetables (const WavetableDataType &wavetable_pos, const WavetableDataType &wavetable_neg)
+>::set_wavetables (const WavetableDataType &wavetable_pos, const WavetableDataType &wavetable_neg) noexcept
 {
 	_wavetable_pos_ptr = &wavetable_pos;
 	_wavetable_neg_ptr = &wavetable_neg;
@@ -139,7 +139,7 @@ const typename OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::WavetableDataType &	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::use_wavetable (int number) const
+>::use_wavetable (int number) const noexcept
 {
 	assert (number >= 0);
 	assert (number < 2);
@@ -179,7 +179,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::set_base_pitch (int32_t pitch)
+>::set_base_pitch (int32_t pitch) noexcept
 {
 	_base_pitch = pitch;
 }
@@ -200,7 +200,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 int32_t	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::get_base_pitch () const
+>::get_base_pitch () const noexcept
 {
 	return _base_pitch;
 }
@@ -226,7 +226,7 @@ Returns:
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 uint32_t	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::set_pitch (int32_t pitch)
+>::set_pitch (int32_t pitch) noexcept
 {
 	assert (pitch < _base_pitch);
 
@@ -270,7 +270,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::set_pitch (int32_t pitch, uint32_t pre_step, int table)
+>::set_pitch (int32_t pitch, uint32_t pre_step, int table) noexcept
 {
 	assert (pitch < _base_pitch);
 	assert (pre_step >= 0x80000000UL);
@@ -315,7 +315,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 int32_t	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::get_pitch () const
+>::get_pitch () const noexcept
 {
 	return _pitch;
 }
@@ -335,7 +335,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::reset_phase ()
+>::reset_phase () noexcept
 {
 	_position_pos.clear ();
 	sync_sub_phase ();
@@ -358,7 +358,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::set_phase (uint32_t phase)
+>::set_phase (uint32_t phase) noexcept
 {
 	_position_pos.set_val_int64 (int64_t (phase) << _cur_table_len_log2);
 	sync_sub_phase ();
@@ -379,7 +379,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 uint32_t	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::get_phase () const
+>::get_phase () const noexcept
 {
 	assert (_cur_table_len > 0);
 
@@ -410,7 +410,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::set_phase_rel (uint32_t rel_phase, DataType dc_fixer)
+>::set_phase_rel (uint32_t rel_phase, DataType dc_fixer) noexcept
 {
 	_rel_phase = rel_phase;
 	_dc_fixer  = dc_fixer;
@@ -432,7 +432,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 uint32_t	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::get_phase_rel () const
+>::get_phase_rel () const noexcept
 {
 	return _rel_phase;
 }
@@ -457,7 +457,7 @@ typename OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::DataType	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::get_sample_at_phase (uint32_t phase) const
+>::get_sample_at_phase (uint32_t phase) const noexcept
 {
 	assert (_wavetable_pos_ptr != 0);
 	assert (_wavetable_neg_ptr != 0);
@@ -496,7 +496,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::get_sample_at_phase (DataType &ref_data, DataType &sub_data, uint32_t phase) const
+>::get_sample_at_phase (DataType &ref_data, DataType &sub_data, uint32_t phase) const noexcept
 {
 	assert (_wavetable_pos_ptr != 0);
 	assert (_wavetable_neg_ptr != 0);
@@ -532,7 +532,7 @@ typename OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::DataType	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::process_sample ()
+>::process_sample () noexcept
 {
 	assert (_wavetable_pos_ptr != nullptr);
 	assert (_wavetable_neg_ptr != nullptr);
@@ -567,7 +567,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::process_sample (DataType &ref_data, DataType &sub_data)
+>::process_sample (DataType &ref_data, DataType &sub_data) noexcept
 {
 	assert (_wavetable_pos_ptr != nullptr);
 	assert (_wavetable_neg_ptr != nullptr);
@@ -602,7 +602,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::process_block (DataType sub_data_ptr [], int nbr_spl)
+>::process_block (DataType sub_data_ptr [], int nbr_spl) noexcept
 {
 	assert (sub_data_ptr != 0);
 	assert (_wavetable_pos_ptr != 0);
@@ -645,7 +645,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::process_block (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl)
+>::process_block (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl) noexcept
 {
 	assert (ref_data_ptr != nullptr);
 	assert (sub_data_ptr != nullptr);
@@ -687,7 +687,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::process_block_mix (DataType sub_data_ptr [], int nbr_spl)
+>::process_block_mix (DataType sub_data_ptr [], int nbr_spl) noexcept
 {
 	assert (sub_data_ptr != 0);
 	assert (_wavetable_pos_ptr != 0);
@@ -728,7 +728,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::process_block_mix (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl)
+>::process_block_mix (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl) noexcept
 {
 	assert (ref_data_ptr != 0);
 	assert (sub_data_ptr != 0);
@@ -774,7 +774,7 @@ Throws: Nothing
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 int32_t	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::conv_freq_to_pitch (float freq, float fs) const
+>::conv_freq_to_pitch (float freq, float fs) const noexcept
 {
 	assert (freq > 0);
 	assert (fs > 0);
@@ -801,7 +801,7 @@ int32_t	OscWavetableSub <
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::sync_sub_phase ()
+>::sync_sub_phase () noexcept
 {
 	sync_sub_phase (_position_pos, _position_neg);
 }
@@ -811,7 +811,7 @@ void	OscWavetableSub <
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::sync_sub_phase (const fstb::FixedPoint &position_pos, fstb::FixedPoint &position_neg) const
+>::sync_sub_phase (const fstb::FixedPoint &position_pos, fstb::FixedPoint &position_neg) const noexcept
 {
 	assert (position_pos.get_int_val () < _cur_table_len);
 
@@ -830,7 +830,7 @@ typename OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::DataType	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::generate_sample (const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const
+>::generate_sample (const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const noexcept
 {
 	DataType       ref_data;
 	DataType       sub_data;
@@ -848,7 +848,7 @@ typename OscWavetableSub <
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::generate_sample (DataType &ref_data, DataType &sub_data, const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const
+>::generate_sample (DataType &ref_data, DataType &sub_data, const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const noexcept
 {
 	const uint32_t position_pos_frac = position_pos.get_frac_val ();
 	const int      position_pos_int  = position_pos.get_int_val ();
@@ -870,7 +870,7 @@ void	OscWavetableSub <
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
->::step_one_sample ()
+>::step_one_sample () noexcept
 {
 	_position_pos.add (_step, _cur_table_mask);
 	_position_neg.add (_step, _cur_table_mask);

@@ -39,14 +39,14 @@ namespace env
 
 
 
-AdsrSeg	AdsrRc::get_cur_seg () const
+AdsrSeg	AdsrRc::get_cur_seg () const noexcept
 {
 	return _seg;
 }
 
 
 
-float	AdsrRc::get_val () const
+float	AdsrRc::get_val () const noexcept
 {
 	return _cur_val;
 }

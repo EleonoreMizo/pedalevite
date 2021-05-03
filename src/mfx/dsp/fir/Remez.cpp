@@ -277,7 +277,7 @@ void	Remez::free_resources ()
 
 
 
-int	Remez::estimate_order (double ripple_db, double atten_db, double trans_band)
+int	Remez::estimate_order (double ripple_db, double atten_db, double trans_band) noexcept
 {
 	assert (ripple_db > 0);
 	assert (atten_db >= ripple_db);
@@ -297,7 +297,7 @@ int	Remez::estimate_order (double ripple_db, double atten_db, double trans_band)
 
 
 
-double	Remez::compute_ripple_ratio (double ripple_db, double atten_db)
+double	Remez::compute_ripple_ratio (double ripple_db, double atten_db) noexcept
 {
 	assert (ripple_db > 0);
 	assert (atten_db >= ripple_db);

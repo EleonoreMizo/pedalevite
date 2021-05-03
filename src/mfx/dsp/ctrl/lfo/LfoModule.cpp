@@ -60,7 +60,7 @@ namespace lfo
 
 
 
-LfoModule::LfoModule ()
+LfoModule::LfoModule () noexcept
 :	_osc ()
 ,	_sample_freq (-1)
 ,	_period (1)
@@ -115,7 +115,7 @@ LfoModule::~LfoModule ()
 
 
 
-void	LfoModule::set_sample_freq (double sample_freq)
+void	LfoModule::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -128,7 +128,7 @@ void	LfoModule::set_sample_freq (double sample_freq)
 
 
 
-void	LfoModule::set_period (double per)
+void	LfoModule::set_period (double per) noexcept
 {
 	assert (per > 0);
 
@@ -140,7 +140,7 @@ void	LfoModule::set_period (double per)
 
 
 
-void	LfoModule::set_phase (double phase)
+void	LfoModule::set_phase (double phase) noexcept
 {
 	assert (phase >= 0);
 	assert (phase < 1);
@@ -152,7 +152,7 @@ void	LfoModule::set_phase (double phase)
 
 
 
-void	LfoModule::set_chaos (double chaos)
+void	LfoModule::set_chaos (double chaos) noexcept
 {
 	assert (chaos >= 0);
 	assert (chaos <= 1);
@@ -163,7 +163,7 @@ void	LfoModule::set_chaos (double chaos)
 
 
 
-void	LfoModule::set_phase_dist (double dist)
+void	LfoModule::set_phase_dist (double dist) noexcept
 {
 	assert (dist >= 0);
 	assert (dist <= 1);
@@ -174,7 +174,7 @@ void	LfoModule::set_phase_dist (double dist)
 
 
 
-void	LfoModule::set_phase_dist_offset (double ofs)
+void	LfoModule::set_phase_dist_offset (double ofs) noexcept
 {
 	assert (ofs >= 0);
 	assert (ofs <= 1);
@@ -185,7 +185,7 @@ void	LfoModule::set_phase_dist_offset (double ofs)
 
 
 
-void	LfoModule::set_sign (bool inv_flag)
+void	LfoModule::set_sign (bool inv_flag) noexcept
 {
 	use_osc ().set_sign (inv_flag);
 	_inv_flag = inv_flag;
@@ -193,7 +193,7 @@ void	LfoModule::set_sign (bool inv_flag)
 
 
 
-void	LfoModule::set_polarity (bool unipolar_flag)
+void	LfoModule::set_polarity (bool unipolar_flag) noexcept
 {
 	use_osc ().set_polarity (unipolar_flag);
 	_unipolar_flag = unipolar_flag;
@@ -201,7 +201,7 @@ void	LfoModule::set_polarity (bool unipolar_flag)
 
 
 
-void	LfoModule::set_variation (int param, double val)
+void	LfoModule::set_variation (int param, double val) noexcept
 {
 	assert (param >= 0);
 	assert (param < OscInterface::Variation_NBR_ELT);
@@ -215,7 +215,7 @@ void	LfoModule::set_variation (int param, double val)
 
 
 
-bool	LfoModule::is_using_variation (int param) const
+bool	LfoModule::is_using_variation (int param) const noexcept
 {
 	assert (param >= 0);
 	assert (param < OscInterface::Variation_NBR_ELT);
@@ -225,7 +225,7 @@ bool	LfoModule::is_using_variation (int param) const
 
 
 
-void	LfoModule::set_type (Type type)
+void	LfoModule::set_type (Type type) noexcept
 {
 	assert (type >= 0);
 	assert (type < Type_NBR_ELT);
@@ -286,7 +286,7 @@ void	LfoModule::set_type (Type type)
 
 
 
-void	LfoModule::set_snh (double ratio)
+void	LfoModule::set_snh (double ratio) noexcept
 {
 	assert (ratio >= 0);
 
@@ -296,7 +296,7 @@ void	LfoModule::set_snh (double ratio)
 
 
 
-void	LfoModule::set_smooth (double ratio)
+void	LfoModule::set_smooth (double ratio) noexcept
 {
 	assert (ratio >= 0);
 
@@ -324,14 +324,14 @@ void	LfoModule::set_step_seq (bool flag)
 
 
 
-bool	LfoModule::has_step_seq () const
+bool	LfoModule::has_step_seq () const noexcept
 {
 	return (_step_seq_uptr.get () != nullptr);
 }
 
 
 
-OscStepSeq &	LfoModule::use_step_seq ()
+OscStepSeq &	LfoModule::use_step_seq () noexcept
 {
 	assert (has_step_seq ());
 
@@ -340,7 +340,7 @@ OscStepSeq &	LfoModule::use_step_seq ()
 
 
 
-void	LfoModule::tick (int nbr_spl)
+void	LfoModule::tick (int nbr_spl) noexcept
 {
 	int            work_len = nbr_spl;
 	if (_snh_flag)
@@ -368,7 +368,7 @@ void	LfoModule::tick (int nbr_spl)
 
 
 
-double	LfoModule::get_val () const
+double	LfoModule::get_val () const noexcept
 {
 	// Source: smooth, S&H or direct
 	const double     val =
@@ -381,14 +381,14 @@ double	LfoModule::get_val () const
 
 
 
-double	LfoModule::get_phase () const
+double	LfoModule::get_phase () const noexcept
 {
 	return use_osc ().get_phase ();
 }
 
 
 
-void	LfoModule::clear_buffers ()
+void	LfoModule::clear_buffers () noexcept
 {
 	use_osc ().clear_buffers ();
 	const double   raw_val = use_osc ().get_val ();
@@ -410,7 +410,7 @@ void	LfoModule::clear_buffers ()
 
 
 
-OscInterface *	LfoModule::get_aligned_osc () const
+OscInterface *	LfoModule::get_aligned_osc () const noexcept
 {
 	const intptr_t   base = reinterpret_cast <intptr_t> (&_osc [0]);
 	const intptr_t   alig = (base + _storage_alig - 1) & ~(_storage_alig - 1);
@@ -420,7 +420,7 @@ OscInterface *	LfoModule::get_aligned_osc () const
 
 
 
-const OscInterface &	LfoModule::use_osc () const
+const OscInterface &	LfoModule::use_osc () const noexcept
 {
 	assert (_type >= 0);
 
@@ -429,7 +429,7 @@ const OscInterface &	LfoModule::use_osc () const
 
 
 
-OscInterface &	LfoModule::use_osc ()
+OscInterface &	LfoModule::use_osc () noexcept
 {
 	assert (_type >= 0);
 
@@ -438,7 +438,7 @@ OscInterface &	LfoModule::use_osc ()
 
 
 
-void	LfoModule::apply_osc_settings ()
+void	LfoModule::apply_osc_settings () noexcept
 {
 	set_period (_period);
 	set_chaos (_phase_chaos);
@@ -454,7 +454,7 @@ void	LfoModule::apply_osc_settings ()
 
 
 
-void	LfoModule::update_snh ()
+void	LfoModule::update_snh () noexcept
 {
 	if (_snh_ratio <= 1e-6)
 	{
@@ -477,7 +477,7 @@ void	LfoModule::update_snh ()
 
 
 
-void	LfoModule::update_smooth ()
+void	LfoModule::update_smooth () noexcept
 {
 	if (_smooth <= 0)
 	{
@@ -516,7 +516,7 @@ void	LfoModule::update_smooth ()
 
 
 
-void	LfoModule::tick_sub (int nbr_spl)
+void	LfoModule::tick_sub (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 

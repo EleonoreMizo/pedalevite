@@ -38,7 +38,7 @@ namespace dsp
 
 
 template <typename FLT, int NBR>
-FLT &	FilterCascadeIdEven <FLT, NBR>::use_filter (int unit)
+FLT &	FilterCascadeIdEven <FLT, NBR>::use_filter (int unit) noexcept
 {
 	assert (unit >= 0);
 	assert (unit < _nbr_units);
@@ -49,7 +49,7 @@ FLT &	FilterCascadeIdEven <FLT, NBR>::use_filter (int unit)
 
 
 template <typename FLT, int NBR>
-const FLT &	FilterCascadeIdEven <FLT, NBR>::use_filter (int unit) const
+const FLT &	FilterCascadeIdEven <FLT, NBR>::use_filter (int unit) const noexcept
 {
 	assert (unit >= 0);
 	assert (unit < _nbr_units);
@@ -60,7 +60,7 @@ const FLT &	FilterCascadeIdEven <FLT, NBR>::use_filter (int unit) const
 
 
 template <typename FLT, int NBR>
-float	FilterCascadeIdEven <FLT, NBR>::process_sample (float x)
+float	FilterCascadeIdEven <FLT, NBR>::process_sample (float x) noexcept
 {
 	int				pos = 0;
 	do
@@ -76,7 +76,7 @@ float	FilterCascadeIdEven <FLT, NBR>::process_sample (float x)
 
 
 template <typename FLT, int NBR>
-void	FilterCascadeIdEven <FLT, NBR>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	FilterCascadeIdEven <FLT, NBR>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -92,7 +92,7 @@ void	FilterCascadeIdEven <FLT, NBR>::process_block (float dst_ptr [], const floa
 
 
 template <typename FLT, int NBR>
-void	FilterCascadeIdEven <FLT, NBR>::clear_buffers ()
+void	FilterCascadeIdEven <FLT, NBR>::clear_buffers () noexcept
 {
 	for (int unit = 0; unit < _nbr_units; ++unit)
 	{

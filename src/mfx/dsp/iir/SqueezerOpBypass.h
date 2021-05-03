@@ -47,11 +47,11 @@ class SqueezerOpBypass
 
 public:
 
-	void           config (float /*reso*/, float /*p1*/) {}
-	void           config (fstb::ToolsSimd::VectF32 /*reso*/, fstb::ToolsSimd::VectF32 /*p1*/) {}
-	float          process_sample (float x) { return x; }
+	void           config (float /*reso*/, float /*p1*/) noexcept {}
+	void           config (fstb::ToolsSimd::VectF32 /*reso*/, fstb::ToolsSimd::VectF32 /*p1*/) noexcept {}
+	float          process_sample (float x) noexcept { return x; }
 	fstb::ToolsSimd::VectF32
-	               process_sample (fstb::ToolsSimd::VectF32 x) { return x; }
+	               process_sample (fstb::ToolsSimd::VectF32 x) noexcept { return x; }
 
 
 

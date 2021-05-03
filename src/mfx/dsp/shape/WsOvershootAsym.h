@@ -47,7 +47,7 @@ class WsOvershootAsym
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		const double   a   = exp (x - 1);
 		const double   b   = exp (-x);

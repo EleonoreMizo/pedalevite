@@ -49,11 +49,11 @@ public:
 
 	template <typename T>
 	static fstb_FORCEINLINE T
-	               mix (T v0, T v1, T v2, T v0m, T v1m, T v2m);
+	               mix (T v0, T v1, T v2, T v0m, T v1m, T v2m) noexcept;
 
 	template <typename T>
 	static fstb_FORCEINLINE void
-	               inc (T &v0m, T &v1m, T &v2m, T v0mi, T v1mi, T v2mi);
+	               inc (T &v0m, T &v1m, T &v2m, T v0mi, T v1mi, T v2mi) noexcept;
 
 
 

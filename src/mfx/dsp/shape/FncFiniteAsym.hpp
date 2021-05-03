@@ -40,7 +40,7 @@ namespace shape
 
 
 template <int BL, int BU, class GF, int RES>
-FncFiniteAsym <BL, BU, GF, RES>::FncFiniteAsym ()
+FncFiniteAsym <BL, BU, GF, RES>::FncFiniteAsym () noexcept
 {
 	if (! _init_flag)
 	{
@@ -51,7 +51,7 @@ FncFiniteAsym <BL, BU, GF, RES>::FncFiniteAsym ()
 
 
 template <int BL, int BU, class GF, int RES>
-float	FncFiniteAsym <BL, BU, GF, RES>::operator () (float x) const
+float	FncFiniteAsym <BL, BU, GF, RES>::operator () (float x) const noexcept
 {
 	assert (_init_flag);
 
@@ -75,7 +75,7 @@ float	FncFiniteAsym <BL, BU, GF, RES>::operator () (float x) const
 
 
 template <int BL, int BU, class GF, int RES>
-fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::ToolsSimd::VectF32 x) const
+fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::ToolsSimd::VectF32 x) const noexcept
 {
 	assert (_init_flag);
 
@@ -126,7 +126,7 @@ fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::Too
 
 
 template <int BL, int BU, class GF, int RES>
-void	FncFiniteAsym <BL, BU, GF, RES>::init_coefs ()
+void	FncFiniteAsym <BL, BU, GF, RES>::init_coefs () noexcept
 {
 	std::array <double, _table_size + 2>     y;
 	std::array <double, _table_size + 2> slope;

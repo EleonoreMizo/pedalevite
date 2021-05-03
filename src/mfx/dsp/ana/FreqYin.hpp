@@ -66,7 +66,7 @@ void	FreqYin <PP>::set_sample_freq (double sample_freq)
 
 
 template <class PP>
-void	FreqYin <PP>::set_freq_bot (float f)
+void	FreqYin <PP>::set_freq_bot (float f) noexcept
 {
 	_freq_bot = f;
 	if (_sample_freq > 0)
@@ -78,7 +78,7 @@ void	FreqYin <PP>::set_freq_bot (float f)
 
 
 template <class PP>
-void	FreqYin <PP>::set_freq_top (float f)
+void	FreqYin <PP>::set_freq_top (float f) noexcept
 {
 	_freq_top = f;
 	if (_sample_freq > 0)
@@ -90,7 +90,7 @@ void	FreqYin <PP>::set_freq_top (float f)
 
 
 template <class PP>
-PP &	FreqYin <PP>::use_postproc ()
+PP &	FreqYin <PP>::use_postproc () noexcept
 {
 	return _postproc;
 }
@@ -98,7 +98,7 @@ PP &	FreqYin <PP>::use_postproc ()
 
 
 template <class PP>
-const PP &	FreqYin <PP>::use_postproc () const
+const PP &	FreqYin <PP>::use_postproc () const noexcept
 {
 	return _postproc;
 }
@@ -106,7 +106,7 @@ const PP &	FreqYin <PP>::use_postproc () const
 
 
 template <class PP>
-void	FreqYin <PP>::set_analysis_period (int per)
+void	FreqYin <PP>::set_analysis_period (int per) noexcept
 {
 	assert (per > 0);
 
@@ -120,20 +120,20 @@ void	FreqYin <PP>::set_analysis_period (int per)
 
 
 template <class PP>
-void	FreqYin <PP>::clear_buffers ()
+void	FreqYin <PP>::clear_buffers () noexcept
 {
 	std::fill (_buffer.begin (), _buffer.end (), 0.f);
 	_buf_pos_w = 0;
 	_ana_pos   = 0;
 	_sum_pos   = 0;
 	_postproc.clear_buffers ();
-	std::fill (_delta_arr.begin (), _delta_arr.end (), Delta ());
+	std::fill (_delta_arr.begin (), _delta_arr.end (), Delta {});
 }
 
 
 
 template <class PP>
-float	FreqYin <PP>::process_block (const float spl_ptr [], int nbr_spl)
+float	FreqYin <PP>::process_block (const float spl_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -175,7 +175,7 @@ float	FreqYin <PP>::process_block (const float spl_ptr [], int nbr_spl)
 
 
 template <class PP>
-float	FreqYin <PP>::process_sample (float x)
+float	FreqYin <PP>::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -206,7 +206,7 @@ float	FreqYin <PP>::process_sample (float x)
 
 
 template <class PP>
-void	FreqYin <PP>::update_freq_bot_param ()
+void	FreqYin <PP>::update_freq_bot_param () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -224,7 +224,7 @@ void	FreqYin <PP>::update_freq_bot_param ()
 
 
 template <class PP>
-void	FreqYin <PP>::update_freq_top_param ()
+void	FreqYin <PP>::update_freq_top_param () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -234,7 +234,7 @@ void	FreqYin <PP>::update_freq_top_param ()
 
 
 template <class PP>
-void	FreqYin <PP>::update_difference_functions ()
+void	FreqYin <PP>::update_difference_functions () noexcept
 {
 	const int      buf_pos_r_m_1 = _buf_pos_w - _win_len - 1; // May be negative
 	int            p_ref_o = buf_pos_r_m_1;
@@ -283,7 +283,7 @@ void	FreqYin <PP>::update_difference_functions ()
 
 
 template <class PP>
-void	FreqYin <PP>::update_difference_functions_block (int nbr_spl)
+void	FreqYin <PP>::update_difference_functions_block (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_blk_size);
@@ -351,7 +351,7 @@ void	FreqYin <PP>::update_difference_functions_block (int nbr_spl)
 
 
 template <class PP>
-void	FreqYin <PP>::check_sum_position ()
+void	FreqYin <PP>::check_sum_position () noexcept
 {
 	if (_sum_pos >= _win_len)
 	{
@@ -370,7 +370,7 @@ void	FreqYin <PP>::check_sum_position ()
 
 
 template <class PP>
-void	FreqYin <PP>::check_ana_position ()
+void	FreqYin <PP>::check_ana_position () noexcept
 {
 	if (_ana_pos >= _ana_per)
 	{
@@ -382,7 +382,7 @@ void	FreqYin <PP>::check_ana_position ()
 
 
 template <class PP>
-void	FreqYin <PP>::analyse ()
+void	FreqYin <PP>::analyse () noexcept
 {
 	float          freq    = 0; // 0 = not found yet
 	float          dif_sum = 0;
@@ -424,7 +424,7 @@ void	FreqYin <PP>::analyse ()
 
 
 template <class PP>
-float	FreqYin <PP>::get_cmndf (int delta) const
+float	FreqYin <PP>::get_cmndf (int delta) const noexcept
 {
 	assert (delta >= 0);
 	assert (delta <= _max_delta);

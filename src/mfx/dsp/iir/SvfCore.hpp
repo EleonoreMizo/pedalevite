@@ -40,7 +40,7 @@ namespace iir
 
 
 template <class MX>
-void	SvfCore <MX>::neutralise ()
+void	SvfCore <MX>::neutralise () noexcept
 {
 	_g0  = 0;
 	_g1  = 0;
@@ -53,7 +53,7 @@ void	SvfCore <MX>::neutralise ()
 
 
 template <class MX>
-void	SvfCore <MX>::set_coefs (float g0, float g1, float g2)
+void	SvfCore <MX>::set_coefs (float g0, float g1, float g2) noexcept
 {
 	_g0 = g0;
 	_g1 = g1;
@@ -63,7 +63,7 @@ void	SvfCore <MX>::set_coefs (float g0, float g1, float g2)
 
 
 template <class MX>
-void	SvfCore <MX>::get_coefs (float &g0, float &g1, float &g2) const
+void	SvfCore <MX>::get_coefs (float &g0, float &g1, float &g2) const noexcept
 {
 	g0 = _g0;
 	g1 = _g1;
@@ -73,7 +73,7 @@ void	SvfCore <MX>::get_coefs (float &g0, float &g1, float &g2) const
 
 
 template <class MX>
-void	SvfCore <MX>::set_mix (float v0m, float v1m, float v2m)
+void	SvfCore <MX>::set_mix (float v0m, float v1m, float v2m) noexcept
 {
 	_v0m = v0m;
 	_v1m = v1m;
@@ -83,7 +83,7 @@ void	SvfCore <MX>::set_mix (float v0m, float v1m, float v2m)
 
 
 template <class MX>
-void	SvfCore <MX>::get_mix (float &v0m, float &v1m, float &v2m) const
+void	SvfCore <MX>::get_mix (float &v0m, float &v1m, float &v2m) const noexcept
 {
 	v0m = _v0m;
 	v1m = _v1m;
@@ -93,7 +93,7 @@ void	SvfCore <MX>::get_mix (float &v0m, float &v1m, float &v2m) const
 
 
 template <class MX>
-void	SvfCore <MX>::copy_z_eq (const SvfCore <MX> &other)
+void	SvfCore <MX>::copy_z_eq (const SvfCore <MX> &other) noexcept
 {
 	_g0  = other._g0;
 	_g1  = other._g1;
@@ -106,7 +106,7 @@ void	SvfCore <MX>::copy_z_eq (const SvfCore <MX> &other)
 
 
 template <class MX>
-void	SvfCore <MX>::clear_buffers ()
+void	SvfCore <MX>::clear_buffers () noexcept
 {
 	_ic1eq = 0;
 	_ic2eq = 0;
@@ -115,7 +115,7 @@ void	SvfCore <MX>::clear_buffers ()
 
 
 template <class MX>
-float	SvfCore <MX>::process_sample (float x)
+float	SvfCore <MX>::process_sample (float x) noexcept
 {
 	return process_sample (x, _g0, _g1, _g2);
 }
@@ -123,7 +123,7 @@ float	SvfCore <MX>::process_sample (float x)
 
 
 template <class MX>
-float	SvfCore <MX>::process_sample (float x, float g0, float g1, float g2)
+float	SvfCore <MX>::process_sample (float x, float g0, float g1, float g2) noexcept
 {
 	return process_sample (x, g0, g1, g2, _v0m, _v1m, _v2m);
 }
@@ -131,7 +131,7 @@ float	SvfCore <MX>::process_sample (float x, float g0, float g1, float g2)
 
 
 template <class MX>
-float	SvfCore <MX>::process_sample (float x, float g0, float g1, float g2, float v0m, float v1m, float v2m)
+float	SvfCore <MX>::process_sample (float x, float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept
 {
 	float          v1;
 	float          v2;
@@ -143,7 +143,7 @@ float	SvfCore <MX>::process_sample (float x, float g0, float g1, float g2, float
 
 
 template <class MX>
-float	SvfCore <MX>::process_sample_inc (float x, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi)
+float	SvfCore <MX>::process_sample_inc (float x, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi) noexcept
 {
 	float          v1;
 	float          v2;
@@ -159,7 +159,7 @@ float	SvfCore <MX>::process_sample_inc (float x, float g0i, float g1i, float g2i
 // Multi-mode output. Returns v1 (band) as first and v2 (low) as second.
 // Mixer is not taken into account
 template <class MX>
-std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x)
+std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x) noexcept
 {
 	return process_sample_mm (x, _g0, _g1, _g2);
 }
@@ -167,7 +167,7 @@ std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x)
 
 
 template <class MX>
-std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x, float g0, float g1, float g2)
+std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x, float g0, float g1, float g2) noexcept
 {
 	float          v1;
 	float          v2;
@@ -179,7 +179,7 @@ std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x, float g0, float 
 
 
 template <class MX>
-std::array <float, 2>	SvfCore <MX>::process_sample_mm_inc (float x, float g0i, float g1i, float g2i)
+std::array <float, 2>	SvfCore <MX>::process_sample_mm_inc (float x, float g0i, float g1i, float g2i) noexcept
 {
 	const auto     v1v2 { process_sample_mm (x) };
 	increment (_g0, _g1, _g2, g0i, g1i, g2i);
@@ -191,7 +191,7 @@ std::array <float, 2>	SvfCore <MX>::process_sample_mm_inc (float x, float g0i, f
 
 // Can work in-place
 template <class MX>
-void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -207,7 +207,7 @@ void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int 
 
 // Can work in-place
 template <class MX>
-void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [])
+void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -229,7 +229,7 @@ void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int 
 
 // Can work in-place
 template <class MX>
-void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [], const float v0m_ptr [], const float v1m_ptr [], const float v2m_ptr [])
+void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [], const float v0m_ptr [], const float v1m_ptr [], const float v2m_ptr []) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -255,7 +255,7 @@ void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int 
 
 // Can work in-place
 template <class MX>
-void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi)
+void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -274,7 +274,7 @@ void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int 
 
 
 template <class MX>
-void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl)
+void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (v1_ptr  != nullptr);
 	assert (v2_ptr  != nullptr);
@@ -295,7 +295,7 @@ void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const flo
 
 
 template <class MX>
-void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [])
+void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []) noexcept
 {
 	assert (v1_ptr  != nullptr);
 	assert (v2_ptr  != nullptr);
@@ -330,7 +330,7 @@ void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const flo
 
 
 template <class MX>
-void	SvfCore <MX>::iterate (float v0, float &v1, float &v2, float g0, float g1, float g2)
+void	SvfCore <MX>::iterate (float v0, float &v1, float &v2, float g0, float g1, float g2) noexcept
 {
 	const float    t0 = v0 - _ic2eq;
 	const float    t1 = g0 * t0 + g1 * _ic1eq;
@@ -344,7 +344,7 @@ void	SvfCore <MX>::iterate (float v0, float &v1, float &v2, float g0, float g1, 
 
 
 template <class MX>
-void	SvfCore <MX>::increment (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi)
+void	SvfCore <MX>::increment (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi) noexcept
 {
 	increment (g0, g1, g2, g0i, g1i, g2i);
 	Mixer::inc (v0m, v1m, v2m, v0mi, v1mi, v2mi);
@@ -353,7 +353,7 @@ void	SvfCore <MX>::increment (float &g0, float &g1, float &g2, float &v0m, float
 
 
 template <class MX>
-void	SvfCore <MX>::increment (float &g0, float &g1, float &g2, float g0i, float g1i, float g2i)
+void	SvfCore <MX>::increment (float &g0, float &g1, float &g2, float g0i, float g1i, float g2i) noexcept
 {
 	g0 += g0i;
 	g1 += g1i;

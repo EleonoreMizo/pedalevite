@@ -37,7 +37,7 @@ namespace dyn
 
 
 
-float	LimiterRms::process_sample (float x)
+float	LimiterRms::process_sample (float x) noexcept
 {
 	const float    vol_sq = _env.process_sample_no_sqrt (x);
 	if (vol_sq > _lvl_sq)
@@ -50,7 +50,7 @@ float	LimiterRms::process_sample (float x)
 
 
 
-void	LimiterRms::apply_volume (float gain)
+void	LimiterRms::apply_volume (float gain) noexcept
 {
 	_env.apply_volume (gain);
 }

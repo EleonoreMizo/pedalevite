@@ -41,18 +41,18 @@ class IvInterface
 
 public:
 
-	               IvInterface ()                               = default;
-	               IvInterface (const IvInterface &other)       = default;
-	               IvInterface (IvInterface &&other)            = default;
-	virtual        ~IvInterface ()                              = default;
+	               IvInterface ()                         = default;
+	               IvInterface (const IvInterface &other) = default;
+	               IvInterface (IvInterface &&other)      = default;
+	virtual        ~IvInterface ()                        = default;
 
 	virtual IvInterface &
-	               operator = (const IvInterface &other)        = default;
+	               operator = (const IvInterface &other)  = default;
 	virtual IvInterface &
-	               operator = (IvInterface &&other)             = default;
+	               operator = (IvInterface &&other)       = default;
 
-	virtual void   eval (float &y, float &dy, float x) const = 0;
-	virtual float  get_max_step (float x) const = 0;
+	virtual void   eval (float &y, float &dy, float x) const noexcept = 0;
+	virtual float  get_max_step (float x) const noexcept = 0;
 
 
 

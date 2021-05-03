@@ -45,10 +45,10 @@ class ClipDetect
 
 public:
 
-	void           set_clip_val (float val);
-	void           set_clip_val (float val_min, float val_max);
-	bool           process_sample (float x) const;
-	bool           process_block (const float src_ptr [], int nbr_spl) const;
+	void           set_clip_val (float val) noexcept;
+	void           set_clip_val (float val_min, float val_max) noexcept;
+	bool           process_sample (float x) const noexcept;
+	bool           process_block (const float src_ptr [], int nbr_spl) const noexcept;
 
 
 

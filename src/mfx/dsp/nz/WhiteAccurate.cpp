@@ -43,14 +43,14 @@ namespace nz
 
 
 
-void	WhiteAccurate::set_seed (uint32_t seed)
+void	WhiteAccurate::set_seed (uint32_t seed) noexcept
 {
 	_idx = seed;
 }
 
 
 
-void	WhiteAccurate::set_rough_level (float lvl)
+void	WhiteAccurate::set_rough_level (float lvl) noexcept
 {
 	assert (lvl > 0);
 
@@ -59,7 +59,7 @@ void	WhiteAccurate::set_rough_level (float lvl)
 
 
 
-void	WhiteAccurate::process_block (float dst_ptr [], int nbr_spl)
+void	WhiteAccurate::process_block (float dst_ptr [], int nbr_spl) noexcept
 {
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
@@ -69,7 +69,7 @@ void	WhiteAccurate::process_block (float dst_ptr [], int nbr_spl)
 
 
 
-void	WhiteAccurate::process_block_add (float dst_ptr [], int nbr_spl)
+void	WhiteAccurate::process_block_add (float dst_ptr [], int nbr_spl) noexcept
 {
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{

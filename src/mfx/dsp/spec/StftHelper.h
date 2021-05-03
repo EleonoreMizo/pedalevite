@@ -65,10 +65,10 @@ public:
 	               StftHelper ();
 	virtual        ~StftHelper () = default;
 
-	void           set_hop_size (int nbr_spl);
+	void           set_hop_size (int nbr_spl) noexcept;
 	void           set_win (const float win_ptr [FftType::FFT_LEN]);
-	void           clear_buffers ();
-	void           process_block (const float spl_ptr [], float freq_ptr [FftType::FFT_LEN], int nbr_spl, bool &trans_flag, int &nbr_spl_proc);
+	void           clear_buffers () noexcept;
+	void           process_block (const float spl_ptr [], float freq_ptr [FftType::FFT_LEN], int nbr_spl, bool &trans_flag, int &nbr_spl_proc) noexcept;
 
 
 

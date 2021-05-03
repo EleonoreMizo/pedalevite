@@ -68,10 +68,10 @@ class HardclipBl
 
 public:
 
-	void           set_clip_lvl (float lvl);
-	float          process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           clear_buffers ();
+	void           set_clip_lvl (float lvl) noexcept;
+	float          process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -111,7 +111,7 @@ private:
 		int            _nbr_cx = 0;
 	};
 
-	void           find_crossings (CrossingList &cxm, CrossingList &cxp, float xm1, float x0, float xp1) const;
+	void           find_crossings (CrossingList &cxm, CrossingList &cxp, float xm1, float x0, float xp1) const noexcept;
 
 #endif
 

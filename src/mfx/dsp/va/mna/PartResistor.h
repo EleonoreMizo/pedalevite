@@ -49,10 +49,10 @@ class PartResistor
 
 public:
 
-	explicit       PartResistor (IdNode nid_1, IdNode nid_2, Flt r);
+	explicit       PartResistor (IdNode nid_1, IdNode nid_2, Flt r) noexcept;
 	virtual        ~PartResistor () = default;
 
-	void           set_resistance (Flt r);
+	void           set_resistance (Flt r) noexcept;
 
 
 
@@ -63,9 +63,9 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix (int it_cnt) final;
-	void           do_step () final;
-	void           do_clear_buffers () final;
+	void           do_add_to_matrix (int it_cnt) noexcept final;
+	void           do_step () noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 

@@ -210,7 +210,7 @@ void	Simulator::prepare (double sample_freq)
 
 
 
-void	Simulator::process_sample ()
+void	Simulator::process_sample () noexcept
 {
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	_st_nbr_it = 0;
@@ -286,7 +286,7 @@ void	Simulator::process_sample ()
 
 
 
-Flt	Simulator::get_node_voltage (IdNode nid) const
+Flt	Simulator::get_node_voltage (IdNode nid) const noexcept
 {
 	assert (nid >= 0);
 
@@ -305,7 +305,7 @@ Flt	Simulator::get_node_voltage (IdNode nid) const
 
 
 
-void	Simulator::clear_buffers ()
+void	Simulator::clear_buffers () noexcept
 {
 	for (auto &part_sptr : _part_arr)
 	{
@@ -317,21 +317,21 @@ void	Simulator::clear_buffers ()
 
 
 
-int	Simulator::get_matrix_size () const
+int	Simulator::get_matrix_size () const noexcept
 {
 	return _msize;
 }
 
 
 
-int	Simulator::get_nbr_nodes () const
+int	Simulator::get_nbr_nodes () const noexcept
 {
 	return _nbr_nodes;
 }
 
 
 
-int	Simulator::get_nbr_src_v () const
+int	Simulator::get_nbr_src_v () const noexcept
 {
 	return _nbr_src_v;
 }
@@ -397,14 +397,14 @@ PartInterface::IdNode	Simulator::do_allocate_node ()
 
 
 
-bool	Simulator::do_is_node_gnd (int node_idx) const
+bool	Simulator::do_is_node_gnd (int node_idx) const noexcept
 {
 	return (node_idx == _idx_gnd);
 }
 
 
 
-Flt	Simulator::do_get_voltage (int node_idx) const
+Flt	Simulator::do_get_voltage (int node_idx) const noexcept
 {
 	assert (node_idx < _nbr_nodes || is_node_gnd (node_idx));
 
@@ -419,7 +419,7 @@ Flt	Simulator::do_get_voltage (int node_idx) const
 
 
 
-Flt	Simulator::do_get_voltage (int n1_idx, int n2_idx) const
+Flt	Simulator::do_get_voltage (int n1_idx, int n2_idx) const noexcept
 {
 	const Flt      v1 = get_voltage (n1_idx);
 	const Flt      v2 = get_voltage (n2_idx);
@@ -430,7 +430,7 @@ Flt	Simulator::do_get_voltage (int n1_idx, int n2_idx) const
 
 
 
-void	Simulator::do_add_coef_mat (int row, int col, Flt val)
+void	Simulator::do_add_coef_mat (int row, int col, Flt val) noexcept
 {
 	assert (row < _msize || row == _idx_gnd);
 	assert (col < _msize || col == _idx_gnd);
@@ -443,7 +443,7 @@ void	Simulator::do_add_coef_mat (int row, int col, Flt val)
 
 
 
-void	Simulator::do_add_coef_vec (int row, Flt val)
+void	Simulator::do_add_coef_vec (int row, Flt val) noexcept
 {
 	assert (row < _msize || row == _idx_gnd);
 
@@ -459,7 +459,7 @@ void	Simulator::do_add_coef_vec (int row, Flt val)
 
 
 
-void	Simulator::build_matrix (int it_cnt)
+void	Simulator::build_matrix (int it_cnt) noexcept
 {
 	lal::fill (_mat_a, Flt (0));
 	std::fill (_vec_z.begin (), _vec_z.end (), Flt (0));

@@ -51,6 +51,7 @@ StftHelper <FFT>::StftHelper ()
 ,	_hop_size (FftType::FFT_LEN / 2)
 ,	_hop_pos (0)
 {
+	mix::Generic::setup ();
 	_buf_acc.set_sample_freq (1);
 	_buf_acc.set_max_delay_time (FftType::FFT_LEN);
 	_buf_acc.update_buffer_size ();
@@ -59,7 +60,7 @@ StftHelper <FFT>::StftHelper ()
 
 
 template <class FFT>
-void	StftHelper <FFT>::set_hop_size (int nbr_spl)
+void	StftHelper <FFT>::set_hop_size (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -87,7 +88,7 @@ void	StftHelper <FFT>::set_win (const float win_ptr [FftType::FFT_LEN])
 
 
 template <class FFT>
-void	StftHelper <FFT>::clear_buffers ()
+void	StftHelper <FFT>::clear_buffers () noexcept
 {
 	_buf_pos = 0;
 	_hop_pos = 0;
@@ -101,7 +102,7 @@ void	StftHelper <FFT>::clear_buffers ()
 // nbr_spl_proc indicates how many input samples have been processed.
 // Repeat the call until all samples are processed.
 template <class FFT>
-void	StftHelper <FFT>::process_block (const float spl_ptr [], float freq_ptr [FftType::FFT_LEN], int nbr_spl, bool &trans_flag, int &nbr_spl_proc)
+void	StftHelper <FFT>::process_block (const float spl_ptr [], float freq_ptr [FftType::FFT_LEN], int nbr_spl, bool &trans_flag, int &nbr_spl_proc) noexcept
 {
 	assert (spl_ptr != nullptr);
 	assert (freq_ptr != nullptr);

@@ -47,11 +47,11 @@ class WhiteFast
 
 public:
 
-	void           set_seed (uint32_t seed);
-	void           set_rough_level (float lvl);
-	inline float   process_sample ();
-	void           process_block (float dst_ptr [], int nbr_spl);
-	void           process_block_add (float dst_ptr [], int nbr_spl);
+	void           set_seed (uint32_t seed) noexcept;
+	void           set_rough_level (float lvl) noexcept;
+	inline float   process_sample () noexcept;
+	void           process_block (float dst_ptr [], int nbr_spl) noexcept;
+	void           process_block_add (float dst_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -77,7 +77,7 @@ private:
 		float          _f;
 	};
 
-	inline float   gen_new_val (uint32_t &state);
+	inline float   gen_new_val (uint32_t &state) noexcept;
 
 	uint32_t       _state  = 1;
 	uint32_t       _exp_or = 0x3F000000;

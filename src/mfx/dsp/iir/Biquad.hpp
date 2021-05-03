@@ -39,7 +39,7 @@ namespace iir
 
 
 
-void	Biquad::neutralise ()
+void	Biquad::neutralise () noexcept
 {
 	_eq_z_b [0] = 1;
 	_eq_z_b [1] = 0;
@@ -50,7 +50,7 @@ void	Biquad::neutralise ()
 
 
 
-void	Biquad::set_z_eq (const float b [3], const float a [3])
+void	Biquad::set_z_eq (const float b [3], const float a [3]) noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -64,7 +64,7 @@ void	Biquad::set_z_eq (const float b [3], const float a [3])
 
 
 
-void	Biquad::get_z_eq (float b [3], float a [3]) const
+void	Biquad::get_z_eq (float b [3], float a [3]) const noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -78,7 +78,7 @@ void	Biquad::get_z_eq (float b [3], float a [3]) const
 
 
 
-void	Biquad::copy_z_eq (const Biquad &other)
+void	Biquad::copy_z_eq (const Biquad &other) noexcept
 {
 	_eq_z_b [0] = other._eq_z_b [0];
 	_eq_z_b [1] = other._eq_z_b [1];
@@ -89,21 +89,21 @@ void	Biquad::copy_z_eq (const Biquad &other)
 
 
 
-float	Biquad::get_state_y () const
+float	Biquad::get_state_y () const noexcept
 {
 	return _mem_y [_mem_pos];
 }
 
 
 
-void	Biquad::set_state_y (float y)
+void	Biquad::set_state_y (float y) noexcept
 {
 	_mem_y [_mem_pos] = y;
 }
 
 
 
-void	Biquad::get_state (float mem_x [2], float mem_y [2]) const
+void	Biquad::get_state (float mem_x [2], float mem_y [2]) const noexcept
 {
 	const int      alt_pos = 1 - _mem_pos;
 	mem_x [0] = _mem_x [_mem_pos];
@@ -114,7 +114,7 @@ void	Biquad::get_state (float mem_x [2], float mem_y [2]) const
 
 
 
-void	Biquad::set_state (const float mem_x [2], const float mem_y [2])
+void	Biquad::set_state (const float mem_x [2], const float mem_y [2]) noexcept
 {
 	const int      alt_pos = 1 - _mem_pos;
 	_mem_x [_mem_pos] = mem_x [0];
@@ -125,7 +125,7 @@ void	Biquad::set_state (const float mem_x [2], const float mem_y [2])
 
 
 
-float	Biquad::process_sample (float x)
+float	Biquad::process_sample (float x) noexcept
 {
 	const int      alt_pos = 1 - _mem_pos;
 	const float    y =      _eq_z_b [0] *      x
@@ -143,7 +143,7 @@ float	Biquad::process_sample (float x)
 
 
 
-float	Biquad::process_sample (float x, const float inc_b [3], const float inc_a [3])
+float	Biquad::process_sample (float x, const float inc_b [3], const float inc_a [3]) noexcept
 {
 	assert (inc_b != nullptr);
 	assert (inc_a != nullptr);
@@ -164,7 +164,7 @@ float	Biquad::process_sample (float x, const float inc_b [3], const float inc_a 
 
 
 
-void	Biquad::step_z_eq (const float inc_b [3], const float inc_a [3])
+void	Biquad::step_z_eq (const float inc_b [3], const float inc_a [3]) noexcept
 {
 	assert (inc_b != nullptr);
 	assert (inc_a != nullptr);

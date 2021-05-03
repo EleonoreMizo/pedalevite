@@ -43,7 +43,7 @@ namespace lfo
 
 
 
-PhaseGen::PhaseGen ()
+PhaseGen::PhaseGen () noexcept
 :	_phase (0)
 ,	_step (0)
 ,	_sample_freq (44100)
@@ -54,7 +54,7 @@ PhaseGen::PhaseGen ()
 
 
 
-void	PhaseGen::set_sample_freq (double sample_freq)
+void	PhaseGen::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -64,7 +64,7 @@ void	PhaseGen::set_sample_freq (double sample_freq)
 
 
 
-void	PhaseGen::set_period (double per)
+void	PhaseGen::set_period (double per) noexcept
 {
 	assert (per > 0);
 
@@ -74,7 +74,7 @@ void	PhaseGen::set_period (double per)
 
 
 
-void	PhaseGen::set_phase (double phase)
+void	PhaseGen::set_phase (double phase) noexcept
 {
 	assert (phase >= 0);
 	assert (phase < 1);
@@ -84,7 +84,7 @@ void	PhaseGen::set_phase (double phase)
 
 
 
-void	PhaseGen::tick (int nbr_spl)
+void	PhaseGen::tick (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -98,21 +98,21 @@ void	PhaseGen::tick (int nbr_spl)
 
 
 
-double	PhaseGen::get_sample_freq () const
+double	PhaseGen::get_sample_freq () const noexcept
 {
 	return (_sample_freq);
 }
 
 
 
-double	PhaseGen::get_period () const
+double	PhaseGen::get_period () const noexcept
 {
 	return (_period);
 }
 
 
 
-double	PhaseGen::get_phase () const
+double	PhaseGen::get_phase () const noexcept
 {
 	return (_phase);
 }
@@ -127,7 +127,7 @@ double	PhaseGen::get_phase () const
 
 
 
-void	PhaseGen::update_period ()
+void	PhaseGen::update_period () noexcept
 {
 	_step = 1.0 / (_period * _sample_freq);
 	assert (_step < 1e6);	// To stay in acceptable range

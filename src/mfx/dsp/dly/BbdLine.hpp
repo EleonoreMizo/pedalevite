@@ -81,21 +81,21 @@ void	BbdLine <MSL2, AL>::init (int max_bbd_size, rspl::InterpolatorInterface &in
 
 
 template <int MSL2, typename AL>
-const rspl::InterpolatorInterface &	BbdLine <MSL2, AL>::use_interpolator () const
+int	BbdLine <MSL2, AL>::get_ovrspl_l2 () const noexcept
 {
-	assert (_interp_ptr != nullptr);
+	assert (_ovrspl_l2 >= 0);
 
-	return *_interp_ptr;
+	return _ovrspl_l2;
 }
 
 
 
 template <int MSL2, typename AL>
-int	BbdLine <MSL2, AL>::get_ovrspl_l2 () const
+const rspl::InterpolatorInterface &	BbdLine <MSL2, AL>::use_interpolator () const noexcept
 {
-	assert (_ovrspl_l2 >= 0);
+	assert (_interp_ptr != nullptr);
 
-	return _ovrspl_l2;
+	return *_interp_ptr;
 }
 
 
@@ -117,7 +117,7 @@ void	BbdLine <MSL2, AL>::set_bbd_size (int bbd_size)
 
 
 template <int MSL2, typename AL>
-int	BbdLine <MSL2, AL>::get_bbd_size () const
+int	BbdLine <MSL2, AL>::get_bbd_size () const noexcept
 {
 	assert (_bbd_size > 1);
 
@@ -129,7 +129,7 @@ int	BbdLine <MSL2, AL>::get_bbd_size () const
 // Call this first, before any other function.
 // speed indicates the rate of the BDD relative to the in/out sampling freq.
 template <int MSL2, typename AL>
-void	BbdLine <MSL2, AL>::set_speed (float speed)
+void	BbdLine <MSL2, AL>::set_speed (float speed) noexcept
 {
 	assert (speed * (1 << -_min_speed_l2) >= 1);
 
@@ -142,7 +142,7 @@ void	BbdLine <MSL2, AL>::set_speed (float speed)
 // Valid for the current speed
 // delay in samples
 template <int MSL2, typename AL>
-float	BbdLine <MSL2, AL>::compute_min_delay () const
+float	BbdLine <MSL2, AL>::compute_min_delay () const noexcept
 {
 	return std::max (
 		(_imp_len - _group_dly.get_val_flt ()) * _speed,
@@ -157,7 +157,7 @@ float	BbdLine <MSL2, AL>::compute_min_delay () const
 // compute_min_delay ().
 // dly_min in samples
 template <int MSL2, typename AL>
-int	BbdLine <MSL2, AL>::estimate_max_one_shot_proc_w_feedback (float dly_min) const
+int	BbdLine <MSL2, AL>::estimate_max_one_shot_proc_w_feedback (float dly_min) const noexcept
 {
 	assert (dly_min >= 1);
 
@@ -192,7 +192,7 @@ BBD bin.
 */
 
 template <int MSL2, typename AL>
-void	BbdLine <MSL2, AL>::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const
+void	BbdLine <MSL2, AL>::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -225,7 +225,7 @@ void	BbdLine <MSL2, AL>::read_block (float dst_ptr [], long nbr_spl, float dly_b
 
 
 template <int MSL2, typename AL>
-float	BbdLine <MSL2, AL>::read_sample (float dly) const
+float	BbdLine <MSL2, AL>::read_sample (float dly) const noexcept
 {
 	assert (dly >= 1);
 	assert (dly >= (_imp_len - _group_dly.get_val_flt ()) * _speed);
@@ -245,7 +245,7 @@ float	BbdLine <MSL2, AL>::read_sample (float dly) const
 
 
 template <int MSL2, typename AL>
-void	BbdLine <MSL2, AL>::push_block (const float src_ptr [], int nbr_spl)
+void	BbdLine <MSL2, AL>::push_block (const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -280,7 +280,7 @@ void	BbdLine <MSL2, AL>::push_block (const float src_ptr [], int nbr_spl)
 
 
 template <int MSL2, typename AL>
-void	BbdLine <MSL2, AL>::push_sample (float x)
+void	BbdLine <MSL2, AL>::push_sample (float x) noexcept
 {
 	push_timestamps (1);
 
@@ -299,7 +299,7 @@ void	BbdLine <MSL2, AL>::push_sample (float x)
 
 
 template <int MSL2, typename AL>
-void	BbdLine <MSL2, AL>::clear_buffers ()
+void	BbdLine <MSL2, AL>::clear_buffers () noexcept
 {
 	_line_ts.clear_buffers ();
 	_line_data.clear_buffers ();
@@ -318,7 +318,7 @@ void	BbdLine <MSL2, AL>::clear_buffers ()
 
 
 template <int MSL2, typename AL>
-float	BbdLine <MSL2, AL>::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const
+float	BbdLine <MSL2, AL>::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const noexcept
 {
 	assert (dly_cur >= 1);
 
@@ -352,7 +352,7 @@ float	BbdLine <MSL2, AL>::read_sample (float dly_cur, int ts_mask, const fstb::F
 
 
 template <int MSL2, typename AL>
-void	BbdLine <MSL2, AL>::push_timestamps (int nbr_spl)
+void	BbdLine <MSL2, AL>::push_timestamps (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 

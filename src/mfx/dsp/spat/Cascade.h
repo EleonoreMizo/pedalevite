@@ -9,8 +9,8 @@ Template parameters:
 	D1::D1 ();
 	D1::~D1 ();
 	typename D1::DataType;
-	D1::DataType D1::process_sample (D1::DataType);
-	void D1::clear_buffers ();
+	D1::DataType D1::process_sample (D1::DataType) noexcept;
+	void D1::clear_buffers () noexcept;
 
 - D2: same as D1, but processed with the output of D1
 
@@ -57,12 +57,12 @@ public:
 
 	typedef typename D1::DataType DataType;
 
-	D1 &           use_proc_1 ();
-	D2 &           use_proc_2 ();
+	D1 &           use_proc_1 () noexcept;
+	D2 &           use_proc_2 () noexcept;
 
 	fstb_FORCEINLINE DataType
-	               process_sample (DataType x);
-	void           clear_buffers ();
+	               process_sample (DataType x) noexcept;
+	void           clear_buffers () noexcept;
 
 
 

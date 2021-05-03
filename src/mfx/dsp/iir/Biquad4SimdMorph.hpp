@@ -44,7 +44,7 @@ namespace iir
 
 
 template <class VD, class VS, class VP>
-Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other)
+Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other) noexcept
 :	_biq (other._biq)
 ,	_step_b ()
 ,	_step_a ()
@@ -62,7 +62,7 @@ Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS,
 
 
 template <class VD, class VS, class VP>
-Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (Biquad4SimdMorph <VD, VS, VP> &&other)
+Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (Biquad4SimdMorph <VD, VS, VP> &&other) noexcept
 :	_biq (std::move (other._biq))
 ,	_step_b ()
 ,	_step_a ()
@@ -80,7 +80,7 @@ Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (Biquad4SimdMorph <VD, VS, VP> &
 
 
 template <class VD, class VS, class VP>
-Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (const Biquad4SimdMorph <VD, VS, VP> &other)
+Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (const Biquad4SimdMorph <VD, VS, VP> &other) noexcept
 {
 	if (this != &other)
 	{
@@ -97,7 +97,7 @@ Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (const
 
 
 template <class VD, class VS, class VP>
-Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (Biquad4SimdMorph <VD, VS, VP> &&other)
+Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (Biquad4SimdMorph <VD, VS, VP> &&other) noexcept
 {
 	if (this != &other)
 	{
@@ -114,7 +114,7 @@ Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (Biqua
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::copy_vectors (const Biquad4SimdMorph <VD, VS, VP> &other)
+void	Biquad4SimdMorph <VD, VS, VP>::copy_vectors (const Biquad4SimdMorph <VD, VS, VP> &other) noexcept
 {
 	V128Par::store_f32 (_step_b [0]  , V128Par::load_f32 (other._step_b [0]  ));
 	V128Par::store_f32 (_step_b [1]  , V128Par::load_f32 (other._step_b [1]  ));
@@ -136,7 +136,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::copy_vectors (const Biquad4SimdMorph <VD, VS
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -171,7 +171,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl)
 
 
 template <class VD, class VS, class VP>
-int	Biquad4SimdMorph <VD, VS, VP>::get_ramp_time () const
+int	Biquad4SimdMorph <VD, VS, VP>::get_ramp_time () const noexcept
 {
 	return _ramp_len;
 }
@@ -179,7 +179,7 @@ int	Biquad4SimdMorph <VD, VS, VP>::get_ramp_time () const
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFlt4 a [3], bool ramp_flag)
+void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFlt4 a [3], bool ramp_flag) noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -253,7 +253,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFl
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_same (const float b [3], const float a [3], bool ramp_flag)
+void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_same (const float b [3], const float a [3], bool ramp_flag) noexcept
 {
 	assert (b != 0);
 	assert (a != 0);
@@ -270,7 +270,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_same (const float b [3], const floa
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], const float a [3], bool ramp_flag)
+void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], const float a [3], bool ramp_flag) noexcept
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);
@@ -387,7 +387,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], co
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::neutralise (bool ramp_flag)
+void	Biquad4SimdMorph <VD, VS, VP>::neutralise (bool ramp_flag) noexcept
 {
 	V128Par::store_f32 (&_tmp_b [0] [0], fstb::ToolsSimd::set1_f32 (1));
 	V128Par::store_f32 (&_tmp_b [1] [0], fstb::ToolsSimd::set1_f32 (0));
@@ -399,7 +399,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::neutralise (bool ramp_flag)
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::neutralise_one (int biq, bool ramp_flag)
+void	Biquad4SimdMorph <VD, VS, VP>::neutralise_one (int biq, bool ramp_flag) noexcept
 {
 	const float    ab [3] = { 1, 0, 0 };
 	set_z_eq_one (biq, ab, ab, ramp_flag);
@@ -408,7 +408,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::neutralise_one (int biq, bool ramp_flag)
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq (VectFlt4 b [3], VectFlt4 a [3]) const
+void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq (VectFlt4 b [3], VectFlt4 a [3]) const noexcept
 {
 	_biq.get_z_eq (b, a);
 }
@@ -416,7 +416,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq (VectFlt4 b [3], VectFlt4 a [3]) co
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one (int biq, float b [3], float a [3]) const
+void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one (int biq, float b [3], float a [3]) const noexcept
 {
 	_biq.get_z_eq_one (biq, b, a);
 }
@@ -424,7 +424,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one (int biq, float b [3], float a 
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_ramp (int biq, float b [3], float a [3]) const
+void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_ramp (int biq, float b [3], float a [3]) const noexcept
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);
@@ -448,7 +448,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_ramp (int biq, float b [3], flo
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_final (int biq, float b [3], float a [3]) const
+void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_final (int biq, float b [3], float a [3]) const noexcept
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);
@@ -483,7 +483,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_final (int biq, float b [3], fl
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::set_state_one (int biq, float const mem_x [2], const float mem_y [2])
+void	Biquad4SimdMorph <VD, VS, VP>::set_state_one (int biq, float const mem_x [2], const float mem_y [2]) noexcept
 {
 	_biq.set_state_one (biq, mem_x, mem_y);
 }
@@ -491,7 +491,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_state_one (int biq, float const mem_x [2
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::get_state_one (int biq, float mem_x [2], float mem_y [2]) const
+void	Biquad4SimdMorph <VD, VS, VP>::get_state_one (int biq, float mem_x [2], float mem_y [2]) const noexcept
 {
 	_biq.get_state_one (biq, mem_x, mem_y);
 }
@@ -499,7 +499,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_state_one (int biq, float mem_x [2], flo
 
 
 template <class VD, class VS, class VP>
-bool	Biquad4SimdMorph <VD, VS, VP>::is_ramping () const
+bool	Biquad4SimdMorph <VD, VS, VP>::is_ramping () const noexcept
 {
 	return (_nbr_rem_spl > 0);
 }
@@ -507,7 +507,7 @@ bool	Biquad4SimdMorph <VD, VS, VP>::is_ramping () const
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -542,7 +542,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::Vec
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -577,7 +577,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::Vec
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -612,7 +612,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr 
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -647,7 +647,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_pt
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -682,7 +682,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [],
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -717,7 +717,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers ()
+void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers () noexcept
 {
 	_biq.clear_buffers ();
 
@@ -741,7 +741,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers ()
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers_one (int biq)
+void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers_one (int biq) noexcept
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);
@@ -760,7 +760,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers_one (int biq)
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::handle_ramp_post (int nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::handle_ramp_post (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (_nbr_rem_spl <= 0 || nbr_spl <= _nbr_rem_spl);

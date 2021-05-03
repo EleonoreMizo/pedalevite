@@ -48,25 +48,9 @@ namespace lfo
 
 
 
-OscNPhase::OscNPhase (bool biphase_flag)
-:	_sample_freq (44100)
-,	_phase (0)
-,	_step (0)
-,	_k_phase (0)
-,	_k_step (0)
-,	_variation_arr ()
-,	_period (1)
-,	_inv_np (1)
-,	_nc (1)
-,	_np (1)
-,	_phase_dist ()
-,	_inv_flag (false)
-,	_unipolar_flag (false)
-,	_biphase_flag (biphase_flag)
+OscNPhase::OscNPhase (bool biphase_flag) noexcept
+:	_biphase_flag (biphase_flag)
 {
-	_variation_arr [Variation_TIME ] = 0;
-	_variation_arr [Variation_SHAPE] = 0;
-
 	update_period ();
 }
 
@@ -76,7 +60,7 @@ OscNPhase::OscNPhase (bool biphase_flag)
 
 
 
-void	OscNPhase::do_set_sample_freq (double sample_freq)
+void	OscNPhase::do_set_sample_freq (double sample_freq) noexcept
 {
 	_sample_freq = sample_freq;
 	update_period ();
@@ -84,7 +68,7 @@ void	OscNPhase::do_set_sample_freq (double sample_freq)
 
 
 
-void	OscNPhase::do_set_period (double per)
+void	OscNPhase::do_set_period (double per) noexcept
 {
 	_period = per;
 	update_period ();
@@ -92,7 +76,7 @@ void	OscNPhase::do_set_period (double per)
 
 
 
-void	OscNPhase::do_set_phase (double phase)
+void	OscNPhase::do_set_phase (double phase) noexcept
 {
 	_phase   = phase;
 	_k_phase = phase * _nc * _np;
@@ -100,42 +84,42 @@ void	OscNPhase::do_set_phase (double phase)
 
 
 
-void	OscNPhase::do_set_phase_dist (double dist)
+void	OscNPhase::do_set_phase_dist (double dist) noexcept
 {
 	_phase_dist.set_phase_dist (dist);
 }
 
 
 
-void	OscNPhase::do_set_phase_dist_offset (double ofs)
+void	OscNPhase::do_set_phase_dist_offset (double ofs) noexcept
 {
 	_phase_dist.set_phase_dist_offset (ofs);
 }
 
 
 
-void	OscNPhase::do_set_chaos (double /*chaos*/)
+void	OscNPhase::do_set_chaos (double /*chaos*/) noexcept
 {
 	// Nothing
 }
 
 
 
-void	OscNPhase::do_set_sign (bool inv_flag)
+void	OscNPhase::do_set_sign (bool inv_flag) noexcept
 {
 	_inv_flag = inv_flag;
 }
 
 
 
-void	OscNPhase::do_set_polarity (bool unipolar_flag)
+void	OscNPhase::do_set_polarity (bool unipolar_flag) noexcept
 {
 	_unipolar_flag = unipolar_flag;
 }
 
 
 
-void	OscNPhase::do_set_variation (int param, double val)
+void	OscNPhase::do_set_variation (int param, double val) noexcept
 {
 	if (is_using_variation (param))
 	{
@@ -146,7 +130,7 @@ void	OscNPhase::do_set_variation (int param, double val)
 
 
 
-bool	OscNPhase::do_is_using_variation (int param) const
+bool	OscNPhase::do_is_using_variation (int param) const noexcept
 {
 	return (   param == Variation_TIME
 	        || param == Variation_SHAPE);
@@ -154,7 +138,7 @@ bool	OscNPhase::do_is_using_variation (int param) const
 
 
 
-void	OscNPhase::do_tick (int nbr_spl)
+void	OscNPhase::do_tick (int nbr_spl) noexcept
 {
 	_phase += _step * nbr_spl;
 	if (_phase >= 1)
@@ -172,7 +156,7 @@ void	OscNPhase::do_tick (int nbr_spl)
 
 
 
-double	OscNPhase::do_get_val () const
+double	OscNPhase::do_get_val () const noexcept
 {
 	const int		k     = fstb::floor_int (_k_phase);
 	double			phase = _phase + k * _inv_np;	// [0 ; 2[
@@ -197,14 +181,14 @@ double	OscNPhase::do_get_val () const
 
 
 
-double	OscNPhase::do_get_phase () const
+double	OscNPhase::do_get_phase () const noexcept
 {
 	return _phase;
 }
 
 
 
-void	OscNPhase::do_clear_buffers ()
+void	OscNPhase::do_clear_buffers () noexcept
 {
 	// Nothing
 }
@@ -215,7 +199,7 @@ void	OscNPhase::do_clear_buffers ()
 
 
 
-void	OscNPhase::update_period ()
+void	OscNPhase::update_period () noexcept
 {
 	const float		ln_nc = float (_variation_arr [Variation_TIME] * 8);
 	_nc = fstb::Approx::exp2 (ln_nc);
@@ -233,10 +217,10 @@ void	OscNPhase::update_period ()
 	const double	ps = _period * _sample_freq;
 
 	_step = 1.0 / (ps * _np);
-	assert (_step < 1e6);	// To stay in acceptable range
+	assert (_step < 1e6);   // To stay in acceptable range
 
 	_k_step = _nc / ps;
-	assert (_k_step < 1e6);	// To stay in acceptable range
+	assert (_k_step < 1e6); // To stay in acceptable range
 
 	if (_biphase_flag)
 	{

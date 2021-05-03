@@ -30,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
-#include <cstring>
 
 
 
@@ -73,9 +72,9 @@ void	DelayLineSimpleMod::set_delay (int len, int mod_per, int mod_depth)
 
 
 
-void	DelayLineSimpleMod::clear_buffers ()
+void	DelayLineSimpleMod::clear_buffers () noexcept
 {
-	memset (&_line_data [0], 0, _line_data.size () * sizeof (_line_data [0]));
+	std::fill (_line_data.begin (), _line_data.end (), 0.f);
 	_write_pos = 0;
 	_mod_pos_t = _mod_per;
 	_mod_pos_d = 0;
@@ -84,7 +83,7 @@ void	DelayLineSimpleMod::clear_buffers ()
 
 
 
-int	DelayLineSimpleMod::get_max_rw_len () const
+int	DelayLineSimpleMod::get_max_rw_len () const noexcept
 {
 	const int      dly_cur  = compute_delay ();
 	const int      read_pos = compute_read_pos (dly_cur);
@@ -103,7 +102,7 @@ int	DelayLineSimpleMod::get_max_rw_len () const
 
 
 
-const float *	DelayLineSimpleMod::use_read_data () const
+const float *	DelayLineSimpleMod::use_read_data () const noexcept
 {
 	const int      read_pos = compute_read_pos ();
 
@@ -112,14 +111,14 @@ const float *	DelayLineSimpleMod::use_read_data () const
 
 
 
-float *	DelayLineSimpleMod::use_write_data ()
+float *	DelayLineSimpleMod::use_write_data () noexcept
 {
 	return &_line_data [_write_pos];
 }
 
 
 
-void	DelayLineSimpleMod::step (int len)
+void	DelayLineSimpleMod::step (int len) noexcept
 {
 	assert (len > 0);
 	assert (len <= _delay);
@@ -152,7 +151,7 @@ void	DelayLineSimpleMod::step (int len)
 
 
 
-int	DelayLineSimpleMod::compute_read_pos () const
+int	DelayLineSimpleMod::compute_read_pos () const noexcept
 {
 	const int      dly_cur = compute_delay ();
 
@@ -161,14 +160,14 @@ int	DelayLineSimpleMod::compute_read_pos () const
 
 
 
-int	DelayLineSimpleMod::compute_read_pos (int dly_cur) const
+int	DelayLineSimpleMod::compute_read_pos (int dly_cur) const noexcept
 {
 	return (_write_pos - dly_cur) & _line_mask;
 }
 
 
 
-int	DelayLineSimpleMod::compute_delay () const
+int	DelayLineSimpleMod::compute_delay () const noexcept
 {
 	return _delay + _mod_pos_d;
 }

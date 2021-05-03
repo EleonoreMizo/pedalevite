@@ -57,13 +57,13 @@ class WsTruncMod
 public:
 
    template <typename T>
-   fstb_FORCEINLINE T operator () (T x)
+   fstb_FORCEINLINE T operator () (T x) noexcept
    {
       return process_sample (x);
    }
 
    template <typename T>
-   static fstb_FORCEINLINE T process_sample (T x)
+   static fstb_FORCEINLINE T process_sample (T x) noexcept
    {
 		const T        lb = T (LB::num) / T (LB::den);
 		const T        ub = T (UB::num) / T (UB::den);

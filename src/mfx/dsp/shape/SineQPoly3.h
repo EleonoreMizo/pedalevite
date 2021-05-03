@@ -68,9 +68,9 @@ class SineQPoly3
 public:
 
 	fstb_FORCEINLINE T
-	               operator () (T x) const;
+	               operator () (T x) const noexcept;
 	static fstb_FORCEINLINE T
-	               approximate (T x);
+	               approximate (T x) noexcept;
 
 
 

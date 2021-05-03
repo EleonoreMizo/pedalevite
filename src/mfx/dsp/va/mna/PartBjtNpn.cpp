@@ -49,7 +49,7 @@ namespace mna
 
 
 
-PartBjtNpn::PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Flt beta_f, Flt beta_r)
+PartBjtNpn::PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Flt beta_f, Flt beta_r) noexcept
 :	_nid_e (nid_e)
 ,	_nid_b (nid_b)
 ,	_nid_c (nid_c)
@@ -70,7 +70,7 @@ PartBjtNpn::PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Flt be
 
 
 
-void	PartBjtNpn::set_is (Flt is)
+void	PartBjtNpn::set_is (Flt is) noexcept
 {
 	assert (is >= 1e-20f);
 	assert (is <= 1e-1f);
@@ -80,7 +80,7 @@ void	PartBjtNpn::set_is (Flt is)
 
 
 
-void	PartBjtNpn::set_beta_f (Flt beta)
+void	PartBjtNpn::set_beta_f (Flt beta) noexcept
 {
 	assert (beta > 0);
 
@@ -90,7 +90,7 @@ void	PartBjtNpn::set_beta_f (Flt beta)
 
 
 
-void	PartBjtNpn::set_beta_r (Flt beta)
+void	PartBjtNpn::set_beta_r (Flt beta) noexcept
 {
 	assert (beta >= 0);
 
@@ -100,7 +100,7 @@ void	PartBjtNpn::set_beta_r (Flt beta)
 
 
 
-void	PartBjtNpn::set_imax (Flt imax)
+void	PartBjtNpn::set_imax (Flt imax) noexcept
 {
 	assert (imax > 0);
 
@@ -138,7 +138,7 @@ void	PartBjtNpn::do_prepare (const SimInfo &info)
 
 
 
-void	PartBjtNpn::do_add_to_matrix (int it_cnt)
+void	PartBjtNpn::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -215,14 +215,14 @@ void	PartBjtNpn::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartBjtNpn::do_step ()
+void	PartBjtNpn::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartBjtNpn::do_clear_buffers ()
+void	PartBjtNpn::do_clear_buffers () noexcept
 {
 	// Nothing
 }
@@ -233,7 +233,7 @@ void	PartBjtNpn::do_clear_buffers ()
 
 
 
-void	PartBjtNpn::compute_param ()
+void	PartBjtNpn::compute_param () noexcept
 {
 	_bf_inv  = 1.f / _beta_f;
 	_br_inv  = 1.f / _beta_r;
@@ -245,7 +245,7 @@ void	PartBjtNpn::compute_param ()
 
 
 
-Flt	PartBjtNpn::compute_vmax (Flt imax, Flt is, Flt vt, Flt n)
+Flt	PartBjtNpn::compute_vmax (Flt imax, Flt is, Flt vt, Flt n) noexcept
 {
 	assert (is > 0);
 	assert (imax > 0);

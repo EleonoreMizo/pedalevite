@@ -49,7 +49,7 @@ namespace dyn
 
 
 
-MeterRmsPeakHold4Simd::MeterRmsPeakHold4Simd ()
+MeterRmsPeakHold4Simd::MeterRmsPeakHold4Simd () noexcept
 :	_hold_time_s (2.0)
 ,	_attack_time_s (0.025)
 ,	_release_time_s (0.250)
@@ -70,7 +70,7 @@ MeterRmsPeakHold4Simd::MeterRmsPeakHold4Simd ()
 
 
 
-void	MeterRmsPeakHold4Simd::set_sample_freq (double freq)
+void	MeterRmsPeakHold4Simd::set_sample_freq (double freq) noexcept
 {
 	assert (freq > 0);
 
@@ -80,7 +80,7 @@ void	MeterRmsPeakHold4Simd::set_sample_freq (double freq)
 
 
 
-void	MeterRmsPeakHold4Simd::set_hold_time_s (double t)
+void	MeterRmsPeakHold4Simd::set_hold_time_s (double t) noexcept
 {
 	assert (t > 0);
 
@@ -90,7 +90,7 @@ void	MeterRmsPeakHold4Simd::set_hold_time_s (double t)
 
 
 
-void	MeterRmsPeakHold4Simd::set_attack_time_s (double t)
+void	MeterRmsPeakHold4Simd::set_attack_time_s (double t) noexcept
 {
 	assert (t > 0);
 
@@ -100,7 +100,7 @@ void	MeterRmsPeakHold4Simd::set_attack_time_s (double t)
 
 
 
-void	MeterRmsPeakHold4Simd::set_release_time_s (double t)
+void	MeterRmsPeakHold4Simd::set_release_time_s (double t) noexcept
 {
 	assert (t > 0);
 
@@ -110,7 +110,7 @@ void	MeterRmsPeakHold4Simd::set_release_time_s (double t)
 
 
 
-void	MeterRmsPeakHold4Simd::clear_buffers ()
+void	MeterRmsPeakHold4Simd::clear_buffers () noexcept
 {
 	fstb::ToolsSimd::store_f32 (&_peak_max    , fstb::ToolsSimd::set_f32_zero ());
 	fstb::ToolsSimd::store_f32 (&_peak_hold   , fstb::ToolsSimd::set_f32_zero ());
@@ -120,7 +120,7 @@ void	MeterRmsPeakHold4Simd::clear_buffers ()
 
 
 
-void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int nbr_spl)
+void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr [0]));
@@ -197,7 +197,7 @@ void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int
 
 
 
-void	MeterRmsPeakHold4Simd::process_sample (fstb::ToolsSimd::VectF32 x)
+void	MeterRmsPeakHold4Simd::process_sample (fstb::ToolsSimd::VectF32 x) noexcept
 {
 	auto           peak_max  = fstb::ToolsSimd::load_f32 (&_peak_max);
 	auto           peak_hold = fstb::ToolsSimd::load_f32 (&_peak_hold);
@@ -216,21 +216,21 @@ void	MeterRmsPeakHold4Simd::process_sample (fstb::ToolsSimd::VectF32 x)
 
 
 
-fstb::ToolsSimd::VectF32	MeterRmsPeakHold4Simd::get_peak () const
+fstb::ToolsSimd::VectF32	MeterRmsPeakHold4Simd::get_peak () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_peak_max);
 }
 
 
 
-fstb::ToolsSimd::VectF32	MeterRmsPeakHold4Simd::get_peak_hold () const
+fstb::ToolsSimd::VectF32	MeterRmsPeakHold4Simd::get_peak_hold () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_peak_hold);
 }
 
 
 
-fstb::ToolsSimd::VectF32	MeterRmsPeakHold4Simd::get_rms () const
+fstb::ToolsSimd::VectF32	MeterRmsPeakHold4Simd::get_rms () const noexcept
 {
 	const auto     rms_sq = fstb::ToolsSimd::load_f32 (&_rms_sq);
 
@@ -239,7 +239,7 @@ fstb::ToolsSimd::VectF32	MeterRmsPeakHold4Simd::get_rms () const
 
 
 
-void	MeterRmsPeakHold4Simd::clear_peak ()
+void	MeterRmsPeakHold4Simd::clear_peak () noexcept
 {
 	fstb::ToolsSimd::store_f32 (&_peak_max, fstb::ToolsSimd::set_f32_zero ());
 }
@@ -254,7 +254,7 @@ void	MeterRmsPeakHold4Simd::clear_peak ()
 
 
 
-void	MeterRmsPeakHold4Simd::update_times ()
+void	MeterRmsPeakHold4Simd::update_times () noexcept
 {
 	_hold_time = fstb::ceil_int (_sample_freq * _hold_time_s);
 	_coef_r    = float (
@@ -273,7 +273,7 @@ void	MeterRmsPeakHold4Simd::update_times ()
 
 
 
-void	MeterRmsPeakHold4Simd::process_sample_peak (fstb::ToolsSimd::VectF32 x_a, fstb::ToolsSimd::VectF32 &peak_max, fstb::ToolsSimd::VectF32 &peak_hold, fstb::ToolsSimd::VectF32 &hold_cnt, float coef_r_flt, int step_int) const
+void	MeterRmsPeakHold4Simd::process_sample_peak (fstb::ToolsSimd::VectF32 x_a, fstb::ToolsSimd::VectF32 &peak_max, fstb::ToolsSimd::VectF32 &peak_hold, fstb::ToolsSimd::VectF32 &hold_cnt, float coef_r_flt, int step_int) const noexcept
 {
 	const auto     hold_time = fstb::ToolsSimd::set1_f32 (float (_hold_time));
 	const auto     coef_r    = fstb::ToolsSimd::set1_f32 (coef_r_flt);
@@ -298,7 +298,7 @@ void	MeterRmsPeakHold4Simd::process_sample_peak (fstb::ToolsSimd::VectF32 x_a, f
 
 
 
-void	MeterRmsPeakHold4Simd::process_sample_rms (fstb::ToolsSimd::VectF32 x, fstb::ToolsSimd::VectF32 &rms_sq) const
+void	MeterRmsPeakHold4Simd::process_sample_rms (fstb::ToolsSimd::VectF32 x, fstb::ToolsSimd::VectF32 &rms_sq) const noexcept
 {
 	const auto     coef_r2   = fstb::ToolsSimd::set1_f32 (_coef_r2);
 	const auto     coef_a2   = fstb::ToolsSimd::set1_f32 (_coef_a2);

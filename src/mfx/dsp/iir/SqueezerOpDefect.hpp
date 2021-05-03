@@ -41,7 +41,7 @@ namespace iir
 
 
 template <int HA>
-void	SqueezerOpDefect <HA>::config (float reso, float p1)
+void	SqueezerOpDefect <HA>::config (float reso, float p1) noexcept
 {
 	_param   = 1.25f - p1 - reso * 0.125f;
 	assert (_param >= 0);
@@ -52,7 +52,7 @@ void	SqueezerOpDefect <HA>::config (float reso, float p1)
 
 
 template <int HA>
-float	SqueezerOpDefect <HA>::process_sample (float x)
+float	SqueezerOpDefect <HA>::process_sample (float x) noexcept
 {
 	const float    xa = fabs (x);
 	if (xa > _param)

@@ -57,7 +57,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::set_nbr_chn (int nbr_chn)
+void	SnhTool::set_nbr_chn (int nbr_chn) noexcept
 {
 	assert (nbr_chn > 0);
 	assert (nbr_chn <= Cst::MAX_NBR_CHN);
@@ -69,7 +69,7 @@ void	SnhTool::set_nbr_chn (int nbr_chn)
 
 
 
-int	SnhTool::get_nbr_chn () const
+int	SnhTool::get_nbr_chn () const noexcept
 {
 	return _nbr_chn;
 }
@@ -89,7 +89,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::set_ovrspl (int ovrspl_l2)
+void	SnhTool::set_ovrspl (int ovrspl_l2) noexcept
 {
 	assert (ovrspl_l2 >= 0);
 
@@ -125,7 +125,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, int max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const
+void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, int max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const noexcept
 {
 	assert (max_nbr_spl > 0);
 
@@ -168,7 +168,7 @@ void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, int max_nbr_spl,
 
 
 // Same for a single sample. Indicates if we should generate data.
-bool	SnhTool::compute_snh_data_sample (const fstb::FixedPoint &rate) const
+bool	SnhTool::compute_snh_data_sample (const fstb::FixedPoint &rate) const noexcept
 {
 	if (_ovrspl_l2 == 0)
 	{
@@ -215,7 +215,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::process_data (float * const data_ptr_arr [], int nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step)
+void	SnhTool::process_data (float * const data_ptr_arr [], int nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) noexcept
 {
 	assert (data_ptr_arr != nullptr);
 	assert (data_ptr_arr [0] != nullptr);
@@ -313,7 +313,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::clear_buffers ()
+void	SnhTool::clear_buffers () noexcept
 {
 	_sub_index = 0;
 	_rep_index = 0;
@@ -346,7 +346,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::adjust_rate_param (int &pos_dest, fstb::FixedPoint &pos_src, fstb::FixedPoint &rate, fstb::FixedPoint &rate_step, int hold_time, int rep_index)
+void	SnhTool::adjust_rate_param (int &pos_dest, fstb::FixedPoint &pos_src, fstb::FixedPoint &rate, fstb::FixedPoint &rate_step, int hold_time, int rep_index) noexcept
 {
 	assert (hold_time > 0);
 	assert (rep_index >= 0);
@@ -407,7 +407,7 @@ Substitued variable values:
 
 
 
-void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], int pos_beg, int pos_end)
+void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (_rem_spl == 0);
 	assert (data_ptr_arr != nullptr);
@@ -449,7 +449,7 @@ void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], int pos_
 
 
 
-void	SnhTool::process_data_steady_state_naive (float * const data_ptr_arr [], int pos_beg, int pos_end)
+void	SnhTool::process_data_steady_state_naive (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (_rem_spl == 0);
 	assert (data_ptr_arr != nullptr);
@@ -496,7 +496,7 @@ void	SnhTool::process_data_steady_state_naive (float * const data_ptr_arr [], in
 
 
 
-void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], int pos_beg, int pos_end)
+void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (_rem_spl == 0);
 	assert (_rep_index == 0);
@@ -536,7 +536,7 @@ void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], in
 
 
 
-void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], int pos_beg, int pos_end)
+void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
@@ -587,7 +587,7 @@ void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], int pos_b
 
 
 
-void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], int pos_beg, int pos_end)
+void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
@@ -650,7 +650,7 @@ void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], int
 
 
 
-void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], int pos_beg, int pos_end)
+void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (_rep_index == 0);
 	assert (_sub_index == 0);
@@ -715,7 +715,7 @@ void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], int
 
 
 
-int	SnhTool::compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2)
+int	SnhTool::compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2) noexcept
 {
 	assert (rate.get_val_int64 () > 0);
 	assert (ovrspl_l2 >= 0);

@@ -86,22 +86,22 @@ public:
 	static constexpr int  _min_speed_l2 = MSL2;
 
 	void           init (int max_bbd_size, rspl::InterpolatorInterface &interp, int ovrspl_l2);
-	int            get_ovrspl_l2 () const;
+	int            get_ovrspl_l2 () const noexcept;
 	const rspl::InterpolatorInterface &
-	               use_interpolator () const;
+	               use_interpolator () const noexcept;
 
 	void           set_bbd_size (int bbd_size);
-	int            get_bbd_size () const;
+	int            get_bbd_size () const noexcept;
 
-	void           set_speed (float speed);
-	float          compute_min_delay () const;
-	int            estimate_max_one_shot_proc_w_feedback (float dly_min) const;
-	void           read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const;
-	float          read_sample (float dly) const;
-	void           push_block (const float src_ptr [], int nbr_spl);
-	void           push_sample (float x);
+	void           set_speed (float speed) noexcept;
+	float          compute_min_delay () const noexcept;
+	int            estimate_max_one_shot_proc_w_feedback (float dly_min) const noexcept;
+	void           read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const noexcept;
+	float          read_sample (float dly) const noexcept;
+	void           push_block (const float src_ptr [], int nbr_spl) noexcept;
+	void           push_sample (float x) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -121,10 +121,10 @@ private:
 	> TimestampLine;
 	typedef dsp::dly::DelayLineData <float, AL> DataLine;
 
-	fstb_FORCEINLINE void
-	               push_timestamps (int nbr_spl);
 	fstb_FORCEINLINE float
-	               read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const;
+	               read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const noexcept;
+	fstb_FORCEINLINE void
+	               push_timestamps (int nbr_spl) noexcept;
 
 	int            _max_bbd_size = 0;
 	TimestampLine  _line_ts;

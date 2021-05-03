@@ -47,7 +47,7 @@ namespace mna
 
 
 
-PartSrcCurrent::PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i)
+PartSrcCurrent::PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i) noexcept
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_i (i)
 {
@@ -58,7 +58,7 @@ PartSrcCurrent::PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i)
 
 
 
-void	PartSrcCurrent::set_current (Flt i)
+void	PartSrcCurrent::set_current (Flt i) noexcept
 {
 	_i = i;
 }
@@ -94,7 +94,7 @@ void	PartSrcCurrent::do_prepare (const SimInfo &info)
 
 
 
-void	PartSrcCurrent::do_add_to_matrix (int it_cnt)
+void	PartSrcCurrent::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -104,14 +104,14 @@ void	PartSrcCurrent::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartSrcCurrent::do_step ()
+void	PartSrcCurrent::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartSrcCurrent::do_clear_buffers ()
+void	PartSrcCurrent::do_clear_buffers () noexcept
 {
 	// Nothing
 }

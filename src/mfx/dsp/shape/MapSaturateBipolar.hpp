@@ -40,7 +40,7 @@ namespace shape
 
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturateBipolar <T, C, XS, YS>::saturate (T x)
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::saturate (T x) noexcept
 {
 	constexpr int  sgn_x = (std::ratio_less <XS, R0>::value) ? -1 : 1;
 
@@ -66,7 +66,7 @@ constexpr T	MapSaturateBipolar <T, C, XS, YS>::saturate (T x)
 
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturateBipolar <T, C, XS, YS>::desaturate (T y)
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::desaturate (T y) noexcept
 {
 	constexpr int  sgn_y = (std::ratio_less <YS, R0>::value) ? -1 : 1;
 
@@ -92,19 +92,19 @@ constexpr T	MapSaturateBipolar <T, C, XS, YS>::desaturate (T y)
 
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_c ()
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_c () noexcept
 {
 	return T (C::num) / T (C::den);
 }
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_xs ()
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_xs () noexcept
 {
 	return T (XS::num) / T (XS::den);
 }
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_ys ()
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_ys () noexcept
 {
 	return T (YS::num) / T (YS::den);
 }

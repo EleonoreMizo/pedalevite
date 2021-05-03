@@ -68,7 +68,7 @@ class FncLin0
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		F              f;
 		const double   r  = double (R::num) / double (R::den);

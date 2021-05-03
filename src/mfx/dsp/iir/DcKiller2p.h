@@ -45,13 +45,13 @@ class DcKiller2p
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           set_cutoff_freq (float f0);
-	inline void    copy_z_eq (const DcKiller2p &other);
-	inline float   process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_cutoff_freq (float f0) noexcept;
+	inline void    copy_z_eq (const DcKiller2p &other) noexcept;
+	inline float   process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -65,7 +65,7 @@ protected:
 
 private:
 
-	void           update_coefs ();
+	void           update_coefs () noexcept;
 
 	float          _sample_freq = 0; // Sampling rate, Hz, > 0. 0 = not set
 	float          _cutoff_freq = 5; // Cutoff frequency, Hz, > 0

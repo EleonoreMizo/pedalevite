@@ -62,11 +62,11 @@ class FreqFast
 public:
 
 	void           set_sample_freq (double sample_freq);
-	void           set_freq_bot (float f);
-	void           set_freq_top (float f);
-	void           clear_buffers ();
-	float          process_block (const float spl_ptr [], int nbr_spl);
-	float          process_sample (float x);
+	void           set_freq_bot (float f) noexcept;
+	void           set_freq_top (float f) noexcept;
+	void           clear_buffers () noexcept;
+	float          process_block (const float spl_ptr [], int nbr_spl) noexcept;
+	float          process_sample (float x) noexcept;
 
 
 
@@ -94,14 +94,14 @@ private:
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	typedef std::array <BufAlign, _nbr_buf> BufArray;
 
-	void           proc_autogain (int nbr_spl);
-	void           proc_peaks (int nbr_spl);
-	void           find_freq (int nbr_spl);
-	void           process_freq (int ts_rel);
-	void           validate_period (float per);
-	void           fix_timestamps ();
+	void           proc_autogain (int nbr_spl) noexcept;
+	void           proc_peaks (int nbr_spl) noexcept;
+	void           find_freq (int nbr_spl) noexcept;
+	void           process_freq (int ts_rel) noexcept;
+	void           validate_period (float per) noexcept;
+	void           fix_timestamps () noexcept;
 
-	static bool    is_period_similar (float p1, float p2);
+	static bool    is_period_similar (float p1, float p2) noexcept;
 
 	float          _sample_freq = 0;    // Sampling rate, Hz, > 0. 0 = not set
 	float          _inv_fs      = 0;

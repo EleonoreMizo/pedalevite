@@ -51,10 +51,10 @@ class PartCccs
 
 public:
 
-	explicit       PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g);
+	explicit       PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g) noexcept;
 	virtual        ~PartCccs () = default;
 
-	void           set_gain (Flt g);
+	void           set_gain (Flt g) noexcept;
 
 
 
@@ -65,9 +65,9 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix (int it_cnt) final;
-	void           do_step () final;
-	void           do_clear_buffers () final;
+	void           do_add_to_matrix (int it_cnt) noexcept final;
+	void           do_step () noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 

@@ -67,29 +67,29 @@ public:
 	               operator = (DelayLineFracFir4Base &&other)      = default;
 
 	void           set_max_time (long max_delay_time);
-	inline long    get_max_time () const;
+	inline long    get_max_time () const noexcept;
 
-	void           set_time (long delay_time);
-	inline long    get_time () const;
+	void           set_time (long delay_time) noexcept;
+	inline long    get_time () const noexcept;
 
-	inline long    get_line_length () const;
-	inline long    get_write_pos () const;
+	inline long    get_line_length () const noexcept;
+	inline long    get_write_pos () const noexcept;
 
 	fstb_FORCEINLINE DataType
-	               read_sample (const DataType fir_data []) const;
+	               read_sample (const DataType fir_data []) const noexcept;
 	fstb_FORCEINLINE DataType
-	               read_sample_unroll (const DataType fir_data []) const;
+	               read_sample_unroll (const DataType fir_data []) const noexcept;
 
 	fstb_FORCEINLINE void
-	               write_sample (DataType sample);
+	               write_sample (DataType sample) noexcept;
 	fstb_FORCEINLINE void
-	               write_sample_unroll (DataType sample);
+	               write_sample_unroll (DataType sample) noexcept;
 
 	fstb_FORCEINLINE void
-	               step_one_sample ();
+	               step_one_sample () noexcept;
 
-	void           clear_buffers ();
-	void           clear_buffers_fast ();
+	void           clear_buffers () noexcept;
+	void           clear_buffers_fast () noexcept;
 
 
 

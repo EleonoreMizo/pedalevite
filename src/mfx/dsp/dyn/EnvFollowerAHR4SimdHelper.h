@@ -80,19 +80,19 @@ public:
 	typedef VS V128Src;
 	typedef VP V128Par;
 
-	               EnvFollowerAHR4SimdHelper ();
+	               EnvFollowerAHR4SimdHelper () noexcept;
 	               ~EnvFollowerAHR4SimdHelper () = default;
 
-	void           set_atk_coef (int env, float coef);
-	void           set_hold_time (int env, int nbr_spl);
-	void           set_rls_coef (int env, float coef);
+	void           set_atk_coef (int env, float coef) noexcept;
+	void           set_hold_time (int env, int nbr_spl) noexcept;
+	void           set_rls_coef (int env, float coef) noexcept;
 
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample (const fstb::ToolsSimd::VectF32 &in);
-	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl);
-	void           process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl);
+	               process_sample (const fstb::ToolsSimd::VectF32 &in) noexcept;
+	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
+	void           process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -109,7 +109,7 @@ private:
 	typedef float VectFloat4 [4];
 
 	fstb_FORCEINLINE static bool
-	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
+	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept;
 
 	alignas (16) VectFloat4
 	               _state [ORD];

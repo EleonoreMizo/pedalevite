@@ -49,21 +49,21 @@ class AllPass2p
 
 public:
 
-	               AllPass2p ();
+	               AllPass2p () noexcept;
 	               AllPass2p (const AllPass2p &other)  = default;
 	               ~AllPass2p ()                       = default;
 	AllPass2p &    operator = (const AllPass2p &other) = default;
 
-	inline void    set_z_eq (float b0, float b1);
-	inline void    get_z_eq (float &b0, float &b1) const;
-	inline void    copy_z_eq (const AllPass2p &other);
+	inline void    set_z_eq (float b0, float b1) noexcept;
+	inline void    get_z_eq (float &b0, float &b1) const noexcept;
+	inline void    copy_z_eq (const AllPass2p &other) noexcept;
 
-	inline float   process_sample (float x);
-	inline float   process_sample (float x, const float inc_b [2]);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2]);
+	inline float   process_sample (float x) noexcept;
+	inline float   process_sample (float x, const float inc_b [2]) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2]) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -77,7 +77,7 @@ protected:
 
 private:
 
-	inline void    step_z_eq (const float inc_b [2]);
+	inline void    step_z_eq (const float inc_b [2]) noexcept;
 
 	std::array <float, 2>      // Direct coefficients, order z^(-n)
 						_eq_z_b;

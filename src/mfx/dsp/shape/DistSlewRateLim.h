@@ -47,14 +47,14 @@ class DistSlewRateLim
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           clear_buffers ();
-	inline float   process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           clear_buffers () noexcept;
+	inline float   process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           set_rate_limit (float rate_max_s);
-	void           set_rate_limit_pos (float rate_max_s);
-	void           set_rate_limit_neg (float rate_max_s);
+	void           set_rate_limit (float rate_max_s) noexcept;
+	void           set_rate_limit_pos (float rate_max_s) noexcept;
+	void           set_rate_limit_neg (float rate_max_s) noexcept;
 
 
 
@@ -68,8 +68,8 @@ protected:
 
 private:
 
-	void           update_rate_p ();
-	void           update_rate_n ();
+	void           update_rate_p () noexcept;
+	void           update_rate_n () noexcept;
 
 	float          _sample_freq   = 44100;
 	float          _inv_fs        = 1.f / _sample_freq;

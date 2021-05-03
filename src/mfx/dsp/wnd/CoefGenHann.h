@@ -45,7 +45,7 @@ class CoefGenHann
 
 public:
 
-	inline double  operator () (double pos) const;
+	inline double  operator () (double pos) noexcept const;
 
 
 

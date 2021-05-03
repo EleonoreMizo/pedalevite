@@ -47,7 +47,7 @@ namespace iir
 
 
 
-void	SplitThiele8::set_sample_freq (double sample_freq)
+void	SplitThiele8::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -58,7 +58,7 @@ void	SplitThiele8::set_sample_freq (double sample_freq)
 
 
 
-void	SplitThiele8::set_split_freq (float f)
+void	SplitThiele8::set_split_freq (float f) noexcept
 {
 	assert (f > 0);
 	assert (f < _sample_freq * 0.5f);
@@ -69,7 +69,7 @@ void	SplitThiele8::set_split_freq (float f)
 
 
 
-void	SplitThiele8::set_thiele_coef (float k)
+void	SplitThiele8::set_thiele_coef (float k) noexcept
 {
 	assert (k >= 0);
 	assert (k < 1);
@@ -81,7 +81,7 @@ void	SplitThiele8::set_thiele_coef (float k)
 
 
 // Mandatory call between setting parameters and processing
-void	SplitThiele8::update_coef ()
+void	SplitThiele8::update_coef () noexcept
 {
 	if (_dirty_flag)
 	{
@@ -92,7 +92,7 @@ void	SplitThiele8::update_coef ()
 
 
 
-void	SplitThiele8::copy_param_from (const SplitThiele8 &other)
+void	SplitThiele8::copy_param_from (const SplitThiele8 &other) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (_sample_freq == other._sample_freq);
@@ -122,7 +122,7 @@ void	SplitThiele8::copy_param_from (const SplitThiele8 &other)
 
 
 
-void	SplitThiele8::clear_buffers ()
+void	SplitThiele8::clear_buffers () noexcept
 {
 	_split_1.clear_buffers ();
 	_split_2.clear_buffers ();
@@ -135,7 +135,7 @@ void	SplitThiele8::clear_buffers ()
 
 
 
-void	SplitThiele8::process_block_split (float lo_ptr [], float hi_ptr [], const float src_ptr [], int nbr_spl)
+void	SplitThiele8::process_block_split (float lo_ptr [], float hi_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (! _dirty_flag);
 	assert (lo_ptr != nullptr);
@@ -154,7 +154,7 @@ void	SplitThiele8::process_block_split (float lo_ptr [], float hi_ptr [], const 
 
 
 
-void	SplitThiele8::process_block_compensate (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	SplitThiele8::process_block_compensate (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (! _dirty_flag);
 	assert (dst_ptr != nullptr);
@@ -177,7 +177,7 @@ void	SplitThiele8::process_block_compensate (float dst_ptr [], const float src_p
 
 
 
-void	SplitThiele8::update_filters ()
+void	SplitThiele8::update_filters () noexcept
 {
 	assert (_sample_freq > 0);
 

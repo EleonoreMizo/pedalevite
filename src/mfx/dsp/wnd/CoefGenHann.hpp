@@ -45,7 +45,7 @@ namespace wnd
 
 
 
-double	CoefGenHann::operator () (double pos) const
+double	CoefGenHann::operator () (double pos) noexcept const
 {
 	const double   win_pos = pos * fstb::PI;
 	const double   win     =

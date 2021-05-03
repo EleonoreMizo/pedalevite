@@ -51,63 +51,63 @@ namespace lfo
 
 
 
-void	OscVariSlope::do_set_sample_freq (double sample_freq)
+void	OscVariSlope::do_set_sample_freq (double sample_freq) noexcept
 {
 	_phase_gen.set_sample_freq (sample_freq);
 }
 
 
 
-void	OscVariSlope::do_set_period (double per)
+void	OscVariSlope::do_set_period (double per) noexcept
 {
 	_phase_gen.set_period (per);
 }
 
 
 
-void	OscVariSlope::do_set_phase (double phase)
+void	OscVariSlope::do_set_phase (double phase) noexcept
 {
 	_phase_gen.set_phase (phase);
 }
 
 
 
-void	OscVariSlope::do_set_chaos (double chaos)
+void	OscVariSlope::do_set_chaos (double chaos) noexcept
 {
 	_phase_gen.set_chaos (chaos);
 }
 
 
 
-void	OscVariSlope::do_set_phase_dist (double dist)
+void	OscVariSlope::do_set_phase_dist (double dist) noexcept
 {
 	_phase_dist.set_phase_dist (dist);
 }
 
 
 
-void	OscVariSlope::do_set_phase_dist_offset (double ofs)
+void	OscVariSlope::do_set_phase_dist_offset (double ofs) noexcept
 {
 	_phase_dist.set_phase_dist_offset (ofs);
 }
 
 
 
-void	OscVariSlope::do_set_sign (bool inv_flag)
+void	OscVariSlope::do_set_sign (bool inv_flag) noexcept
 {
 	_inv_flag = inv_flag;
 }
 
 
 
-void	OscVariSlope::do_set_polarity (bool unipolar_flag)
+void	OscVariSlope::do_set_polarity (bool unipolar_flag) noexcept
 {
 	_unipolar_flag = unipolar_flag;
 }
 
 
 
-void	OscVariSlope::do_set_variation (int param, double val)
+void	OscVariSlope::do_set_variation (int param, double val) noexcept
 {
 	switch (param)
 	{
@@ -127,7 +127,7 @@ void	OscVariSlope::do_set_variation (int param, double val)
 
 
 
-bool	OscVariSlope::do_is_using_variation (int param) const
+bool	OscVariSlope::do_is_using_variation (int param) const noexcept
 {
 	return (   param == Variation_TIME
 	        || param == Variation_SHAPE);
@@ -135,14 +135,14 @@ bool	OscVariSlope::do_is_using_variation (int param) const
 
 
 
-void	OscVariSlope::do_tick (int nbr_spl)
+void	OscVariSlope::do_tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 }
 
 
 
-double	OscVariSlope::do_get_val () const
+double	OscVariSlope::do_get_val () const noexcept
 {
 	const double	t   = _phase_dist.process_phase (_phase_gen.get_phase ());
 	double			val =
@@ -164,14 +164,14 @@ double	OscVariSlope::do_get_val () const
 
 
 
-double	OscVariSlope::do_get_phase () const
+double	OscVariSlope::do_get_phase () const noexcept
 {
 	return _phase_gen.get_phase ();
 }
 
 
 
-void	OscVariSlope::do_clear_buffers ()
+void	OscVariSlope::do_clear_buffers () noexcept
 {
 	_phase_gen.clear_buffers ();
 }
@@ -182,7 +182,7 @@ void	OscVariSlope::do_clear_buffers ()
 
 
 
-void	OscVariSlope::update_slopes ()
+void	OscVariSlope::update_slopes () noexcept
 {
 	const double   height = 2 * (1 - _var_shape);
 	const double   time_0 = std::max (1e-9,     _var_time);

@@ -46,7 +46,7 @@ class WsPuncherA
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		const double   xx = fstb::limit (
 			x,

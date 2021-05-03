@@ -40,7 +40,7 @@ namespace va
 
 
 template <int OP, int ON>
-void	IvPoly <OP, ON>::set_atten_p (float a)
+void	IvPoly <OP, ON>::set_atten_p (float a) noexcept
 {
 	assert (a > 0);
 	_attn_p = a;
@@ -49,7 +49,7 @@ void	IvPoly <OP, ON>::set_atten_p (float a)
 
 
 template <int OP, int ON>
-void	IvPoly <OP, ON>::set_atten_n (float a)
+void	IvPoly <OP, ON>::set_atten_n (float a) noexcept
 {
 	assert (a > 0);
 	_attn_n = a;
@@ -58,7 +58,7 @@ void	IvPoly <OP, ON>::set_atten_n (float a)
 
 
 template <int OP, int ON>
-void	IvPoly <OP, ON>::eval (float &y, float &dy, float x) const
+void	IvPoly <OP, ON>::eval (float &y, float &dy, float x) const noexcept
 {
 	if (x < 0)
 	{
@@ -77,7 +77,7 @@ void	IvPoly <OP, ON>::eval (float &y, float &dy, float x) const
 
 
 template <int OP, int ON>
-float	IvPoly <OP, ON>::get_max_step (float x) const
+float	IvPoly <OP, ON>::get_max_step (float x) const noexcept
 {
 	fstb::unused (x);
 

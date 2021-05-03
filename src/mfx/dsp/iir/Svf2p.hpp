@@ -39,7 +39,7 @@ namespace iir
 
 
 
-void	Svf2p::set_sample_freq (float fs)
+void	Svf2p::set_sample_freq (float fs) noexcept
 {
 	assert (fs > 0);
 
@@ -49,14 +49,14 @@ void	Svf2p::set_sample_freq (float fs)
 
 
 
-float	Svf2p::get_sample_freq () const
+float	Svf2p::get_sample_freq () const noexcept
 {
 	return _sample_freq;
 }
 
 
 
-void	Svf2p::set_freq (float f0)
+void	Svf2p::set_freq (float f0) noexcept
 {
 	assert (f0 > 0);
 	assert (f0 < _sample_freq * 0.5f);
@@ -66,14 +66,14 @@ void	Svf2p::set_freq (float f0)
 
 
 
-float	Svf2p::get_freq () const
+float	Svf2p::get_freq () const noexcept
 {
 	return _f0;
 }
 
 
 
-void	Svf2p::set_type (Type type)
+void	Svf2p::set_type (Type type) noexcept
 {
 	assert (type >= 0);
 	assert (type < Type_NBR_ELT);
@@ -83,28 +83,28 @@ void	Svf2p::set_type (Type type)
 
 
 
-Svf2p::Type	Svf2p::get_type () const
+Svf2p::Type	Svf2p::get_type () const noexcept
 {
 	return _type;
 }
 
 
 
-void	Svf2p::set_reso (float reso)
+void	Svf2p::set_reso (float reso) noexcept
 {
 	_reso = reso;
 }
 
 
 
-float	Svf2p::get_reso () const
+float	Svf2p::get_reso () const noexcept
 {
 	return _reso;
 }
 
 
 
-void	Svf2p::set_q (float q)
+void	Svf2p::set_q (float q) noexcept
 {
 	assert (q > 0);
 
@@ -113,49 +113,49 @@ void	Svf2p::set_q (float q)
 
 
 
-float	Svf2p::get_q () const
+float	Svf2p::get_q () const noexcept
 {
 	return _q;
 }
 
 
 
-float	Svf2p::get_g0 () const
+float	Svf2p::get_g0 () const noexcept
 {
 	return _g0;
 }
 
 
 
-float	Svf2p::get_g1 () const
+float	Svf2p::get_g1 () const noexcept
 {
 	return _g1;
 }
 
 
 
-float	Svf2p::get_g2 () const
+float	Svf2p::get_g2 () const noexcept
 {
 	return _g2;
 }
 
 
 
-float	Svf2p::get_v0m () const
+float	Svf2p::get_v0m () const noexcept
 {
 	return _v0m;
 }
 
 
 
-float	Svf2p::get_v1m () const
+float	Svf2p::get_v1m () const noexcept
 {
 	return _v1m;
 }
 
 
 
-float	Svf2p::get_v2m () const
+float	Svf2p::get_v2m () const noexcept
 {
 	return _v2m;
 }
@@ -184,7 +184,7 @@ v2m = b0 - b2
 */
 
 template <typename TE>
-void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const TE b [3], const TE a [3], double freq, double fs)
+void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const TE b [3], const TE a [3], double freq, double fs) noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);

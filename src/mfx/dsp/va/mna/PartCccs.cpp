@@ -46,7 +46,7 @@ namespace mna
 
 
 
-PartCccs::PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g)
+PartCccs::PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g) noexcept
 :	_nid_i_arr {{ nid_i_1, nid_i_2 }}
 ,	_nid_o_arr {{ nid_o_1, nid_o_2 }}
 ,	_g (g)
@@ -63,7 +63,7 @@ PartCccs::PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o
 
 
 
-void	PartCccs::set_gain (Flt g)
+void	PartCccs::set_gain (Flt g) noexcept
 {
 	assert (g != 0);
 
@@ -108,7 +108,7 @@ void	PartCccs::do_prepare (const SimInfo &info)
 
 
 
-void	PartCccs::do_add_to_matrix (int it_cnt)
+void	PartCccs::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -123,14 +123,14 @@ void	PartCccs::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartCccs::do_step ()
+void	PartCccs::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartCccs::do_clear_buffers ()
+void	PartCccs::do_clear_buffers () noexcept
 {
 	// Nothing
 }

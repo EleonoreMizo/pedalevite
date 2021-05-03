@@ -27,8 +27,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/fir/ConvolverFft.h"
 
+#include <algorithm>
+
 #include <cassert>
-#include <cstring>
 
 
 
@@ -61,7 +62,7 @@ ConvolverFft::ConvolverFft (int nbr_spl, const DataType impulse_ptr [])
 
 
 
-bool	ConvolverFft::is_valid () const
+bool	ConvolverFft::is_valid () const noexcept
 {
 	return (_fft_len > 0);
 }
@@ -132,7 +133,7 @@ void	ConvolverFft::set_impulse (int nbr_spl, const DataType impulse_ptr [])
 
 
 
-int	ConvolverFft::get_block_len () const
+int	ConvolverFft::get_block_len () const noexcept
 {
 	assert (is_valid ());
 
@@ -152,7 +153,7 @@ Throws : Nothing
 ==============================================================================
 */
 
-ConvolverFft::DataType *	ConvolverFft::get_input_buffer () const
+ConvolverFft::DataType *	ConvolverFft::get_input_buffer () const noexcept
 {
 	assert (is_valid ());
 
@@ -172,7 +173,7 @@ Throws : Nothing
 ==============================================================================
 */
 
-const ConvolverFft::DataType *	ConvolverFft::get_output_buffer () const
+const ConvolverFft::DataType *	ConvolverFft::get_output_buffer () const noexcept
 {
 	assert (is_valid ());
 
@@ -191,7 +192,7 @@ Throws : Nothing
 ==============================================================================
 */
 
-void	ConvolverFft::process ()
+void	ConvolverFft::process () noexcept
 {
 	assert (is_valid ());
 
@@ -232,10 +233,9 @@ void	ConvolverFft::process ()
 
 
 
-void	ConvolverFft::clear_buffers ()
+void	ConvolverFft::clear_buffers () noexcept
 {
-	const size_t   len = _input_buf.size ();
-	memset (&_input_buf [0], 0, len * sizeof (_input_buf [0]));
+	std::fill (_input_buf.begin (), _input_buf.end (), DataType {});
 }
 
 

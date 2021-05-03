@@ -59,7 +59,7 @@ void	DelayPushPop::setup (int max_dly, int max_block_len)
 
 
 
-void	DelayPushPop::set_delay (int d)
+void	DelayPushPop::set_delay (int d) noexcept
 {
 	assert (d >= 0);
 	assert (d <= _max_dly);
@@ -70,7 +70,7 @@ void	DelayPushPop::set_delay (int d)
 
 
 
-void	DelayPushPop::push_block (const float src_ptr [], int nbr_spl)
+void	DelayPushPop::push_block (const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -95,7 +95,7 @@ void	DelayPushPop::push_block (const float src_ptr [], int nbr_spl)
 
 
 
-void	DelayPushPop::pop_block (float dst_ptr [], int nbr_spl)
+void	DelayPushPop::pop_block (float dst_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -121,7 +121,7 @@ void	DelayPushPop::pop_block (float dst_ptr [], int nbr_spl)
 
 
 // Read and write heads are synchronized.
-void	DelayPushPop::clear_buffers ()
+void	DelayPushPop::clear_buffers () noexcept
 {
 	memset (_buf.data (), 0, _buf.size () * sizeof (_buf [0]));
 	_pos_r = 0;
@@ -131,7 +131,7 @@ void	DelayPushPop::clear_buffers ()
 
 
 // Read and write heads are synchronized.
-void	DelayPushPop::clear_buffers_quick ()
+void	DelayPushPop::clear_buffers_quick () noexcept
 {
 	if (_dly > 0)
 	{

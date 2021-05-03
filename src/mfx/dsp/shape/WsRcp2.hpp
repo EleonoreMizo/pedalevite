@@ -44,7 +44,7 @@ namespace shape
 
 
 
-float	WsRcp2::process_sample (float x)
+float	WsRcp2::process_sample (float x) noexcept
 {
 	const float    t = 0.5f;
 	const float    a = fabs (x);
@@ -59,7 +59,7 @@ float	WsRcp2::process_sample (float x)
 
 
 template <typename VD, typename VS>
-void	WsRcp2::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	WsRcp2::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

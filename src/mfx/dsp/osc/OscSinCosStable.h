@@ -63,28 +63,22 @@ public:
 
 	typedef T DataType;
 
-	               OscSinCosStable ()                             = default;
-	               OscSinCosStable (const OscSinCosStable &other) = default;
-	virtual        ~OscSinCosStable ()                            = default;
-	OscSinCosStable &
-	               operator = (const OscSinCosStable &other)      = default;
-
-	inline void    set_phase (DataType angle_rad);
-	inline void    set_step (DataType angle_rad);
+	inline void    set_phase (DataType angle_rad) noexcept;
+	inline void    set_step (DataType angle_rad) noexcept;
 
    fstb_FORCEINLINE void
-	               step ();
-	inline void    step (DataType angle_rad);
+	               step () noexcept;
+	inline void    step (DataType angle_rad) noexcept;
 
    fstb_FORCEINLINE DataType
-	               get_cos () const;
+	               get_cos () const noexcept;
    fstb_FORCEINLINE DataType
-	               get_sin () const;
+	               get_sin () const noexcept;
 
-	void inline    clear_buffers ();
-	void inline    correct ();
+	void inline    clear_buffers () noexcept;
+	void inline    correct () noexcept;
 	void fstb_FORCEINLINE
-	               correct_fast ();
+	               correct_fast () noexcept;
 
 
 
@@ -99,10 +93,10 @@ protected:
 private:
 
 	fstb_FORCEINLINE void
-	               step (DataType alpha, DataType beta);
+	               step (DataType alpha, DataType beta) noexcept;
 
 	static inline void
-	               compute_step (DataType &alpha, DataType &beta, DataType angle_rad);
+	               compute_step (DataType &alpha, DataType &beta, DataType angle_rad) noexcept;
 
    DataType       _pos_cos = DataType (1);
    DataType       _pos_sin = DataType (0);

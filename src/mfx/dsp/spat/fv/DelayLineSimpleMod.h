@@ -49,17 +49,14 @@ class DelayLineSimpleMod
 
 public:
 
-	               DelayLineSimpleMod ()  = default;
-	virtual        ~DelayLineSimpleMod () = default;
-
 	void           set_delay (int len, int mod_per, int mod_depth);
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
-	int            get_max_rw_len () const;
-	const float *  use_read_data () const;
-	float *        use_write_data ();
-	void           step (int len);
+	int            get_max_rw_len () const noexcept;
+	const float *  use_read_data () const noexcept;
+	float *        use_write_data () noexcept;
+	void           step (int len) noexcept;
 
 
 
@@ -73,9 +70,9 @@ protected:
 
 private:
 
-	inline int     compute_read_pos () const;
-	inline int     compute_read_pos (int dly_cur) const;
-	inline int     compute_delay () const;
+	inline int     compute_read_pos () const noexcept;
+	inline int     compute_read_pos (int dly_cur) const noexcept;
+	inline int     compute_delay () const noexcept;
 
 	int            _delay      = 0;
 	int            _mod_per    = 0;
@@ -95,9 +92,6 @@ private:
 
 private:
 
-	               DelayLineSimpleMod (const DelayLineSimpleMod &other) = delete;
-	DelayLineSimpleMod &
-	               operator = (const DelayLineSimpleMod &other)        = delete;
 	bool           operator == (const DelayLineSimpleMod &other) const = delete;
 	bool           operator != (const DelayLineSimpleMod &other) const = delete;
 

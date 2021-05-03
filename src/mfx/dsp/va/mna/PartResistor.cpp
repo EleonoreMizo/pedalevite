@@ -47,7 +47,7 @@ namespace mna
 
 
 
-PartResistor::PartResistor (IdNode nid_1, IdNode nid_2, Flt r)
+PartResistor::PartResistor (IdNode nid_1, IdNode nid_2, Flt r) noexcept
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_r (r)
 ,	_g (1.f / r)
@@ -60,7 +60,7 @@ PartResistor::PartResistor (IdNode nid_1, IdNode nid_2, Flt r)
 
 
 
-void	PartResistor::set_resistance (Flt r)
+void	PartResistor::set_resistance (Flt r) noexcept
 {
 	assert (r > 0);
 
@@ -99,7 +99,7 @@ void	PartResistor::do_prepare (const SimInfo &info)
 
 
 
-void	PartResistor::do_add_to_matrix (int it_cnt)
+void	PartResistor::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -111,14 +111,14 @@ void	PartResistor::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartResistor::do_step ()
+void	PartResistor::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartResistor::do_clear_buffers ()
+void	PartResistor::do_clear_buffers () noexcept
 {
 	// Nothing
 }

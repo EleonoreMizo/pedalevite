@@ -47,20 +47,20 @@ class SmootherLpf
 
 public:
 
-	void           set_sample_freq (double sample_freq);
+	void           set_sample_freq (double sample_freq) noexcept;
 
-	void           set_time (float t);
+	void           set_time (float t) noexcept;
 	fstb_FORCEINLINE void
-	               set_val (T x);
+	               set_val (T x) noexcept;
 	fstb_FORCEINLINE T
-	               process_sample ();
+	               process_sample () noexcept;
 	fstb_FORCEINLINE T
-	               skip_block (int nbr_spl);
+	               skip_block (int nbr_spl) noexcept;
 	fstb_FORCEINLINE T
-	               get_val_cur () const;
+	               get_val_cur () const noexcept;
 	fstb_FORCEINLINE T
-	               get_val_tgt () const;
-	void           clear_buffers ();
+	               get_val_tgt () const noexcept;
+	void           clear_buffers () noexcept;
 
 
 

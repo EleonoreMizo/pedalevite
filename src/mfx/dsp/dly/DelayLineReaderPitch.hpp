@@ -47,7 +47,7 @@ namespace dly
 
 // Mandatory call
 template <typename TC>
-void	DelayLineReaderPitch <TC>::set_tmp_buf (float *buf_ptr, int len)
+void	DelayLineReaderPitch <TC>::set_tmp_buf (float *buf_ptr, int len) noexcept
 {
 	assert (buf_ptr != nullptr);
 	assert (len > 0);
@@ -59,7 +59,7 @@ void	DelayLineReaderPitch <TC>::set_tmp_buf (float *buf_ptr, int len)
 
 
 template <typename TC>
-float *	DelayLineReaderPitch <TC>::get_tmp_buf_ptr () const
+float *	DelayLineReaderPitch <TC>::get_tmp_buf_ptr () const noexcept
 {
 	assert (_tmp_buf_ptr != 0);
 
@@ -69,7 +69,7 @@ float *	DelayLineReaderPitch <TC>::get_tmp_buf_ptr () const
 
 
 template <typename TC>
-int	DelayLineReaderPitch <TC>::get_tmp_buf_len () const
+int	DelayLineReaderPitch <TC>::get_tmp_buf_len () const noexcept
 {
 	assert (_tmp_buf_ptr != 0);
 
@@ -80,7 +80,7 @@ int	DelayLineReaderPitch <TC>::get_tmp_buf_len () const
 
 // Mandatory call
 template <typename TC>
-void	DelayLineReaderPitch <TC>::set_delay_line (const DelayLineReadInterface &delay_line)
+void	DelayLineReaderPitch <TC>::set_delay_line (const DelayLineReadInterface &delay_line) noexcept
 {
 	_delay_line_ptr = &delay_line;
 	_dly_min = -1;
@@ -91,7 +91,7 @@ void	DelayLineReaderPitch <TC>::set_delay_line (const DelayLineReadInterface &de
 
 // Rates are related to input data (not oversampled)
 template <typename TC>
-void	DelayLineReaderPitch <TC>::set_resampling_range (TC rate_inf, TC rate_sup)
+void	DelayLineReaderPitch <TC>::set_resampling_range (TC rate_inf, TC rate_sup) noexcept
 {
 	assert (rate_inf < rate_sup);
 
@@ -103,7 +103,7 @@ void	DelayLineReaderPitch <TC>::set_resampling_range (TC rate_inf, TC rate_sup)
 
 // Set shape_ptr to 0 to remove the shape and use the default (linear).
 template <typename TC>
-void	DelayLineReaderPitch <TC>::set_crossfade_normal (int nbr_spl, const float shape_ptr [])
+void	DelayLineReaderPitch <TC>::set_crossfade_normal (int nbr_spl, const float shape_ptr []) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -120,7 +120,7 @@ void	DelayLineReaderPitch <TC>::set_crossfade_normal (int nbr_spl, const float s
 
 // Set shape_ptr to 0 to remove the shape and use the default (linear).
 template <typename TC>
-void	DelayLineReaderPitch <TC>::set_crossfade_pitchshift (int nbr_spl, const float shape_ptr [])
+void	DelayLineReaderPitch <TC>::set_crossfade_pitchshift (int nbr_spl, const float shape_ptr []) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -136,7 +136,7 @@ void	DelayLineReaderPitch <TC>::set_crossfade_pitchshift (int nbr_spl, const flo
 
 
 template <typename TC>
-bool	DelayLineReaderPitch <TC>::is_ready () const
+bool	DelayLineReaderPitch <TC>::is_ready () const noexcept
 {
 	return (   _delay_line_ptr != nullptr
 	        && _tmp_buf_ptr    != nullptr);
@@ -147,7 +147,7 @@ bool	DelayLineReaderPitch <TC>::is_ready () const
 // transition_time is a time in samples, related to output. Therefore it is
 // related to oversampled data, if oversampling has been set.
 template <typename TC>
-void	DelayLineReaderPitch <TC>::set_delay_time (TC delay_time, int transition_time)
+void	DelayLineReaderPitch <TC>::set_delay_time (TC delay_time, int transition_time) noexcept
 {
 	assert (is_ready ());
 	assert (delay_time >= _delay_line_ptr->get_min_delay_time ());
@@ -161,7 +161,7 @@ void	DelayLineReaderPitch <TC>::set_delay_time (TC delay_time, int transition_ti
 
 
 template <typename TC>
-void	DelayLineReaderPitch <TC>::set_grain_pitch (float ratio)
+void	DelayLineReaderPitch <TC>::set_grain_pitch (float ratio) noexcept
 {
 	assert (is_ready ());
 
@@ -196,7 +196,7 @@ void	DelayLineReaderPitch <TC>::set_grain_pitch (float ratio)
 // push_block() is called before reading the line.
 // Read data is oversampled, if delay line has been oversampled.
 template <typename TC>
-void	DelayLineReaderPitch <TC>::read_data (float dst_ptr [], int nbr_spl, int src_pos)
+void	DelayLineReaderPitch <TC>::read_data (float dst_ptr [], int nbr_spl, int src_pos) noexcept
 {
 	assert (is_ready ());
 	assert (dst_ptr != nullptr);
@@ -303,7 +303,7 @@ void	DelayLineReaderPitch <TC>::read_data (float dst_ptr [], int nbr_spl, int sr
 
 
 template <typename TC>
-bool	DelayLineReaderPitch <TC>::is_time_change_programmed () const
+bool	DelayLineReaderPitch <TC>::is_time_change_programmed () const noexcept
 {
 	assert (is_ready ());
 
@@ -313,7 +313,7 @@ bool	DelayLineReaderPitch <TC>::is_time_change_programmed () const
 
 
 template <typename TC>
-void	DelayLineReaderPitch <TC>::clear_buffers ()
+void	DelayLineReaderPitch <TC>::clear_buffers () noexcept
 {
 	assert (is_ready ());
 
@@ -343,7 +343,7 @@ void	DelayLineReaderPitch <TC>::clear_buffers ()
 
 
 template <typename TC>
-bool	DelayLineReaderPitch <TC>::Grain::is_ramping () const
+bool	DelayLineReaderPitch <TC>::Grain::is_ramping () const noexcept
 {
 	return (_trans_len > 0);
 }
@@ -351,7 +351,7 @@ bool	DelayLineReaderPitch <TC>::Grain::is_ramping () const
 
 
 template <typename TC>
-int	DelayLineReaderPitch <TC>::Grain::clip_block_len (int len) const
+int	DelayLineReaderPitch <TC>::Grain::clip_block_len (int len) const noexcept
 {
 	assert (len > 0);
 
@@ -367,7 +367,7 @@ int	DelayLineReaderPitch <TC>::Grain::clip_block_len (int len) const
 
 
 template <typename TC>
-void	DelayLineReaderPitch <TC>::check_and_start_transition ()
+void	DelayLineReaderPitch <TC>::check_and_start_transition () noexcept
 {
 	// Check if we need a transition
 	bool           req_trans_flag = _ps_flag;
@@ -477,7 +477,7 @@ void	DelayLineReaderPitch <TC>::check_and_start_transition ()
 
 // Returns true if the ramp is terminated
 template <typename TC>
-bool	DelayLineReaderPitch <TC>::process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl)
+bool	DelayLineReaderPitch <TC>::process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl) noexcept
 {
 	assert (dest_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -517,7 +517,7 @@ bool	DelayLineReaderPitch <TC>::process_grain (Grain &g, float dest_ptr [], int 
 
 
 template <typename TC>
-int	DelayLineReaderPitch <TC>::get_xfade_len () const
+int	DelayLineReaderPitch <TC>::get_xfade_len () const noexcept
 {
 	return _ps_flag ? _xfade_dp : _xfade_dn;
 }
@@ -525,7 +525,7 @@ int	DelayLineReaderPitch <TC>::get_xfade_len () const
 
 
 template <typename TC>
-const float *	DelayLineReaderPitch <TC>::use_xfase_shape () const
+const float *	DelayLineReaderPitch <TC>::use_xfase_shape () const noexcept
 {
 	return _ps_flag ? _xfade_sp_ptr : _xfade_sn_ptr;
 }

@@ -46,7 +46,7 @@ namespace osc
 
 
 template <class T>
-void	OscSinCosStable <T>::set_phase (DataType angle_rad)
+void	OscSinCosStable <T>::set_phase (DataType angle_rad) noexcept
 {
 	_pos_cos = DataType (cos (angle_rad));
 	_pos_sin = DataType (sin (angle_rad));
@@ -55,7 +55,7 @@ void	OscSinCosStable <T>::set_phase (DataType angle_rad)
 
 
 template <class T>
-void	OscSinCosStable <T>::set_step (DataType angle_rad)
+void	OscSinCosStable <T>::set_step (DataType angle_rad) noexcept
 {
 	compute_step (_alpha, _beta, angle_rad);
 }
@@ -63,7 +63,7 @@ void	OscSinCosStable <T>::set_step (DataType angle_rad)
 
 
 template <class T>
-void	OscSinCosStable <T>::step ()
+void	OscSinCosStable <T>::step () noexcept
 {
 	step (_alpha, _beta);
 }
@@ -71,7 +71,7 @@ void	OscSinCosStable <T>::step ()
 
 
 template <class T>
-void	OscSinCosStable <T>::step (DataType angle_rad)
+void	OscSinCosStable <T>::step (DataType angle_rad) noexcept
 {
 	DataType       alpha;
 	DataType       beta;
@@ -83,7 +83,7 @@ void	OscSinCosStable <T>::step (DataType angle_rad)
 
 
 template <class T>
-typename OscSinCosStable <T>::DataType	OscSinCosStable <T>::get_cos () const
+typename OscSinCosStable <T>::DataType	OscSinCosStable <T>::get_cos () const noexcept
 {
 	return _pos_cos;
 }
@@ -91,7 +91,7 @@ typename OscSinCosStable <T>::DataType	OscSinCosStable <T>::get_cos () const
 
 
 template <class T>
-typename OscSinCosStable <T>::DataType	OscSinCosStable <T>::get_sin () const
+typename OscSinCosStable <T>::DataType	OscSinCosStable <T>::get_sin () const noexcept
 {
 	return _pos_sin;
 }
@@ -99,7 +99,7 @@ typename OscSinCosStable <T>::DataType	OscSinCosStable <T>::get_sin () const
 
 
 template <class T>
-void	OscSinCosStable <T>::clear_buffers ()
+void	OscSinCosStable <T>::clear_buffers () noexcept
 {
 	_pos_cos = DataType (1);
 	_pos_sin = DataType (0);
@@ -110,7 +110,7 @@ void	OscSinCosStable <T>::clear_buffers ()
 // Given the stability of the oscillator, this function is almost useless.
 // If really needed, calling correct_fast() regularly is more than enough.
 template <class T>
-void	OscSinCosStable <T>::correct ()
+void	OscSinCosStable <T>::correct () noexcept
 {
 	const double   norm_sq = double (_pos_cos * _pos_cos + _pos_sin * _pos_sin);
 	const DataType mult    = DataType (1.0 / sqrt (norm_sq));
@@ -124,7 +124,7 @@ void	OscSinCosStable <T>::correct ()
 // Uses a single-step Newton-Raphson approximation of 1 / sqrt (1 + r ^ 2)
 // with 1 as initial guess for the corrective term.
 template <class T>
-void	OscSinCosStable <T>::correct_fast ()
+void	OscSinCosStable <T>::correct_fast () noexcept
 {
 	const double   norm_sq = double (_pos_cos * _pos_cos + _pos_sin * _pos_sin);
 	const DataType mult    = DataType ((3.0 - norm_sq) * 0.5);
@@ -145,7 +145,7 @@ void	OscSinCosStable <T>::correct_fast ()
 
 
 template <class T>
-void	OscSinCosStable <T>::step (DataType alpha, DataType beta)
+void	OscSinCosStable <T>::step (DataType alpha, DataType beta) noexcept
 {
 #if mfx_dsp_osc_OscSinCosStable_TYPE == 1
 	const DataType old_cos = _pos_cos;
@@ -163,7 +163,7 @@ void	OscSinCosStable <T>::step (DataType alpha, DataType beta)
 
 
 template <class T>
-void	OscSinCosStable <T>::compute_step (DataType &alpha, DataType &beta, DataType angle_rad)
+void	OscSinCosStable <T>::compute_step (DataType &alpha, DataType &beta, DataType angle_rad) noexcept
 {
 #if mfx_dsp_osc_OscSinCosStable_TYPE == 1
 	const double	s = sin (angle_rad * 0.5f);

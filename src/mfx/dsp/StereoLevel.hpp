@@ -35,7 +35,7 @@ namespace dsp
 
 
 
-StereoLevel::StereoLevel (float l2l, float l2r, float r2l, float r2r)
+StereoLevel::StereoLevel (float l2l, float l2r, float r2l, float r2r) noexcept
 :	_l2l (l2l)
 ,	_l2r (l2r)
 ,	_r2l (r2l)
@@ -46,7 +46,7 @@ StereoLevel::StereoLevel (float l2l, float l2r, float r2l, float r2r)
 
 
 
-void	StereoLevel::set (float l2l, float l2r, float r2l, float r2r)
+void	StereoLevel::set (float l2l, float l2r, float r2l, float r2r) noexcept
 {
 	_l2l = l2l;
 	_l2r = l2r;
@@ -56,58 +56,58 @@ void	StereoLevel::set (float l2l, float l2r, float r2l, float r2r)
 
 
 
-void	StereoLevel::set_l2l (float val)
+void	StereoLevel::set_l2l (float val) noexcept
 {
 	_l2l = val;
 }
 
 
 
-void	StereoLevel::set_l2r (float val)
+void	StereoLevel::set_l2r (float val) noexcept
 {
 	_l2r = val;
 }
 
 
 
-void	StereoLevel::set_r2l (float val)
+void	StereoLevel::set_r2l (float val) noexcept
 {
 	_r2l = val;
 }
 
 
 
-void	StereoLevel::set_r2r (float val)
+void	StereoLevel::set_r2r (float val) noexcept
 {
 	_r2r = val;
 }
 
 
 
-float	StereoLevel::get_l2l () const
+float	StereoLevel::get_l2l () const noexcept
 {
-	return (_l2l);
+	return _l2l;
 }
 
 
 
-float	StereoLevel::get_l2r () const
+float	StereoLevel::get_l2r () const noexcept
 {
-	return (_l2r);
+	return _l2r;
 }
 
 
 
-float	StereoLevel::get_r2l () const
+float	StereoLevel::get_r2l () const noexcept
 {
-	return (_r2l);
+	return _r2l;
 }
 
 
 
-float	StereoLevel::get_r2r () const
+float	StereoLevel::get_r2r () const noexcept
 {
-	return (_r2r);
+	return _r2r;
 }
 
 
@@ -126,7 +126,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	StereoLevel::mat_mul (const StereoLevel &other)
+void	StereoLevel::mat_mul (const StereoLevel &other) noexcept
 {
 	const float	t_l2r = _l2r * other._l2l + _r2r * other._l2r;
 	const float	t_r2l = _l2l * other._r2l + _r2l * other._r2r;
@@ -138,74 +138,74 @@ void	StereoLevel::mat_mul (const StereoLevel &other)
 
 
 
-StereoLevel &	StereoLevel::operator += (const StereoLevel &other)
+StereoLevel &	StereoLevel::operator += (const StereoLevel &other) noexcept
 {
 	_l2l += other._l2l;
 	_l2r += other._l2r;
 	_r2l += other._r2l;
 	_r2r += other._r2r;
 
-	return (*this);
+	return *this;
 }
 
 
 
-StereoLevel &	StereoLevel::operator += (float val)
+StereoLevel &	StereoLevel::operator += (float val) noexcept
 {
 	_l2l += val;
 	_l2r += val;
 	_r2l += val;
 	_r2r += val;
 
-	return (*this);
+	return *this;
 }
 
 
 
-StereoLevel &	StereoLevel::operator -= (const StereoLevel &other)
+StereoLevel &	StereoLevel::operator -= (const StereoLevel &other) noexcept
 {
 	_l2l -= other._l2l;
 	_l2r -= other._l2r;
 	_r2l -= other._r2l;
 	_r2r -= other._r2r;
 
-	return (*this);
+	return *this;
 }
 
 
 
-StereoLevel &	StereoLevel::operator -= (float val)
+StereoLevel &	StereoLevel::operator -= (float val) noexcept
 {
 	_l2l -= val;
 	_l2r -= val;
 	_r2l -= val;
 	_r2r -= val;
 
-	return (*this);
+	return *this;
 }
 
 
 
-StereoLevel &	StereoLevel::operator *= (const StereoLevel &other)
+StereoLevel &	StereoLevel::operator *= (const StereoLevel &other) noexcept
 {
 	_l2l *= other._l2l;
 	_l2r *= other._l2r;
 	_r2l *= other._r2l;
 	_r2r *= other._r2r;
 
-	return (*this);
+	return *this;
 }
 
 
 
-StereoLevel &	StereoLevel::operator *= (float val)
+StereoLevel &	StereoLevel::operator *= (float val) noexcept
 {
 	_l2l *= val;
 	_l2r *= val;
 	_r2l *= val;
 	_r2r *= val;
 
-	return (*this);
+	return *this;
 }
 
 
@@ -222,17 +222,19 @@ StereoLevel &	StereoLevel::operator *= (float val)
 
 
 
-bool	operator == (const StereoLevel &lhs, const StereoLevel &rhs)
+bool	operator == (const StereoLevel &lhs, const StereoLevel &rhs) noexcept
 {
-	return (   lhs.get_l2l () == rhs.get_l2l ()
-	        && lhs.get_l2r () == rhs.get_l2r ()
-	        && lhs.get_r2l () == rhs.get_r2l ()
-	        && lhs.get_r2r () == rhs.get_r2r ());
+	return (
+		   lhs.get_l2l () == rhs.get_l2l ()
+		&& lhs.get_l2r () == rhs.get_l2r ()
+		&& lhs.get_r2l () == rhs.get_r2l ()
+		&& lhs.get_r2r () == rhs.get_r2r ()
+	);
 }
 
 
 
-bool	operator != (const StereoLevel &lhs, const StereoLevel &rhs)
+bool	operator != (const StereoLevel &lhs, const StereoLevel &rhs) noexcept
 {
 	return (! (lhs == rhs));
 }

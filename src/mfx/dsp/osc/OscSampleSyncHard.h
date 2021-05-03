@@ -84,49 +84,49 @@ public:
 
 	static const int  PITCH_FRAC_BITS = Oscillator::PITCH_FRAC_BITS;
 
-	void           set_sample_data (const SampleTable &sample_data);
+	void           set_sample_data (const SampleTable &sample_data) noexcept;
 	const SampleTable &
-	               use_sample_data () const;
-	SampleTable &	use_sample_data ();
+	               use_sample_data () const noexcept;
+	SampleTable &	use_sample_data () noexcept;
 
-	void           set_steptable (AntialiasedStep &steptable);
+	void           set_steptable (AntialiasedStep &steptable) noexcept;
 	const AntialiasedStep &
-	               use_steptable () const;
+	               use_steptable () const noexcept;
 	AntialiasedStep &
-	               use_steptable ();
+	               use_steptable () noexcept;
 
-	void           set_bandlimit (int32_t limit);
+	void           set_bandlimit (int32_t limit) noexcept;
 	fstb_FORCEINLINE int32_t
-	               get_bandlimit () const;
+	               get_bandlimit () const noexcept;
 
-	void           set_base_pitch (int32_t pitch);
+	void           set_base_pitch (int32_t pitch) noexcept;
 	fstb_FORCEINLINE int32_t
-	               get_base_pitch () const;
+	               get_base_pitch () const noexcept;
 
 	fstb_FORCEINLINE void
-	               set_master_pitch (int32_t pitch);
+	               set_master_pitch (int32_t pitch) noexcept;
 	fstb_FORCEINLINE int32_t
-	               get_master_pitch () const;
+	               get_master_pitch () const noexcept;
 
 	fstb_FORCEINLINE void
-	               set_slave_pitch (int32_t pitch);
+	               set_slave_pitch (int32_t pitch) noexcept;
 	fstb_FORCEINLINE int32_t
-	               get_slave_pitch () const;
+	               get_slave_pitch () const noexcept;
 
-	void           set_sync_pos (const fstb::FixedPoint &pos);
-	void           set_sync_speed (const fstb::FixedPoint &spd);
-	int            get_wave_length () const;
+	void           set_sync_pos (const fstb::FixedPoint &pos) noexcept;
+	void           set_sync_speed (const fstb::FixedPoint &spd) noexcept;
+	int            get_wave_length () const noexcept;
 
 	fstb_FORCEINLINE void
-	               get_slave_pos (fstb::FixedPoint &pos) const;
+	               get_slave_pos (fstb::FixedPoint &pos) const noexcept;
 	fstb_FORCEINLINE void
-	               set_slave_pos (const fstb::FixedPoint &pos);
+	               set_slave_pos (const fstb::FixedPoint &pos) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 	fstb_FORCEINLINE CalcDataType
-	               process_sample ();
-	void           process_block (CalcDataType data_ptr [], int nbr_spl);
+	               process_sample () noexcept;
+	void           process_block (CalcDataType data_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -156,21 +156,21 @@ private:
 
 	typedef std::array <CalcDataType, BUF_SIZE> Buffer;
 
-	void           update_master_pitch ();
+	void           update_master_pitch () noexcept;
 	fstb_FORCEINLINE void
-	               update_sync_pos ();
+	               update_sync_pos () noexcept;
 	fstb_FORCEINLINE void
-	               update_sync_speed ();
+	               update_sync_speed () noexcept;
 	fstb_FORCEINLINE void
-	               generate_block (CalcDataType data_ptr [], int nbr_spl);
+	               generate_block (CalcDataType data_ptr [], int nbr_spl) noexcept;
 	fstb_FORCEINLINE CalcDataType
-	               generate_sample ();
+	               generate_sample () noexcept;
 	fstb_FORCEINLINE void
-	               check_and_handle_sync_point ();
+	               check_and_handle_sync_point () noexcept;
 	fstb_FORCEINLINE void
-	               add_step (CalcDataType step_amplitude);
+	               add_step (CalcDataType step_amplitude) noexcept;
 	fstb_FORCEINLINE void
-	               fix_sync_pos_table ();
+	               fix_sync_pos_table () noexcept;
 
 	Oscillator     _osc;
 	AntialiasedStep *	         // Antialiased step, symetric data
@@ -208,8 +208,8 @@ private:
 	fstb::FixedPoint
 	               _sync_speed_table { 0 };
 
-	Buffer         _buffer {};    // Buffer for past and new samples
-	int            _buf_pos;      // Writing position
+	Buffer         _buffer {};       // Buffer for past and new samples
+	int            _buf_pos { 0 };   // Writing position
 
 
 

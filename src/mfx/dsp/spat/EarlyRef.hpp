@@ -69,7 +69,7 @@ void	EarlyRef <T>::reset (double sample_freq, double max_predelay_time, double m
 // duration in seconds
 // lvl_end is the relative level of the last tap (first tap is 1)
 template <typename T>
-void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, float lvl_end, float gain)
+void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, float lvl_end, float gain) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (nbr_taps >= 0);
@@ -130,7 +130,7 @@ void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, f
 
 
 template <typename T>
-void	EarlyRef <T>::morph_taps_to (const ThisType &other, float lerp)
+void	EarlyRef <T>::morph_taps_to (const ThisType &other, float lerp) noexcept
 {
 	assert (lerp >= 0);
 	assert (lerp <= 1);
@@ -166,7 +166,7 @@ void	EarlyRef <T>::morph_taps_to (const ThisType &other, float lerp)
 
 
 template <typename T>
-void	EarlyRef <T>::set_predelay (float delay)
+void	EarlyRef <T>::set_predelay (float delay) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (delay >= 0);
@@ -181,7 +181,7 @@ void	EarlyRef <T>::set_predelay (float delay)
 // .first: pre-delayed source
 // .second: early reflections
 template <typename T>
-std::pair <T, T>	EarlyRef <T>::process_sample (T x)
+std::pair <T, T>	EarlyRef <T>::process_sample (T x) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -200,7 +200,7 @@ std::pair <T, T>	EarlyRef <T>::process_sample (T x)
 
 
 template <typename T>
-void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr [], int nbr_spl)
+void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dly_ptr != nullptr);
@@ -254,7 +254,7 @@ void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr []
 
 
 template <typename T>
-void	EarlyRef <T>::clear_buffers ()
+void	EarlyRef <T>::clear_buffers () noexcept
 {
 	_delay.clear_buffers ();
 }

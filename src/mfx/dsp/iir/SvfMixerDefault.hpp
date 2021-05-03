@@ -38,7 +38,7 @@ namespace iir
 
 
 template <typename T>
-inline T	SvfMixerDefault::mix (T v0, T v1, T v2, T v0m, T v1m, T v2m)
+inline T	SvfMixerDefault::mix (T v0, T v1, T v2, T v0m, T v1m, T v2m) noexcept
 {
 	return (v0 * v0m + v1 * v1m + v2 * v2m);
 }
@@ -46,7 +46,7 @@ inline T	SvfMixerDefault::mix (T v0, T v1, T v2, T v0m, T v1m, T v2m)
 
 
 template <typename T>
-inline void	SvfMixerDefault::inc (T &v0m, T &v1m, T &v2m, T v0mi, T v1mi, T v2mi)
+inline void	SvfMixerDefault::inc (T &v0m, T &v1m, T &v2m, T v0mi, T v1mi, T v2mi) noexcept
 {
 	v0m += v0mi;
 	v1m += v1mi;

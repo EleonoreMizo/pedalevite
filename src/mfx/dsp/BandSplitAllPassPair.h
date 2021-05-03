@@ -8,9 +8,9 @@ Template parameters:
 - AP0, AP1: a pair of all-pass filters. Requirements on AP0 and AP1 :
 	AP0::AP0 ();
 	AP0::~AP0 ();
-	void AP0::process_block (float *, const float *, int);
-	float AP0::process_sample (float);
-	void AP0::clear_buffers ();
+	void AP0::process_block (float *, const float *, int) noexcept;
+	float AP0::process_sample (float) noexcept;
+	void AP0::clear_buffers () noexcept;
 	It is recommended to set the lightest filter to AP0, because it is used
 	for phase compensation too.
 
@@ -58,36 +58,36 @@ class BandSplitAllPassPair
 
 public:
 
-	typedef void (* AddSubProto) (float out_1_ptr [], float out_2_ptr [], int nbr_spl);
-	typedef void (* VolumeProto) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol);
+	typedef void (* AddSubProto) (float out_1_ptr [], float out_2_ptr [], int nbr_spl) noexcept;
+	typedef void (* VolumeProto) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept;
 
 	typedef AP0 ApFilter0;
 	typedef AP1 ApFilter1;
 
 	               BandSplitAllPassPair ();
 
-	ApFilter0 &    use_filter_0 ();
+	ApFilter0 &    use_filter_0 () noexcept;
 	const ApFilter0 &
-	               use_filter_0 () const;
+	               use_filter_0 () const noexcept;
 
-	ApFilter1 &    use_filter_1 ();
+	ApFilter1 &    use_filter_1 () noexcept;
 	const ApFilter1 &
-	               use_filter_1 () const;
+	               use_filter_1 () const noexcept;
 
-	ApFilter0 &    use_fix_filter ();
+	ApFilter0 &    use_fix_filter () noexcept;
 	const ApFilter0 &
-	               use_fix_filter () const;
+	               use_fix_filter () const noexcept;
 
-	void           set_add_sub_function (AddSubProto fnc_ptr);
-	void           set_vol_function (VolumeProto vol_ptr);
+	void           set_add_sub_function (AddSubProto fnc_ptr) noexcept;
+	void           set_vol_function (VolumeProto vol_ptr) noexcept;
 
-	inline void    split_sample (float &out_1, float &out_2, float sample);
-	void           split_block (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl);
+	inline void    split_sample (float &out_1, float &out_2, float sample) noexcept;
+	void           split_block (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
-	inline float   compensate_sample (float sample);
-	void           compensate_block (float out_ptr [], const float in_ptr [], int nbr_spl);
+	inline float   compensate_sample (float sample) noexcept;
+	void           compensate_block (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

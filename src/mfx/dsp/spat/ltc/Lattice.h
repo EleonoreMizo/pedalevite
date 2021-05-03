@@ -12,8 +12,8 @@ Template parameters:
 	D::D ();
 	D::~D ();
 	typename D::DataType;
-	D::DataType D::process_sample (D::DataType);
-	void D::clear_buffers ();
+	D::DataType D::process_sample (D::DataType) noexcept;
+	void D::clear_buffers () noexcept;
 
 - N: number of cells, > 0
 
@@ -68,12 +68,12 @@ public:
 	typedef typename Delay::DataType DataType;
 
 	fstb_FORCEINLINE D &
-	               use_delay (int idx);
+	               use_delay (int idx) noexcept;
 	fstb_FORCEINLINE void
-	               set_coef (int idx, DataType c);
-	DataType       process_sample (DataType x);
-	DataType &     use_delay_output (int idx);
-	void           clear_buffers ();
+	               set_coef (int idx, DataType c) noexcept;
+	DataType       process_sample (DataType x) noexcept;
+	DataType &     use_delay_output (int idx) noexcept;
+	void           clear_buffers () noexcept;
 
 
 

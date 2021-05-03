@@ -46,7 +46,7 @@ namespace va
 
 
 
-void	DiodeClipJcm::set_sample_freq (double sample_freq)
+void	DiodeClipJcm::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -58,7 +58,7 @@ void	DiodeClipJcm::set_sample_freq (double sample_freq)
 
 
 // Distortion potentiometer control. 0 = silent input
-void	DiodeClipJcm::set_dist (float dist)
+void	DiodeClipJcm::set_dist (float dist) noexcept
 {
 	assert (dist >= 0);
 	assert (dist <= 1);
@@ -70,7 +70,7 @@ void	DiodeClipJcm::set_dist (float dist)
 
 
 // Approximative way to set the saturation level
-void	DiodeClipJcm::set_sat_lvl (float lvl)
+void	DiodeClipJcm::set_sat_lvl (float lvl) noexcept
 {
 	assert (lvl > 0);
 
@@ -80,7 +80,7 @@ void	DiodeClipJcm::set_sat_lvl (float lvl)
 
 
 
-void	DiodeClipJcm::set_input_hpf_capa (float c)
+void	DiodeClipJcm::set_input_hpf_capa (float c) noexcept
 {
 	assert (c > 0);
 
@@ -90,14 +90,14 @@ void	DiodeClipJcm::set_input_hpf_capa (float c)
 
 
 
-void	DiodeClipJcm::set_input_hpf_freq (float f)
+void	DiodeClipJcm::set_input_hpf_freq (float f) noexcept
 {
 	set_input_hpf_capa (1.0f / (float (2 * fstb::PI) * _r1 * f));
 }
 
 
 
-void	DiodeClipJcm::set_fdbk_lpf_capa (float c)
+void	DiodeClipJcm::set_fdbk_lpf_capa (float c) noexcept
 {
 	assert (c > 0);
 
@@ -107,21 +107,21 @@ void	DiodeClipJcm::set_fdbk_lpf_capa (float c)
 
 
 
-void	DiodeClipJcm::set_fdbk_lpf_freq (float f)
+void	DiodeClipJcm::set_fdbk_lpf_freq (float f) noexcept
 {
 	set_fdbk_lpf_capa (1.0f / (float (2 * fstb::PI) * _rp * f));
 }
 
 
 
-void	DiodeClipJcm::update_eq ()
+void	DiodeClipJcm::update_eq () noexcept
 {
 	update_internal_coef ();
 }
 
 
 
-float	DiodeClipJcm::process_sample (float x)
+float	DiodeClipJcm::process_sample (float x) noexcept
 {
 	assert (! _dirty_flag);
 
@@ -155,7 +155,7 @@ float	DiodeClipJcm::process_sample (float x)
 
 
 
-void	DiodeClipJcm::clear_buffers ()
+void	DiodeClipJcm::clear_buffers () noexcept
 {
 	_wc1_s = 0;
 	_wc2_s = 0;
@@ -172,7 +172,7 @@ void	DiodeClipJcm::clear_buffers ()
 
 
 
-void	DiodeClipJcm::update_internal_coef ()
+void	DiodeClipJcm::update_internal_coef () noexcept
 {
 	if (_dirty_flag)
 	{

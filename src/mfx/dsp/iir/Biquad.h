@@ -50,27 +50,27 @@ class Biquad
 
 public:
 
-	               Biquad ();
+	               Biquad () noexcept;
 	               Biquad (const Biquad &other)     = default;
 	               ~Biquad ()                       = default;
 	Biquad &       operator = (const Biquad &other) = default;
 
-	inline void    neutralise ();
-	inline void    set_z_eq (const float b [3], const float a [3]);
-	inline void    get_z_eq (float b [3], float a [3]) const;
-	inline void    copy_z_eq (const Biquad &other);
-	inline float   get_state_y () const;
-	inline void    set_state_y (float y);
-	inline void    get_state (float mem_x [2], float mem_y [2]) const;
-	inline void    set_state (const float mem_x [2], const float mem_y [2]);
+	inline void    neutralise () noexcept;
+	inline void    set_z_eq (const float b [3], const float a [3]) noexcept;
+	inline void    get_z_eq (float b [3], float a [3]) const noexcept;
+	inline void    copy_z_eq (const Biquad &other) noexcept;
+	inline float   get_state_y () const noexcept;
+	inline void    set_state_y (float y) noexcept;
+	inline void    get_state (float mem_x [2], float mem_y [2]) const noexcept;
+	inline void    set_state (const float mem_x [2], const float mem_y [2]) noexcept;
 
-	inline float   process_sample (float x);
-	inline float   process_sample (float x, const float inc_b [3], const float inc_a [3]);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3]);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, std::function <float (float)> shaper);
+	inline float   process_sample (float x) noexcept;
+	inline float   process_sample (float x, const float inc_b [3], const float inc_a [3]) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3]) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, std::function <float (float)> shaper) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -84,7 +84,7 @@ protected:
 
 private:
 
-	inline void    step_z_eq (const float inc_b [3], const float inc_a [3]);
+	inline void    step_z_eq (const float inc_b [3], const float inc_a [3]) noexcept;
 
 	std::array <float, 3>      // Direct coefficients, order z^(-n)
 						_eq_z_b;

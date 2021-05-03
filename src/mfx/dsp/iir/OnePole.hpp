@@ -39,7 +39,7 @@ namespace iir
 
 
 
-void	OnePole::neutralise ()
+void	OnePole::neutralise () noexcept
 {
 	_eq_z_b [0] = 1;
 	_eq_z_b [1] = 0;
@@ -48,7 +48,7 @@ void	OnePole::neutralise ()
 
 
 
-void	OnePole::set_z_eq (const float b [2], const float a [2])
+void	OnePole::set_z_eq (const float b [2], const float a [2]) noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -60,7 +60,7 @@ void	OnePole::set_z_eq (const float b [2], const float a [2])
 
 
 
-void	OnePole::get_z_eq (float b [2], float a [2]) const
+void	OnePole::get_z_eq (float b [2], float a [2]) const noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -72,7 +72,7 @@ void	OnePole::get_z_eq (float b [2], float a [2]) const
 
 
 
-void	OnePole::copy_z_eq (const OnePole &other)
+void	OnePole::copy_z_eq (const OnePole &other) noexcept
 {
 	_eq_z_b [0] = other._eq_z_b [0];
 	_eq_z_b [1] = other._eq_z_b [1];
@@ -81,7 +81,7 @@ void	OnePole::copy_z_eq (const OnePole &other)
 
 
 
-float	OnePole::process_sample (float x)
+float	OnePole::process_sample (float x) noexcept
 {
 	const float    y =   _eq_z_b [0] *      x
 	                   + _eq_z_b [1] * _mem_x
@@ -94,7 +94,7 @@ float	OnePole::process_sample (float x)
 
 
 
-float	OnePole::process_sample (float x, const float inc_b [2], const float inc_a [2])
+float	OnePole::process_sample (float x, const float inc_b [2], const float inc_a [2]) noexcept
 {
 	assert (inc_b != nullptr);
 	assert (inc_a != nullptr);
@@ -115,7 +115,7 @@ float	OnePole::process_sample (float x, const float inc_b [2], const float inc_a
 
 
 
-void	OnePole::step_z_eq (const float inc_b [2], const float inc_a [2])
+void	OnePole::step_z_eq (const float inc_b [2], const float inc_a [2]) noexcept
 {
 	assert (inc_b != nullptr);
 	assert (inc_a != nullptr);

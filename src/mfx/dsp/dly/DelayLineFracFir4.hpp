@@ -76,7 +76,7 @@ void	DelayLineFracFir4 <IM, AL>::set_sample_freq (float sample_freq)
 
 
 template <typename IM, typename AL>
-float	DelayLineFracFir4 <IM, AL>::get_sample_freq () const
+float	DelayLineFracFir4 <IM, AL>::get_sample_freq () const noexcept
 {
 	return _sample_freq;
 }
@@ -99,7 +99,7 @@ void	DelayLineFracFir4 <IM, AL>::set_max_time (float per)
 
 
 template <typename IM, typename AL>
-float	DelayLineFracFir4 <IM, AL>::get_max_time () const
+float	DelayLineFracFir4 <IM, AL>::get_max_time () const noexcept
 {
 	return _max_time;
 }
@@ -107,7 +107,7 @@ float	DelayLineFracFir4 <IM, AL>::get_max_time () const
 
 
 template <typename IM, typename AL>
-float	DelayLineFracFir4 <IM, AL>::get_min_time () const
+float	DelayLineFracFir4 <IM, AL>::get_min_time () const noexcept
 {
 	return 4.0f / _sample_freq;
 }
@@ -115,7 +115,7 @@ float	DelayLineFracFir4 <IM, AL>::get_min_time () const
 
 
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::set_time (float per)
+void	DelayLineFracFir4 <IM, AL>::set_time (float per) noexcept
 {
 	assert (per >= get_min_time ());
 	assert (per <= get_max_time ());
@@ -127,7 +127,7 @@ void	DelayLineFracFir4 <IM, AL>::set_time (float per)
 
 
 template <typename IM, typename AL>
-float	DelayLineFracFir4 <IM, AL>::get_time () const
+float	DelayLineFracFir4 <IM, AL>::get_time () const noexcept
 {
 	return _real_period;
 }
@@ -135,7 +135,7 @@ float	DelayLineFracFir4 <IM, AL>::get_time () const
 
 
 template <typename IM, typename AL>
-typename DelayLineFracFir4 <IM, AL>::InterpolatorMaker &	DelayLineFracFir4 <IM, AL>::use_interpolator_maker ()
+typename DelayLineFracFir4 <IM, AL>::InterpolatorMaker &	DelayLineFracFir4 <IM, AL>::use_interpolator_maker () noexcept
 {
 	return _interpolater_maker;
 }
@@ -143,7 +143,7 @@ typename DelayLineFracFir4 <IM, AL>::InterpolatorMaker &	DelayLineFracFir4 <IM, 
 
 
 template <typename IM, typename AL>
-const typename DelayLineFracFir4 <IM, AL>::InterpolatorMaker &	DelayLineFracFir4 <IM, AL>::use_interpolator_maker () const
+const typename DelayLineFracFir4 <IM, AL>::InterpolatorMaker &	DelayLineFracFir4 <IM, AL>::use_interpolator_maker () const noexcept
 {
 	return _interpolater_maker;
 }
@@ -151,7 +151,7 @@ const typename DelayLineFracFir4 <IM, AL>::InterpolatorMaker &	DelayLineFracFir4
 
 
 template <typename IM, typename AL>
-float	DelayLineFracFir4 <IM, AL>::process_sample (float sample)
+float	DelayLineFracFir4 <IM, AL>::process_sample (float sample) noexcept
 {
 	const float    read_val = _buf.read_sample (&_interp_fir [0]);
 	_buf.write_sample (sample);
@@ -164,7 +164,7 @@ float	DelayLineFracFir4 <IM, AL>::process_sample (float sample)
 
 // Can work in-place
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::process_block (float dest_ptr [], const float src_ptr [], int nbr_spl)
+void	DelayLineFracFir4 <IM, AL>::process_block (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dest_ptr != 0);
 	assert (src_ptr != 0);
@@ -179,7 +179,7 @@ void	DelayLineFracFir4 <IM, AL>::process_block (float dest_ptr [], const float s
 
 
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl)
+void	DelayLineFracFir4 <IM, AL>::process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dest_ptr != 0);
 	assert (src_ptr != 0);
@@ -196,7 +196,7 @@ void	DelayLineFracFir4 <IM, AL>::process_block_mix (float dest_ptr [], const flo
 
 // Can work in-place
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::process_block_vt (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time)
+void	DelayLineFracFir4 <IM, AL>::process_block_vt (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time) noexcept
 {
 	assert (dest_ptr != 0);
 	assert (src_ptr != 0);
@@ -216,7 +216,7 @@ void	DelayLineFracFir4 <IM, AL>::process_block_vt (float dest_ptr [], const floa
 
 
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::process_block_vt_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time)
+void	DelayLineFracFir4 <IM, AL>::process_block_vt_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time) noexcept
 {
 	assert (dest_ptr != 0);
 	assert (src_ptr != 0);
@@ -236,7 +236,7 @@ void	DelayLineFracFir4 <IM, AL>::process_block_vt_mix (float dest_ptr [], const 
 
 
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::clear_buffers ()
+void	DelayLineFracFir4 <IM, AL>::clear_buffers () noexcept
 {
 	_buf.clear_buffers ();
 }
@@ -262,7 +262,7 @@ void	DelayLineFracFir4 <IM, AL>::update_buffer ()
 
 
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::update_period ()
+void	DelayLineFracFir4 <IM, AL>::update_period () noexcept
 {
 	_period = _real_period * _sample_freq + _interpolator_maker.get_delay ();
 	update_interpolator ();
@@ -271,7 +271,7 @@ void	DelayLineFracFir4 <IM, AL>::update_period ()
 
 
 template <typename IM, typename AL>
-void	DelayLineFracFir4 <IM, AL>::update_interpolator ()
+void	DelayLineFracFir4 <IM, AL>::update_interpolator () noexcept
 {
 	assert (_interpolator_maker.get_length () == 4);
 
@@ -284,7 +284,7 @@ void	DelayLineFracFir4 <IM, AL>::update_interpolator ()
 
 
 template <typename IM, typename AL>
-float	DelayLineFracFir4 <IM, AL>::init_variable_time (int nbr_spl, float final_time)
+float	DelayLineFracFir4 <IM, AL>::init_variable_time (int nbr_spl, float final_time) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (final_time >= get_min_time ());
@@ -301,7 +301,7 @@ float	DelayLineFracFir4 <IM, AL>::init_variable_time (int nbr_spl, float final_t
 
 
 template <typename IM, typename AL>
-float	DelayLineFracFir4 <IM, AL>::iterate_variable_time (float period_step, float sample)
+float	DelayLineFracFir4 <IM, AL>::iterate_variable_time (float period_step, float sample) noexcept
 {
 	_period += period_step;
 	update_interpolator ();

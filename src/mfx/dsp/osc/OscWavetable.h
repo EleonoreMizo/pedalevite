@@ -71,38 +71,38 @@ public:
 
 	static const int  PITCH_FRAC_BITS = 16;
 
-	void           set_wavetable (const WavetableDataType &wavetable);
+	void           set_wavetable (const WavetableDataType &wavetable) noexcept;
 	const WavetableDataType &
-	               use_wavetable () const;
+	               use_wavetable () const noexcept;
 
-	inline void    set_base_pitch (int32_t pitch);
-	inline int32_t get_base_pitch () const;
+	inline void    set_base_pitch (int32_t pitch) noexcept;
+	inline int32_t get_base_pitch () const noexcept;
 	fstb_FORCEINLINE uint32_t
-	               set_pitch (int32_t pitch);
-	inline int32_t get_pitch () const;
+	               set_pitch (int32_t pitch) noexcept;
+	inline int32_t get_pitch () const noexcept;
 	fstb_FORCEINLINE void
-	               set_pitch_no_table_update (int32_t pitch);
+	               set_pitch_no_table_update (int32_t pitch) noexcept;
 
-	void           reset_phase ();
-	void           set_phase (uint32_t phase);
+	void           reset_phase () noexcept;
+	void           set_phase (uint32_t phase) noexcept;
 	fstb_FORCEINLINE uint32_t
-	               get_phase () const;
-	void           set_phase_flt (float phase);
+	               get_phase () const noexcept;
+	void           set_phase_flt (float phase) noexcept;
 	fstb_FORCEINLINE float
-	               get_phase_flt () const;
+	               get_phase_flt () const noexcept;
 
-	DataType       get_sample_at_phase (uint32_t phase) const;
-	DataType       get_sample_at_phase_flt (float phase) const;
+	DataType       get_sample_at_phase (uint32_t phase) const noexcept;
+	DataType       get_sample_at_phase_flt (float phase) const noexcept;
 	fstb_FORCEINLINE DataType
-	               get_cur_sample () const;
+	               get_cur_sample () const noexcept;
 	fstb_FORCEINLINE DataType
-	               process_sample ();
-	void           process_block (DataType dest_ptr [], int nbr_spl);
-	void           process_block_mix (DataType dest_ptr [], int nbr_spl);
-	inline void    skip_block (int nbr_spl);
+	               process_sample () noexcept;
+	void           process_block (DataType dest_ptr [], int nbr_spl) noexcept;
+	void           process_block_mix (DataType dest_ptr [], int nbr_spl) noexcept;
+	inline void    skip_block (int nbr_spl) noexcept;
 
 	// Convenience function
-	inline int32_t conv_freq_to_pitch (float freq, float fs) const;
+	inline int32_t conv_freq_to_pitch (float freq, float fs) const noexcept;
 
 
 

@@ -53,10 +53,10 @@ class CosineSum
 
 public:
 
-	static const int  _min_order =  1;
-	static const int  _max_order = 10;
+	static constexpr int _min_order =  1;
+	static constexpr int _max_order = 10;
 
-	void           set_order (int order);
+	void           set_order (int order) noexcept;
 
 	/*** To do: information retrieval ***/
 

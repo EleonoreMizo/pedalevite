@@ -69,7 +69,7 @@ void	FreqFast::set_sample_freq (double sample_freq)
 
 
 
-void	FreqFast::set_freq_bot (float f)
+void	FreqFast::set_freq_bot (float f) noexcept
 {
 	assert (f > 0);
 
@@ -78,7 +78,7 @@ void	FreqFast::set_freq_bot (float f)
 
 
 
-void	FreqFast::set_freq_top (float f)
+void	FreqFast::set_freq_top (float f) noexcept
 {
 	assert (f > 0);
 
@@ -87,7 +87,7 @@ void	FreqFast::set_freq_top (float f)
 
 
 
-void	FreqFast::clear_buffers ()
+void	FreqFast::clear_buffers () noexcept
 {
 	_freq = 0;
 	_dc_killer.clear_buffers ();
@@ -105,7 +105,7 @@ void	FreqFast::clear_buffers ()
 
 
 
-float	FreqFast::process_block (const float spl_ptr [], int nbr_spl)
+float	FreqFast::process_block (const float spl_ptr [], int nbr_spl) noexcept
 {
 	assert (spl_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -144,7 +144,7 @@ float	FreqFast::process_block (const float spl_ptr [], int nbr_spl)
 
 
 
-float	FreqFast::process_sample (float x)
+float	FreqFast::process_sample (float x) noexcept
 {
 	// DC murdering
 	x = _dc_killer.process_sample (x);
@@ -207,7 +207,7 @@ float	FreqFast::process_sample (float x)
 // Gain is maximum at: (n * a^n) ^ (1 / (n+1))
 // Gate parameter:
 // a^n = (gate_level ^ (n+1)) / n
-void	FreqFast::proc_autogain (int nbr_spl)
+void	FreqFast::proc_autogain (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
@@ -245,7 +245,7 @@ void	FreqFast::proc_autogain (int nbr_spl)
 
 
 
-void	FreqFast::proc_peaks (int nbr_spl)
+void	FreqFast::proc_peaks (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
@@ -317,7 +317,7 @@ void	FreqFast::proc_peaks (int nbr_spl)
 
 
 
-void	FreqFast::find_freq (int nbr_spl)
+void	FreqFast::find_freq (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
@@ -355,7 +355,7 @@ void	FreqFast::find_freq (int nbr_spl)
 
 
 
-void	FreqFast::process_freq (int ts_rel)
+void	FreqFast::process_freq (int ts_rel) noexcept
 {
 	const int32_t  time_p0 = _time_ref + ts_rel;
 	const float    per     = float (time_p0 - _time_p1);
@@ -387,7 +387,7 @@ void	FreqFast::process_freq (int ts_rel)
 
 
 
-void	FreqFast::validate_period (float per)
+void	FreqFast::validate_period (float per) noexcept
 {
 	assert (per > 0);
 
@@ -415,7 +415,7 @@ void	FreqFast::validate_period (float per)
 
 
 
-void	FreqFast::fix_timestamps ()
+void	FreqFast::fix_timestamps () noexcept
 {
 	const int32_t  lim = INT32_MAX / 2;
 	if (_time_p1 > lim)
@@ -427,7 +427,7 @@ void	FreqFast::fix_timestamps ()
 
 
 
-bool	FreqFast::is_period_similar (float p1, float p2)
+bool	FreqFast::is_period_similar (float p1, float p2) noexcept
 {
 	assert (p1 >= 0);
 	assert (p2 >= 0);

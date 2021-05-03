@@ -67,27 +67,20 @@ public:
 	typedef DT DataType;
 	typedef WavetablePolyphaseData <PLEN, NPL2, DT> ThisType;
 
-	               WavetablePolyphaseData ()  = default;
-	               WavetablePolyphaseData (const WavetablePolyphaseData &other) = default;
-	               ~WavetablePolyphaseData () = default;
-
-	WavetablePolyphaseData &
-	               operator = (const WavetablePolyphaseData &other) = default;
-
-	inline void		set_sample (int phase, int pos, DataType val);
-	inline void		set_sample (int phase_pos, DataType val);
+	inline void		set_sample (int phase, int pos, DataType val) noexcept;
+	inline void		set_sample (int phase_pos, DataType val) noexcept;
 
 	fstb_FORCEINLINE DataType
-	               get_sample (int phase, int pos) const;
+	               get_sample (int phase, int pos) const noexcept;
 	fstb_FORCEINLINE DataType
-	               get_sample (int phase_pos) const;
+	               get_sample (int phase_pos) const noexcept;
 
 	fstb_FORCEINLINE DataType *
-	               use_table (int phase);
+	               use_table (int phase) noexcept;
 	fstb_FORCEINLINE const DataType *
-	               use_table (int phase) const;
+	               use_table (int phase) const noexcept;
 
-	void           clear_table (int phase);
+	void           clear_table (int phase) noexcept;
 
 
 

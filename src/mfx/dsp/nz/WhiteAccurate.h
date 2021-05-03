@@ -49,11 +49,11 @@ class WhiteAccurate
 
 public:
 
-	void           set_seed (uint32_t seed);
-	void           set_rough_level (float lvl);
-	inline float   process_sample ();
-	void           process_block (float dst_ptr [], int nbr_spl);
-	void           process_block_add (float dst_ptr [], int nbr_spl);
+	void           set_seed (uint32_t seed) noexcept;
+	void           set_rough_level (float lvl) noexcept;
+	inline float   process_sample () noexcept;
+	void           process_block (float dst_ptr [], int nbr_spl) noexcept;
+	void           process_block_add (float dst_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -69,7 +69,7 @@ private:
 
 	static constexpr float  _scale_unity = 2 * fstb::TWOPM32;
 
-	inline float   gen_new_val ();
+	inline float   gen_new_val () noexcept;
 
 	uint32_t       _idx   = 1;
 	float          _scale = _scale_unity;

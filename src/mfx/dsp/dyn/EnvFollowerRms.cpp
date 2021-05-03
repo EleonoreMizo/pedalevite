@@ -46,7 +46,7 @@ namespace dyn
 
 
 
-EnvFollowerRms::EnvFollowerRms ()
+EnvFollowerRms::EnvFollowerRms () noexcept
 :	_sample_freq (44100)
 ,	_time_a (0)
 ,	_time_r (0)
@@ -60,7 +60,7 @@ EnvFollowerRms::EnvFollowerRms ()
 
 
 
-void	EnvFollowerRms::set_sample_freq (double fs)
+void	EnvFollowerRms::set_sample_freq (double fs) noexcept
 {
 	assert (fs > 0);
 
@@ -70,7 +70,7 @@ void	EnvFollowerRms::set_sample_freq (double fs)
 
 
 
-void	EnvFollowerRms::set_times (float at, float rt)
+void	EnvFollowerRms::set_times (float at, float rt) noexcept
 {
 	assert (at >= 0);
 	assert (rt >= 0);
@@ -82,7 +82,7 @@ void	EnvFollowerRms::set_times (float at, float rt)
 
 
 
-void	EnvFollowerRms::set_time_atk (float t)
+void	EnvFollowerRms::set_time_atk (float t) noexcept
 {
 	assert (t >= 0);
 
@@ -92,7 +92,7 @@ void	EnvFollowerRms::set_time_atk (float t)
 
 
 
-void	EnvFollowerRms::set_time_rel (float t)
+void	EnvFollowerRms::set_time_rel (float t) noexcept
 {
 	assert (t >= 0);
 
@@ -102,7 +102,7 @@ void	EnvFollowerRms::set_time_rel (float t)
 
 
 
-void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -126,7 +126,7 @@ void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], int
 
 
 
-void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -152,7 +152,7 @@ void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr
 
 // Input is not squared
 // Output is not square-rooted
-void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -177,7 +177,7 @@ void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [],
 
 
 
-float	EnvFollowerRms::analyse_block (const float data_ptr [], int nbr_spl)
+float	EnvFollowerRms::analyse_block (const float data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -203,7 +203,7 @@ float	EnvFollowerRms::analyse_block (const float data_ptr [], int nbr_spl)
 
 // Input is not squared
 // Output is not square-rooted
-float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], int nbr_spl)
+float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -230,7 +230,7 @@ float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], int nbr_spl)
 
 // Input is not squared
 // Output is not square-rooted
-float	EnvFollowerRms::analyse_block_raw_cst (float x2, int nbr_spl)
+float	EnvFollowerRms::analyse_block_raw_cst (float x2, int nbr_spl) noexcept
 {
 	assert (x2 >= 0);
 	assert (nbr_spl > 0);
@@ -250,7 +250,7 @@ float	EnvFollowerRms::analyse_block_raw_cst (float x2, int nbr_spl)
 
 
 
-void	EnvFollowerRms::clear_buffers ()
+void	EnvFollowerRms::clear_buffers () noexcept
 {
 	_state = 0;
 }
@@ -265,7 +265,7 @@ void	EnvFollowerRms::clear_buffers ()
 
 
 
-void	EnvFollowerRms::update_parameters ()
+void	EnvFollowerRms::update_parameters () noexcept
 {
 	_coef_a = EnvHelper::compute_env_coef_simple (_time_a, _sample_freq);
 	_coef_r = EnvHelper::compute_env_coef_simple (_time_r, _sample_freq);

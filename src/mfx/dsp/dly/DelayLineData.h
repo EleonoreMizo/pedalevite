@@ -63,29 +63,29 @@ public:
 	DelayLineData &
 	               operator = (DelayLineData &&other)    = default;
 
-	void           set_extra_len (int nbr_spl);
-	int            get_extra_len () const;
-	void           set_unroll_pre (int nbr_spl);
-	int            get_unroll_pre () const;
-	void           set_unroll_post (int nbr_spl);
-	int            get_unroll_post () const;
+	void           set_extra_len (int nbr_spl) noexcept;
+	int            get_extra_len () const noexcept;
+	void           set_unroll_pre (int nbr_spl) noexcept;
+	int            get_unroll_pre () const noexcept;
+	void           set_unroll_post (int nbr_spl) noexcept;
+	int            get_unroll_post () const noexcept;
 
 	void           set_sample_freq (double sample_freq);
 	void           set_max_delay_time (double max_time);
-	double         get_max_delay_time () const;
+	double         get_max_delay_time () const noexcept;
 
 	void           update_buffer_size ();
-	void           update_unroll ();
-	void           update_unroll_pre ();
-	void           update_unroll_post ();
+	void           update_unroll () noexcept;
+	void           update_unroll_pre () noexcept;
+	void           update_unroll_post () noexcept;
 
-	int            get_len () const;
-	int            get_mask () const;
-	ValueType *    get_buffer ();
+	int            get_len () const noexcept;
+	int            get_mask () const noexcept;
+	ValueType *    get_buffer () noexcept;
 	const ValueType *
-	               get_buffer () const;
+	               get_buffer () const noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -101,7 +101,7 @@ private:
 
 	typedef std::vector <ValueType, AllocatorType> Buffer;
 
-	void           invalidate_buf ();
+	void           invalidate_buf () noexcept;
 
 	Buffer         _buf;
 	ValueType *    _buf_ptr;         // Points on virtual buffer beginning (after _head_len)

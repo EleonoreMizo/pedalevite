@@ -38,7 +38,7 @@ namespace iir
 
 
 template <typename T>
-inline T	SvfMixerHigh::mix (T v0, T v1, T v2, T v0m, T v1m, T v2m)
+inline T	SvfMixerHigh::mix (T v0, T v1, T v2, T v0m, T v1m, T v2m) noexcept
 {
 	fstb::unused (v0m, v2m);
 
@@ -48,7 +48,7 @@ inline T	SvfMixerHigh::mix (T v0, T v1, T v2, T v0m, T v1m, T v2m)
 
 
 template <typename T>
-inline void	SvfMixerHigh::inc (T &v0m, T &v1m, T &v2m, T v0mi, T v1mi, T v2mi)
+inline void	SvfMixerHigh::inc (T &v0m, T &v1m, T &v2m, T v0mi, T v1mi, T v2mi) noexcept
 {
 	fstb::unused (v0m, v2m, v0mi, v2mi);
 

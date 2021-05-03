@@ -41,7 +41,7 @@ namespace shape
 
 
 
-constexpr float	WsAsym1::process_sample (float x)
+constexpr float	WsAsym1::process_sample (float x) noexcept
 {
 	const float    x2 = x * x;
 	if (x <= 0)
@@ -63,7 +63,7 @@ constexpr float	WsAsym1::process_sample (float x)
 
 
 template <typename VD, typename VS>
-void  WsAsym1::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void  WsAsym1::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

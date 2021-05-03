@@ -41,7 +41,7 @@ namespace ctrl
 
 
 
-VarBlock::VarBlock (float val)
+VarBlock::VarBlock (float val) noexcept
 :	_val_tgt (val)
 ,	_val_beg (val)
 ,	_val_end (val)
@@ -52,14 +52,14 @@ VarBlock::VarBlock (float val)
 
 
 
-void	VarBlock::set_val (float val)
+void	VarBlock::set_val (float val) noexcept
 {
 	_val_tgt = val;
 }
 
 
 
-void	VarBlock::force_val (float val)
+void	VarBlock::force_val (float val) noexcept
 {
 	set_val (val);
 	clear_buffers ();
@@ -67,7 +67,7 @@ void	VarBlock::force_val (float val)
 
 
 
-void	VarBlock::tick (int nbr_spl)
+void	VarBlock::tick (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -78,35 +78,35 @@ void	VarBlock::tick (int nbr_spl)
 
 
 
-float	VarBlock::get_beg () const
+float	VarBlock::get_beg () const noexcept
 {
 	return _val_beg;
 }
 
 
 
-float	VarBlock::get_end () const
+float	VarBlock::get_end () const noexcept
 {
 	return _val_end;
 }
 
 
 
-float	VarBlock::get_tgt () const
+float	VarBlock::get_tgt () const noexcept
 {
 	return _val_tgt;
 }
 
 
 
-float	VarBlock::get_step () const
+float	VarBlock::get_step () const noexcept
 {
 	return _step;
 }
 
 
 
-void	VarBlock::clear_buffers ()
+void	VarBlock::clear_buffers () noexcept
 {
 	_val_beg = _val_tgt;
 	_val_end = _val_tgt;

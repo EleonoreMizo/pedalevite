@@ -43,14 +43,14 @@ namespace nz
 
 
 
-void	WhiteFast::set_seed (uint32_t seed)
+void	WhiteFast::set_seed (uint32_t seed) noexcept
 {
 	_state = seed & _mm;
 }
 
 
 
-void	WhiteFast::set_rough_level (float lvl)
+void	WhiteFast::set_rough_level (float lvl) noexcept
 {
 	assert (lvl > 0);
 
@@ -61,7 +61,7 @@ void	WhiteFast::set_rough_level (float lvl)
 
 
 
-void	WhiteFast::process_block (float dst_ptr [], int nbr_spl)
+void	WhiteFast::process_block (float dst_ptr [], int nbr_spl) noexcept
 {
 	uint32_t       state = _state;
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -73,7 +73,7 @@ void	WhiteFast::process_block (float dst_ptr [], int nbr_spl)
 
 
 
-void	WhiteFast::process_block_add (float dst_ptr [], int nbr_spl)
+void	WhiteFast::process_block_add (float dst_ptr [], int nbr_spl) noexcept
 {
 	uint32_t       state = _state;
 	for (int pos = 0; pos < nbr_spl; ++pos)

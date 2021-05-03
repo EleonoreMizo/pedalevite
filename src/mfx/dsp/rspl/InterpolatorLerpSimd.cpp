@@ -58,28 +58,28 @@ void	InterpolatorLerpSimd::do_set_ovrspl_l2 (int ovrspl_l2)
 
 
 
-int	InterpolatorLerpSimd::do_get_impulse_len () const
+int	InterpolatorLerpSimd::do_get_impulse_len () const noexcept
 {
 	return IMPULSE_LEN;
 }
 
 
 
-fstb::FixedPoint	InterpolatorLerpSimd::do_get_group_delay () const
+fstb::FixedPoint	InterpolatorLerpSimd::do_get_group_delay () const noexcept
 {
 	return fstb::FixedPoint (0, 0);
 }
 
 
 
-void	InterpolatorLerpSimd::do_start (int nbr_chn)
+void	InterpolatorLerpSimd::do_start (int nbr_chn) noexcept
 {
 	_nbr_chn = nbr_chn;
 }
 
 
 
-int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept
 {
 	typedef	float	Buffer [4];
 	alignas (16) Buffer  in_0_arr;
@@ -205,7 +205,7 @@ int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const
 
 
 
-float	InterpolatorLerpSimd::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+float	InterpolatorLerpSimd::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) noexcept
 {
 	fstb::unused (rate);
 

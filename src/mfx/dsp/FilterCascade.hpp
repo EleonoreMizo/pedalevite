@@ -36,7 +36,7 @@ namespace dsp
 
 
 template <class F1, class F2, class F3, class F4>
-float	FilterCascade <F1, F2, F3, F4>::process_sample (float sample)
+float	FilterCascade <F1, F2, F3, F4>::process_sample (float sample) noexcept
 {
 	sample = _f1.process_sample (sample);
 	sample = _f2.process_sample (sample);
@@ -49,7 +49,7 @@ float	FilterCascade <F1, F2, F3, F4>::process_sample (float sample)
 
 
 template <class F1, class F2, class F3, class F4>
-typename FilterCascade <F1, F2, F3, F4>::Filter1Type &	FilterCascade <F1, F2, F3, F4>::use_filter_1 ()
+typename FilterCascade <F1, F2, F3, F4>::Filter1Type &	FilterCascade <F1, F2, F3, F4>::use_filter_1 () noexcept
 {
 	return _f1;
 }
@@ -57,7 +57,7 @@ typename FilterCascade <F1, F2, F3, F4>::Filter1Type &	FilterCascade <F1, F2, F3
 
 
 template <class F1, class F2, class F3, class F4>
-const typename FilterCascade <F1, F2, F3, F4>::Filter1Type &	FilterCascade <F1, F2, F3, F4>::use_filter_1 () const
+const typename FilterCascade <F1, F2, F3, F4>::Filter1Type &	FilterCascade <F1, F2, F3, F4>::use_filter_1 () const noexcept
 {
 	return _f1;
 }
@@ -65,7 +65,7 @@ const typename FilterCascade <F1, F2, F3, F4>::Filter1Type &	FilterCascade <F1, 
 
 
 template <class F1, class F2, class F3, class F4>
-typename FilterCascade <F1, F2, F3, F4>::Filter2Type &	FilterCascade <F1, F2, F3, F4>::use_filter_2 ()
+typename FilterCascade <F1, F2, F3, F4>::Filter2Type &	FilterCascade <F1, F2, F3, F4>::use_filter_2 () noexcept
 {
 	return _f2;
 }
@@ -73,7 +73,7 @@ typename FilterCascade <F1, F2, F3, F4>::Filter2Type &	FilterCascade <F1, F2, F3
 
 
 template <class F1, class F2, class F3, class F4>
-const typename FilterCascade <F1, F2, F3, F4>::Filter2Type &	FilterCascade <F1, F2, F3, F4>::use_filter_2 () const
+const typename FilterCascade <F1, F2, F3, F4>::Filter2Type &	FilterCascade <F1, F2, F3, F4>::use_filter_2 () const noexcept
 {
 	return _f2;
 }
@@ -81,7 +81,7 @@ const typename FilterCascade <F1, F2, F3, F4>::Filter2Type &	FilterCascade <F1, 
 
 
 template <class F1, class F2, class F3, class F4>
-typename FilterCascade <F1, F2, F3, F4>::Filter3Type &	FilterCascade <F1, F2, F3, F4>::use_filter_3 ()
+typename FilterCascade <F1, F2, F3, F4>::Filter3Type &	FilterCascade <F1, F2, F3, F4>::use_filter_3 () noexcept
 {
 	return _f3;
 }
@@ -89,7 +89,7 @@ typename FilterCascade <F1, F2, F3, F4>::Filter3Type &	FilterCascade <F1, F2, F3
 
 
 template <class F1, class F2, class F3, class F4>
-const typename FilterCascade <F1, F2, F3, F4>::Filter3Type &	FilterCascade <F1, F2, F3, F4>::use_filter_3 () const
+const typename FilterCascade <F1, F2, F3, F4>::Filter3Type &	FilterCascade <F1, F2, F3, F4>::use_filter_3 () const noexcept
 {
 	return _f3;
 }
@@ -97,7 +97,7 @@ const typename FilterCascade <F1, F2, F3, F4>::Filter3Type &	FilterCascade <F1, 
 
 
 template <class F1, class F2, class F3, class F4>
-typename FilterCascade <F1, F2, F3, F4>::Filter4Type &	FilterCascade <F1, F2, F3, F4>::use_filter_4 ()
+typename FilterCascade <F1, F2, F3, F4>::Filter4Type &	FilterCascade <F1, F2, F3, F4>::use_filter_4 () noexcept
 {
 	return _f4;
 }
@@ -105,7 +105,7 @@ typename FilterCascade <F1, F2, F3, F4>::Filter4Type &	FilterCascade <F1, F2, F3
 
 
 template <class F1, class F2, class F3, class F4>
-const typename FilterCascade <F1, F2, F3, F4>::Filter4Type &	FilterCascade <F1, F2, F3, F4>::use_filter_4 () const
+const typename FilterCascade <F1, F2, F3, F4>::Filter4Type &	FilterCascade <F1, F2, F3, F4>::use_filter_4 () const noexcept
 {
 	return _f4;
 }

@@ -50,23 +50,23 @@ class DelayLineReaderPitch
 
 public:
 
-	void           set_tmp_buf (float *buf_ptr, int len);
-	float *        get_tmp_buf_ptr () const;
-	int            get_tmp_buf_len () const;
+	void           set_tmp_buf (float *buf_ptr, int len) noexcept;
+	float *        get_tmp_buf_ptr () const noexcept;
+	int            get_tmp_buf_len () const noexcept;
 
-	void           set_delay_line (const DelayLineReadInterface &delay_line);
+	void           set_delay_line (const DelayLineReadInterface &delay_line) noexcept;
 
-	void           set_resampling_range (TC rate_inf, TC rate_sup);
-	void           set_crossfade_normal (int nbr_spl, const float shape_ptr []);
-	void           set_crossfade_pitchshift (int nbr_spl, const float shape_ptr []);
+	void           set_resampling_range (TC rate_inf, TC rate_sup) noexcept;
+	void           set_crossfade_normal (int nbr_spl, const float shape_ptr []) noexcept;
+	void           set_crossfade_pitchshift (int nbr_spl, const float shape_ptr []) noexcept;
 
-	bool           is_ready () const;
+	bool           is_ready () const noexcept;
 
-	void           set_delay_time (TC delay_time, int transition_time);
-	void           set_grain_pitch (float ratio);
-	void           read_data (float dst_ptr [], int nbr_spl, int src_pos);
-	bool           is_time_change_programmed () const;
-	void           clear_buffers ();
+	void           set_delay_time (TC delay_time, int transition_time) noexcept;
+	void           set_grain_pitch (float ratio) noexcept;
+	void           read_data (float dst_ptr [], int nbr_spl, int src_pos) noexcept;
+	bool           is_time_change_programmed () const noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -83,8 +83,8 @@ private:
 	class Grain
 	{
 	public:
-		bool           is_ramping () const;
-		int            clip_block_len (int len) const;
+		bool           is_ramping () const noexcept;
+		int            clip_block_len (int len) const noexcept;
 
 		TC             _dly_cur   =  0;  // Current delay time in seconds. Can be out of bound.
 		TC             _dly_tgt   =  0;  // Target delay time in seconds, for transitions. Can be out of bound.
@@ -94,10 +94,10 @@ private:
 	};
 	typedef std::array <Grain, 2> GrainArray;
 
-	void           check_and_start_transition ();
-	bool           process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl);
-	int            get_xfade_len () const;
-	const float *  use_xfase_shape () const;
+	void           check_and_start_transition () noexcept;
+	bool           process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl) noexcept;
+	int            get_xfade_len () const noexcept;
+	const float *  use_xfase_shape () const noexcept;
 
 	const DelayLineReadInterface *
 	               _delay_line_ptr = nullptr; // 0 = not initialised.

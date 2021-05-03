@@ -50,7 +50,7 @@ namespace mna
 
 
 
-PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1, Flt is2, Flt n2)
+PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1, Flt is2, Flt n2) noexcept
 :	_nid_arr {{ nid_1, nid_2 }}
 {
 	assert (nid_1 >= 0);
@@ -78,7 +78,7 @@ PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1,
 
 
 
-void	PartDiodeAntipar::set_is (int dir, Flt is)
+void	PartDiodeAntipar::set_is (int dir, Flt is) noexcept
 {
 	assert (dir >= 0);
 	assert (dir < int (_dir_arr.size ()));
@@ -93,7 +93,7 @@ void	PartDiodeAntipar::set_is (int dir, Flt is)
 
 
 
-void	PartDiodeAntipar::set_n (int dir, Flt n)
+void	PartDiodeAntipar::set_n (int dir, Flt n) noexcept
 {
 	assert (dir >= 0);
 	assert (dir < int (_dir_arr.size ()));
@@ -109,7 +109,7 @@ void	PartDiodeAntipar::set_n (int dir, Flt n)
 
 
 
-void	PartDiodeAntipar::set_imax (int dir, Flt imax)
+void	PartDiodeAntipar::set_imax (int dir, Flt imax) noexcept
 {
 	assert (dir >= 0);
 	assert (dir < int (_dir_arr.size ()));
@@ -152,7 +152,7 @@ void	PartDiodeAntipar::do_prepare (const SimInfo &info)
 
 
 
-void	PartDiodeAntipar::do_add_to_matrix (int it_cnt)
+void	PartDiodeAntipar::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -193,14 +193,14 @@ void	PartDiodeAntipar::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartDiodeAntipar::do_step ()
+void	PartDiodeAntipar::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartDiodeAntipar::do_clear_buffers ()
+void	PartDiodeAntipar::do_clear_buffers () noexcept
 {
 	_v_prev = 0;
 }
@@ -211,14 +211,14 @@ void	PartDiodeAntipar::do_clear_buffers ()
 
 
 
-Flt	PartDiodeAntipar::Direction::compute_nvt_inv () const
+Flt	PartDiodeAntipar::Direction::compute_nvt_inv () const noexcept
 {
 	return std::copysign (Flt (1. / (_n * _vt)), _is);
 }
 
 
 
-Flt	PartDiodeAntipar::Direction::compute_mul_v () const
+Flt	PartDiodeAntipar::Direction::compute_mul_v () const noexcept
 {
 	return std::copysign (Flt (1. / (_n * _vt * fstb::LN2)), _is);
 }
@@ -226,7 +226,7 @@ Flt	PartDiodeAntipar::Direction::compute_mul_v () const
 
 
 // (3.55) from http://qucs.sourceforge.net/tech/node16.html
-Flt	PartDiodeAntipar::Direction::compute_vcrit () const
+Flt	PartDiodeAntipar::Direction::compute_vcrit () const noexcept
 {
 	const Flt      nvt = _n * _vt;
 	const Flt      l2i = nvt / (fabs (_is) * Flt (fstb::SQRT2));
@@ -237,7 +237,7 @@ Flt	PartDiodeAntipar::Direction::compute_vcrit () const
 
 
 
-Flt	PartDiodeAntipar::Direction::compute_vmax ()
+Flt	PartDiodeAntipar::Direction::compute_vmax () noexcept
 {
 	return std::copysign (_n * _vt * Flt (log (1 + _imax / _is)), _is);
 }

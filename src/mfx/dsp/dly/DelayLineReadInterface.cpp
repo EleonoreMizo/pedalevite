@@ -43,7 +43,7 @@ namespace dly
 
 
 
-double	DelayLineReadInterface::get_sample_freq () const
+double	DelayLineReadInterface::get_sample_freq () const noexcept
 {
 	const double   sample_freq = do_get_sample_freq ();
 	assert (sample_freq > 0);
@@ -53,7 +53,7 @@ double	DelayLineReadInterface::get_sample_freq () const
 
 
 
-int	DelayLineReadInterface::get_ovrspl_l2 () const
+int	DelayLineReadInterface::get_ovrspl_l2 () const noexcept
 {
 	const int      ovrspl_l2 = do_get_ovrspl_l2 ();
 	assert (ovrspl_l2 >= 0);
@@ -63,7 +63,7 @@ int	DelayLineReadInterface::get_ovrspl_l2 () const
 
 
 
-double	DelayLineReadInterface::get_min_delay_time () const
+double	DelayLineReadInterface::get_min_delay_time () const noexcept
 {
 	const double   dly = do_get_min_delay_time ();
 	assert (dly > 0);
@@ -73,7 +73,7 @@ double	DelayLineReadInterface::get_min_delay_time () const
 
 
 
-double	DelayLineReadInterface::get_max_delay_time () const
+double	DelayLineReadInterface::get_max_delay_time () const noexcept
 {
 	const double   dly = do_get_max_delay_time ();
 	assert (dly > 0);
@@ -83,7 +83,7 @@ double	DelayLineReadInterface::get_max_delay_time () const
 
 
 
-int	DelayLineReadInterface::estimate_max_one_shot_proc_w_feedback (double min_dly_time) const
+int	DelayLineReadInterface::estimate_max_one_shot_proc_w_feedback (double min_dly_time) const noexcept
 {
 	assert (min_dly_time > 0);
 
@@ -102,7 +102,7 @@ int	DelayLineReadInterface::estimate_max_one_shot_proc_w_feedback (double min_dl
 // Use negative values if you push_block() first before reading the line.
 // Important: read data is oversampled, if oversampling has been set.
 // Therefore pos_in_block is related to oversampled data, too.
-void	DelayLineReadInterface::read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const
+void	DelayLineReadInterface::read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -114,7 +114,7 @@ void	DelayLineReadInterface::read_block (float dst_ptr [], int nbr_spl, double d
 
 
 
-float	DelayLineReadInterface::read_sample (float dly) const
+float	DelayLineReadInterface::read_sample (float dly) const noexcept
 {
 	assert (dly > 0);
 

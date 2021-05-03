@@ -65,7 +65,7 @@ void	ApfLine <NAPD, DF, FF>::set_apd_max_delay (int idx, int len)
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::set_delay (int len)
+void	ApfLine <NAPD, DF, FF>::set_delay (int len) noexcept
 {
 	assert (DF);
 	assert (len >= 0);
@@ -76,7 +76,7 @@ void	ApfLine <NAPD, DF, FF>::set_delay (int len)
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::set_apd_delay_flt (int idx, float len_spl)
+void	ApfLine <NAPD, DF, FF>::set_apd_delay_flt (int idx, float len_spl) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_apd);
@@ -87,7 +87,7 @@ void	ApfLine <NAPD, DF, FF>::set_apd_delay_flt (int idx, float len_spl)
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::set_apd_coef (int idx, float coef)
+void	ApfLine <NAPD, DF, FF>::set_apd_coef (int idx, float coef) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_apd);
@@ -100,7 +100,7 @@ void	ApfLine <NAPD, DF, FF>::set_apd_coef (int idx, float coef)
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::set_filter_coefs (float g0, float g1, float g2)
+void	ApfLine <NAPD, DF, FF>::set_filter_coefs (float g0, float g1, float g2) noexcept
 {
 	assert (FF);
 
@@ -110,7 +110,7 @@ void	ApfLine <NAPD, DF, FF>::set_filter_coefs (float g0, float g1, float g2)
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::set_filter_mix (float v0m, float v1m, float v2m)
+void	ApfLine <NAPD, DF, FF>::set_filter_mix (float v0m, float v1m, float v2m) noexcept
 {
 	assert (FF);
 
@@ -120,7 +120,7 @@ void	ApfLine <NAPD, DF, FF>::set_filter_mix (float v0m, float v1m, float v2m)
 
 
 template <int NAPD, bool DF, bool FF>
-float	ApfLine <NAPD, DF, FF>::process_sample (float x)
+float	ApfLine <NAPD, DF, FF>::process_sample (float x) noexcept
 {
 	for (auto &apd : _apd_arr)
 	{
@@ -142,7 +142,7 @@ float	ApfLine <NAPD, DF, FF>::process_sample (float x)
 
 // Reading the line is meant to occur after process_sample().
 template <int NAPD, bool DF, bool FF>
-float	ApfLine <NAPD, DF, FF>::read_apd (int idx, int delay) const
+float	ApfLine <NAPD, DF, FF>::read_apd (int idx, int delay) const noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_apd);
@@ -153,7 +153,7 @@ float	ApfLine <NAPD, DF, FF>::read_apd (int idx, int delay) const
 
 
 template <int NAPD, bool DF, bool FF>
-float	ApfLine <NAPD, DF, FF>::read_delay (int delay) const
+float	ApfLine <NAPD, DF, FF>::read_delay (int delay) const noexcept
 {
 	assert (DF);
 
@@ -163,7 +163,7 @@ float	ApfLine <NAPD, DF, FF>::read_delay (int delay) const
 
 
 template <int NAPD, bool DF, bool FF>
-int	ApfLine <NAPD, DF, FF>::compute_max_block_len () const
+int	ApfLine <NAPD, DF, FF>::compute_max_block_len () const noexcept
 {
 	int            max_len = (DF) ? _max_blk_size : INT_MAX;
 	for (const auto &apd : _apd_arr)
@@ -180,7 +180,7 @@ int	ApfLine <NAPD, DF, FF>::compute_max_block_len () const
 // nbr_spl should be bounded by the all-pass delay requirements
 // -> compute_max_block_len ()
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	ApfLine <NAPD, DF, FF>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -205,7 +205,7 @@ void	ApfLine <NAPD, DF, FF>::process_block (float dst_ptr [], const float src_pt
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::process_block_var_dly (float dst_ptr [], const float src_ptr [], const int32_t * const * dly_frc_arr_ptr, int nbr_spl)
+void	ApfLine <NAPD, DF, FF>::process_block_var_dly (float dst_ptr [], const float src_ptr [], const int32_t * const * dly_frc_arr_ptr, int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -236,7 +236,7 @@ void	ApfLine <NAPD, DF, FF>::process_block_var_dly (float dst_ptr [], const floa
 // Reading the line is meant to occur after process_block()
 // For consistent results, nbr_spl should be the same in both calls
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::read_apd_block (float dst_ptr [], int idx, int delay, int nbr_spl) const
+void	ApfLine <NAPD, DF, FF>::read_apd_block (float dst_ptr [], int idx, int delay, int nbr_spl) const noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (idx >= 0);
@@ -250,7 +250,7 @@ void	ApfLine <NAPD, DF, FF>::read_apd_block (float dst_ptr [], int idx, int dela
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::read_delay_block (float dst_ptr [], int delay, int nbr_spl) const
+void	ApfLine <NAPD, DF, FF>::read_delay_block (float dst_ptr [], int delay, int nbr_spl) const noexcept
 {
 	assert (DF);
 	assert (dst_ptr != nullptr);
@@ -263,7 +263,7 @@ void	ApfLine <NAPD, DF, FF>::read_delay_block (float dst_ptr [], int delay, int 
 
 
 template <int NAPD, bool DF, bool FF>
-void	ApfLine <NAPD, DF, FF>::clear_buffers ()
+void	ApfLine <NAPD, DF, FF>::clear_buffers () noexcept
 {
 	for (auto &apd : _apd_arr)
 	{

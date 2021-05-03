@@ -49,84 +49,84 @@ namespace lfo
 
 
 
-void	OscSaw::do_set_sample_freq (double sample_freq)
+void	OscSaw::do_set_sample_freq (double sample_freq) noexcept
 {
 	_phase_gen.set_sample_freq (sample_freq);
 }
 
 
 
-void	OscSaw::do_set_period (double per)
+void	OscSaw::do_set_period (double per) noexcept
 {
 	_phase_gen.set_period (per);
 }
 
 
 
-void	OscSaw::do_set_phase (double phase)
+void	OscSaw::do_set_phase (double phase) noexcept
 {
 	_phase_gen.set_phase (phase);
 }
 
 
 
-void	OscSaw::do_set_chaos (double chaos)
+void	OscSaw::do_set_chaos (double chaos) noexcept
 {
 	_phase_gen.set_chaos (chaos);
 }
 
 
 
-void	OscSaw::do_set_phase_dist (double dist)
+void	OscSaw::do_set_phase_dist (double dist) noexcept
 {
 	_phase_dist.set_phase_dist (dist);
 }
 
 
 
-void	OscSaw::do_set_phase_dist_offset (double ofs)
+void	OscSaw::do_set_phase_dist_offset (double ofs) noexcept
 {
 	_phase_dist.set_phase_dist_offset (ofs);
 }
 
 
 
-void	OscSaw::do_set_sign (bool inv_flag)
+void	OscSaw::do_set_sign (bool inv_flag) noexcept
 {
 	_inv_flag = inv_flag;
 }
 
 
 
-void	OscSaw::do_set_polarity (bool unipolar_flag)
+void	OscSaw::do_set_polarity (bool unipolar_flag) noexcept
 {
 	_unipolar_flag = unipolar_flag;
 }
 
 
 
-void	OscSaw::do_set_variation (int /*param*/, double /*val*/)
+void	OscSaw::do_set_variation (int /*param*/, double /*val*/) noexcept
 {
 	// Nothing
 }
 
 
 
-bool	OscSaw::do_is_using_variation (int /*param*/) const
+bool	OscSaw::do_is_using_variation (int /*param*/) const noexcept
 {
 	return false;
 }
 
 
 
-void	OscSaw::do_tick (int nbr_spl)
+void	OscSaw::do_tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 }
 
 
 
-double	OscSaw::do_get_val () const
+double	OscSaw::do_get_val () const noexcept
 {
 	double         val = _phase_dist.process_phase (_phase_gen.get_phase ());
 	if (_inv_flag)
@@ -147,14 +147,14 @@ double	OscSaw::do_get_val () const
 
 
 
-double	OscSaw::do_get_phase () const
+double	OscSaw::do_get_phase () const noexcept
 {
 	return _phase_gen.get_phase ();
 }
 
 
 
-void	OscSaw::do_clear_buffers ()
+void	OscSaw::do_clear_buffers () noexcept
 {
 	_phase_gen.clear_buffers ();
 }

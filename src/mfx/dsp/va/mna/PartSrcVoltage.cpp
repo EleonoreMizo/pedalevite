@@ -47,7 +47,7 @@ namespace mna
 
 
 
-PartSrcVoltage::PartSrcVoltage (IdNode nid_1, IdNode nid_2, Flt v)
+PartSrcVoltage::PartSrcVoltage (IdNode nid_1, IdNode nid_2, Flt v) noexcept
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_v (v)
 {
@@ -58,7 +58,7 @@ PartSrcVoltage::PartSrcVoltage (IdNode nid_1, IdNode nid_2, Flt v)
 
 
 
-void	PartSrcVoltage::set_voltage (Flt v)
+void	PartSrcVoltage::set_voltage (Flt v) noexcept
 {
 	_v = v;
 }
@@ -95,7 +95,7 @@ void	PartSrcVoltage::do_prepare (const SimInfo &info)
 
 
 
-void	PartSrcVoltage::do_add_to_matrix (int it_cnt)
+void	PartSrcVoltage::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -109,14 +109,14 @@ void	PartSrcVoltage::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartSrcVoltage::do_step ()
+void	PartSrcVoltage::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartSrcVoltage::do_clear_buffers ()
+void	PartSrcVoltage::do_clear_buffers () noexcept
 {
 	// Nothing
 }

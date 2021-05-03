@@ -46,26 +46,14 @@ namespace iir
 
 
 
-Svf2p::Svf2p ()
-:	_sample_freq (44100)
-,	_inv_fs (1.0f / _sample_freq)
-,	_f0 (1000)
-,	_q (0.5f)
-,	_type (Type_RESONATOR)
-,	_reso (0)
-,	_g0 (0)
-,	_g1 (0)
-,	_g2 (0)
-,	_v0m (1)
-,	_v1m (0)
-,	_v2m (0)
+Svf2p::Svf2p () noexcept
 {
 	update_eq ();
 }
 
 
 
-void	Svf2p::update_eq ()
+void	Svf2p::update_eq () noexcept
 {
 	const float    k = float (1.0 / _q);
 	conv_poles (_g0, _g1, _g2, _f0 * _inv_fs, k);
@@ -130,7 +118,7 @@ void	Svf2p::update_eq ()
 
 // k     =  1 / Q
 // f0_fs = f0 / fs
-void	Svf2p::conv_poles (float &g0, float &g1, float &g2, double f0_fs, float k)
+void	Svf2p::conv_poles (float &g0, float &g1, float &g2, double f0_fs, float k) noexcept
 {
 	assert (f0_fs > 0);
 	assert (f0_fs < 0.5);
@@ -149,7 +137,7 @@ void	Svf2p::conv_poles (float &g0, float &g1, float &g2, double f0_fs, float k)
 
 
 
-void	Svf2p::approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 &s2, fstb::ToolsSimd::VectF32 f0_fs)
+void	Svf2p::approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 &s2, fstb::ToolsSimd::VectF32 f0_fs) noexcept
 {
 	f0_fs += f0_fs;
 	s1 = fstb::Approx::sin_rbj_halfpi (f0_fs);
@@ -158,7 +146,7 @@ void	Svf2p::approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 
 
 
 
-void	Svf2p::conv_poles (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 f0_fs, fstb::ToolsSimd::VectF32 k)
+void	Svf2p::conv_poles (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 f0_fs, fstb::ToolsSimd::VectF32 k) noexcept
 {
 	fstb::ToolsSimd::VectF32   s1;
 	fstb::ToolsSimd::VectF32   s2;

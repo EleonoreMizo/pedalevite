@@ -47,7 +47,7 @@ namespace shape
 
 
 
-void	HardclipBl::set_clip_lvl (float lvl)
+void	HardclipBl::set_clip_lvl (float lvl) noexcept
 {
 	assert (lvl > 0);
 
@@ -56,7 +56,7 @@ void	HardclipBl::set_clip_lvl (float lvl)
 
 
 
-float	HardclipBl::process_sample (float x)
+float	HardclipBl::process_sample (float x) noexcept
 {
 
 #if mfx_dsp_shape_HardclipBl_ALGO == 0 // Original algorithm
@@ -194,7 +194,7 @@ float	HardclipBl::process_sample (float x)
 
 
 
-void	HardclipBl::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	HardclipBl::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -208,7 +208,7 @@ void	HardclipBl::process_block (float dst_ptr [], const float src_ptr [], int nb
 
 
 
-void	HardclipBl::clear_buffers ()
+void	HardclipBl::clear_buffers () noexcept
 {
 	_x_arr.fill (0);
 	_y_arr.fill (0);
@@ -240,7 +240,7 @@ void	HardclipBl::clear_buffers ()
 // three points.
 // cxm_arr receives the crossing before x0 ( < 0),
 // cxp_arr receives the crossing after or at x0 ( >= 0)
-void	HardclipBl::find_crossings (CrossingList &cxm, CrossingList &cxp, float xm1, float x0, float xp1) const
+void	HardclipBl::find_crossings (CrossingList &cxm, CrossingList &cxp, float xm1, float x0, float xp1) const noexcept
 {
 	// Resets the list of the crossings after x0,
 	// and accumulates the crossings before x0

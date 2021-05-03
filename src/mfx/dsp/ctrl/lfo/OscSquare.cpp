@@ -47,49 +47,49 @@ namespace lfo
 
 
 
-void	OscSquare::do_set_sample_freq (double sample_freq)
+void	OscSquare::do_set_sample_freq (double sample_freq) noexcept
 {
 	_phase_gen.set_sample_freq (sample_freq);
 }
 
 
 
-void	OscSquare::do_set_period (double per)
+void	OscSquare::do_set_period (double per) noexcept
 {
 	_phase_gen.set_period (per);
 }
 
 
 
-void	OscSquare::do_set_phase (double phase)
+void	OscSquare::do_set_phase (double phase) noexcept
 {
 	_phase_gen.set_phase (phase);
 }
 
 
 
-void	OscSquare::do_set_chaos (double chaos)
+void	OscSquare::do_set_chaos (double chaos) noexcept
 {
 	_phase_gen.set_chaos (chaos);
 }
 
 
 
-void	OscSquare::do_set_phase_dist (double dist)
+void	OscSquare::do_set_phase_dist (double dist) noexcept
 {
 	_phase_dist.set_phase_dist (dist);
 }
 
 
 
-void	OscSquare::do_set_phase_dist_offset (double ofs)
+void	OscSquare::do_set_phase_dist_offset (double ofs) noexcept
 {
 	_phase_dist.set_phase_dist_offset (ofs);
 }
 
 
 
-void	OscSquare::do_set_sign (bool inv_flag)
+void	OscSquare::do_set_sign (bool inv_flag) noexcept
 {
 	_inv_flag = inv_flag;
 	update_time_values ();
@@ -97,7 +97,7 @@ void	OscSquare::do_set_sign (bool inv_flag)
 
 
 
-void	OscSquare::do_set_polarity (bool unipolar_flag)
+void	OscSquare::do_set_polarity (bool unipolar_flag) noexcept
 {
 	_unipolar_flag = unipolar_flag;
 	update_time_values ();
@@ -105,28 +105,28 @@ void	OscSquare::do_set_polarity (bool unipolar_flag)
 
 
 
-void	OscSquare::do_set_variation (int /*param*/, double /*val*/)
+void	OscSquare::do_set_variation (int /*param*/, double /*val*/) noexcept
 {
 	// Nothing
 }
 
 
 
-bool	OscSquare::do_is_using_variation (int /*param*/) const
+bool	OscSquare::do_is_using_variation (int /*param*/) const noexcept
 {
 	return false;
 }
 
 
 
-void	OscSquare::do_tick (int nbr_spl)
+void	OscSquare::do_tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 }
 
 
 
-double	OscSquare::do_get_val () const
+double	OscSquare::do_get_val () const noexcept
 {
 	const double   phase   = _phase_dist.process_phase (_phase_gen.get_phase ());
 	const bool     up_flag = (phase >= 0.5f);
@@ -136,14 +136,14 @@ double	OscSquare::do_get_val () const
 
 
 
-double	OscSquare::do_get_phase () const
+double	OscSquare::do_get_phase () const noexcept
 {
 	return _phase_gen.get_phase ();
 }
 
 
 
-void	OscSquare::do_clear_buffers ()
+void	OscSquare::do_clear_buffers () noexcept
 {
 	_phase_gen.clear_buffers ();
 }
@@ -158,7 +158,7 @@ void	OscSquare::do_clear_buffers ()
 
 
 
-void	OscSquare::update_time_values ()
+void	OscSquare::update_time_values () noexcept
 {
 	_val_0 = (_unipolar_flag) ? 0.f : -1.f;
 	_val_1 = 1.f;

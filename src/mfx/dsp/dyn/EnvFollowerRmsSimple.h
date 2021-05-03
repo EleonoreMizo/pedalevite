@@ -48,27 +48,27 @@ class EnvFollowerRmsSimple
 
 public:
 
-	void           set_sample_freq (double fs);
-	void           set_time (float t);
+	void           set_sample_freq (double fs) noexcept;
+	void           set_time (float t) noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float x);
+	               process_sample (float x) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_no_sqrt (float x);
+	               process_sample_no_sqrt (float x) noexcept;
 
-	void           process_block (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void           process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void           process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl);
-	float          analyse_block (const float data_ptr [], int nbr_spl);
-	float          analyse_block_no_sqrt (const float data_ptr [], int nbr_spl);
-	float          analyse_block_raw (const float data_ptr [], int nbr_spl);
-	float          analyse_block_raw_cst (float x2, int nbr_spl);
-	inline float   get_state_no_sqrt () const;
+	void           process_block (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	void           process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	void           process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	float          analyse_block (const float data_ptr [], int nbr_spl) noexcept;
+	float          analyse_block_no_sqrt (const float data_ptr [], int nbr_spl) noexcept;
+	float          analyse_block_raw (const float data_ptr [], int nbr_spl) noexcept;
+	float          analyse_block_raw_cst (float x2, int nbr_spl) noexcept;
+	inline float   get_state_no_sqrt () const noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
-	inline void    apply_volume (float gain);
-	inline void    set_state_raw (float x2);
+	inline void    apply_volume (float gain) noexcept;
+	inline void    set_state_raw (float x2) noexcept;
 
 
 
@@ -83,11 +83,11 @@ protected:
 private:
 
 	fstb_FORCEINLINE void
-						process_sample_internal (float &state, float x) const;
+						process_sample_internal (float &state, float x) const noexcept;
 	fstb_FORCEINLINE void
-						process_sample_internal_no_sq (float &state, float x2) const;
+						process_sample_internal_no_sq (float &state, float x2) const noexcept;
 
-	void           update_parameters ();
+	void           update_parameters () noexcept;
 
 	float          _sample_freq = 44100.f;    // Hz, > 0
 	float          _time        =     0.001f; // s, >= 0

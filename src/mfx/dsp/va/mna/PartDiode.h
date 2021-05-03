@@ -50,12 +50,12 @@ class PartDiode
 
 public:
 
-	explicit       PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n);
+	explicit       PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n) noexcept;
 	virtual        ~PartDiode () = default;
 
-	void           set_is (Flt is);
-	void           set_n (Flt n);
-	void           set_imax (Flt imax);
+	void           set_is (Flt is) noexcept;
+	void           set_n (Flt n) noexcept;
+	void           set_imax (Flt imax) noexcept;
 
 
 
@@ -66,9 +66,9 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix (int it_cnt) final;
-	void           do_step () final;
-	void           do_clear_buffers () final;
+	void           do_add_to_matrix (int it_cnt) noexcept final;
+	void           do_step () noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 
@@ -76,10 +76,10 @@ protected:
 
 private:
 
-	Flt            compute_nvt_inv () const;
-	Flt            compute_mul_e () const;
-	Flt            compute_vcrit () const;
-	Flt            compute_vmax () const;
+	Flt            compute_nvt_inv () const noexcept;
+	Flt            compute_mul_e () const noexcept;
+	Flt            compute_vcrit () const noexcept;
+	Flt            compute_vmax () const noexcept;
 
 	std::array <IdNode, 2>
 	               _nid_arr  = {{ _nid_invalid, _nid_invalid }};

@@ -46,15 +46,7 @@ namespace lfo
 
 
 template <int ORDER>
-OscNoiseFlt <ORDER>::OscNoiseFlt ()
-:	_phase_gen ()
-,	_rnd_gen ()
-,	_rnd_dist (-1, 1)
-,	_amp (0)
-,	_cur_val_arr ()
-,	_filter_coef (0)
-,	_noise_pos (0)
-,	_noise_res (64)
+OscNoiseFlt <ORDER>::OscNoiseFlt () noexcept
 {
 	update_period ();
 	clear_buffers ();
@@ -67,10 +59,10 @@ OscNoiseFlt <ORDER>::OscNoiseFlt ()
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_sample_freq (double sample_freq)
+void	OscNoiseFlt <ORDER>::do_set_sample_freq (double sample_freq) noexcept
 {
 	// 44.1kHz-48kHz -> 64
-	const int      nr_l2  = fstb::round_int (log2 (sample_freq) - 9.5);
+	const int      nr_l2 = fstb::round_int (log2 (sample_freq) - 9.5);
 	_noise_res = 1 << std::max (nr_l2, 0);
 
 	_phase_gen.set_sample_freq (sample_freq);
@@ -80,7 +72,7 @@ void	OscNoiseFlt <ORDER>::do_set_sample_freq (double sample_freq)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_period (double per)
+void	OscNoiseFlt <ORDER>::do_set_period (double per) noexcept
 {
 	_phase_gen.set_period (per);
 	update_period ();
@@ -89,7 +81,7 @@ void	OscNoiseFlt <ORDER>::do_set_period (double per)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_phase (double phase)
+void	OscNoiseFlt <ORDER>::do_set_phase (double phase) noexcept
 {
 	_phase_gen.set_phase (phase);
 }
@@ -97,7 +89,7 @@ void	OscNoiseFlt <ORDER>::do_set_phase (double phase)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_chaos (double /*chaos*/)
+void	OscNoiseFlt <ORDER>::do_set_chaos (double /*chaos*/) noexcept
 {
 	// Nothing
 }
@@ -105,7 +97,7 @@ void	OscNoiseFlt <ORDER>::do_set_chaos (double /*chaos*/)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_phase_dist (double /*dist*/)
+void	OscNoiseFlt <ORDER>::do_set_phase_dist (double /*dist*/) noexcept
 {
 	// Nothing
 }
@@ -113,7 +105,7 @@ void	OscNoiseFlt <ORDER>::do_set_phase_dist (double /*dist*/)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_phase_dist_offset (double /*ofs*/)
+void	OscNoiseFlt <ORDER>::do_set_phase_dist_offset (double /*ofs*/) noexcept
 {
 	// Nothing
 }
@@ -121,7 +113,7 @@ void	OscNoiseFlt <ORDER>::do_set_phase_dist_offset (double /*ofs*/)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_sign (bool /*inv_flag*/)
+void	OscNoiseFlt <ORDER>::do_set_sign (bool /*inv_flag*/) noexcept
 {
 	// Nothing
 }
@@ -129,7 +121,7 @@ void	OscNoiseFlt <ORDER>::do_set_sign (bool /*inv_flag*/)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_polarity (bool /*unipolar_flag*/)
+void	OscNoiseFlt <ORDER>::do_set_polarity (bool /*unipolar_flag*/) noexcept
 {
 	// Nothing
 }
@@ -137,7 +129,7 @@ void	OscNoiseFlt <ORDER>::do_set_polarity (bool /*unipolar_flag*/)
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_set_variation (int /*param*/, double /*val*/)
+void	OscNoiseFlt <ORDER>::do_set_variation (int /*param*/, double /*val*/) noexcept
 {
 	// Nothing
 }
@@ -145,7 +137,7 @@ void	OscNoiseFlt <ORDER>::do_set_variation (int /*param*/, double /*val*/)
 
 
 template <int ORDER>
-bool	OscNoiseFlt <ORDER>::do_is_using_variation (int /*param*/) const
+bool	OscNoiseFlt <ORDER>::do_is_using_variation (int /*param*/) const noexcept
 {
 	return false;
 }
@@ -153,7 +145,7 @@ bool	OscNoiseFlt <ORDER>::do_is_using_variation (int /*param*/) const
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_tick (int nbr_spl)
+void	OscNoiseFlt <ORDER>::do_tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 
@@ -168,7 +160,7 @@ void	OscNoiseFlt <ORDER>::do_tick (int nbr_spl)
 
 
 template <int ORDER>
-double	OscNoiseFlt <ORDER>::do_get_val () const
+double	OscNoiseFlt <ORDER>::do_get_val () const noexcept
 {
 	return (_cur_val_arr [ORDER]);
 }
@@ -176,7 +168,7 @@ double	OscNoiseFlt <ORDER>::do_get_val () const
 
 
 template <int ORDER>
-double	OscNoiseFlt <ORDER>::do_get_phase () const
+double	OscNoiseFlt <ORDER>::do_get_phase () const noexcept
 {
 	return (_phase_gen.get_phase ());
 }
@@ -184,7 +176,7 @@ double	OscNoiseFlt <ORDER>::do_get_phase () const
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_clear_buffers ()
+void	OscNoiseFlt <ORDER>::do_clear_buffers () noexcept
 {
 	for (int state_index = 0; state_index <= ORDER; ++state_index)
 	{
@@ -202,7 +194,7 @@ void	OscNoiseFlt <ORDER>::do_clear_buffers ()
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::update_period ()
+void	OscNoiseFlt <ORDER>::update_period () noexcept
 {
 	const double   pseudo_fs =
 		_phase_gen.get_sample_freq () * (1.0 / _noise_res);
@@ -224,7 +216,7 @@ void	OscNoiseFlt <ORDER>::update_period ()
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::gen_new_val ()
+void	OscNoiseFlt <ORDER>::gen_new_val () noexcept
 {
 	double         val = _rnd_dist (_rnd_gen) * _amp;
 	_cur_val_arr [0] = val;

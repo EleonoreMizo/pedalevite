@@ -49,10 +49,10 @@ class DistAttract
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           clear_buffers ();
-	inline float   process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           clear_buffers () noexcept;
+	inline float   process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -76,12 +76,12 @@ private:
 
 	typedef std::array <float, Polarity_NBR_ELT> BipolarVal;
 
-	inline void		attract (float x, float env_val);
+	inline void		attract (float x, float env_val) noexcept;
 
 	static inline constexpr Polarity
-						val_to_pol (float val);
+						val_to_pol (float val) noexcept;
 	static inline constexpr float
-						pol_to_val (Polarity polarity);
+						pol_to_val (Polarity polarity) noexcept;
 
 	float          _sample_freq   = 0;  // Hz. 0 = not set
 

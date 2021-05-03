@@ -302,7 +302,7 @@ void	Simulator::set_reordering_jacobian (const std::vector <int> &r_arr, const s
 
 
 
-void	Simulator::set_max_nbr_it (int max_it)
+void	Simulator::set_max_nbr_it (int max_it) noexcept
 {
 	assert (max_it > 0);
 	assert (max_it <= _limit_it);
@@ -312,7 +312,7 @@ void	Simulator::set_max_nbr_it (int max_it)
 
 
 
-void	Simulator::set_src_v (int idx, Flt v)
+void	Simulator::set_src_v (int idx, Flt v) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_src_v);
@@ -322,7 +322,7 @@ void	Simulator::set_src_v (int idx, Flt v)
 
 
 
-void	Simulator::set_pot (int idx, Flt pos)
+void	Simulator::set_pot (int idx, Flt pos) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_pot);
@@ -335,7 +335,7 @@ void	Simulator::set_pot (int idx, Flt pos)
 
 
 
-void	Simulator::process_sample ()
+void	Simulator::process_sample () noexcept
 {
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 	_st_nbr_it = 0;
@@ -399,7 +399,7 @@ void	Simulator::process_sample ()
 
 
 
-Flt	Simulator::get_output (int idx) const
+Flt	Simulator::get_output (int idx) const noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_out);
@@ -409,7 +409,7 @@ Flt	Simulator::get_output (int idx) const
 
 
 
-void	Simulator::clear_buffers ()
+void	Simulator::clear_buffers () noexcept
 {
 	std::fill (_vec_x_cur.begin (), _vec_x_cur.end (), Flt (0));
 	std::fill (_vec_x_prv.begin (), _vec_x_prv.end (), Flt (0));
@@ -419,49 +419,49 @@ void	Simulator::clear_buffers ()
 
 
 
-int	Simulator::get_nbr_nodes () const
+int	Simulator::get_nbr_nodes () const noexcept
 {
 	return _nbr_nodes;
 }
 
 
 
-int	Simulator::get_nbr_src_v () const
+int	Simulator::get_nbr_src_v () const noexcept
 {
 	return _nbr_src_v;
 }
 
 
 
-int	Simulator::get_nbr_non_lin () const
+int	Simulator::get_nbr_non_lin () const noexcept
 {
 	return _nbr_nl;
 }
 
 
 
-int	Simulator::get_nbr_res () const
+int	Simulator::get_nbr_res () const noexcept
 {
 	return _nbr_res;
 }
 
 
 
-int	Simulator::get_nbr_pot () const
+int	Simulator::get_nbr_pot () const noexcept
 {
 	return _nbr_pot;
 }
 
 
 
-int	Simulator::get_nbr_ese () const
+int	Simulator::get_nbr_ese () const noexcept
 {
 	return _nbr_ese;
 }
 
 
 
-int	Simulator::get_nbr_out () const
+int	Simulator::get_nbr_out () const noexcept
 {
 	return _nbr_out;
 }
@@ -1113,7 +1113,7 @@ void	Simulator::prepare_dk_const_matrices ()
 
 
 
-void	Simulator::update_r_v ()
+void	Simulator::update_r_v () noexcept
 {
 	lal::copy (_mat_a, _mat_a_0);
 	lal::copy (_mat_b, _mat_b_0);
@@ -1173,7 +1173,7 @@ void	Simulator::update_r_v ()
 
 // Outputs _vec_i_n
 // Starts with the previous _vec_v_n value
-void	Simulator::solve_nl ()
+void	Simulator::solve_nl () noexcept
 {
 	bool           cont_flag    = false;
 	bool           res_chg_flag = false;
@@ -1248,7 +1248,7 @@ void	Simulator::solve_nl ()
 
 
 // Fills _vec_i_n, _mat_j_f, _mat_j_r, _vec_r_neg
-void	Simulator::compute_nl_data (int it_cnt)
+void	Simulator::compute_nl_data (int it_cnt) noexcept
 {
 	assert (it_cnt >= 0);
 
@@ -1329,7 +1329,7 @@ void	Simulator::compute_nl_data (int it_cnt)
 
 
 
-void	Simulator::compute_nl_data_diode (int it_cnt, int idx_d)
+void	Simulator::compute_nl_data_diode (int it_cnt, int idx_d) noexcept
 {
 	assert (idx_d >= 0);
 	assert (idx_d < int (_diode_arr.size ()));
@@ -1348,7 +1348,7 @@ void	Simulator::compute_nl_data_diode (int it_cnt, int idx_d)
 
 
 
-void	Simulator::compute_nl_data_diode_pair (int it_cnt, int idx_d)
+void	Simulator::compute_nl_data_diode_pair (int it_cnt, int idx_d) noexcept
 {
 	assert (idx_d >= 0);
 	assert (idx_d < int (_diode_pair_arr.size ()));
@@ -1378,7 +1378,7 @@ void	Simulator::compute_nl_data_diode_pair (int it_cnt, int idx_d)
 
 
 
-void	Simulator::compute_nl_data_bjt_npn (int it_cnt, int idx_d)
+void	Simulator::compute_nl_data_bjt_npn (int it_cnt, int idx_d) noexcept
 {
 	assert (idx_d >= 0);
 	assert (idx_d < int (_bjt_npn_arr.size ()));
@@ -1416,7 +1416,7 @@ void	Simulator::compute_nl_data_bjt_npn (int it_cnt, int idx_d)
 
 
 
-void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, JuncDataType v, const Junction &junc, int it_cnt)
+void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, JuncDataType v, const Junction &junc, int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -1439,7 +1439,7 @@ void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, Jun
 // identity diagonal row. The rows are kept at their original location.
 // r is the reordering vector indicating the order of the matrix rows for up
 // and down traversal.
-void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r)
+void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r) noexcept
 {
 	const int      n = int (lu.get_rows ());
 	assert (int (lu.get_cols ()) == n);
@@ -1503,7 +1503,7 @@ void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r)
 // lu = main matrix, in an LU-decomposed form (see decompose_lu)
 // r  = row-reordering indexes
 // y  = temporary vector
-void	Simulator::traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y)
+void	Simulator::traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y) noexcept
 {
 	const int      n = int (b.size ());
 	assert (int (x.size ()) == n);

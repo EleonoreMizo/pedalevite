@@ -45,7 +45,7 @@ namespace va
 
 
 template <typename FNC, int MAXIT, bool PVF>
-SolverNR <FNC, MAXIT, PVF>::SolverNR (const FuncType &fnc, DataType prec, DataType max_dif)
+SolverNR <FNC, MAXIT, PVF>::SolverNR (const FuncType &fnc, DataType prec, DataType max_dif) noexcept
 :  _fnc (fnc)
 ,  _prec (prec)
 ,  _max_dif (max_dif)
@@ -56,7 +56,7 @@ SolverNR <FNC, MAXIT, PVF>::SolverNR (const FuncType &fnc, DataType prec, DataTy
 }
 
 template <typename FNC, int MAXIT, bool PVF>
-SolverNR <FNC, MAXIT, PVF>::SolverNR (FuncType &&fnc, DataType prec, DataType max_dif)
+SolverNR <FNC, MAXIT, PVF>::SolverNR (FuncType &&fnc, DataType prec, DataType max_dif) noexcept
 :  _fnc (std::move (fnc))
 ,  _prec (prec)
 ,  _max_dif (max_dif)
@@ -69,7 +69,7 @@ SolverNR <FNC, MAXIT, PVF>::SolverNR (FuncType &&fnc, DataType prec, DataType ma
 
 
 template <typename FNC, int MAXIT, bool PVF>
-typename SolverNR <FNC, MAXIT, PVF>::FuncType & SolverNR <FNC, MAXIT, PVF>::use_fnc ()
+typename SolverNR <FNC, MAXIT, PVF>::FuncType & SolverNR <FNC, MAXIT, PVF>::use_fnc () noexcept
 {
 	return _fnc;
 }
@@ -77,7 +77,7 @@ typename SolverNR <FNC, MAXIT, PVF>::FuncType & SolverNR <FNC, MAXIT, PVF>::use_
 
 
 template <typename FNC, int MAXIT, bool PVF>
-typename SolverNR <FNC, MAXIT, PVF>::DataType SolverNR <FNC, MAXIT, PVF>::slove ()
+typename SolverNR <FNC, MAXIT, PVF>::DataType SolverNR <FNC, MAXIT, PVF>::slove () noexcept
 {
 	DataType       x = _fnc.estimate ();
 	assert (std::isfinite (x));

@@ -41,7 +41,7 @@ namespace lfo
 
 
 
-void	OscInterface::set_sample_freq (double sample_freq)
+void	OscInterface::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -50,7 +50,7 @@ void	OscInterface::set_sample_freq (double sample_freq)
 
 
 
-void	OscInterface::set_period (double per)
+void	OscInterface::set_period (double per) noexcept
 {
 	assert (per > 0);
 
@@ -59,7 +59,7 @@ void	OscInterface::set_period (double per)
 
 
 
-void	OscInterface::set_phase (double phase)
+void	OscInterface::set_phase (double phase) noexcept
 {
 	assert (phase >= 0);
 	assert (phase < 1);
@@ -69,7 +69,7 @@ void	OscInterface::set_phase (double phase)
 
 
 
-void	OscInterface::set_chaos (double chaos)
+void	OscInterface::set_chaos (double chaos) noexcept
 {
 	assert (chaos >= 0);
 	assert (chaos <= 1);
@@ -79,7 +79,7 @@ void	OscInterface::set_chaos (double chaos)
 
 
 
-void	OscInterface::set_phase_dist (double dist)
+void	OscInterface::set_phase_dist (double dist) noexcept
 {
 	assert (dist >= 0);
 	assert (dist <= 1);
@@ -89,7 +89,7 @@ void	OscInterface::set_phase_dist (double dist)
 
 
 
-void	OscInterface::set_phase_dist_offset (double ofs)
+void	OscInterface::set_phase_dist_offset (double ofs) noexcept
 {
 	assert (ofs >= 0);
 	assert (ofs <= 1);
@@ -99,21 +99,21 @@ void	OscInterface::set_phase_dist_offset (double ofs)
 
 
 
-void	OscInterface::set_sign (bool inv_flag)
+void	OscInterface::set_sign (bool inv_flag) noexcept
 {
 	do_set_sign (inv_flag);
 }
 
 
 
-void	OscInterface::set_polarity (bool unipolar_flag)
+void	OscInterface::set_polarity (bool unipolar_flag) noexcept
 {
 	do_set_polarity (unipolar_flag);
 }
 
 
 
-void	OscInterface::set_variation (int param, double val)
+void	OscInterface::set_variation (int param, double val) noexcept
 {
 	assert (param >= 0);
 	assert (param < Variation_NBR_ELT);
@@ -125,7 +125,7 @@ void	OscInterface::set_variation (int param, double val)
 
 
 
-bool	OscInterface::is_using_variation (int param) const
+bool	OscInterface::is_using_variation (int param) const noexcept
 {
 	assert (param >= 0);
 	assert (param < Variation_NBR_ELT);
@@ -135,7 +135,7 @@ bool	OscInterface::is_using_variation (int param) const
 
 
 
-void	OscInterface::tick (int nbr_spl)
+void	OscInterface::tick (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -144,7 +144,7 @@ void	OscInterface::tick (int nbr_spl)
 
 
 
-double	OscInterface::get_val () const
+double	OscInterface::get_val () const noexcept
 {
 	const double	val = do_get_val ();
 	assert (val > -1000);	// Assume it is in a reasonable range
@@ -155,7 +155,7 @@ double	OscInterface::get_val () const
 
 
 
-double	OscInterface::get_phase () const
+double	OscInterface::get_phase () const noexcept
 {
 	const double	phase = do_get_phase ();
 	assert (phase >= 0);
@@ -166,7 +166,7 @@ double	OscInterface::get_phase () const
 
 
 
-void	OscInterface::clear_buffers ()
+void	OscInterface::clear_buffers () noexcept
 {
 	do_clear_buffers ();
 }

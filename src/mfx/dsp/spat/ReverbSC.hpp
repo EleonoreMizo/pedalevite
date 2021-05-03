@@ -87,7 +87,7 @@ void	ReverbSC <T, P>::set_sample_freq (double sample_freq)
 
 
 template <typename T, typename P>
-void	ReverbSC <T, P>::set_size (float size)
+void	ReverbSC <T, P>::set_size (float size) noexcept
 {
 	assert (_sr > 0);
 	assert (_size >= 0);
@@ -99,7 +99,7 @@ void	ReverbSC <T, P>::set_size (float size)
 
 
 template <typename T, typename P>
-void	ReverbSC <T, P>::set_cutoff (float cutoff)
+void	ReverbSC <T, P>::set_cutoff (float cutoff) noexcept
 {
 	assert (_sr > 0);
 	assert (cutoff > 0);
@@ -111,7 +111,7 @@ void	ReverbSC <T, P>::set_cutoff (float cutoff)
 
 
 template <typename T, typename P>
-void	ReverbSC <T, P>::process_sample (T *outL, T *outR, T inL, T inR)
+void	ReverbSC <T, P>::process_sample (T *outL, T *outR, T inL, T inR) noexcept
 {
 	assert (_sr > 0);
 
@@ -158,7 +158,7 @@ void	ReverbSC <T, P>::process_sample (T *outL, T *outR, T inL, T inR)
 
 
 template <typename T, typename P>
-void	ReverbSC <T, P>::clear_buffers ()
+void	ReverbSC <T, P>::clear_buffers () noexcept
 {
 	for (auto &delay : _delay)
 	{
@@ -178,7 +178,7 @@ void	ReverbSC <T, P>::clear_buffers ()
 
 // Calculates the length of the delay line
 template <typename T, typename P>
-int	ReverbSC <T, P>::ParamSet::get_delay_size (float sr) const
+int	ReverbSC <T, P>::ParamSet::get_delay_size (float sr) const noexcept
 {
 	float          sz = _delay + _drift * 1.125f;
 
@@ -211,7 +211,7 @@ void	ReverbSC <T, P>::Delay::init (const ParamSet &p, int sz, float sr)
 
 
 template <typename T, typename P>
-T	ReverbSC <T, P>::Delay::compute (T in, T fdbk, T filt, float sr)
+T	ReverbSC <T, P>::Delay::compute (T in, T fdbk, T filt, float sr) noexcept
 {
 	// Sends input signal and feedback to delay line
 	_buf [_wpos] = in - _y;
@@ -298,7 +298,7 @@ T	ReverbSC <T, P>::Delay::compute (T in, T fdbk, T filt, float sr)
 
 
 template <typename T, typename P>
-void	ReverbSC <T, P>::Delay::generate_next_line (float sr)
+void	ReverbSC <T, P>::Delay::generate_next_line (float sr) noexcept
 {
 	// Updates random seed
 	constexpr int  mul = fstb::ipowpc <6> (5); // 5^6;
@@ -331,7 +331,7 @@ void	ReverbSC <T, P>::Delay::generate_next_line (float sr)
 
 
 template <typename T, typename P>
-float	ReverbSC <T, P>::Delay::calculate_drift () const
+float	ReverbSC <T, P>::Delay::calculate_drift () const noexcept
 {
 	return _drift * float (_rng) / float (_rng_scale);
 }
@@ -339,7 +339,7 @@ float	ReverbSC <T, P>::Delay::calculate_drift () const
 
 
 template <typename T, typename P>
-void	ReverbSC <T, P>::Delay::clear_buffers ()
+void	ReverbSC <T, P>::Delay::clear_buffers () noexcept
 {
 	std::fill (_buf.begin (), _buf.end (), T (0));
 	_rng = _seed;

@@ -37,14 +37,14 @@ namespace iir
 
 
 
-void	DcKiller1p::copy_z_eq (const DcKiller1p &other)
+void	DcKiller1p::copy_z_eq (const DcKiller1p &other) noexcept
 {
 	_filter.copy_z_eq (other._filter);
 }
 
 
 
-float	DcKiller1p::process_sample (float x)
+float	DcKiller1p::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 

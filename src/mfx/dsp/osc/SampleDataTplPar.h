@@ -77,9 +77,12 @@ private:
 
 	               SampleDataTplPar ()                               = delete;
 	               SampleDataTplPar (const SampleDataTplPar &other)  = delete;
+	               SampleDataTplPar (SampleDataTplPar &&other)       = delete;
 	virtual        ~SampleDataTplPar ()                              = delete;
 	SampleDataTplPar &
 	               operator = (const SampleDataTplPar &other)        = delete;
+	SampleDataTplPar &
+	               operator = (SampleDataTplPar &&other)             = delete;
 	bool           operator == (const SampleDataTplPar &other) const = delete;
 	bool           operator != (const SampleDataTplPar &other) const = delete;
 

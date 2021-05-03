@@ -53,13 +53,13 @@ class FreqPeak
 public:
 
 	void           set_sample_freq (double sample_freq);
-	void           set_freq_bot (float f);
-	void           set_freq_top (float f);
-	void           set_smoothing (float responsiveness, float thr);
-	void           set_threshold (float thr);
-	void           clear_buffers ();
-	float          process_block (const float spl_ptr [], int nbr_spl);
-	float          process_sample (float x);
+	void           set_freq_bot (float f) noexcept;
+	void           set_freq_top (float f) noexcept;
+	void           set_smoothing (float responsiveness, float thr) noexcept;
+	void           set_threshold (float thr) noexcept;
+	void           clear_buffers () noexcept;
+	float          process_block (const float spl_ptr [], int nbr_spl) noexcept;
+	float          process_sample (float x) noexcept;
 
 
 
@@ -88,14 +88,14 @@ private:
 		float          _peak_age { 1e9f }; // Last peak age in samples. Large value: no peak found
 	};
 
-	void           update_input_filter ();
+	void           update_input_filter () noexcept;
 
 	static inline float
-	               compute_median3 (float a0, float a1, float a2);
+	               compute_median3 (float a0, float a1, float a2) noexcept;
 	static inline float
-	               compute_median5 (float a0, float a1, float a2, float a3, float a4);
+	               compute_median5 (float a0, float a1, float a2, float a3, float a4) noexcept;
 	static inline void
-	               sort_pair (float &a, float &b);
+	               sort_pair (float &a, float &b) noexcept;
 
 	float          _sample_freq = 0;    // Sampling rate, Hz, > 0. 0 = not set
 	float          _inv_fs      = 0;

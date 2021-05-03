@@ -47,7 +47,7 @@ class WsAsym2
 
 public:
 
-		double         operator () (double x)
+		double         operator () (double x) noexcept
 		{
 			x *= 2.0 / 3.0;
 			const double   a = 1 + exp (-0.75 * sqrt (fabs (x)));

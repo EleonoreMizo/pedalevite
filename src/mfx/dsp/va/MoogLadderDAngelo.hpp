@@ -47,7 +47,7 @@ namespace va
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_sample_freq (double sample_freq)
+void	MoogLadderDAngelo <N, SL, SF>::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -74,7 +74,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_sample_freq (double sample_freq)
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_scale (float s)
+void	MoogLadderDAngelo <N, SL, SF>::set_scale (float s) noexcept
 {
 	assert (s > 0);
 
@@ -88,7 +88,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_scale (float s)
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_freq_natural (float f)
+void	MoogLadderDAngelo <N, SL, SF>::set_freq_natural (float f) noexcept
 {
 	assert (_d._sample_freq > 0);
 	assert (f > 0);
@@ -102,7 +102,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_freq_natural (float f)
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_freq_compensated (float f)
+void	MoogLadderDAngelo <N, SL, SF>::set_freq_compensated (float f) noexcept
 {
 	assert (_d._sample_freq > 0);
 	assert (f > 0);
@@ -117,7 +117,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_freq_compensated (float f)
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_max_mod_freq (float f)
+void	MoogLadderDAngelo <N, SL, SF>::set_max_mod_freq (float f) noexcept
 {
 	assert (_d._sample_freq > 0);
 	assert (f > 0);
@@ -130,7 +130,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_max_mod_freq (float f)
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_reso_raw (float k)
+void	MoogLadderDAngelo <N, SL, SF>::set_reso_raw (float k) noexcept
 {
 	assert (_d._sample_freq > 0);
 	assert (k >= 0);
@@ -145,7 +145,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_reso_raw (float k)
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_reso_norm (float kn)
+void	MoogLadderDAngelo <N, SL, SF>::set_reso_norm (float kn) noexcept
 {
 	assert (_d._sample_freq > 0);
 	assert (kn >= 0);
@@ -156,7 +156,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_reso_norm (float kn)
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::set_gain_comp (float gc)
+void	MoogLadderDAngelo <N, SL, SF>::set_gain_comp (float gc) noexcept
 {
 	assert (gc >= 0);
 	assert (gc <= 1);
@@ -168,7 +168,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_gain_comp (float gc)
 
 
 template <int N, class SL, class SF>
-float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x)
+float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x) noexcept
 {
 	check_coef ();
 
@@ -178,7 +178,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x)
 
 
 template <int N, class SL, class SF>
-float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x, float stage_in_ptr [N])
+float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x, float stage_in_ptr [N]) noexcept
 {
 	check_coef ();
 
@@ -198,7 +198,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x, float stage_in_ptr
 
 // m = 1 V/oct pitch modulation (0 = neutral)
 template <int N, class SL, class SF>
-float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m)
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m) noexcept
 {
 	check_coef ();
 	const float    k0s = fstb::limit (_d._k0s + _d._k0si * m, 0.f, _d._k0smax);
@@ -210,7 +210,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m)
 
 
 template <int N, class SL, class SF>
-float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m, float stage_in_ptr [N])
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m, float stage_in_ptr [N]) noexcept
 {
 	check_coef ();
 	const float    k0s = fstb::limit (_d._k0s + _d._k0si * m, 0.f, _d._k0smax);
@@ -231,7 +231,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m,
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	MoogLadderDAngelo <N, SL, SF>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -247,7 +247,7 @@ void	MoogLadderDAngelo <N, SL, SF>::process_block (float dst_ptr [], const float
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl)
+void	MoogLadderDAngelo <N, SL, SF>::process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -267,7 +267,7 @@ void	MoogLadderDAngelo <N, SL, SF>::process_block_pitch_mod (float dst_ptr [], c
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::clear_buffers ()
+void	MoogLadderDAngelo <N, SL, SF>::clear_buffers () noexcept
 {
 	_d._si_arr.fill (0);
 	_d._sf_arr.fill (0);
@@ -277,7 +277,7 @@ void	MoogLadderDAngelo <N, SL, SF>::clear_buffers ()
 
 
 template <int N, class SL, class SF>
-MoogLadderDAngeloData <N> &	MoogLadderDAngelo <N, SL, SF>::use_data ()
+MoogLadderDAngeloData <N> &	MoogLadderDAngelo <N, SL, SF>::use_data () noexcept
 {
 	return _d;
 }
@@ -285,7 +285,7 @@ MoogLadderDAngeloData <N> &	MoogLadderDAngelo <N, SL, SF>::use_data ()
 
 
 template <int N, class SL, class SF>
-const MoogLadderDAngeloData <N> &	MoogLadderDAngelo <N, SL, SF>::use_data () const
+const MoogLadderDAngeloData <N> &	MoogLadderDAngelo <N, SL, SF>::use_data () const noexcept
 {
 	return _d;
 }
@@ -301,7 +301,7 @@ const MoogLadderDAngeloData <N> &	MoogLadderDAngelo <N, SL, SF>::use_data () con
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::check_coef ()
+void	MoogLadderDAngelo <N, SL, SF>::check_coef () noexcept
 {
 	if (_d._dirty_flag)
 	{
@@ -312,7 +312,7 @@ void	MoogLadderDAngelo <N, SL, SF>::check_coef ()
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::update_coef ()
+void	MoogLadderDAngelo <N, SL, SF>::update_coef () noexcept
 {
 	const float    a = float (fstb::PI) * _d._fc * _d._inv_fs;
 	_d._g = fstb::Approx::tan_mystran (a) * _d._alpha_inv;
@@ -348,7 +348,7 @@ void	MoogLadderDAngelo <N, SL, SF>::update_coef ()
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::update_gaincomp ()
+void	MoogLadderDAngelo <N, SL, SF>::update_gaincomp () noexcept
 {
 	_d._gc_mul   = 1 + std::min (_d._k, _d._knorm_factor) * _d._gaincomp;
 	_d._gc_mul_s = _d._gc_mul * _d._vt2;
@@ -357,7 +357,7 @@ void	MoogLadderDAngelo <N, SL, SF>::update_gaincomp ()
 
 
 template <int N, class SL, class SF>
-float	MoogLadderDAngelo <N, SL, SF>::process_sample_internal (float x, float g, float k0s)
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_internal (float x, float g, float k0s) noexcept
 {
 	float          yo = process_sample_input (x);
 	float          y;
@@ -373,7 +373,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample_internal (float x, float g, 
 
 
 template <int N, class SL, class SF>
-void	MoogLadderDAngelo <N, SL, SF>::process_sample_stage (float &y, float &yo, int n, float g, float k0s)
+void	MoogLadderDAngelo <N, SL, SF>::process_sample_stage (float &y, float &yo, int n, float g, float k0s) noexcept
 {
 	const float    yi = yo;
 	const float    yd = k0s * (yi + _d._sf_arr [n]);
@@ -387,7 +387,7 @@ void	MoogLadderDAngelo <N, SL, SF>::process_sample_stage (float &y, float &yo, i
 
 
 template <int N, class SL, class SF>
-float	MoogLadderDAngelo <N, SL, SF>::process_sample_input (float x)
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_input (float x) noexcept
 {
 	const float    fdbk = _shaper_fdbk (_d._k0g * _d._sg_arr [0]);
 	const float    yo   = _shaper_input (_d._k0g * x + fdbk);
@@ -398,7 +398,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample_input (float x)
 
 
 template <int N, class SL, class SF>
-float	MoogLadderDAngelo <N, SL, SF>::process_sample_fdbk (float x, float y)
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_fdbk (float x, float y) noexcept
 {
 	// Feedback
 	const float    yf = y * _d._k;

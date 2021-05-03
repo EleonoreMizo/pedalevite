@@ -10,8 +10,8 @@ Template parameters:
 - BU: Upper bound
 
 - GF: functor of the interpolated function. Requires:
-	GF::GF ();
-	double GF::operator () (double x) const;
+	GF::GF () noexcept;
+	double GF::operator () (double x) const noexcept;
 
 - RES: internal resolution, > 0
 
@@ -65,12 +65,18 @@ class FncFiniteAsym
 
 public:
 
-	               FncFiniteAsym ();
+	               FncFiniteAsym () noexcept;
+	               FncFiniteAsym (const FncFiniteAsym <BL, BU, GF, RES> &other) = default;
+	               FncFiniteAsym (FncFiniteAsym <BL, BU, GF, RES> &&other) = default;
 	virtual        ~FncFiniteAsym () = default;
+	FncFiniteAsym <BL, BU, GF, RES> &
+	               operator = (const FncFiniteAsym <BL, BU, GF, RES> &other) = default;
+	FncFiniteAsym <BL, BU, GF, RES> &
+	               operator = (FncFiniteAsym <BL, BU, GF, RES> &&other) = default;
 
-	inline float   operator () (float x) const;
+	inline float   operator () (float x) const noexcept;
 	inline fstb::ToolsSimd::VectF32
-	               operator () (fstb::ToolsSimd::VectF32 x) const;
+	               operator () (fstb::ToolsSimd::VectF32 x) const noexcept;
 
 
 
@@ -91,7 +97,7 @@ private:
 	typedef std::array <float, _order + 1> Curve;
 	typedef std::array <Curve, _table_size + 1> CurveTable;	// +1 to secure rounding errors
 
-	static void    init_coefs ();
+	static void    init_coefs () noexcept;
 
 	static CurveTable
 	               _coef_arr;
@@ -105,12 +111,6 @@ private:
 
 private:
 
-	               FncFiniteAsym (const FncFiniteAsym <BL, BU, GF, RES> &other)     = delete;
-	               FncFiniteAsym (FncFiniteAsym <BL, BU, GF, RES> &&other)          = delete;
-	FncFiniteAsym <BL, BU, GF, RES> &
-	               operator = (const FncFiniteAsym <BL, BU, GF, RES> &other)        = delete;
-	FncFiniteAsym <BL, BU, GF, RES> &
-	               operator = (FncFiniteAsym <BL, BU, GF, RES> &&other)             = delete;
 	bool           operator == (const FncFiniteAsym <BL, BU, GF, RES> &other) const = delete;
 	bool           operator != (const FncFiniteAsym <BL, BU, GF, RES> &other) const = delete;
 

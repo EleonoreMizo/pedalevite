@@ -55,7 +55,7 @@ public:
 
 
 	template <class TS, class TZ>
-	static void    map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs);
+	static void    map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs) noexcept;
 
 
 
@@ -70,7 +70,7 @@ protected:
 private:
 
 	template <class TS>
-	static double  compute_h2s (const TS s_eq_b [3], const TS s_eq_a [3], double w);
+	static double  compute_h2s (const TS s_eq_b [3], const TS s_eq_a [3], double w) noexcept;
 
 
 

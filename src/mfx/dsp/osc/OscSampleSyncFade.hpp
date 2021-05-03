@@ -58,7 +58,7 @@ Throws: Nothing
 */
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_sample_data (const SampleTable &sample_data)
+void	OscSampleSyncFade <OSC>::set_sample_data (const SampleTable &sample_data) noexcept
 {
 	_osc_arr [0].set_sample_data (sample_data);
 	_osc_arr [1].set_sample_data (sample_data);
@@ -81,7 +81,7 @@ Throws: Nothing
 */
 
 template <typename OSC>
-const typename OscSampleSyncFade <OSC>::SampleTable &	OscSampleSyncFade <OSC>::use_sample_data () const
+const typename OscSampleSyncFade <OSC>::SampleTable &	OscSampleSyncFade <OSC>::use_sample_data () const noexcept
 {
 	return _osc_arr [0].use_sample_data ();
 }
@@ -104,7 +104,7 @@ Throws: Nothing
 */
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_bandlimit (int32_t limit)
+void	OscSampleSyncFade <OSC>::set_bandlimit (int32_t limit) noexcept
 {
 	_osc_arr [0].set_bandlimit (limit);
 	_osc_arr [1].set_bandlimit (limit);
@@ -113,7 +113,7 @@ void	OscSampleSyncFade <OSC>::set_bandlimit (int32_t limit)
 
 
 template <typename OSC>
-int32_t	OscSampleSyncFade <OSC>::get_bandlimit () const
+int32_t	OscSampleSyncFade <OSC>::get_bandlimit () const noexcept
 {
 	return _osc_arr [0].get_bandlimit ();
 }
@@ -121,7 +121,7 @@ int32_t	OscSampleSyncFade <OSC>::get_bandlimit () const
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_base_pitch (int32_t pitch)
+void	OscSampleSyncFade <OSC>::set_base_pitch (int32_t pitch) noexcept
 {
 	_base_pitch = pitch;
 }
@@ -129,7 +129,7 @@ void	OscSampleSyncFade <OSC>::set_base_pitch (int32_t pitch)
 
 
 template <typename OSC>
-int32_t	OscSampleSyncFade <OSC>::get_base_pitch () const
+int32_t	OscSampleSyncFade <OSC>::get_base_pitch () const noexcept
 {
 	return _base_pitch;
 }
@@ -137,7 +137,7 @@ int32_t	OscSampleSyncFade <OSC>::get_base_pitch () const
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_master_pitch (int32_t pitch)
+void	OscSampleSyncFade <OSC>::set_master_pitch (int32_t pitch) noexcept
 {
 	assert (pitch < get_base_pitch ());
 
@@ -151,7 +151,7 @@ void	OscSampleSyncFade <OSC>::set_master_pitch (int32_t pitch)
 
 
 template <typename OSC>
-int32_t	OscSampleSyncFade <OSC>::get_master_pitch () const
+int32_t	OscSampleSyncFade <OSC>::get_master_pitch () const noexcept
 {
 	return _master_pitch;
 }
@@ -159,7 +159,7 @@ int32_t	OscSampleSyncFade <OSC>::get_master_pitch () const
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_slave_pitch (int32_t pitch)
+void	OscSampleSyncFade <OSC>::set_slave_pitch (int32_t pitch) noexcept
 {
 	_osc_arr [0].set_pitch (pitch);
 	_osc_arr [1].set_pitch (pitch);
@@ -174,7 +174,7 @@ void	OscSampleSyncFade <OSC>::set_slave_pitch (int32_t pitch)
 
 
 template <typename OSC>
-int32_t	OscSampleSyncFade <OSC>::get_slave_pitch () const
+int32_t	OscSampleSyncFade <OSC>::get_slave_pitch () const noexcept
 {
 	return _osc_arr [0].get_pitch ();
 }
@@ -182,7 +182,7 @@ int32_t	OscSampleSyncFade <OSC>::get_slave_pitch () const
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_sync_pos (const fstb::FixedPoint &pos)
+void	OscSampleSyncFade <OSC>::set_sync_pos (const fstb::FixedPoint &pos) noexcept
 {
 	assert (pos.get_int_val () >= -SampleTable::UNROLL_PRE);
 	assert (pos.get_int_val () < _osc_arr [0].use_sample_data ().get_table_len (0) + SampleTable::UNROLL_POST);
@@ -194,7 +194,7 @@ void	OscSampleSyncFade <OSC>::set_sync_pos (const fstb::FixedPoint &pos)
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_sync_speed (const fstb::FixedPoint &spd)
+void	OscSampleSyncFade <OSC>::set_sync_speed (const fstb::FixedPoint &spd) noexcept
 {
 	_sync_speed = spd;
 	update_sync_speed ();
@@ -214,7 +214,7 @@ Throws: Nothing
 */
 
 template <typename OSC>
-int	OscSampleSyncFade <OSC>::get_wave_length () const
+int	OscSampleSyncFade <OSC>::get_wave_length () const noexcept
 {
 	fstb::FixedPoint  rate;
 
@@ -229,7 +229,7 @@ int	OscSampleSyncFade <OSC>::get_wave_length () const
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::get_slave_pos (fstb::FixedPoint &pos) const
+void	OscSampleSyncFade <OSC>::get_slave_pos (fstb::FixedPoint &pos) const noexcept
 {
 	_osc_arr [_cur_osc].get_playback_pos (pos);
 }
@@ -237,7 +237,7 @@ void	OscSampleSyncFade <OSC>::get_slave_pos (fstb::FixedPoint &pos) const
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::set_slave_pos (const fstb::FixedPoint &pos)
+void	OscSampleSyncFade <OSC>::set_slave_pos (const fstb::FixedPoint &pos) noexcept
 {
 	_osc_arr [_cur_osc].set_playback_pos (pos);
 }
@@ -245,7 +245,7 @@ void	OscSampleSyncFade <OSC>::set_slave_pos (const fstb::FixedPoint &pos)
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::clear_buffers ()
+void	OscSampleSyncFade <OSC>::clear_buffers () noexcept
 {
 	for (int osc = 0; osc < NBR_OSC; ++osc)
 	{
@@ -269,7 +269,7 @@ Throws: Nothing
 */
 
 template <typename OSC>
-typename OscSampleSyncFade <OSC>::CalcDataType	OscSampleSyncFade <OSC>::process_sample ()
+typename OscSampleSyncFade <OSC>::CalcDataType	OscSampleSyncFade <OSC>::process_sample () noexcept
 {
 	assert (_period.get_val_dbl () > 0);
 	assert (_wave_freq_spl.get_val_int64 () > 0);
@@ -287,7 +287,7 @@ typename OscSampleSyncFade <OSC>::CalcDataType	OscSampleSyncFade <OSC>::process_
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::process_block (CalcDataType data_ptr [], int nbr_spl)
+void	OscSampleSyncFade <OSC>::process_block (CalcDataType data_ptr [], int nbr_spl) noexcept
 {
 	assert (_period.get_val_dbl () > 0);
 	assert (_wave_freq_spl.get_val_int64 () > 0);
@@ -326,7 +326,7 @@ void	OscSampleSyncFade <OSC>::process_block (CalcDataType data_ptr [], int nbr_s
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::wrap_osc_pos ()
+void	OscSampleSyncFade <OSC>::wrap_osc_pos () noexcept
 {
 	const int      old_osc = NBR_OSC-1 - _cur_osc;
 	fstb::FixedPoint  pos;
@@ -365,14 +365,14 @@ template <typename T>
 class OscSampleSyncFade_ScaleHelper
 {
 public:
-	static fstb_FORCEINLINE constexpr T  get_scale_val ();
-	static fstb_FORCEINLINE constexpr T  scale (T data, T scale);
-	static fstb_FORCEINLINE T  invert_float_and_scale (float val);
-	static fstb_FORCEINLINE T  scale_float (T data, float scale);
+	static fstb_FORCEINLINE constexpr T  get_scale_val () noexcept;
+	static fstb_FORCEINLINE constexpr T  scale (T data, T scale) noexcept;
+	static fstb_FORCEINLINE T  invert_float_and_scale (float val) noexcept;
+	static fstb_FORCEINLINE T  scale_float (T data, float scale) noexcept;
 };
 
 template <typename T>
-constexpr T	OscSampleSyncFade_ScaleHelper <T>::get_scale_val ()
+constexpr T	OscSampleSyncFade_ScaleHelper <T>::get_scale_val () noexcept
 {
 	return 1;
 }
@@ -380,7 +380,7 @@ constexpr T	OscSampleSyncFade_ScaleHelper <T>::get_scale_val ()
 
 
 template <>
-inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::get_scale_val ()
+inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::get_scale_val () noexcept
 {
 	return 1 << 14;
 }
@@ -388,7 +388,7 @@ inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::get_scale_val 
 
 
 template <typename T>
-constexpr T	OscSampleSyncFade_ScaleHelper <T>::scale (T data, T scale)
+constexpr T	OscSampleSyncFade_ScaleHelper <T>::scale (T data, T scale) noexcept
 {
 	return data * scale;
 }
@@ -399,7 +399,7 @@ constexpr T	OscSampleSyncFade_ScaleHelper <T>::scale (T data, T scale)
 // N should be less than 18
 // Mutiplication intermediate result is stored on 32 bit
 template <>
-inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale (int32_t data, int32_t scale)
+inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale (int32_t data, int32_t scale) noexcept
 {
 	return (data * scale) >> 14;
 }
@@ -407,7 +407,7 @@ inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale (int32_t
 
 
 template <typename T>
-T	OscSampleSyncFade_ScaleHelper <T>::invert_float_and_scale (float val)
+T	OscSampleSyncFade_ScaleHelper <T>::invert_float_and_scale (float val) noexcept
 {
 	return 1 / val;
 }
@@ -415,7 +415,7 @@ T	OscSampleSyncFade_ScaleHelper <T>::invert_float_and_scale (float val)
 
 
 template <>
-inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::invert_float_and_scale (float val)
+inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::invert_float_and_scale (float val) noexcept
 {
 	return fstb::conv_int_fast ((1 << 14) / val);
 }
@@ -423,7 +423,7 @@ inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::invert_float_and_scale (
 
 
 template <typename T>
-T	OscSampleSyncFade_ScaleHelper <T>::scale_float (T data, float scale)
+T	OscSampleSyncFade_ScaleHelper <T>::scale_float (T data, float scale) noexcept
 {
 	return data * scale;
 }
@@ -431,7 +431,7 @@ T	OscSampleSyncFade_ScaleHelper <T>::scale_float (T data, float scale)
 
 
 template <>
-inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale_float (int32_t data, float scale)
+inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale_float (int32_t data, float scale) noexcept
 {
 	return fstb::conv_int_fast (data * scale);
 }
@@ -443,7 +443,7 @@ inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale_float (int32_t dat
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::update_master_pitch ()
+void	OscSampleSyncFade <OSC>::update_master_pitch () noexcept
 {
 	const int      rel_pitch = _base_pitch - _master_pitch;
 
@@ -472,7 +472,7 @@ void	OscSampleSyncFade <OSC>::update_master_pitch ()
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::update_sync_pos ()
+void	OscSampleSyncFade <OSC>::update_sync_pos () noexcept
 {
 	SampleTable::convert_position (
 		_sync_pos_table,
@@ -484,7 +484,7 @@ void	OscSampleSyncFade <OSC>::update_sync_pos ()
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::update_sync_speed ()
+void	OscSampleSyncFade <OSC>::update_sync_speed () noexcept
 {
 	SampleTable::convert_position (
 		_sync_speed_table,
@@ -496,7 +496,7 @@ void	OscSampleSyncFade <OSC>::update_sync_speed ()
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::generate_block (CalcDataType data_ptr [], int nbr_spl)
+void	OscSampleSyncFade <OSC>::generate_block (CalcDataType data_ptr [], int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (NBR_OSC == 2);
@@ -549,7 +549,7 @@ void	OscSampleSyncFade <OSC>::generate_block (CalcDataType data_ptr [], int nbr_
 
 
 template <typename OSC>
-typename OscSampleSyncFade <OSC>::CalcDataType	OscSampleSyncFade <OSC>::generate_sample ()
+typename OscSampleSyncFade <OSC>::CalcDataType	OscSampleSyncFade <OSC>::generate_sample () noexcept
 {
 	const int      old_osc = NBR_OSC-1 - _cur_osc;
 
@@ -571,7 +571,7 @@ typename OscSampleSyncFade <OSC>::CalcDataType	OscSampleSyncFade <OSC>::generate
 
 
 template <typename OSC>
-void	OscSampleSyncFade <OSC>::check_and_handle_sync_point ()
+void	OscSampleSyncFade <OSC>::check_and_handle_sync_point () noexcept
 {
 	if (_spl_to_next_sync.get_ceil () == 0)
 	{

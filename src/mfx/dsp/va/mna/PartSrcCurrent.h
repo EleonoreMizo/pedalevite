@@ -49,10 +49,10 @@ class PartSrcCurrent
 
 public:
 
-	explicit       PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i);
+	explicit       PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i) noexcept;
 	               ~PartSrcCurrent () = default;
 
-	void           set_current (Flt i);
+	void           set_current (Flt i) noexcept;
 
 
 
@@ -63,9 +63,9 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix (int it_cnt) final;
-	void           do_step () final;
-	void           do_clear_buffers () final;
+	void           do_add_to_matrix (int it_cnt) noexcept final;
+	void           do_step () noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 

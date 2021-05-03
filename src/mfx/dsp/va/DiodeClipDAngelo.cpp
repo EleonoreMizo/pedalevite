@@ -46,7 +46,7 @@ namespace va
 
 
 
-void	DiodeClipDAngelo::set_sample_freq (double sample_freq)
+void	DiodeClipDAngelo::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -56,7 +56,7 @@ void	DiodeClipDAngelo::set_sample_freq (double sample_freq)
 
 
 
-void	DiodeClipDAngelo::set_d1_is (float is)
+void	DiodeClipDAngelo::set_d1_is (float is) noexcept
 {
 	assert (is >= 1e-20f);
 	assert (is <= 0.1f);
@@ -67,7 +67,7 @@ void	DiodeClipDAngelo::set_d1_is (float is)
 
 
 
-void	DiodeClipDAngelo::set_d2_is (float is)
+void	DiodeClipDAngelo::set_d2_is (float is) noexcept
 {
 	assert (is >= 1e-20f);
 	assert (is <= 0.1f);
@@ -78,7 +78,7 @@ void	DiodeClipDAngelo::set_d2_is (float is)
 
 
 
-void	DiodeClipDAngelo::set_d1_n (float n)
+void	DiodeClipDAngelo::set_d1_n (float n) noexcept
 {
 	assert (n > 0);
 
@@ -88,7 +88,7 @@ void	DiodeClipDAngelo::set_d1_n (float n)
 
 
 
-void	DiodeClipDAngelo::set_d2_n (float n)
+void	DiodeClipDAngelo::set_d2_n (float n) noexcept
 {
 	assert (n > 0);
 
@@ -99,7 +99,7 @@ void	DiodeClipDAngelo::set_d2_n (float n)
 
 
 // It could be interesting to make c proportional to the input gain.
-void	DiodeClipDAngelo::set_capa (float c)
+void	DiodeClipDAngelo::set_capa (float c) noexcept
 {
 	assert (c > 0);
 
@@ -110,7 +110,7 @@ void	DiodeClipDAngelo::set_capa (float c)
 
 
 // Same as setting C, but with a meaningful value.
-void	DiodeClipDAngelo::set_cutoff_freq (float f)
+void	DiodeClipDAngelo::set_cutoff_freq (float f) noexcept
 {
 	assert (f > 0);
 
@@ -119,7 +119,7 @@ void	DiodeClipDAngelo::set_cutoff_freq (float f)
 
 
 
-void	DiodeClipDAngelo::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DiodeClipDAngelo::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -140,7 +140,7 @@ void	DiodeClipDAngelo::process_block (float dst_ptr [], const float src_ptr [], 
 
 
 
-void	DiodeClipDAngelo::clear_buffers ()
+void	DiodeClipDAngelo::clear_buffers () noexcept
 {
 	_mem_p = 0;
 }
@@ -155,7 +155,7 @@ void	DiodeClipDAngelo::clear_buffers ()
 
 
 
-void	DiodeClipDAngelo::update_internal_coef_fs ()
+void	DiodeClipDAngelo::update_internal_coef_fs () noexcept
 {
 	// Trapezoidal rule
 	// v[n] = v[n-1] + (T/2) * (v'[n] + v'[n-1])
@@ -170,7 +170,7 @@ void	DiodeClipDAngelo::update_internal_coef_fs ()
 
 
 
-void	DiodeClipDAngelo::update_internal_coef ()
+void	DiodeClipDAngelo::update_internal_coef () noexcept
 {
 	const float    cr        = _c * _r;
 	const float    invb0crp1 = 1 / (_b0 * cr + 1);

@@ -63,7 +63,7 @@ class WsNegCond
 public:
 
 	template <typename T>
-	fstb_FORCEINLINE T operator () (T x)
+	fstb_FORCEINLINE T operator () (T x) noexcept
 	{
 		const T        lb = T (LB::num) / T (LB::den);
 		const T        ub = T (UB::num) / T (UB::den);

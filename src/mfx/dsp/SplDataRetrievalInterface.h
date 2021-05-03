@@ -55,7 +55,7 @@ public:
 	virtual SplDataRetrievalInterface &
 	               operator = (SplDataRetrievalInterface &&other)      = default;
 
-	void				get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag);
+	void				get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag) noexcept;
 
 
 
@@ -63,7 +63,7 @@ public:
 
 protected:
 
-	virtual void	do_get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag) = 0;
+	virtual void	do_get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag) noexcept = 0;
 
 
 

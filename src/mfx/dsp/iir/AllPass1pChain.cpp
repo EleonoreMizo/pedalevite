@@ -59,7 +59,7 @@ void	AllPass1pChain::set_length (int nbr_ap)
 
 
 
-void	AllPass1pChain::set_coef_all (float b0)
+void	AllPass1pChain::set_coef_all (float b0) noexcept
 {
 	for (auto &stage : _stage_arr)
 	{
@@ -69,7 +69,7 @@ void	AllPass1pChain::set_coef_all (float b0)
 
 
 
-void	AllPass1pChain::clear_buffers ()
+void	AllPass1pChain::clear_buffers () noexcept
 {
 	_mem_x = 0;
 	for (auto &stage : _stage_arr)

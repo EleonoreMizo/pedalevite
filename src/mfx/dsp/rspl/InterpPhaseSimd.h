@@ -63,13 +63,13 @@ public:
 
 	typedef std::array <float, ARRAY_LEN> Buffer;
 
-	inline void		set_data (int pos, float imp, float dif);
+	inline void		set_data (int pos, float imp, float dif) noexcept;
 	fstb_FORCEINLINE void
-						precompute_impulse (Buffer &imp, float q) const;
+						precompute_impulse (Buffer &imp, float q) const noexcept;
 	fstb_FORCEINLINE float
-						convolve (const float data_ptr [], const Buffer &imp) const;
+						convolve (const float data_ptr [], const Buffer &imp) const noexcept;
 	fstb_FORCEINLINE float
-						convolve (const float data_ptr [], float q) const;
+						convolve (const float data_ptr [], float q) const noexcept;
 
 
 

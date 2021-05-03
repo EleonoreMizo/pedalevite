@@ -42,12 +42,12 @@ namespace lfo
 
 
 // 0.5 = neutral (no distortion)
-void	PhaseDist::set_phase_dist (double dist)
+void	PhaseDist::set_phase_dist (double dist) noexcept
 {
 	assert (dist >= 0);
 	assert (dist <= 1);
 
-	const double   margin = 1e-4;
+	constexpr double  margin = 1e-4;
 	if (dist > 0.5 * (1 - margin) && dist < 0.5 * (1 + margin))
 	{
 		_active_flag = false;
@@ -80,7 +80,7 @@ void	PhaseDist::set_phase_dist (double dist)
 
 
 
-void	PhaseDist::set_phase_dist_offset (double offset)
+void	PhaseDist::set_phase_dist_offset (double offset) noexcept
 {
 	assert (offset >= 0);
 	assert (offset <= 1);
@@ -90,7 +90,7 @@ void	PhaseDist::set_phase_dist_offset (double offset)
 
 
 
-double	PhaseDist::process_phase (double phase) const
+double	PhaseDist::process_phase (double phase) const noexcept
 {
 	assert (phase >= 0);
 	assert (phase < 1);

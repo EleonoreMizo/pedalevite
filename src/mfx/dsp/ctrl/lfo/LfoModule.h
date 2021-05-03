@@ -75,29 +75,29 @@ public:
 		Type_NBR_ELT
 	};
 
-	               LfoModule ();
+	               LfoModule () noexcept;
 	virtual        ~LfoModule ();
 
-	void           set_sample_freq (double sample_freq);
-	void           set_period (double per);
-	void           set_phase (double phase);
-	void           set_chaos (double chaos);
-	void           set_phase_dist (double dist);
-	void           set_phase_dist_offset (double ofs);
-	void           set_sign (bool inv_flag);
-	void           set_polarity (bool unipolar_flag);
-	void           set_variation (int param, double val);
-	bool           is_using_variation (int param) const;
-	void           set_type (Type type);
-	void           set_snh (double ratio);
-	void           set_smooth (double ratio);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_period (double per) noexcept;
+	void           set_phase (double phase) noexcept;
+	void           set_chaos (double chaos) noexcept;
+	void           set_phase_dist (double dist) noexcept;
+	void           set_phase_dist_offset (double ofs) noexcept;
+	void           set_sign (bool inv_flag) noexcept;
+	void           set_polarity (bool unipolar_flag) noexcept;
+	void           set_variation (int param, double val) noexcept;
+	bool           is_using_variation (int param) const noexcept;
+	void           set_type (Type type) noexcept;
+	void           set_snh (double ratio) noexcept;
+	void           set_smooth (double ratio) noexcept;
 	void           set_step_seq (bool flag);
-	bool           has_step_seq () const;
-	OscStepSeq &   use_step_seq ();
-	void           tick (int nbr_spl);
-	double         get_val () const;
-	double         get_phase () const;
-	void           clear_buffers ();
+	bool           has_step_seq () const noexcept;
+	OscStepSeq &   use_step_seq () noexcept;
+	void           tick (int nbr_spl) noexcept;
+	double         get_val () const noexcept;
+	double         get_phase () const noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -118,15 +118,15 @@ private:
 
 	typedef std::unique_ptr <OscStepSeq> StepSeqUPtr;
 
-	OscInterface * get_aligned_osc () const;
+	OscInterface * get_aligned_osc () const noexcept;
 	inline const OscInterface &
-	               use_osc () const;
+	               use_osc () const noexcept;
 	inline OscInterface &
-	               use_osc ();
-	void           apply_osc_settings ();
-	void           update_snh ();
-	void           update_smooth ();
-	inline void    tick_sub (int nbr_spl);
+	               use_osc () noexcept;
+	void           apply_osc_settings () noexcept;
+	void           update_snh () noexcept;
+	void           update_smooth () noexcept;
+	inline void    tick_sub (int nbr_spl) noexcept;
 
 	OscStorage     _osc;
 

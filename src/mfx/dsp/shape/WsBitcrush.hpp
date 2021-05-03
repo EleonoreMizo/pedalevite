@@ -44,7 +44,7 @@ namespace shape
 
 template <class S, bool L>
 template <typename T>
-T	WsBitcrush <S, L>::operator () (T x)
+T	WsBitcrush <S, L>::operator () (T x) noexcept
 {
 	return process_sample (x);
 }
@@ -53,7 +53,7 @@ T	WsBitcrush <S, L>::operator () (T x)
 
 template <class S, bool L>
 template <typename T>
-T	WsBitcrush <S, L>::process_sample (T x)
+T	WsBitcrush <S, L>::process_sample (T x) noexcept
 {
 	const T        scale     = T (Scale::num) / T (Scale::den);
 	const T        scale_inv = T (Scale::den) / T (Scale::num);
@@ -73,7 +73,7 @@ T	WsBitcrush <S, L>::process_sample (T x)
 
 template <class S, bool L>
 template <typename VD, typename VS>
-void  WsBitcrush <S, L>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void  WsBitcrush <S, L>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

@@ -43,7 +43,7 @@ namespace shape
 
 
 template <typename T>
-T	WsHardclip::operator () (T x)
+T	WsHardclip::operator () (T x) noexcept
 {
 	return process_sample (x);
 }
@@ -51,7 +51,7 @@ T	WsHardclip::operator () (T x)
 
 
 template <typename T>
-T	WsHardclip::process_sample (T x)
+T	WsHardclip::process_sample (T x) noexcept
 {
 	return fstb::limit (x, T (-1), T (+1));
 }
@@ -59,7 +59,7 @@ T	WsHardclip::process_sample (T x)
 
 
 template <typename VD, typename VS>
-void	WsHardclip::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	WsHardclip::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

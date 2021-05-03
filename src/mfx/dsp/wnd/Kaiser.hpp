@@ -45,7 +45,7 @@ namespace wnd
 
 
 template <class T>
-void	Kaiser <T>::set_alpha (double alpha)
+void	Kaiser <T>::set_alpha (double alpha) noexcept
 {
 	assert (alpha > 0);
 
@@ -109,7 +109,7 @@ Throws: Nothing
 */
 
 template <class T>
-double	Kaiser <T>::compute_wp (int pos, int len, double alpha)
+double	Kaiser <T>::compute_wp (int pos, int len, double alpha) noexcept
 {
    assert (pos >= 0);
    assert (pos <= len / 2);
@@ -127,7 +127,7 @@ double	Kaiser <T>::compute_wp (int pos, int len, double alpha)
 
 
 template <class T>
-double	Kaiser <T>::compute_i0 (double x)
+double	Kaiser <T>::compute_i0 (double x) noexcept
 {
    int            k    = 1;
    double         sum  = 1;

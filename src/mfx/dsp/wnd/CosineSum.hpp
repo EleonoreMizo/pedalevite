@@ -43,7 +43,7 @@ namespace wnd
 
 
 template <class T>
-void	CosineSum <T>::set_order (int order)
+void	CosineSum <T>::set_order (int order) noexcept
 {
 	assert (order >= _min_order);
 	assert (order <= _max_order);

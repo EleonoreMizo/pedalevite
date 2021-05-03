@@ -51,28 +51,28 @@ void	InterpolatorOrder0::do_set_ovrspl_l2 (int ovrspl_l2)
 
 
 
-int	InterpolatorOrder0::do_get_impulse_len () const
+int	InterpolatorOrder0::do_get_impulse_len () const noexcept
 {
 	return _impulse_len;
 }
 
 
 
-fstb::FixedPoint	InterpolatorOrder0::do_get_group_delay () const
+fstb::FixedPoint	InterpolatorOrder0::do_get_group_delay () const noexcept
 {
 	return fstb::FixedPoint (-1, uint32_t (1) << 31); // -0.5
 }
 
 
 
-void	InterpolatorOrder0::do_start (int nbr_chn)
+void	InterpolatorOrder0::do_start (int nbr_chn) noexcept
 {
 	_nbr_chn = nbr_chn;
 }
 
 
 
-int	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept
 {
 	const int      pos_dest_old = pos_dest;
 	const int      src_limit    = end_src - (_impulse_len - 1);
@@ -117,7 +117,7 @@ int	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const f
 
 
 
-float	InterpolatorOrder0::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+float	InterpolatorOrder0::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) noexcept
 {
 	fstb::unused (rate);
 

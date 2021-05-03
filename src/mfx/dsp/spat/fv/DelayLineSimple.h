@@ -51,12 +51,12 @@ public:
 
 	void           set_delay (int len);
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
-	int            get_max_rw_len () const;
-	const float *  use_read_data () const;
-	float *        use_write_data ();
-	void           step (int len);
+	int            get_max_rw_len () const noexcept;
+	const float *  use_read_data () const noexcept;
+	float *        use_write_data () noexcept;
+	void           step (int len) noexcept;
 
 
 
@@ -70,7 +70,7 @@ protected:
 
 private:
 
-	inline int     compute_read_pos () const;
+	inline int     compute_read_pos () const noexcept;
 
 	int            _delay      = 0;
 	int            _write_pos  = 0;

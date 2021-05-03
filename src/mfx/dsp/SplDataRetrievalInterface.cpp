@@ -58,7 +58,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SplDataRetrievalInterface::get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag)
+void	SplDataRetrievalInterface::get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag) noexcept
 {
 	assert (chn_data_ptr_arr != nullptr);
 	assert (chn_data_ptr_arr [0] != nullptr);

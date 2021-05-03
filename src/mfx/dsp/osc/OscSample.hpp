@@ -56,7 +56,7 @@ Throws: Nothing
 */
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::set_sample_data (const SampleTable &sample_data)
+void	OscSample <SD, IF, CDT>::set_sample_data (const SampleTable &sample_data) noexcept
 {
 	assert (sample_data.is_valid ());
 
@@ -78,7 +78,7 @@ Throws: Nothing
 */
 
 template <typename SD, typename IF, typename CDT>
-const typename OscSample <SD, IF, CDT>::SampleTable &	OscSample <SD, IF, CDT>::use_sample_data () const
+const typename OscSample <SD, IF, CDT>::SampleTable &	OscSample <SD, IF, CDT>::use_sample_data () const noexcept
 {
 	return _sample_data;
 }
@@ -86,7 +86,7 @@ const typename OscSample <SD, IF, CDT>::SampleTable &	OscSample <SD, IF, CDT>::u
 
 
 template <typename SD, typename IF, typename CDT>
-typename OscSample <SD, IF, CDT>::SampleTable &	OscSample <SD, IF, CDT>::use_sample_data ()
+typename OscSample <SD, IF, CDT>::SampleTable &	OscSample <SD, IF, CDT>::use_sample_data () noexcept
 {
 	return _sample_data;
 }
@@ -109,7 +109,7 @@ Throws: Nothing
 */
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::set_bandlimit (int32_t limit)
+void	OscSample <SD, IF, CDT>::set_bandlimit (int32_t limit) noexcept
 {
 	assert (limit <= 0);
 
@@ -119,7 +119,7 @@ void	OscSample <SD, IF, CDT>::set_bandlimit (int32_t limit)
 
 
 template <typename SD, typename IF, typename CDT>
-int32_t	OscSample <SD, IF, CDT>::get_bandlimit () const
+int32_t	OscSample <SD, IF, CDT>::get_bandlimit () const noexcept
 {
 	return _bandlimit;
 }
@@ -139,7 +139,7 @@ Throws: Nothing
 */
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::set_pitch (int32_t pitch)
+void	OscSample <SD, IF, CDT>::set_pitch (int32_t pitch) noexcept
 {
 	_pitch = pitch;
 
@@ -187,7 +187,7 @@ void	OscSample <SD, IF, CDT>::set_pitch (int32_t pitch)
 
 
 template <typename SD, typename IF, typename CDT>
-int32_t	OscSample <SD, IF, CDT>::get_pitch () const
+int32_t	OscSample <SD, IF, CDT>::get_pitch () const noexcept
 {
 	return _pitch;
 }
@@ -208,7 +208,7 @@ Throws: Nothing
 */
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::get_table_rate (fstb::FixedPoint &rate) const
+void	OscSample <SD, IF, CDT>::get_table_rate (fstb::FixedPoint &rate) const noexcept
 {
 	rate = _step;
 }
@@ -216,7 +216,7 @@ void	OscSample <SD, IF, CDT>::get_table_rate (fstb::FixedPoint &rate) const
 
 
 template <typename SD, typename IF, typename CDT>
-int	OscSample <SD, IF, CDT>::get_cur_table () const
+int	OscSample <SD, IF, CDT>::get_cur_table () const noexcept
 {
 	return _table;
 }
@@ -224,7 +224,7 @@ int	OscSample <SD, IF, CDT>::get_cur_table () const
 
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::set_playback_pos (const fstb::FixedPoint &pos)
+void	OscSample <SD, IF, CDT>::set_playback_pos (const fstb::FixedPoint &pos) noexcept
 {
 	_pos   = pos;
 	_pos >>= _table;
@@ -233,7 +233,7 @@ void	OscSample <SD, IF, CDT>::set_playback_pos (const fstb::FixedPoint &pos)
 
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::get_playback_pos (fstb::FixedPoint &pos) const
+void	OscSample <SD, IF, CDT>::get_playback_pos (fstb::FixedPoint &pos) const noexcept
 {
 	pos   = _pos;
 	pos <<= _table;
@@ -242,7 +242,7 @@ void	OscSample <SD, IF, CDT>::get_playback_pos (fstb::FixedPoint &pos) const
 
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::set_playback_pos_in_cur_table (const fstb::FixedPoint &pos)
+void	OscSample <SD, IF, CDT>::set_playback_pos_in_cur_table (const fstb::FixedPoint &pos) noexcept
 {
 	_pos = pos;
 }
@@ -250,7 +250,7 @@ void	OscSample <SD, IF, CDT>::set_playback_pos_in_cur_table (const fstb::FixedPo
 
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::get_playback_pos_in_cur_table (fstb::FixedPoint &pos) const
+void	OscSample <SD, IF, CDT>::get_playback_pos_in_cur_table (fstb::FixedPoint &pos) const noexcept
 {
 	pos = _pos;
 }
@@ -259,7 +259,7 @@ void	OscSample <SD, IF, CDT>::get_playback_pos_in_cur_table (fstb::FixedPoint &p
 
 
 template <typename SD, typename IF, typename CDT>
-typename OscSample <SD, IF, CDT>::CalcDataType	OscSample <SD, IF, CDT>::get_sample_in_cur_table (const fstb::FixedPoint &pos) const
+typename OscSample <SD, IF, CDT>::CalcDataType	OscSample <SD, IF, CDT>::get_sample_in_cur_table (const fstb::FixedPoint &pos) const noexcept
 {
 	assert (pos.get_int_val () >= -SampleTable::UNROLL_PRE + InterpFtor::DATA_PRE);
 	assert (pos.get_int_val () < _sample_data.get_table_len (_table) + SampleTable::UNROLL_POST - InterpFtor::DATA_POST);
@@ -287,7 +287,7 @@ Throws: Nothing
 */
 
 template <typename SD, typename IF, typename CDT>
-typename OscSample <SD, IF, CDT>::CalcDataType	OscSample <SD, IF, CDT>::process_sample ()
+typename OscSample <SD, IF, CDT>::CalcDataType	OscSample <SD, IF, CDT>::process_sample () noexcept
 {
 	assert (_pos.get_int_val () >= -SampleTable::UNROLL_PRE + InterpFtor::DATA_PRE);
 	assert (_pos.get_int_val () < _sample_data.get_table_len (_table) + SampleTable::UNROLL_POST - InterpFtor::DATA_POST);
@@ -304,7 +304,7 @@ typename OscSample <SD, IF, CDT>::CalcDataType	OscSample <SD, IF, CDT>::process_
 
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::process_block (CalcDataType data_ptr [], int nbr_spl)
+void	OscSample <SD, IF, CDT>::process_block (CalcDataType data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -338,7 +338,7 @@ void	OscSample <SD, IF, CDT>::process_block (CalcDataType data_ptr [], int nbr_s
 
 
 template <typename SD, typename IF, typename CDT>
-void	OscSample <SD, IF, CDT>::process_block_mix (CalcDataType data_ptr [], int nbr_spl)
+void	OscSample <SD, IF, CDT>::process_block_mix (CalcDataType data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);

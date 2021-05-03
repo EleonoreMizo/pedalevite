@@ -44,28 +44,21 @@ namespace nz
 
 
 
-PinkShade::PinkShade ()
-:	_buf ()
-,	_bpos (0)
-,	_lfsr (0x5EED41F5)
-,	_inc (0x4CCCC)    // Balance initial states to avoid DC 
-,	_dec (0x4CCCC)
-,	_accu ()
-,	_ncnt (0)         // Counter from zero
+PinkShade::PinkShade () noexcept
 {
 	mix::Generic::setup ();
 }
 
 
 
-void	PinkShade::set_seed (int seed)
+void	PinkShade::set_seed (int seed) noexcept
 {
 	_lfsr = 0x5EED41F5 + seed;
 }
 
 
 
-void	PinkShade::process_block (float dst_ptr [], int nbr_spl)
+void	PinkShade::process_block (float dst_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -97,7 +90,7 @@ void	PinkShade::process_block (float dst_ptr [], int nbr_spl)
 
 
 
-void	PinkShade::process_block_add (float dst_ptr [], int nbr_spl)
+void	PinkShade::process_block_add (float dst_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -130,7 +123,7 @@ void	PinkShade::process_block_add (float dst_ptr [], int nbr_spl)
 
 
 // Generates 16 samples
-void	PinkShade::gen_16 (float *dst_ptr)
+void	PinkShade::gen_16 (float *dst_ptr) noexcept
 {
 	assert (dst_ptr != nullptr);
 

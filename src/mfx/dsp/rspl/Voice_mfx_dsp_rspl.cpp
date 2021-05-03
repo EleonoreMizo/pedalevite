@@ -49,39 +49,7 @@ namespace rspl
 
 
 
-Voice::Voice ()
-:	_interp_ptr (nullptr)
-,	_imp_len (1)
-,	_group_dly (0, 0)
-,	_data_provider_ptr (nullptr)
-,	_ovrspl_l2 (0)
-,	_sample_freq (44100)
-,	_fade_time (0.005)
-,	_tmp_buf_ptr (nullptr)
-,	_tmp_buf_len (0)
-,	_room_for_lin_src (-1)
-,	_in_fs (44100)
-,	_in_len (0)
-,	_nbr_chn (1)
-,	_rate (1, 0)
-,	_rate_step (0, 0)
-,	_loop_mode (LoopMode_NONE)
-,	_loop_pos_arr ()
-,	_pos_int (0)
-,	_pos_frac (0)
-,	_pbk_dir (1)
-,	_started_flag (false)
-,	_stopped_flag (false)
-,	_fade_rem_spl (0)
-,	_fade_val (0)
-,	_fade_step (0)
-{
-	// Nothing
-}
-
-
-
-void	Voice::set_interpolator (InterpolatorInterface &interp)
+void	Voice::set_interpolator (InterpolatorInterface &interp) noexcept
 {
 	assert (! is_active ());
 
@@ -96,7 +64,7 @@ void	Voice::set_interpolator (InterpolatorInterface &interp)
 
 
 
-const InterpolatorInterface &	Voice::use_interpolator () const
+const InterpolatorInterface &	Voice::use_interpolator () const noexcept
 {
 	assert (_interp_ptr != nullptr);
 
@@ -105,7 +73,7 @@ const InterpolatorInterface &	Voice::use_interpolator () const
 
 
 
-void	Voice::set_tmp_buf (float *buf_ptr, int len)
+void	Voice::set_tmp_buf (float *buf_ptr, int len) noexcept
 {
 	assert (buf_ptr != nullptr);
 	assert (len > 0);
@@ -136,7 +104,7 @@ void	Voice::set_sample_freq (double sample_freq, int ovrspl_l2)
 
 
 
-void	Voice::set_fade_duration (double fade_time)
+void	Voice::set_fade_duration (double fade_time) noexcept
 {
 	assert (! is_playing ());
 	assert (fade_time > 0);
@@ -146,14 +114,14 @@ void	Voice::set_fade_duration (double fade_time)
 
 
 
-bool	Voice::is_active () const
+bool	Voice::is_active () const noexcept
 {
 	return (_data_provider_ptr != nullptr);
 }
 
 
 
-void	Voice::activate (SplDataRetrievalInterface &data_provider, int64_t len, int nbr_chn, double sample_freq)
+void	Voice::activate (SplDataRetrievalInterface &data_provider, int64_t len, int nbr_chn, double sample_freq) noexcept
 {
 	assert (len >= 0);
 	assert (nbr_chn > 0);
@@ -180,14 +148,14 @@ void	Voice::activate (SplDataRetrievalInterface &data_provider, int64_t len, int
 
 
 
-void	Voice::deactivate ()
+void	Voice::deactivate () noexcept
 {
 	_data_provider_ptr = nullptr;
 }
 
 
 
-void	Voice::start (bool fade_flag)
+void	Voice::start (bool fade_flag) noexcept
 {
 	assert (is_active ());
 	assert (! _started_flag);
@@ -209,7 +177,7 @@ void	Voice::start (bool fade_flag)
 
 
 
-void	Voice::stop (bool fade_flag)
+void	Voice::stop (bool fade_flag) noexcept
 {
 	assert (is_active ());
 	assert (_started_flag);
@@ -229,7 +197,7 @@ void	Voice::stop (bool fade_flag)
 
 
 
-void	Voice::set_rate (double rate, double rate_step)
+void	Voice::set_rate (double rate, double rate_step) noexcept
 {
 	assert (is_active ());
 	assert (rate > 0);
@@ -240,7 +208,7 @@ void	Voice::set_rate (double rate, double rate_step)
 
 
 
-void	Voice::set_direction (bool backward_flag)
+void	Voice::set_direction (bool backward_flag) noexcept
 {
 	assert (is_active ());
 
@@ -253,7 +221,7 @@ void	Voice::set_direction (bool backward_flag)
 
 
 
-void	Voice::set_loop_info (LoopMode loop_mode, int64_t pos, int64_t len)
+void	Voice::set_loop_info (LoopMode loop_mode, int64_t pos, int64_t len) noexcept
 {
 	assert (is_active ());
 	assert (loop_mode >= 0);
@@ -269,7 +237,7 @@ void	Voice::set_loop_info (LoopMode loop_mode, int64_t pos, int64_t len)
 
 
 
-void	Voice::set_playback_pos (int64_t pos_int, uint32_t pos_frac)
+void	Voice::set_playback_pos (int64_t pos_int, uint32_t pos_frac) noexcept
 {
 	compensate_pos_for_group_delay (pos_int, pos_frac, _pbk_dir);
 	_pos_int  = pos_int;
@@ -278,7 +246,7 @@ void	Voice::set_playback_pos (int64_t pos_int, uint32_t pos_frac)
 
 
 
-void	Voice::get_playback_pos (int64_t &pos_int, uint32_t &pos_frac) const
+void	Voice::get_playback_pos (int64_t &pos_int, uint32_t &pos_frac) const noexcept
 {
 	assert (is_active ());
 
@@ -289,14 +257,14 @@ void	Voice::get_playback_pos (int64_t &pos_int, uint32_t &pos_frac) const
 
 
 
-bool	Voice::is_running_backward () const
+bool	Voice::is_running_backward () const noexcept
 {
 	return (_pbk_dir < 0);
 }
 
 
 
-void	Voice::process_block (float *out_ptr_arr [], int nbr_spl)
+void	Voice::process_block (float *out_ptr_arr [], int nbr_spl) noexcept
 {
 	assert (is_active ());
 	assert (_interp_ptr != nullptr);
@@ -413,7 +381,7 @@ void	Voice::process_block (float *out_ptr_arr [], int nbr_spl)
 
 
 
-void	Voice::conv_pos_flt_to_fix (int64_t &pos_int, uint32_t &pos_frac, double pos)
+void	Voice::conv_pos_flt_to_fix (int64_t &pos_int, uint32_t &pos_frac, double pos) noexcept
 {
 	const float		uint_scale = 65536.0f * 65536.0f;
 
@@ -435,14 +403,14 @@ void	Voice::conv_pos_flt_to_fix (int64_t &pos_int, uint32_t &pos_frac, double po
 
 
 
-bool	Voice::is_playing () const
+bool	Voice::is_playing () const noexcept
 {
 	return (is_active () && _started_flag);
 }
 
 
 
-void	Voice::fade_to (float val)
+void	Voice::fade_to (float val) noexcept
 {
 	assert (val >= 0);
 	assert (val <= 1);
@@ -465,7 +433,7 @@ void	Voice::fade_to (float val)
 
 
 
-void	Voice::update_tmp_buf_info ()
+void	Voice::update_tmp_buf_info () noexcept
 {
 	assert (is_active ());
 
@@ -476,7 +444,7 @@ void	Voice::update_tmp_buf_info ()
 
 // nbr_spl = number of source samples to fetch
 // If the loop cursors are fractionnal, the linearisation is approximative.
-void	Voice::linearise_sample (int nbr_spl)
+void	Voice::linearise_sample (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -565,7 +533,7 @@ void	Voice::linearise_sample (int nbr_spl)
 
 
 // true if it is the loop
-bool	Voice::compute_next_stop (int64_t &stop_pos, int64_t cur_pos, int dir) const
+bool	Voice::compute_next_stop (int64_t &stop_pos, int64_t cur_pos, int dir) const noexcept
 {
 	assert (cur_pos >= 0);
 	assert (cur_pos < _in_len);
@@ -604,7 +572,7 @@ bool	Voice::compute_next_stop (int64_t &stop_pos, int64_t cur_pos, int dir) cons
 
 
 
-int	Voice::collect_source_spl (int offset, int max_len, int cur_dir, int64_t pos, int64_t stop_pos)
+int	Voice::collect_source_spl (int offset, int max_len, int cur_dir, int64_t pos, int64_t stop_pos) noexcept
 {
 	assert (offset >= 0);
 	assert (max_len > 0);
@@ -656,7 +624,7 @@ int	Voice::collect_source_spl (int offset, int max_len, int cur_dir, int64_t pos
 
 
 // pos can be < 0 or >= _in_len if there is no loop to stop the cursor.
-void	Voice::advance_cursor_pos (int64_t &pos, int &dir, int stride) const
+void	Voice::advance_cursor_pos (int64_t &pos, int &dir, int stride) const noexcept
 {
 	assert (dir == +1 || dir == -1);
 	assert (stride >= 0);
@@ -720,7 +688,7 @@ void	Voice::advance_cursor_pos (int64_t &pos, int &dir, int stride) const
 
 
 
-void	Voice::check_finished (float *out_ptr_arr [], int &dest_pos, int nbr_spl)
+void	Voice::check_finished (float *out_ptr_arr [], int &dest_pos, int nbr_spl) noexcept
 {
 	assert (dest_pos >= 0);
 	assert (nbr_spl > 0);
@@ -752,7 +720,7 @@ void	Voice::check_finished (float *out_ptr_arr [], int &dest_pos, int nbr_spl)
 
 
 // Compensation moves the cursor in the direction opposed to dir
-void	Voice::compensate_pos_for_group_delay (int64_t &pos_int, uint32_t &pos_frac, int dir) const
+void	Voice::compensate_pos_for_group_delay (int64_t &pos_int, uint32_t &pos_frac, int dir) const noexcept
 {
 	assert (dir == +1 || dir == -1);
 
@@ -767,7 +735,7 @@ void	Voice::compensate_pos_for_group_delay (int64_t &pos_int, uint32_t &pos_frac
 
 
 
-int	Voice::compute_dir_fix (int dir)
+int	Voice::compute_dir_fix (int dir) noexcept
 {
 	assert (dir == +1 || dir == -1);
 

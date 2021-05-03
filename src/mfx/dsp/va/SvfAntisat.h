@@ -72,12 +72,12 @@ class SvfAntisat
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           set_freq (float f);
-	void           set_reso (float r);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_freq (float f) noexcept;
+	void           set_reso (float r) noexcept;
 
-	void           process_sample (float &y_lp, float &y_bp, float &y_hp, float x);
-	void           clear_buffers ();
+	void           process_sample (float &y_lp, float &y_bp, float &y_hp, float x) noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -96,15 +96,15 @@ private:
 	public:
 		typedef float DataType;
 		fstb_FORCEINLINE void
-		               set_a (float a);
+		               set_a (float a) noexcept;
 		fstb_FORCEINLINE void
-		               set_b (float b);
+		               set_b (float b) noexcept;
 		fstb_FORCEINLINE void
-		               set_estimation (float y);
+		               set_estimation (float y) noexcept;
 		fstb_FORCEINLINE float
-		               estimate ();
+		               estimate () noexcept;
 		fstb_FORCEINLINE void
-		               eval (float &y, float &dy, float x);
+		               eval (float &y, float &dy, float x) noexcept;
 	private:
 		float          _a = 0;
 		float          _b = 1;
@@ -113,7 +113,7 @@ private:
 		float          _y = 0;
 	};
 
-	inline void    update_b ();
+	inline void    update_b () noexcept;
 
 	float          _sample_freq = 0;
 	float          _inv_fs      = 0;

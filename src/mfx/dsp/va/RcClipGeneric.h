@@ -24,8 +24,8 @@ Template parameters:
 
 - F: class computing the characteristic function I = f(V) as well as df/dV.
 	Requires:
-	void F::eval (float &y, float &dy, float x);
-	float F::get_max_step (float x);
+	void F::eval (float &y, float &dy, float x) noexcept;
+	float F::get_max_step (float x) noexcept;
 
 Ref:
 http://www.ecircuitcenter.com/SpiceTopics/Non-Linear%20Analysis/Non-Linear%20Analysis.htm
@@ -103,7 +103,7 @@ public:
 #endif // mfx_dsp_va_RcClipGeneric_STAT
 
 
-	explicit       RcClipGeneric (IvFunc &&fnc);
+	explicit       RcClipGeneric (IvFunc &&fnc) noexcept;
 	               RcClipGeneric ()                               = default;
 	               RcClipGeneric (const RcClipGeneric <F> &other) = default;
 	               RcClipGeneric (RcClipGeneric <F> &&other)      = default;
@@ -115,18 +115,18 @@ public:
 	RcClipGeneric <F> &
 	               operator = (RcClipGeneric <F> &&other)         = default;
 
-	IvFunc &       use_fnc ();
-	const IvFunc & use_fnc () const;
+	IvFunc &       use_fnc () noexcept;
+	const IvFunc & use_fnc () const noexcept;
 
-	void           set_sample_freq (double sample_freq);
-	void           set_capa (float c);
-	void           set_cutoff_freq (float f);
-	float          process_sample (float x);
-	void           clear_buffers ();
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_capa (float c) noexcept;
+	void           set_cutoff_freq (float f) noexcept;
+	float          process_sample (float x) noexcept;
+	void           clear_buffers () noexcept;
 
 #if defined (mfx_dsp_va_RcClipGeneric_STAT)
-	void           reset_stat ();
-	void           get_stats (Stat &stat) const;
+	void           reset_stat () noexcept;
+	void           get_stats (Stat &stat) const noexcept;
 #endif // mfx_dsp_va_RcClipGeneric_STAT
 
 
@@ -141,7 +141,7 @@ protected:
 
 private:
 
-	void           update_internal_coef_rc ();
+	void           update_internal_coef_rc () noexcept;
 
 	IvFunc         _fnc;
 	float          _sample_freq = 0; // Sampling rate, Hz. > 0. 0 = not init.

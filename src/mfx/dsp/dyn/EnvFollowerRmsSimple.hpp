@@ -40,7 +40,7 @@ namespace dyn
 
 
 
-float	EnvFollowerRmsSimple::process_sample (float x)
+float	EnvFollowerRmsSimple::process_sample (float x) noexcept
 {
 	const float    y = process_sample_no_sqrt (x);
 
@@ -49,7 +49,7 @@ float	EnvFollowerRmsSimple::process_sample (float x)
 
 
 
-float	EnvFollowerRmsSimple::process_sample_no_sqrt (float x)
+float	EnvFollowerRmsSimple::process_sample_no_sqrt (float x) noexcept
 {
 	process_sample_internal (_state, x);
 
@@ -71,7 +71,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	EnvFollowerRmsSimple::apply_volume (float gain)
+void	EnvFollowerRmsSimple::apply_volume (float gain) noexcept
 {
 	assert (gain >= 0);
 
@@ -80,14 +80,14 @@ void	EnvFollowerRmsSimple::apply_volume (float gain)
 
 
 
-float	EnvFollowerRmsSimple::get_state_no_sqrt () const
+float	EnvFollowerRmsSimple::get_state_no_sqrt () const noexcept
 {
 	return _state;
 }
 
 
 
-void	EnvFollowerRmsSimple::set_state_raw (float x2)
+void	EnvFollowerRmsSimple::set_state_raw (float x2) noexcept
 {
 	assert (x2 >= 0);
 
@@ -104,14 +104,14 @@ void	EnvFollowerRmsSimple::set_state_raw (float x2)
 
 
 
-void	EnvFollowerRmsSimple::process_sample_internal (float &state, float x) const
+void	EnvFollowerRmsSimple::process_sample_internal (float &state, float x) const noexcept
 {
 	process_sample_internal_no_sq (state, x * x);
 }
 
 
 
-void	EnvFollowerRmsSimple::process_sample_internal_no_sq (float &state, float x2) const
+void	EnvFollowerRmsSimple::process_sample_internal_no_sq (float &state, float x2) const noexcept
 {
 	const float    delta = x2 - state;
 	state += delta * _coef;

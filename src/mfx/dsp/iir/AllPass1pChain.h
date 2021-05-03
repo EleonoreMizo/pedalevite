@@ -56,17 +56,17 @@ public:
 
 	void           reserve (int nbr_ap);
 	void           set_length (int nbr_ap);
-	inline int     get_length () const;
-	inline void    set_coef (int idx, float b0);
-	inline float   get_coef (int idx) const;
-	void           set_coef_all (float b0);
-	inline float   get_state (int idx) const;
-	inline void    set_state (int idx, float mem);
+	inline int     get_length () const noexcept;
+	inline void    set_coef (int idx, float b0) noexcept;
+	inline float   get_coef (int idx) const noexcept;
+	void           set_coef_all (float b0) noexcept;
+	inline float   get_state (int idx) const noexcept;
+	inline void    set_state (int idx, float mem) noexcept;
 
-	inline float   process_sample (float x);
-	inline float   process_sample_coef (float x, float b0);
+	inline float   process_sample (float x) noexcept;
+	inline float   process_sample_coef (float x, float b0) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

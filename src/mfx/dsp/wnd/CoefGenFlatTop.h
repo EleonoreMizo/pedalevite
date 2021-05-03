@@ -49,7 +49,7 @@ class CoefGenFlatTop
 
 public:
 
-	inline double  operator () (double pos) const;
+	inline double  operator () (double pos) const noexcept;
 
 
 

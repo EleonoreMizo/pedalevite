@@ -30,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
-#include <cstring>
 
 
 
@@ -65,15 +64,15 @@ void	DelayLineSimple::set_delay (int len)
 
 
 
-void	DelayLineSimple::clear_buffers ()
+void	DelayLineSimple::clear_buffers () noexcept
 {
-	memset (&_line_data [0], 0, _line_data.size () * sizeof (_line_data [0]));
+	std::fill (_line_data.begin (), _line_data.end (), 0.f);
 	_write_pos = 0;
 }
 
 
 
-int	DelayLineSimple::get_max_rw_len () const
+int	DelayLineSimple::get_max_rw_len () const noexcept
 {
 	const int      read_pos = compute_read_pos ();
 	const int      len_w    = _line_size - _write_pos;
@@ -85,7 +84,7 @@ int	DelayLineSimple::get_max_rw_len () const
 
 
 
-const float *	DelayLineSimple::use_read_data () const
+const float *	DelayLineSimple::use_read_data () const noexcept
 {
 	const int      read_pos = compute_read_pos ();
 
@@ -94,14 +93,14 @@ const float *	DelayLineSimple::use_read_data () const
 
 
 
-float *	DelayLineSimple::use_write_data ()
+float *	DelayLineSimple::use_write_data () noexcept
 {
 	return &_line_data [_write_pos];
 }
 
 
 
-void	DelayLineSimple::step (int len)
+void	DelayLineSimple::step (int len) noexcept
 {
 	assert (len > 0);
 	assert (len <= _delay);
@@ -119,7 +118,7 @@ void	DelayLineSimple::step (int len)
 
 
 
-int	DelayLineSimple::compute_read_pos () const
+int	DelayLineSimple::compute_read_pos () const noexcept
 {
 	return (_write_pos - _delay) & _line_mask;
 }

@@ -57,28 +57,28 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	AllPass1p::set_coef (float b0)
+void	AllPass1p::set_coef (float b0) noexcept
 {
 	_eq_z_b0 = b0;
 }
 
 
 
-float	AllPass1p::get_coef () const
+float	AllPass1p::get_coef () const noexcept
 {
 	return _eq_z_b0;
 }
 
 
 
-void	AllPass1p::copy_z_eq (const AllPass1p &other)
+void	AllPass1p::copy_z_eq (const AllPass1p &other) noexcept
 {
 	_eq_z_b0 = other._eq_z_b0;
 }
 
 
 
-float	AllPass1p::process_sample (float x)
+float	AllPass1p::process_sample (float x) noexcept
 {
 	const float    y = _eq_z_b0 * (x - _mem_y) + _mem_x;
 	_mem_y = y;
@@ -89,7 +89,7 @@ float	AllPass1p::process_sample (float x)
 
 
 
-float	AllPass1p::process_sample (float x, float inc_b0)
+float	AllPass1p::process_sample (float x, float inc_b0) noexcept
 {
 	const float    y = process_sample (x);
 	step_z_eq (inc_b0);
@@ -107,7 +107,7 @@ float	AllPass1p::process_sample (float x, float inc_b0)
 
 
 
-void	AllPass1p::step_z_eq (const float inc_b0)
+void	AllPass1p::step_z_eq (const float inc_b0) noexcept
 {
 	_eq_z_b0 += inc_b0;
 }

@@ -49,7 +49,7 @@ namespace dly
 
 
 // Mandatory call
-void	DelayLineReader::set_tmp_buf (float *buf_ptr, int len)
+void	DelayLineReader::set_tmp_buf (float *buf_ptr, int len) noexcept
 {
 	assert (buf_ptr != nullptr);
 	assert (len > 0);
@@ -60,26 +60,26 @@ void	DelayLineReader::set_tmp_buf (float *buf_ptr, int len)
 
 
 
-float *	DelayLineReader::get_tmp_buf_ptr () const
+float *	DelayLineReader::get_tmp_buf_ptr () const noexcept
 {
 	assert (_tmp_buf_ptr != nullptr);
 
-	return (_tmp_buf_ptr);
+	return _tmp_buf_ptr;
 }
 
 
 
-int	DelayLineReader::get_tmp_buf_len () const
+int	DelayLineReader::get_tmp_buf_len () const noexcept
 {
 	assert (_tmp_buf_ptr != nullptr);
 
-	return (_tmp_buf_len);
+	return _tmp_buf_len;
 }
 
 
 
 // Mandatory call
-void	DelayLineReader::set_delay_line (const DelayLineReadInterface &delay_line)
+void	DelayLineReader::set_delay_line (const DelayLineReadInterface &delay_line) noexcept
 {
 	_delay_line_ptr = &delay_line;
 }
@@ -87,7 +87,7 @@ void	DelayLineReader::set_delay_line (const DelayLineReadInterface &delay_line)
 
 
 // Rates are related to input data (not oversampled)
-void	DelayLineReader::set_resampling_range (double rate_inf, double rate_sup)
+void	DelayLineReader::set_resampling_range (double rate_inf, double rate_sup) noexcept
 {
 	assert (rate_inf < rate_sup);
 
@@ -98,7 +98,7 @@ void	DelayLineReader::set_resampling_range (double rate_inf, double rate_sup)
 
 
 // Set shape_ptr to 0 to remove the shape and use the default (linear).
-void	DelayLineReader::set_crossfade (int nbr_spl, const float shape_ptr [])
+void	DelayLineReader::set_crossfade (int nbr_spl, const float shape_ptr []) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -108,7 +108,7 @@ void	DelayLineReader::set_crossfade (int nbr_spl, const float shape_ptr [])
 
 
 
-bool	DelayLineReader::is_ready () const
+bool	DelayLineReader::is_ready () const noexcept
 {
 	return (   _delay_line_ptr != nullptr
 	        && _tmp_buf_ptr    != nullptr);
@@ -118,7 +118,7 @@ bool	DelayLineReader::is_ready () const
 
 // transition_time is a time in samples, related to output. Therefore it is
 // related to oversampled data, if oversampling has been set.
-void	DelayLineReader::set_delay_time (double delay_time, int transition_time)
+void	DelayLineReader::set_delay_time (double delay_time, int transition_time) noexcept
 {
 	assert (is_ready ());
 	assert (delay_time >= _delay_line_ptr->get_min_delay_time ());
@@ -143,7 +143,7 @@ void	DelayLineReader::set_delay_time (double delay_time, int transition_time)
 
 
 // Makes sure everything is right
-void	DelayLineReader::clip_times ()
+void	DelayLineReader::clip_times () noexcept
 {
 	assert (is_ready ());
 	const double   dly_min = _delay_line_ptr->get_min_delay_time ();
@@ -161,7 +161,7 @@ void	DelayLineReader::clip_times ()
 // consecutive calls to DelayLine::push_block(). It can be negative if
 // push_block() is called before reading the line.
 // Read data is oversampled, if delay line has been oversampled.
-void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos)
+void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos) noexcept
 {
 	assert (is_ready ());
 	assert (dest_ptr != nullptr);
@@ -249,7 +249,7 @@ void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos)
 
 
 
-bool	DelayLineReader::is_time_ramping () const
+bool	DelayLineReader::is_time_ramping () const noexcept
 {
 	assert (is_ready ());
 
@@ -258,7 +258,7 @@ bool	DelayLineReader::is_time_ramping () const
 
 
 
-bool	DelayLineReader::is_time_change_programmed () const
+bool	DelayLineReader::is_time_change_programmed () const noexcept
 {
 	assert (is_ready ());
 
@@ -267,7 +267,7 @@ bool	DelayLineReader::is_time_change_programmed () const
 
 
 
-void	DelayLineReader::clear_buffers ()
+void	DelayLineReader::clear_buffers () noexcept
 {
 	assert (is_ready ());
 
@@ -292,7 +292,7 @@ void	DelayLineReader::clear_buffers ()
 
 
 
-void	DelayLineReader::setup_immediate_transition (double delay_time, int transition_time)
+void	DelayLineReader::setup_immediate_transition (double delay_time, int transition_time) noexcept
 {
 	assert (transition_time >= 0);
 
@@ -325,7 +325,7 @@ void	DelayLineReader::setup_immediate_transition (double delay_time, int transit
 
 
 
-void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double lerp_pos_end, int src_pos)
+void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double lerp_pos_end, int src_pos) noexcept
 {
 	assert (_xfade_flag);
 	assert (_trans_pos + nbr_spl <= _trans_dur);

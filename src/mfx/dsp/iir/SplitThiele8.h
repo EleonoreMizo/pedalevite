@@ -87,19 +87,19 @@ class SplitThiele8
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           set_split_freq (float f);
-	void           set_thiele_coef (float k);
-	inline bool    is_dirty () const;
-	void           update_coef ();
-	void           copy_param_from (const SplitThiele8 &other);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_split_freq (float f) noexcept;
+	void           set_thiele_coef (float k) noexcept;
+	inline bool    is_dirty () const noexcept;
+	void           update_coef () noexcept;
+	void           copy_param_from (const SplitThiele8 &other) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 	inline std::array <float, 2>
-	               process_sample_split (float x);
-	inline float   process_sample_compensate (float x);
-	void           process_block_split (float lo_ptr [], float hi_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_compensate (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	               process_sample_split (float x) noexcept;
+	inline float   process_sample_compensate (float x) noexcept;
+	void           process_block_split (float lo_ptr [], float hi_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_compensate (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -113,9 +113,9 @@ protected:
 
 private:
 
-	void           update_filters ();
+	void           update_filters () noexcept;
 	inline std::array <float, 2>
-	               compute_ap4_lp4 (float x, SvfCore <> &filt_1, SvfCore <> &filt_2);
+	               compute_ap4_lp4 (float x, SvfCore <> &filt_1, SvfCore <> &filt_2) noexcept;
 
 	float          _sample_freq = 0; // Hz, > 0. 0 = not set
 	float          _inv_fs      = 0; // s, > 0. 0 = not set

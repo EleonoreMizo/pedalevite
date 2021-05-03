@@ -47,25 +47,17 @@ class SegmentRc
 
 public:
 
-	               SegmentRc ()                        = default;
-	               SegmentRc (const SegmentRc &other)  = default;
-	               SegmentRc (SegmentRc &&other)       = default;
-	virtual        ~SegmentRc ()                       = default;
-
-	SegmentRc &    operator = (const SegmentRc &other) = default;
-	SegmentRc &    operator = (SegmentRc &&other)      = default;
-
-	void           setup (float final_val, float mult, float end_thr);
-	void           setup (float final_val, float mult, float end_thr, int duration);
-	void           setup_and_set_val (float final_val, float mult, float end_thr, float val);
-	void           set_val (float val);
-	inline float   get_val () const;
-	inline float   get_final_val () const;
-	inline int     get_nbr_rem_spl () const;
-	inline float   process_sample ();
-	void           process_block (float data_ptr [], int nbr_spl);
-	void           skip_block (int nbr_spl);
-	inline bool    is_finished () const;
+	void           setup (float final_val, float mult, float end_thr) noexcept;
+	void           setup (float final_val, float mult, float end_thr, int duration) noexcept;
+	void           setup_and_set_val (float final_val, float mult, float end_thr, float val) noexcept;
+	void           set_val (float val) noexcept;
+	inline float   get_val () const noexcept;
+	inline float   get_final_val () const noexcept;
+	inline int     get_nbr_rem_spl () const noexcept;
+	inline float   process_sample () noexcept;
+	void           process_block (float data_ptr [], int nbr_spl) noexcept;
+	void           skip_block (int nbr_spl) noexcept;
+	inline bool    is_finished () const noexcept;
 
 
 
@@ -79,9 +71,9 @@ protected:
 
 private:
 
-	inline void    setup_partial (float final_val, float mult, float end_thr);
-   inline void    set_val_direct (float val);
-	inline void    compute_nbr_rem_spl ();
+	inline void    setup_partial (float final_val, float mult, float end_thr) noexcept;
+   inline void    set_val_direct (float val) noexcept;
+	inline void    compute_nbr_rem_spl () noexcept;
 
 	float          _raw_val     = 1;          // May be 0 if _final_val is reached
 	float          _end_thr     = 1 / 256.f;  // > 0

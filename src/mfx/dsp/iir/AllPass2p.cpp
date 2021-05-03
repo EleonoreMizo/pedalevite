@@ -43,7 +43,7 @@ namespace iir
 
 
 
-AllPass2p::AllPass2p ()
+AllPass2p::AllPass2p () noexcept
 :	_eq_z_b ({{ 0, 0 }})
 ,	_mem_x ({{ 0, 0 }})
 ,	_mem_y ({{ 0, 0 }})
@@ -68,7 +68,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -135,7 +135,7 @@ void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 
 
-void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2])
+void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2]) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -206,7 +206,7 @@ void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 
 
-void	AllPass2p::clear_buffers ()
+void	AllPass2p::clear_buffers () noexcept
 {
 	_mem_x [0] = 0;
 	_mem_x [1] = 0;

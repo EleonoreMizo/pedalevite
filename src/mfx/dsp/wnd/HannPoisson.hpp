@@ -43,7 +43,7 @@ namespace wnd
 
 
 template <class T>
-void	HannPoisson <T>::set_alpha (double alpha)
+void	HannPoisson <T>::set_alpha (double alpha) noexcept
 {
 	assert (alpha > 0);
 

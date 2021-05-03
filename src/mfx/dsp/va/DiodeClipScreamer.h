@@ -57,30 +57,19 @@ class DiodeClipScreamer
 
 public:
 
-	               DiodeClipScreamer ()                               = default;
-	               DiodeClipScreamer (const DiodeClipScreamer &other) = default;
-	               DiodeClipScreamer (DiodeClipScreamer &&other)      = default;
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_dist (float dist) noexcept;
+	void           set_sat_lvl (float lvl) noexcept;
+	void           set_input_hpf_capa (float c) noexcept;
+	void           set_input_hpf_freq (float f) noexcept;
+	void           set_fdbk_hpf_capa (float c) noexcept;
+	void           set_fdbk_hpf_freq (float f) noexcept;
+	void           set_fdbk_lpf_capa (float c) noexcept;
+	void           set_fdbk_lpf_freq (float f) noexcept;
 
-	               ~DiodeClipScreamer ()                              = default;
-
-	DiodeClipScreamer &
-	               operator = (const DiodeClipScreamer &other)        = default;
-	DiodeClipScreamer &
-	               operator = (DiodeClipScreamer &&other)             = default;
-
-	void           set_sample_freq (double sample_freq);
-	void           set_dist (float dist);
-	void           set_sat_lvl (float lvl);
-	void           set_input_hpf_capa (float c);
-	void           set_input_hpf_freq (float f);
-	void           set_fdbk_hpf_capa (float c);
-	void           set_fdbk_hpf_freq (float f);
-	void           set_fdbk_lpf_capa (float c);
-	void           set_fdbk_lpf_freq (float f);
-
-	void           update_eq ();
-	float          process_sample (float x);
-	void           clear_buffers ();
+	void           update_eq () noexcept;
+	float          process_sample (float x) noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -94,7 +83,7 @@ protected:
 
 private:
 
-	void           update_internal_coef ();
+	void           update_internal_coef () noexcept;
 
 	float          _sample_freq = 0;    // Sampling rate, Hz. > 0. 0 = not init
 	float          _dist        = 1;    // Distortion potentiometer, [0 ; 1]

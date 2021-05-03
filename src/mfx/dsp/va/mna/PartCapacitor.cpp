@@ -47,7 +47,7 @@ namespace mna
 
 
 
-PartCapacitor::PartCapacitor (IdNode nid_1, IdNode nid_2, Flt c)
+PartCapacitor::PartCapacitor (IdNode nid_1, IdNode nid_2, Flt c) noexcept
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_c (c)
 {
@@ -59,7 +59,7 @@ PartCapacitor::PartCapacitor (IdNode nid_1, IdNode nid_2, Flt c)
 
 
 
-void	PartCapacitor::set_capacity (Flt c)
+void	PartCapacitor::set_capacity (Flt c) noexcept
 {
 	assert (c > 0);
 
@@ -104,7 +104,7 @@ void	PartCapacitor::do_prepare (const SimInfo &info)
 
 
 
-void	PartCapacitor::do_add_to_matrix (int it_cnt)
+void	PartCapacitor::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -113,7 +113,7 @@ void	PartCapacitor::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartCapacitor::do_step ()
+void	PartCapacitor::do_step () noexcept
 {
 	const Flt      v = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
 	_ieq = -2 * _geq * v - _ieq;
@@ -121,7 +121,7 @@ void	PartCapacitor::do_step ()
 
 
 
-void	PartCapacitor::do_clear_buffers ()
+void	PartCapacitor::do_clear_buffers () noexcept
 {
 	_ieq = 0;
 }
@@ -132,7 +132,7 @@ void	PartCapacitor::do_clear_buffers ()
 
 
 
-void	PartCapacitor::update_geq ()
+void	PartCapacitor::update_geq () noexcept
 {
 	assert (_sample_freq > 0);
 

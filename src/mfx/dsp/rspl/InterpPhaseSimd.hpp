@@ -47,17 +47,17 @@ class InterpPhaseSimd_Util
 {
 public:
 	static fstb_FORCEINLINE void
-						sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []);
+						sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []) noexcept;
 	static fstb_FORCEINLINE void
-						lerp_imp (float lerp_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []);
+						lerp_imp (float lerp_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []) noexcept;
 	static fstb_FORCEINLINE void
-						sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const float lerp_ptr []);
+						sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const float lerp_ptr []) noexcept;
 };
 
 
 
 template <int REM>
-inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	const int      offset = (nbr_blocks - REM) * 4;
 	auto           tmp    = fstb::ToolsSimd::load_f32 (&imp_ptr [offset]);
@@ -77,7 +77,7 @@ inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::Too
 }
 
 template <>
-inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	fstb::unused (nbr_blocks, sum_v, data_ptr, q_v, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
@@ -86,7 +86,7 @@ inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::Tools
 
 
 template <int REM>
-inline void	InterpPhaseSimd_Util <REM>::lerp_imp (float lerp_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseSimd_Util <REM>::lerp_imp (float lerp_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	InterpPhaseSimd_Util <REM - 1>::lerp_imp (
 		lerp_ptr,
@@ -103,7 +103,7 @@ inline void	InterpPhaseSimd_Util <REM>::lerp_imp (float lerp_ptr [], const fstb:
 }
 
 template <>
-inline void	InterpPhaseSimd_Util <0>::lerp_imp (float lerp_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseSimd_Util <0>::lerp_imp (float lerp_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	fstb::unused (lerp_ptr, q_v, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
@@ -112,7 +112,7 @@ inline void	InterpPhaseSimd_Util <0>::lerp_imp (float lerp_ptr [], const fstb::T
 
 
 template <int REM>
-inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const float lerp_ptr [])
+inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const float lerp_ptr []) noexcept
 {
 	const int      offset = (nbr_blocks - REM) * 4;
 	const auto     val    = fstb::ToolsSimd::loadu_f32 (&data_ptr [offset]);
@@ -129,7 +129,7 @@ inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::Too
 }
 
 template <>
-inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const float lerp_ptr [])
+inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const float lerp_ptr []) noexcept
 {
 	fstb::unused (nbr_blocks, sum_v, data_ptr, lerp_ptr);
 	// Nothing, stops the recursion
@@ -142,7 +142,7 @@ inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::Tools
 
 
 template <int PL>
-void	InterpPhaseSimd <PL>::set_data (int pos, float imp, float dif)
+void	InterpPhaseSimd <PL>::set_data (int pos, float imp, float dif) noexcept
 {
 	assert (pos >= 0);
 	assert (pos < PHASE_LEN);
@@ -154,7 +154,7 @@ void	InterpPhaseSimd <PL>::set_data (int pos, float imp, float dif)
 
 
 template <int PL>
-void	InterpPhaseSimd <PL>::precompute_impulse (Buffer &imp, float q) const
+void	InterpPhaseSimd <PL>::precompute_impulse (Buffer &imp, float q) const noexcept
 {
 	assert (q >= 0);
 	assert (q <= 1);
@@ -166,7 +166,7 @@ void	InterpPhaseSimd <PL>::precompute_impulse (Buffer &imp, float q) const
 
 
 template <int PL>
-float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], const Buffer &imp) const
+float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], const Buffer &imp) const noexcept
 {
 	assert (data_ptr != nullptr);
 
@@ -189,7 +189,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], const Buffer &imp
 
 
 template <int PL>
-float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const
+float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const noexcept
 {
 	assert (_imp [0] != CHK_IMPULSE_NOT_SET);
 	assert (data_ptr != nullptr);

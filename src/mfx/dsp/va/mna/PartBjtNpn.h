@@ -58,13 +58,13 @@ class PartBjtNpn
 
 public:
 
-	explicit       PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Flt beta_f, Flt beta_r);
+	explicit       PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Flt beta_f, Flt beta_r) noexcept;
 	virtual        ~PartBjtNpn () = default;
 
-	void           set_is (Flt is);
-	void           set_beta_f (Flt beta);
-	void           set_beta_r (Flt beta);
-	void           set_imax (Flt imax);
+	void           set_is (Flt is) noexcept;
+	void           set_beta_f (Flt beta) noexcept;
+	void           set_beta_r (Flt beta) noexcept;
+	void           set_imax (Flt imax) noexcept;
 
 
 
@@ -75,9 +75,9 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix (int it_cnt) final;
-	void           do_step () final;
-	void           do_clear_buffers () final;
+	void           do_add_to_matrix (int it_cnt) noexcept final;
+	void           do_step () noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 
@@ -88,9 +88,9 @@ private:
 	typedef std::shared_ptr <PartDiode> DiodeSPtr;
 	typedef std::shared_ptr <PartCccs> CccsSPtr;
 
-	void           compute_param ();
+	void           compute_param () noexcept;
 
-	static Flt     compute_vmax (Flt imax, Flt is, Flt vt, Flt n);
+	static Flt     compute_vmax (Flt imax, Flt is, Flt vt, Flt n) noexcept;
 
 	const Flt      _vt      = Flt (0.026); // Thermal voltage, volt
 

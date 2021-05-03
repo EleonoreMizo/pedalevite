@@ -55,10 +55,10 @@ public:
 	};
 
 	void           set_sample_freq (double sample_freq);
-	void           clear_buffers ();
-	void           set_pot (Pot pot, float val);
-	float          process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           clear_buffers () noexcept;
+	void           set_pot (Pot pot, float val) noexcept;
+	float          process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 	void           reset_stats ();

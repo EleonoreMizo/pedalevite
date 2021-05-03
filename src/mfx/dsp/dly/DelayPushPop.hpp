@@ -37,7 +37,7 @@ namespace dly
 
 
 
-void	DelayPushPop::push_sample (float x)
+void	DelayPushPop::push_sample (float x) noexcept
 {
 	assert (_pos_w != _pos_r);
 
@@ -47,7 +47,7 @@ void	DelayPushPop::push_sample (float x)
 
 
 
-float	DelayPushPop::pop_sample ()
+float	DelayPushPop::pop_sample () noexcept
 {
 	assert (_pos_w != _pos_r);
 
@@ -67,7 +67,7 @@ float	DelayPushPop::pop_sample ()
 
 
 
-int	DelayPushPop::delay (int pos) const
+int	DelayPushPop::delay (int pos) const noexcept
 {
 	return (pos - _dly) & _mask;
 }

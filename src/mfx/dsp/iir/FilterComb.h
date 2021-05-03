@@ -19,21 +19,21 @@ Template parameters:
 It must have the following functions:
 
 	IM::IM ();
-	void IM::make_interpolator (float fir_ptr [], float pos);
-	int IM::get_length ();
-	int IM::get_delay ();
+	void IM::make_interpolator (float fir_ptr [], float pos) noexcept;
+	int IM::get_length () noexcept;
+	int IM::get_delay () noexcept;
 
 - FP is an optional processor for feedback path, put after the feedback gain.
 It must have the following functions:
 
 	FP::FP ();
-	float FP::process_sample (float sample);
+	float FP::process_sample (float sample) noexcept;
 
 - OP is an optional processor for delay line output. It must have the following
 functions:
 
 	OP::OP ();
-	float OP::process_sample (float sample);
+	float OP::process_sample (float sample) noexcept;
 
 - AL is a standard allocator for the internal buffer.
 
@@ -101,35 +101,35 @@ public:
 	FilterComb &   operator = (FilterComb &&other)      = default;
 
 	void           set_sample_freq (float sample_freq);
-	inline float   get_sample_freq () const;
+	inline float   get_sample_freq () const noexcept;
 	void           set_min_freq (float freq);
-	inline float   get_min_freq () const;
-	inline float   get_max_freq () const;
-	void           set_freq (float freq);
-	inline float   get_freq () const;
-	void           set_feedback (float feedback);
-	inline float   get_feedback () const;
+	inline float   get_min_freq () const noexcept;
+	inline float   get_max_freq () const noexcept;
+	void           set_freq (float freq) noexcept;
+	inline float   get_freq () const noexcept;
+	void           set_feedback (float feedback) noexcept;
+	inline float   get_feedback () const noexcept;
 	inline FeedbackProcessor &
-	               use_feedback_proc ();
+	               use_feedback_proc () noexcept;
 	inline const FeedbackProcessor &
-	               use_feedback_proc () const;
+	               use_feedback_proc () const noexcept;
 	inline OutputProcessor &
-	               use_output_proc ();
+	               use_output_proc () noexcept;
 	inline const OutputProcessor &
-	               use_output_proc () const;
+	               use_output_proc () const noexcept;
 	inline InterpolatorMaker &
-	               use_interpolator_maker ();
+	               use_interpolator_maker () noexcept;
 	inline const InterpolatorMaker &
-	               use_interpolator_maker () const;
+	               use_interpolator_maker () const noexcept;
 
-	inline float   process_sample (float sample);
-	void           process_block (float dest_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_vff (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback);
-	void           process_block_vff_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback);
+	inline float   process_sample (float sample) noexcept;
+	void           process_block (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_vff (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback) noexcept;
+	void           process_block_vff_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback) noexcept;
 
-	void           clear_buffers ();
-	void           clear_buffers_fast ();
+	void           clear_buffers () noexcept;
+	void           clear_buffers_fast () noexcept;
 
 
 
@@ -154,14 +154,14 @@ private:
 	};
 
 	void           update_buffer ();
-	void           update_interpolator ();
-	void           update_interpolator_base_only (float d);
-	void           update_feedback ();
-	inline float   read_sample_without_feedback () const;
-	inline float   read_sample_with_feedback () const;
-	inline float   write_in_delay_line (float sample);
-	inline void 	init_variable_freq_feedback (VariableFreqFeedbackData &data, int nbr_spl, float final_freq, float final_feedback);
-	inline float   iterate_variable_freq_feedback (VariableFreqFeedbackData &data, float sample);
+	void           update_interpolator () noexcept;
+	void           update_interpolator_base_only (float d) noexcept;
+	void           update_feedback () noexcept;
+	inline float   read_sample_without_feedback () const noexcept;
+	inline float   read_sample_with_feedback () const noexcept;
+	inline float   write_in_delay_line (float sample) noexcept;
+	inline void 	init_variable_freq_feedback (VariableFreqFeedbackData &data, int nbr_spl, float final_freq, float final_feedback) noexcept;
+	inline float   iterate_variable_freq_feedback (VariableFreqFeedbackData &data, float sample) noexcept;
 
 	std::array <float, 4>         // Base
 	               _interp_base;

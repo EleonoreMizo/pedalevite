@@ -57,8 +57,8 @@ public:
 
 	static const int  _nbr_it = NIT;
 
-	void           set_rough_level (float lvl);
-	inline float   process_sample ();
+	void           set_rough_level (float lvl) noexcept;
+	inline float   process_sample () noexcept;
 
 
 

@@ -60,7 +60,7 @@ public:
 
 	typedef float VectFloat4 [_nbr_units];
 
-	               Biquad4 ();
+	               Biquad4 () noexcept;
 	               Biquad4 (const Biquad4 &other)    = default;
 	               Biquad4 (Biquad4 &&other)         = default;
 
@@ -69,37 +69,37 @@ public:
 	Biquad4 &      operator = (const Biquad4 &other) = default;
 	Biquad4 &      operator = (Biquad4 &&other)      = default;
 
-	void           neutralise ();
-	void           neutralise_one (int biq);
-	void           set_z_eq (const VectFloat4 b [3], const VectFloat4 a [3]);
-	void           set_z_eq_same (const float b [3], const float a [3]);
-	void           set_z_eq_one (int biq, const float b [3], const float a [3]);
+	void           neutralise () noexcept;
+	void           neutralise_one (int biq) noexcept;
+	void           set_z_eq (const VectFloat4 b [3], const VectFloat4 a [3]) noexcept;
+	void           set_z_eq_same (const float b [3], const float a [3]) noexcept;
+	void           set_z_eq_one (int biq, const float b [3], const float a [3]) noexcept;
 
-	void           get_z_eq (VectFloat4 b [3], VectFloat4 a [3]) const;
-	void           get_z_eq_one (int biq, float b [3], float a [3]) const;
+	void           get_z_eq (VectFloat4 b [3], VectFloat4 a [3]) const noexcept;
+	void           get_z_eq_one (int biq, float b [3], float a [3]) const noexcept;
 
-	void           copy_z_eq (const Biquad4 &other);
+	void           copy_z_eq (const Biquad4 &other) noexcept;
 
-	void           set_state_one (int biq, float const mem_x [2], const float mem_y [2]);
-	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const;
+	void           set_state_one (int biq, float const mem_x [2], const float mem_y [2]) noexcept;
+	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const noexcept;
 
-	inline void    process_block_serial_latency (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	inline void    process_block_serial_latency (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_serial_latency (float x_s);
+	               process_sample_serial_latency (float x_s) noexcept;
 
-	void           process_block_serial_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           process_block_serial_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_serial_immediate (float x_s);
+	               process_sample_serial_immediate (float x_s) noexcept;
 
-	inline void    process_block_2x2_latency (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	inline void    process_block_2x2_latency (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           process_block_2x2_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           process_block_2x2_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
-	void           clear_buffers_one (int biq);
+	void           clear_buffers () noexcept;
+	void           clear_buffers_one (int biq) noexcept;
 
 	fstb_FORCEINLINE static bool
-	               check_stability (float a1, float a2);
+	               check_stability (float a1, float a2) noexcept;
 
 
 

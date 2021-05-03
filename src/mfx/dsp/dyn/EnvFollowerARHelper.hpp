@@ -40,7 +40,7 @@ namespace dyn
 
 
 template <int ORD>
-void	EnvFollowerARHelper <ORD>::set_atk_coef (float coef)
+void	EnvFollowerARHelper <ORD>::set_atk_coef (float coef) noexcept
 {
 	assert (coef > 0);
 	assert (coef <= 1);
@@ -51,7 +51,7 @@ void	EnvFollowerARHelper <ORD>::set_atk_coef (float coef)
 
 
 template <int ORD>
-void	EnvFollowerARHelper <ORD>::set_rls_coef (float coef)
+void	EnvFollowerARHelper <ORD>::set_rls_coef (float coef) noexcept
 {
 	assert (coef > 0);
 	assert (coef <= 1);
@@ -63,7 +63,7 @@ void	EnvFollowerARHelper <ORD>::set_rls_coef (float coef)
 
 // x must be positive!
 template <int ORD>
-float	EnvFollowerARHelper <ORD>::process_sample (float x)
+float	EnvFollowerARHelper <ORD>::process_sample (float x) noexcept
 {
 	for (int flt = 0; flt < ORD; ++flt)
 	{
@@ -83,7 +83,7 @@ float	EnvFollowerARHelper <ORD>::process_sample (float x)
 // src_ptr must contain only positive values!
 // Can work in-place
 template <int ORD>
-void	EnvFollowerARHelper <ORD>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	EnvFollowerARHelper <ORD>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -130,7 +130,7 @@ void	EnvFollowerARHelper <ORD>::process_block (float dst_ptr [], const float src
 
 
 template <int ORD>
-void	EnvFollowerARHelper <ORD>::clear_buffers ()
+void	EnvFollowerARHelper <ORD>::clear_buffers () noexcept
 {
 	_state.fill (0);
 }

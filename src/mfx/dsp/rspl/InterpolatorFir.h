@@ -63,13 +63,16 @@ public:
 
 	static const int PHASE_LEN = Convolver::PHASE_LEN;
 
-	               InterpolatorFir ();
-	virtual        ~InterpolatorFir () {}
+	               InterpolatorFir () = default;
+	               InterpolatorFir (InterpolatorFir &&other) = default;
+	               ~InterpolatorFir () = default;
+	InterpolatorFir &
+	               operator = (InterpolatorFir &&other) = default;
 
-	void           set_convolver (IT &convolver);
-	void           set_group_delay (double grp_dly);
+	void           set_convolver (IT &convolver) noexcept;
+	void           set_group_delay (double grp_dly) noexcept;
 
-	bool           is_ready () const;
+	bool           is_ready () const noexcept;
 
 
 
@@ -79,13 +82,13 @@ protected:
 
 	// InterpolatorInterface
 	virtual void   do_set_ovrspl_l2 (int ovrspl_l2);
-	virtual int    do_get_impulse_len () const;
+	virtual int    do_get_impulse_len () const noexcept;
 	virtual fstb::FixedPoint
-	               do_get_group_delay () const;
+	               do_get_group_delay () const noexcept;
 
-	virtual void   do_start (int nbr_chn);
-	virtual int    do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
-	virtual float  do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate);
+	virtual void   do_start (int nbr_chn) noexcept;
+	virtual int    do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept;
+	virtual float  do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) noexcept;
 
 
 
@@ -93,18 +96,18 @@ protected:
 
 private:
 
-	int            process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
-	int            process_block_mono (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	int            process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept;
+	int            process_block_mono (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept;
 
-	int            process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
-	int            process_block_mono_sparse (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
+	int            process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index) noexcept;
+	int            process_block_mono_sparse (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index) noexcept;
 
 	SnhTool        _snh_tool;
 	fstb::FixedPoint
-	               _grp_dly;
-	Convolver *    _conv_ptr;  // 0 = not initialised
-	int            _nbr_chn;
-	int            _ovrspl_l2; // Log base 2 of the oversampling. >= 0.
+	               _grp_dly   = 0;
+	Convolver *    _conv_ptr  = nullptr;   // 0 = not initialised
+	int            _nbr_chn   = 1;
+	int            _ovrspl_l2 = 0;   // Log base 2 of the oversampling. >= 0.
 
 
 
@@ -112,11 +115,11 @@ private:
 
 private:
 
-	               InterpolatorFir (const InterpolatorFir &other);
+	               InterpolatorFir (const InterpolatorFir &other) = delete;
 	InterpolatorFir &
-	               operator = (const InterpolatorFir &other);
-	bool           operator == (const InterpolatorFir &other);
-	bool           operator != (const InterpolatorFir &other);
+	               operator = (const InterpolatorFir &other)      = delete;
+	bool           operator == (const InterpolatorFir &other)     = delete;
+	bool           operator != (const InterpolatorFir &other)     = delete;
 
 };	// class InterpolatorFir
 

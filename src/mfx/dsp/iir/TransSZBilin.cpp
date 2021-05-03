@@ -61,7 +61,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	TransSZBilin::prewarp_freq_rel_1 (double f0, double fref, double fs)
+double	TransSZBilin::prewarp_freq_rel_1 (double f0, double fref, double fs) noexcept
 {
 	assert (f0 > 0);
 	assert (f0 < fs * 0.5);
@@ -95,7 +95,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	TransSZBilin::prewarp_freq_rel (double f0, double fref, double fs)
+double	TransSZBilin::prewarp_freq_rel (double f0, double fref, double fs) noexcept
 {
 	return prewarp_freq_rel_1 (f0, fref, fs) * fref;
 }
@@ -116,7 +116,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	TransSZBilin::prewarp_freq_rel_mul (double f0, double fref, double fs)
+double	TransSZBilin::prewarp_freq_rel_mul (double f0, double fref, double fs) noexcept
 {
 	assert (fs > 0);
 	assert (f0 > 0);
@@ -152,7 +152,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-std::complex <double>	TransSZBilin::prewarp_root_rel (const std::complex <double> &root, double fref, double fs)
+std::complex <double>	TransSZBilin::prewarp_root_rel (const std::complex <double> &root, double fref, double fs) noexcept
 {
 	assert (fs > 0);
 	assert (root.real () <= 0);
@@ -184,7 +184,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	TransSZBilin::prewarp_biquad (double b [3], double a [3], double fref, double fs)
+void	TransSZBilin::prewarp_biquad (double b [3], double a [3], double fref, double fs) noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -202,7 +202,7 @@ void	TransSZBilin::prewarp_biquad (double b [3], double a [3], double fref, doub
 
 
 
-void	TransSZBilin::map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const float s_eq_b [3], const float s_eq_a [3], float k)
+void	TransSZBilin::map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const float s_eq_b [3], const float s_eq_a [3], float k) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -277,7 +277,7 @@ void	TransSZBilin::map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const 
 
 
 
-void	TransSZBilin::map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 z_eq_a [3], const fstb::ToolsSimd::VectF32 s_eq_b [3], const fstb::ToolsSimd::VectF32 s_eq_a [3], fstb::ToolsSimd::VectF32 k)
+void	TransSZBilin::map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 z_eq_a [3], const fstb::ToolsSimd::VectF32 s_eq_b [3], const fstb::ToolsSimd::VectF32 s_eq_a [3], fstb::ToolsSimd::VectF32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -323,7 +323,7 @@ void	TransSZBilin::map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb:
 
 
 
-void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [2], const float s_eq_a [2], float k)
+void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [2], const float s_eq_a [2], float k) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -381,7 +381,7 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2
 
 
 
-void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 z_eq_a [2], const fstb::ToolsSimd::VectF32 s_eq_b [2], const fstb::ToolsSimd::VectF32 s_eq_a [2], fstb::ToolsSimd::VectF32 k)
+void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 z_eq_a [2], const fstb::ToolsSimd::VectF32 s_eq_b [2], const fstb::ToolsSimd::VectF32 s_eq_a [2], fstb::ToolsSimd::VectF32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -413,7 +413,7 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [
 
 
 
-void	TransSZBilin::map_s_to_z_ap1_approx (float z_eq_b [2], float k)
+void	TransSZBilin::map_s_to_z_ap1_approx (float z_eq_b [2], float k) noexcept
 {
 	assert (z_eq_b != nullptr);
 
@@ -423,7 +423,7 @@ void	TransSZBilin::map_s_to_z_ap1_approx (float z_eq_b [2], float k)
 
 
 
-void	TransSZBilin::map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 k)
+void	TransSZBilin::map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 
@@ -433,7 +433,7 @@ void	TransSZBilin::map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], f
 
 
 
-float	TransSZBilin::map_s_to_z_ap1_approx_b0 (float k)
+float	TransSZBilin::map_s_to_z_ap1_approx_b0 (float k) noexcept
 {
 	const float    a1z = 1 - k;
 	const float    a0z = 1 + k;
@@ -455,7 +455,7 @@ float	TransSZBilin::map_s_to_z_ap1_approx_b0 (float k)
 
 
 
-fstb::ToolsSimd::VectF32	TransSZBilin::map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd::VectF32 k)
+fstb::ToolsSimd::VectF32	TransSZBilin::map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd::VectF32 k) noexcept
 {
 	const auto     one = fstb::ToolsSimd::set1_f32 (1);
 	const auto     a1z = one - k;
@@ -473,7 +473,7 @@ fstb::ToolsSimd::VectF32	TransSZBilin::map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd
 
 
 
-void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k)
+void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k) noexcept
 {
 	assert (z_eq_b != nullptr);
 
@@ -504,7 +504,7 @@ void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float
 
 
 
-void	TransSZBilin::map_s_to_z_ap2_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 s_eq_b1, fstb::ToolsSimd::VectF32 k)
+void	TransSZBilin::map_s_to_z_ap2_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 s_eq_b1, fstb::ToolsSimd::VectF32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 

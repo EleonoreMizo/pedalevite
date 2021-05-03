@@ -29,7 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
-#include <cstring>
 
 
 
@@ -59,7 +58,7 @@ Throws: Nothing
 */
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_sample_data (const SampleTable &sample_data)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_sample_data (const SampleTable &sample_data) noexcept
 {
 	_osc.set_sample_data (sample_data);
 }
@@ -79,7 +78,7 @@ Throws: Nothing
 */
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-const typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::SampleTable &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_sample_data () const
+const typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::SampleTable &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_sample_data () const noexcept
 {
 	return _osc.use_sample_data ();
 }
@@ -87,7 +86,7 @@ const typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::SampleTable &	OscSampl
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::SampleTable &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_sample_data ()
+typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::SampleTable &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_sample_data () noexcept
 {
 	return _osc.use_sample_data ();
 }
@@ -110,7 +109,7 @@ Throws: Nothing
 */
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_steptable (AntialiasedStep &steptable)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_steptable (AntialiasedStep &steptable) noexcept
 {
 	_step_ptr = &steptable;
 }
@@ -130,7 +129,7 @@ Throws: Nothing
 */
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-const typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::AntialiasedStep &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_steptable () const
+const typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::AntialiasedStep &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_steptable () const noexcept
 {
 	assert (_step_ptr != 0);
 
@@ -140,7 +139,7 @@ const typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::AntialiasedStep &	OscS
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::AntialiasedStep &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_steptable ()
+typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::AntialiasedStep &	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::use_steptable () noexcept
 {
 	assert (_step_ptr != 0);
 
@@ -165,7 +164,7 @@ Throws: Nothing
 */
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_bandlimit (int32_t limit)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_bandlimit (int32_t limit) noexcept
 {
 	_osc.set_bandlimit (limit);
 }
@@ -173,7 +172,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_bandlimit (int32_t limit)
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_bandlimit () const
+int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_bandlimit () const noexcept
 {
 	return _osc.get_bandlimit ();
 }
@@ -181,7 +180,7 @@ int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_bandlimit () const
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_base_pitch (int32_t pitch)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_base_pitch (int32_t pitch) noexcept
 {
 	_base_pitch = pitch;
 }
@@ -189,7 +188,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_base_pitch (int32_t pitch)
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_base_pitch () const
+int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_base_pitch () const noexcept
 {
 	return _base_pitch;
 }
@@ -197,7 +196,7 @@ int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_base_pitch () const
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_master_pitch (int32_t pitch)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_master_pitch (int32_t pitch) noexcept
 {
 	assert (pitch < get_base_pitch ());
 
@@ -208,7 +207,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_master_pitch (int32_t pitch)
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_master_pitch () const
+int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_master_pitch () const noexcept
 {
 	return _master_pitch;
 }
@@ -216,7 +215,7 @@ int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_master_pitch () const
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_slave_pitch (int32_t pitch)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_slave_pitch (int32_t pitch) noexcept
 {
 	_osc.set_pitch (pitch);
 	_osc.get_table_rate (_wave_freq_spl);
@@ -227,7 +226,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_slave_pitch (int32_t pitch)
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_slave_pitch () const
+int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_slave_pitch () const noexcept
 {
 	return _osc.get_pitch ();
 }
@@ -235,7 +234,7 @@ int32_t	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_slave_pitch () const
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_sync_pos (const fstb::FixedPoint &pos)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_sync_pos (const fstb::FixedPoint &pos) noexcept
 {
 	assert (pos.get_int_val () >= -SampleTable::UNROLL_PRE);
 	assert (pos.get_int_val () < _osc.use_sample_data ().get_table_len (0) + SampleTable::UNROLL_POST);
@@ -247,7 +246,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_sync_pos (const fstb::FixedP
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_sync_speed (const fstb::FixedPoint &spd)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_sync_speed (const fstb::FixedPoint &spd) noexcept
 {
 	_sync_speed = spd;
 	update_sync_speed ();
@@ -266,7 +265,7 @@ Throws: Nothing
 */
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-int	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_wave_length () const
+int	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_wave_length () const noexcept
 {
 	fstb::FixedPoint  rate;
 
@@ -281,7 +280,7 @@ int	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_wave_length () const
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_slave_pos (fstb::FixedPoint &pos) const
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_slave_pos (fstb::FixedPoint &pos) const noexcept
 {
 	_osc.get_playback_pos (pos);
 }
@@ -289,7 +288,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::get_slave_pos (fstb::FixedPoint 
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_slave_pos (const fstb::FixedPoint &pos)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_slave_pos (const fstb::FixedPoint &pos) noexcept
 {
 	_osc.set_playback_pos (pos);
 }
@@ -297,13 +296,9 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_slave_pos (const fstb::Fixed
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::clear_buffers ()
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::clear_buffers () noexcept
 {
-	memset (
-		&_buffer [0],
-		0,
-		_buffer.size () * sizeof (_buffer [0])
-	);
+	_buffer.fill (CalcDataType (0));
 
 	_buf_pos = 0;
 	_spl_to_next_sync.set_val (0, 0x00000001);
@@ -324,7 +319,7 @@ Throws: Nothing
 */
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::CalcDataType	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::process_sample ()
+typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::CalcDataType	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::process_sample () noexcept
 {
 	assert (_step_ptr != 0);
 	assert (_period.get_val_dbl () > 0);
@@ -343,7 +338,7 @@ typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::CalcDataType	OscSampleSyncHa
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::process_block (CalcDataType data_ptr [], int nbr_spl)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::process_block (CalcDataType data_ptr [], int nbr_spl) noexcept
 {
 	assert (_step_ptr != nullptr);
 	assert (_period.get_val_dbl () > 0);
@@ -395,7 +390,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::process_block (CalcDataType data
 
 
 template <typename T>
-static fstb_FORCEINLINE constexpr T	OscSampleSync_scale (T data, T scale)
+static fstb_FORCEINLINE constexpr T	OscSampleSync_scale (T data, T scale) noexcept
 {
 	return data * scale;
 }
@@ -406,7 +401,7 @@ static fstb_FORCEINLINE constexpr T	OscSampleSync_scale (T data, T scale)
 // N should be less than 18
 // Mutiplication intermediate result is stored on 32 bit
 template <>
-fstb_FORCEINLINE constexpr int32_t	OscSampleSync_scale (int32_t data, int32_t scale)
+fstb_FORCEINLINE constexpr int32_t	OscSampleSync_scale (int32_t data, int32_t scale) noexcept
 {
 	return (data * scale) >> (16-2);
 }
@@ -418,7 +413,7 @@ fstb_FORCEINLINE constexpr int32_t	OscSampleSync_scale (int32_t data, int32_t sc
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_master_pitch ()
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_master_pitch () noexcept
 {
 	const int      rel_pitch = _base_pitch - _master_pitch;
 
@@ -444,7 +439,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_master_pitch ()
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_sync_pos ()
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_sync_pos () noexcept
 {
 	SampleTable::convert_position (
 		_sync_pos_table,
@@ -456,7 +451,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_sync_pos ()
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_sync_speed ()
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_sync_speed () noexcept
 {
 	SampleTable::convert_position (
 		_sync_speed_table,
@@ -468,7 +463,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_sync_speed ()
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::generate_block (CalcDataType data_ptr [], int nbr_spl)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::generate_block (CalcDataType data_ptr [], int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -487,17 +482,15 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::generate_block (CalcDataType dat
 		const int      write_pos = rbv.get_curs_pos (0);
 		const int      read_pos  = rbv.get_curs_pos (1);
 
-		const int      byte_len  = len * sizeof (_buffer [0]);
-
 		// Generate on one half-buffer
 		_osc.process_block_mix (&_buffer [write_pos + half_buf_write], len);
 		const int      pos_hbr = read_pos + half_buf_read;
-		memcpy (&data_ptr [pos], &_buffer [pos_hbr], byte_len);
+		fstb::copy_no_overlap (&data_ptr [pos], &_buffer [pos_hbr], len);
 
 		// Clean on the other one
 		const int      half_buf_clean = half_buf_write ^ BUF_SEL_BIT;
 		const int      pos_hbc        = write_pos + half_buf_clean;
-		memset (&_buffer [pos_hbc], 0, byte_len);
+		std::fill (&_buffer [pos_hbc], &_buffer [pos_hbc + len], CalcDataType (0));
 
 		// Swap buffers
 		if (write_pos + len == HALF_BUF_SIZE)
@@ -518,7 +511,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::generate_block (CalcDataType dat
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::CalcDataType	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::generate_sample ()
+typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::CalcDataType	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::generate_sample () noexcept
 {
 	const CalcDataType   temp = _osc.process_sample ();
 
@@ -538,7 +531,7 @@ typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::CalcDataType	OscSampleSyncHa
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::check_and_handle_sync_point ()
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::check_and_handle_sync_point () noexcept
 {
 	if (_spl_to_next_sync.get_ceil () == 0)
 	{
@@ -573,7 +566,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::check_and_handle_sync_point ()
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::add_step (CalcDataType step_amplitude)
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::add_step (CalcDataType step_amplitude) noexcept
 {
 	assert (_step_ptr != nullptr);
 	assert (_spl_to_next_sync.get_ceil () == 0);
@@ -599,7 +592,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::add_step (CalcDataType step_ampl
 
 
 template <typename OSC, int STPPLEN, int STPNPL2>
-void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::fix_sync_pos_table ()
+void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::fix_sync_pos_table () noexcept
 {
 	int            spt_int     = _sync_pos_table.get_int_val ();
 	const int      table_index = _osc.get_cur_table ();

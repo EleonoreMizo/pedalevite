@@ -37,7 +37,7 @@ namespace nz
 
 
 
-float	WhiteFast::process_sample ()
+float	WhiteFast::process_sample () noexcept
 {
 	return gen_new_val (_state);
 }
@@ -52,7 +52,7 @@ float	WhiteFast::process_sample ()
 
 
 
-float	WhiteFast::gen_new_val (uint32_t &state)
+float	WhiteFast::gen_new_val (uint32_t &state) noexcept
 {
 	state  = (state * _a + _c) & _mm;
 

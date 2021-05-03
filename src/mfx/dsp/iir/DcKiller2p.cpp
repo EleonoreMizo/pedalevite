@@ -45,7 +45,7 @@ namespace iir
 
 
 
-void	DcKiller2p::set_sample_freq (double sample_freq)
+void	DcKiller2p::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -55,7 +55,7 @@ void	DcKiller2p::set_sample_freq (double sample_freq)
 
 
 
-void	DcKiller2p::set_cutoff_freq (float f0)
+void	DcKiller2p::set_cutoff_freq (float f0) noexcept
 {
 	assert (f0 > 0);
 	assert (f0 < _sample_freq * 0.5f);
@@ -66,7 +66,7 @@ void	DcKiller2p::set_cutoff_freq (float f0)
 
 
 
-void	DcKiller2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DcKiller2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);
@@ -81,7 +81,7 @@ void	DcKiller2p::process_block (float dst_ptr [], const float src_ptr [], int nb
 
 
 
-void	DcKiller2p::clear_buffers ()
+void	DcKiller2p::clear_buffers () noexcept
 {
 	_v1 = 0;
 	_v2 = 0;
@@ -97,7 +97,7 @@ void	DcKiller2p::clear_buffers ()
 
 
 
-void	DcKiller2p::update_coefs ()
+void	DcKiller2p::update_coefs () noexcept
 {
 	constexpr double   q   = fstb::SQRT2 * 0.5;
 	const double       g2  = tan (fstb::PI * _cutoff_freq / _sample_freq);

@@ -53,14 +53,14 @@ public:
 
 	void           reserve (int len);
 	void           set_len (int len, float x = 0);
-	void           set_rank (int rank);
-	void           fill (float x);
+	void           set_rank (int rank) noexcept;
+	void           fill (float x) noexcept;
 
-	float          process_sample (float x);
-	float          get_nth (int rank) const;
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	float          process_sample (float x) noexcept;
+	float          get_nth (int rank) const noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -85,9 +85,9 @@ private:
 	};
 	typedef std::vector <Node> NodeList;
 
-	void           insert_new_remove_old (float x);
-	int            find_ni (int rank);
-	void           check_ok ();
+	void           insert_new_remove_old (float x) noexcept;
+	int            find_ni (int rank) noexcept;
+	void           check_ok () noexcept;
 
 	NodeList       _node_list = NodeList (1, Node ({ _nil, _nil, 0.f })); // Stored by insertion time (ring buffer), linked by increasing value
 	int            _ni_first  = 0;      // Node index, first from the list

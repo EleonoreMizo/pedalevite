@@ -49,7 +49,7 @@ class MeterRmsPeakHold4Simd
 
 public:
 
-	               MeterRmsPeakHold4Simd ();
+	               MeterRmsPeakHold4Simd () noexcept;
 	               MeterRmsPeakHold4Simd (const MeterRmsPeakHold4Simd &other) = default;
 	               MeterRmsPeakHold4Simd (MeterRmsPeakHold4Simd &&other) = default;
 	virtual        ~MeterRmsPeakHold4Simd ()                             = default;
@@ -59,21 +59,21 @@ public:
 	MeterRmsPeakHold4Simd &
 	               operator = (MeterRmsPeakHold4Simd &&other)            = default;
 
-	void           set_sample_freq (double freq);
-	void           set_hold_time_s (double t);
-	void           set_attack_time_s (double t);
-	void           set_release_time_s (double t);
+	void           set_sample_freq (double freq) noexcept;
+	void           set_hold_time_s (double t) noexcept;
+	void           set_attack_time_s (double t) noexcept;
+	void           set_release_time_s (double t) noexcept;
 
-	void           clear_buffers ();
-	void           process_block (const float * const data_ptr [4], int nbr_spl);
-	void           process_sample (fstb::ToolsSimd::VectF32 x);
+	void           clear_buffers () noexcept;
+	void           process_block (const float * const data_ptr [4], int nbr_spl) noexcept;
+	void           process_sample (fstb::ToolsSimd::VectF32 x) noexcept;
 	fstb::ToolsSimd::VectF32
-	               get_peak () const;
+	               get_peak () const noexcept;
 	fstb::ToolsSimd::VectF32
-	               get_peak_hold () const;
+	               get_peak_hold () const noexcept;
 	fstb::ToolsSimd::VectF32
-	               get_rms () const;
-	void           clear_peak ();
+	               get_rms () const noexcept;
+	void           clear_peak () noexcept;
 
 
 
@@ -87,9 +87,9 @@ protected:
 
 private:
 
-	void           update_times ();
-	inline void    process_sample_peak (fstb::ToolsSimd::VectF32 x_a, fstb::ToolsSimd::VectF32 &peak_max, fstb::ToolsSimd::VectF32 &peak_hold, fstb::ToolsSimd::VectF32 &hold_cnt, float coef_r_flt, int step_int) const;
-	inline void    process_sample_rms (fstb::ToolsSimd::VectF32 x, fstb::ToolsSimd::VectF32 &rms_sq) const;
+	void           update_times () noexcept;
+	inline void    process_sample_peak (fstb::ToolsSimd::VectF32 x_a, fstb::ToolsSimd::VectF32 &peak_max, fstb::ToolsSimd::VectF32 &peak_hold, fstb::ToolsSimd::VectF32 &hold_cnt, float coef_r_flt, int step_int) const noexcept;
+	inline void    process_sample_rms (fstb::ToolsSimd::VectF32 x, fstb::ToolsSimd::VectF32 &rms_sq) const noexcept;
 
 	double         _hold_time_s;     // Hold time, in s
 	double         _attack_time_s;   // Attack time, in s

@@ -64,7 +64,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	TransSZBilin::prewarp_freq (double f0, double fs)
+double	TransSZBilin::prewarp_freq (double f0, double fs) noexcept
 {
 	assert (f0 >= 0);
 	assert (f0 < fs * 0.5);
@@ -91,7 +91,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	TransSZBilin::unwarp_freq (double f_w, double fs)
+double	TransSZBilin::unwarp_freq (double f_w, double fs) noexcept
 {
 	assert (f_w >= 0);
 
@@ -135,7 +135,7 @@ Throws: Nothing
 */
 
 template <class TS, class TZ>
-void	TransSZBilin::map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs)
+void	TransSZBilin::map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -178,7 +178,7 @@ void	TransSZBilin::map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3]
 
 
 template <class TS, class TZ>
-void	TransSZBilin::map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s_eq_b [2], const TS s_eq_a [2], double f0, double fs)
+void	TransSZBilin::map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s_eq_b [2], const TS s_eq_a [2], double f0, double fs) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -213,7 +213,7 @@ void	TransSZBilin::map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s
 
 // 1st-order all-pass filter
 template <class TS, class TZ>
-void	TransSZBilin::map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs)
+void	TransSZBilin::map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs) noexcept
 {
 	assert (z_eq_b != nullptr);
 
@@ -242,7 +242,7 @@ void	TransSZBilin::map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs)
 
 // 2nd-order all-pass filter
 template <class TS, class TZ>
-void	TransSZBilin::map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double fs)
+void	TransSZBilin::map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double fs) noexcept
 {
 	assert (z_eq_b != nullptr);
 
@@ -310,7 +310,7 @@ as2 = (az0 - az1 + az2) * 0.25 / (k * k)
 */
 
 template <class TS, class TZ>
-void	TransSZBilin::map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3], const TZ z_eq_a [3], double f0, double fs)
+void	TransSZBilin::map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3], const TZ z_eq_a [3], double f0, double fs) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -333,7 +333,7 @@ void	TransSZBilin::map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3]
 
 
 template <class TS, class TZ>
-void	TransSZBilin::map_z_to_s_one_pole (TS s_eq_b [2], TS s_eq_a [2], const TZ z_eq_b [2], const TZ z_eq_a [2], double f0, double fs)
+void	TransSZBilin::map_z_to_s_one_pole (TS s_eq_b [2], TS s_eq_a [2], const TZ z_eq_b [2], const TZ z_eq_a [2], double f0, double fs) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -355,7 +355,7 @@ void	TransSZBilin::map_z_to_s_one_pole (TS s_eq_b [2], TS s_eq_a [2], const TZ z
 // f = f0 / fs
 // returns an approximation of 1 / tan (pi * f)
 // ~ (1 - (pi^2*f^2)/3 - (pi^4*f^4)/36) / (pi*f)
-float	TransSZBilin::compute_k_approx (float f)
+float	TransSZBilin::compute_k_approx (float f) noexcept
 {
 	const float    pi2      = float (fstb::PI * fstb::PI);
 	const float    c0       = float (1 / fstb::PI);
@@ -378,7 +378,7 @@ float	TransSZBilin::compute_k_approx (float f)
 
 
 
-fstb::ToolsSimd::VectF32	TransSZBilin::compute_k_approx (fstb::ToolsSimd::VectF32 f)
+fstb::ToolsSimd::VectF32	TransSZBilin::compute_k_approx (fstb::ToolsSimd::VectF32 f) noexcept
 {
 	const float    pi2    = float (fstb::PI * fstb::PI);
 	const auto     c0     = fstb::ToolsSimd::set1_f32 (float (1 / fstb::PI));

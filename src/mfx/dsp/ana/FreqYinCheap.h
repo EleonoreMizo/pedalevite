@@ -67,12 +67,12 @@ class FreqYinCheap
 public:
 
 	void           set_sample_freq (double sample_freq);
-	void           set_freq_bot (float f);
-	void           set_freq_top (float f);
-	void           set_smoothing (float responsiveness, float thr);
-	void           clear_buffers ();
-	float          process_block (const float spl_ptr [], int nbr_spl);
-	float          process_sample (float x);
+	void           set_freq_bot (float f) noexcept;
+	void           set_freq_top (float f) noexcept;
+	void           set_smoothing (float responsiveness, float thr) noexcept;
+	void           clear_buffers () noexcept;
+	float          process_block (const float spl_ptr [], int nbr_spl) noexcept;
+	float          process_sample (float x) noexcept;
 
 
 
@@ -86,9 +86,9 @@ protected:
 
 private:
 
-	void           update_freq_bot_param ();
-	void           update_freq_top_param ();
-	void           analyse_sample ();
+	void           update_freq_bot_param () noexcept;
+	void           update_freq_top_param () noexcept;
+	void           analyse_sample () noexcept;
 
 	const float    _min_freq    = 20.0f; // Hz
 	const float    _threshold   = 0.1f;

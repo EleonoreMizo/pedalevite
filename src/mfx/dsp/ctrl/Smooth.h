@@ -57,20 +57,20 @@ public:
 	Smooth &       operator = (const Smooth &other) = default;
 	Smooth &       operator = (Smooth &&other)      = default;
 
-	void           set_sample_freq (double sample_freq);
-	void           set_base_freq (float freq);
-	void           set_sensitivity (float s);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_base_freq (float freq) noexcept;
+	void           set_sensitivity (float s) noexcept;
 
-	void           force_val (float x);
-	float          process_sample (float x);
-	float          skip_block (int nbr_spl);
-	float          process_block (float x, int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           force_val (float x) noexcept;
+	float          process_sample (float x) noexcept;
+	float          skip_block (int nbr_spl) noexcept;
+	float          process_block (float x, int nbr_spl) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	float          get_target_val () const;
-	float          get_smooth_val () const;
+	float          get_target_val () const noexcept;
+	float          get_smooth_val () const noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -84,9 +84,9 @@ protected:
 
 private:
 
-	void           update_g0_cond ();
-	float          compute_g0 (float f0);
-	float          process_sample (float x, float g0, float sense);
+	void           update_g0_cond () noexcept;
+	float          compute_g0 (float f0) noexcept;
+	float          process_sample (float x, float g0, float sense) noexcept;
 
 	// Parameters
 	float          _sample_freq = 0; // Sampling rate, Hz, > 0. 0 = not set

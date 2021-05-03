@@ -41,7 +41,7 @@ namespace spat
 
 
 template <typename T>
-fstb_FORCEINLINE void	DelayAllPass_mac_vec_std (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_1_ptr, const T * fstb_RESTRICT src_2_ptr, T coef, int nbr_spl)
+fstb_FORCEINLINE void	DelayAllPass_mac_vec_std (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_1_ptr, const T * fstb_RESTRICT src_2_ptr, T coef, int nbr_spl) noexcept
 {
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
@@ -50,7 +50,7 @@ fstb_FORCEINLINE void	DelayAllPass_mac_vec_std (T * fstb_RESTRICT dst_ptr, const
 }
 
 template <typename T>
-fstb_FORCEINLINE void	DelayAllPass_mac_vec (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_1_ptr, const T * fstb_RESTRICT src_2_ptr, T coef, int nbr_spl)
+fstb_FORCEINLINE void	DelayAllPass_mac_vec (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_1_ptr, const T * fstb_RESTRICT src_2_ptr, T coef, int nbr_spl) noexcept
 {
 	assert (dst_ptr != src_1_ptr);
 	assert (dst_ptr != src_2_ptr);
@@ -62,7 +62,7 @@ fstb_FORCEINLINE void	DelayAllPass_mac_vec (T * fstb_RESTRICT dst_ptr, const T *
 #if defined (fstb_HAS_SIMD)
 
 template <>
-fstb_FORCEINLINE void	DelayAllPass_mac_vec (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_1_ptr, const float * fstb_RESTRICT src_2_ptr, float coef, int nbr_spl)
+fstb_FORCEINLINE void	DelayAllPass_mac_vec (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_1_ptr, const float * fstb_RESTRICT src_2_ptr, float coef, int nbr_spl) noexcept
 {
 	const auto        c = fstb::ToolsSimd::set1_f32 (coef);
 
@@ -117,7 +117,7 @@ void	DelayAllPass <T, NPL2>::set_max_len (int len)
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::set_delay_flt (float len_spl)
+void	DelayAllPass <T, NPL2>::set_delay_flt (float len_spl) noexcept
 {
 	set_delay_fix (fstb::conv_int_fast (len_spl * _nbr_phases));
 }
@@ -125,7 +125,7 @@ void	DelayAllPass <T, NPL2>::set_delay_flt (float len_spl)
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::set_delay_fix (int len_fixp)
+void	DelayAllPass <T, NPL2>::set_delay_fix (int len_fixp) noexcept
 {
 	assert (len_fixp >= _delay_min * _nbr_phases);
 
@@ -135,7 +135,7 @@ void	DelayAllPass <T, NPL2>::set_delay_fix (int len_fixp)
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::set_coef (T coef)
+void	DelayAllPass <T, NPL2>::set_coef (T coef) noexcept
 {
 	assert (coef >= T (-1.f));
 	assert (coef <= T (+1.f));
@@ -157,7 +157,7 @@ step ();
 */
 
 template <typename T, int NPL2>
-std::pair <T, T>	DelayAllPass <T, NPL2>::read (T x) const
+std::pair <T, T>	DelayAllPass <T, NPL2>::read (T x) const noexcept
 {
 	const T        u { _delay.read () };
 	const T        v { x - u * _coef };
@@ -169,7 +169,7 @@ std::pair <T, T>	DelayAllPass <T, NPL2>::read (T x) const
 
 
 template <typename T, int NPL2>
-T	DelayAllPass <T, NPL2>::read_at (int delay) const
+T	DelayAllPass <T, NPL2>::read_at (int delay) const noexcept
 {
 	return _delay.read_at (delay);
 }
@@ -177,7 +177,7 @@ T	DelayAllPass <T, NPL2>::read_at (int delay) const
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::write (T v)
+void	DelayAllPass <T, NPL2>::write (T v) noexcept
 {
 	_delay.write (v);
 }
@@ -185,7 +185,7 @@ void	DelayAllPass <T, NPL2>::write (T v)
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::step ()
+void	DelayAllPass <T, NPL2>::step () noexcept
 {
 	_delay.step ();
 }
@@ -193,7 +193,7 @@ void	DelayAllPass <T, NPL2>::step ()
 
 
 template <typename T, int NPL2>
-T	DelayAllPass <T, NPL2>::process_sample (T x)
+T	DelayAllPass <T, NPL2>::process_sample (T x) noexcept
 {
 	T              y { _delay.read () };
 	x -= y * _coef;
@@ -207,7 +207,7 @@ T	DelayAllPass <T, NPL2>::process_sample (T x)
 
 
 template <typename T, int NPL2>
-int	DelayAllPass <T, NPL2>::get_max_block_len () const
+int	DelayAllPass <T, NPL2>::get_max_block_len () const noexcept
 {
 	return _delay.get_max_block_len ();
 }
@@ -216,7 +216,7 @@ int	DelayAllPass <T, NPL2>::get_max_block_len () const
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const
+void	DelayAllPass <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const noexcept
 {
 	_delay.read_block_at (dst_ptr, delay, len);
 }
@@ -224,7 +224,7 @@ void	DelayAllPass <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) co
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::process_block (T dst_ptr [], const T src_ptr [], int nbr_spl)
+void	DelayAllPass <T, NPL2>::process_block (T dst_ptr [], const T src_ptr [], int nbr_spl) noexcept
 {
 	assert (src_ptr != nullptr);
 	assert (dst_ptr != nullptr);
@@ -260,7 +260,7 @@ void	DelayAllPass <T, NPL2>::process_block (T dst_ptr [], const T src_ptr [], in
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::process_block_var_dly (T dst_ptr [], const T src_ptr [], const int32_t dly_frc_ptr [], int nbr_spl)
+void	DelayAllPass <T, NPL2>::process_block_var_dly (T dst_ptr [], const T src_ptr [], const int32_t dly_frc_ptr [], int nbr_spl) noexcept
 {
 	assert (src_ptr != nullptr);
 	assert (dst_ptr != nullptr);
@@ -297,7 +297,7 @@ void	DelayAllPass <T, NPL2>::process_block_var_dly (T dst_ptr [], const T src_pt
 
 
 template <typename T, int NPL2>
-void	DelayAllPass <T, NPL2>::clear_buffers ()
+void	DelayAllPass <T, NPL2>::clear_buffers () noexcept
 {
 	_delay.clear_buffers ();
 }

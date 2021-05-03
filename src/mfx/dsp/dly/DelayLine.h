@@ -60,17 +60,17 @@ public:
 
 	void           set_interpolator (rspl::InterpolatorInterface &interp);
 	const rspl::InterpolatorInterface &
-	               use_interpolator () const;
+	               use_interpolator () const noexcept;
 
 	void           set_sample_freq (double sample_freq, int ovrspl_l2);
 	void           set_max_delay_time (double max_time);
-	bool           is_ready () const;
-	void           clear_buffers ();
+	bool           is_ready () const noexcept;
+	void           clear_buffers () noexcept;
 
 	// Real-time functions
-	void           push_block (const float src_ptr [], int nbr_spl);
-	void           push_sample (float src);
-	void           move_write_head (int offset);
+	void           push_block (const float src_ptr [], int nbr_spl) noexcept;
+	void           push_sample (float src) noexcept;
+	void           move_write_head (int offset) noexcept;
 
 
 
@@ -79,13 +79,13 @@ public:
 protected:
 
 	// DelayLineReadInterface
-	double         do_get_sample_freq () const final;
-	int            do_get_ovrspl_l2 () const final;
-	double         do_get_min_delay_time () const final;
-	double         do_get_max_delay_time () const final;
-	int            do_estimate_max_one_shot_proc_w_feedback (double min_delay_time) const final;
-	void           do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const final;
-	float          do_read_sample (float delay) const final;
+	double         do_get_sample_freq () const noexcept final;
+	int            do_get_ovrspl_l2 () const noexcept final;
+	double         do_get_min_delay_time () const noexcept final;
+	double         do_get_max_delay_time () const noexcept final;
+	int            do_estimate_max_one_shot_proc_w_feedback (double min_delay_time) const noexcept final;
+	void           do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const noexcept final;
+	float          do_read_sample (float delay) const noexcept final;
 
 
 

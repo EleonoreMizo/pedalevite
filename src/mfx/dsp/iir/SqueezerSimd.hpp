@@ -48,23 +48,7 @@ namespace iir
 
 
 template <bool BR, class LFOP>
-SqueezerSimd <BR, LFOP>::SqueezerSimd ()
-:	_y ()
-,	_x (0)
-,	_r (0)
-,	_p (0)
-,	_g (1)
-,	_lofi_op ()
-,	_gain_out (1)
-,	_gain_out_cur (1)
-,	_gain_out_lerp_step (1.0f / 256)
-,	_br_scale (1)
-,	_br_scale_inv (1)
-,	_br_amt (0)
-,	_fs (44100)
-,	_freq (1000)
-,	_reso (0)
-,	_p1 (0)
+SqueezerSimd <BR, LFOP>::SqueezerSimd () noexcept
 {
 	update_eq ();
 	clear_buffers ();
@@ -73,7 +57,7 @@ SqueezerSimd <BR, LFOP>::SqueezerSimd ()
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::set_sample_freq (float fs)
+void	SqueezerSimd <BR, LFOP>::set_sample_freq (float fs) noexcept
 {
 	assert (fs > 0);
 
@@ -86,7 +70,7 @@ void	SqueezerSimd <BR, LFOP>::set_sample_freq (float fs)
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::set_freq (float f0)
+void	SqueezerSimd <BR, LFOP>::set_freq (float f0) noexcept
 {
 	assert (f0 > 0);
 
@@ -96,7 +80,7 @@ void	SqueezerSimd <BR, LFOP>::set_freq (float f0)
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::set_freq_and_update_eq_fast (float f0)
+void	SqueezerSimd <BR, LFOP>::set_freq_and_update_eq_fast (float f0) noexcept
 {
 	set_freq (f0);
 	update_internal_variables_fast (
@@ -107,7 +91,7 @@ void	SqueezerSimd <BR, LFOP>::set_freq_and_update_eq_fast (float f0)
 
 
 template <bool BR, class LFOP>
-float	SqueezerSimd <BR, LFOP>::get_freq () const
+float	SqueezerSimd <BR, LFOP>::get_freq () const noexcept
 {
 	return _freq;
 }
@@ -115,7 +99,7 @@ float	SqueezerSimd <BR, LFOP>::get_freq () const
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::set_reso (float reso)
+void	SqueezerSimd <BR, LFOP>::set_reso (float reso) noexcept
 {
 	assert (reso >= 0);
 
@@ -125,7 +109,7 @@ void	SqueezerSimd <BR, LFOP>::set_reso (float reso)
 
 
 template <bool BR, class LFOP>
-float	SqueezerSimd <BR, LFOP>::get_reso () const
+float	SqueezerSimd <BR, LFOP>::get_reso () const noexcept
 {
 	return _reso;
 }
@@ -133,7 +117,7 @@ float	SqueezerSimd <BR, LFOP>::get_reso () const
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::set_p1 (float p1)
+void	SqueezerSimd <BR, LFOP>::set_p1 (float p1) noexcept
 {
 	assert (p1 >= 0);
 	assert (p1 <= 1);
@@ -155,7 +139,7 @@ void	SqueezerSimd <BR, LFOP>::set_p1 (float p1)
 
 
 template <bool BR, class LFOP>
-float	SqueezerSimd <BR, LFOP>::get_p1 () const
+float	SqueezerSimd <BR, LFOP>::get_p1 () const noexcept
 {
 	return _p1;
 }
@@ -163,7 +147,7 @@ float	SqueezerSimd <BR, LFOP>::get_p1 () const
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::copy_z_eq (const SqueezerSimd <BR, LFOP> &other)
+void	SqueezerSimd <BR, LFOP>::copy_z_eq (const SqueezerSimd <BR, LFOP> &other) noexcept
 {
 	assert (_fs == other._fs);
 
@@ -186,7 +170,7 @@ void	SqueezerSimd <BR, LFOP>::copy_z_eq (const SqueezerSimd <BR, LFOP> &other)
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::update_eq ()
+void	SqueezerSimd <BR, LFOP>::update_eq () noexcept
 {
 	update_internal_variables (
 		_r, _g, _p, _gain_out, _fs, _freq, _reso
@@ -198,7 +182,7 @@ void	SqueezerSimd <BR, LFOP>::update_eq ()
 
 
 template <bool BR, class LFOP>
-float	SqueezerSimd <BR, LFOP>::process_sample (float x)
+float	SqueezerSimd <BR, LFOP>::process_sample (float x) noexcept
 {
 	_gain_out_cur += (_gain_out - _gain_out_cur) * _gain_out_lerp_step;
 
@@ -241,7 +225,7 @@ float	SqueezerSimd <BR, LFOP>::process_sample (float x)
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	SqueezerSimd <BR, LFOP>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -256,7 +240,7 @@ void	SqueezerSimd <BR, LFOP>::process_block (float dst_ptr [], const float src_p
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::process_block (float spl_ptr [], int nbr_spl)
+void	SqueezerSimd <BR, LFOP>::process_block (float spl_ptr [], int nbr_spl) noexcept
 {
 	assert (spl_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -270,7 +254,7 @@ void	SqueezerSimd <BR, LFOP>::process_block (float spl_ptr [], int nbr_spl)
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::process_block_fm (float dst_ptr [], const float src_ptr [], const float freq_ptr [], int nbr_spl)
+void	SqueezerSimd <BR, LFOP>::process_block_fm (float dst_ptr [], const float src_ptr [], const float freq_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -288,7 +272,7 @@ void	SqueezerSimd <BR, LFOP>::process_block_fm (float dst_ptr [], const float sr
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::clear_buffers ()
+void	SqueezerSimd <BR, LFOP>::clear_buffers () noexcept
 {
 	_x = 0;
 	for (int stage = 0; stage < _nbr_stages; ++stage)
@@ -310,7 +294,7 @@ void	SqueezerSimd <BR, LFOP>::clear_buffers ()
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::update_internal_variables (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso)
+void	SqueezerSimd <BR, LFOP>::update_internal_variables (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso) noexcept
 {
 	assert (fs > 0);
 	assert (freq > 0);
@@ -341,7 +325,7 @@ void	SqueezerSimd <BR, LFOP>::update_internal_variables (float &r, float &g, flo
 
 
 template <bool BR, class LFOP>
-void	SqueezerSimd <BR, LFOP>::update_internal_variables_fast (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso)
+void	SqueezerSimd <BR, LFOP>::update_internal_variables_fast (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso) noexcept
 {
 	assert (fs > 0);
 	assert (freq > 0);
@@ -365,7 +349,7 @@ void	SqueezerSimd <BR, LFOP>::update_internal_variables_fast (float &r, float &g
 
 
 template <bool BR, class LFOP>
-fstb::ToolsSimd::VectF32	SqueezerSimd <BR, LFOP>::shape_feedback (fstb::ToolsSimd::VectF32 x)
+fstb::ToolsSimd::VectF32	SqueezerSimd <BR, LFOP>::shape_feedback (fstb::ToolsSimd::VectF32 x) noexcept
 {
 	const auto     c1   = fstb::ToolsSimd::set1_f32 ( 1);
 	const auto     cm1  = fstb::ToolsSimd::set1_f32 (-1);

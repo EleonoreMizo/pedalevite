@@ -12,7 +12,7 @@ Template parameters:
 
 - SL: lowpass and input saturator. Requires:
 	SL::SL ();
-	float SL::operator () (float x);
+	float SL::operator () (float x) noexcept;
 	Suggestions:
 	- WsTanhFast for the tanh curve quoted in the paper. Tuning issues at high
 		resonance.
@@ -22,7 +22,7 @@ Template parameters:
 
 - SF: feedback saturator. Requires:
 	SF::SF ();
-	float SF::operator () (float x);
+	float SF::operator () (float x) noexcept;
 	Suggestions:
 	- WsBypass
 	- WsNegCond <std::ratio <1, 1>, std::ratio <2, 1> > for zipper noises
@@ -109,26 +109,26 @@ public:
 
 	typedef MoogLadderDAngeloData <N> FilterData;
 
-	void           set_sample_freq (double sample_freq);
-	void           set_scale (float s);
-	void           set_freq_natural (float f);
-	void           set_freq_compensated (float f);
-	void           set_max_mod_freq (float f);
-	void           set_reso_raw (float k);
-	void           set_reso_norm (float kn);
-	void           set_gain_comp (float gc);
-	float          process_sample (float x);
-	float          process_sample (float x, float stage_in_ptr [N]);
-	float          process_sample_pitch_mod (float x, float m);
-	float          process_sample_pitch_mod (float x, float m, float stage_in_ptr [N]);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl);
-	void           clear_buffers ();
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_scale (float s) noexcept;
+	void           set_freq_natural (float f) noexcept;
+	void           set_freq_compensated (float f) noexcept;
+	void           set_max_mod_freq (float f) noexcept;
+	void           set_reso_raw (float k) noexcept;
+	void           set_reso_norm (float kn) noexcept;
+	void           set_gain_comp (float gc) noexcept;
+	float          process_sample (float x) noexcept;
+	float          process_sample (float x, float stage_in_ptr [N]) noexcept;
+	float          process_sample_pitch_mod (float x, float m) noexcept;
+	float          process_sample_pitch_mod (float x, float m, float stage_in_ptr [N]) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
 
 	MoogLadderDAngeloData <N> &
-	               use_data ();
+	               use_data () noexcept;
 	const MoogLadderDAngeloData <N> &
-	               use_data () const;
+	               use_data () const noexcept;
 
 
 
@@ -143,17 +143,17 @@ protected:
 private:
 
 	fstb_FORCEINLINE void
-	               check_coef ();
-	void           update_coef ();
-	void           update_gaincomp ();
+	               check_coef () noexcept;
+	void           update_coef () noexcept;
+	void           update_gaincomp () noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_internal (float x, float g, float k0s);
+	               process_sample_internal (float x, float g, float k0s) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_input (float x);
+	               process_sample_input (float x) noexcept;
 	fstb_FORCEINLINE void
-	               process_sample_stage (float &y, float &yo, int n, float g, float k0s);
+	               process_sample_stage (float &y, float &yo, int n, float g, float k0s) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_fdbk (float x, float y);
+	               process_sample_fdbk (float x, float y) noexcept;
 
 	FilterData     _d;
 

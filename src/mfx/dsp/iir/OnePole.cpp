@@ -43,7 +43,7 @@ namespace iir
 
 
 
-OnePole::OnePole ()
+OnePole::OnePole () noexcept
 :	_eq_z_b ({{ 1, 0 }})
 ,	_eq_z_a ({{ 0, 0 }})
 ,	_mem_x (0)
@@ -68,7 +68,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -95,7 +95,7 @@ void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_s
 
 
 
-void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2], const float inc_a [2])
+void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2], const float inc_a [2]) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -125,7 +125,7 @@ void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_s
 
 
 
-void	OnePole::clear_buffers ()
+void	OnePole::clear_buffers () noexcept
 {
 	_mem_x = 0;
 	_mem_y = 0;

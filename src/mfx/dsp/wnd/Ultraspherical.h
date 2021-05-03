@@ -61,12 +61,12 @@ class Ultraspherical
 
 public:
 
-	void           set_mu (double mu);
-	void           set_x_mu (double x_mu);
+	void           set_mu (double mu) noexcept;
+	void           set_x_mu (double x_mu) noexcept;
 
-	static double  compute_x_mu_for_prescribed_null_to_null_width (int len, double mu, double w);
-	static double  compute_x_mu_for_prescribed_main_lobe_width (int len, double mu, double w);
-	static double  compute_x_mu_for_prescribed_ripple_ratio (int len, double mu, double r);
+	static double  compute_x_mu_for_prescribed_null_to_null_width (int len, double mu, double w) noexcept;
+	static double  compute_x_mu_for_prescribed_main_lobe_width (int len, double mu, double w) noexcept;
+	static double  compute_x_mu_for_prescribed_ripple_ratio (int len, double mu, double r) noexcept;
 
 
 
@@ -84,15 +84,15 @@ protected:
 private:
 
 	static constexpr double
-	               msgn (double x);
-	static double  compute_t (int n, double x);
-	static void    compute_t (double &t_n, double &t_n_m_1, int n, double x);
-	static double  compute_c (int n, double mu, double x);
-	static void    compute_c (double &c_n, double &c_n_m_1, int n, double mu, double x);
-	static double  compute_a (int len, double mu, double epsilon);
-	static double  compute_b (int len, double mu, double epsilon);
-	static double  compute_v (int len, double mu, double epsilon, int l);
-	static double  compute_zero_of_c (int n, int l, double mu, double param, double epsilon, double r);
+	               msgn (double x) noexcept;
+	static double  compute_t (int n, double x) noexcept;
+	static void    compute_t (double &t_n, double &t_n_m_1, int n, double x) noexcept;
+	static double  compute_c (int n, double mu, double x) noexcept;
+	static void    compute_c (double &c_n, double &c_n_m_1, int n, double mu, double x) noexcept;
+	static double  compute_a (int len, double mu, double epsilon) noexcept;
+	static double  compute_b (int len, double mu, double epsilon) noexcept;
+	static double  compute_v (int len, double mu, double epsilon, int l) noexcept;
+	static double  compute_zero_of_c (int n, int l, double mu, double param, double epsilon, double r) noexcept;
 
 	double         _mu   = 1;
 	double         _x_mu = 1;

@@ -39,7 +39,7 @@ namespace iir
 
 
 
-void	DcKiller2p::copy_z_eq (const DcKiller2p &other)
+void	DcKiller2p::copy_z_eq (const DcKiller2p &other) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (other._sample_freq > 0);
@@ -51,7 +51,7 @@ void	DcKiller2p::copy_z_eq (const DcKiller2p &other)
 
 
 
-float	DcKiller2p::process_sample (float x)
+float	DcKiller2p::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 

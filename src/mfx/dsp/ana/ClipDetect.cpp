@@ -44,7 +44,7 @@ namespace ana
 
 
 
-void	ClipDetect::set_clip_val (float val)
+void	ClipDetect::set_clip_val (float val) noexcept
 {
 	assert (val > 0);
 
@@ -53,7 +53,7 @@ void	ClipDetect::set_clip_val (float val)
 
 
 
-void	ClipDetect::set_clip_val (float val_min, float val_max)
+void	ClipDetect::set_clip_val (float val_min, float val_max) noexcept
 {
 	assert (val_min < val_max);
 
@@ -63,15 +63,16 @@ void	ClipDetect::set_clip_val (float val_min, float val_max)
 
 
 
-bool	ClipDetect::process_sample (float x) const
+bool	ClipDetect::process_sample (float x) const noexcept
 {
 	return (x < _val_min || x > _val_max);
 }
 
 
 
-bool	ClipDetect::process_block (const float src_ptr [], int nbr_spl) const
+bool	ClipDetect::process_block (const float src_ptr [], int nbr_spl) const noexcept
 {
+#if 1
 	int            res_mask = 0;
 	const int      ns8 = nbr_spl & ~7;
 
@@ -99,6 +100,20 @@ bool	ClipDetect::process_block (const float src_ptr [], int nbr_spl) const
 	}
 
 	return clip_flag;
+
+#else // Reference implementation
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		if (process_sample (src_ptr [pos]))
+		{
+			return true;
+		}
+	}
+
+	return false;
+
+#endif
 }
 
 

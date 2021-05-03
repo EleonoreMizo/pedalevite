@@ -57,7 +57,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Smooth::set_sample_freq (double sample_freq)
+void	Smooth::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -80,7 +80,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Smooth::set_base_freq (float freq)
+void	Smooth::set_base_freq (float freq) noexcept
 {
 	assert (freq > 0);
 
@@ -105,7 +105,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Smooth::set_sensitivity (float s)
+void	Smooth::set_sensitivity (float s) noexcept
 {
 	assert (s >= 0);
 
@@ -125,7 +125,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Smooth::force_val (float x)
+void	Smooth::force_val (float x) noexcept
 {
 	_val = x;
 	clear_buffers ();
@@ -145,7 +145,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-float	Smooth::process_sample (float x)
+float	Smooth::process_sample (float x) noexcept
 {
 	_val = x;
 
@@ -168,7 +168,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-float	Smooth::skip_block (int nbr_spl)
+float	Smooth::skip_block (int nbr_spl) noexcept
 {
 	return process_block (_val, nbr_spl);
 }
@@ -190,7 +190,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-float	Smooth::process_block (float x, int nbr_spl)
+float	Smooth::process_block (float x, int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -218,7 +218,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Smooth::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Smooth::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);
@@ -244,7 +244,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-float	Smooth::get_target_val () const
+float	Smooth::get_target_val () const noexcept
 {
 	return _val;
 }
@@ -261,7 +261,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-float	Smooth::get_smooth_val () const
+float	Smooth::get_smooth_val () const noexcept
 {
 	return _low2;
 }
@@ -277,7 +277,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Smooth::clear_buffers ()
+void	Smooth::clear_buffers () noexcept
 {
 	_low1 = _val;
 	_low2 = _val;
@@ -289,7 +289,7 @@ void	Smooth::clear_buffers ()
 
 
 
-void	Smooth::update_g0_cond ()
+void	Smooth::update_g0_cond () noexcept
 {
 	if (_sample_freq > 0)
 	{
@@ -299,7 +299,7 @@ void	Smooth::update_g0_cond ()
 
 
 
-float	Smooth::compute_g0 (float f0)
+float	Smooth::compute_g0 (float f0) noexcept
 {
 	assert (_inv_fs > 0);
 	assert (f0 > 0);
@@ -315,7 +315,7 @@ float	Smooth::compute_g0 (float f0)
 
 
 
-float	Smooth::process_sample (float x, float g0, float sense)
+float	Smooth::process_sample (float x, float g0, float sense) noexcept
 {
 	const float    low1z = _low1;
 	const float    low2z = _low2;

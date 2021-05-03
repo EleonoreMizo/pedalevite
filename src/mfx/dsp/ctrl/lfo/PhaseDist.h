@@ -49,10 +49,10 @@ class PhaseDist
 
 public:
 
-	inline void    set_phase_dist (double dist);
-	inline void    set_phase_dist_offset (double offset);
+	inline void    set_phase_dist (double dist) noexcept;
+	inline void    set_phase_dist_offset (double offset) noexcept;
 
-	inline double  process_phase (double phase) const;
+	inline double  process_phase (double phase) const noexcept;
 
 
 

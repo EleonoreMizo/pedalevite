@@ -45,16 +45,16 @@ class IvDiodeAntipar
 
 public:
 
-	inline void    set_d1_is (float is);
-	inline void    set_d2_is (float is);
-	inline void    set_d1_n (float n);
-	inline void    set_d2_n (float n);
+	inline void    set_d1_is (float is) noexcept;
+	inline void    set_d2_is (float is) noexcept;
+	inline void    set_d1_n (float n) noexcept;
+	inline void    set_d2_n (float n) noexcept;
 
 	// mfx::dsp::va::IvInterface
 	fstb_FORCEINLINE void
-	               eval (float &y, float &dy, float x) const final;
+	               eval (float &y, float &dy, float x) const noexcept final;
 	fstb_FORCEINLINE float
-	               get_max_step (float x) const final;
+	               get_max_step (float x) const noexcept final;
 
 
 
@@ -68,8 +68,8 @@ protected:
 
 private:
 
-	inline float   compute_max_step (float n) const;
-	inline float   compute_mv (float n) const;
+	inline float   compute_max_step (float n) const noexcept;
+	inline float   compute_mv (float n) const noexcept;
 
 	float          _vt   = 0.026f;   // Diode thermal voltage, volt. Sets the diode clipping threshold, around 0.65 V for 0.026
 	float          _is1  = 0.1e-15f; // Diode 1 saturation current, ampere

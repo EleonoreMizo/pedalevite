@@ -98,17 +98,17 @@ class SnhTool
 
 public:
 
-	void           set_ovrspl (int ovrspl_l2);
-	void           set_nbr_chn (int nbr_chn);
-	int            get_nbr_chn () const;
+	void           set_ovrspl (int ovrspl_l2) noexcept;
+	void           set_nbr_chn (int nbr_chn) noexcept;
+	int            get_nbr_chn () const noexcept;
 
-	void           compute_snh_data (int &hold_time, int &rep_index, int max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const;
-	bool           compute_snh_data_sample (const fstb::FixedPoint &rate) const;
-	void           process_data (float * const data_ptr_arr [], int nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step);
+	void           compute_snh_data (int &hold_time, int &rep_index, int max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const noexcept;
+	bool           compute_snh_data_sample (const fstb::FixedPoint &rate) const noexcept;
+	void           process_data (float * const data_ptr_arr [], int nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
-	static void    adjust_rate_param (int &pos_dest, fstb::FixedPoint &pos_src, fstb::FixedPoint &rate, fstb::FixedPoint &rate_step, int hold_time, int rep_index);
+	static void    adjust_rate_param (int &pos_dest, fstb::FixedPoint &pos_src, fstb::FixedPoint &rate, fstb::FixedPoint &rate_step, int hold_time, int rep_index) noexcept;
 
 
 
@@ -133,16 +133,16 @@ private:
 
 	typedef std::array <ChnState, Cst::MAX_NBR_CHN> ChnStateArray;
 
-	void           process_data_steady_state (float * const data_ptr_arr [], int pos_beg, int pos_end);
-	void           process_data_steady_state_naive (float * const data_ptr_arr [], int pos_beg, int pos_end);
-	void           process_data_steady_state_block (float * const data_ptr_arr [], int pos_beg, int pos_end);
+	void           process_data_steady_state (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           process_data_steady_state_naive (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           process_data_steady_state_block (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept;
 
-	void           process_data_interpolate (float * const data_ptr_arr [], int pos_beg, int pos_end);
-	void           process_data_interpolate_naive (float * const data_ptr_arr [], int pos_beg, int pos_end);
-	void           process_data_interpolate_block (float * const data_ptr_arr [], int pos_beg, int pos_end);
+	void           process_data_interpolate (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           process_data_interpolate_naive (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           process_data_interpolate_block (float * const data_ptr_arr [], int pos_beg, int pos_end) noexcept;
 
 	static inline int
-	               compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2);
+	               compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2) noexcept;
 
 	ChnStateArray  _chn_state_arr;
 	int            _nbr_chn     = 1;

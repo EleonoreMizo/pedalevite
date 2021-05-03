@@ -49,20 +49,7 @@ namespace rspl
 
 
 template <class IT>
-InterpolatorFir <IT>::InterpolatorFir ()
-:	_snh_tool ()
-,	_grp_dly (0)
-,	_conv_ptr (0)
-,	_nbr_chn (1)
-,	_ovrspl_l2 (0)
-{
-	// Nothing
-}
-
-
-
-template <class IT>
-void	InterpolatorFir <IT>::set_convolver (IT &convolver)
+void	InterpolatorFir <IT>::set_convolver (IT &convolver) noexcept
 {
 	_conv_ptr = &convolver;
 }
@@ -70,7 +57,7 @@ void	InterpolatorFir <IT>::set_convolver (IT &convolver)
 
 
 template <class IT>
-void	InterpolatorFir <IT>::set_group_delay (double grp_dly)
+void	InterpolatorFir <IT>::set_group_delay (double grp_dly) noexcept
 {
 	assert (grp_dly >= 0);
 	assert (grp_dly <= PHASE_LEN - 1);
@@ -81,7 +68,7 @@ void	InterpolatorFir <IT>::set_group_delay (double grp_dly)
 
 
 template <class IT>
-bool	InterpolatorFir <IT>::is_ready () const
+bool	InterpolatorFir <IT>::is_ready () const noexcept
 {
 	return (_conv_ptr != nullptr);
 }
@@ -102,7 +89,7 @@ void	InterpolatorFir <IT>::do_set_ovrspl_l2 (int ovrspl_l2)
 
 
 template <class IT>
-int	InterpolatorFir <IT>::do_get_impulse_len () const
+int	InterpolatorFir <IT>::do_get_impulse_len () const noexcept
 {
 	return PHASE_LEN;
 }
@@ -110,7 +97,7 @@ int	InterpolatorFir <IT>::do_get_impulse_len () const
 
 
 template <class IT>
-fstb::FixedPoint	InterpolatorFir <IT>::do_get_group_delay () const
+fstb::FixedPoint	InterpolatorFir <IT>::do_get_group_delay () const noexcept
 {
 	return _grp_dly;
 }
@@ -118,7 +105,7 @@ fstb::FixedPoint	InterpolatorFir <IT>::do_get_group_delay () const
 
 
 template <class IT>
-void	InterpolatorFir <IT>::do_start (int nbr_chn)
+void	InterpolatorFir <IT>::do_start (int nbr_chn) noexcept
 {
 	_nbr_chn = nbr_chn;
 	_snh_tool.set_nbr_chn (_nbr_chn);
@@ -127,7 +114,7 @@ void	InterpolatorFir <IT>::do_start (int nbr_chn)
 
 
 template <class IT>
-int	InterpolatorFir <IT>::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorFir <IT>::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept
 {
 	assert (is_ready ());
 
@@ -223,7 +210,7 @@ int	InterpolatorFir <IT>::do_process_block (float * const dest_ptr_arr [], const
 
 
 template <class IT>
-float	InterpolatorFir <IT>::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+float	InterpolatorFir <IT>::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) noexcept
 {
 	assert (is_ready ());
 	assert (_snh_tool.get_nbr_chn () == 1);
@@ -251,7 +238,7 @@ float	InterpolatorFir <IT>::do_process_sample (const float src_ptr [], fstb::Fix
 
 
 template <class IT>
-int	InterpolatorFir <IT>::process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorFir <IT>::process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept
 {
 	const int      pos_dest_old = pos_dest;
 	const int      src_limit    = end_src - PHASE_LEN + 1;
@@ -322,7 +309,7 @@ int	InterpolatorFir <IT>::process_block_multi_chn (float * const dest_ptr_arr []
 
 
 template <class IT>
-int	InterpolatorFir <IT>::process_block_mono (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorFir <IT>::process_block_mono (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept
 {
 	const int      pos_dest_old = pos_dest;
 	const int      src_limit    = end_src - PHASE_LEN + 1;
@@ -352,7 +339,7 @@ int	InterpolatorFir <IT>::process_block_mono (float dest_ptr [], const float src
 
 
 template <class IT>
-int	InterpolatorFir <IT>::process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index)
+int	InterpolatorFir <IT>::process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index) noexcept
 {
 	const int      pos_dest_old = pos_dest;
 
@@ -432,7 +419,7 @@ int	InterpolatorFir <IT>::process_block_multi_chn_sparse (float * const dest_ptr
 
 
 template <class IT>
-int	InterpolatorFir <IT>::process_block_mono_sparse (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index)
+int	InterpolatorFir <IT>::process_block_mono_sparse (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index) noexcept
 {
 	const int      pos_dest_old = pos_dest;
 

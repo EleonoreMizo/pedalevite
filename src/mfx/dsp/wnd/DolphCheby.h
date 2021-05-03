@@ -52,7 +52,7 @@ class DolphCheby
 
 public:
 
-	void           set_ripple_ratio (double r);
+	void           set_ripple_ratio (double r) noexcept;
 
 
 
@@ -69,7 +69,7 @@ protected:
 
 private:
 
-	static double  cheby_poly (double x, int n);
+	static double  cheby_poly (double x, int n) noexcept;
 
 	double         _r = 0.5;
 

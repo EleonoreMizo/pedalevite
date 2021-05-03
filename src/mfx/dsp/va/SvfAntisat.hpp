@@ -58,7 +58,7 @@ Throws: Nothing
 */
 
 template <class AS>
-void	SvfAntisat <AS>::set_sample_freq (double sample_freq)
+void	SvfAntisat <AS>::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -82,7 +82,7 @@ Throws: Nothing
 */
 
 template <class AS>
-void	SvfAntisat <AS>::set_freq (float f)
+void	SvfAntisat <AS>::set_freq (float f) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (f > 0);
@@ -113,7 +113,7 @@ Throws: Nothing
 */
 
 template <class AS>
-void	SvfAntisat <AS>::set_reso (float r)
+void	SvfAntisat <AS>::set_reso (float r) noexcept
 {
 	assert (r >= 0);
 	assert (r <= 1.75f);
@@ -142,7 +142,7 @@ Throws: Nothing
 */
 
 template <class AS>
-void	SvfAntisat <AS>::process_sample (float &lp, float &bp, float &hp, float x)
+void	SvfAntisat <AS>::process_sample (float &lp, float &bp, float &hp, float x) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -174,7 +174,7 @@ Throws: Nothing
 */
 
 template <class AS>
-void	SvfAntisat <AS>::clear_buffers ()
+void	SvfAntisat <AS>::clear_buffers () noexcept
 {
 	_s1 = 0;
 	_s2 = 0;
@@ -192,7 +192,7 @@ void	SvfAntisat <AS>::clear_buffers ()
 
 
 template <class AS>
-void	SvfAntisat <AS>::update_b ()
+void	SvfAntisat <AS>::update_b () noexcept
 {
 	_b = (-1 - _g * (_g + _k )) * _g_inv;
 	_solver.use_fnc ().set_b (_b);
@@ -201,7 +201,7 @@ void	SvfAntisat <AS>::update_b ()
 
 
 template <class AS>
-void	SvfAntisat <AS>::EqBp::set_a (float a)
+void	SvfAntisat <AS>::EqBp::set_a (float a) noexcept
 {
 	_a = a;
 }
@@ -209,7 +209,7 @@ void	SvfAntisat <AS>::EqBp::set_a (float a)
 
 
 template <class AS>
-void	SvfAntisat <AS>::EqBp::set_b (float b)
+void	SvfAntisat <AS>::EqBp::set_b (float b) noexcept
 {
 	_b = b;
 	_one_over_b = 1.f / b;
@@ -222,7 +222,7 @@ void	SvfAntisat <AS>::EqBp::set_b (float b)
 
 
 template <class AS>
-void	SvfAntisat <AS>::EqBp::set_estimation (float y)
+void	SvfAntisat <AS>::EqBp::set_estimation (float y) noexcept
 {
 	_y = y;
 }
@@ -254,7 +254,7 @@ Throws: Nothing
 */
 
 template <class AS>
-float	SvfAntisat <AS>::EqBp::estimate ()
+float	SvfAntisat <AS>::EqBp::estimate () noexcept
 {
 	if (_b == 0)
 	{
@@ -297,7 +297,7 @@ Throws: Nothing
 */
 
 template <class AS>
-void	SvfAntisat <AS>::EqBp::eval (float &y, float &dy, float x)
+void	SvfAntisat <AS>::EqBp::eval (float &y, float &dy, float x) noexcept
 {
 	const float    lx = _a + _b * x;
 	AS::eval (y, dy, lx);

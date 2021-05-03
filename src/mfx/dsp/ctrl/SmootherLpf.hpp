@@ -42,7 +42,7 @@ namespace ctrl
 
 
 template <typename T>
-void	SmootherLpf <T>::set_sample_freq (double sample_freq)
+void	SmootherLpf <T>::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -52,7 +52,7 @@ void	SmootherLpf <T>::set_sample_freq (double sample_freq)
 
 
 template <typename T>
-void	SmootherLpf <T>::set_time (float t)
+void	SmootherLpf <T>::set_time (float t) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (t >= 0);
@@ -69,7 +69,7 @@ void	SmootherLpf <T>::set_time (float t)
 
 
 template <typename T>
-void	SmootherLpf <T>::set_val (T x)
+void	SmootherLpf <T>::set_val (T x) noexcept
 {
 	_val_tgt = x;
 }
@@ -77,7 +77,7 @@ void	SmootherLpf <T>::set_val (T x)
 
 
 template <typename T>
-T	SmootherLpf <T>::process_sample ()
+T	SmootherLpf <T>::process_sample () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -87,7 +87,7 @@ T	SmootherLpf <T>::process_sample ()
 
 
 template <typename T>
-T	SmootherLpf <T>::skip_block (int nbr_spl)
+T	SmootherLpf <T>::skip_block (int nbr_spl) noexcept
 {
 	return _lpf.constant_block (_val_tgt, nbr_spl);
 }
@@ -95,7 +95,7 @@ T	SmootherLpf <T>::skip_block (int nbr_spl)
 
 
 template <typename T>
-T	SmootherLpf <T>::get_val_cur () const
+T	SmootherLpf <T>::get_val_cur () const noexcept
 {
 	return _lpf.use_state ();
 }
@@ -103,7 +103,7 @@ T	SmootherLpf <T>::get_val_cur () const
 
 
 template <typename T>
-T	SmootherLpf <T>::get_val_tgt () const
+T	SmootherLpf <T>::get_val_tgt () const noexcept
 {
 	return _val_tgt;
 }
@@ -111,7 +111,7 @@ T	SmootherLpf <T>::get_val_tgt () const
 
 
 template <typename T>
-void	SmootherLpf <T>::clear_buffers ()
+void	SmootherLpf <T>::clear_buffers () noexcept
 {
 	_lpf.use_state () = _val_tgt;
 }

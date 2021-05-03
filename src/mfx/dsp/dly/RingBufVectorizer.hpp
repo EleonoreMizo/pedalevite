@@ -48,7 +48,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-RingBufVectorizer::RingBufVectorizer (int size)
+RingBufVectorizer::RingBufVectorizer (int size) noexcept
 :	_size (size)
 ,	_pos ()
 ,	_len ()
@@ -70,7 +70,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	RingBufVectorizer::get_size () const
+int	RingBufVectorizer::get_size () const noexcept
 {
 	return _size;
 }
@@ -88,7 +88,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-bool	RingBufVectorizer::end () const
+bool	RingBufVectorizer::end () const noexcept
 {
 	assert (_nbr_curs > 0);
 
@@ -108,7 +108,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	RingBufVectorizer::get_seg_len () const
+int	RingBufVectorizer::get_seg_len () const noexcept
 {
 	assert (_nbr_curs > 0);
 	assert (_seg_len > 0);
@@ -130,7 +130,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	RingBufVectorizer::get_curs_pos (int curs) const
+int	RingBufVectorizer::get_curs_pos (int curs) const noexcept
 {
 	assert (_nbr_curs > 0);
 	assert (curs < _nbr_curs);

@@ -47,7 +47,7 @@ public:
 
 	               Ramp ()                        = default;
 	inline explicit constexpr
-	               Ramp (float x);
+	               Ramp (float x) noexcept;
 	               Ramp (const Ramp &other)       = default;
 	               Ramp (Ramp &&other)            = default;
 
@@ -56,16 +56,16 @@ public:
 	Ramp &         operator = (const Ramp &other) = default;
 	Ramp &         operator = (Ramp &&other)      = default;
 
-	inline void    set_time (int nbr_spl, float time_step);
-	inline void    set_val (float x);
-	inline void    clear_buffers ();
-	inline void    tick (int nbr_spl);
-	inline float   get_beg () const;
-	inline float   get_end () const;
-	inline float   get_tgt () const;
-	inline bool    is_ramping () const;
-	inline float   get_step () const;
-	inline int     get_rem_len () const;
+	inline void    set_time (int nbr_spl, float time_step) noexcept;
+	inline void    set_val (float x) noexcept;
+	inline void    clear_buffers () noexcept;
+	inline void    tick (int nbr_spl) noexcept;
+	inline float   get_beg () const noexcept;
+	inline float   get_end () const noexcept;
+	inline float   get_tgt () const noexcept;
+	inline bool    is_ramping () const noexcept;
+	inline float   get_step () const noexcept;
+	inline int     get_rem_len () const noexcept;
 
 
 

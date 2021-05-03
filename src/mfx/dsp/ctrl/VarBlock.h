@@ -50,21 +50,21 @@ public:
 
 	               VarBlock ()                        = default;
 	inline explicit
-	               VarBlock (float val);
+	               VarBlock (float val) noexcept;
 	               VarBlock (const VarBlock &other)   = default;
 	               VarBlock (VarBlock &&other)        = default;
 	               ~VarBlock ()                       = default;
 	VarBlock &     operator = (const VarBlock &other) = default;
 	VarBlock &     operator = (VarBlock &&other)      = default;
 
-	inline void    set_val (float val);
-	inline void    force_val (float val);
-	inline void    tick (int nbr_spl);
-	inline float   get_beg () const;
-	inline float   get_end () const;
-	inline float   get_tgt () const;
-	inline float   get_step () const;
-	inline void    clear_buffers ();
+	inline void    set_val (float val) noexcept;
+	inline void    force_val (float val) noexcept;
+	inline void    tick (int nbr_spl) noexcept;
+	inline float   get_beg () const noexcept;
+	inline float   get_end () const noexcept;
+	inline float   get_tgt () const noexcept;
+	inline float   get_step () const noexcept;
+	inline void    clear_buffers () noexcept;
 	
 
 

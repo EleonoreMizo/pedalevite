@@ -39,14 +39,14 @@ namespace iir
 
 
 
-bool	SplitAp5::is_dirty () const
+bool	SplitAp5::is_dirty () const noexcept
 {
 	return _dirty_flag;
 }
 
 
 
-std::array <float, 2>	SplitAp5::process_sample_split (float x)
+std::array <float, 2>	SplitAp5::process_sample_split (float x) noexcept
 {
 	assert (! _dirty_flag);
 
@@ -59,7 +59,7 @@ std::array <float, 2>	SplitAp5::process_sample_split (float x)
 
 
 
-float	SplitAp5::process_sample_compensate (float x)
+float	SplitAp5::process_sample_compensate (float x) noexcept
 {
 	assert (! _dirty_flag);
 

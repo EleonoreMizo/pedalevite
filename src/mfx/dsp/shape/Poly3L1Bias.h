@@ -65,7 +65,7 @@ class Poly3L1Bias
 public:
 
 	static fstb_FORCEINLINE float
-	               process_sample (float sample);
+	               process_sample (float sample) noexcept;
 
 
 

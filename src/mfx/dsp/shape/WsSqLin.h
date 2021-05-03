@@ -47,13 +47,13 @@ class WsSqLin
 public:
 
 	template <typename T>
-	fstb_FORCEINLINE T operator () (T x)
+	fstb_FORCEINLINE T operator () (T x) noexcept
 	{
 		return process_sample (x);
 	}
 
 	template <typename T>
-	static fstb_FORCEINLINE T process_sample (T x)
+	static fstb_FORCEINLINE T process_sample (T x) noexcept
 	{
 		x = fstb::limit (x, T (-1.5f), T (1.5f));
 		const T        u = fstb::limit (x, T (-0.5f), T (0.5f));

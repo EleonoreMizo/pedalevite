@@ -64,7 +64,7 @@ class FncScale
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		F              f;
 		const double   sd = double (S::num) / double (S::den);

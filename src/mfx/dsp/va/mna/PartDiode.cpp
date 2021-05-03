@@ -50,7 +50,7 @@ namespace mna
 
 
 
-PartDiode::PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n)
+PartDiode::PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n) noexcept
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_is (is)
 ,	_n (n)
@@ -68,7 +68,7 @@ PartDiode::PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n)
 
 
 
-void	PartDiode::set_is (Flt is)
+void	PartDiode::set_is (Flt is) noexcept
 {
 	assert (is >= 1e-20f);
 	assert (is <= 1e-1f);
@@ -79,7 +79,7 @@ void	PartDiode::set_is (Flt is)
 
 
 
-void	PartDiode::set_n (Flt n)
+void	PartDiode::set_n (Flt n) noexcept
 {
 	assert (n > 0);
 
@@ -90,7 +90,7 @@ void	PartDiode::set_n (Flt n)
 
 
 
-void	PartDiode::set_imax (Flt imax)
+void	PartDiode::set_imax (Flt imax) noexcept
 {
 	assert (imax > 0);
 
@@ -130,7 +130,7 @@ void	PartDiode::do_prepare (const SimInfo &info)
 
 
 
-void	PartDiode::do_add_to_matrix (int it_cnt)
+void	PartDiode::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -150,14 +150,14 @@ void	PartDiode::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartDiode::do_step ()
+void	PartDiode::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartDiode::do_clear_buffers ()
+void	PartDiode::do_clear_buffers () noexcept
 {
 	// Nothing
 }
@@ -168,14 +168,14 @@ void	PartDiode::do_clear_buffers ()
 
 
 
-Flt	PartDiode::compute_nvt_inv () const
+Flt	PartDiode::compute_nvt_inv () const noexcept
 {
 	return Flt (1. / (_n * _vt));
 }
 
 
 
-Flt	PartDiode::compute_mul_e () const
+Flt	PartDiode::compute_mul_e () const noexcept
 {
 	return Flt (1. / (_n * _vt * fstb::LN2));
 }
@@ -183,7 +183,7 @@ Flt	PartDiode::compute_mul_e () const
 
 
 // (3.55) from http://qucs.sourceforge.net/tech/node16.html
-Flt	PartDiode::compute_vcrit () const
+Flt	PartDiode::compute_vcrit () const noexcept
 {
 	const Flt      nvt = _n * _vt;
 	const Flt      l2i = nvt / (_is * Flt (fstb::SQRT2));
@@ -194,7 +194,7 @@ Flt	PartDiode::compute_vcrit () const
 
 
 
-Flt	PartDiode::compute_vmax () const
+Flt	PartDiode::compute_vmax () const noexcept
 {
 	return _n * _vt * Flt (log (1 + _imax / _is));
 }

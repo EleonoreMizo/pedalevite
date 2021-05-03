@@ -42,7 +42,7 @@ namespace osc
 
 
 template <typename SDTP>
-SampleData <SDTP>::SampleData ()
+SampleData <SDTP>::SampleData () noexcept
 :	_table_ptr_arr ()
 ,	_table_len_arr ()
 {
@@ -53,7 +53,7 @@ SampleData <SDTP>::SampleData ()
 
 
 template <typename SDTP>
-bool	SampleData <SDTP>::is_valid () const
+bool	SampleData <SDTP>::is_valid () const noexcept
 {
 	bool           valid_flag = true;
 	for (int table = 0; table < NBR_TABLES && valid_flag; ++table)
@@ -68,7 +68,7 @@ bool	SampleData <SDTP>::is_valid () const
 
 
 template <typename SDTP>
-void	SampleData <SDTP>::set_main_info (int len)
+void	SampleData <SDTP>::set_main_info (int len) noexcept
 {
 	assert (len > 0);
 
@@ -96,7 +96,7 @@ Throws: Nothing
 */
 
 template <typename SDTP>
-void	SampleData <SDTP>::set_table_base_address (int table, DataType *data_ptr)
+void	SampleData <SDTP>::set_table_base_address (int table, DataType *data_ptr) noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -108,7 +108,7 @@ void	SampleData <SDTP>::set_table_base_address (int table, DataType *data_ptr)
 
 
 template <typename SDTP>
-void	SampleData <SDTP>::set_sample (int table, int pos, DataType val)
+void	SampleData <SDTP>::set_sample (int table, int pos, DataType val) noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -121,7 +121,7 @@ void	SampleData <SDTP>::set_sample (int table, int pos, DataType val)
 
 
 template <typename SDTP>
-typename SampleData <SDTP>::DataType	SampleData <SDTP>::get_sample (int table, int pos) const
+typename SampleData <SDTP>::DataType	SampleData <SDTP>::get_sample (int table, int pos) const noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -148,7 +148,7 @@ Throws: Nothing
 */
 
 template <typename SDTP>
-typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int table)
+typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -160,7 +160,7 @@ typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int table)
 
 
 template <typename SDTP>
-const typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int table) const
+const typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int table) const noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -172,7 +172,7 @@ const typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int t
 
 
 template <typename SDTP>
-int	SampleData <SDTP>::get_nbr_tables () const
+int	SampleData <SDTP>::get_nbr_tables () const noexcept
 {
 	return NBR_TABLES;
 }
@@ -193,7 +193,7 @@ Throws: Nothing
 */
 
 template <typename SDTP>
-int	SampleData <SDTP>::get_table_len (int table) const
+int	SampleData <SDTP>::get_table_len (int table) const noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -204,7 +204,7 @@ int	SampleData <SDTP>::get_table_len (int table) const
 
 
 template <typename SDTP>
-int	SampleData <SDTP>::get_unrolled_table_len (int table) const
+int	SampleData <SDTP>::get_unrolled_table_len (int table) const noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -215,7 +215,7 @@ int	SampleData <SDTP>::get_unrolled_table_len (int table) const
 
 
 template <typename SDTP>
-void	SampleData <SDTP>::convert_position (fstb::FixedPoint &table_pos, const fstb::FixedPoint &abs_pos, int table)
+void	SampleData <SDTP>::convert_position (fstb::FixedPoint &table_pos, const fstb::FixedPoint &abs_pos, int table) noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
@@ -227,7 +227,7 @@ void	SampleData <SDTP>::convert_position (fstb::FixedPoint &table_pos, const fst
 
 
 template <typename SDTP>
-void	SampleData <SDTP>::convert_position (fstb::FixedPoint &pos, int table)
+void	SampleData <SDTP>::convert_position (fstb::FixedPoint &pos, int table) noexcept
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);

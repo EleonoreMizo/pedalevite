@@ -63,11 +63,12 @@ public:
 	typedef DT DataType;
 	typedef ST SumType;
 
+	void           reserve (int len);
 	void           set_win_len (int len);
 
-	inline SumType process_sample (DataType x);
-	void           process_block (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl);
-	void           clear_buffers ();
+	inline SumType process_sample (DataType x) noexcept;
+	void           process_block (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
 
 
 

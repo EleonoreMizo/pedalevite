@@ -60,14 +60,14 @@ public:
 		Type_NBR_ELT
 	};
 
-	void           set_sample_freq (double sample_freq);
-	void           set_type (Type type);
-	void           set_time (float t);
-	void           set_threshold_lvl (float thr);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_type (Type type) noexcept;
+	void           set_time (float t) noexcept;
+	void           set_threshold_lvl (float thr) noexcept;
 
-	void           clear_buffers ();
-	float          process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           clear_buffers () noexcept;
+	float          process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -81,8 +81,8 @@ protected:
 
 private:
 
-	void           update_coef ();
-	inline void    set_new_state (float x);
+	void           update_coef () noexcept;
+	inline void    set_new_state (float x) noexcept;
 
 	double         _sample_freq = 0;          // Hz. 0 = not initialised
 	Type           _type        = Type_EXP;

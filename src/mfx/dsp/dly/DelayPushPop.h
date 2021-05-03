@@ -50,13 +50,13 @@ public:
 	// Mandatory call
 	void           setup (int max_dly, int max_block_len);
 
-	void           set_delay (int d);
-	inline void    push_sample (float x);
-	inline float   pop_sample ();
-	void           push_block (const float src_ptr [], int nbr_spl);
-	void           pop_block (float dst_ptr [], int nbr_spl);
-	void           clear_buffers ();
-	void           clear_buffers_quick ();
+	void           set_delay (int d) noexcept;
+	inline void    push_sample (float x) noexcept;
+	inline float   pop_sample () noexcept;
+	void           push_block (const float src_ptr [], int nbr_spl) noexcept;
+	void           pop_block (float dst_ptr [], int nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
+	void           clear_buffers_quick () noexcept;
 
 
 
@@ -73,7 +73,7 @@ private:
 	typedef std::vector <float> Buffer;
 
 	void           update_buf ();
-	inline int     delay (int pos) const;
+	inline int     delay (int pos) const noexcept;
 
 	Buffer         _buf           = Buffer (64, 0);
 	int            _len           = 64; // Buffer length in samples, power of 2, > 0

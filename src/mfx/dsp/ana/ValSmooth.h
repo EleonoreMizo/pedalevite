@@ -54,13 +54,13 @@ public:
 
 	typedef T ValType;
 
-	inline void    reset (T x = T (NV));
-	inline T       proc_val (T x);
-	inline T       get_val () const;
-	inline T       get_raw_val () const;
-	inline void    clear_buffers ();
-	inline void    set_responsiveness (T resp);
-	inline void    set_threshold (T thr);
+	inline void    reset (T x = T (NV)) noexcept;
+	inline T       proc_val (T x) noexcept;
+	inline T       get_val () const noexcept;
+	inline T       get_raw_val () const noexcept;
+	inline void    clear_buffers () noexcept;
+	inline void    set_responsiveness (T resp) noexcept;
+	inline void    set_threshold (T thr) noexcept;
 
 
 

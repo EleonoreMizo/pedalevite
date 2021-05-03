@@ -51,7 +51,7 @@ Throws: Nothing
 */
 
 template <class IP, int NPL2>
-void	InterpFirPolyphase <IP, NPL2>::set_impulse (const double impulse_ptr [IMPULSE_LEN])
+void	InterpFirPolyphase <IP, NPL2>::set_impulse (const double impulse_ptr [IMPULSE_LEN]) noexcept
 {
 	assert (impulse_ptr != nullptr);
 
@@ -94,7 +94,7 @@ Throws: Nothing
 */
 
 template <class IP, int NPL2>
-float	InterpFirPolyphase <IP, NPL2>::interpolate (const float data_ptr [], uint32_t frac_pos) const
+float	InterpFirPolyphase <IP, NPL2>::interpolate (const float data_ptr [], uint32_t frac_pos) const noexcept
 {
 	assert (data_ptr != nullptr);
 
@@ -111,7 +111,7 @@ float	InterpFirPolyphase <IP, NPL2>::interpolate (const float data_ptr [], uint3
 
 
 template <class IP, int NPL2>
-void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float * const out_ptr_arr [], long out_offset, const float * const in_ptr_arr [], long in_offset, uint32_t frac_pos, int nbr_chn) const
+void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float * const out_ptr_arr [], long out_offset, const float * const in_ptr_arr [], long in_offset, uint32_t frac_pos, int nbr_chn) const noexcept
 {
 	assert (out_ptr_arr != nullptr);
 	assert (in_ptr_arr != nullptr);
@@ -139,7 +139,7 @@ void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float * const out_ptr
 
 
 template <class IP, int NPL2>
-void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float out_ptr [], const float in_ptr [], uint32_t frac_pos, int nbr_chn, long chn_stride_in, long chn_stride_out) const
+void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float out_ptr [], const float in_ptr [], uint32_t frac_pos, int nbr_chn, long chn_stride_in, long chn_stride_out) const noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -174,7 +174,7 @@ void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float out_ptr [], con
 
 
 template <class IP, int NPL2>
-void	InterpFirPolyphase <IP, NPL2>::compute_phase_info (float &q, int &phase_index, uint32_t frac_pos)
+void	InterpFirPolyphase <IP, NPL2>::compute_phase_info (float &q, int &phase_index, uint32_t frac_pos) noexcept
 {
 	// q is made of the lower bits of the fractional position, scaled in the
 	// range [0 ; 1[.

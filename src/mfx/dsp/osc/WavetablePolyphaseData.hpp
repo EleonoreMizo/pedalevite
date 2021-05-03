@@ -22,8 +22,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <algorithm>
+
 #include <cassert>
-#include <cstring>
 
 
 
@@ -41,7 +42,7 @@ namespace osc
 
 
 template <int PLEN, int NPL2, typename DT>
-void	WavetablePolyphaseData <PLEN, NPL2, DT>::set_sample (int phase, int pos, DataType val)
+void	WavetablePolyphaseData <PLEN, NPL2, DT>::set_sample (int phase, int pos, DataType val) noexcept
 {
 	assert (phase >= 0);
 	assert (phase < NBR_PHASES);
@@ -54,7 +55,7 @@ void	WavetablePolyphaseData <PLEN, NPL2, DT>::set_sample (int phase, int pos, Da
 
 
 template <int PLEN, int NPL2, typename DT>
-void	WavetablePolyphaseData <PLEN, NPL2, DT>::set_sample (int phase_pos, DataType val)
+void	WavetablePolyphaseData <PLEN, NPL2, DT>::set_sample (int phase_pos, DataType val) noexcept
 {
 	assert (phase_pos >= 0);
 	assert (phase_pos < NBR_PHASES * PHASE_LEN);
@@ -66,7 +67,7 @@ void	WavetablePolyphaseData <PLEN, NPL2, DT>::set_sample (int phase_pos, DataTyp
 
 
 template <int PLEN, int NPL2, typename DT>
-typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType	WavetablePolyphaseData <PLEN, NPL2, DT>::get_sample (int phase, int pos) const
+typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType	WavetablePolyphaseData <PLEN, NPL2, DT>::get_sample (int phase, int pos) const noexcept
 {
 	assert (phase >= 0);
 	assert (phase < NBR_PHASES);
@@ -79,7 +80,7 @@ typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType	WavetablePolyphaseDat
 
 
 template <int PLEN, int NPL2, typename DT>
-typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType	WavetablePolyphaseData <PLEN, NPL2, DT>::get_sample (int phase_pos) const
+typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType	WavetablePolyphaseData <PLEN, NPL2, DT>::get_sample (int phase_pos) const noexcept
 {
 	assert (phase_pos >= 0);
 	assert (phase_pos < NBR_PHASES * PHASE_LEN);
@@ -91,7 +92,7 @@ typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType	WavetablePolyphaseDat
 
 
 template <int PLEN, int NPL2, typename DT>
-typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType *	WavetablePolyphaseData <PLEN, NPL2, DT>::use_table (int phase)
+typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType *	WavetablePolyphaseData <PLEN, NPL2, DT>::use_table (int phase) noexcept
 {
 	assert (phase >= 0);
 	assert (phase < NBR_PHASES);
@@ -102,7 +103,7 @@ typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType *	WavetablePolyphaseD
 
 
 template <int PLEN, int NPL2, typename DT>
-const typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType *	WavetablePolyphaseData <PLEN, NPL2, DT>::use_table (int phase) const
+const typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType *	WavetablePolyphaseData <PLEN, NPL2, DT>::use_table (int phase) const noexcept
 {
 	assert (phase >= 0);
 	assert (phase < NBR_PHASES);
@@ -113,13 +114,9 @@ const typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType *	WavetablePoly
 
 
 template <int PLEN, int NPL2, typename DT>
-void	WavetablePolyphaseData <PLEN, NPL2, DT>::clear_table (int phase)
+void	WavetablePolyphaseData <PLEN, NPL2, DT>::clear_table (int phase) noexcept
 {
-	memset (
-		&_data_arr [phase] [0],
-		0,
-		PHASE_LEN * sizeof (_data_arr [phase] [0])
-	);
+	std::fill (_data_arr [phase], _data_arr [phase] + PHASE_LEN, DataType (0));
 }
 
 

@@ -43,7 +43,7 @@ namespace iir
 
 
 
-Biquad4::Biquad4 ()
+Biquad4::Biquad4 () noexcept
 :	_biq_arr ()
 {
 	neutralise ();
@@ -52,7 +52,7 @@ Biquad4::Biquad4 ()
 
 
 
-void	Biquad4::neutralise ()
+void	Biquad4::neutralise () noexcept
 {
 	for (auto &biq : _biq_arr)
 	{
@@ -62,7 +62,7 @@ void	Biquad4::neutralise ()
 
 
 
-void	Biquad4::neutralise_one (int biq)
+void	Biquad4::neutralise_one (int biq) noexcept
 {
 	assert (biq >= 0);
 	assert (biq < _nbr_units);
@@ -72,7 +72,7 @@ void	Biquad4::neutralise_one (int biq)
 
 
 
-void	Biquad4::set_z_eq (const VectFloat4 b [3], const VectFloat4 a [3])
+void	Biquad4::set_z_eq (const VectFloat4 b [3], const VectFloat4 a [3]) noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -87,7 +87,7 @@ void	Biquad4::set_z_eq (const VectFloat4 b [3], const VectFloat4 a [3])
 
 
 
-void	Biquad4::set_z_eq_same (const float b [3], const float a [3])
+void	Biquad4::set_z_eq_same (const float b [3], const float a [3]) noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -100,7 +100,7 @@ void	Biquad4::set_z_eq_same (const float b [3], const float a [3])
 
 
 
-void	Biquad4::set_z_eq_one (int biq, const float b [3], const float a [3])
+void	Biquad4::set_z_eq_one (int biq, const float b [3], const float a [3]) noexcept
 {
 	assert (biq >= 0);
 	assert (biq < _nbr_units);
@@ -112,7 +112,7 @@ void	Biquad4::set_z_eq_one (int biq, const float b [3], const float a [3])
 
 
 
-void	Biquad4::get_z_eq (VectFloat4 b [3], VectFloat4 a [3]) const
+void	Biquad4::get_z_eq (VectFloat4 b [3], VectFloat4 a [3]) const noexcept
 {
 	assert (b != nullptr);
 	assert (a != nullptr);
@@ -132,7 +132,7 @@ void	Biquad4::get_z_eq (VectFloat4 b [3], VectFloat4 a [3]) const
 
 
 
-void	Biquad4::get_z_eq_one (int biq, float b [3], float a [3]) const
+void	Biquad4::get_z_eq_one (int biq, float b [3], float a [3]) const noexcept
 {
 	assert (biq >= 0);
 	assert (biq < _nbr_units);
@@ -144,7 +144,7 @@ void	Biquad4::get_z_eq_one (int biq, float b [3], float a [3]) const
 
 
 
-void	Biquad4::copy_z_eq (const Biquad4 &other)
+void	Biquad4::copy_z_eq (const Biquad4 &other) noexcept
 {
 	for (int cnt = 0; cnt < _nbr_units; ++cnt)
 	{
@@ -154,7 +154,7 @@ void	Biquad4::copy_z_eq (const Biquad4 &other)
 
 
 
-void	Biquad4::set_state_one (int biq, float const mem_x [2], const float mem_y [2])
+void	Biquad4::set_state_one (int biq, float const mem_x [2], const float mem_y [2]) noexcept
 {
 	assert (biq >= 0);
 	assert (biq < _nbr_units);
@@ -166,7 +166,7 @@ void	Biquad4::set_state_one (int biq, float const mem_x [2], const float mem_y [
 
 
 
-void	Biquad4::get_state_one (int biq, float mem_x [2], float mem_y [2]) const
+void	Biquad4::get_state_one (int biq, float mem_x [2], float mem_y [2]) const noexcept
 {
 	assert (biq >= 0);
 	assert (biq < _nbr_units);
@@ -178,7 +178,7 @@ void	Biquad4::get_state_one (int biq, float mem_x [2], float mem_y [2]) const
 
 
 
-void	Biquad4::process_block_serial_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Biquad4::process_block_serial_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -193,7 +193,7 @@ void	Biquad4::process_block_serial_immediate (float dst_ptr [], const float src_
 
 
 
-void	Biquad4::process_block_2x2_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Biquad4::process_block_2x2_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -221,7 +221,7 @@ void	Biquad4::process_block_2x2_immediate (float dst_ptr [], const float src_ptr
 
 
 
-void	Biquad4::clear_buffers ()
+void	Biquad4::clear_buffers () noexcept
 {
 	for (auto &biq : _biq_arr)
 	{
@@ -231,7 +231,7 @@ void	Biquad4::clear_buffers ()
 
 
 
-void	Biquad4::clear_buffers_one (int biq)
+void	Biquad4::clear_buffers_one (int biq) noexcept
 {
 	assert (biq >= 0);
 	assert (biq < _nbr_units);

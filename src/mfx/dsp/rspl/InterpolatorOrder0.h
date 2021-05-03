@@ -56,13 +56,13 @@ protected:
 
 	// InterpolatorInterface
 	inline void    do_set_ovrspl_l2 (int ovrspl_l2) override;
-	inline int     do_get_impulse_len () const override;
+	inline int     do_get_impulse_len () const noexcept override;
 	inline fstb::FixedPoint
-	               do_get_group_delay () const override;
+	               do_get_group_delay () const noexcept override;
 
-	inline void    do_start (int nbr_chn) override;
-	inline int     do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) override;
-	inline float   do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) override;
+	inline void    do_start (int nbr_chn) noexcept override;
+	inline int     do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept override;
+	inline float   do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) noexcept override;
 
 
 

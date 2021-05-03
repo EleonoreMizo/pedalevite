@@ -49,7 +49,7 @@ void	BbdLineReadable <BBD>::init (int max_bbd_size, double sample_freq, rspl::In
 
 
 template <class BBD>
-const rspl::InterpolatorInterface &	BbdLineReadable <BBD>::use_interpolator () const
+const rspl::InterpolatorInterface &	BbdLineReadable <BBD>::use_interpolator () const noexcept
 {
 	return _bbd.use_interpolator ();
 }
@@ -70,7 +70,7 @@ void	BbdLineReadable <BBD>::set_bbd_size (int bbd_size)
 
 
 template <class BBD>
-int	BbdLineReadable <BBD>::get_bbd_size () const
+int	BbdLineReadable <BBD>::get_bbd_size () const noexcept
 {
 	return _bbd.get_bbd_size ();
 }
@@ -78,7 +78,7 @@ int	BbdLineReadable <BBD>::get_bbd_size () const
 
 
 template <class BBD>
-void	BbdLineReadable <BBD>::set_speed (float speed)
+void	BbdLineReadable <BBD>::set_speed (float speed) noexcept
 {
 	_bbd.set_speed (speed);
 	_speed        = speed;
@@ -91,7 +91,7 @@ void	BbdLineReadable <BBD>::set_speed (float speed)
 
 
 template <class BBD>
-void	BbdLineReadable <BBD>::push_block (const float src_ptr [], int nbr_spl)
+void	BbdLineReadable <BBD>::push_block (const float src_ptr [], int nbr_spl) noexcept
 {
 	_bbd.push_block (src_ptr, nbr_spl);
 }
@@ -99,7 +99,7 @@ void	BbdLineReadable <BBD>::push_block (const float src_ptr [], int nbr_spl)
 
 
 template <class BBD>
-void	BbdLineReadable <BBD>::push_sample (float x)
+void	BbdLineReadable <BBD>::push_sample (float x) noexcept
 {
 	_bbd.push_sample (x);
 }
@@ -107,7 +107,7 @@ void	BbdLineReadable <BBD>::push_sample (float x)
 
 
 template <class BBD>
-void	BbdLineReadable <BBD>::clear_buffers ()
+void	BbdLineReadable <BBD>::clear_buffers () noexcept
 {
 	_bbd.clear_buffers ();
 }
@@ -119,7 +119,7 @@ void	BbdLineReadable <BBD>::clear_buffers ()
 
 
 template <class BBD>
-double	BbdLineReadable <BBD>::do_get_sample_freq () const
+double	BbdLineReadable <BBD>::do_get_sample_freq () const noexcept
 {
 	return _sample_freq;
 }
@@ -127,7 +127,7 @@ double	BbdLineReadable <BBD>::do_get_sample_freq () const
 
 
 template <class BBD>
-int	BbdLineReadable <BBD>::do_get_ovrspl_l2 () const
+int	BbdLineReadable <BBD>::do_get_ovrspl_l2 () const noexcept
 {
 	return _bbd.get_ovrspl_l2 ();
 }
@@ -135,7 +135,7 @@ int	BbdLineReadable <BBD>::do_get_ovrspl_l2 () const
 
 
 template <class BBD>
-double	BbdLineReadable <BBD>::do_get_min_delay_time () const
+double	BbdLineReadable <BBD>::do_get_min_delay_time () const noexcept
 {
 	assert (_min_dly_time > 0);
 
@@ -145,7 +145,7 @@ double	BbdLineReadable <BBD>::do_get_min_delay_time () const
 
 
 template <class BBD>
-double	BbdLineReadable <BBD>::do_get_max_delay_time () const
+double	BbdLineReadable <BBD>::do_get_max_delay_time () const noexcept
 {
 	assert (_max_dly_time > 0);
 
@@ -155,7 +155,7 @@ double	BbdLineReadable <BBD>::do_get_max_delay_time () const
 
 
 template <class BBD>
-int	BbdLineReadable <BBD>::do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const
+int	BbdLineReadable <BBD>::do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const noexcept
 {
 	const float    min_dly_bbd = float (min_dly_time) * _sample_freq * _speed;
 
@@ -165,7 +165,7 @@ int	BbdLineReadable <BBD>::do_estimate_max_one_shot_proc_w_feedback (double min_
 
 
 template <class BBD>
-void	BbdLineReadable <BBD>::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const
+void	BbdLineReadable <BBD>::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const noexcept
 {
 	const float    mult        = _sample_freq * _speed;
 	const float    dly_beg_bbd = float (dly_beg) * mult;
@@ -177,7 +177,7 @@ void	BbdLineReadable <BBD>::do_read_block (float dst_ptr [], int nbr_spl, double
 
 
 template <class BBD>
-float	BbdLineReadable <BBD>::do_read_sample (float dly) const
+float	BbdLineReadable <BBD>::do_read_sample (float dly) const noexcept
 {
 	const float    dly_bbd = dly * _sample_freq * _speed;
 

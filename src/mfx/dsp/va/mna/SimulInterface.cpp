@@ -56,7 +56,7 @@ PartInterface::IdNode	SimulInterface::allocate_node ()
 
 
 
-bool	SimulInterface::is_node_gnd (int node_idx) const
+bool	SimulInterface::is_node_gnd (int node_idx) const noexcept
 {
 	assert (node_idx >= 0);
 
@@ -65,7 +65,7 @@ bool	SimulInterface::is_node_gnd (int node_idx) const
 
 
 
-Flt	SimulInterface::get_voltage (int node_idx) const
+Flt	SimulInterface::get_voltage (int node_idx) const noexcept
 {
 	assert (node_idx >= 0);
 
@@ -74,7 +74,7 @@ Flt	SimulInterface::get_voltage (int node_idx) const
 
 
 
-Flt	SimulInterface::get_voltage (int n1_idx, int n2_idx) const
+Flt	SimulInterface::get_voltage (int n1_idx, int n2_idx) const noexcept
 {
 	assert (n1_idx >= 0);
 	assert (n2_idx >= 0);
@@ -84,7 +84,7 @@ Flt	SimulInterface::get_voltage (int n1_idx, int n2_idx) const
 
 
 
-void	SimulInterface::add_coef_mat (int row, int col, Flt val)
+void	SimulInterface::add_coef_mat (int row, int col, Flt val) noexcept
 {
 	assert (row >= 0);
 	assert (col >= 0);
@@ -94,7 +94,7 @@ void	SimulInterface::add_coef_mat (int row, int col, Flt val)
 
 
 
-void	SimulInterface::add_coef_vec (int row, Flt val)
+void	SimulInterface::add_coef_vec (int row, Flt val) noexcept
 {
 	assert (row >= 0);
 
@@ -103,7 +103,7 @@ void	SimulInterface::add_coef_vec (int row, Flt val)
 
 
 
-void	SimulInterface::add_passive (int n1_idx, int n2_idx, Flt g)
+void	SimulInterface::add_passive (int n1_idx, int n2_idx, Flt g) noexcept
 {
 	add_coef_mat (n1_idx, n1_idx, +g);
 	add_coef_mat (n1_idx, n2_idx, -g);
@@ -113,7 +113,7 @@ void	SimulInterface::add_passive (int n1_idx, int n2_idx, Flt g)
 
 
 
-void	SimulInterface::add_norton (int n1_idx, int n2_idx, Flt geq, Flt ieq)
+void	SimulInterface::add_norton (int n1_idx, int n2_idx, Flt geq, Flt ieq) noexcept
 {
 	add_passive (n1_idx, n2_idx, geq);
 	add_coef_vec (n1_idx, -ieq);

@@ -41,7 +41,7 @@ namespace va
 
 
 
-float	DiodeClipDAngelo::process_sample (float x)
+float	DiodeClipDAngelo::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -63,7 +63,7 @@ float	DiodeClipDAngelo::process_sample (float x)
 
 
 
-float	DiodeClipDAngelo::process_sample_internal (float x, float &mem_p)
+float	DiodeClipDAngelo::process_sample_internal (float x, float &mem_p) noexcept
 {
 	const float    q  = _k1 * x - mem_p;                  // Eq. 27
 	const bool     neg_flag = (q < 0);

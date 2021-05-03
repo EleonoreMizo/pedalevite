@@ -43,7 +43,7 @@ namespace ctrl
 
 
 
-InertiaRc::InertiaRc ()
+InertiaRc::InertiaRc () noexcept
 :	_sample_freq (44100)
 ,	_inertia_time (0.100f)
 ,	_start_val (0)
@@ -57,7 +57,7 @@ InertiaRc::InertiaRc ()
 
 
 
-void	InertiaRc::set_sample_freq (float sample_freq)
+void	InertiaRc::set_sample_freq (float sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -67,7 +67,7 @@ void	InertiaRc::set_sample_freq (float sample_freq)
 
 
 
-void	InertiaRc::set_inertia_time (float t)
+void	InertiaRc::set_inertia_time (float t) noexcept
 {
 	assert (t >= 0);
 
@@ -77,14 +77,14 @@ void	InertiaRc::set_inertia_time (float t)
 
 
 
-float	InertiaRc::get_inertia_time () const
+float	InertiaRc::get_inertia_time () const noexcept
 {
 	return _inertia_time;
 }
 
 
 
-void	InertiaRc::set_threshold (float threshold)
+void	InertiaRc::set_threshold (float threshold) noexcept
 {
 	assert (threshold > 0);
 
@@ -94,7 +94,7 @@ void	InertiaRc::set_threshold (float threshold)
 
 
 
-void	InertiaRc::set_val (float val)
+void	InertiaRc::set_val (float val) noexcept
 {
 	_start_val = get_val ();
 	_final_val = val;
@@ -103,7 +103,7 @@ void	InertiaRc::set_val (float val)
 
 
 
-void	InertiaRc::force_val (float val)
+void	InertiaRc::force_val (float val) noexcept
 {
 	_start_val = val;
 	_final_val = val;
@@ -112,7 +112,7 @@ void	InertiaRc::force_val (float val)
 
 
 
-float	InertiaRc::get_val () const
+float	InertiaRc::get_val () const noexcept
 {
 	const float    lerp = _rc.get_val ();
 
@@ -121,35 +121,35 @@ float	InertiaRc::get_val () const
 
 
 
-float	InertiaRc::get_target_val () const
+float	InertiaRc::get_target_val () const noexcept
 {
 	return _final_val;
 }
 
 
 
-void	InertiaRc::tick (long nbr_spl)
+void	InertiaRc::tick (long nbr_spl) noexcept
 {
 	_rc.skip_block (nbr_spl);
 }
 
 
 
-bool	InertiaRc::is_ramping () const
+bool	InertiaRc::is_ramping () const noexcept
 {
 	return (_start_val != _final_val && ! _rc.is_finished ());
 }
 
 
 
-void	InertiaRc::stop ()
+void	InertiaRc::stop () noexcept
 {
 	force_val (get_val ());
 }
 
 
 
-void	InertiaRc::clear_buffers ()
+void	InertiaRc::clear_buffers () noexcept
 {
 	force_val (_final_val);
 }
@@ -164,7 +164,7 @@ void	InertiaRc::clear_buffers ()
 
 
 
-void	InertiaRc::update_inertia_time ()
+void	InertiaRc::update_inertia_time () noexcept
 {
 	float          mult = 0;
 	if (_inertia_time >  0)

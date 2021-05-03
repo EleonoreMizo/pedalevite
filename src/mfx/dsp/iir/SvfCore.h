@@ -9,9 +9,9 @@ Template parameters:
 	outputs (v1 and v2).
 	Requires:
 	static float MX::mix (float v0, float v1, float v2,
-		float v0m, float v1m, float v2m);
+		float v0m, float v1m, float v2m) noexcept;
 	static void MX::inc (float &v0m, float &v1m, float &v2m,
-		float v0mi, float v1mi, float v2mi);
+		float v0mi, float v1mi, float v2mi) noexcept;
 
 Implements:
 
@@ -97,46 +97,38 @@ public:
 
 	typedef MX Mixer;
 
-	               SvfCore ()                        = default;
-	               SvfCore (const SvfCore &other)    = default;
-	               SvfCore (SvfCore &&other)         = default;
-	               ~SvfCore ()                       = default;
+	void           neutralise () noexcept;
+	void           set_coefs (float g0, float g1, float g2) noexcept;
+	void           get_coefs (float &g0, float &g1, float &g2) const noexcept;
+	void           set_mix (float v0m, float v1m, float v2m) noexcept;
+	void           get_mix (float &v0m, float &v1m, float &v2m) const noexcept;
+	void           copy_z_eq (const SvfCore <MX> &other) noexcept;
 
-	SvfCore &      operator = (const SvfCore &other) = default;
-	SvfCore &      operator = (SvfCore &&other)      = default;
-
-	void           neutralise ();
-	void           set_coefs (float g0, float g1, float g2);
-	void           get_coefs (float &g0, float &g1, float &g2) const;
-	void           set_mix (float v0m, float v1m, float v2m);
-	void           get_mix (float &v0m, float &v1m, float &v2m) const;
-	void           copy_z_eq (const SvfCore <MX> &other);
-
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float x);
+	               process_sample (float x) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample (float x, float g0, float g1, float g2);
+	               process_sample (float x, float g0, float g1, float g2) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample (float x, float g0, float g1, float g2, float v0m, float v1m, float v2m);
+	               process_sample (float x, float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_inc (float x, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi);
+	               process_sample_inc (float x, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi) noexcept;
 
 	fstb_FORCEINLINE std::array <float, 2>
-	               process_sample_mm (float x);
+	               process_sample_mm (float x) noexcept;
 	fstb_FORCEINLINE std::array <float, 2>
-	               process_sample_mm (float x, float g0, float g1, float g2);
+	               process_sample_mm (float x, float g0, float g1, float g2) noexcept;
 	fstb_FORCEINLINE std::array <float, 2>
-	               process_sample_mm_inc (float x, float g0i, float g1i, float g2i);
+	               process_sample_mm_inc (float x, float g0i, float g1i, float g2i) noexcept;
 
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [], const float v0m_ptr [], const float v1m_ptr [], const float v2m_ptr []);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [], const float v0m_ptr [], const float v1m_ptr [], const float v2m_ptr []) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi) noexcept;
 
-	void           process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []);
+	void           process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []) noexcept;
 
 
 
@@ -151,11 +143,11 @@ protected:
 private:
 
 	fstb_FORCEINLINE void
-	               iterate (float v0, float &v1, float &v2, float g0, float g1, float g2);
+	               iterate (float v0, float &v1, float &v2, float g0, float g1, float g2) noexcept;
 	static fstb_FORCEINLINE void
-	               increment (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi);
+	               increment (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi) noexcept;
 	static fstb_FORCEINLINE void
-	               increment (float &g0, float &g1, float &g2, float g0i, float g1i, float g2i);
+	               increment (float &g0, float &g1, float &g2, float g0i, float g1i, float g2i) noexcept;
 
 	// Coefficients
 	float          _g0    = 0;

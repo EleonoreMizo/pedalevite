@@ -43,6 +43,16 @@ namespace fir
 
 
 
+template <typename DT, typename ST>
+void	MovingSum <DT, ST>::reserve (int len)
+{
+	assert (len > 0);
+
+	_buf.reserve (len);
+}
+
+
+
 // Filter memory may be lost if the size is actually changed
 template <typename DT, typename ST>
 void	MovingSum <DT, ST>::set_win_len (int len)
@@ -60,7 +70,7 @@ void	MovingSum <DT, ST>::set_win_len (int len)
 
 
 template <typename DT, typename ST>
-typename MovingSum <DT, ST>::SumType	MovingSum <DT, ST>::process_sample (DataType x)
+typename MovingSum <DT, ST>::SumType	MovingSum <DT, ST>::process_sample (DataType x) noexcept
 {
 	_sum_u += x;
 	_sum_d -= _buf [_pos_rw];
@@ -80,7 +90,7 @@ typename MovingSum <DT, ST>::SumType	MovingSum <DT, ST>::process_sample (DataTyp
 
 
 template <typename DT, typename ST>
-void	MovingSum <DT, ST>::process_block (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl)
+void	MovingSum <DT, ST>::process_block (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -117,7 +127,7 @@ void	MovingSum <DT, ST>::process_block (SumType dst_ptr [], const DataType src_p
 
 
 template <typename DT, typename ST>
-void	MovingSum <DT, ST>::clear_buffers ()
+void	MovingSum <DT, ST>::clear_buffers () noexcept
 {
 	std::fill (_buf.begin (), _buf.end (), DataType (0));
 	_pos_rw = 0;

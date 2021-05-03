@@ -54,7 +54,7 @@ class WsPuncherB
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		const double   m  = 20; // Range
 		const double   z  = log (m + 1);

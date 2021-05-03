@@ -102,7 +102,7 @@ DelayLineData <T, AL> &	DelayLineData <T, AL>::operator = (const DelayLineData &
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::set_extra_len (int nbr_spl)
+void	DelayLineData <T, AL>::set_extra_len (int nbr_spl) noexcept
 {
 	assert (nbr_spl >= 0);
 	_extra_len = nbr_spl;
@@ -112,15 +112,15 @@ void	DelayLineData <T, AL>::set_extra_len (int nbr_spl)
 
 
 template <typename T, typename AL>
-int	DelayLineData <T, AL>::get_extra_len () const
+int	DelayLineData <T, AL>::get_extra_len () const noexcept
 {
-	return (_extra_len);
+	return _extra_len;
 }
 
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::set_unroll_pre (int nbr_spl)
+void	DelayLineData <T, AL>::set_unroll_pre (int nbr_spl) noexcept
 {
 	assert (nbr_spl >= 0);
 	_unroll_pre = nbr_spl;
@@ -130,15 +130,15 @@ void	DelayLineData <T, AL>::set_unroll_pre (int nbr_spl)
 
 
 template <typename T, typename AL>
-int	DelayLineData <T, AL>::get_unroll_pre () const
+int	DelayLineData <T, AL>::get_unroll_pre () const noexcept
 {
-	return (_unroll_pre);
+	return _unroll_pre;
 }
 
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::set_unroll_post (int nbr_spl)
+void	DelayLineData <T, AL>::set_unroll_post (int nbr_spl) noexcept
 {
 	assert (nbr_spl >= 0);
 	_unroll_post = nbr_spl;
@@ -148,9 +148,9 @@ void	DelayLineData <T, AL>::set_unroll_post (int nbr_spl)
 
 
 template <typename T, typename AL>
-int	DelayLineData <T, AL>::get_unroll_post () const
+int	DelayLineData <T, AL>::get_unroll_post () const noexcept
 {
-	return (_unroll_post);
+	return _unroll_post;
 }
 
 
@@ -178,9 +178,9 @@ void	DelayLineData <T, AL>::set_max_delay_time (double max_time)
 
 
 template <typename T, typename AL>
-double	DelayLineData <T, AL>::get_max_delay_time () const
+double	DelayLineData <T, AL>::get_max_delay_time () const noexcept
 {
-	return (_max_time);
+	return _max_time;
 }
 
 
@@ -209,7 +209,7 @@ void	DelayLineData <T, AL>::update_buffer_size ()
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::update_unroll ()
+void	DelayLineData <T, AL>::update_unroll () noexcept
 {
 	assert (_buf_ptr != nullptr);
 	update_unroll_pre ();
@@ -219,7 +219,7 @@ void	DelayLineData <T, AL>::update_unroll ()
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::update_unroll_pre ()
+void	DelayLineData <T, AL>::update_unroll_pre () noexcept
 {
 	assert (_buf_ptr != nullptr);
 	assert (_unroll_pre <= _buf_len);
@@ -233,7 +233,7 @@ void	DelayLineData <T, AL>::update_unroll_pre ()
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::update_unroll_post ()
+void	DelayLineData <T, AL>::update_unroll_post () noexcept
 {
 	assert (_buf_ptr != nullptr);
 
@@ -246,7 +246,7 @@ void	DelayLineData <T, AL>::update_unroll_post ()
 
 
 template <typename T, typename AL>
-int	DelayLineData <T, AL>::get_len () const
+int	DelayLineData <T, AL>::get_len () const noexcept
 {
 	assert (_buf_ptr != nullptr);
 
@@ -256,7 +256,7 @@ int	DelayLineData <T, AL>::get_len () const
 
 
 template <typename T, typename AL>
-int	DelayLineData <T, AL>::get_mask () const
+int	DelayLineData <T, AL>::get_mask () const noexcept
 {
 	return _buf_mask;
 }
@@ -264,7 +264,7 @@ int	DelayLineData <T, AL>::get_mask () const
 
 
 template <typename T, typename AL>
-typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer ()
+typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer () noexcept
 {
 	assert (_buf_ptr != nullptr);
 
@@ -274,7 +274,7 @@ typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer ()
 
 
 template <typename T, typename AL>
-const typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer () const
+const typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer () const noexcept
 {
 	assert (_buf_ptr != nullptr);
 
@@ -284,7 +284,7 @@ const typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buf
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::clear_buffers ()
+void	DelayLineData <T, AL>::clear_buffers () noexcept
 {
 	assert (_buf_ptr != nullptr);
 
@@ -306,7 +306,7 @@ void	DelayLineData <T, AL>::clear_buffers ()
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::invalidate_buf ()
+void	DelayLineData <T, AL>::invalidate_buf () noexcept
 {
 	_buf_ptr  = nullptr;
 	_buf_len  = 0;

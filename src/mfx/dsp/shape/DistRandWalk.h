@@ -47,10 +47,10 @@ class DistRandWalk
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           clear_buffers ();
-	inline float   process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           clear_buffers () noexcept;
+	inline float   process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 

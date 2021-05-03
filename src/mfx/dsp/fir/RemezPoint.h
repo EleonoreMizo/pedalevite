@@ -59,7 +59,7 @@ class RemezPoint
 public:
 
 	               RemezPoint ()                        = default;
-	explicit       RemezPoint (double lower_freq, double upper_freq, double amp, double weight = 1);
+	explicit       RemezPoint (double lower_freq, double upper_freq, double amp, double weight = 1) noexcept;
 	               RemezPoint (const RemezPoint &other) = default;
 	               RemezPoint (RemezPoint &&other)      = default;
 
@@ -67,16 +67,16 @@ public:
 	RemezPoint &   operator = (const RemezPoint &other) = default;
 	RemezPoint &   operator = (RemezPoint &&other)      = default;
 
-	void           set_lower_freq (double freq);
-	double         get_lower_freq () const;
-	void           set_upper_freq (double freq);
-	double         get_upper_freq () const;
+	void           set_lower_freq (double freq) noexcept;
+	double         get_lower_freq () const noexcept;
+	void           set_upper_freq (double freq) noexcept;
+	double         get_upper_freq () const noexcept;
 
-	void           set_amp (double amp);
-	double         get_amp () const;
+	void           set_amp (double amp) noexcept;
+	double         get_amp () const noexcept;
 
-	void           set_weight (double weight);
-	double         get_weight () const;
+	void           set_weight (double weight) noexcept;
+	double         get_weight () const noexcept;
 
 
 

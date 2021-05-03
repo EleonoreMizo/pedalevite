@@ -45,7 +45,7 @@ namespace dyn
 
 
 
-void	Compander::set_sample_freq (double sample_freq)
+void	Compander::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -55,7 +55,7 @@ void	Compander::set_sample_freq (double sample_freq)
 
 
 
-void	Compander::set_type (Type type)
+void	Compander::set_type (Type type) noexcept
 {
 	assert (type >= 0);
 	assert (type < Type_NBR_ELT);
@@ -65,7 +65,7 @@ void	Compander::set_type (Type type)
 
 
 
-void	Compander::set_time (float t)
+void	Compander::set_time (float t) noexcept
 {
 	assert (t > 0);
 
@@ -75,7 +75,7 @@ void	Compander::set_time (float t)
 
 
 
-void	Compander::set_threshold_lvl (float thr)
+void	Compander::set_threshold_lvl (float thr) noexcept
 {
 	assert (thr > 0);
 
@@ -84,14 +84,14 @@ void	Compander::set_threshold_lvl (float thr)
 
 
 
-void	Compander::clear_buffers ()
+void	Compander::clear_buffers () noexcept
 {
 	_state = 0;
 }
 
 
 
-float	Compander::process_sample (float x)
+float	Compander::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -117,7 +117,7 @@ float	Compander::process_sample (float x)
 
 
 
-void	Compander::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Compander::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);
@@ -161,7 +161,7 @@ void	Compander::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 
 
-void	Compander::update_coef ()
+void	Compander::update_coef () noexcept
 {
 	if (_sample_freq > 0)
 	{
@@ -174,7 +174,7 @@ void	Compander::update_coef ()
 
 
 
-void	Compander::set_new_state (float x)
+void	Compander::set_new_state (float x) noexcept
 {
 	const float    xa = fabs (x);
 	if (xa < _lvl_thr)

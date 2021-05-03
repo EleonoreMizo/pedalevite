@@ -42,7 +42,7 @@ namespace ltc
 
 
 template <class D, int N>
-D &	LatticeStereo <D, N>::use_delay (int chn, int idx)
+D &	LatticeStereo <D, N>::use_delay (int chn, int idx) noexcept
 {
 	assert (chn >= 0);
 	assert (chn < _nbr_chn);
@@ -55,7 +55,7 @@ D &	LatticeStereo <D, N>::use_delay (int chn, int idx)
 
 
 template <class D, int N>
-void	LatticeStereo <D, N>::set_coef (int chn, int idx, DataType c)
+void	LatticeStereo <D, N>::set_coef (int chn, int idx, DataType c) noexcept
 {
 	assert (chn >= 0);
 	assert (chn < _nbr_chn);
@@ -70,7 +70,7 @@ void	LatticeStereo <D, N>::set_coef (int chn, int idx, DataType c)
 
 
 template <class D, int N>
-void	LatticeStereo <D, N>::set_cross_feedback (DataType cf)
+void	LatticeStereo <D, N>::set_cross_feedback (DataType cf) noexcept
 {
 	assert (cf >= 0);
 	assert (cf <= 1);
@@ -83,7 +83,7 @@ void	LatticeStereo <D, N>::set_cross_feedback (DataType cf)
 // first  = left
 // second = right
 template <class D, int N>
-std::pair <typename LatticeStereo <D, N>::DataType, typename LatticeStereo <D, N>::DataType>	LatticeStereo <D, N>::process_sample (DataType xl, DataType xr)
+std::pair <typename LatticeStereo <D, N>::DataType, typename LatticeStereo <D, N>::DataType>	LatticeStereo <D, N>::process_sample (DataType xl, DataType xr) noexcept
 {
 	for (int idx = 0; idx < _nbr_proc; idx += 2)
 	{
@@ -113,7 +113,7 @@ std::pair <typename LatticeStereo <D, N>::DataType, typename LatticeStereo <D, N
 
 
 template <class D, int N>
-void	LatticeStereo <D, N>::clear_buffers ()
+void	LatticeStereo <D, N>::clear_buffers () noexcept
 {
 	for (auto &lattice : _ltc_arr)
 	{

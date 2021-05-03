@@ -181,7 +181,7 @@ Throws: Nothing.
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::set_ramp_time (int nbr_spl)
+void	BiquadPackSimd <VD, VS>::set_ramp_time (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -255,7 +255,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::set_biquad (int stage, int chn, const float b [3], const float a [3], bool ramp_flag)
+void	BiquadPackSimd <VD, VS>::set_biquad (int stage, int chn, const float b [3], const float a [3], bool ramp_flag) noexcept
 {
 	assert (stage >= 0);
 	assert (stage < _nbr_stages);
@@ -290,7 +290,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::get_biquad (int stage, int chn, float b [3], float a [3]) const
+void	BiquadPackSimd <VD, VS>::get_biquad (int stage, int chn, float b [3], float a [3]) const noexcept
 {
 	assert (stage >= 0);
 	assert (stage < _nbr_stages);
@@ -326,7 +326,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::get_biquad_target (int stage, int chn, float b [3], float a [3]) const
+void	BiquadPackSimd <VD, VS>::get_biquad_target (int stage, int chn, float b [3], float a [3]) const noexcept
 {
 	assert (stage >= 0);
 	assert (stage < _nbr_stages);
@@ -374,7 +374,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
+void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (out_ptr_arr != nullptr);
 	assert (in_ptr_arr != nullptr);
@@ -440,7 +440,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end)
+void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end) noexcept
 {
 	assert (out_ptr_arr != 0);
 	assert (in_ptr != 0);
@@ -496,7 +496,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::clear_buffers ()
+void	BiquadPackSimd <VD, VS>::clear_buffers () noexcept
 {
 	for (int pack_index = 0; pack_index < _nbr_packs; ++pack_index)
 	{
@@ -519,7 +519,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::clear_buffers_one (int stage, int chn)
+void	BiquadPackSimd <VD, VS>::clear_buffers_one (int stage, int chn) noexcept
 {
 	assert (stage >= 0);
 	assert (stage < _nbr_stages);
@@ -545,7 +545,7 @@ void	BiquadPackSimd <VD, VS>::clear_buffers_one (int stage, int chn)
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::find_biq (int &pack_index, int &biq_index, int stage, int chn) const
+void	BiquadPackSimd <VD, VS>::find_biq (int &pack_index, int &biq_index, int stage, int chn) const noexcept
 {
 	assert (stage >= 0);
 	assert (stage < _nbr_stages);
@@ -611,7 +611,7 @@ void	BiquadPackSimd <VD, VS>::set_config_internal (int nbr_stages, int nbr_chn)
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::save_info ()
+void	BiquadPackSimd <VD, VS>::save_info () noexcept
 {
 	assert (int (_biq_info_list.size ()) >= _nbr_stages * _nbr_chn);
 
@@ -636,7 +636,7 @@ void	BiquadPackSimd <VD, VS>::save_info ()
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::load_info (int nbr_stages, int nbr_chn)
+void	BiquadPackSimd <VD, VS>::load_info (int nbr_stages, int nbr_chn) noexcept
 {
 	assert (int (_biq_info_list.size ()) >= nbr_stages * nbr_chn);
 	assert (nbr_stages >= 0);
@@ -666,7 +666,7 @@ void	BiquadPackSimd <VD, VS>::load_info (int nbr_stages, int nbr_chn)
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end, bool mono_source_flag)
+void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end, bool mono_source_flag) noexcept
 {
 	int            pack_index = 0;
 	for (int chn_base = 0; chn_base < _nbr_chn; chn_base += 4)
@@ -771,7 +771,7 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	int            pack_index = 0;
 	for (int chn = 0; chn < _nbr_chn; ++chn)
@@ -789,7 +789,7 @@ void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr []
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end) noexcept
 {
 	int            pack_index = 0;
 	for (int chn = 0; chn < _nbr_chn; ++chn)
@@ -807,7 +807,7 @@ void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr []
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_serial_one_chn (float out_ptr [], const float in_ptr [], int pos_beg, int pos_end, int &pack_index)
+void	BiquadPackSimd <VD, VS>::process_block_serial_one_chn (float out_ptr [], const float in_ptr [], int pos_beg, int pos_end, int &pack_index) noexcept
 {
 	const float *  src_ptr = in_ptr;
 	const int      group_end = pack_index + _group_size;
@@ -829,7 +829,7 @@ void	BiquadPackSimd <VD, VS>::process_block_serial_one_chn (float out_ptr [], co
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	assert (_nbr_packs == 1);
 
@@ -877,7 +877,7 @@ void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], c
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end) noexcept
 {
 	const float * const in_ptr_arr [2] = { in_ptr, in_ptr };
 	process_block_2x2 (out_ptr_arr, in_ptr_arr, pos_beg, pos_end);
@@ -900,7 +900,7 @@ Chn Stg Config
 */
 
 template <class VD, class VS>
-typename BiquadPackSimd <VD, VS>::ProcConf	BiquadPackSimd <VD, VS>::compute_proc_conf (int nbr_stages, int nbr_chn)
+typename BiquadPackSimd <VD, VS>::ProcConf	BiquadPackSimd <VD, VS>::compute_proc_conf (int nbr_stages, int nbr_chn) noexcept
 {
 	assert (nbr_stages >= 0);
 	assert (nbr_chn >= 0);
@@ -938,7 +938,7 @@ typename BiquadPackSimd <VD, VS>::ProcConf	BiquadPackSimd <VD, VS>::compute_proc
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::compute_config_info (ProcConf &proc_conf, int &nbr_packs, int &group_size, int nbr_stages, int nbr_chn)
+void	BiquadPackSimd <VD, VS>::compute_config_info (ProcConf &proc_conf, int &nbr_packs, int &group_size, int nbr_stages, int nbr_chn) noexcept
 {
 	assert (nbr_stages >= 0);
 	assert (nbr_chn >= 0);

@@ -42,7 +42,7 @@ namespace shape
 
 
 
-float	DistRandWalk::process_sample (float x)
+float	DistRandWalk::process_sample (float x) noexcept
 {
 	_sum += x;
 	_val += _inc;

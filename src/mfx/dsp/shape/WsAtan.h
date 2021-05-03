@@ -45,7 +45,7 @@ class WsAtan
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		return (2 / fstb::PI) * atan (fstb::PI * 0.5 * x);
 	}

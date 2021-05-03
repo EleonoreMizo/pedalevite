@@ -52,7 +52,7 @@ public:
 	static const int  _nbr_units_l2 = 2;
 	static const int  _nbr_units    = 1 << _nbr_units_l2;
 
-	               OscSinCosEulerSimd ();
+	               OscSinCosEulerSimd () noexcept;
 	               OscSinCosEulerSimd (const OscSinCosEulerSimd &other) = default;
 	               OscSinCosEulerSimd (OscSinCosEulerSimd &&other) = default;
 
@@ -63,17 +63,17 @@ public:
 	OscSinCosEulerSimd &
 	               operator = (OscSinCosEulerSimd &&other)         = default;
 
-	void           set_phase (float phase);
-	void           set_step (float step);
+	void           set_phase (float phase) noexcept;
+	void           set_step (float step) noexcept;
 
-	void           step ();
+	void           step () noexcept;
 	fstb::ToolsSimd::VectF32
-	               get_cos () const;
+	               get_cos () const noexcept;
 	fstb::ToolsSimd::VectF32
-	               get_sin () const;
-	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec);
-	void           correct ();
-	void           correct_fast ();
+	               get_sin () const noexcept;
+	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec) noexcept;
+	void           correct () noexcept;
+	void           correct_fast () noexcept;
 
 
 
@@ -87,7 +87,7 @@ protected:
 
 private:
 
-	void           resync (float c0, float s0);
+	void           resync (float c0, float s0) noexcept;
 
 	alignas (16) fstb::ToolsSimd::VectF32
 	               _pos_cos;

@@ -44,7 +44,7 @@ namespace va
 
 
 
-void	MoogLadderMystran::set_sample_freq (double sample_freq)
+void	MoogLadderMystran::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -54,7 +54,7 @@ void	MoogLadderMystran::set_sample_freq (double sample_freq)
 
 
 
-void	MoogLadderMystran::set_freq (float freq)
+void	MoogLadderMystran::set_freq (float freq) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (freq > 0);
@@ -67,7 +67,7 @@ void	MoogLadderMystran::set_freq (float freq)
 
 
 // Normalised resonance. 1 = self osc
-void	MoogLadderMystran::set_reso (float reso)
+void	MoogLadderMystran::set_reso (float reso) noexcept
 {
 	assert (reso >= 0);
 	assert (reso <= float (_max_reso));
@@ -83,7 +83,7 @@ void	MoogLadderMystran::set_reso (float reso)
 
 
 
-void	MoogLadderMystran::set_gain_comp (float gc)
+void	MoogLadderMystran::set_gain_comp (float gc) noexcept
 {
 	assert (gc >= 0);
 	assert (gc <= 1);
@@ -94,7 +94,7 @@ void	MoogLadderMystran::set_gain_comp (float gc)
 
 
 
-void	MoogLadderMystran::set_freq_comp (bool comp_flag)
+void	MoogLadderMystran::set_freq_comp (bool comp_flag) noexcept
 {
 	if (_freq_comp_flag != comp_flag)
 	{
@@ -105,7 +105,7 @@ void	MoogLadderMystran::set_freq_comp (bool comp_flag)
 
 
 
-float	MoogLadderMystran::process_sample (float x)
+float	MoogLadderMystran::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -125,7 +125,7 @@ float	MoogLadderMystran::process_sample (float x)
 
 
 
-float	MoogLadderMystran::process_sample (float x, float stage_in_ptr [4])
+float	MoogLadderMystran::process_sample (float x, float stage_in_ptr [4]) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -149,7 +149,7 @@ float	MoogLadderMystran::process_sample (float x, float stage_in_ptr [4])
 
 
 
-float	MoogLadderMystran::process_sample_pitch_mod (float x, float m)
+float	MoogLadderMystran::process_sample_pitch_mod (float x, float m) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -170,7 +170,7 @@ float	MoogLadderMystran::process_sample_pitch_mod (float x, float m)
 
 
 
-float	MoogLadderMystran::process_sample_pitch_mod (float x, float m, float stage_in_ptr [4])
+float	MoogLadderMystran::process_sample_pitch_mod (float x, float m, float stage_in_ptr [4]) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -195,7 +195,7 @@ float	MoogLadderMystran::process_sample_pitch_mod (float x, float m, float stage
 
 
 
-void	MoogLadderMystran::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	MoogLadderMystran::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);
@@ -220,7 +220,7 @@ void	MoogLadderMystran::process_block (float dst_ptr [], const float src_ptr [],
 
 
 
-void	MoogLadderMystran::process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl)
+void	MoogLadderMystran::process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);
@@ -247,7 +247,7 @@ void	MoogLadderMystran::process_block_pitch_mod (float dst_ptr [], const float s
 
 
 
-void	MoogLadderMystran::clear_buffers ()
+void	MoogLadderMystran::clear_buffers () noexcept
 {
 	_zi = 0;
 	_s_arr.fill (0);
@@ -263,7 +263,7 @@ void	MoogLadderMystran::clear_buffers ()
 
 
 
-float	MoogLadderMystran::process_sample_internal (float x, float f, float &xx, float &y0, float &y1, float &y2)
+float	MoogLadderMystran::process_sample_internal (float x, float f, float &xx, float &y0, float &y1, float &y2) noexcept
 {
 	// Input with half delay, for non-linearities
 	const float    ih = 0.5f * (x + _zi);
@@ -316,14 +316,14 @@ float	MoogLadderMystran::process_sample_internal (float x, float f, float &xx, f
 
 
 
-void	MoogLadderMystran::update_gaincomp ()
+void	MoogLadderMystran::update_gaincomp () noexcept
 {
 	_gc_mul = 1 + std::min (_r, 4.f) * _gaincomp;
 }
 
 
 
-void	MoogLadderMystran::update_cutoff ()
+void	MoogLadderMystran::update_cutoff () noexcept
 {
 	const float    a = _piofs * _fc;
 	_f  = fstb::Approx::tan_taylor5 (a);
@@ -343,7 +343,7 @@ void	MoogLadderMystran::update_cutoff ()
 
 
 
-float	MoogLadderMystran::compute_alpha (float k) const
+float	MoogLadderMystran::compute_alpha (float k) const noexcept
 {
 	const float    k_rt4 = float (sqrt (sqrt (k)));
 	const float    alpha = float (
@@ -357,7 +357,7 @@ float	MoogLadderMystran::compute_alpha (float k) const
 
 // tanh(x)/x approximation, flatline at very high inputs
 // so might not be safe for very large feedback gains.
-constexpr float	MoogLadderMystran::tanh_xdx (float x)
+constexpr float	MoogLadderMystran::tanh_xdx (float x) noexcept
 {
 	const float    x2 = x * x;
 

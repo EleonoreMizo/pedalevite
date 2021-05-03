@@ -42,7 +42,7 @@ namespace dyn
 
 
 template <class VP, int ORD>
-EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper ()
+EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper () noexcept
 :	_state ()
 ,	_hold_state ()
 ,	_reset_mask ()
@@ -58,7 +58,7 @@ EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper ()
 
 
 template <class VP, int ORD>
-EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other)
+EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept
 :	_state ()
 ,	_hold_state ()
 ,	_reset_mask ()
@@ -74,7 +74,7 @@ EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (const EnvFol
 
 
 template <class VP, int ORD>
-EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other)
+EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other) noexcept
 :	_state ()
 ,	_hold_state ()
 ,	_reset_mask ()
@@ -90,7 +90,7 @@ EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (EnvFollowerA
 
 
 template <class VP, int ORD>
-EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::operator = (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other)
+EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::operator = (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept
 {
 	if (this != &other)
 	{
@@ -108,7 +108,7 @@ EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::o
 
 
 template <class VP, int ORD>
-EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::operator = (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other)
+EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::operator = (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other) noexcept
 {
 	if (this != &other)
 	{
@@ -126,7 +126,7 @@ EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::o
 
 
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_atk_coef (float coef)
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_atk_coef (float coef) noexcept
 {
 	assert (coef > 0);
 	assert (coef <= 1);
@@ -138,7 +138,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_atk_coef (float coef)
 
 // 4-samples accuracy
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_hold_time (int nbr_spl)
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_hold_time (int nbr_spl) noexcept
 {
 	assert (nbr_spl >= 0);
 
@@ -149,7 +149,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_hold_time (int nbr_spl)
 
 
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_rls_coef (float coef)
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_rls_coef (float coef) noexcept
 {
 	assert (coef > 0);
 	assert (coef <= 1);
@@ -161,7 +161,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::set_rls_coef (float coef)
 
 // in must contain only positive values!
 template <class VP, int ORD>
-float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in)
+float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 {
 	assert (in >= 0);
 
@@ -244,7 +244,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in)
 // Input data must contain only positive values!
 // Can work in-place.
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -337,7 +337,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 
 
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::clear_buffers ()
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::clear_buffers () noexcept
 {
 	for (int flt = 0; flt < ORD; ++flt)
 	{
@@ -362,7 +362,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::clear_buffers ()
 
 
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other)
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept
 {
 	for (int flt = 0; flt < ORD; ++flt)
 	{
@@ -375,7 +375,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::copy_vect_data (const EnvFollowerAHR
 
 
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl)
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -394,7 +394,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::ToolsSimd::Ve
 
 
 template <class VP, int ORD>
-bool	EnvFollowerAHR1LrSimdHelper <VP, ORD>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in)
+bool	EnvFollowerAHR1LrSimdHelper <VP, ORD>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept
 {
 	return (
 		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0

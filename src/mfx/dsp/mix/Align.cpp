@@ -52,14 +52,14 @@ namespace mix
 
 
 
-bool	Align::is_ready ()
+bool	Align::is_ready () noexcept
 {
 	return (use_instance ()._state == State_READY);
 }
 
 
 
-void	Align::setup ()
+void	Align::setup () noexcept
 {
 	use_instance ().setup_internal ();
 }
@@ -67,169 +67,169 @@ void	Align::setup ()
 
 
 // Scale
-void	(*Align::scale_1_v) (float data_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::scale_1_vlr) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::scale_1_vlrauto) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::scale_1_v) (float data_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::scale_1_vlr) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::scale_1_vlrauto) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::scale_2_v) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::scale_2_vlr) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::scale_2_vlrauto) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::scale_2_v) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::scale_2_vlr) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::scale_2_vlrauto) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Copy
-void	(*Align::copy_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::copy_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::copy_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::copy_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Spread copying
-void	(*Align::copy_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) = nullptr;
-void	(*Align::copy_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
-void	(*Align::copy_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
+void	(*Align::copy_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept = nullptr;
+void	(*Align::copy_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
+void	(*Align::copy_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
 
 // Cross-fade copying
-void	(*Align::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf) = nullptr;
-void	(*Align::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) = nullptr;
-void	(*Align::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) = nullptr;
+void	(*Align::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf) noexcept = nullptr;
+void	(*Align::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept = nullptr;
+void	(*Align::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept = nullptr;
 
-void	(*Align::copy_xfade_3_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl) = nullptr;
+void	(*Align::copy_xfade_3_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl) noexcept = nullptr;
 
 // Matrix copying
-void	(*Align::copy_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) = nullptr;
-void	(*Align::copy_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
-void	(*Align::copy_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
+void	(*Align::copy_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept = nullptr;
+void	(*Align::copy_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
+void	(*Align::copy_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
 
 // Copy and interleave
-void	(*Align::copy_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::copy_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::copy_4_4i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_2_4i2) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
+void	(*Align::copy_4_4i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_2_4i2) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
 
-void	(*Align::copy_1_ni1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out) = nullptr;
+void	(*Align::copy_1_ni1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out) noexcept = nullptr;
 
 // Copy and deinterleave
-void	(*Align::copy_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::copy_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::copy_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::copy_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::copy_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::copy_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::copy_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::copy_4i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_4i_4) (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::copy_4i2_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
+void	(*Align::copy_4i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_4i_4) (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::copy_4i2_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
 
-void	(*Align::copy_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) = nullptr;
+void	(*Align::copy_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) noexcept = nullptr;
 
 // Copy and convert interleaving
-void	(*Align::copy_nip_mip) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out, int nbr_chn_in, int nbr_chn_copy) = nullptr;
+void	(*Align::copy_nip_mip) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out, int nbr_chn_in, int nbr_chn_copy) noexcept = nullptr;
 
 // Mixing
-void	(*Align::mix_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::mix_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::mix_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::mix_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Spread mixing
-void	(*Align::mix_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) = nullptr;
-void	(*Align::mix_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
-void	(*Align::mix_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
+void	(*Align::mix_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept = nullptr;
+void	(*Align::mix_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
+void	(*Align::mix_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
 
 // Matrix mixing
-void	(*Align::mix_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) = nullptr;
-void	(*Align::mix_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
-void	(*Align::mix_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
+void	(*Align::mix_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept = nullptr;
+void	(*Align::mix_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
+void	(*Align::mix_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
 
 // Mix and interleave
-void	(*Align::mix_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::mix_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Mix and deinterleave
-void	(*Align::mix_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::mix_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mix_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Align::mix_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Align::mix_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Align::mix_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mix_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Align::mix_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Align::mix_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Align::mix_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) = nullptr;
+void	(*Align::mix_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) noexcept = nullptr;
 
 // Multiply
-void	(*Align::mult_1_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
+void	(*Align::mult_1_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
 
 // Multiply, in-place
-void	(*Align::mult_ip_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mult_ip_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Align::mult_ip_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
+void	(*Align::mult_ip_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mult_ip_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::mult_ip_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
 
 // Misc
-void	(*Align::clear) (float out_ptr [], int nbr_spl) = nullptr;
-void	(*Align::clear_nim) (float out_ptr [], int nbr_spl, int clear_len, int skip_len) = nullptr;
+void	(*Align::clear) (float out_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Align::clear_nim) (float out_ptr [], int nbr_spl, int clear_len, int skip_len) noexcept = nullptr;
 
-void	(*Align::fill) (float out_ptr [], int nbr_spl, float val) = nullptr;
-void	(*Align::fill_lr) (float out_ptr [], int nbr_spl, float s_val, float e_val) = nullptr;
-void	(*Align::fill_lrauto) (float out_ptr [], int nbr_spl, float s_val, float e_val) = nullptr;
+void	(*Align::fill) (float out_ptr [], int nbr_spl, float val) noexcept = nullptr;
+void	(*Align::fill_lr) (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept = nullptr;
+void	(*Align::fill_lrauto) (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept = nullptr;
 
-void	(*Align::add_cst_1_1) (float out_ptr [], int nbr_spl, float val) = nullptr;
-void	(*Align::add_cst_1_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val) = nullptr;
+void	(*Align::add_cst_1_1) (float out_ptr [], int nbr_spl, float val) noexcept = nullptr;
+void	(*Align::add_cst_1_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val) noexcept = nullptr;
 
-void	(*Align::linop_cst_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val) = nullptr;
-void	(*Align::linop_cst_ip_1) (float data_ptr [], int nbr_spl, float mul_val, float add_val) = nullptr;
+void	(*Align::linop_cst_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val) noexcept = nullptr;
+void	(*Align::linop_cst_ip_1) (float data_ptr [], int nbr_spl, float mul_val, float add_val) noexcept = nullptr;
 
-void	(*Align::add_sub_ip_2_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl) = nullptr;
+void	(*Align::add_sub_ip_2_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl) noexcept = nullptr;
 
-void	(*Align::sum_square_n_1) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val) = nullptr;
-void	(*Align::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol) = nullptr;
+void	(*Align::sum_square_n_1) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val) noexcept = nullptr;
+void	(*Align::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol) noexcept = nullptr;
 
 
 
@@ -241,7 +241,7 @@ void	(*Align::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_a
 
 
 
-Align::Align ()
+Align::Align () noexcept
 :	_state (Align::State_UNBORN)
 {
 	setup_internal ();
@@ -249,7 +249,7 @@ Align::Align ()
 
 
 
-void	Align::setup_internal ()
+void	Align::setup_internal () noexcept
 {
 	if (_state != State_READY)
 	{
@@ -271,7 +271,7 @@ void	Align::setup_internal ()
 
 
 
-void	Align::setup_unaligned ()
+void	Align::setup_unaligned () noexcept
 {
 	Generic::setup ();
 
@@ -445,7 +445,7 @@ void	Align::setup_unaligned ()
 
 #if (fstb_ARCHI == fstb_ARCHI_X86) || (fstb_ARCHI == fstb_ARCHI_ARM)
 
-void	Align::setup_simd ()
+void	Align::setup_simd () noexcept
 {
 	typedef	Simd <
 		fstb::DataAlign <true>,
@@ -622,11 +622,11 @@ void	Align::setup_simd ()
 
 
 
-Align &	Align::use_instance ()
+Align &	Align::use_instance () noexcept
 {
 	static Align   instance;
 
-	return (instance);
+	return instance;
 }
 
 

@@ -76,7 +76,7 @@ class WsProgClipper
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		const double   a  = double (A::num) / double (A::den);
 		const double   bi = double (B::den) / double (B::num);

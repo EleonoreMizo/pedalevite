@@ -39,7 +39,7 @@ namespace shape
 
 
 
-double	WsAsym12::operator () (double x) const
+double	WsAsym12::operator () (double x) const noexcept
 {
 	static const double	limit_h = 1.0954451150103322269139395656016;	// sqrt (6) / sqrt (5)
 	static const double	one_over_sqrt5 = 0.44721359549995793928183473374626;
@@ -55,7 +55,7 @@ double	WsAsym12::operator () (double x) const
 	y -= y_slope_1;
 	y *= -2;
 
-	return (y);
+	return y;
 }
 
 
@@ -69,12 +69,12 @@ double	WsAsym12::operator () (double x) const
 
 
 // y = 2 * x^3 - x^5
-double	WsAsym12::fnc (double x)
+double	WsAsym12::fnc (double x) noexcept
 {
 	const double	x2 = x * x;
 	const double	y = x * x2 * (2 - x2);
 
-	return (y);
+	return y;
 }
 
 

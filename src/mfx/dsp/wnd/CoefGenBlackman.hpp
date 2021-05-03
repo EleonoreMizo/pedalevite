@@ -41,7 +41,7 @@ namespace wnd
 
 
 
-double	CoefGenBlackman::operator () (double pos) const
+double	CoefGenBlackman::operator () (double pos) const noexcept
 {
 	const double   win_pos = pos * fstb::PI;
 	const double   win     =

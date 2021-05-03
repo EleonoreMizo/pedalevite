@@ -42,7 +42,7 @@ namespace shape
 
 
 template <class BIAS>
-float	Poly3L1Bias <BIAS>::process_sample (float sample)
+float	Poly3L1Bias <BIAS>::process_sample (float sample) noexcept
 {
 	// Bias
 	const float    bias = float (BIAS::num) / float (BIAS::den);
@@ -57,7 +57,7 @@ float	Poly3L1Bias <BIAS>::process_sample (float sample)
 	const float		unbias   = bias + bias * (bias_abs - bias * bias);
 	sample -= unbias;
 
-	return (sample);
+	return sample;
 }
 
 

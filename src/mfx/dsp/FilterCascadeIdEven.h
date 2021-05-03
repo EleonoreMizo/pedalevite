@@ -63,17 +63,16 @@ public:
 	typedef FLT FilterType;
 	static const int  _nbr_units = NBR;
 
-	               FilterCascadeIdEven () = default;
 
-	inline FLT &   use_filter (int unit);
+	inline FLT &   use_filter (int unit) noexcept;
 	inline const FLT &
-	               use_filter (int unit) const;
+	               use_filter (int unit) const noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	               process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -97,9 +96,6 @@ private:
 
 private:
 
-	               FilterCascadeIdEven (const FilterCascadeIdEven &other) = delete;
-	FilterCascadeIdEven &
-	               operator = (const FilterCascadeIdEven &other)        = delete;
 	bool           operator == (const FilterCascadeIdEven &other) const = delete;
 	bool           operator != (const FilterCascadeIdEven &other) const = delete;
 

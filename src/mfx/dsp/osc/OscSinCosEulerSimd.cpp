@@ -44,7 +44,7 @@ namespace osc
 
 
 
-OscSinCosEulerSimd::OscSinCosEulerSimd ()
+OscSinCosEulerSimd::OscSinCosEulerSimd () noexcept
 :	_pos_cos ()
 ,	_pos_sin ()
 ,	_step_cosn (1)
@@ -59,7 +59,7 @@ OscSinCosEulerSimd::OscSinCosEulerSimd ()
 
 
 // phase in radian
-void	OscSinCosEulerSimd::set_phase (float phase)
+void	OscSinCosEulerSimd::set_phase (float phase) noexcept
 {
 	const float    c = cos (phase);
 	const float    s = sin (phase);
@@ -70,7 +70,7 @@ void	OscSinCosEulerSimd::set_phase (float phase)
 
 
 // step in radian/sample
-void	OscSinCosEulerSimd::set_step (float stp)
+void	OscSinCosEulerSimd::set_step (float stp) noexcept
 {
 	_step_cos1 = cos (stp);
 	_step_sin1 = sin (stp);
@@ -88,7 +88,7 @@ void	OscSinCosEulerSimd::set_step (float stp)
 
 
 
-void	OscSinCosEulerSimd::step ()
+void	OscSinCosEulerSimd::step () noexcept
 {
 	const auto     c_old = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	const auto     s_old = fstb::ToolsSimd::load_f32 (&_pos_sin);
@@ -102,21 +102,21 @@ void	OscSinCosEulerSimd::step ()
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosEulerSimd::get_cos () const
+fstb::ToolsSimd::VectF32	OscSinCosEulerSimd::get_cos () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_pos_cos);
 }
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosEulerSimd::get_sin () const
+fstb::ToolsSimd::VectF32	OscSinCosEulerSimd::get_sin () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_pos_sin);
 }
 
 
 
-void	OscSinCosEulerSimd::process_block (float cos_ptr [], float sin_ptr [], int nbr_vec)
+void	OscSinCosEulerSimd::process_block (float cos_ptr [], float sin_ptr [], int nbr_vec) noexcept
 {
 	assert (fstb::DataAlign <true>::check_ptr (cos_ptr));
 	assert (fstb::DataAlign <true>::check_ptr (sin_ptr));
@@ -144,7 +144,7 @@ void	OscSinCosEulerSimd::process_block (float cos_ptr [], float sin_ptr [], int 
 
 
 
-void	OscSinCosEulerSimd::correct ()
+void	OscSinCosEulerSimd::correct () noexcept
 {
 	auto           c  = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	auto           s  = fstb::ToolsSimd::load_f32 (&_pos_sin);
@@ -160,7 +160,7 @@ void	OscSinCosEulerSimd::correct ()
 
 // Uses a single-step Newton-Raphson approximation of 1 / sqrt (1 + r ^ 2)
 // with 1 as initial guess for the corrective term.
-void	OscSinCosEulerSimd::correct_fast ()
+void	OscSinCosEulerSimd::correct_fast () noexcept
 {
 	auto           c  = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	auto           s  = fstb::ToolsSimd::load_f32 (&_pos_sin);
@@ -180,7 +180,7 @@ void	OscSinCosEulerSimd::correct_fast ()
 
 
 
-void	OscSinCosEulerSimd::resync (float c0, float s0)
+void	OscSinCosEulerSimd::resync (float c0, float s0) noexcept
 {
 	auto           c = fstb::ToolsSimd::set1_f32 (c0);
 	auto           s = fstb::ToolsSimd::set1_f32 (s0);

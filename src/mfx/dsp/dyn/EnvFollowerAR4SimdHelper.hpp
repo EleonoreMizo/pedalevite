@@ -40,7 +40,7 @@ namespace dyn
 
 
 template <class VD, class VS, class VP, int ORD>
-EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::EnvFollowerAR4SimdHelper ()
+EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::EnvFollowerAR4SimdHelper () noexcept
 /*:	_state ()
 ,	_coef_atk ()
 ,	_coef_rls ()*/
@@ -55,7 +55,7 @@ EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::EnvFollowerAR4SimdHelper ()
 
 
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_atk_coef (int env, float coef)
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_atk_coef (int env, float coef) noexcept
 {
 	assert (env >= 0);
 	assert (env < _nbr_env);
@@ -68,7 +68,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_atk_coef (int env, float co
 
 
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_rls_coef (int env, float coef)
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_rls_coef (int env, float coef) noexcept
 {
 	assert (env >= 0);
 	assert (env < _nbr_env);
@@ -82,7 +82,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_rls_coef (int env, float co
 
 // in must contain only positive values!
 template <class VD, class VS, class VP, int ORD>
-fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fstb::ToolsSimd::VectF32 &in)
+fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fstb::ToolsSimd::VectF32 &in) noexcept
 {
 	assert (test_ge_0 (in));
 
@@ -141,7 +141,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 // Input data must contain only positive values!
 // Can work in-place.
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl)
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -208,7 +208,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd:
 // Input data must contain only positive values!
 // Can work in-place.
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -248,7 +248,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out_
 
 
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::clear_buffers ()
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::clear_buffers () noexcept
 {
 	for (int flt = 0; flt < ORD; ++flt)
 	{
@@ -267,7 +267,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::clear_buffers ()
 
 
 template <class VD, class VS, class VP, int ORD>
-bool	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in)
+bool	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept
 {
 	return (
 		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0

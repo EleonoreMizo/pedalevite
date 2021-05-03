@@ -55,11 +55,11 @@ class Taylor
 
 public:
 
-	void           set_side_lobe_lvl (double lvl);
-	void           set_nbar (int nbar);
+	void           set_side_lobe_lvl (double lvl) noexcept;
+	void           set_nbar (int nbar) noexcept;
 
-	int            compute_nbar_min (double lvl);
-	bool           is_side_lobe_lvl_guaranteed () const;
+	int            compute_nbar_min (double lvl) noexcept;
+	bool           is_side_lobe_lvl_guaranteed () const noexcept;
 
 
 
@@ -76,9 +76,9 @@ protected:
 
 private:
 
-	double         compute_fm (int m, double sp2, double a);
+	double         compute_fm (int m, double sp2, double a) noexcept;
 
-	static double  compute_a (double lvl);
+	static double  compute_a (double lvl) noexcept;
 
 	// Maximum linear level of the side lobes, relative to the main lobe.
 	// Range: ]0 ; 1[

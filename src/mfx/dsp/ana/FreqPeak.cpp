@@ -65,7 +65,7 @@ void	FreqPeak::set_sample_freq (double sample_freq)
 
 
 
-void	FreqPeak::set_freq_bot (float f)
+void	FreqPeak::set_freq_bot (float f) noexcept
 {
 	assert (f > 0);
 
@@ -79,7 +79,7 @@ void	FreqPeak::set_freq_bot (float f)
 
 
 
-void	FreqPeak::set_freq_top (float f)
+void	FreqPeak::set_freq_top (float f) noexcept
 {
 	assert (f > 0);
 
@@ -93,7 +93,7 @@ void	FreqPeak::set_freq_top (float f)
 
 
 
-void	FreqPeak::set_smoothing (float responsiveness, float thr)
+void	FreqPeak::set_smoothing (float responsiveness, float thr) noexcept
 {
 	assert (responsiveness > 0);
 	assert (responsiveness <= 1);
@@ -105,7 +105,7 @@ void	FreqPeak::set_smoothing (float responsiveness, float thr)
 
 
 
-void	FreqPeak::set_threshold (float thr)
+void	FreqPeak::set_threshold (float thr) noexcept
 {
 	assert (thr >= 0);
 
@@ -114,7 +114,7 @@ void	FreqPeak::set_threshold (float thr)
 
 
 
-void	FreqPeak::clear_buffers ()
+void	FreqPeak::clear_buffers () noexcept
 {
 	_hpf_in.clear_buffers ();
 	_lpf_in.clear_buffers ();
@@ -133,7 +133,7 @@ void	FreqPeak::clear_buffers ()
 
 
 
-float	FreqPeak::process_block (const float spl_ptr [], int nbr_spl)
+float	FreqPeak::process_block (const float spl_ptr [], int nbr_spl) noexcept
 {
 	assert (spl_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -148,7 +148,7 @@ float	FreqPeak::process_block (const float spl_ptr [], int nbr_spl)
 
 
 
-float	FreqPeak::process_sample (float x)
+float	FreqPeak::process_sample (float x) noexcept
 {
 	x = _hpf_in.process_sample (x);
 	x = _lpf_in.process_sample (x);
@@ -234,7 +234,7 @@ float	FreqPeak::process_sample (float x)
 
 
 
-void	FreqPeak::update_input_filter ()
+void	FreqPeak::update_input_filter () noexcept
 {
 	if (_sample_freq > 0)
 	{
@@ -266,7 +266,7 @@ void	FreqPeak::update_input_filter ()
 
 
 
-float	FreqPeak::compute_median3 (float a0, float a1, float a2)
+float	FreqPeak::compute_median3 (float a0, float a1, float a2) noexcept
 {
 	const float    mi = std::min (a0, a1);
 	const float    ma = std::max (a0, a1);
@@ -276,7 +276,7 @@ float	FreqPeak::compute_median3 (float a0, float a1, float a2)
 
 
 
-float	FreqPeak::compute_median5 (float a0, float a1, float a2, float a3, float a4)
+float	FreqPeak::compute_median5 (float a0, float a1, float a2, float a3, float a4) noexcept
 {
 	sort_pair (a0, a1);
 	sort_pair (a2, a3);
@@ -300,7 +300,7 @@ float	FreqPeak::compute_median5 (float a0, float a1, float a2, float a3, float a
 
 
 
-void	FreqPeak::sort_pair (float &a, float &b)
+void	FreqPeak::sort_pair (float &a, float &b) noexcept
 {
 	if (b < a)
 	{

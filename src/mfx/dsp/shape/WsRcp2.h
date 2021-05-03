@@ -63,9 +63,9 @@ class WsRcp2
 public:
 
 	static inline float
-	               process_sample (float x);
+	               process_sample (float x) noexcept;
 	template <typename VD, typename VS>
-	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 

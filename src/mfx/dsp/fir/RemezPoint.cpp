@@ -43,7 +43,7 @@ namespace fir
 
 
 
-RemezPoint::RemezPoint (double lower_freq, double upper_freq, double amp, double weight)
+RemezPoint::RemezPoint (double lower_freq, double upper_freq, double amp, double weight) noexcept
 :	_lower_freq (lower_freq)
 ,	_upper_freq (upper_freq)
 ,	_amp (amp)
@@ -58,7 +58,7 @@ RemezPoint::RemezPoint (double lower_freq, double upper_freq, double amp, double
 
 
 
-void	RemezPoint::set_lower_freq (double freq)
+void	RemezPoint::set_lower_freq (double freq) noexcept
 {
 	assert (freq >= 0);
 	assert (freq <= 0.5);
@@ -68,14 +68,14 @@ void	RemezPoint::set_lower_freq (double freq)
 
 
 
-double	RemezPoint::get_lower_freq () const
+double	RemezPoint::get_lower_freq () const noexcept
 {
 	return _lower_freq;
 }
 
 
 
-void	RemezPoint::set_upper_freq (double freq)
+void	RemezPoint::set_upper_freq (double freq) noexcept
 {
 	assert (freq >= 0);
 	assert (freq <= 0.5);
@@ -85,14 +85,14 @@ void	RemezPoint::set_upper_freq (double freq)
 
 
 
-double	RemezPoint::get_upper_freq () const
+double	RemezPoint::get_upper_freq () const noexcept
 {
 	return _upper_freq;
 }
 
 
 
-void	RemezPoint::set_amp (double amp)
+void	RemezPoint::set_amp (double amp) noexcept
 {
 	assert (amp >= 0);
 
@@ -101,14 +101,14 @@ void	RemezPoint::set_amp (double amp)
 
 
 
-double	RemezPoint::get_amp () const
+double	RemezPoint::get_amp () const noexcept
 {
 	return _amp;
 }
 
 
 
-void	RemezPoint::set_weight (double weight)
+void	RemezPoint::set_weight (double weight) noexcept
 {
 	assert (weight > 0);
 
@@ -117,7 +117,7 @@ void	RemezPoint::set_weight (double weight)
 
 
 
-double	RemezPoint::get_weight () const
+double	RemezPoint::get_weight () const noexcept
 {
 	return _weight;
 }

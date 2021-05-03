@@ -189,7 +189,7 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 
 
 
-void	ReverbDattorro::set_room_size (float sz)
+void	ReverbDattorro::set_room_size (float sz) noexcept
 {
 	assert (sz >= _min_room_size);
 	assert (sz <= _max_room_size);
@@ -200,7 +200,7 @@ void	ReverbDattorro::set_room_size (float sz)
 
 
 
-void	ReverbDattorro::set_decay (float decay)
+void	ReverbDattorro::set_decay (float decay) noexcept
 {
 	assert (decay >= 0);
 	assert (decay <= 1);
@@ -212,7 +212,7 @@ void	ReverbDattorro::set_decay (float decay)
 
 // all_flag: indicates we want to spread the shift on all the all-pass delays
 // and not just one of them.
-void	ReverbDattorro::set_shimmer_pitch (float cents, bool all_flag)
+void	ReverbDattorro::set_shimmer_pitch (float cents, bool all_flag) noexcept
 {
 	constexpr int  cents_per_octave = 12 * 100;
 	assert (cents >= -1 * cents_per_octave);
@@ -275,7 +275,7 @@ void	ReverbDattorro::set_shimmer_pitch (float cents, bool all_flag)
 
 
 
-void	ReverbDattorro::set_diffusion_input (float amount)
+void	ReverbDattorro::set_diffusion_input (float amount) noexcept
 {
 	assert (amount >= 0);
 	assert (amount <= 1);
@@ -286,7 +286,7 @@ void	ReverbDattorro::set_diffusion_input (float amount)
 
 
 
-void	ReverbDattorro::set_diffusion_tank (float amount)
+void	ReverbDattorro::set_diffusion_tank (float amount) noexcept
 {
 	assert (amount >= 0);
 	assert (amount <= 1);
@@ -299,7 +299,7 @@ void	ReverbDattorro::set_diffusion_tank (float amount)
 
 // If lo <= hi, the filter is a band-pass
 // if lo >  hi, the filter is a notch
-void	ReverbDattorro::set_filter_input_bp (float lo, float hi)
+void	ReverbDattorro::set_filter_input_bp (float lo, float hi) noexcept
 {
 	assert (lo >= 1);
 	assert (lo < _sample_freq * 0.5f);
@@ -317,7 +317,7 @@ void	ReverbDattorro::set_filter_input_bp (float lo, float hi)
 
 // Trapezoidal-integrated SVF coefficients and mixers
 // See iir::Svf2p to compute them from basic parameters
-void	ReverbDattorro::set_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m)
+void	ReverbDattorro::set_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept
 {
 	_filt_spec_input._g0  = g0;
 	_filt_spec_input._g1  = g1;
@@ -330,7 +330,7 @@ void	ReverbDattorro::set_filter_input_coefs (float g0, float g1, float g2, float
 
 
 
-void	ReverbDattorro::set_filter_tank_bp (float lo, float hi)
+void	ReverbDattorro::set_filter_tank_bp (float lo, float hi) noexcept
 {
 	assert (lo >= 1);
 	assert (lo < _sample_freq * 0.5f);
@@ -350,7 +350,7 @@ void	ReverbDattorro::set_filter_tank_bp (float lo, float hi)
 // See iir::Svf2p to compute them from basic parameters
 // Avoid gain > 1 for any frequency band
 // override_freeze_flag sets the filter even if the freeze mode is activated.
-void	ReverbDattorro::set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m, bool override_freeze_flag)
+void	ReverbDattorro::set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m, bool override_freeze_flag) noexcept
 {
 	_filt_spec_tank._g0  = g0;
 	_filt_spec_tank._g1  = g1;
@@ -368,7 +368,7 @@ void	ReverbDattorro::set_filter_tank_coefs (float g0, float g1, float g2, float 
 
 // Tank filter is set to "neutral" during freeze. However it is possible
 // to set the filter afterwards.
-void	ReverbDattorro::freeze_tank (bool freeze_flag)
+void	ReverbDattorro::freeze_tank (bool freeze_flag) noexcept
 {
 	if (freeze_flag)
 	{
@@ -394,7 +394,7 @@ void	ReverbDattorro::freeze_tank (bool freeze_flag)
 // The problem only appears on x86 architecture.
 #define mfx_dsp_spat_ReverbDattorro_INVERSE_ORDER
 
-std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
+std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -459,7 +459,7 @@ std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
 
 
 
-void	ReverbDattorro::process_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl)
+void	ReverbDattorro::process_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (dst_l_ptr != nullptr);
@@ -597,7 +597,7 @@ void	ReverbDattorro::process_block (float dst_l_ptr [], float dst_r_ptr [], cons
 
 
 
-void	ReverbDattorro::flush_tank ()
+void	ReverbDattorro::flush_tank () noexcept
 {
 	for (auto &chn : _chn_arr)
 	{
@@ -610,7 +610,7 @@ void	ReverbDattorro::flush_tank ()
 
 
 
-void	ReverbDattorro::clear_buffers ()
+void	ReverbDattorro::clear_buffers () noexcept
 {
 	flush_tank ();
 	reset_lfo ();
@@ -634,7 +634,7 @@ constexpr float	ReverbDattorro::_max_room_size;
 
 
 
-void	ReverbDattorro::update_diffusion_input ()
+void	ReverbDattorro::update_diffusion_input () noexcept
 {
 	const float    coef_1 = 0.7f * _diffuse_in;
 	const float    coef_2 = 0.5f * _diffuse_in;
@@ -649,7 +649,7 @@ void	ReverbDattorro::update_diffusion_input ()
 
 
 
-void	ReverbDattorro::update_diffusion_tank ()
+void	ReverbDattorro::update_diffusion_tank () noexcept
 {
 	const float    coef_1 = -0.750f * _diffuse_tnk;
 	const float    coef_2 =  0.625f * _diffuse_tnk;
@@ -662,7 +662,7 @@ void	ReverbDattorro::update_diffusion_tank ()
 
 
 
-void	ReverbDattorro::update_delay_times ()
+void	ReverbDattorro::update_delay_times () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -692,7 +692,7 @@ void	ReverbDattorro::update_delay_times ()
 
 
 
-void	ReverbDattorro::compute_update_filter (FilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m))
+void	ReverbDattorro::compute_update_filter (FilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m)) noexcept
 {
 	if (spec._f_hi > 0)
 	{
@@ -706,7 +706,7 @@ void	ReverbDattorro::compute_update_filter (FilterSpec &spec, void (ReverbDattor
 
 
 
-void	ReverbDattorro::compute_filter_coef (FilterSpec &spec) const
+void	ReverbDattorro::compute_filter_coef (FilterSpec &spec) const noexcept
 {
 	assert (spec._f_lo > 0);
 	assert (spec._f_lo < _sample_freq * 0.5f);
@@ -769,7 +769,7 @@ void	ReverbDattorro::compute_filter_coef (FilterSpec &spec) const
 
 
 
-void	ReverbDattorro::update_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m)
+void	ReverbDattorro::update_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept
 {
 	for (auto &chn : _chn_arr)
 	{
@@ -780,7 +780,7 @@ void	ReverbDattorro::update_filter_input_coefs (float g0, float g1, float g2, fl
 
 
 
-void	ReverbDattorro::update_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m)
+void	ReverbDattorro::update_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m) noexcept
 {
 	for (auto &chn : _chn_arr)
 	{
@@ -791,7 +791,7 @@ void	ReverbDattorro::update_filter_tank_coefs (float g0, float g1, float g2, flo
 
 
 
-void	ReverbDattorro::reset_lfo ()
+void	ReverbDattorro::reset_lfo () noexcept
 {
 	// Starts the LFOs with different phases
 	for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
@@ -809,7 +809,7 @@ void	ReverbDattorro::reset_lfo ()
 
 
 
-void	ReverbDattorro::process_predelay (float &xl, float &xr)
+void	ReverbDattorro::process_predelay (float &xl, float &xr) noexcept
 {
 	xl = _chn_arr [0]._input.process_sample (xl);
 	xr = _chn_arr [1]._input.process_sample (xr);
@@ -817,7 +817,7 @@ void	ReverbDattorro::process_predelay (float &xl, float &xr)
 
 
 
-void	ReverbDattorro::process_predelay_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl)
+void	ReverbDattorro::process_predelay_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl) noexcept
 {
 	_chn_arr [0]._input.process_block (dst_l_ptr, src_l_ptr, nbr_spl);
 	_chn_arr [1]._input.process_block (dst_r_ptr, src_r_ptr, nbr_spl);
@@ -826,7 +826,7 @@ void	ReverbDattorro::process_predelay_block (float dst_l_ptr [], float dst_r_ptr
 
 
 // Returns the modulated delay time, in samples
-float	ReverbDattorro::process_modulation (ModDlyState &mds)
+float	ReverbDattorro::process_modulation (ModDlyState &mds) noexcept
 {
 	mds._lfo_val += mds._lfo_step;
 	mds._rnd_val += mds._rnd_step;
@@ -847,7 +847,7 @@ float	ReverbDattorro::process_modulation (ModDlyState &mds)
 
 // dly_ptr must be aligned on a 16-byte boundary, and the allocated zone must
 // be a multiple of 16
-void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &mds, int nbr_spl)
+void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &mds, int nbr_spl) noexcept
 {
 	assert (fstb::is_ptr_align_nz (dly_ptr, 16));
 	assert (nbr_spl > 0);
@@ -933,7 +933,7 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 
 
 
-void	ReverbDattorro::check_mod_counters (ModDlyState &mds)
+void	ReverbDattorro::check_mod_counters (ModDlyState &mds) noexcept
 {
 	// LFO
 	while (mds._lfo_val >= 1)

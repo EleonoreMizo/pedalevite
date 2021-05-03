@@ -58,7 +58,7 @@ void	FreqAmGha::set_sample_freq (double sample_freq)
 
 
 
-void	FreqAmGha::set_freq_bot (float f)
+void	FreqAmGha::set_freq_bot (float f) noexcept
 {
 	assert (f > 0);
 
@@ -67,7 +67,7 @@ void	FreqAmGha::set_freq_bot (float f)
 
 
 
-void	FreqAmGha::set_freq_top (float f)
+void	FreqAmGha::set_freq_top (float f) noexcept
 {
 	assert (f > 0);
 
@@ -77,7 +77,7 @@ void	FreqAmGha::set_freq_top (float f)
 
 
 
-void	FreqAmGha::set_smoothing (float responsiveness, float thr)
+void	FreqAmGha::set_smoothing (float responsiveness, float thr) noexcept
 {
 	assert (responsiveness > 0);
 	assert (responsiveness <= 1);
@@ -89,7 +89,7 @@ void	FreqAmGha::set_smoothing (float responsiveness, float thr)
 
 
 
-void	FreqAmGha::clear_buffers ()
+void	FreqAmGha::clear_buffers () noexcept
 {
 	_lpf_in.clear_buffers ();
 	reset ();
@@ -97,7 +97,7 @@ void	FreqAmGha::clear_buffers ()
 
 
 
-float	FreqAmGha::process_block (const float spl_ptr [], int nbr_spl)
+float	FreqAmGha::process_block (const float spl_ptr [], int nbr_spl) noexcept
 {
 	assert (spl_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -112,7 +112,7 @@ float	FreqAmGha::process_block (const float spl_ptr [], int nbr_spl)
 
 
 
-float	FreqAmGha::process_sample (float x)
+float	FreqAmGha::process_sample (float x) noexcept
 {
 	_val_old = _val_cur;
 	_val_cur = _lpf_in.process_sample (x);
@@ -213,7 +213,7 @@ float	FreqAmGha::process_sample (float x)
 
 
 
-void	FreqAmGha::reset ()
+void	FreqAmGha::reset () noexcept
 {
 	_index          = 0;
 	_nbr_match_fail = 0;
@@ -223,7 +223,7 @@ void	FreqAmGha::reset ()
 
 
 
-void	FreqAmGha::update_lpf ()
+void	FreqAmGha::update_lpf () noexcept
 {
 	if (_sample_freq > 0)
 	{
@@ -241,7 +241,7 @@ void	FreqAmGha::update_lpf ()
 
 
 // Estimates the fractional sample position of the zero-crossing.
-float	FreqAmGha::compute_zc_time (float cur, float old)
+float	FreqAmGha::compute_zc_time (float cur, float old) noexcept
 {
 	assert (cur >= 0);
 	assert (old <= 0);

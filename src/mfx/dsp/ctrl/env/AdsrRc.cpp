@@ -55,22 +55,7 @@ const float	AdsrRc::_infinite_sus = 1999.f;
 
 
 
-AdsrRc::AdsrRc ()
-:	_sample_freq (0)
-,	_atk_time (0.005f)
-,	_atk_virt_lvl (1.5f)
-,	_dcy_time (0.050f)
-,	_sus_time (_infinite_sus)
-,	_sus_lvl (0.75f)
-,	_rls_time (0.100f)
-,	_cur_val (0)
-,	_seg (AdsrSeg_NONE)
-,	_cur_seg_ptr (nullptr)
-,	_seg_atk ()
-,	_seg_dcy ()
-,	_seg_sus ()
-,	_seg_rls ()
-,	_seg_ptr_arr ({{ nullptr, &_seg_atk, &_seg_dcy, &_seg_sus, &_seg_rls }})
+AdsrRc::AdsrRc () noexcept
 {
 	mix::Generic::setup ();
 	set_sample_freq (44100);
@@ -78,7 +63,7 @@ AdsrRc::AdsrRc ()
 
 
 
-void	AdsrRc::set_sample_freq (float fs)
+void	AdsrRc::set_sample_freq (float fs) noexcept
 {
 	assert (fs > 0);
 
@@ -93,7 +78,7 @@ void	AdsrRc::set_sample_freq (float fs)
 
 
 
-void	AdsrRc::set_atk_time (float at)
+void	AdsrRc::set_atk_time (float at) noexcept
 {
 	assert (at > 0);
 
@@ -103,7 +88,7 @@ void	AdsrRc::set_atk_time (float at)
 
 
 
-void	AdsrRc::set_atk_virt_lvl (float atk_lvl)
+void	AdsrRc::set_atk_virt_lvl (float atk_lvl) noexcept
 {
 	assert (atk_lvl > 1);
 
@@ -113,7 +98,7 @@ void	AdsrRc::set_atk_virt_lvl (float atk_lvl)
 
 
 
-void	AdsrRc::set_dcy_time (float dt)
+void	AdsrRc::set_dcy_time (float dt) noexcept
 {
 	assert (dt > 0);
 
@@ -123,7 +108,7 @@ void	AdsrRc::set_dcy_time (float dt)
 
 
 
-void	AdsrRc::set_sus_lvl (float sl)
+void	AdsrRc::set_sus_lvl (float sl) noexcept
 {
 	_sus_lvl = sl;
 	if (_seg == AdsrSeg_SUS && _sus_time >= _infinite_sus)
@@ -140,7 +125,7 @@ void	AdsrRc::set_sus_lvl (float sl)
 
 
 
-void	AdsrRc::set_sus_time (float st)
+void	AdsrRc::set_sus_time (float st) noexcept
 {
 	assert (st > 0);
 
@@ -164,7 +149,7 @@ void	AdsrRc::set_sus_time (float st)
 
 
 
-void	AdsrRc::set_rls_time (float rt)
+void	AdsrRc::set_rls_time (float rt) noexcept
 {
 	assert (rt > 0);
 
@@ -180,7 +165,7 @@ void	AdsrRc::set_rls_time (float rt)
 
 
 
-void	AdsrRc::note_on ()
+void	AdsrRc::note_on () noexcept
 {
 	_seg         = AdsrSeg_ATK;
 	_cur_seg_ptr = &_seg_atk;
@@ -190,7 +175,7 @@ void	AdsrRc::note_on ()
 
 
 
-void	AdsrRc::note_off ()
+void	AdsrRc::note_off () noexcept
 {
 	if (   _seg != AdsrSeg_NONE
 	    && _seg != AdsrSeg_RLS)
@@ -204,7 +189,7 @@ void	AdsrRc::note_off ()
 
 
 
-void	AdsrRc::clear_buffers ()
+void	AdsrRc::clear_buffers () noexcept
 {
 	_seg = AdsrSeg_NONE;
 	_cur_val = 0;
@@ -212,7 +197,7 @@ void	AdsrRc::clear_buffers ()
 
 
 
-void	AdsrRc::kill_ramps ()
+void	AdsrRc::kill_ramps () noexcept
 {
 	assert (   _seg == AdsrSeg_NONE
 	        || _seg == AdsrSeg_ATK);
@@ -227,7 +212,7 @@ void	AdsrRc::kill_ramps ()
 
 
 
-float	AdsrRc::process_sample ()
+float	AdsrRc::process_sample () noexcept
 {
 	if (_seg == AdsrSeg_NONE)
 	{
@@ -245,7 +230,7 @@ float	AdsrRc::process_sample ()
 
 
 
-void	AdsrRc::process_block (float data [], int nbr_spl)
+void	AdsrRc::process_block (float data [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -274,7 +259,7 @@ void	AdsrRc::process_block (float data [], int nbr_spl)
 
 
 
-void	AdsrRc::skip_block (int nbr_spl)
+void	AdsrRc::skip_block (int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -310,7 +295,7 @@ void	AdsrRc::skip_block (int nbr_spl)
 
 
 
-void	AdsrRc::update_atk_seg ()
+void	AdsrRc::update_atk_seg () noexcept
 {
 	assert (_atk_virt_lvl > 1);
 
@@ -324,7 +309,7 @@ void	AdsrRc::update_atk_seg ()
 
 
 
-void	AdsrRc::update_dcy_seg ()
+void	AdsrRc::update_dcy_seg () noexcept
 {
 	const float    nbr_spl = _dcy_time * _sample_freq;
 	const float    ratio   = 0.01f;
@@ -341,7 +326,7 @@ void	AdsrRc::update_dcy_seg ()
 
 
 
-void	AdsrRc::check_and_set_next_seg ()
+void	AdsrRc::check_and_set_next_seg () noexcept
 {
 	while (   _cur_seg_ptr != nullptr
 	       && _cur_seg_ptr->get_nbr_rem_spl () <= 0)

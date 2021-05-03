@@ -47,44 +47,43 @@ class DesignEq2p
 
 public:
 
-	virtual        ~DesignEq2p () = default;
 
 	template <typename T>
-	static void		make_dc_killer (T bs [3], T as [3]);
+	static void		make_dc_killer (T bs [3], T as [3]) noexcept;
 
 	template <typename T>
-	static void		make_3db_shelf_lo (T bs [3], T as [3], T q, T lvl);
+	static void		make_3db_shelf_lo (T bs [3], T as [3], T q, T lvl) noexcept;
 	template <typename T>
-	static void		make_3db_shelf_hi (T bs [3], T as [3], T q, T lvl);
+	static void		make_3db_shelf_hi (T bs [3], T as [3], T q, T lvl) noexcept;
 	template <typename T>
-	static void		make_3db_peak (T bs [3], T a [3], T q, T lvl);
+	static void		make_3db_peak (T bs [3], T a [3], T q, T lvl) noexcept;
 
 	template <typename T>
-	static void		make_mid_shelf_lo (T bs [3], T as [3], T q, T lvl);
+	static void		make_mid_shelf_lo (T bs [3], T as [3], T q, T lvl) noexcept;
 	template <typename T>
-	static void		make_mid_shelf_hi (T bs [3], T as [3], T q, T lvl);
+	static void		make_mid_shelf_hi (T bs [3], T as [3], T q, T lvl) noexcept;
 	template <typename T>
-	static void		make_mid_peak (T bs [3], T as [3], T q, T lvl);
+	static void		make_mid_peak (T bs [3], T as [3], T q, T lvl) noexcept;
 
 	template <typename T>
-	static void		make_low_pass (T bs [3], T as [3], T q);
+	static void		make_low_pass (T bs [3], T as [3], T q) noexcept;
 	template <typename T>
-	static void		make_hi_pass (T bs [3], T as [3], T q);
+	static void		make_hi_pass (T bs [3], T as [3], T q) noexcept;
 	template <typename T>
-	static void		make_band_pass (T bs [3], T as [3], T q);
+	static void		make_band_pass (T bs [3], T as [3], T q) noexcept;
 
-	static void		make_nyq_peak (float bz [3], float az [3], double q, double lvl, double f0, double fs);
-	static void		make_nyq_peak (float bz [3], float az [3], double g0, double g, double gb, double w0, double dw);
+	static void		make_nyq_peak (float bz [3], float az [3], double q, double lvl, double f0, double fs) noexcept;
+	static void		make_nyq_peak (float bz [3], float az [3], double g0, double g, double gb, double w0, double dw) noexcept;
 
-	static std::complex <double>  compute_butter_pole (int order, int biq);
-	static double  compute_butter_coef_a1 (int order, int biq);
+	static std::complex <double>  compute_butter_pole (int order, int biq) noexcept;
+	static double  compute_butter_coef_a1 (int order, int biq) noexcept;
 
-	static double  compute_thiele_coef_a1 (int order, int biq, double k);
+	static double  compute_thiele_coef_a1 (int order, int biq, double k) noexcept;
 
 	template <typename T>
-	static double  compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0);
+	static double  compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0) noexcept;
 	template <typename T>
-	static double  compute_group_delay_1p (const T bz [2], const T az [2], double sample_freq, double f0);
+	static double  compute_group_delay_1p (const T bz [2], const T az [2], double sample_freq, double f0) noexcept;
 
 
 
@@ -106,7 +105,10 @@ private:
 
 	               DesignEq2p ()                               = delete;
 	               DesignEq2p (const DesignEq2p &other)        = delete;
+	               DesignEq2p (DesignEq2p &&other)             = delete;
+	               ~DesignEq2p ()                              = delete;
 	DesignEq2p &   operator = (const DesignEq2p &other)        = delete;
+	DesignEq2p &   operator = (DesignEq2p &&other)             = delete;
 	bool           operator == (const DesignEq2p &other) const = delete;
 	bool           operator != (const DesignEq2p &other) const = delete;
 

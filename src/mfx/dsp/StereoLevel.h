@@ -45,36 +45,38 @@ public:
 
 	               StereoLevel ()                         = default;
 	               StereoLevel (const StereoLevel &other) = default;
-	inline         StereoLevel (float l2l, float l2r, float r2l, float r2r);
+	               StereoLevel (StereoLevel &&other)      = default;
+	inline         StereoLevel (float l2l, float l2r, float r2l, float r2r) noexcept;
 
 	StereoLevel &  operator = (const StereoLevel &other)  = default;
+	StereoLevel &  operator = (StereoLevel &&other)       = default;
 
-	void inline    set (float l2l, float l2r, float r2l, float r2r);
+	void inline    set (float l2l, float l2r, float r2l, float r2r) noexcept;
 
-	inline void    set_l2l (float val);
-	inline void    set_l2r (float val);
-	inline void    set_r2l (float val);
-	inline void    set_r2r (float val);
+	inline void    set_l2l (float val) noexcept;
+	inline void    set_l2r (float val) noexcept;
+	inline void    set_r2l (float val) noexcept;
+	inline void    set_r2r (float val) noexcept;
 
-	float inline   get_l2l () const;
-	float inline   get_l2r () const;
-	float inline   get_r2l () const;
-	float inline   get_r2r () const;
+	float inline   get_l2l () const noexcept;
+	float inline   get_l2r () const noexcept;
+	float inline   get_r2l () const noexcept;
+	float inline   get_r2r () const noexcept;
 
-	void inline    mat_mul (const StereoLevel &other);
+	void inline    mat_mul (const StereoLevel &other) noexcept;
 
 	StereoLevel inline &
-	               operator += (const StereoLevel &other);
+	               operator += (const StereoLevel &other) noexcept;
 	StereoLevel inline &
-	               operator += (float val);
+	               operator += (float val) noexcept;
 	StereoLevel inline &
-	               operator -= (const StereoLevel &other);
+	               operator -= (const StereoLevel &other) noexcept;
 	StereoLevel inline &
-	               operator -= (float val);
+	               operator -= (float val) noexcept;
 	StereoLevel inline &
-	               operator *= (const StereoLevel &other);
+	               operator *= (const StereoLevel &other) noexcept;
 	StereoLevel inline &
-	               operator *= (float val);
+	               operator *= (float val) noexcept;
 
 
 
@@ -107,8 +109,8 @@ private:
 
 
 
-inline bool	operator == (const StereoLevel &lhs, const StereoLevel &rhs);
-inline bool	operator != (const StereoLevel &lhs, const StereoLevel &rhs);
+inline bool	operator == (const StereoLevel &lhs, const StereoLevel &rhs) noexcept;
+inline bool	operator != (const StereoLevel &lhs, const StereoLevel &rhs) noexcept;
 
 
 

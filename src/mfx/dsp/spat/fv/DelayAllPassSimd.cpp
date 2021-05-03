@@ -55,7 +55,7 @@ void	DelayAllPassSimd::set_delay (int len)
 
 
 
-void	DelayAllPassSimd::set_feedback (float coef)
+void	DelayAllPassSimd::set_feedback (float coef) noexcept
 {
 	assert (coef > -1);
 	assert (coef < 1);
@@ -65,7 +65,7 @@ void	DelayAllPassSimd::set_feedback (float coef)
 
 
 
-void	DelayAllPassSimd::clear_buffers ()
+void	DelayAllPassSimd::clear_buffers () noexcept
 {
 	_delay_line.clear_buffers ();
 }
@@ -83,7 +83,7 @@ https://ccrma.stanford.edu/~jos/pasp/Freeverb_Allpass_Approximation.html
 http://freeverb3vst.osdn.jp/tips/allpass.shtml
 */
 
-void	DelayAllPassSimd::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DelayAllPassSimd::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);

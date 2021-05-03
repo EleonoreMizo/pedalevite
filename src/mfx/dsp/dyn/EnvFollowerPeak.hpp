@@ -40,7 +40,7 @@ namespace dyn
 
 
 
-float	EnvFollowerPeak::process_sample (float x)
+float	EnvFollowerPeak::process_sample (float x) noexcept
 {
 	process_sample_internal (_state, x);
 
@@ -62,7 +62,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	EnvFollowerPeak::apply_volume (float gain)
+void	EnvFollowerPeak::apply_volume (float gain) noexcept
 {
 	assert (gain >= 0);
 
@@ -71,7 +71,7 @@ void	EnvFollowerPeak::apply_volume (float gain)
 
 
 
-float	EnvFollowerPeak::get_state () const
+float	EnvFollowerPeak::get_state () const noexcept
 {
 	return _state;
 }
@@ -86,7 +86,7 @@ float	EnvFollowerPeak::get_state () const
 
 
 
-void	EnvFollowerPeak::process_sample_internal (float &state, float x) const
+void	EnvFollowerPeak::process_sample_internal (float &state, float x) const noexcept
 {
 	const float    xa    = fabs (x);
 	const float    delta = xa - state;

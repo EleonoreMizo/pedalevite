@@ -54,14 +54,14 @@ public:
 
 	void           reserve (int len);
 	void           set_len (int len, float x = 0);
-	void           set_rank (int rank);
-	void           fill (float x);
+	void           set_rank (int rank) noexcept;
+	void           fill (float x) noexcept;
 
-	float          process_sample (float x);
-	float          get_nth (int rank) const;
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	float          process_sample (float x) noexcept;
+	float          get_nth (int rank) const noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -83,8 +83,8 @@ private:
 	};
 	typedef std::vector <Element> ElementArray;
 
-	void           insert_new_remove_old (float x);
-	void           check_index ();
+	void           insert_new_remove_old (float x) noexcept;
+	void           check_index () noexcept;
 
 	// The list is always ordered (by increasing _val)
 	ElementArray   _elt_arr   = ElementArray (1, Element ({ 0.f, -1 }));

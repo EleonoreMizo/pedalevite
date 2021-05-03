@@ -41,7 +41,7 @@ namespace va
 
 
 
-void	AntisatRcp::eval (float &y, float &dy, float x)
+void	AntisatRcp::eval (float &y, float &dy, float x) noexcept
 {
 	const float    tmp  = 1.f / (1 + fabs (x));
 	y  =   x * tmp;
@@ -50,7 +50,7 @@ void	AntisatRcp::eval (float &y, float &dy, float x)
 
 
 
-float AntisatRcp::eval_inv (float y)
+float AntisatRcp::eval_inv (float y) noexcept
 {
    assert (y > -1);
    assert (y <  1);

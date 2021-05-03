@@ -48,13 +48,13 @@ class IvPoly
 
 public:
 
-	inline void    set_atten_p (float a);
-	inline void    set_atten_n (float a);
+	inline void    set_atten_p (float a) noexcept;
+	inline void    set_atten_n (float a) noexcept;
 
 	fstb_FORCEINLINE void
-	               eval (float &y, float &dy, float x) const final;
+	               eval (float &y, float &dy, float x) const noexcept final;
 	fstb_FORCEINLINE float
-	               get_max_step (float x) const final;
+	               get_max_step (float x) const noexcept final;
 
 
 

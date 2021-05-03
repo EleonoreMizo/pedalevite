@@ -13,7 +13,7 @@ Template paramteters:
 
 - OP: binary functor for the operation. Requires:
 	OP::OP ();
-	T OP::operator () (T, T);
+	T OP::operator () (T, T) noexcept;
 
 --- Legal stuff ---
 
@@ -72,13 +72,13 @@ public:
 	SlidingOp &    operator = (const SlidingOp &other) = default;
 	SlidingOp &    operator = (SlidingOp &&other)      = default;
 
-	Operator &     use_ftor ();
+	Operator &     use_ftor () noexcept;
 	void           set_length (int len);
-	void           clear_buffers ();
-	void           fill (const DataType &val);
+	void           clear_buffers () noexcept;
+	void           fill (const DataType &val) noexcept;
 
-	DataType       process_sample (DataType x);
-	void           process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl);
+	DataType       process_sample (DataType x) noexcept;
+	void           process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept;
 
 
 

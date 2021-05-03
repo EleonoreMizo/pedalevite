@@ -45,7 +45,7 @@ namespace osc
 
 
 
-SweepingSin::SweepingSin (double fs, double f1, double f2)
+SweepingSin::SweepingSin (double fs, double f1, double f2) noexcept
 :	_fs (fs)
 ,	_f1 (f1)
 ,	_f2 (f2)
@@ -59,7 +59,7 @@ SweepingSin::SweepingSin (double fs, double f1, double f2)
 
 
 
-void	SweepingSin::generate (float data_ptr [], int nbr_spl)
+void	SweepingSin::generate (float data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -69,7 +69,7 @@ void	SweepingSin::generate (float data_ptr [], int nbr_spl)
 
 
 
-void	SweepingSin::generate (float data_ptr [], int nbr_spl, int block_start, int block_len)
+void	SweepingSin::generate (float data_ptr [], int nbr_spl, int block_start, int block_len) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);

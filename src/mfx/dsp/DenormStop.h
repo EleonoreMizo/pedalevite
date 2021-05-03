@@ -45,10 +45,10 @@ class DenormStop
 
 public:
 
-	static float   process_sample (float x);
-	static void    process_block (float buf_ptr [], int nbr_spl);
-	static void    process_block_2chn (float buf_ptr [], int nbr_frames);
-	static void    process_block_4chn (float buf_ptr [], int nbr_frames);
+	static float   process_sample (float x) noexcept;
+	static void    process_block (float buf_ptr [], int nbr_spl) noexcept;
+	static void    process_block_2chn (float buf_ptr [], int nbr_frames) noexcept;
+	static void    process_block_4chn (float buf_ptr [], int nbr_frames) noexcept;
 
 
 
@@ -63,7 +63,7 @@ protected:
 private:
 
 	static inline float
-	               gen_new_rnd_val ();
+	               gen_new_rnd_val () noexcept;
 
 	static uint32_t
 	               _rnd_val;

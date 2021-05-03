@@ -79,7 +79,7 @@ void	FilterComb <IM, FP, OP, AL>::set_sample_freq (float sample_freq)
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::get_sample_freq () const
+float	FilterComb <IM, FP, OP, AL>::get_sample_freq () const noexcept
 {
 	return _sample_freq;
 }
@@ -103,7 +103,7 @@ void	FilterComb <IM, FP, OP, AL>::set_min_freq (float freq)
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::get_min_freq () const
+float	FilterComb <IM, FP, OP, AL>::get_min_freq () const noexcept
 {
 	return _min_freq;
 }
@@ -111,7 +111,7 @@ float	FilterComb <IM, FP, OP, AL>::get_min_freq () const
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::get_max_freq () const
+float	FilterComb <IM, FP, OP, AL>::get_max_freq () const noexcept
 {
 	return _sample_freq * 0.25f;
 }
@@ -119,7 +119,7 @@ float	FilterComb <IM, FP, OP, AL>::get_max_freq () const
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::set_freq (float freq)
+void	FilterComb <IM, FP, OP, AL>::set_freq (float freq) noexcept
 {
 	assert (freq >= get_min_freq ());
 	assert (freq <= get_max_freq ());
@@ -131,7 +131,7 @@ void	FilterComb <IM, FP, OP, AL>::set_freq (float freq)
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::get_freq () const
+float	FilterComb <IM, FP, OP, AL>::get_freq () const noexcept
 {
 	return _freq;
 }
@@ -139,7 +139,7 @@ float	FilterComb <IM, FP, OP, AL>::get_freq () const
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::set_feedback (float feedback)
+void	FilterComb <IM, FP, OP, AL>::set_feedback (float feedback) noexcept
 {
 	assert (fabs (feedback) <= 1);
 
@@ -150,7 +150,7 @@ void	FilterComb <IM, FP, OP, AL>::set_feedback (float feedback)
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::get_feedback () const
+float	FilterComb <IM, FP, OP, AL>::get_feedback () const noexcept
 {
 	return _feedback;
 }
@@ -158,7 +158,7 @@ float	FilterComb <IM, FP, OP, AL>::get_feedback () const
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-typename FilterComb <IM, FP, OP, AL>::FeedbackProcessor &	FilterComb <IM, FP, OP, AL>::use_feedback_proc ()
+typename FilterComb <IM, FP, OP, AL>::FeedbackProcessor &	FilterComb <IM, FP, OP, AL>::use_feedback_proc () noexcept
 {
 	return _feedback_proc;
 }
@@ -166,7 +166,7 @@ typename FilterComb <IM, FP, OP, AL>::FeedbackProcessor &	FilterComb <IM, FP, OP
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-const typename FilterComb <IM, FP, OP, AL>::FeedbackProcessor &	FilterComb <IM, FP, OP, AL>::use_feedback_proc () const
+const typename FilterComb <IM, FP, OP, AL>::FeedbackProcessor &	FilterComb <IM, FP, OP, AL>::use_feedback_proc () const noexcept
 {
 	return _feedback_proc;
 }
@@ -174,7 +174,7 @@ const typename FilterComb <IM, FP, OP, AL>::FeedbackProcessor &	FilterComb <IM, 
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-typename FilterComb <IM, FP, OP, AL>::OutputProcessor &	FilterComb <IM, FP, OP, AL>::use_output_proc ()
+typename FilterComb <IM, FP, OP, AL>::OutputProcessor &	FilterComb <IM, FP, OP, AL>::use_output_proc () noexcept
 {
 	return _output_proc;
 }
@@ -182,7 +182,7 @@ typename FilterComb <IM, FP, OP, AL>::OutputProcessor &	FilterComb <IM, FP, OP, 
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-const typename FilterComb <IM, FP, OP, AL>::OutputProcessor &	FilterComb <IM, FP, OP, AL>::use_output_proc () const
+const typename FilterComb <IM, FP, OP, AL>::OutputProcessor &	FilterComb <IM, FP, OP, AL>::use_output_proc () const noexcept
 {
 	return _output_proc;
 }
@@ -190,7 +190,7 @@ const typename FilterComb <IM, FP, OP, AL>::OutputProcessor &	FilterComb <IM, FP
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-typename FilterComb <IM, FP, OP, AL>::InterpolatorMaker &	FilterComb <IM, FP, OP, AL>::use_interpolator_maker ()
+typename FilterComb <IM, FP, OP, AL>::InterpolatorMaker &	FilterComb <IM, FP, OP, AL>::use_interpolator_maker () noexcept
 {
 	return _interpolator_maker;
 }
@@ -198,7 +198,7 @@ typename FilterComb <IM, FP, OP, AL>::InterpolatorMaker &	FilterComb <IM, FP, OP
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-const typename FilterComb <IM, FP, OP, AL>::InterpolatorMaker &	FilterComb <IM, FP, OP, AL>::use_interpolator_maker () const
+const typename FilterComb <IM, FP, OP, AL>::InterpolatorMaker &	FilterComb <IM, FP, OP, AL>::use_interpolator_maker () const noexcept
 {
 	return _interpolator_maker;
 }
@@ -206,7 +206,7 @@ const typename FilterComb <IM, FP, OP, AL>::InterpolatorMaker &	FilterComb <IM, 
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::process_sample (float sample)
+float	FilterComb <IM, FP, OP, AL>::process_sample (float sample) noexcept
 {
 	const float    read_val = read_sample_with_feedback ();
 	const float    fdbk_val = _feedback_proc.process_sample (read_val);
@@ -219,7 +219,7 @@ float	FilterComb <IM, FP, OP, AL>::process_sample (float sample)
 
 // Can work in-place
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::process_block (float dest_ptr [], const float src_ptr [], int nbr_spl)
+void	FilterComb <IM, FP, OP, AL>::process_block (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dest_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -234,7 +234,7 @@ void	FilterComb <IM, FP, OP, AL>::process_block (float dest_ptr [], const float 
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl)
+void	FilterComb <IM, FP, OP, AL>::process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dest_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -250,7 +250,7 @@ void	FilterComb <IM, FP, OP, AL>::process_block_mix (float dest_ptr [], const fl
 
 // Can work in-place
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback)
+void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback) noexcept
 {
 	assert (dest_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -274,7 +274,7 @@ void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const fl
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::process_block_vff_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback)
+void	FilterComb <IM, FP, OP, AL>::process_block_vff_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback) noexcept
 {
 	assert (dest_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -298,7 +298,7 @@ void	FilterComb <IM, FP, OP, AL>::process_block_vff_mix (float dest_ptr [], cons
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::clear_buffers ()
+void	FilterComb <IM, FP, OP, AL>::clear_buffers () noexcept
 {
 	_buf.clear_buffers ();
 }
@@ -315,7 +315,7 @@ Throws: Nothing
 */
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::clear_buffers_fast ()
+void	FilterComb <IM, FP, OP, AL>::clear_buffers_fast () noexcept
 {
 	_buf.clear_buffers_fast ();
 }
@@ -342,7 +342,7 @@ void	FilterComb <IM, FP, OP, AL>::update_buffer ()
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::update_interpolator ()
+void	FilterComb <IM, FP, OP, AL>::update_interpolator () noexcept
 {
 	_period = _sample_freq / _freq + _interpolator_maker.get_delay ();
 	_period_int = fstb::ceil_int (_period);
@@ -356,7 +356,7 @@ void	FilterComb <IM, FP, OP, AL>::update_interpolator ()
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::update_interpolator_base_only (float d)
+void	FilterComb <IM, FP, OP, AL>::update_interpolator_base_only (float d) noexcept
 {
 	assert (_interpolator_maker.get_length () == 4);
 
@@ -366,7 +366,7 @@ void	FilterComb <IM, FP, OP, AL>::update_interpolator_base_only (float d)
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::update_feedback ()
+void	FilterComb <IM, FP, OP, AL>::update_feedback () noexcept
 {
 	_interp_final [0] = _interp_base [0] * _feedback;
 	_interp_final [1] = _interp_base [1] * _feedback;
@@ -378,7 +378,7 @@ void	FilterComb <IM, FP, OP, AL>::update_feedback ()
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::read_sample_without_feedback () const
+float	FilterComb <IM, FP, OP, AL>::read_sample_without_feedback () const noexcept
 {
 	return _buf.read_sample (&_interp_base [0]);
 }
@@ -386,7 +386,7 @@ float	FilterComb <IM, FP, OP, AL>::read_sample_without_feedback () const
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::read_sample_with_feedback () const
+float	FilterComb <IM, FP, OP, AL>::read_sample_with_feedback () const noexcept
 {
 	return _buf.read_sample (&_interp_final [0]);
 }
@@ -394,7 +394,7 @@ float	FilterComb <IM, FP, OP, AL>::read_sample_with_feedback () const
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::write_in_delay_line (float sample)
+float	FilterComb <IM, FP, OP, AL>::write_in_delay_line (float sample) noexcept
 {
 	_buf.write_sample (sample);
 	_buf.step_one_sample ();
@@ -405,7 +405,7 @@ float	FilterComb <IM, FP, OP, AL>::write_in_delay_line (float sample)
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-void	FilterComb <IM, FP, OP, AL>::init_variable_freq_feedback (VariableFreqFeedbackData &data, int nbr_spl, float final_freq, float final_feedback)
+void	FilterComb <IM, FP, OP, AL>::init_variable_freq_feedback (VariableFreqFeedbackData &data, int nbr_spl, float final_freq, float final_feedback) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (final_freq >= get_min_freq ());
@@ -424,7 +424,7 @@ void	FilterComb <IM, FP, OP, AL>::init_variable_freq_feedback (VariableFreqFeedb
 
 
 template <typename IM, typename FP, typename OP, typename AL>
-float	FilterComb <IM, FP, OP, AL>::iterate_variable_freq_feedback (VariableFreqFeedbackData &data, float sample)
+float	FilterComb <IM, FP, OP, AL>::iterate_variable_freq_feedback (VariableFreqFeedbackData &data, float sample) noexcept
 {
 	_period_int = fstb::ceil_int (data._cur_period);
 	_buf.set_time (_period_int);

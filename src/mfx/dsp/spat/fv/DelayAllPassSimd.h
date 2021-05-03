@@ -50,9 +50,9 @@ class DelayAllPassSimd
 public:
 
 	void           set_delay (int len);
-	void           set_feedback (float coef);
-	void           clear_buffers ();
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           set_feedback (float coef) noexcept;
+	void           clear_buffers () noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 

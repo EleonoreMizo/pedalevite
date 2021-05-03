@@ -19,9 +19,9 @@ Template parameters:
 	internal data..
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
-	static bool VP::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectF32 VP::load_f32 (const void *ptr);
-	static void VP::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val);
+	static bool VP::check_ptr (const void *ptr) noexcept;
+	static fstb::ToolsSimd::VectF32 VP::load_f32 (const void *ptr) noexcept;
+	static void VP::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val) noexcept;
 
 - ORD: filter order. >= 1
 
@@ -78,26 +78,26 @@ public:
 
 	typedef VP V128Par;
 
-	               EnvFollowerAHR1LrSimdHelper ();
-	               EnvFollowerAHR1LrSimdHelper (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other);
-	               EnvFollowerAHR1LrSimdHelper (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other);
+	               EnvFollowerAHR1LrSimdHelper () noexcept;
+	               EnvFollowerAHR1LrSimdHelper (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept;
+	               EnvFollowerAHR1LrSimdHelper (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other) noexcept;
 
 	virtual        ~EnvFollowerAHR1LrSimdHelper () = default;
 
 	EnvFollowerAHR1LrSimdHelper <VP, ORD> &
-	               operator = (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other);
+	               operator = (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept;
 	EnvFollowerAHR1LrSimdHelper <VP, ORD> &
-	               operator = (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other);
+	               operator = (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other) noexcept;
 
-	void           set_atk_coef (float coef);
-	void           set_hold_time (int nbr_spl);
-	void           set_rls_coef (float coef);
+	void           set_atk_coef (float coef) noexcept;
+	void           set_hold_time (int nbr_spl) noexcept;
+	void           set_rls_coef (float coef) noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float in);
-	void           process_block (float out_ptr [], const float in_ptr [], int nbr_spl);
+	               process_sample (float in) noexcept;
+	void           process_block (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -114,11 +114,11 @@ private:
 	typedef float VectFloat4 [4];
 
 	fstb_FORCEINLINE void
-	               copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other);
+	               copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept;
 	fstb_FORCEINLINE void
-	               check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl);
+	               check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl) noexcept;
 	fstb_FORCEINLINE static bool
-	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
+	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept;
 
 	alignas (16) VectFloat4
 	               _state [ORD];

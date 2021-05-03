@@ -42,7 +42,7 @@ namespace va
 
 
 
-void	AntisatSinh::eval (float &y, float &dy, float x)
+void	AntisatSinh::eval (float &y, float &dy, float x) noexcept
 {
 	const float    xd = 2 * x;
 	y  = 0.5f * asinh_fast (xd);
@@ -51,7 +51,7 @@ void	AntisatSinh::eval (float &y, float &dy, float x)
 
 
 
-float AntisatSinh::eval_inv (float y)
+float AntisatSinh::eval_inv (float y) noexcept
 {
 	return 0.5f * sinh_fast (y * 2);
 }
@@ -66,7 +66,7 @@ float AntisatSinh::eval_inv (float y)
 
 
 
-float	AntisatSinh::sinh_fast (float x)
+float	AntisatSinh::sinh_fast (float x) noexcept
 {
 	const float    ex  = fstb::Approx::exp2 (x * float (fstb::LOG2_E));
 	const float    e2x = ex * ex;
@@ -77,7 +77,7 @@ float	AntisatSinh::sinh_fast (float x)
 
 
 
-float	AntisatSinh::asinh_fast (float x)
+float	AntisatSinh::asinh_fast (float x) noexcept
 {
 	const float    u   = x + sqrt (x * x + 1);
 	const float    ash = float (fstb::LN2) * fstb::Approx::log2 (u);

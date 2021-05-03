@@ -47,13 +47,13 @@ class WsSq
 public:
 
 	template <typename T>
-	fstb_FORCEINLINE T operator () (T x)
+	fstb_FORCEINLINE T operator () (T x) noexcept
 	{
 		return process_sample (x);
 	}
 
 	template <typename T>
-	static fstb_FORCEINLINE T process_sample (T x)
+	static fstb_FORCEINLINE T process_sample (T x) noexcept
 	{
 		x = fstb::limit (x, T (-2), T (2));
 		return x * (T (1) - T (0.25f) * T (fabs (x)));

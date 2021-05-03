@@ -38,7 +38,7 @@ namespace shape
 
 
 template <typename T, long XSN, long XSD, long YSN, long YSD>
-T	SineQPoly3 <T, XSN, XSD, YSN, YSD>::operator () (T x) const
+T	SineQPoly3 <T, XSN, XSD, YSN, YSD>::operator () (T x) const noexcept
 {
 	return approximate (x);
 }
@@ -46,7 +46,7 @@ T	SineQPoly3 <T, XSN, XSD, YSN, YSD>::operator () (T x) const
 
 
 template <typename T, long XSN, long XSD, long YSN, long YSD>
-T	SineQPoly3 <T, XSN, XSD, YSN, YSD>::approximate (T x)
+T	SineQPoly3 <T, XSN, XSD, YSN, YSD>::approximate (T x) noexcept
 {
 	const T			sx = T (XSN) / T (XSD);
 	const T			sy = T (YSN) / T (YSD);
@@ -66,7 +66,7 @@ T	SineQPoly3 <T, XSN, XSD, YSN, YSD>::approximate (T x)
 	assert (y / sy >= 0);
 	assert (y / sy <= T (1.0000000000000002));	// Rounding error: 1 bit on a 64-bit float
  
-	return (y);
+	return y;
 }
 
 

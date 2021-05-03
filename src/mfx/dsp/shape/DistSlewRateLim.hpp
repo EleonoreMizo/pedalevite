@@ -39,7 +39,7 @@ namespace shape
 
 
 
-float	DistSlewRateLim::process_sample (float x)
+float	DistSlewRateLim::process_sample (float x) noexcept
 {
 	const float    val_min = _state - _rate_max_n;
 	const float    val_max = _state + _rate_max_p;

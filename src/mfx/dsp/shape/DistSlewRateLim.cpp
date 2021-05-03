@@ -43,7 +43,7 @@ namespace shape
 
 
 
-void	DistSlewRateLim::set_sample_freq (double sample_freq)
+void	DistSlewRateLim::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -55,14 +55,14 @@ void	DistSlewRateLim::set_sample_freq (double sample_freq)
 
 
 
-void	DistSlewRateLim::clear_buffers ()
+void	DistSlewRateLim::clear_buffers () noexcept
 {
 	_state = 0;
 }
 
 
 
-void	DistSlewRateLim::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DistSlewRateLim::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -84,7 +84,7 @@ void	DistSlewRateLim::process_block (float dst_ptr [], const float src_ptr [], i
 
 
 
-void	DistSlewRateLim::set_rate_limit (float rate_max_s)
+void	DistSlewRateLim::set_rate_limit (float rate_max_s) noexcept
 {
 	assert (rate_max_s > 0);
 
@@ -94,7 +94,7 @@ void	DistSlewRateLim::set_rate_limit (float rate_max_s)
 
 
 
-void	DistSlewRateLim::set_rate_limit_pos (float rate_max_s)
+void	DistSlewRateLim::set_rate_limit_pos (float rate_max_s) noexcept
 {
 	_rate_max_p_s = rate_max_s;
 	update_rate_p ();
@@ -102,7 +102,7 @@ void	DistSlewRateLim::set_rate_limit_pos (float rate_max_s)
 
 
 
-void	DistSlewRateLim::set_rate_limit_neg (float rate_max_s)
+void	DistSlewRateLim::set_rate_limit_neg (float rate_max_s) noexcept
 {
 	_rate_max_n_s = rate_max_s;
 	update_rate_n ();
@@ -118,14 +118,14 @@ void	DistSlewRateLim::set_rate_limit_neg (float rate_max_s)
 
 
 
-void	DistSlewRateLim::update_rate_p ()
+void	DistSlewRateLim::update_rate_p () noexcept
 {
 	_rate_max_p = _rate_max_p_s * _inv_fs;
 }
 
 
 
-void	DistSlewRateLim::update_rate_n ()
+void	DistSlewRateLim::update_rate_n () noexcept
 {
 	_rate_max_n = _rate_max_n_s * _inv_fs;
 }

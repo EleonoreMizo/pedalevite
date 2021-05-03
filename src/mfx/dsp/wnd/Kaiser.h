@@ -49,7 +49,7 @@ class Kaiser
 
 public:
 
-	void           set_alpha (double alpha);
+	void           set_alpha (double alpha) noexcept;
 
 
 
@@ -66,8 +66,8 @@ protected:
 
 private:
 
-	static double  compute_wp (int pos, int len, double alpha);
-	static double  compute_i0 (double x);
+	static double  compute_wp (int pos, int len, double alpha) noexcept;
+	static double  compute_i0 (double x) noexcept;
 
 	double         _alpha = 1;
 

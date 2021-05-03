@@ -75,7 +75,7 @@ Throws: Nothing
 */
 
 template <typename T, typename OP>
-typename SlidingOp <T, OP>::Operator &	SlidingOp <T, OP>::use_ftor ()
+typename SlidingOp <T, OP>::Operator &	SlidingOp <T, OP>::use_ftor () noexcept
 {
 	return _op;
 }
@@ -127,7 +127,7 @@ Throws: Nothing
 */
 
 template <typename T, typename OP>
-void	SlidingOp <T, OP>::clear_buffers ()
+void	SlidingOp <T, OP>::clear_buffers () noexcept
 {
 	_pos_w     = 0;
 	_nbr_avail = 0;
@@ -148,7 +148,7 @@ Throws: Nothing
 */
 
 template <typename T, typename OP>
-void	SlidingOp <T, OP>::fill (const DataType &val)
+void	SlidingOp <T, OP>::fill (const DataType &val) noexcept
 {
 	for (auto &lvl : _lvl_arr)
 	{
@@ -174,12 +174,12 @@ Description:
 Input parameters:
 	- x: The new sample
 Returns: the result of the operation on all the operands from the new window.
-Throws: OP::operator () related exceptions
+Throws: Nothing
 ==============================================================================
 */
 
 template <typename T, typename OP>
-typename SlidingOp <T, OP>::DataType	SlidingOp <T, OP>::process_sample (DataType x)
+typename SlidingOp <T, OP>::DataType	SlidingOp <T, OP>::process_sample (DataType x) noexcept
 {
 	// A new sample arrived
 	if (_nbr_avail < _len)
@@ -233,12 +233,12 @@ Input parameters:
 	- nbr_spl: Number of samples to process. > 0.
 Output parameters:
 	- dst_ptr: Pointer on the preallocated result buffer. Not null.
-Throws: OP::operator () related exceptions
+Throws: Nothing
 ==============================================================================
 */
 
 template <typename T, typename OP>
-void	SlidingOp <T, OP>::process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl)
+void	SlidingOp <T, OP>::process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);

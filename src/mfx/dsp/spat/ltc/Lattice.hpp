@@ -42,7 +42,7 @@ namespace ltc
 
 
 template <class D, int N>
-D &	Lattice <D, N>::use_delay (int idx)
+D &	Lattice <D, N>::use_delay (int idx) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_proc);
@@ -53,7 +53,7 @@ D &	Lattice <D, N>::use_delay (int idx)
 
 
 template <class D, int N>
-void	Lattice <D, N>::set_coef (int idx, DataType c)
+void	Lattice <D, N>::set_coef (int idx, DataType c) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_proc);
@@ -66,7 +66,7 @@ void	Lattice <D, N>::set_coef (int idx, DataType c)
 
 
 template <class D, int N>
-typename Lattice <D, N>::DataType	Lattice <D, N>::process_sample (DataType x)
+typename Lattice <D, N>::DataType	Lattice <D, N>::process_sample (DataType x) noexcept
 {
 	// Feedforward values multiplied by their coefficient
 	ScalarArray    tmp_arr;
@@ -91,7 +91,7 @@ typename Lattice <D, N>::DataType	Lattice <D, N>::process_sample (DataType x)
 
 
 template <class D, int N>
-typename Lattice <D, N>::DataType &	Lattice <D, N>::use_delay_output (int idx)
+typename Lattice <D, N>::DataType &	Lattice <D, N>::use_delay_output (int idx) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _nbr_proc);
@@ -102,7 +102,7 @@ typename Lattice <D, N>::DataType &	Lattice <D, N>::use_delay_output (int idx)
 
 
 template <class D, int N>
-void	Lattice <D, N>::clear_buffers ()
+void	Lattice <D, N>::clear_buffers () noexcept
 {
 	for (auto &delay : _delay_arr)
 	{

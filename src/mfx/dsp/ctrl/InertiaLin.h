@@ -46,27 +46,27 @@ class InertiaLin
 public:
 
 	               InertiaLin ()                        = default;
-	inline         InertiaLin (double val);
+	inline         InertiaLin (double val) noexcept;
 	               InertiaLin (const InertiaLin &other) = default;
 	               InertiaLin (InertiaLin &&other)      = default;
 
 	InertiaLin &   operator = (const InertiaLin &other) = default;
 	InertiaLin &   operator = (InertiaLin &&other)      = default;
 
-	inline void		set_inertia_time (double inertia_time);
-	inline void    update_inertia_time (double inertia_time);
-	inline double	get_inertia_time () const;
+	inline void		set_inertia_time (double inertia_time) noexcept;
+	inline void    update_inertia_time (double inertia_time) noexcept;
+	inline double	get_inertia_time () const noexcept;
 
-	inline void		set_sample_freq (double fs);
-	inline void		set_val (double val);
-	inline void		force_val (double val);	// No inertia
-	inline double	get_val () const;
-	inline double	get_target_val () const;
-	inline void		tick (int nbr_spl);
-	inline bool		is_ramping () const;
-	inline double	get_step () const;
-   inline void    stop ();
-	inline void		clear_buffers ();
+	inline void		set_sample_freq (double fs) noexcept;
+	inline void		set_val (double val) noexcept;
+	inline void		force_val (double val) noexcept;	// No inertia
+	inline double	get_val () const noexcept;
+	inline double	get_target_val () const noexcept;
+	inline void		tick (int nbr_spl) noexcept;
+	inline bool		is_ramping () const noexcept;
+	inline double	get_step () const noexcept;
+   inline void    stop () noexcept;
+	inline void		clear_buffers () noexcept;
 
 
 

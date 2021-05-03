@@ -40,7 +40,7 @@ namespace va
 
 
 template <class F>
-RcClipGeneric <F>::RcClipGeneric (IvFunc &&fnc)
+RcClipGeneric <F>::RcClipGeneric (IvFunc &&fnc) noexcept
 :	_fnc (std::move (fnc))
 {
 	// Nothing
@@ -49,7 +49,7 @@ RcClipGeneric <F>::RcClipGeneric (IvFunc &&fnc)
 
 
 template <class F>
-typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc ()
+typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc () noexcept
 {
 	return _fnc;
 }
@@ -57,7 +57,7 @@ typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc ()
 
 
 template <class F>
-const typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc () const
+const typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc () const noexcept
 {
 	return _fnc;
 }
@@ -65,7 +65,7 @@ const typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc () const
 
 
 template <class F>
-void	RcClipGeneric <F>::set_sample_freq (double sample_freq)
+void	RcClipGeneric <F>::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -77,7 +77,7 @@ void	RcClipGeneric <F>::set_sample_freq (double sample_freq)
 
 
 template <class F>
-void	RcClipGeneric <F>::set_capa (float c)
+void	RcClipGeneric <F>::set_capa (float c) noexcept
 {
 	assert (c > 0);
 
@@ -88,7 +88,7 @@ void	RcClipGeneric <F>::set_capa (float c)
 
 
 template <class F>
-void	RcClipGeneric <F>::set_cutoff_freq (float f)
+void	RcClipGeneric <F>::set_cutoff_freq (float f) noexcept
 {
 	assert (f > 0);
 
@@ -98,7 +98,7 @@ void	RcClipGeneric <F>::set_cutoff_freq (float f)
 
 
 template <class F>
-float	RcClipGeneric <F>::process_sample (float x)
+float	RcClipGeneric <F>::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -173,7 +173,7 @@ float	RcClipGeneric <F>::process_sample (float x)
 
 
 template <class F>
-void	RcClipGeneric <F>::clear_buffers ()
+void	RcClipGeneric <F>::clear_buffers () noexcept
 {
 	_iceq = 0;
 	_v2   = 0;
@@ -184,7 +184,7 @@ void	RcClipGeneric <F>::clear_buffers ()
 #if defined (mfx_dsp_va_RcClipGeneric_STAT)
 
 template <class F>
-void	RcClipGeneric <F>::reset_stat ()
+void	RcClipGeneric <F>::reset_stat () noexcept
 {
 	_st._hist_it.fill (0);
 	_st._hist_f0.fill (0);
@@ -195,7 +195,7 @@ void	RcClipGeneric <F>::reset_stat ()
 
 
 template <class F>
-void	RcClipGeneric <F>::get_stats (Stat &stat) const
+void	RcClipGeneric <F>::get_stats (Stat &stat) const noexcept
 {
 	stat = _st;
 }
@@ -213,7 +213,7 @@ void	RcClipGeneric <F>::get_stats (Stat &stat) const
 
 
 template <class F>
-void	RcClipGeneric <F>::update_internal_coef_rc ()
+void	RcClipGeneric <F>::update_internal_coef_rc () noexcept
 {
 	_geqc      = 2 * _c * _sample_freq;
 //	_gr        = 1.f / _r;

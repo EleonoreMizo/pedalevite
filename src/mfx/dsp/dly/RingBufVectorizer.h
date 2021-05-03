@@ -59,7 +59,7 @@ public:
 	static const int  _max_nbr_curs = 16;  // Maximum number of simultaneous cursors
 
 	inline explicit
-	               RingBufVectorizer (int size);
+	               RingBufVectorizer (int size) noexcept;
 	               RingBufVectorizer (const RingBufVectorizer &other) = default;
 	               RingBufVectorizer (RingBufVectorizer &&other)      = default;
 	virtual        ~RingBufVectorizer ()                              = default;
@@ -69,17 +69,17 @@ public:
 	RingBufVectorizer &
 	               operator = (RingBufVectorizer &&other)             = default;
 
-	void				set_size (int size);
-	inline int     get_size () const;
-	void           set_curs (int nbr_curs, const int pos_arr []);
-	void           start (int len, int pos);
-	void           start (int len, int pos_0, int pos_1);
-	void           start (int len, int nbr_curs, const int pos_arr []);
-	void           restart (int len);
-	inline bool    end () const;
-	void           next ();
-	inline int     get_seg_len () const;
-	inline int     get_curs_pos (int curs) const;
+	void				set_size (int size) noexcept;
+	inline int     get_size () const noexcept;
+	void           set_curs (int nbr_curs, const int pos_arr []) noexcept;
+	void           start (int len, int pos) noexcept;
+	void           start (int len, int pos_0, int pos_1) noexcept;
+	void           start (int len, int nbr_curs, const int pos_arr []) noexcept;
+	void           restart (int len) noexcept;
+	inline bool    end () const noexcept;
+	void           next () noexcept;
+	inline int     get_seg_len () const noexcept;
+	inline int     get_curs_pos (int curs) const noexcept;
 
 
 
@@ -87,7 +87,7 @@ public:
 
 protected:
 
-	void           compute_seg ();
+	void           compute_seg () noexcept;
 
 
 

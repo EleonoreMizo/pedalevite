@@ -9,8 +9,8 @@ Template parameters:
 
 - LFOP: Lo-Fi operator. Typically one of the SqueezerOp*. Requires:
    All ctor/dtor/assign
-	void LFOP::config (float reso, float p1);
-	float LFOP::process_sample (float x);
+	void LFOP::config (float reso, float p1) noexcept;
+	float LFOP::process_sample (float x) noexcept;
 
 --- Legal stuff ---
 
@@ -65,7 +65,7 @@ public:
 	static const bool _br_flag    = BR;
 	typedef LFOP LoFiOperator;
 
-	               SqueezerSimd ();
+	               SqueezerSimd () noexcept;
 	               SqueezerSimd (const SqueezerSimd <BR, LFOP> &other) = default;
 	               SqueezerSimd (SqueezerSimd <BR, LFOP> &&other)      = default;
 
@@ -76,27 +76,27 @@ public:
 	SqueezerSimd <BR, LFOP> &
 	               operator = (SqueezerSimd <BR, LFOP> &&other)        = default;
 
-	inline void    set_sample_freq (float fs);
-	inline void    set_freq (float f0);
+	inline void    set_sample_freq (float fs) noexcept;
+	inline void    set_freq (float f0) noexcept;
 	fstb_FORCEINLINE void
-	               set_freq_and_update_eq_fast (float f0);
-	inline float   get_freq () const;
-	inline void    set_reso (float reso);
-	inline float   get_reso () const;
-	inline void    set_p1 (float p1);
-	inline float   get_p1 () const;
-	inline void    copy_z_eq (const SqueezerSimd <BR, LFOP> &other);
+	               set_freq_and_update_eq_fast (float f0) noexcept;
+	inline float   get_freq () const noexcept;
+	inline void    set_reso (float reso) noexcept;
+	inline float   get_reso () const noexcept;
+	inline void    set_p1 (float p1) noexcept;
+	inline float   get_p1 () const noexcept;
+	inline void    copy_z_eq (const SqueezerSimd <BR, LFOP> &other) noexcept;
 	fstb_FORCEINLINE void
-	               update_eq ();
+	               update_eq () noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float x);
+	               process_sample (float x) noexcept;
 
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block (float spl_ptr [], int nbr_spl);
-	void           process_block_fm (float dst_ptr [], const float src_ptr [], const float freq_ptr [], int nbr_spl);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block (float spl_ptr [], int nbr_spl) noexcept;
+	void           process_block_fm (float dst_ptr [], const float src_ptr [], const float freq_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -110,34 +110,34 @@ protected:
 
 private:
 
-	static void    update_internal_variables (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso);
-	static void    update_internal_variables_fast (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso);
+	static void    update_internal_variables (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso) noexcept;
+	static void    update_internal_variables_fast (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso) noexcept;
 	static fstb::ToolsSimd::VectF32
-	               shape_feedback (fstb::ToolsSimd::VectF32 x);
+	               shape_feedback (fstb::ToolsSimd::VectF32 x) noexcept;
 
 	// Internal variables, SSE code. Do not change the order!
 	std::array <float, _nbr_stages>
-	               _y;               // y_{n} = x_{n+1}
-	float          _x;               // x_{0}
-	float          _r;               // Feedback coefficient. 4 is max, but it may be bigger.
-	float          _p;               // Pole, < -1
-	float          _g;               // Gain for the forward path of the 1-pole filters
+	               _y {};            // y_{n} = x_{n+1}
+	float          _x = 0;           // x_{0}
+	float          _r = 0;           // Feedback coefficient. 4 is max, but it may be bigger.
+	float          _p = 0;           // Pole, < -1
+	float          _g = 0;           // Gain for the forward path of the 1-pole filters
 	LoFiOperator   _lofi_op;
 
    // Other internal variables
-   float          _gain_out;        // Compensation gain for output (because of reso tweaking)
-	float          _gain_out_cur;    // Current value (low-pass filtered) for _out_gain
-   float          _gain_out_lerp_step; // Step for the low-pass filter on gain, ]0 ; 1]
+   float          _gain_out = 1;    // Compensation gain for output (because of reso tweaking)
+	float          _gain_out_cur = 1;// Current value (low-pass filtered) for _out_gain
+   float          _gain_out_lerp_step = 1.f / 256; // Step for the low-pass filter on gain, ]0 ; 1]
 
-	float          _br_scale;        // Scale for the bit reduction (step level). Could be assimilated with _r to save a multiplication
-	float          _br_scale_inv;    // Inverse scale for the bit reduction
-	float          _br_amt;          // Amount of bit-reduced feedback [0 ; 1]
+	float          _br_scale = 1;    // Scale for the bit reduction (step level). Could be assimilated with _r to save a multiplication
+	float          _br_scale_inv = 1;// Inverse scale for the bit reduction
+	float          _br_amt   = 0;    // Amount of bit-reduced feedback [0 ; 1]
 
 	// Classic variables
-	float          _fs;              // Hz, > 0
-	float          _freq;            // Hz, ]0..._fs/2[
-	float          _reso;            // %, [0...1]
-	float          _p1;              // %, [0...1]
+	float          _fs   = 44100;    // Hz, > 0
+	float          _freq =  1000;    // Hz, ]0..._fs/2[
+	float          _reso =     0;    // %, [0...1]
+	float          _p1   =     0;    // %, [0...1]
 
 
 

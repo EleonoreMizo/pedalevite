@@ -49,23 +49,23 @@ class DelayLineReader
 
 public:
 
-	void           set_tmp_buf (float *buf_ptr, int len);
-	float *        get_tmp_buf_ptr () const;
-	int            get_tmp_buf_len () const;
+	void           set_tmp_buf (float *buf_ptr, int len) noexcept;
+	float *        get_tmp_buf_ptr () const noexcept;
+	int            get_tmp_buf_len () const noexcept;
 
-	void           set_delay_line (const DelayLineReadInterface &delay_line);
+	void           set_delay_line (const DelayLineReadInterface &delay_line) noexcept;
 
-	void           set_resampling_range (double rate_inf, double rate_sup);
-	void           set_crossfade (int nbr_spl, const float shape_ptr []);
+	void           set_resampling_range (double rate_inf, double rate_sup) noexcept;
+	void           set_crossfade (int nbr_spl, const float shape_ptr []) noexcept;
 
-	bool           is_ready () const;
+	bool           is_ready () const noexcept;
 
-	void           set_delay_time (double delay_time, int transition_time);
-	void           clip_times ();
-	void           read_data (float dest_ptr [], int nbr_spl, int src_pos);
-	bool           is_time_ramping () const;
-	bool           is_time_change_programmed () const;
-	void           clear_buffers ();
+	void           set_delay_time (double delay_time, int transition_time) noexcept;
+	void           clip_times () noexcept;
+	void           read_data (float dest_ptr [], int nbr_spl, int src_pos) noexcept;
+	bool           is_time_ramping () const noexcept;
+	bool           is_time_change_programmed () const noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -79,8 +79,8 @@ protected:
 
 private:
 
-	void           setup_immediate_transition (double delay_time, int transition_time);
-	void           apply_crossfade (float dest_ptr [], int nbr_spl, double lerp_pos_end, int src_pos);
+	void           setup_immediate_transition (double delay_time, int transition_time) noexcept;
+	void           apply_crossfade (float dest_ptr [], int nbr_spl, double lerp_pos_end, int src_pos) noexcept;
 
 	const DelayLineReadInterface *
 	               _delay_line_ptr  =  nullptr; // 0 = not initialised.

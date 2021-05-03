@@ -8,13 +8,13 @@ Newton-Raphson equation solver.
 Template parameters:
 
 - FNC: function f(x) = 0, where x is the unknown. Requires:
-   FNC::FNC (FNC &&);
+   FNC::FNC (FNC &&) noexcept;
 	FNC::DataType;
 		The type of handled data
-	FNC::DataType FNC::estimate ();
+	FNC::DataType FNC::estimate () noexcept;
 		Guess a first value x for the iteration, so f(x) is as close as
 		possible to 0.
-	void FNC::eval (FNC::DataType &y, FNC::DataType &dy, FNC::DataType x);
+	void FNC::eval (FNC::DataType &y, FNC::DataType &dy, FNC::DataType x) noexcept;
 		y and dy (never 0) are the function value and its derivative at x.
 
 - MAXIT: maximum number of iterations. >= 1
@@ -76,11 +76,11 @@ public:
 	               operator = (SolverNR <FNC, MAXIT, PVF> &&other)      = default;
 	               ~SolverNR () = default;
 
-	explicit       SolverNR (const FuncType &fnc, DataType prec, DataType max_dif = 0.125);
-	explicit       SolverNR (FuncType &&fnc, DataType prec, DataType max_dif = 0.125);
+	explicit       SolverNR (const FuncType &fnc, DataType prec, DataType max_dif = 0.125) noexcept;
+	explicit       SolverNR (FuncType &&fnc, DataType prec, DataType max_dif = 0.125) noexcept;
 	inline FuncType &
-	               use_fnc ();
-	DataType       slove ();
+	               use_fnc () noexcept;
+	DataType       slove () noexcept;
 
 
 

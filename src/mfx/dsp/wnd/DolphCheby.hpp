@@ -54,7 +54,7 @@ Throws: Nothing
 */
 
 template <class T>
-void	DolphCheby <T>::set_ripple_ratio (double r)
+void	DolphCheby <T>::set_ripple_ratio (double r) noexcept
 {
 	assert (r > 0);
 	assert (r < 1);
@@ -112,7 +112,7 @@ void	DolphCheby <T>::do_make_win (T data_ptr [], int len)
 
 
 template <class T>
-double	DolphCheby <T>::cheby_poly (double x, int n)
+double	DolphCheby <T>::cheby_poly (double x, int n) noexcept
 {
 	assert (n >= 0);
 

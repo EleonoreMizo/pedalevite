@@ -55,7 +55,7 @@ class PinkShade
 
 public:
 
-	               PinkShade ();
+	               PinkShade () noexcept;
 	               PinkShade (const PinkShade &other)  = default;
 	               PinkShade (PinkShade &&other)       = default;
 
@@ -64,10 +64,10 @@ public:
 	PinkShade &    operator = (const PinkShade &other) = default;
 	PinkShade &    operator = (PinkShade &&other)      = default;
 
-	void           set_seed (int seed);
-	inline float   process_sample ();
-	void           process_block (float dst_ptr [], int nbr_spl);
-	void           process_block_add (float dst_ptr [], int nbr_spl);
+	void           set_seed (int seed) noexcept;
+	inline float   process_sample () noexcept;
+	void           process_block (float dst_ptr [], int nbr_spl) noexcept;
+	void           process_block_add (float dst_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -91,16 +91,16 @@ private:
 		int32_t        _i;
 	};
 
-	void           gen_16 (float *dst_ptr);
+	void           gen_16 (float *dst_ptr) noexcept;
 
-	std::array <float, _buf_len>  // Pre-generated data
+	std::array <float, _buf_len>        // Pre-generated data
 	               _buf;
-	int            _bpos;         // Current reading position within the buffer, [0 ; _buf_len-1]. 0 = buffer needs to be generated beforehand
-	int            _lfsr;         // Linear feedback shift register
-	int            _inc;          // Increment for all noise sources (bits)
-	int            _dec;          // Decrement for all noise sources
-	Combo          _accu;         // Accu, also interpreted as float
-	uint8_t        _ncnt;         // Overflowing counter as index to _nmask
+	int            _bpos = 0;           // Current reading position within the buffer, [0 ; _buf_len-1]. 0 = buffer needs to be generated beforehand
+	int            _lfsr = 0x5EED41F5;  // Linear feedback shift register
+	int            _inc  = 0x4CCCC;     // Increment for all noise sources (bits)
+	int            _dec  = 0x4CCCC;     // Decrement for all noise sources
+	Combo          _accu;               // Accu, also interpreted as float
+	uint8_t        _ncnt = 0;           // Overflowing counter as index to _nmask
 
 	static const unsigned int
 	               _nmask [256];

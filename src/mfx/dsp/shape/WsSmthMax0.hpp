@@ -43,7 +43,7 @@ namespace shape
 
 template <typename A>
 template <typename T>
-T	WsSmthMax0 <A>::operator () (T x)
+T	WsSmthMax0 <A>::operator () (T x) noexcept
 {
 	return process_sample (x);
 }
@@ -52,7 +52,7 @@ T	WsSmthMax0 <A>::operator () (T x)
 
 template <typename A>
 template <typename T>
-T	WsSmthMax0 <A>::process_sample (T x)
+T	WsSmthMax0 <A>::process_sample (T x) noexcept
 {
 	const T        a     = T (A::num) / T (A::den);
 	const T        a_inv = T (A::den) / T (A::num);
@@ -73,7 +73,7 @@ T	WsSmthMax0 <A>::process_sample (T x)
 
 template <typename A>
 template <typename VD, typename VS>
-void  WsSmthMax0 <A>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void  WsSmthMax0 <A>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

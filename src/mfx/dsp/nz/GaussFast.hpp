@@ -39,7 +39,7 @@ namespace nz
 
 // lvl is approximately the standard deviation
 template <int NIT>
-void	GaussFast <NIT>::set_rough_level (float lvl)
+void	GaussFast <NIT>::set_rough_level (float lvl) noexcept
 {
 	_mult = lvl * (1.0f / (1 << _resol));
 }
@@ -47,7 +47,7 @@ void	GaussFast <NIT>::set_rough_level (float lvl)
 
 
 template <int NIT>
-float	GaussFast <NIT>::process_sample ()
+float	GaussFast <NIT>::process_sample () noexcept
 {
 	int32_t        acc = -_sub;
 	for (int cnt = 0; cnt < _nbr_it; ++cnt)

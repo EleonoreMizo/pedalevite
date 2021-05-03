@@ -77,7 +77,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SegmentRc::setup (float final_val, float mult, float end_thr)
+void	SegmentRc::setup (float final_val, float mult, float end_thr) noexcept
 {
 	setup_and_set_val (final_val, mult, end_thr, get_val ());
 }
@@ -86,7 +86,7 @@ void	SegmentRc::setup (float final_val, float mult, float end_thr)
 
 // Duration: force duration (samples) of the section. Useful when start and
 // target values are close and prone to numeric roundoff errors.
-void	SegmentRc::setup (float final_val, float mult, float end_thr, int duration)
+void	SegmentRc::setup (float final_val, float mult, float end_thr, int duration) noexcept
 {
    assert (duration >= 0);
 
@@ -98,7 +98,7 @@ void	SegmentRc::setup (float final_val, float mult, float end_thr, int duration)
 
 
 
-void	SegmentRc::setup_and_set_val (float final_val, float mult, float end_thr, float val)
+void	SegmentRc::setup_and_set_val (float final_val, float mult, float end_thr, float val) noexcept
 {
 	setup_partial (final_val, mult, end_thr);
 	set_val (val);
@@ -106,7 +106,7 @@ void	SegmentRc::setup_and_set_val (float final_val, float mult, float end_thr, f
 
 
 
-void	SegmentRc::set_val (float val)
+void	SegmentRc::set_val (float val) noexcept
 {
    set_val_direct (val);
 	compute_nbr_rem_spl ();
@@ -114,7 +114,7 @@ void	SegmentRc::set_val (float val)
 
 
 
-void	SegmentRc::process_block (float data_ptr [], int nbr_spl)
+void	SegmentRc::process_block (float data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -143,7 +143,7 @@ void	SegmentRc::process_block (float data_ptr [], int nbr_spl)
 
 
 
-void	SegmentRc::skip_block (int nbr_spl)
+void	SegmentRc::skip_block (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -172,7 +172,7 @@ void	SegmentRc::skip_block (int nbr_spl)
 
 
 
-void	SegmentRc::setup_partial (float final_val, float mult, float end_thr)
+void	SegmentRc::setup_partial (float final_val, float mult, float end_thr) noexcept
 {
 	assert (fabs (mult) <= 1);
 	assert (end_thr >= 0);
@@ -184,7 +184,7 @@ void	SegmentRc::setup_partial (float final_val, float mult, float end_thr)
 
 
 
-void	SegmentRc::set_val_direct (float val)
+void	SegmentRc::set_val_direct (float val) noexcept
 {
 	_offset = _final_val;
    const float    dif = val - _final_val;
@@ -214,7 +214,7 @@ void	SegmentRc::set_val_direct (float val)
 
 
 
-void	SegmentRc::compute_nbr_rem_spl ()
+void	SegmentRc::compute_nbr_rem_spl () noexcept
 {
 	if (_mult >= 1)
 	{

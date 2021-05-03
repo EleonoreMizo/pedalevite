@@ -23,7 +23,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <cassert>
-#include <cstring>
 
 #include <algorithm>
 
@@ -73,7 +72,7 @@ void	DelayLineFracFir4Base <DT, AL>::set_max_time (long max_delay_time)
 
 
 template <class DT, typename AL>
-long	DelayLineFracFir4Base <DT, AL>::get_max_time () const
+long	DelayLineFracFir4Base <DT, AL>::get_max_time () const noexcept
 {
 	return (_delay_time_max);
 }
@@ -81,7 +80,7 @@ long	DelayLineFracFir4Base <DT, AL>::get_max_time () const
 
 
 template <class DT, typename AL>
-void	DelayLineFracFir4Base <DT, AL>::set_time (long delay_time)
+void	DelayLineFracFir4Base <DT, AL>::set_time (long delay_time) noexcept
 {
 	assert (delay_time > 0);
 	assert (delay_time <= _delay_time_max);
@@ -92,7 +91,7 @@ void	DelayLineFracFir4Base <DT, AL>::set_time (long delay_time)
 
 
 template <class DT, typename AL>
-long	DelayLineFracFir4Base <DT, AL>::get_time () const
+long	DelayLineFracFir4Base <DT, AL>::get_time () const noexcept
 {
 	return (_delay_time_int);
 }
@@ -100,7 +99,7 @@ long	DelayLineFracFir4Base <DT, AL>::get_time () const
 
 
 template <class DT, typename AL>
-long	DelayLineFracFir4Base <DT, AL>::get_line_length () const
+long	DelayLineFracFir4Base <DT, AL>::get_line_length () const noexcept
 {
 	return (_buf.get_len ());
 }
@@ -108,7 +107,7 @@ long	DelayLineFracFir4Base <DT, AL>::get_line_length () const
 
 
 template <class DT, typename AL>
-long	DelayLineFracFir4Base <DT, AL>::get_write_pos () const
+long	DelayLineFracFir4Base <DT, AL>::get_write_pos () const noexcept
 {
 	return (_write_pos);
 }
@@ -116,7 +115,7 @@ long	DelayLineFracFir4Base <DT, AL>::get_write_pos () const
 
 
 template <class DT, typename AL>
-typename DelayLineFracFir4Base <DT, AL>::DataType	DelayLineFracFir4Base <DT, AL>::read_sample (const DataType fir_data []) const
+typename DelayLineFracFir4Base <DT, AL>::DataType	DelayLineFracFir4Base <DT, AL>::read_sample (const DataType fir_data []) const noexcept
 {
 	const DataType * const  buf_ptr = _buf.get_buffer ();
 	const long     buf_mask = _buf.get_mask ();
@@ -138,7 +137,7 @@ typename DelayLineFracFir4Base <DT, AL>::DataType	DelayLineFracFir4Base <DT, AL>
 
 
 template <class DT, typename AL>
-typename DelayLineFracFir4Base <DT, AL>::DataType	DelayLineFracFir4Base <DT, AL>::read_sample_unroll (const DataType fir_data []) const
+typename DelayLineFracFir4Base <DT, AL>::DataType	DelayLineFracFir4Base <DT, AL>::read_sample_unroll (const DataType fir_data []) const noexcept
 {
 	const DataType * const  buf_ptr = _buf.get_buffer ();
 	const long     buf_mask = _buf.get_mask ();
@@ -160,7 +159,7 @@ typename DelayLineFracFir4Base <DT, AL>::DataType	DelayLineFracFir4Base <DT, AL>
 
 
 template <class DT, typename AL>
-void	DelayLineFracFir4Base <DT, AL>::write_sample (DataType sample)
+void	DelayLineFracFir4Base <DT, AL>::write_sample (DataType sample) noexcept
 {
 	DataType * const  buf_ptr = _buf.get_buffer ();
 
@@ -170,7 +169,7 @@ void	DelayLineFracFir4Base <DT, AL>::write_sample (DataType sample)
 
 
 template <class DT, typename AL>
-void	DelayLineFracFir4Base <DT, AL>::write_sample_unroll (DataType sample)
+void	DelayLineFracFir4Base <DT, AL>::write_sample_unroll (DataType sample) noexcept
 {
 	assert (_write_pos <= UNROLL_POST);
 
@@ -184,7 +183,7 @@ void	DelayLineFracFir4Base <DT, AL>::write_sample_unroll (DataType sample)
 
 
 template <class DT, typename AL>
-void	DelayLineFracFir4Base <DT, AL>::step_one_sample ()
+void	DelayLineFracFir4Base <DT, AL>::step_one_sample () noexcept
 {
 	const long     buf_mask = _buf.get_mask ();
 	_write_pos = (_write_pos + 1) & buf_mask;
@@ -193,7 +192,7 @@ void	DelayLineFracFir4Base <DT, AL>::step_one_sample ()
 
 
 template <class DT, typename AL>
-void	DelayLineFracFir4Base <DT, AL>::clear_buffers ()
+void	DelayLineFracFir4Base <DT, AL>::clear_buffers () noexcept
 {
 	_buf.clear_buffers ();
 	_buf.update_unroll_post ();
@@ -213,7 +212,7 @@ Throws: Nothing
 */
 
 template <class DT, typename AL>
-void	DelayLineFracFir4Base <DT, AL>::clear_buffers_fast ()
+void	DelayLineFracFir4Base <DT, AL>::clear_buffers_fast () noexcept
 {
 	const long     buf_len   = _buf.get_len ();
 	const long     erase_len = std::min (
@@ -221,7 +220,7 @@ void	DelayLineFracFir4Base <DT, AL>::clear_buffers_fast ()
 		buf_len
 	);
 	DataType * const	buf_ptr = _buf.get_buffer ();
-	memset (&buf_ptr [0], 0, erase_len * sizeof (*buf_ptr));
+	std::fill (buf_ptr, buf_ptr + erase_len, DataType (0));
 
 	_write_pos = _delay_time_int;
 }

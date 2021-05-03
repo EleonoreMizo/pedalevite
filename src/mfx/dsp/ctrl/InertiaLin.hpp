@@ -40,7 +40,7 @@ namespace ctrl
 
 
 
-InertiaLin::InertiaLin (double val)
+InertiaLin::InertiaLin (double val) noexcept
 :	_old_val (val)
 ,	_new_val (val)
 ,	_cur_val (val)
@@ -61,7 +61,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	InertiaLin::set_sample_freq (double fs)
+void	InertiaLin::set_sample_freq (double fs) noexcept
 {
 	assert (fs > 0);
 
@@ -84,7 +84,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::set_inertia_time (double inertia_time)
+void	InertiaLin::set_inertia_time (double inertia_time) noexcept
 {
 	assert (inertia_time >= 0);
 
@@ -107,7 +107,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::update_inertia_time (double inertia_time)
+void	InertiaLin::update_inertia_time (double inertia_time) noexcept
 {
 	assert (inertia_time >= 0);
 
@@ -137,7 +137,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-double	InertiaLin::get_inertia_time () const
+double	InertiaLin::get_inertia_time () const noexcept
 {
 	return _inertia_time;
 }
@@ -156,7 +156,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::set_val (double val)
+void	InertiaLin::set_val (double val) noexcept
 {
 	if (_inertia_time == 0)
 	{
@@ -199,7 +199,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::force_val (double val)
+void	InertiaLin::force_val (double val) noexcept
 {
 	_old_val = val;
 	_new_val = val;
@@ -219,7 +219,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-double	InertiaLin::get_val () const
+double	InertiaLin::get_val () const noexcept
 {
 	return _cur_val;
 }
@@ -237,7 +237,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-double	InertiaLin::get_target_val () const
+double	InertiaLin::get_target_val () const noexcept
 {
 	return _new_val;
 }
@@ -255,7 +255,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::tick (int nbr_spl)
+void	InertiaLin::tick (int nbr_spl) noexcept
 {
 	assert (nbr_spl >= 0);
 
@@ -285,14 +285,14 @@ Throws: Nothing.
 ==============================================================================
 */
 
-bool	InertiaLin::is_ramping () const
+bool	InertiaLin::is_ramping () const noexcept
 {
 	return (_step != 0);
 }
 
 
 
-double	InertiaLin::get_step () const
+double	InertiaLin::get_step () const noexcept
 {
 	return _step;
 }
@@ -309,7 +309,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::stop ()
+void	InertiaLin::stop () noexcept
 {
 	force_val (_cur_val);
 }
@@ -325,7 +325,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::clear_buffers ()
+void	InertiaLin::clear_buffers () noexcept
 {
 	force_val (_new_val);
 }

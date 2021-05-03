@@ -30,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
-#include <cstring>
 
 
 
@@ -56,7 +55,7 @@ void	DelayComb::set_delay (int len)
 
 
 
-void	DelayComb::set_feedback (float coef)
+void	DelayComb::set_feedback (float coef) noexcept
 {
 	assert (coef >= -1);
 	assert (coef <= 1);
@@ -67,7 +66,7 @@ void	DelayComb::set_feedback (float coef)
 
 
 
-void	DelayComb::set_damp (float damp)
+void	DelayComb::set_damp (float damp) noexcept
 {
 	assert (damp >= 0);
 	assert (damp < 1);
@@ -78,7 +77,7 @@ void	DelayComb::set_damp (float damp)
 
 
 
-void	DelayComb::clear_buffers ()
+void	DelayComb::clear_buffers () noexcept
 {
 	_delay_line.clear_buffers ();
 	_mem_y = 0;
@@ -87,7 +86,7 @@ void	DelayComb::clear_buffers ()
 
 
 // Can work in-place
-void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -134,7 +133,7 @@ void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 
 
-void	DelayComb::update_fdbkdamp ()
+void	DelayComb::update_fdbkdamp () noexcept
 {
 	_fdbkdamp = (1 - _damp) * _fdbk;
 }

@@ -45,7 +45,7 @@ namespace lfo
 
 
 
-void	OscStepSeq::set_nbr_steps (int nbr_steps)
+void	OscStepSeq::set_nbr_steps (int nbr_steps) noexcept
 {
 	assert (nbr_steps >= 2);
 	assert (nbr_steps <= _max_nbr_steps);
@@ -56,7 +56,7 @@ void	OscStepSeq::set_nbr_steps (int nbr_steps)
 
 
 // Assumed bipolar
-void	OscStepSeq::set_val (int index, float val)
+void	OscStepSeq::set_val (int index, float val) noexcept
 {
 	assert (index >= 0);
 	assert (index < _max_nbr_steps); // Or _nbr_steps?
@@ -69,7 +69,7 @@ void	OscStepSeq::set_val (int index, float val)
 
 
 
-void	OscStepSeq::set_curve (int index, Curve c)
+void	OscStepSeq::set_curve (int index, Curve c) noexcept
 {
 	assert (index >= 0);
 	assert (index < _max_nbr_steps); // Or _nbr_steps?
@@ -86,84 +86,84 @@ void	OscStepSeq::set_curve (int index, Curve c)
 
 
 
-void	OscStepSeq::do_set_sample_freq (double sample_freq)
+void	OscStepSeq::do_set_sample_freq (double sample_freq) noexcept
 {
 	_phase_gen.set_sample_freq (sample_freq);
 }
 
 
 
-void	OscStepSeq::do_set_period (double per)
+void	OscStepSeq::do_set_period (double per) noexcept
 {
 	_phase_gen.set_period (per);
 }
 
 
 
-void	OscStepSeq::do_set_phase (double phase)
+void	OscStepSeq::do_set_phase (double phase) noexcept
 {
 	_phase_gen.set_phase (phase);
 }
 
 
 
-void	OscStepSeq::do_set_chaos (double chaos)
+void	OscStepSeq::do_set_chaos (double chaos) noexcept
 {
 	_phase_gen.set_chaos (chaos);
 }
 
 
 
-void	OscStepSeq::do_set_phase_dist (double dist)
+void	OscStepSeq::do_set_phase_dist (double dist) noexcept
 {
 	_phase_dist.set_phase_dist (dist);
 }
 
 
 
-void	OscStepSeq::do_set_phase_dist_offset (double ofs)
+void	OscStepSeq::do_set_phase_dist_offset (double ofs) noexcept
 {
 	_phase_dist.set_phase_dist_offset (ofs);
 }
 
 
 
-void	OscStepSeq::do_set_sign (bool inv_flag)
+void	OscStepSeq::do_set_sign (bool inv_flag) noexcept
 {
 	_inv_flag = inv_flag;
 }
 
 
 
-void	OscStepSeq::do_set_polarity (bool unipolar_flag)
+void	OscStepSeq::do_set_polarity (bool unipolar_flag) noexcept
 {
 	_unipolar_flag = unipolar_flag;
 }
 
 
 
-void	OscStepSeq::do_set_variation (int /*param*/, double /*val*/)
+void	OscStepSeq::do_set_variation (int /*param*/, double /*val*/) noexcept
 {
 	// Nothing
 }
 
 
 
-bool	OscStepSeq::do_is_using_variation (int /*param*/) const
+bool	OscStepSeq::do_is_using_variation (int /*param*/) const noexcept
 {
 	return false;
 }
 
 
 
-void	OscStepSeq::do_tick (int nbr_spl)
+void	OscStepSeq::do_tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 }
 
 
 
-double	OscStepSeq::do_get_val () const
+double	OscStepSeq::do_get_val () const noexcept
 {
 	double         phase = _phase_dist.process_phase (_phase_gen.get_phase ());
 	phase *= _nbr_steps;
@@ -189,14 +189,14 @@ double	OscStepSeq::do_get_val () const
 
 
 
-double	OscStepSeq::do_get_phase () const
+double	OscStepSeq::do_get_phase () const noexcept
 {
 	return _phase_gen.get_phase ();
 }
 
 
 
-void	OscStepSeq::do_clear_buffers ()
+void	OscStepSeq::do_clear_buffers () noexcept
 {
 	_phase_gen.clear_buffers ();
 }
@@ -207,7 +207,7 @@ void	OscStepSeq::do_clear_buffers ()
 
 
 
-constexpr double	OscStepSeq::map_pos (double pos, Curve c)
+constexpr double	OscStepSeq::map_pos (double pos, Curve c) noexcept
 {
 	assert (pos >= 0);
 	assert (pos <= 1);
@@ -240,7 +240,7 @@ constexpr double	OscStepSeq::map_pos (double pos, Curve c)
 
 
 
-constexpr double	OscStepSeq::smooth (double x)
+constexpr double	OscStepSeq::smooth (double x) noexcept
 {
 	const double   x2 = x * x;
 

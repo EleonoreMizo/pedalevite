@@ -45,7 +45,7 @@ class WsLopsided
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		return std::copysign (1 - cos (x) * exp (-fabs (x)), x);
 	}

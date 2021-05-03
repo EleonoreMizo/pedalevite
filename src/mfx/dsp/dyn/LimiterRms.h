@@ -51,16 +51,16 @@ class LimiterRms
 
 public:
 
-	void           set_sample_freq (double fs);
-	void           set_time (float t);
-	void           set_level (float l);
+	void           set_sample_freq (double fs) noexcept;
+	void           set_time (float t) noexcept;
+	void           set_level (float l) noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float x);
+	               process_sample (float x) noexcept;
 
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           clear_buffers ();
-	inline void    apply_volume (float gain);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
+	inline void    apply_volume (float gain) noexcept;
 
 
 

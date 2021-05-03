@@ -44,7 +44,7 @@ namespace iir
 
 
 
-void	SplitAp5::set_sample_freq (double sample_freq)
+void	SplitAp5::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -55,7 +55,7 @@ void	SplitAp5::set_sample_freq (double sample_freq)
 
 
 
-void	SplitAp5::set_split_freq (float f)
+void	SplitAp5::set_split_freq (float f) noexcept
 {
 	assert (f > 0);
 	assert (f < _sample_freq * 0.5f);
@@ -66,7 +66,7 @@ void	SplitAp5::set_split_freq (float f)
 
 
 
-void	SplitAp5::set_param (float ka, float kb)
+void	SplitAp5::set_param (float ka, float kb) noexcept
 {
 	assert (ka > 0);
 	assert (kb > 0);
@@ -79,7 +79,7 @@ void	SplitAp5::set_param (float ka, float kb)
 
 
 // Mandatory call between setting parameters and processing
-void	SplitAp5::update_coef ()
+void	SplitAp5::update_coef () noexcept
 {
 	if (_dirty_flag)
 	{
@@ -90,7 +90,7 @@ void	SplitAp5::update_coef ()
 
 
 
-void	SplitAp5::copy_param_from (const SplitAp5 &other)
+void	SplitAp5::copy_param_from (const SplitAp5 &other) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (_sample_freq == other._sample_freq);
@@ -111,7 +111,7 @@ void	SplitAp5::copy_param_from (const SplitAp5 &other)
 
 
 
-void	SplitAp5::clear_buffers ()
+void	SplitAp5::clear_buffers () noexcept
 {
 	_ap0.clear_buffers ();
 	_ap1.clear_buffers ();
@@ -121,7 +121,7 @@ void	SplitAp5::clear_buffers ()
 
 
 
-void	SplitAp5::process_block_split (float lo_ptr [], float hi_ptr [], const float src_ptr [], int nbr_spl)
+void	SplitAp5::process_block_split (float lo_ptr [], float hi_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (! _dirty_flag);
 	assert (lo_ptr != nullptr);
@@ -140,7 +140,7 @@ void	SplitAp5::process_block_split (float lo_ptr [], float hi_ptr [], const floa
 
 
 
-void	SplitAp5::process_block_compensate (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	SplitAp5::process_block_compensate (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (! _dirty_flag);
 	assert (dst_ptr != nullptr);
@@ -163,7 +163,7 @@ void	SplitAp5::process_block_compensate (float dst_ptr [], const float src_ptr [
 
 
 
-void	SplitAp5::update_filters ()
+void	SplitAp5::update_filters () noexcept
 {
 	assert (_sample_freq > 0);
 	assert (_split_freq  > 0);

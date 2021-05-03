@@ -41,28 +41,28 @@ namespace env
 
 
 
-float	SegmentRc::get_val () const
+float	SegmentRc::get_val () const noexcept
 {
 	return _raw_val + _offset;
 }
 
 
 
-float	SegmentRc::get_final_val () const
+float	SegmentRc::get_final_val () const noexcept
 {
 	return _final_val;
 }
 
 
 
-int	SegmentRc::get_nbr_rem_spl () const
+int	SegmentRc::get_nbr_rem_spl () const noexcept
 {
 	return _nbr_rem_spl;
 }
 
 
 
-float	SegmentRc::process_sample ()
+float	SegmentRc::process_sample () noexcept
 {
 	const float    val = get_val ();
 
@@ -77,7 +77,7 @@ float	SegmentRc::process_sample ()
 
 
 
-bool	SegmentRc::is_finished () const
+bool	SegmentRc::is_finished () const noexcept
 {
 	return (fabs (_raw_val) <= _end_thr);
 }

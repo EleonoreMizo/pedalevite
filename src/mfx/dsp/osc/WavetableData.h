@@ -98,31 +98,37 @@ public:
 
 	typedef	DT	DataType;
 
-	               WavetableData ();
-	               ~WavetableData () = default;
+	               WavetableData () noexcept;
+	               WavetableData (const WavetableData &other) = default;
+	               WavetableData (WavetableData &&other)      = default;
+	               ~WavetableData ()                          = default;
+	WavetableData &
+	               operator = (const WavetableData &other)    = default;
+	WavetableData &
+	               operator = (WavetableData &&other)         = default;
 
-	inline void    set_sample (int table, int pos, DataType val);
+	inline void    set_sample (int table, int pos, DataType val) noexcept;
 	fstb_FORCEINLINE DataType
-	               get_sample (int table, int pos) const;
+	               get_sample (int table, int pos) const noexcept;
 	inline DataType *
-	               use_table (int table);
+	               use_table (int table) noexcept;
 	inline const DataType *
-	               use_table (int table) const;
+	               use_table (int table) const noexcept;
 
-	void           update_table_unroll (int table);
-	void           update_all_tables_unroll ();
-	void           clear_table (int table);
+	void           update_table_unroll (int table) noexcept;
+	void           update_all_tables_unroll () noexcept;
+	void           clear_table (int table) noexcept;
 
 	static inline int
-	               get_nbr_tables ();
+	               get_nbr_tables () noexcept;
 	static inline int
-	               get_table_len (int table);
+	               get_table_len (int table) noexcept;
 	static inline int
-	               get_table_len_log2 (int table);
+	               get_table_len_log2 (int table) noexcept;
 	static inline int
-	               get_table_mask (int table);
+	               get_table_mask (int table) noexcept;
 	static inline int
-	               get_table_ovr_log2 (int table);
+	               get_table_ovr_log2 (int table) noexcept;
 
 
 
@@ -164,7 +170,7 @@ private:
 	typedef std::array <DataType, DATA_ARR_SIZE> TableData;
 	typedef std::array <int, MAX_SIZE_LOG2 + 1> TableInfArray;
 
-	static void    build_table_index ();
+	static void    build_table_index () noexcept;
 
 	TableData      _data;
 
@@ -183,9 +189,6 @@ private:
 
 private:
 
-	               WavetableData (const WavetableData &other)     = delete;
-	WavetableData &
-	               operator = (const WavetableData &other)        = delete;
 	bool           operator == (const WavetableData &other) const = delete;
 	bool           operator != (const WavetableData &other) const = delete;
 

@@ -44,7 +44,7 @@ namespace iir
 // 1          -> neutral, cutoff at Nyquist
 // close to 0 -> low cutoff frequency
 template <typename T>
-void	Lpf1p <T>::set_coef (T c)
+void	Lpf1p <T>::set_coef (T c) noexcept
 {
    assert (c >= 0);
    assert (c <= 1);
@@ -55,7 +55,7 @@ void	Lpf1p <T>::set_coef (T c)
 
 
 template <typename T>
-T	Lpf1p <T>::process_sample (T x)
+T	Lpf1p <T>::process_sample (T x) noexcept
 {
    const T        y { _mem_y + (x - _mem_y) * _coef };
    _mem_y = y;
@@ -66,7 +66,7 @@ T	Lpf1p <T>::process_sample (T x)
 
 
 template <typename T>
-T	Lpf1p <T>::constant_block (T x, int nbr_spl)
+T	Lpf1p <T>::constant_block (T x, int nbr_spl) noexcept
 {
    assert (nbr_spl > 0);
 
@@ -80,7 +80,7 @@ T	Lpf1p <T>::constant_block (T x, int nbr_spl)
 
 
 template <typename T>
-T &	Lpf1p <T>::use_state ()
+T &	Lpf1p <T>::use_state () noexcept
 {
    return _mem_y;
 }
@@ -88,7 +88,7 @@ T &	Lpf1p <T>::use_state ()
 
 
 template <typename T>
-const T &	Lpf1p <T>::use_state () const
+const T &	Lpf1p <T>::use_state () const noexcept
 {
    return _mem_y;
 }
@@ -96,7 +96,7 @@ const T &	Lpf1p <T>::use_state () const
 
 
 template <typename T>
-void	Lpf1p <T>::clear_buffers ()
+void	Lpf1p <T>::clear_buffers () noexcept
 {
    _mem_y = T (0.f);
 }

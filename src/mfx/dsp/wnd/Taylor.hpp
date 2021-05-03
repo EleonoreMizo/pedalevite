@@ -46,7 +46,7 @@ namespace wnd
 
 
 template <class T>
-void	Taylor <T>::set_side_lobe_lvl (double lvl)
+void	Taylor <T>::set_side_lobe_lvl (double lvl) noexcept
 {
 	assert (lvl > 0);
 	assert (lvl < 1);
@@ -57,7 +57,7 @@ void	Taylor <T>::set_side_lobe_lvl (double lvl)
 
 
 template <class T>
-void	Taylor <T>::set_nbar (int nbar)
+void	Taylor <T>::set_nbar (int nbar) noexcept
 {
 	assert (nbar > 0);
 
@@ -67,7 +67,7 @@ void	Taylor <T>::set_nbar (int nbar)
 
 
 template <class T>
-int	Taylor <T>::compute_nbar_min (double lvl)
+int	Taylor <T>::compute_nbar_min (double lvl) noexcept
 {
 	const double   a = compute_a (lvl);
 
@@ -78,7 +78,7 @@ int	Taylor <T>::compute_nbar_min (double lvl)
 
 // The the specified sidelobe level is guaranteed only if the function is true
 template <class T>
-bool	Taylor <T>::is_side_lobe_lvl_guaranteed () const
+bool	Taylor <T>::is_side_lobe_lvl_guaranteed () const noexcept
 {
 	const double   a = compute_a (_sl_lvl);
 
@@ -149,7 +149,7 @@ void	Taylor <T>::do_make_win (T data_ptr [], int len)
 
 // Computes the cosine weight
 template <class T>
-double	Taylor <T>::compute_fm (int m, double sp2, double a)
+double	Taylor <T>::compute_fm (int m, double sp2, double a) noexcept
 {
 	assert (m > 0);
 	assert (sp2 > 0);
@@ -177,7 +177,7 @@ double	Taylor <T>::compute_fm (int m, double sp2, double a)
 
 
 template <class T>
-double	Taylor <T>::compute_a (double lvl)
+double	Taylor <T>::compute_a (double lvl) noexcept
 {
 	assert (lvl > 0);
 	assert (lvl < 1);

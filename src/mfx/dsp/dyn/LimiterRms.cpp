@@ -46,21 +46,21 @@ namespace dyn
 
 
 
-void	LimiterRms::set_sample_freq (double fs)
+void	LimiterRms::set_sample_freq (double fs) noexcept
 {
 	_env.set_sample_freq (fs);
 }
 
 
 
-void	LimiterRms::set_time (float t)
+void	LimiterRms::set_time (float t) noexcept
 {
 	_env.set_time (t);
 }
 
 
 
-void	LimiterRms::set_level (float l)
+void	LimiterRms::set_level (float l) noexcept
 {
 	assert (l > 0);
 
@@ -70,7 +70,7 @@ void	LimiterRms::set_level (float l)
 
 
 
-void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -120,7 +120,7 @@ void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nb
 
 
 
-void	LimiterRms::clear_buffers ()
+void	LimiterRms::clear_buffers () noexcept
 {
 	_env.clear_buffers ();
 }

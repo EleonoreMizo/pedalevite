@@ -46,12 +46,12 @@ public:
 
 	static const int  _order = N;
 
-	inline float   compute_g_max (float fmax_over_fs);
-	inline float   compute_k0_max (float gmax);
+	inline float   compute_g_max (float fmax_over_fs) noexcept;
+	inline float   compute_k0_max (float gmax) noexcept;
 	static inline float
-	               compute_alpha (float k);
+	               compute_alpha (float k) noexcept;
 	static inline float
-	               compute_knorm_factor ();
+	               compute_knorm_factor () noexcept;
 
 	float          _sample_freq = 0;    // Sampling rate, Hz. > 0. 0 = not init.
 	float          _inv_fs      = 0;    // 1 / fs, > 0

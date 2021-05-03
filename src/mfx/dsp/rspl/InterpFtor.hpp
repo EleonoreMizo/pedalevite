@@ -50,7 +50,7 @@ namespace rspl
 
 
 
-float	InterpFtor::Hold::operator () (float /*frac_pos*/, const float data []) const
+float	InterpFtor::Hold::operator () (float /*frac_pos*/, const float data []) const noexcept
 {
 	assert (data != nullptr);
 
@@ -59,7 +59,7 @@ float	InterpFtor::Hold::operator () (float /*frac_pos*/, const float data []) co
 
 
 
-float	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const float data []) const
+float	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const float data []) const noexcept
 {
 	assert (data != nullptr);
 
@@ -68,7 +68,7 @@ float	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const float data [])
 
 
 
-int32_t	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const int16_t data []) const
+int32_t	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const int16_t data []) const noexcept
 {
 	assert (data != nullptr);
 
@@ -77,7 +77,7 @@ int32_t	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const int16_t data
 
 
 
-float	InterpFtor::Linear::operator () (float frac_pos, const float data []) const
+float	InterpFtor::Linear::operator () (float frac_pos, const float data []) const noexcept
 {
 	assert (frac_pos >= 0);
 	assert (frac_pos <= 1);
@@ -88,7 +88,7 @@ float	InterpFtor::Linear::operator () (float frac_pos, const float data []) cons
 
 
 
-float	InterpFtor::Linear::operator () (uint32_t frac_pos, const float data []) const
+float	InterpFtor::Linear::operator () (uint32_t frac_pos, const float data []) const noexcept
 {
 	return operator () (frac_pos * float (fstb::TWOPM32), data);
 }
@@ -96,7 +96,7 @@ float	InterpFtor::Linear::operator () (uint32_t frac_pos, const float data []) c
 
 
 // Result is still on a signed 16-bit scale
-int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data []) const
+int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data []) const noexcept
 {
 	assert (data != nullptr);
 
@@ -125,7 +125,7 @@ int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data [
 
 
 
-float	InterpFtor::CubicHermite::operator () (float frac_pos, const float data []) const
+float	InterpFtor::CubicHermite::operator () (float frac_pos, const float data []) const noexcept
 {
 	assert (frac_pos >= 0);
 	assert (frac_pos <= 1);
@@ -170,7 +170,7 @@ float	InterpFtor::CubicHermite::operator () (float frac_pos, const float data []
 
 
 
-float	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const float data []) const
+float	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const float data []) const noexcept
 {
 	return operator () (frac_pos * float (fstb::TWOPM32), data);
 }
@@ -178,7 +178,7 @@ float	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const float data
 
 
 // Result is still on a signed 16-bit scale, but can exceed 16-bit capacity
-int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t data []) const
+int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t data []) const noexcept
 {
 	const int32_t  xm1 = data [-1];
 	const int32_t  x0  = data [ 0];
@@ -229,7 +229,7 @@ int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t 
 
 
 
-float	InterpFtor::CubicCatmullRom::operator () (float frac_pos, const float data []) const
+float	InterpFtor::CubicCatmullRom::operator () (float frac_pos, const float data []) const noexcept
 {
 	assert (frac_pos >= 0);
 	assert (frac_pos <= 1);
@@ -252,7 +252,7 @@ float	InterpFtor::CubicCatmullRom::operator () (float frac_pos, const float data
 
 
 
-float	InterpFtor::CubicCatmullRom::operator () (uint32_t frac_pos, const float data []) const
+float	InterpFtor::CubicCatmullRom::operator () (uint32_t frac_pos, const float data []) const noexcept
 {
 	return operator () (frac_pos * float (fstb::TWOPM32), data);
 }

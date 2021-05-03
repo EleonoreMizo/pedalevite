@@ -49,7 +49,7 @@ class PhaseGen
 
 public:
 
-	inline         PhaseGen ();
+	inline         PhaseGen () noexcept;
 	               PhaseGen (const PhaseGen &other)   = default;
 	               PhaseGen (PhaseGen &&other)        = default;
 	virtual        ~PhaseGen ()                       = default;
@@ -57,17 +57,17 @@ public:
 	PhaseGen &     operator = (const PhaseGen &other) = default;
 	PhaseGen &     operator = (PhaseGen &&other)      = default;
 
-	inline void    set_sample_freq (double sample_freq);
-	inline void    set_period (double per);
-	inline void    set_phase (double phase);
+	inline void    set_sample_freq (double sample_freq) noexcept;
+	inline void    set_period (double per) noexcept;
+	inline void    set_phase (double phase) noexcept;
 	fstb_FORCEINLINE void
-	               tick (int nbr_spl);
+	               tick (int nbr_spl) noexcept;
 	fstb_FORCEINLINE double
-	               get_sample_freq () const;
+	               get_sample_freq () const noexcept;
 	fstb_FORCEINLINE double
-	               get_period () const;
+	               get_period () const noexcept;
 	fstb_FORCEINLINE double
-	               get_phase () const;
+	               get_phase () const noexcept;
 
 
 
@@ -81,12 +81,12 @@ protected:
 
 private:
 
-	inline void    update_period ();
+	inline void    update_period () noexcept;
 
-	double         _phase;           // [0 ; 1[
-	double         _step;
-	double         _sample_freq;     // Hz, > 0
-	double         _period;          // s, > 0
+	double         _phase       = 0;       // [0 ; 1[
+	double         _step        = 0;
+	double         _sample_freq = 44100;   // Hz, > 0
+	double         _period      = 1;       // s, > 0
 
 
 

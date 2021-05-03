@@ -22,8 +22,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "fstb/Scale.h"
 #include "mfx/dsp/dly/RingBufVectorizer.h"
+
+#include <algorithm>
 
 #include <cassert>
 
@@ -57,7 +60,7 @@ typename OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
 >::Oscillator &	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::use_osc ()
+>::use_osc () noexcept
 {
 	return _osc;
 }
@@ -69,7 +72,7 @@ const typename OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
 >::Oscillator &	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::use_osc () const
+>::use_osc () const noexcept
 {
 	return _osc;
 }
@@ -93,7 +96,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::set_wavetable (const WavetableDataType &wavetable)
+>::set_wavetable (const WavetableDataType &wavetable) noexcept
 {
 	_osc.set_wavetable (wavetable);
 }
@@ -116,7 +119,7 @@ const typename OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
 >::WavetableDataType &	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::use_wavetable () const
+>::use_wavetable () const noexcept
 {
 	return _osc.use_wavetable ();
 }
@@ -140,7 +143,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::set_steptable (const AntialiasedStep &steptable)
+>::set_steptable (const AntialiasedStep &steptable) noexcept
 {
 	_step_ptr = &steptable;
 }
@@ -154,7 +157,7 @@ Description:
 	Access the antialiased step table. A steptable must have been set
 	previously.
 Returns: The step table.
-Throws: ?
+Throws: Nothing
 ==============================================================================
 */
 
@@ -163,7 +166,7 @@ const typename OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
 >::AntialiasedStep &	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::use_steptable () const
+>::use_steptable () const noexcept
 {
 	assert (_step_ptr != 0);
 
@@ -194,7 +197,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::set_base_pitch (int32_t pitch)
+>::set_base_pitch (int32_t pitch) noexcept
 {
 	_base_pitch = pitch;
 	_osc.set_base_pitch (pitch);
@@ -216,7 +219,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 int32_t	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::get_base_pitch () const
+>::get_base_pitch () const noexcept
 {
 	return _base_pitch;
 }
@@ -244,7 +247,7 @@ Returns:
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::set_pitch (int32_t pitch)
+>::set_pitch (int32_t pitch) noexcept
 {
 	// freq/F_s = 2 ^ (rel_pitch / (1 << PITCH_FRAC_BITS) - 1)
 	// period_spl = 1 / (freq/F_s)
@@ -293,7 +296,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 int32_t	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::get_pitch () const
+>::get_pitch () const noexcept
 {
 	return _pitch;
 }
@@ -314,7 +317,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::set_pitch_slave (int32_t pitch)
+>::set_pitch_slave (int32_t pitch) noexcept
 {
 	// freq/F_s = 2 ^ (rel_pitch / (1 << PITCH_FRAC_BITS) - 1)
 
@@ -341,7 +344,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 int32_t	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::get_pitch_slave () const
+>::get_pitch_slave () const noexcept
 {
 	return _osc.get_pitch ();
 }
@@ -361,7 +364,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::reset_phase ()
+>::reset_phase () noexcept
 {
 	_spl_to_next_sync.clear ();
 }
@@ -382,7 +385,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::set_phase (uint32_t phase)
+>::set_phase (uint32_t phase) noexcept
 {
 	const int64_t  per20 = _period.get_val_int64 () >> 12;
 	const uint16_t ph12  = (-phase) >> (32 - 12);
@@ -404,7 +407,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 uint32_t	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::get_phase () const
+>::get_phase () const noexcept
 {
 	const int64_t  per20 = _period.get_val_int64 () >> 12;
 	const int64_t  pos32 = _spl_to_next_sync.get_val_int64 ();
@@ -430,7 +433,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::set_sync_pos (uint32_t pos)
+>::set_sync_pos (uint32_t pos) noexcept
 {
 	_sync_pos = pos;
 }
@@ -450,7 +453,7 @@ Throws: Noting
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 uint32_t	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::get_sync_pos () const
+>::get_sync_pos () const noexcept
 {
 	return _sync_pos;
 }
@@ -469,7 +472,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::clear_buffers ()
+>::clear_buffers () noexcept
 {
 	_spl_to_next_sync.clear ();
 	_buffer.fill (DataType (0));
@@ -493,7 +496,7 @@ typename OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
 >::DataType	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::process_sample ()
+>::process_sample () noexcept
 {
 	assert (_spl_to_next_sync.get_ceil () >= 0);
 
@@ -520,7 +523,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::process_block (DataType dst_ptr [], int nbr_spl)
+>::process_block (DataType dst_ptr [], int nbr_spl) noexcept
 {
 	assert (_spl_to_next_sync.get_ceil () >= 0);
 	assert (_step_ptr != nullptr);
@@ -564,7 +567,7 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 int32_t	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::conv_freq_to_pitch (float freq, float fs) const
+>::conv_freq_to_pitch (float freq, float fs) const noexcept
 {
 	return _osc.conv_freq_to_pitch (freq, fs);
 }
@@ -584,7 +587,7 @@ typename OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
 >::DataType	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::generate_sample ()
+>::generate_sample () noexcept
 {
 	const DataType val_osc = _osc.process_sample ();
 
@@ -607,7 +610,7 @@ typename OscWavetableSyncHard <
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::generate_block (DataType dst_ptr [], int nbr_spl)
+>::generate_block (DataType dst_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -627,17 +630,15 @@ void	OscWavetableSyncHard <
 		const int      write_pos = rbv.get_curs_pos (0);
 		const int      read_pos  = rbv.get_curs_pos (1);
 
-		const int      byte_len  = len * sizeof (_buffer [0]);
-
 		// Generate on one half-buffer
 		_osc.process_block_mix (&_buffer [write_pos + half_buf_write], len);
 		const int      pos_hbr = read_pos + half_buf_read;
-		memcpy (&dst_ptr [pos], &_buffer [pos_hbr], byte_len);
+		fstb::copy_no_overlap (&dst_ptr [pos], &_buffer [pos_hbr], len);
 
 		// Clean on the other one
 		const int      half_buf_clean = half_buf_write ^ BUF_SEL_BIT;
 		const int      pos_hbc        = write_pos + half_buf_clean;
-		memset (&_buffer [pos_hbc], 0, byte_len);
+		std::fill (&_buffer [pos_hbc], &_buffer [pos_hbc + len], DataType (0));
 
 		// Swap buffers
 		if (write_pos + len == HALF_BUF_SIZE)
@@ -662,7 +663,7 @@ void	OscWavetableSyncHard <
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::check_and_handle_sync_point ()
+>::check_and_handle_sync_point () noexcept
 {
 	if (_spl_to_next_sync.get_val_int64 () <= 0)
 	{
@@ -677,7 +678,7 @@ void	OscWavetableSyncHard <
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::generate_step ()
+>::generate_step () noexcept
 {
 	// Calculates the oscillator phase for the next generated sample
 	// _spl_to_next_sync * _freq_slave
@@ -709,7 +710,7 @@ void	OscWavetableSyncHard <
 template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
 void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
->::add_step (DataType step_amp, uint32_t stns_neg)
+>::add_step (DataType step_amp, uint32_t stns_neg) noexcept
 {
 	const int      phase_idx    = stns_neg >> (32 - NBR_PHASES_L2);
 	const DataType *  phase_ptr = _step_ptr->use_table (phase_idx);

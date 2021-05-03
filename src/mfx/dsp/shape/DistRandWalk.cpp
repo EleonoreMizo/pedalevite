@@ -43,7 +43,7 @@ namespace shape
 
 
 
-void	DistRandWalk::set_sample_freq (double sample_freq)
+void	DistRandWalk::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -53,7 +53,7 @@ void	DistRandWalk::set_sample_freq (double sample_freq)
 
 
 
-void	DistRandWalk::clear_buffers ()
+void	DistRandWalk::clear_buffers () noexcept
 {
 	_sum     = 0;
 	_val     = 0;
@@ -64,7 +64,7 @@ void	DistRandWalk::clear_buffers ()
 
 
 
-void	DistRandWalk::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DistRandWalk::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);

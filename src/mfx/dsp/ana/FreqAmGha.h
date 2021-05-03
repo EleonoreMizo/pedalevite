@@ -54,12 +54,12 @@ class FreqAmGha
 public:
 
 	void           set_sample_freq (double sample_freq);
-	void           set_freq_bot (float f);
-	void           set_freq_top (float f);
-	void           set_smoothing (float responsiveness, float thr);
-	void           clear_buffers ();
-	float          process_block (const float spl_ptr [], int nbr_spl);
-	float          process_sample (float x);
+	void           set_freq_bot (float f) noexcept;
+	void           set_freq_top (float f) noexcept;
+	void           set_smoothing (float responsiveness, float thr) noexcept;
+	void           clear_buffers () noexcept;
+	float          process_block (const float spl_ptr [], int nbr_spl) noexcept;
+	float          process_sample (float x) noexcept;
 
 
 
@@ -83,10 +83,10 @@ private:
 		float          _slope = 0;
 	};
 
-	void           reset ();
-	void           update_lpf ();
+	void           reset () noexcept;
+	void           update_lpf () noexcept;
 
-	static float   compute_zc_time (float cur, float old);
+	static float   compute_zc_time (float cur, float old) noexcept;
 
 	float          _sample_freq = 0;    // Sampling rate, Hz, > 0. 0 = not set
 	float          _inv_fs      = 0;

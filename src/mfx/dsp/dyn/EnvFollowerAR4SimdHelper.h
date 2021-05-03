@@ -11,14 +11,14 @@ Template parameters:
 - VD: class writing and reading memory with SIMD vectors (destination access).
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
-	static bool VD::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr);
-	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val);
+	static bool VD::check_ptr (const void *ptr) noexcept;
+	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr) noexcept;
+	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val) noexcept;
 
 - VS: same as VD, but for reading only (source access)
 	Requires:
-	static bool VS::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr);
+	static bool VS::check_ptr (const void *ptr) noexcept;
+	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr) noexcept;
 
 - VP: same as VD, but for parametering and internal data.
 	Requires: same as VD.
@@ -80,18 +80,18 @@ public:
 	typedef VS V128Src;
 	typedef VP V128Par;
 
-	               EnvFollowerAR4SimdHelper ();
+	               EnvFollowerAR4SimdHelper () noexcept;
 	               ~EnvFollowerAR4SimdHelper () = default;
 
-	void           set_atk_coef (int env, float coef);
-	void           set_rls_coef (int env, float coef);
+	void           set_atk_coef (int env, float coef) noexcept;
+	void           set_rls_coef (int env, float coef) noexcept;
 
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample (const fstb::ToolsSimd::VectF32 &in);
-	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl);
-	void           process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl);
+	               process_sample (const fstb::ToolsSimd::VectF32 &in) noexcept;
+	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
+	void           process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -108,7 +108,7 @@ private:
 	typedef	float	VectFloat4 [4];
 
 	fstb_FORCEINLINE static bool
-	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
+	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept;
 
 	alignas (16) VectFloat4
 	               _state [ORD];

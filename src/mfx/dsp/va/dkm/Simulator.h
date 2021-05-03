@@ -127,21 +127,21 @@ public:
 	void           update_sample_freq (double sample_freq);
 	void           set_reordering_jacobian (const std::vector <int> &r_arr, const std::vector <int> &c_arr);
 
-	void           set_max_nbr_it (int max_it);
-	void           set_src_v (int idx, Flt v);
-	void           set_pot (int idx, Flt pos);
-	void           process_sample ();
-	Flt            get_output (int idx) const;
+	void           set_max_nbr_it (int max_it) noexcept;
+	void           set_src_v (int idx, Flt v) noexcept;
+	void           set_pot (int idx, Flt pos) noexcept;
+	void           process_sample () noexcept;
+	Flt            get_output (int idx) const noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
-	int            get_nbr_nodes () const;
-	int            get_nbr_src_v () const;
-	int            get_nbr_non_lin () const;
-	int            get_nbr_res () const;
-	int            get_nbr_pot () const;
-	int            get_nbr_ese () const;
-	int            get_nbr_out () const;
+	int            get_nbr_nodes () const noexcept;
+	int            get_nbr_src_v () const noexcept;
+	int            get_nbr_non_lin () const noexcept;
+	int            get_nbr_res () const noexcept;
+	int            get_nbr_pot () const noexcept;
+	int            get_nbr_ese () const noexcept;
+	int            get_nbr_out () const noexcept;
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 	std::string    print_all () const;
@@ -299,15 +299,16 @@ private:
 	void           finalize_matrices ();
 	void           build_s_0_inv ();
 	void           prepare_dk_const_matrices ();
-	void           update_r_v ();
-	void           solve_nl ();
-	void           compute_nl_data (int it_cnt);
-	void           compute_nl_data_diode (int it_cnt, int idx_d);
-	void           compute_nl_data_diode_pair (int it_cnt, int idx_d);
-	void           compute_nl_data_bjt_npn (int it_cnt, int idx_d);
-	inline void    compute_nl_data_junction (JuncDataType &i, JuncDataType &di, JuncDataType v, const Junction &junc, int it_cnt);
-	void           decompose_lu (TypeMatrixRm &lu, std::vector <int> &r);
-	void           traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y);
+
+	void           update_r_v () noexcept;
+	void           solve_nl () noexcept;
+	void           compute_nl_data (int it_cnt) noexcept;
+	void           compute_nl_data_diode (int it_cnt, int idx_d) noexcept;
+	void           compute_nl_data_diode_pair (int it_cnt, int idx_d) noexcept;
+	void           compute_nl_data_bjt_npn (int it_cnt, int idx_d) noexcept;
+	inline void    compute_nl_data_junction (JuncDataType &i, JuncDataType &di, JuncDataType v, const Junction &junc, int it_cnt) noexcept;
+	void           decompose_lu (TypeMatrixRm &lu, std::vector <int> &r) noexcept;
+	void           traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y) noexcept;
 
 	template <typename D>
 	static void    mul_oim (D &dst, D &tmp, const TypeMatrix &lhs, const TypeVector &vec, const TypeMatrix &rhs);

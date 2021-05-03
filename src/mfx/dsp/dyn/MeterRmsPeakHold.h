@@ -45,7 +45,7 @@ class MeterRmsPeakHold
 
 public:
 
-	               MeterRmsPeakHold ();
+	               MeterRmsPeakHold () noexcept;
 	               MeterRmsPeakHold (const MeterRmsPeakHold &other) = default;
 	               MeterRmsPeakHold (MeterRmsPeakHold &&other)      = default;
 	virtual        ~MeterRmsPeakHold ()                             = default;
@@ -55,19 +55,19 @@ public:
 	MeterRmsPeakHold &
 	               operator = (MeterRmsPeakHold &&other)            = default;
 
-	void           set_sample_freq (double freq);
-	void           set_hold_time_s (double t);
-	void           set_attack_time_s (double t);
-	void           set_release_time_s (double t);
+	void           set_sample_freq (double freq) noexcept;
+	void           set_hold_time_s (double t) noexcept;
+	void           set_attack_time_s (double t) noexcept;
+	void           set_release_time_s (double t) noexcept;
 
-	void           clear_buffers ();
-	void           process_block (const float data_ptr [], int nbr_spl);
-	void           process_sample (float x);
-	void           skip_block (int nbr_spl);
-	double         get_peak () const;
-	double         get_peak_hold () const;
-	double         get_rms () const;
-	void           clear_peak ();
+	void           clear_buffers () noexcept;
+	void           process_block (const float data_ptr [], int nbr_spl) noexcept;
+	void           process_sample (float x) noexcept;
+	void           skip_block (int nbr_spl) noexcept;
+	double         get_peak () const noexcept;
+	double         get_peak_hold () const noexcept;
+	double         get_rms () const noexcept;
+	void           clear_peak () noexcept;
 
 
 
@@ -81,9 +81,9 @@ protected:
 
 private:
 
-	void           update_times ();
-	void           process_sample_internal (float x);
-	void           fix_tiny_values ();
+	void           update_times () noexcept;
+	void           process_sample_internal (float x) noexcept;
+	void           fix_tiny_values () noexcept;
 
 	double         _hold_time_s;     // Hold time, in s
 	double         _attack_time_s;   // Attack time, in s

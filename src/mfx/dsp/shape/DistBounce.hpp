@@ -39,7 +39,7 @@ namespace shape
 
 
 
-float	DistBounce::process_sample (float x)
+float	DistBounce::process_sample (float x) noexcept
 {
 	// Updates the current ball position according ot its speed
 	_pos += _speed;
@@ -83,7 +83,7 @@ float	DistBounce::process_sample (float x)
 
 
 
-float	DistBounce::bounce (float val)
+float	DistBounce::bounce (float val) noexcept
 {
 	// Computes the ball speed according to the bounce angle on the curve and
 	// bounce rate.

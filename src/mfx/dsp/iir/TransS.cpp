@@ -46,7 +46,7 @@ namespace iir
 
 
 
-void	TransS::conv_roots_real_to_poly_1 (double poly [2], double k, double root)
+void	TransS::conv_roots_real_to_poly_1 (double poly [2], double k, double root) noexcept
 {
 	assert (poly != nullptr);
 
@@ -56,7 +56,7 @@ void	TransS::conv_roots_real_to_poly_1 (double poly [2], double k, double root)
 
 
 
-void	TransS::conv_roots_real_to_poly_2 (double poly [3], double k, double root_1, double root_2)
+void	TransS::conv_roots_real_to_poly_2 (double poly [3], double k, double root_1, double root_2) noexcept
 {
 	assert (poly != nullptr);
 
@@ -67,7 +67,7 @@ void	TransS::conv_roots_real_to_poly_2 (double poly [3], double k, double root_1
 
 
 
-void	TransS::conv_roots_cplx_to_poly_2 (double poly [3], double k, const Cplx &root)
+void	TransS::conv_roots_cplx_to_poly_2 (double poly [3], double k, const Cplx &root) noexcept
 {
 	assert (poly != nullptr);
 
@@ -101,7 +101,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	TransS::conv_lp_pz_to_pb_pz (Cplx &pz_bp_1, Cplx &pz_bp_2, const Cplx &pz_lp, double bw)
+void	TransS::conv_lp_pz_to_pb_pz (Cplx &pz_bp_1, Cplx &pz_bp_2, const Cplx &pz_lp, double bw) noexcept
 {
 	assert (bw > 0);
 
@@ -171,7 +171,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	TransS::conv_lp_ap_to_pb_biq (double b_1 [3], double a_1 [3], double b_2 [3], double a_2 [3], const Cplx &lp_pole, double bw)
+void	TransS::conv_lp_ap_to_pb_biq (double b_1 [3], double a_1 [3], double b_2 [3], double a_2 [3], const Cplx &lp_pole, double bw) noexcept
 {
 	assert (b_1 != nullptr);
 	assert (a_1 != nullptr);

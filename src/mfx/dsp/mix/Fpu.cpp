@@ -53,7 +53,7 @@ namespace mix
 
 
 
-void	Fpu::scale_1_v (float data_ptr [], int nbr_spl, float vol)
+void	Fpu::scale_1_v (float data_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -76,7 +76,7 @@ void	Fpu::scale_1_v (float data_ptr [], int nbr_spl, float vol)
 
 
 
-void	Fpu::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -94,7 +94,7 @@ void	Fpu::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
 
 
 
-void	Fpu::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -108,7 +108,7 @@ void	Fpu::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol, float e_
 
 
 
-void	Fpu::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol)
+void	Fpu::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (data_1_ptr != nullptr);
 	assert (data_2_ptr != nullptr);
@@ -133,7 +133,7 @@ void	Fpu::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, floa
 
 
 
-void	Fpu::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (data_1_ptr != nullptr);
 	assert (data_2_ptr != nullptr);
@@ -153,7 +153,7 @@ void	Fpu::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int nbr_spl, fl
 
 
 
-void	Fpu::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -175,7 +175,7 @@ void	Fpu::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], int nbr_spl
 
 
 
-void	Fpu::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -186,7 +186,7 @@ void	Fpu::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -214,7 +214,7 @@ void	Fpu::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, floa
 
 
 
-void	Fpu::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -233,7 +233,7 @@ void	Fpu::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, fl
 
 
 
-void	Fpu::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -247,7 +247,7 @@ void	Fpu::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl
 
 
 
-void	Fpu::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -260,7 +260,7 @@ void	Fpu::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [
 
 
 
-void	Fpu::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -292,7 +292,7 @@ void	Fpu::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr
 
 
 
-void	Fpu::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -314,7 +314,7 @@ void	Fpu::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_p
 
 
 
-void	Fpu::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -328,7 +328,7 @@ void	Fpu::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float 
 
 
 
-void	Fpu::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -346,7 +346,7 @@ void	Fpu::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_
 
 
 
-void	Fpu::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -375,7 +375,7 @@ void	Fpu::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_
 
 
 
-void	Fpu::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -395,7 +395,7 @@ void	Fpu::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float i
 
 
 
-void	Fpu::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -409,7 +409,7 @@ void	Fpu::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const flo
 
 
 
-void	Fpu::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -423,7 +423,7 @@ void	Fpu::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr
 
 
 
-void	Fpu::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -457,7 +457,7 @@ void	Fpu::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_p
 
 
 
-void	Fpu::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -481,7 +481,7 @@ void	Fpu::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1
 
 
 
-void	Fpu::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -503,7 +503,7 @@ void	Fpu::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float 
 
 
 
-void	Fpu::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
+void	Fpu::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -523,7 +523,7 @@ void	Fpu::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float
 
 
 
-void	Fpu::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Fpu::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -550,7 +550,7 @@ void	Fpu::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 
-void	Fpu::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Fpu::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	if (e_vol_l == s_vol_l && e_vol_r == s_vol_r)
 	{
@@ -572,7 +572,7 @@ void	Fpu::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const
 
 
 
-void	Fpu::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf)
+void	Fpu::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -592,7 +592,7 @@ void	Fpu::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const flo
 
 
 
-void	Fpu::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf)
+void	Fpu::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -614,7 +614,7 @@ void	Fpu::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const f
 
 
 
-void	Fpu::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf)
+void	Fpu::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept
 {
 	if (e_xf == s_xf)
 	{
@@ -628,7 +628,7 @@ void	Fpu::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], con
 
 
 
-void	Fpu::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl)
+void	Fpu::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -658,7 +658,7 @@ void	Fpu::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float
 
 
 
-void	Fpu::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
+void	Fpu::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -683,7 +683,7 @@ void	Fpu::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in
 
 
 
-void	Fpu::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Fpu::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -714,7 +714,7 @@ void	Fpu::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float 
 
 
 
-void	Fpu::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Fpu::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -736,7 +736,7 @@ void	Fpu::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 
-void	Fpu::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -755,7 +755,7 @@ void	Fpu::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -774,7 +774,7 @@ void	Fpu::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, flo
 
 
 
-void	Fpu::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -795,7 +795,7 @@ void	Fpu::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, f
 
 
 
-void	Fpu::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -809,7 +809,7 @@ void	Fpu::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_sp
 
 
 
-void	Fpu::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -830,7 +830,7 @@ void	Fpu::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2
 
 
 
-void	Fpu::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -851,7 +851,7 @@ void	Fpu::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in
 
 
 
-void	Fpu::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -874,7 +874,7 @@ void	Fpu::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float 
 
 
 
-void	Fpu::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -888,7 +888,7 @@ void	Fpu::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const fl
 
 
 
-void	Fpu::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl)
+void	Fpu::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -913,7 +913,7 @@ void	Fpu::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2
 
 
 // Content of the channels 3 and 4 is not specified.
-void	Fpu::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -933,7 +933,7 @@ void	Fpu::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_
 
 
 
-void	Fpu::copy_1_ni1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out)
+void	Fpu::copy_1_ni1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -959,7 +959,7 @@ void	Fpu::copy_1_ni1 (float out_ptr [], const float in_ptr [], int nbr_spl, int 
 
 
 
-void	Fpu::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -976,7 +976,7 @@ void	Fpu::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -993,7 +993,7 @@ void	Fpu::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, flo
 
 
 
-void	Fpu::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1012,7 +1012,7 @@ void	Fpu::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, f
 
 
 
-void	Fpu::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1026,7 +1026,7 @@ void	Fpu::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_sp
 
 
 
-void	Fpu::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1047,7 +1047,7 @@ void	Fpu::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr 
 
 
 
-void	Fpu::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1068,7 +1068,7 @@ void	Fpu::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_pt
 
 
 
-void	Fpu::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1091,7 +1091,7 @@ void	Fpu::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_
 
 
 
-void	Fpu::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1105,7 +1105,7 @@ void	Fpu::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float
 
 
 
-void	Fpu::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1128,7 +1128,7 @@ void	Fpu::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1152,7 +1152,7 @@ void	Fpu::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [],
 
 
 
-void	Fpu::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1172,7 +1172,7 @@ void	Fpu::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr
 
 
 
-void	Fpu::copy_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in)
+void	Fpu::copy_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1198,7 +1198,7 @@ void	Fpu::copy_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int 
 
 
 
-void	Fpu::copy_nip_mip (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out, int nbr_chn_in, int nbr_chn_copy)
+void	Fpu::copy_nip_mip (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out, int nbr_chn_in, int nbr_chn_copy) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1238,7 +1238,7 @@ void	Fpu::copy_nip_mip (float out_ptr [], const float in_ptr [], int nbr_spl, in
 
 
 
-void	Fpu::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1255,7 +1255,7 @@ void	Fpu::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1279,7 +1279,7 @@ void	Fpu::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float
 
 
 
-void	Fpu::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1298,7 +1298,7 @@ void	Fpu::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, flo
 
 
 
-void	Fpu::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1312,7 +1312,7 @@ void	Fpu::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl,
 
 
 
-void	Fpu::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1332,7 +1332,7 @@ void	Fpu::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr []
 
 
 
-void	Fpu::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1359,7 +1359,7 @@ void	Fpu::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr 
 
 
 
-void	Fpu::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1381,7 +1381,7 @@ void	Fpu::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_pt
 
 
 
-void	Fpu::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1395,7 +1395,7 @@ void	Fpu::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float i
 
 
 
-void	Fpu::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -1413,7 +1413,7 @@ void	Fpu::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_p
 
 
 
-void	Fpu::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -1438,7 +1438,7 @@ void	Fpu::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2
 
 
 
-void	Fpu::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -1458,7 +1458,7 @@ void	Fpu::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in
 
 
 
-void	Fpu::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1472,7 +1472,7 @@ void	Fpu::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const floa
 
 
 
-void	Fpu::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1494,7 +1494,7 @@ void	Fpu::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr 
 
 
 
-void	Fpu::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1523,7 +1523,7 @@ void	Fpu::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_pt
 
 
 
-void	Fpu::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1547,7 +1547,7 @@ void	Fpu::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_
 
 
 
-void	Fpu::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1569,7 +1569,7 @@ void	Fpu::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float i
 
 
 
-void	Fpu::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
+void	Fpu::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1589,7 +1589,7 @@ void	Fpu::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float 
 
 
 
-void	Fpu::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Fpu::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1616,7 +1616,7 @@ void	Fpu::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const floa
 
 
 
-void	Fpu::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Fpu::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	if (e_vol_l == s_vol_l && e_vol_r == s_vol_r)
 	{
@@ -1638,7 +1638,7 @@ void	Fpu::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const 
 
 
 
-void	Fpu::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
+void	Fpu::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1663,7 +1663,7 @@ void	Fpu::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_
 
 
 
-void	Fpu::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Fpu::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1694,7 +1694,7 @@ void	Fpu::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float i
 
 
 
-void	Fpu::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Fpu::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1716,7 +1716,7 @@ void	Fpu::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 
-void	Fpu::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1735,7 +1735,7 @@ void	Fpu::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1754,7 +1754,7 @@ void	Fpu::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, floa
 
 
 
-void	Fpu::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1775,7 +1775,7 @@ void	Fpu::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, fl
 
 
 
-void	Fpu::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1789,7 +1789,7 @@ void	Fpu::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl
 
 
 
-void	Fpu::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -1810,7 +1810,7 @@ void	Fpu::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_
 
 
 
-void	Fpu::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -1831,7 +1831,7 @@ void	Fpu::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_
 
 
 
-void	Fpu::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -1854,7 +1854,7 @@ void	Fpu::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float i
 
 
 
-void	Fpu::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1876,7 +1876,7 @@ void	Fpu::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const flo
 
 
 
-void	Fpu::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1893,7 +1893,7 @@ void	Fpu::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1910,7 +1910,7 @@ void	Fpu::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, floa
 
 
 
-void	Fpu::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1929,7 +1929,7 @@ void	Fpu::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, fl
 
 
 
-void	Fpu::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1943,7 +1943,7 @@ void	Fpu::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl
 
 
 
-void	Fpu::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1962,7 +1962,7 @@ void	Fpu::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [
 
 
 
-void	Fpu::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Fpu::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -1981,7 +1981,7 @@ void	Fpu::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr
 
 
 
-void	Fpu::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -2002,7 +2002,7 @@ void	Fpu::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_p
 
 
 
-void	Fpu::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Fpu::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -2016,7 +2016,7 @@ void	Fpu::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float 
 
 
 
-void	Fpu::mix_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in)
+void	Fpu::mix_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -2042,7 +2042,7 @@ void	Fpu::mix_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int n
 
 
 
-void	Fpu::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_1_ptr != nullptr);
@@ -2071,7 +2071,7 @@ void	Fpu::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_
 
 
 
-void	Fpu::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -2090,7 +2090,7 @@ void	Fpu::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 
 
-void	Fpu::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Fpu::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -2111,7 +2111,7 @@ void	Fpu::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_pt
 
 
 
-void	Fpu::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Fpu::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -2142,7 +2142,7 @@ void	Fpu::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_
 
 
 
-void	Fpu::clear (float out_ptr [], int nbr_spl)
+void	Fpu::clear (float out_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -2156,7 +2156,7 @@ void	Fpu::clear (float out_ptr [], int nbr_spl)
 
 // Clears clear_len samples at the beginning of every clear_len + skip_len
 // blocks. nbr_spl = number of blocks
-void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len)
+void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -2191,7 +2191,7 @@ void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len)
 
 
 
-void	Fpu::fill (float out_ptr [], int nbr_spl, float val)
+void	Fpu::fill (float out_ptr [], int nbr_spl, float val) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -2207,7 +2207,7 @@ void	Fpu::fill (float out_ptr [], int nbr_spl, float val)
 
 
 
-void	Fpu::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e_val)
+void	Fpu::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -2225,7 +2225,7 @@ void	Fpu::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e_val)
 
 
 
-void	Fpu::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, float e_val)
+void	Fpu::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept
 {
 	if (e_val == s_val)
 	{
@@ -2239,7 +2239,7 @@ void	Fpu::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, float e_val)
 
 
 
-void	Fpu::add_cst_1_1 (float out_ptr [], int nbr_spl, float val)
+void	Fpu::add_cst_1_1 (float out_ptr [], int nbr_spl, float val) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -2255,7 +2255,7 @@ void	Fpu::add_cst_1_1 (float out_ptr [], int nbr_spl, float val)
 
 
 
-void	Fpu::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val)
+void	Fpu::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -2273,7 +2273,7 @@ void	Fpu::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, floa
 
 
 
-void	Fpu::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val)
+void	Fpu::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -2290,7 +2290,7 @@ void	Fpu::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, f
 
 
 
-void	Fpu::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float add_val)
+void	Fpu::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float add_val) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -2306,7 +2306,7 @@ void	Fpu::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float a
 
 
 
-void	Fpu::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl)
+void	Fpu::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -2326,7 +2326,7 @@ void	Fpu::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl)
 
 
 
-void	Fpu::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val)
+void	Fpu::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (src_ptr_arr != nullptr);
@@ -2381,7 +2381,7 @@ void	Fpu::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], 
 
 
 
-void	Fpu::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol)
+void	Fpu::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (src_ptr_arr != nullptr);

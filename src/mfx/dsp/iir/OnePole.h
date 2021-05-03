@@ -49,22 +49,22 @@ class OnePole
 
 public:
 
-	               OnePole ();
+	               OnePole () noexcept;
 	               OnePole (const OnePole &other)     = default;
 	               ~OnePole ()                        = default;
 	OnePole &       operator = (const OnePole &other) = default;
 
-	inline void    neutralise ();
-	inline void    set_z_eq (const float b [2], const float a [2]);
-	inline void    get_z_eq (float b [2], float a [2]) const;
-	inline void    copy_z_eq (const OnePole &other);
+	inline void    neutralise () noexcept;
+	inline void    set_z_eq (const float b [2], const float a [2]) noexcept;
+	inline void    get_z_eq (float b [2], float a [2]) const noexcept;
+	inline void    copy_z_eq (const OnePole &other) noexcept;
 
-	inline float   process_sample (float x);
-	inline float   process_sample (float x, const float inc_b [2], const float inc_a [2]);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2], const float inc_a [2]);
+	inline float   process_sample (float x) noexcept;
+	inline float   process_sample (float x, const float inc_b [2], const float inc_a [2]) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2], const float inc_a [2]) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -78,7 +78,7 @@ protected:
 
 private:
 
-	inline void    step_z_eq (const float inc_b [3], const float inc_a [3]);
+	inline void    step_z_eq (const float inc_b [3], const float inc_a [3]) noexcept;
 
 	std::array <float, 2>      // Direct coefficients, order z^(-n)
 						_eq_z_b;

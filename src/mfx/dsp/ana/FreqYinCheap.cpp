@@ -33,7 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cmath>
-#include <cstring>
 
 
 
@@ -82,7 +81,7 @@ void	FreqYinCheap::set_sample_freq (double sample_freq)
 
 
 
-void	FreqYinCheap::set_freq_bot (float f)
+void	FreqYinCheap::set_freq_bot (float f) noexcept
 {
 	_freq_bot = f;
 	if (_sample_freq > 0)
@@ -93,7 +92,7 @@ void	FreqYinCheap::set_freq_bot (float f)
 
 
 
-void	FreqYinCheap::set_freq_top (float f)
+void	FreqYinCheap::set_freq_top (float f) noexcept
 {
 	_freq_top = f;
 	if (_sample_freq > 0)
@@ -104,7 +103,7 @@ void	FreqYinCheap::set_freq_top (float f)
 
 
 
-void	FreqYinCheap::set_smoothing (float responsiveness, float thr)
+void	FreqYinCheap::set_smoothing (float responsiveness, float thr) noexcept
 {
 	assert (responsiveness > 0);
 	assert (responsiveness <= 1);
@@ -116,15 +115,15 @@ void	FreqYinCheap::set_smoothing (float responsiveness, float thr)
 
 
 
-void	FreqYinCheap::clear_buffers ()
+void	FreqYinCheap::clear_buffers () noexcept
 {
 #if defined (mfx_dsp_ana_USE_SIMD)
 	for (BufAlign &buf : _buf_arr)
 	{
-		memset (&buf [0], 0, sizeof (buf [0]));
+		std::fill (buf.begin (), buf.end (), 0.f);
 	}
 #else
-	memset (&_buffer [0], 0, sizeof (_buffer [0]));
+	std::fill (_buffer.begin (), _buffer.end (), 0.f);
 #endif
 	_buf_pos   = 0;
 	_delta     = 1;
@@ -135,7 +134,7 @@ void	FreqYinCheap::clear_buffers ()
 
 
 
-float	FreqYinCheap::process_block (const float spl_ptr [], int nbr_spl)
+float	FreqYinCheap::process_block (const float spl_ptr [], int nbr_spl) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -152,7 +151,7 @@ float	FreqYinCheap::process_block (const float spl_ptr [], int nbr_spl)
 
 
 
-float	FreqYinCheap::process_sample (float x)
+float	FreqYinCheap::process_sample (float x) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -189,7 +188,7 @@ float	FreqYinCheap::process_sample (float x)
 
 
 
-void	FreqYinCheap::update_freq_bot_param ()
+void	FreqYinCheap::update_freq_bot_param () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -203,7 +202,7 @@ void	FreqYinCheap::update_freq_bot_param ()
 
 
 
-void	FreqYinCheap::update_freq_top_param ()
+void	FreqYinCheap::update_freq_top_param () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -212,7 +211,7 @@ void	FreqYinCheap::update_freq_top_param ()
 
 
 
-void	FreqYinCheap::analyse_sample ()
+void	FreqYinCheap::analyse_sample () noexcept
 {
 	if (_delta <= 1)
 	{

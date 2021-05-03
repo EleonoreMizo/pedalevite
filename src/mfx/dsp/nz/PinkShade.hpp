@@ -37,7 +37,7 @@ namespace nz
 
 
 
-float	PinkShade::process_sample ()
+float	PinkShade::process_sample () noexcept
 {
 	if (_bpos == 0)
 	{

@@ -56,7 +56,7 @@ BandSplitAllPassPair <AP0, AP1, VFF>::BandSplitAllPassPair ()
 
 
 template <typename AP0, typename AP1, bool VFF>
-typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_0 ()
+typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_0 () noexcept
 {
 	return _filter_0;
 }
@@ -64,7 +64,7 @@ typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair 
 
 
 template <typename AP0, typename AP1, bool VFF>
-const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_0 () const
+const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_0 () const noexcept
 {
 	return _filter_0;
 }
@@ -72,7 +72,7 @@ const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPas
 
 
 template <typename AP0, typename AP1, bool VFF>
-typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter1 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_1 ()
+typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter1 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_1 () noexcept
 {
 	return _filter_1;
 }
@@ -80,7 +80,7 @@ typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter1 &	BandSplitAllPassPair 
 
 
 template <typename AP0, typename AP1, bool VFF>
-const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter1 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_1 () const
+const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter1 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_filter_1 () const noexcept
 {
 	return _filter_1;
 }
@@ -88,7 +88,7 @@ const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter1 &	BandSplitAllPas
 
 
 template <typename AP0, typename AP1, bool VFF>
-typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_fix_filter ()
+typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_fix_filter () noexcept
 {
 	return _filter_fix;
 }
@@ -96,7 +96,7 @@ typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair 
 
 
 template <typename AP0, typename AP1, bool VFF>
-const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_fix_filter () const
+const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPassPair <AP0, AP1, VFF>::use_fix_filter () const noexcept
 {
 	return _filter_fix;
 }
@@ -104,7 +104,7 @@ const typename BandSplitAllPassPair <AP0, AP1, VFF>::ApFilter0 &	BandSplitAllPas
 
 
 template <typename AP0, typename AP1, bool VFF>
-void	BandSplitAllPassPair <AP0, AP1, VFF>::set_add_sub_function (AddSubProto fnc_ptr)
+void	BandSplitAllPassPair <AP0, AP1, VFF>::set_add_sub_function (AddSubProto fnc_ptr) noexcept
 {
 	assert (fnc_ptr != 0);
 
@@ -114,7 +114,7 @@ void	BandSplitAllPassPair <AP0, AP1, VFF>::set_add_sub_function (AddSubProto fnc
 
 
 template <typename AP0, typename AP1, bool VFF>
-void	BandSplitAllPassPair <AP0, AP1, VFF>::set_vol_function (VolumeProto vol_ptr)
+void	BandSplitAllPassPair <AP0, AP1, VFF>::set_vol_function (VolumeProto vol_ptr) noexcept
 {
 	assert (vol_ptr != 0);
 
@@ -124,7 +124,7 @@ void	BandSplitAllPassPair <AP0, AP1, VFF>::set_vol_function (VolumeProto vol_ptr
 
 
 template <typename AP0, typename AP1, bool VFF>
-void	BandSplitAllPassPair <AP0, AP1, VFF>::split_sample (float &out_1, float &out_2, float sample)
+void	BandSplitAllPassPair <AP0, AP1, VFF>::split_sample (float &out_1, float &out_2, float sample) noexcept
 {
 	if (VFF)
 	{
@@ -142,7 +142,7 @@ void	BandSplitAllPassPair <AP0, AP1, VFF>::split_sample (float &out_1, float &ou
 
 // Can work in-place (1 or 2)
 template <typename AP0, typename AP1, bool VFF>
-void	BandSplitAllPassPair <AP0, AP1, VFF>::split_block (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	BandSplitAllPassPair <AP0, AP1, VFF>::split_block (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_1_ptr != nullptr);
 	assert (out_2_ptr != nullptr);
@@ -172,7 +172,7 @@ void	BandSplitAllPassPair <AP0, AP1, VFF>::split_block (float out_1_ptr [], floa
 
 
 template <typename AP0, typename AP1, bool VFF>
-float	BandSplitAllPassPair <AP0, AP1, VFF>::compensate_sample (float sample)
+float	BandSplitAllPassPair <AP0, AP1, VFF>::compensate_sample (float sample) noexcept
 {
 	return (_filter_fix.process_sample (sample));
 }
@@ -180,7 +180,7 @@ float	BandSplitAllPassPair <AP0, AP1, VFF>::compensate_sample (float sample)
 
 
 template <typename AP0, typename AP1, bool VFF>
-void	BandSplitAllPassPair <AP0, AP1, VFF>::compensate_block (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	BandSplitAllPassPair <AP0, AP1, VFF>::compensate_block (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != 0);
 	assert (in_ptr != 0);
@@ -192,7 +192,7 @@ void	BandSplitAllPassPair <AP0, AP1, VFF>::compensate_block (float out_ptr [], c
 
 
 template <typename AP0, typename AP1, bool VFF>
-void	BandSplitAllPassPair <AP0, AP1, VFF>::clear_buffers ()
+void	BandSplitAllPassPair <AP0, AP1, VFF>::clear_buffers () noexcept
 {
 	_filter_0.clear_buffers ();
 	_filter_1.clear_buffers ();

@@ -41,7 +41,7 @@ namespace shape
 
 
 
-float	WsLight3::process_sample (float x)
+float	WsLight3::process_sample (float x) noexcept
 {
 	Combo          c;
 	c._f = x;
@@ -53,7 +53,7 @@ float	WsLight3::process_sample (float x)
 
 
 template <typename VD, typename VS>
-void	WsLight3::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	WsLight3::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

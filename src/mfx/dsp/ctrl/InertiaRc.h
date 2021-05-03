@@ -47,7 +47,7 @@ class InertiaRc
 
 public:
 
-	               InertiaRc ();
+	               InertiaRc () noexcept;
 	               InertiaRc (const InertiaRc &other)  = default;
 	               InertiaRc (InertiaRc &&other)       = default;
 	virtual        ~InertiaRc ()                       = default;
@@ -55,19 +55,19 @@ public:
 	InertiaRc &    operator = (const InertiaRc &other) = default;
 	InertiaRc &    operator = (InertiaRc &&other)      = default;
 
-	void           set_sample_freq (float sample_freq);
-	void           set_inertia_time (float t);
-	float          get_inertia_time () const;
-	void           set_threshold (float threshold);
+	void           set_sample_freq (float sample_freq) noexcept;
+	void           set_inertia_time (float t) noexcept;
+	float          get_inertia_time () const noexcept;
+	void           set_threshold (float threshold) noexcept;
 
-	void           set_val (float val);
-	void           force_val (float val);
-	float          get_val () const;
-	float          get_target_val () const;
-	void           tick (long nbr_spl);
-	bool           is_ramping () const;
-   void           stop ();
-	void           clear_buffers ();
+	void           set_val (float val) noexcept;
+	void           force_val (float val) noexcept;
+	float          get_val () const noexcept;
+	float          get_target_val () const noexcept;
+	void           tick (long nbr_spl) noexcept;
+	bool           is_ramping () const noexcept;
+   void           stop () noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -81,7 +81,7 @@ protected:
 
 private:
 
-	void           update_inertia_time ();
+	void           update_inertia_time () noexcept;
 
 	float          _sample_freq;        // Hz, > 0
 	float          _inertia_time;       // s, >= 0

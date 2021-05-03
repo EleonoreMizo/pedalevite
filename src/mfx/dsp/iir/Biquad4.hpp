@@ -41,21 +41,21 @@ namespace iir
 
 
 
-void	Biquad4::process_block_serial_latency (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Biquad4::process_block_serial_latency (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	process_block_serial_immediate (dst_ptr, src_ptr, nbr_spl);
 }
 
 
 
-float	Biquad4::process_sample_serial_latency (float x_s)
+float	Biquad4::process_sample_serial_latency (float x_s) noexcept
 {
 	return process_sample_serial_immediate (x_s);
 }
 
 
 
-float	Biquad4::process_sample_serial_immediate (float x_s)
+float	Biquad4::process_sample_serial_immediate (float x_s) noexcept
 {
 	for (int cnt = 0; cnt < _nbr_units; ++cnt)
 	{
@@ -67,7 +67,7 @@ float	Biquad4::process_sample_serial_immediate (float x_s)
 
 
 
-void	Biquad4::process_block_2x2_latency (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Biquad4::process_block_2x2_latency (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -79,7 +79,7 @@ void	Biquad4::process_block_2x2_latency (float dst_ptr [], const float src_ptr [
 
 
 // |a1| < a2 + 1 && |a2| < 1
-bool	Biquad4::check_stability (float a1, float a2)
+bool	Biquad4::check_stability (float a1, float a2) noexcept
 {
 	const float    margin = 5e-6f;
 

@@ -51,14 +51,14 @@ class PhaseGenChaos
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           set_period (double per);
-	void           set_phase (double phase);
-	void           set_chaos (double chaos);
-	void           clear_buffers ();
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_period (double per) noexcept;
+	void           set_phase (double phase) noexcept;
+	void           set_chaos (double chaos) noexcept;
+	void           clear_buffers () noexcept;
 
-	void           tick (int nbr_spl);
-	double         get_phase () const;
+	void           tick (int nbr_spl) noexcept;
+	double         get_phase () const noexcept;
 
 
 
@@ -88,7 +88,7 @@ private:
 		Dir_NBR_ELT
 	};
 
-	inline void    update_retrig_len ();
+	inline void    update_retrig_len () noexcept;
 
 	int            _retrig_len  = 256;
 	int            _retrig_pos  =   0;

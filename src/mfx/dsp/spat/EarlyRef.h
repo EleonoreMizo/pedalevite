@@ -3,6 +3,10 @@
         EarlyRef.h
         Author: Laurent de Soras, 2020
 
+Template parameters:
+
+- T: sample data type
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -56,15 +60,15 @@ public:
 
 	void           reset (double sample_freq, double max_predelay_time, double max_duration);
 
-	void           generate_taps (uint32_t seed, int nbr_taps, float duration, float lvl_end, float gain);
-	void           morph_taps_to (const ThisType &other, float lerp);
-	void           set_predelay (float delay);
+	void           generate_taps (uint32_t seed, int nbr_taps, float duration, float lvl_end, float gain) noexcept;
+	void           morph_taps_to (const ThisType &other, float lerp) noexcept;
+	void           set_predelay (float delay) noexcept;
 
 	fstb_FORCEINLINE std::pair <T, T>
-	               process_sample (T x);
-	void           process_block (T dly_ptr [], T erf_ptr [], const T src_ptr [], int nbr_spl);
+	               process_sample (T x) noexcept;
+	void           process_block (T dly_ptr [], T erf_ptr [], const T src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

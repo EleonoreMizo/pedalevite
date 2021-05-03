@@ -40,7 +40,7 @@ namespace mix
 
 
 template <typename OP>
-void	Fpu::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OP op)
+void	Fpu::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OP op) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -72,7 +72,7 @@ void	Fpu::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT
 
 
 template <typename OP>
-void	Fpu::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OP op)
+void	Fpu::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OP op) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (lhs_ptr != nullptr);

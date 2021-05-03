@@ -40,7 +40,7 @@ namespace osc
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableData ()
+WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableData () noexcept
 :	_data ()
 {
 	// Build table index. Not a big deal if it's done more than once...
@@ -50,7 +50,7 @@ WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableData ()
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_sample (int table, int pos, DataType val)
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_sample (int table, int pos, DataType val) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -63,7 +63,7 @@ void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_sample (int tab
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample (int table, int pos) const
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample (int table, int pos) const noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -76,7 +76,7 @@ typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	Waveta
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_table (int table)
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_table (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -87,7 +87,7 @@ typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType *	Wave
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-const typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_table (int table) const
+const typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_table (int table) const noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -98,7 +98,7 @@ const typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType 
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_table_unroll (int table)
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_table_unroll (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -122,7 +122,7 @@ void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_table_unroll
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_all_tables_unroll ()
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_all_tables_unroll () noexcept
 {
 	const int      nbr_tables = get_nbr_tables ();
 	for (int table = 0; table < nbr_tables; ++table)
@@ -134,7 +134,7 @@ void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_all_tables_u
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::clear_table (int table)
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::clear_table (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -150,7 +150,7 @@ void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::clear_table (int ta
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_nbr_tables ()
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_nbr_tables () noexcept
 {
 	return MAX_SIZE_LOG2 + 1;
 }
@@ -158,7 +158,7 @@ int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_nbr_tables ()
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len (int table)
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -169,7 +169,7 @@ int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len (int t
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len_log2 (int table)
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len_log2 (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -180,7 +180,7 @@ int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len_log2 (
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_mask (int table)
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_mask (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -191,7 +191,7 @@ int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_mask (int 
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_ovr_log2 (int table)
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_ovr_log2 (int table) noexcept
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -210,7 +210,7 @@ int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_ovr_log2 (
 
 
 template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::build_table_index ()
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::build_table_index () noexcept
 {
 	int            index      = DATA_ARR_SIZE;
 

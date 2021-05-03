@@ -39,7 +39,7 @@ namespace iir
 
 
 
-int	AllPass1pChain::get_length () const
+int	AllPass1pChain::get_length () const noexcept
 {
 	return int (_stage_arr.size ());
 }
@@ -65,7 +65,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	AllPass1pChain::set_coef (int idx, float b0)
+void	AllPass1pChain::set_coef (int idx, float b0) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < get_length ());
@@ -75,7 +75,7 @@ void	AllPass1pChain::set_coef (int idx, float b0)
 
 
 
-float	AllPass1pChain::get_coef (int idx) const
+float	AllPass1pChain::get_coef (int idx) const noexcept
 {
 	assert (idx >= 0);
 	assert (idx < get_length ());
@@ -85,7 +85,7 @@ float	AllPass1pChain::get_coef (int idx) const
 
 
 
-float	AllPass1pChain::get_state (int idx) const
+float	AllPass1pChain::get_state (int idx) const noexcept
 {
 	assert (idx >= 0);
 	assert (idx <= get_length ());
@@ -95,7 +95,7 @@ float	AllPass1pChain::get_state (int idx) const
 
 
 
-void	AllPass1pChain::set_state (int idx, float mem)
+void	AllPass1pChain::set_state (int idx, float mem) noexcept
 {
 	assert (idx >= 0);
 	assert (idx <= get_length ());
@@ -112,7 +112,7 @@ void	AllPass1pChain::set_state (int idx, float mem)
 
 
 
-float	AllPass1pChain::process_sample (float x)
+float	AllPass1pChain::process_sample (float x) noexcept
 {
 	if (_stage_arr.size () > 0)
 	{
@@ -133,7 +133,7 @@ float	AllPass1pChain::process_sample (float x)
 
 
 // Uses the provided coefficient for all the stages
-float	AllPass1pChain::process_sample_coef (float x, float b0)
+float	AllPass1pChain::process_sample_coef (float x, float b0) noexcept
 {
 	if (_stage_arr.size() > 0)
 	{

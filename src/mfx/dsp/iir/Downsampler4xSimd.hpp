@@ -43,7 +43,7 @@ namespace iir
 
 
 template <int NC42, int NC21>
-void	Downsampler4xSimd <NC42, NC21>::set_coefs (const double coef_42 [NC42], const double coef_21 [NC21])
+void	Downsampler4xSimd <NC42, NC21>::set_coefs (const double coef_42 [NC42], const double coef_21 [NC21]) noexcept
 {
 	_ds_42.set_coefs (coef_42);
 	_ds_21.set_coefs (coef_21);
@@ -52,7 +52,7 @@ void	Downsampler4xSimd <NC42, NC21>::set_coefs (const double coef_42 [NC42], con
 
 
 template <int NC42, int NC21>
-float	Downsampler4xSimd <NC42, NC21>::process_sample (const float src_ptr [4])
+float	Downsampler4xSimd <NC42, NC21>::process_sample (const float src_ptr [4]) noexcept
 {
 	float          buf_x2 [2];
 
@@ -65,7 +65,7 @@ float	Downsampler4xSimd <NC42, NC21>::process_sample (const float src_ptr [4])
 
 
 template <int NC42, int NC21>
-void	Downsampler4xSimd <NC42, NC21>::process_block (float data_ptr [], int nbr_spl)
+void	Downsampler4xSimd <NC42, NC21>::process_block (float data_ptr [], int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -76,7 +76,7 @@ void	Downsampler4xSimd <NC42, NC21>::process_block (float data_ptr [], int nbr_s
 
 
 template <int NC42, int NC21>
-void	Downsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Downsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -100,7 +100,7 @@ void	Downsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const floa
 
 
 template <int NC42, int NC21>
-float	Downsampler4xSimd <NC42, NC21>::process_sample_2x (const float src_ptr [2])
+float	Downsampler4xSimd <NC42, NC21>::process_sample_2x (const float src_ptr [2]) noexcept
 {
 	return _ds_21.process_sample (src_ptr);
 }
@@ -108,7 +108,7 @@ float	Downsampler4xSimd <NC42, NC21>::process_sample_2x (const float src_ptr [2]
 
 
 template <int NC42, int NC21>
-void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float data_ptr [], int nbr_spl)
+void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float data_ptr [], int nbr_spl) noexcept
 {
 	_ds_21.process_block (data_ptr, data_ptr, nbr_spl);
 }
@@ -116,7 +116,7 @@ void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float data_ptr [], int nb
 
 
 template <int NC42, int NC21>
-void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	_ds_21.process_block (dst_ptr, src_ptr, nbr_spl);
 }
@@ -124,7 +124,7 @@ void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const f
 
 
 template <int NC42, int NC21>
-void	Downsampler4xSimd <NC42, NC21>::clear_buffers ()
+void	Downsampler4xSimd <NC42, NC21>::clear_buffers () noexcept
 {
 	_ds_42.clear_buffers ();
 	_ds_21.clear_buffers ();

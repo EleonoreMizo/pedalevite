@@ -9,9 +9,9 @@ Template parameters:
 It must have the following functions:
 
 	IM::IM ();
-	void IM::make_interpolator (float fir_ptr [], float pos);
-	int IM::get_length ();
-	int IM::get_delay ();
+	void IM::make_interpolator (float fir_ptr [], float pos) noexcept;
+	int IM::get_length () noexcept;
+	int IM::get_delay () noexcept;
 
 - AL is a standard allocator for the internal buffer.
 
@@ -72,25 +72,25 @@ public:
 	virtual        ~DelayLineFracFir4 () = default;
 
 	void           set_sample_freq (float sample_freq);
-	inline float   get_sample_freq () const;
+	inline float   get_sample_freq () const noexcept;
 	void           set_max_time (float freq);
-	inline float   get_max_time () const;
-	inline float   get_min_time () const;
-	void           set_time (float per);
-	inline float   get_time () const;
+	inline float   get_max_time () const noexcept;
+	inline float   get_min_time () const noexcept;
+	void           set_time (float per) noexcept;
+	inline float   get_time () const noexcept;
 	inline InterpolatorMaker &
-	               use_interpolator_maker ();
+	               use_interpolator_maker () noexcept;
 	inline const InterpolatorMaker &
-	               use_interpolator_maker () const;
+	               use_interpolator_maker () const noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float sample);
-	void           process_block (float dest_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block_vt (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time);
-	void           process_block_vt_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time);
+	               process_sample (float sample) noexcept;
+	void           process_block (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           process_block_vt (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time) noexcept;
+	void           process_block_vt_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_time) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -105,12 +105,12 @@ protected:
 private:
 
 	void           update_buffer ();
-	void           update_period ();
+	void           update_period () noexcept;
 	fstb_FORCEINLINE void
-	               update_interpolator ();
-	inline float	init_variable_time (int nbr_spl, float final_time);
+	               update_interpolator () noexcept;
+	inline float	init_variable_time (int nbr_spl, float final_time) noexcept;
 	fstb_FORCEINLINE float
-	               iterate_variable_time (float period_step, float sample);
+	               iterate_variable_time (float period_step, float sample) noexcept;
 
 	std::array <float, 4>         // Base
 	               _interp_fir;

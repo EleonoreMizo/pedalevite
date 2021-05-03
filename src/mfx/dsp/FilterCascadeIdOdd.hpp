@@ -38,7 +38,7 @@ namespace dsp
 
 
 template <typename F1P, typename F2P, int NBR>
-F1P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter ()
+F1P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter () noexcept
 {
 	return _odd;
 }
@@ -46,7 +46,7 @@ F1P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter ()
 
 
 template <typename F1P, typename F2P, int NBR>
-const F1P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter () const
+const F1P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter () const noexcept
 {
 	return _odd;
 }
@@ -54,7 +54,7 @@ const F1P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter () const
 
 
 template <typename F1P, typename F2P, int NBR>
-F2P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter (int unit)
+F2P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter (int unit) noexcept
 {
 	return _even.use_filter (unit);
 }
@@ -62,7 +62,7 @@ F2P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter (int unit)
 
 
 template <typename F1P, typename F2P, int NBR>
-const F2P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter (int unit) const
+const F2P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter (int unit) const noexcept
 {
 	return _even.use_filter (unit);
 }
@@ -70,7 +70,7 @@ const F2P &	FilterCascadeIdOdd <F1P, F2P, NBR>::use_filter (int unit) const
 
 
 template <typename F1P, typename F2P, int NBR>
-float	FilterCascadeIdOdd <F1P, F2P, NBR>::process_sample (float x)
+float	FilterCascadeIdOdd <F1P, F2P, NBR>::process_sample (float x) noexcept
 {
 	x = _even.process_sample (x);
 	x = _odd.process_sample (x);
@@ -81,7 +81,7 @@ float	FilterCascadeIdOdd <F1P, F2P, NBR>::process_sample (float x)
 
 
 template <typename F1P, typename F2P, int NBR>
-void	FilterCascadeIdOdd <F1P, F2P, NBR>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	FilterCascadeIdOdd <F1P, F2P, NBR>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -94,7 +94,7 @@ void	FilterCascadeIdOdd <F1P, F2P, NBR>::process_block (float dst_ptr [], const 
 
 
 template <typename F1P, typename F2P, int NBR>
-void	FilterCascadeIdOdd <F1P, F2P, NBR>::clear_buffers ()
+void	FilterCascadeIdOdd <F1P, F2P, NBR>::clear_buffers () noexcept
 {
 	_even.clear_buffers ();
 	_odd.clear_buffers ();

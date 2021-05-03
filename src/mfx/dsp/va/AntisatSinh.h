@@ -44,9 +44,9 @@ class AntisatSinh
 public:
 
 	static fstb_FORCEINLINE void
-	               eval (float &y, float &dy, float x);
+	               eval (float &y, float &dy, float x) noexcept;
 	static fstb_FORCEINLINE float
-	               eval_inv (float y);
+	               eval_inv (float y) noexcept;
 
 
 
@@ -61,9 +61,9 @@ protected:
 private:
 
 	static fstb_FORCEINLINE float
-	               sinh_fast (float x);
+	               sinh_fast (float x) noexcept;
 	static fstb_FORCEINLINE float
-	               asinh_fast (float x);
+	               asinh_fast (float x) noexcept;
 
 
 

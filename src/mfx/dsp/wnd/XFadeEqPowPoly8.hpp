@@ -40,7 +40,7 @@ namespace wnd
 
 
 template <typename T>
-std::array <T, 2>	XFadeEqAmpPoly3::compute_gain (T x)
+std::array <T, 2>	XFadeEqAmpPoly3::compute_gain (T x) noexcept
 {
 	assert (x >= T (0));
 	assert (x <= T (1));
@@ -58,7 +58,7 @@ std::array <T, 2>	XFadeEqAmpPoly3::compute_gain (T x)
 
 
 
-std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqAmpPoly3::compute_gain (fstb::ToolsSimd::VectF32 x)
+std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqAmpPoly3::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept
 {
 	using TS = fstb::ToolsSimd;
 

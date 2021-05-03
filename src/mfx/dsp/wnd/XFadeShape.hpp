@@ -76,7 +76,7 @@ void	XFadeShape <SHP>::set_sample_freq (double sample_freq)
 
 
 template <typename SHP>
-bool	XFadeShape <SHP>::is_ready () const
+bool	XFadeShape <SHP>::is_ready () const noexcept
 {
 	return (_sample_freq > 0);
 }
@@ -84,7 +84,7 @@ bool	XFadeShape <SHP>::is_ready () const
 
 
 template <typename SHP>
-int	XFadeShape <SHP>::get_len () const
+int	XFadeShape <SHP>::get_len () const noexcept
 {
 	assert (_len > 0);
 
@@ -94,7 +94,7 @@ int	XFadeShape <SHP>::get_len () const
 
 
 template <typename SHP>
-const float *	XFadeShape <SHP>::use_shape () const
+const float *	XFadeShape <SHP>::use_shape () const noexcept
 {
 	assert (_len > 0);
 

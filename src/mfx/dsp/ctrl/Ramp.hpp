@@ -40,7 +40,7 @@ namespace ctrl
 
 
 
-constexpr Ramp::Ramp (float x)
+constexpr Ramp::Ramp (float x) noexcept
 :	_val_beg (x)
 ,	_val_end (x)
 ,	_val_tgt (x)
@@ -50,7 +50,7 @@ constexpr Ramp::Ramp (float x)
 
 
 
-void	Ramp::set_time (int nbr_spl, float time_step)
+void	Ramp::set_time (int nbr_spl, float time_step) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (time_step > 0);
@@ -69,7 +69,7 @@ void	Ramp::set_time (int nbr_spl, float time_step)
 
 
 
-void	Ramp::set_val (float x)
+void	Ramp::set_val (float x) noexcept
 {
 	_val_tgt  = x;
 	_step     = (x - _val_end) * _time_step;
@@ -78,7 +78,7 @@ void	Ramp::set_val (float x)
 
 
 
-void	Ramp::clear_buffers ()
+void	Ramp::clear_buffers () noexcept
 {
 	_val_beg  = _val_tgt;
 	_val_end  = _val_tgt;
@@ -88,7 +88,7 @@ void	Ramp::clear_buffers ()
 
 
 
-void	Ramp::tick (int nbr_spl)
+void	Ramp::tick (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -108,42 +108,42 @@ void	Ramp::tick (int nbr_spl)
 
 
 
-float	Ramp::get_beg () const
+float	Ramp::get_beg () const noexcept
 {
 	return _val_beg;
 }
 
 
 
-float	Ramp::get_end () const
+float	Ramp::get_end () const noexcept
 {
 	return _val_end;
 }
 
 
 
-float	Ramp::get_tgt () const
+float	Ramp::get_tgt () const noexcept
 {
 	return _val_tgt;
 }
 
 
 
-bool	Ramp::is_ramping () const
+bool	Ramp::is_ramping () const noexcept
 {
 	return (_ramp_pos > 0);
 }
 
 
 
-float	Ramp::get_step () const
+float	Ramp::get_step () const noexcept
 {
 	return _step;
 }
 
 
 
-int	Ramp::get_rem_len () const
+int	Ramp::get_rem_len () const noexcept
 {
 	return _ramp_pos;
 }

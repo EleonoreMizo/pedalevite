@@ -80,33 +80,33 @@ public:
 	void           set_apd_max_delay (int idx, int len);
 
 	fstb_FORCEINLINE void
-	               set_delay (int len);
+	               set_delay (int len) noexcept;
 
 	fstb_FORCEINLINE void
-	               set_apd_delay_flt (int idx, float len_spl);
+	               set_apd_delay_flt (int idx, float len_spl) noexcept;
 	fstb_FORCEINLINE void
-	               set_apd_coef (int idx, float coef);
+	               set_apd_coef (int idx, float coef) noexcept;
 
 	fstb_FORCEINLINE void
-	               set_filter_coefs (float g0, float g1, float g2);
+	               set_filter_coefs (float g0, float g1, float g2) noexcept;
 	fstb_FORCEINLINE void
-	               set_filter_mix (float v0m, float v1m, float v2m);
+	               set_filter_mix (float v0m, float v1m, float v2m) noexcept;
 
 	fstb_FORCEINLINE float
-	               process_sample (float x);
+	               process_sample (float x) noexcept;
 	fstb_FORCEINLINE float
-	               read_apd (int idx, int delay) const;
+	               read_apd (int idx, int delay) const noexcept;
 	fstb_FORCEINLINE float
-	               read_delay (int delay) const;
+	               read_delay (int delay) const noexcept;
 
 	fstb_FORCEINLINE int
-	               compute_max_block_len () const;
-	inline void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	inline void    process_block_var_dly (float dst_ptr [], const float src_ptr [], const int32_t * const * dly_frc_arr_ptr, int nbr_spl);
-	inline void    read_apd_block (float dst_ptr [], int idx, int delay, int nbr_spl) const;
-	inline void    read_delay_block (float dst_ptr [], int delay, int nbr_spl) const;
+	               compute_max_block_len () const noexcept;
+	inline void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	inline void    process_block_var_dly (float dst_ptr [], const float src_ptr [], const int32_t * const * dly_frc_arr_ptr, int nbr_spl) noexcept;
+	inline void    read_apd_block (float dst_ptr [], int idx, int delay, int nbr_spl) const noexcept;
+	inline void    read_delay_block (float dst_ptr [], int delay, int nbr_spl) const noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

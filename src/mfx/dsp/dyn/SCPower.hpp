@@ -41,7 +41,7 @@ namespace dyn
 
 
 template <class AP>
-typename SCPower <AP>::AddProc &	SCPower <AP>::use_add_proc ()
+typename SCPower <AP>::AddProc &	SCPower <AP>::use_add_proc () noexcept
 {
 	return _add_proc;
 }
@@ -53,7 +53,7 @@ typename SCPower <AP>::AddProc &	SCPower <AP>::use_add_proc ()
 // The pos_beg position in the input buffer corresponds to the 0 position in
 // the output buffer.
 template <class AP>
-void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end)
+void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end) noexcept
 {
 	assert (fstb::DataAlign <true>::check_ptr (out_ptr));
 	assert (chn_ptr_arr != nullptr);
@@ -87,7 +87,7 @@ void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_
 
 
 template <class AP>
-void	SCPower <AP>::prepare_env_input_1chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end)
+void	SCPower <AP>::prepare_env_input_1chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	static const float   not_zero_flt = 1e-30f;  // -600 dB
 
@@ -145,7 +145,7 @@ void	SCPower <AP>::prepare_env_input_1chn (float out_ptr [], const float * const
 
 
 template <class AP>
-void	SCPower <AP>::prepare_env_input_2chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end)
+void	SCPower <AP>::prepare_env_input_2chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end) noexcept
 {
 	static const float   not_zero_flt = 1e-30f;  // -600 dB
 
@@ -215,7 +215,7 @@ void	SCPower <AP>::prepare_env_input_2chn (float out_ptr [], const float * const
 
 
 template <class AP>
-void	SCPower <AP>::prepare_env_input_nchn (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end)
+void	SCPower <AP>::prepare_env_input_nchn (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end) noexcept
 {
 	static const float   not_zero_flt = 1e-30f;  // -600 dB
 

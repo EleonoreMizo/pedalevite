@@ -52,12 +52,12 @@ class PartBjt
 
 public:
 
-	explicit       PartBjt (IdNode nid_e, IdNode nid_b, IdNode nid_c, bool pnp_flag, Flt is, Flt beta_f, Flt beta_r);
+	explicit       PartBjt (IdNode nid_e, IdNode nid_b, IdNode nid_c, bool pnp_flag, Flt is, Flt beta_f, Flt beta_r) noexcept;
 	virtual        ~PartBjt () = default;
 
-	void           set_is (Flt is);
-	void           set_beta_f (Flt beta);
-	void           set_beta_r (Flt beta);
+	void           set_is (Flt is) noexcept;
+	void           set_beta_f (Flt beta) noexcept;
+	void           set_beta_r (Flt beta) noexcept;
 
 
 
@@ -68,9 +68,9 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix (int it_cnt) final;
-	void           do_step () final;
-	void           do_clear_buffers () final;
+	void           do_add_to_matrix (int it_cnt) noexcept final;
+	void           do_step () noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 
@@ -82,9 +82,9 @@ private:
 	typedef std::shared_ptr <PartCccs> CccsSPtr;
 
 	static constexpr Flt
-	               compute_alpha (Flt beta) { return beta / (1.f + beta); }
+	               compute_alpha (Flt beta) noexcept { return beta / (1.f + beta); }
 	static constexpr Flt
-	               compute_isx (Flt is, Flt alpha) { return is / alpha; }
+	               compute_isx (Flt is, Flt alpha) noexcept { return is / alpha; }
 
 	IdNode         _nid_e    = _nid_invalid;
 	IdNode         _nid_b    = _nid_invalid;

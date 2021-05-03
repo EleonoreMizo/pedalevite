@@ -45,7 +45,7 @@ class WsBreakBase
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		const double   f1 = tanh (x);
 		const double   f2 = x / (1 + fabs (x));

@@ -52,10 +52,10 @@ public:
 
 	template <typename T>
 	static inline std::array <T, 2>
-	               compute_gain (T x);
+	               compute_gain (T x) noexcept;
 
 	static inline std::array <fstb::ToolsSimd::VectF32, 2>
-	               compute_gain (fstb::ToolsSimd::VectF32 x);
+	               compute_gain (fstb::ToolsSimd::VectF32 x) noexcept;
 
 
 

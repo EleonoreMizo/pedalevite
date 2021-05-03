@@ -49,84 +49,84 @@ namespace lfo
 
 
 
-void	OscTri::do_set_sample_freq (double sample_freq)
+void	OscTri::do_set_sample_freq (double sample_freq) noexcept
 {
 	_phase_gen.set_sample_freq (sample_freq);
 }
 
 
 
-void	OscTri::do_set_period (double per)
+void	OscTri::do_set_period (double per) noexcept
 {
 	_phase_gen.set_period (per);
 }
 
 
 
-void	OscTri::do_set_phase (double phase)
+void	OscTri::do_set_phase (double phase) noexcept
 {
 	_phase_gen.set_phase (phase);
 }
 
 
 
-void	OscTri::do_set_chaos (double chaos)
+void	OscTri::do_set_chaos (double chaos) noexcept
 {
 	_phase_gen.set_chaos (chaos);
 }
 
 
 
-void	OscTri::do_set_phase_dist (double dist)
+void	OscTri::do_set_phase_dist (double dist) noexcept
 {
 	_phase_dist.set_phase_dist (dist);
 }
 
 
 
-void	OscTri::do_set_phase_dist_offset (double ofs)
+void	OscTri::do_set_phase_dist_offset (double ofs) noexcept
 {
 	_phase_dist.set_phase_dist_offset (ofs);
 }
 
 
 
-void	OscTri::do_set_sign (bool inv_flag)
+void	OscTri::do_set_sign (bool inv_flag) noexcept
 {
 	_inv_flag = inv_flag;
 }
 
 
 
-void	OscTri::do_set_polarity (bool unipolar_flag)
+void	OscTri::do_set_polarity (bool unipolar_flag) noexcept
 {
 	_unipolar_flag = unipolar_flag;
 }
 
 
 
-void	OscTri::do_set_variation (int /*param*/, double /*val*/)
+void	OscTri::do_set_variation (int /*param*/, double /*val*/) noexcept
 {
 	// Nothing
 }
 
 
 
-bool	OscTri::do_is_using_variation (int /*param*/) const
+bool	OscTri::do_is_using_variation (int /*param*/) const noexcept
 {
 	return false;
 }
 
 
 
-void	OscTri::do_tick (int nbr_spl)
+void	OscTri::do_tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 }
 
 
 
-double	OscTri::do_get_val () const
+double	OscTri::do_get_val () const noexcept
 {
 	double         val = _phase_dist.process_phase (_phase_gen.get_phase ());
 	val = fabs (val - 0.5f); // 0.5 ... 0 ... 0.5
@@ -145,14 +145,14 @@ double	OscTri::do_get_val () const
 
 
 
-double	OscTri::do_get_phase () const
+double	OscTri::do_get_phase () const noexcept
 {
 	return _phase_gen.get_phase ();
 }
 
 
 
-void	OscTri::do_clear_buffers ()
+void	OscTri::do_clear_buffers () noexcept
 {
 	_phase_gen.clear_buffers ();
 }

@@ -71,14 +71,14 @@ public:
 	typedef PP PreProcessor;
 
 	void           set_sample_freq (double sample_freq);
-	void           set_freq_bot (float f);
-	void           set_freq_top (float f);
-	PP &           use_postproc ();
-	const PP &     use_postproc () const;
-	void           set_analysis_period (int per);
-	void           clear_buffers ();
-	float          process_block (const float spl_ptr [], int nbr_spl);
-	float          process_sample (float x);
+	void           set_freq_bot (float f) noexcept;
+	void           set_freq_top (float f) noexcept;
+	PP &           use_postproc () noexcept;
+	const PP &     use_postproc () const noexcept;
+	void           set_analysis_period (int per) noexcept;
+	void           clear_buffers () noexcept;
+	float          process_block (const float spl_ptr [], int nbr_spl) noexcept;
+	float          process_sample (float x) noexcept;
 
 
 
@@ -110,14 +110,14 @@ private:
 	};
 	typedef std::vector <Delta, fstb::AllocAlign <Delta, 16> > DeltaArray;
 
-	void           update_freq_bot_param ();
-	void           update_freq_top_param ();
-	void           update_difference_functions ();
-	void           update_difference_functions_block (int nbr_spl);
-	void           check_sum_position ();
-	void           check_ana_position ();
-	void           analyse ();
-	float          get_cmndf (int delta) const;
+	void           update_freq_bot_param () noexcept;
+	void           update_freq_top_param () noexcept;
+	void           update_difference_functions () noexcept;
+	void           update_difference_functions_block (int nbr_spl) noexcept;
+	void           check_sum_position () noexcept;
+	void           check_ana_position () noexcept;
+	void           analyse () noexcept;
+	float          get_cmndf (int delta) const noexcept;
 
 	const float    _min_freq    = 20.0f; // Hz
 	const float    _threshold   = 0.1f; // From step 4: absolute theshold

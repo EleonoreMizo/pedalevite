@@ -54,7 +54,7 @@ class OscNPhase final
 
 public:
 
-	               OscNPhase (bool biphase_flag = false);
+	               OscNPhase (bool biphase_flag = false) noexcept;
 	               OscNPhase (const OscNPhase &other)  = default;
 	               OscNPhase (OscNPhase &&other     )  = default;
 	               ~OscNPhase ()                       = default;
@@ -69,20 +69,20 @@ public:
 protected:
 
 	// mfx::dsp::ctrl::lfo::OscInterface
-	void           do_set_sample_freq (double sample_freq) final;
-	void           do_set_period (double per) final;
-	void           do_set_phase (double phase) final;
-	void           do_set_chaos (double chaos) final;
-	void           do_set_phase_dist (double dist) final;
-	void           do_set_phase_dist_offset (double ofs) final;
-	void           do_set_sign (bool inv_flag) final;
-	void           do_set_polarity (bool unipolar_flag) final;
-	void           do_set_variation (int param, double val) final;
-	bool           do_is_using_variation (int param) const final;
-	void           do_tick (int nbr_spl) final;
-	double         do_get_val () const final;
-	double         do_get_phase () const final;
-	void           do_clear_buffers () final;
+	void           do_set_sample_freq (double sample_freq) noexcept final;
+	void           do_set_period (double per) noexcept final;
+	void           do_set_phase (double phase) noexcept final;
+	void           do_set_chaos (double chaos) noexcept final;
+	void           do_set_phase_dist (double dist) noexcept final;
+	void           do_set_phase_dist_offset (double ofs) noexcept final;
+	void           do_set_sign (bool inv_flag) noexcept final;
+	void           do_set_polarity (bool unipolar_flag) noexcept final;
+	void           do_set_variation (int param, double val) noexcept final;
+	bool           do_is_using_variation (int param) const noexcept final;
+	void           do_tick (int nbr_spl) noexcept final;
+	double         do_get_val () const noexcept final;
+	double         do_get_phase () const noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 
@@ -90,19 +90,19 @@ protected:
 
 private:
 
-	void				update_period ();
+	void				update_period () noexcept;
 
-	double         _sample_freq;		// Hz, > 0
-	double         _phase;				// [0 ; 1[
-	double         _step;
-	double         _k_phase;			// [0 ; _nc[
-	double         _k_step;
+	double         _sample_freq   = 44100; // Hz, > 0
+	double         _phase         = 0;     // [0 ; 1[
+	double         _step          = 0;
+	double         _k_phase       = 0;     // [0 ; _nc[
+	double         _k_step        = 0;
 	std::array <double, 2>
-	               _variation_arr;
-	double         _period;				// s, > 0
-	double         _inv_np;				// ]0 ; 1]
-	float          _nc;					// >= 1
-	int            _np;					// >= 1
+	               _variation_arr { 0, 0 };
+	double         _period        = 1;     // s, > 0
+	double         _inv_np        = 1;     // ]0 ; 1]
+	float          _nc            = 1;     // >= 1
+	int            _np            = 1;     // >= 1
 	PhaseDist      _phase_dist;
 	bool           _inv_flag      = false;
 	bool           _unipolar_flag = false;

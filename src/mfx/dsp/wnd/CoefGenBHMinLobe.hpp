@@ -41,7 +41,7 @@ namespace wnd
 
 
 
-double	CoefGenBHMinLobe::operator () (double pos) const
+double	CoefGenBHMinLobe::operator () (double pos) const noexcept
 {
 	const double   win_pos = pos * fstb::PI;
 	const double   win     =

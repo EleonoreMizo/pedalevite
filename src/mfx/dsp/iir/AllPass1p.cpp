@@ -57,7 +57,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -82,7 +82,7 @@ void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 
 
-void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float inc_b0)
+void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float inc_b0) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -108,7 +108,7 @@ void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 
 
-void	AllPass1p::clear_buffers ()
+void	AllPass1p::clear_buffers () noexcept
 {
 	_mem_x = 0;
 	_mem_y = 0;

@@ -71,7 +71,7 @@ void	RankSelL::set_len (int len, float x)
 
 
 
-void	RankSelL::set_rank (int rank)
+void	RankSelL::set_rank (int rank) noexcept
 {
 	assert (rank >= 0);
 	assert (rank < int (_node_list.size ()));
@@ -85,7 +85,7 @@ void	RankSelL::set_rank (int rank)
 
 
 
-void	RankSelL::fill (float x)
+void	RankSelL::fill (float x) noexcept
 {
 	const int      len = int (_node_list.size ());
 
@@ -120,7 +120,7 @@ void	RankSelL::fill (float x)
 
 
 
-float	RankSelL::process_sample (float x)
+float	RankSelL::process_sample (float x) noexcept
 {
 	insert_new_remove_old (x);
 
@@ -129,7 +129,7 @@ float	RankSelL::process_sample (float x)
 
 
 
-float	RankSelL::get_nth (int rank) const
+float	RankSelL::get_nth (int rank) const noexcept
 {
 	assert (rank >= 0);
 	assert (rank < int (_node_list.size ()));
@@ -153,7 +153,7 @@ float	RankSelL::get_nth (int rank) const
 
 
 
-void	RankSelL::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	RankSelL::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -167,7 +167,7 @@ void	RankSelL::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 
 
 
-void	RankSelL::clear_buffers ()
+void	RankSelL::clear_buffers () noexcept
 {
 	fill (0);
 }
@@ -184,7 +184,7 @@ void	RankSelL::clear_buffers ()
 
 // If the new value already exists in the list, it is always inserted before.
 // So when the value is removed, it is always the last from the set.
-void	RankSelL::insert_new_remove_old (float x)
+void	RankSelL::insert_new_remove_old (float x) noexcept
 {
 	const int      len = int (_node_list.size ());
 	if (len == 1)
@@ -327,7 +327,7 @@ void	RankSelL::insert_new_remove_old (float x)
 
 
 // We cannot assume _ni_rank is valid here.
-int	RankSelL::find_ni (int rank)
+int	RankSelL::find_ni (int rank) noexcept
 {
 	int            ni  = _nil;
 	const int      len = int (_node_list.size ());
@@ -360,7 +360,7 @@ int	RankSelL::find_ni (int rank)
 
 
 // Debugging stuff
-void	RankSelL::check_ok ()
+void	RankSelL::check_ok () noexcept
 {
 #if ! defined (NDEBUG)
 	const int      len = int (_node_list.size ());

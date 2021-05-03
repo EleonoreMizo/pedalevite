@@ -67,14 +67,14 @@ public:
 
 	template <typename T>
 	fstb_FORCEINLINE T
-	               operator () (T x)
+	               operator () (T x) noexcept
 	{
 		return process_sample (x);
 	}
 
 	template <typename T>
 	static fstb_FORCEINLINE T
-	               process_sample (T x)
+	               process_sample (T x) noexcept
 	{
 		const T        a    = T (A::num) / T (A::den);
 		const T        b    = T (B::num) / T (B::den);

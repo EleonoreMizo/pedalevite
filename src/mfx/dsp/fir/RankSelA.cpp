@@ -104,7 +104,7 @@ void	RankSelA::set_len (int len, float x)
 
 
 
-void	RankSelA::set_rank (int rank)
+void	RankSelA::set_rank (int rank) noexcept
 {
 	assert (rank >= 0);
 	assert (rank < int (_elt_arr.size ()));
@@ -114,7 +114,7 @@ void	RankSelA::set_rank (int rank)
 
 
 
-void	RankSelA::fill (float x)
+void	RankSelA::fill (float x) noexcept
 {
 	const int      len = int (_elt_arr.size ());
 	for (int pos = 0; pos < len; ++pos)
@@ -127,7 +127,7 @@ void	RankSelA::fill (float x)
 
 
 
-float	RankSelA::process_sample (float x)
+float	RankSelA::process_sample (float x) noexcept
 {
 	insert_new_remove_old (x);
 	check_index ();
@@ -137,7 +137,7 @@ float	RankSelA::process_sample (float x)
 
 
 
-float	RankSelA::get_nth (int rank) const
+float	RankSelA::get_nth (int rank) const noexcept
 {
 	assert (rank >= 0);
 	assert (rank < int (_elt_arr.size ()));
@@ -147,7 +147,7 @@ float	RankSelA::get_nth (int rank) const
 
 
 
-void	RankSelA::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	RankSelA::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -164,7 +164,7 @@ void	RankSelA::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 
 
 
-void	RankSelA::clear_buffers ()
+void	RankSelA::clear_buffers () noexcept
 {
 	_index_cur = 0;
 	fill (0);
@@ -180,7 +180,7 @@ void	RankSelA::clear_buffers ()
 
 
 
-void	RankSelA::insert_new_remove_old (float x)
+void	RankSelA::insert_new_remove_old (float x) noexcept
 {
 	const int      len      = int (_elt_arr.size ());
 	const int      del_idx  = _index_cur - len;
@@ -229,7 +229,7 @@ void	RankSelA::insert_new_remove_old (float x)
 
 
 
-void	RankSelA::check_index ()
+void	RankSelA::check_index () noexcept
 {
 	static const int  big_index = INT_MAX / 2;
 

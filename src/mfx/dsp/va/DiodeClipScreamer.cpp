@@ -46,7 +46,7 @@ namespace va
 
 
 
-void	DiodeClipScreamer::set_sample_freq (double sample_freq)
+void	DiodeClipScreamer::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -58,7 +58,7 @@ void	DiodeClipScreamer::set_sample_freq (double sample_freq)
 
 
 // Distortion potentiometer control
-void	DiodeClipScreamer::set_dist (float dist)
+void	DiodeClipScreamer::set_dist (float dist) noexcept
 {
 	assert (dist >= 0);
 	assert (dist <= 1);
@@ -70,7 +70,7 @@ void	DiodeClipScreamer::set_dist (float dist)
 
 
 // Approximative way to set the saturation level
-void	DiodeClipScreamer::set_sat_lvl (float lvl)
+void	DiodeClipScreamer::set_sat_lvl (float lvl) noexcept
 {
 	assert (lvl > 0);
 
@@ -80,7 +80,7 @@ void	DiodeClipScreamer::set_sat_lvl (float lvl)
 
 
 
-void	DiodeClipScreamer::set_input_hpf_capa (float c)
+void	DiodeClipScreamer::set_input_hpf_capa (float c) noexcept
 {
 	assert (c > 0);
 
@@ -90,14 +90,14 @@ void	DiodeClipScreamer::set_input_hpf_capa (float c)
 
 
 
-void	DiodeClipScreamer::set_input_hpf_freq (float f)
+void	DiodeClipScreamer::set_input_hpf_freq (float f) noexcept
 {
 	set_input_hpf_capa (1.0f / (float (2 * fstb::PI) * _rn * f));
 }
 
 
 
-void	DiodeClipScreamer::set_fdbk_hpf_capa (float c)
+void	DiodeClipScreamer::set_fdbk_hpf_capa (float c) noexcept
 {
 	assert (c > 0);
 
@@ -107,14 +107,14 @@ void	DiodeClipScreamer::set_fdbk_hpf_capa (float c)
 
 
 
-void	DiodeClipScreamer::set_fdbk_hpf_freq (float f)
+void	DiodeClipScreamer::set_fdbk_hpf_freq (float f) noexcept
 {
 	set_fdbk_hpf_capa (1.0f / (float (2 * fstb::PI) * _ri * f));
 }
 
 
 
-void	DiodeClipScreamer::set_fdbk_lpf_capa (float c)
+void	DiodeClipScreamer::set_fdbk_lpf_capa (float c) noexcept
 {
 	assert (c > 0);
 
@@ -124,7 +124,7 @@ void	DiodeClipScreamer::set_fdbk_lpf_capa (float c)
 
 
 
-void	DiodeClipScreamer::set_fdbk_lpf_freq (float f)
+void	DiodeClipScreamer::set_fdbk_lpf_freq (float f) noexcept
 {
 	set_fdbk_lpf_capa (1.0f / (float (2 * fstb::PI) * _rfmax * f));
 }
@@ -132,14 +132,14 @@ void	DiodeClipScreamer::set_fdbk_lpf_freq (float f)
 
 
 // Call this after a parameter change
-void	DiodeClipScreamer::update_eq ()
+void	DiodeClipScreamer::update_eq () noexcept
 {
 	update_internal_coef ();
 }
 
 
 
-float	DiodeClipScreamer::process_sample (float x)
+float	DiodeClipScreamer::process_sample (float x) noexcept
 {
 	assert (! _dirty_flag);
 
@@ -183,7 +183,7 @@ float	DiodeClipScreamer::process_sample (float x)
 
 
 
-void	DiodeClipScreamer::clear_buffers ()
+void	DiodeClipScreamer::clear_buffers () noexcept
 {
 	_wcn_s = 0;
 	_wci_s = 0;
@@ -200,7 +200,7 @@ void	DiodeClipScreamer::clear_buffers ()
 
 
 
-void	DiodeClipScreamer::update_internal_coef ()
+void	DiodeClipScreamer::update_internal_coef () noexcept
 {
 	if (_dirty_flag)
 	{

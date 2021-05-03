@@ -53,7 +53,7 @@ mu == 0: side lobes are flat
 */
 
 template <class T>
-void	Ultraspherical <T>::set_mu (double mu)
+void	Ultraspherical <T>::set_mu (double mu) noexcept
 {
 	_mu = mu;
 }
@@ -61,7 +61,7 @@ void	Ultraspherical <T>::set_mu (double mu)
 
 
 template <class T>
-void	Ultraspherical <T>::set_x_mu (double x_mu)
+void	Ultraspherical <T>::set_x_mu (double x_mu) noexcept
 {
 	_x_mu = x_mu;
 }
@@ -71,7 +71,7 @@ void	Ultraspherical <T>::set_x_mu (double x_mu)
 // w = null-to-null half width, in rad/s
 // Integer negative mu will cause calculation issues.
 template <class T>
-double	Ultraspherical <T>::compute_x_mu_for_prescribed_null_to_null_width (int len, double mu, double w)
+double	Ultraspherical <T>::compute_x_mu_for_prescribed_null_to_null_width (int len, double mu, double w) noexcept
 {
 	assert (len >= 3);
 	assert (mu >= 0 || mu != fstb::round (mu));
@@ -91,7 +91,7 @@ double	Ultraspherical <T>::compute_x_mu_for_prescribed_null_to_null_width (int l
 // w = main lobe half width, in rad/s
 // Integer negative mu will cause calculation issues.
 template <class T>
-double	Ultraspherical <T>::compute_x_mu_for_prescribed_main_lobe_width (int len, double mu, double w)
+double	Ultraspherical <T>::compute_x_mu_for_prescribed_main_lobe_width (int len, double mu, double w) noexcept
 {
 	assert (len >= 3);
 	assert (mu >= 0 || mu != fstb::round (mu));
@@ -114,7 +114,7 @@ double	Ultraspherical <T>::compute_x_mu_for_prescribed_main_lobe_width (int len,
 // r = ripple ratio (max_side_lobe_amp / main_lobe_amp)
 // Integer negative mu will cause calculation issues.
 template <class T>
-double	Ultraspherical <T>::compute_x_mu_for_prescribed_ripple_ratio (int len, double mu, double r)
+double	Ultraspherical <T>::compute_x_mu_for_prescribed_ripple_ratio (int len, double mu, double r) noexcept
 {
 	assert (len >= 3);
 	assert (mu >= 0 || mu != fstb::round (mu));
@@ -142,14 +142,6 @@ double	Ultraspherical <T>::compute_x_mu_for_prescribed_ripple_ratio (int len, do
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-template <class T>
-constexpr double	Ultraspherical <T>::msgn (double x)
-{
-	return (x < 0) ? -1 : 1;
-}
 
 
 
@@ -214,7 +206,15 @@ void	Ultraspherical <T>::do_make_win (T data_ptr [], int len)
 
 
 template <class T>
-double	Ultraspherical <T>::compute_t (int n, double x)
+constexpr double	Ultraspherical <T>::msgn (double x) noexcept
+{
+	return (x < 0) ? -1 : 1;
+}
+
+
+
+template <class T>
+double	Ultraspherical <T>::compute_t (int n, double x) noexcept
 {
 	assert (n >= 0);
 
@@ -228,7 +228,7 @@ double	Ultraspherical <T>::compute_t (int n, double x)
 
 
 template <class T>
-void	Ultraspherical <T>::compute_t (double &t_n, double &t_n_m_1, int n, double x)
+void	Ultraspherical <T>::compute_t (double &t_n, double &t_n_m_1, int n, double x) noexcept
 {
 	assert (n >= 0);
 
@@ -253,7 +253,7 @@ void	Ultraspherical <T>::compute_t (double &t_n, double &t_n_m_1, int n, double 
 
 
 template <class T>
-double	Ultraspherical <T>::compute_c (int n, double mu, double x)
+double	Ultraspherical <T>::compute_c (int n, double mu, double x) noexcept
 {
 	assert (n >= 0);
 
@@ -267,7 +267,7 @@ double	Ultraspherical <T>::compute_c (int n, double mu, double x)
 
 
 template <class T>
-void	Ultraspherical <T>::compute_c (double &c_n, double &c_n_m_1, int n, double mu, double x)
+void	Ultraspherical <T>::compute_c (double &c_n, double &c_n_m_1, int n, double mu, double x) noexcept
 {
 	assert (n >= 0);
 
@@ -298,7 +298,7 @@ void	Ultraspherical <T>::compute_c (double &c_n, double &c_n_m_1, int n, double 
 
 
 template <class T>
-double	Ultraspherical <T>::compute_a (int len, double mu, double epsilon)
+double	Ultraspherical <T>::compute_a (int len, double mu, double epsilon) noexcept
 {
 	return compute_v (len, mu, epsilon, 1);
 }
@@ -306,7 +306,7 @@ double	Ultraspherical <T>::compute_a (int len, double mu, double epsilon)
 
 
 template <class T>
-double	Ultraspherical <T>::compute_b (int len, double mu, double epsilon)
+double	Ultraspherical <T>::compute_b (int len, double mu, double epsilon) noexcept
 {
 	const int      l = (len - 2 + 1) / 2;
 
@@ -316,7 +316,7 @@ double	Ultraspherical <T>::compute_b (int len, double mu, double epsilon)
 
 
 template <class T>
-double	Ultraspherical <T>::compute_v (int len, double mu, double epsilon, int l)
+double	Ultraspherical <T>::compute_v (int len, double mu, double epsilon, int l) noexcept
 {
 	assert (len >= 3);
 	assert (epsilon > 0);
@@ -335,7 +335,7 @@ double	Ultraspherical <T>::compute_v (int len, double mu, double epsilon, int l)
 // r > 0 indicates a modification of the starting point for the prescribed
 // ripple ratio mode.
 template <class T>
-double	Ultraspherical <T>::compute_zero_of_c (int n, int l, double mu, double param, double epsilon, double r)
+double	Ultraspherical <T>::compute_zero_of_c (int n, int l, double mu, double param, double epsilon, double r) noexcept
 {
 	assert (n >= 1);
 	assert (l >= 1);

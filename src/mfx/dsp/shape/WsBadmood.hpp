@@ -41,7 +41,7 @@ namespace shape
 
 
 
-float	WsBadmood::process_sample (float x)
+float	WsBadmood::process_sample (float x) noexcept
 {
 	Combo          c;
 	c._f = x;
@@ -69,7 +69,7 @@ float	WsBadmood::process_sample (float x)
 
 
 template <typename VD, typename VS>
-void  WsBadmood::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void  WsBadmood::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

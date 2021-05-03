@@ -87,31 +87,33 @@ public:
 	static const int  UNROLL_PRE  = ParamType::UNROLL_PRE;
 	static const int  UNROLL_POST = ParamType::UNROLL_POST;
 
-	               SampleData ();
+	               SampleData () noexcept;
 	               ~SampleData ()                       = default;
 	               SampleData (const SampleData &other) = default;
+	               SampleData (SampleData &&other)      = default;
 	SampleData &   operator = (const SampleData &other) = default;
+	SampleData &   operator = (SampleData &&other)      = default;
 
-	bool           is_valid () const;
+	bool           is_valid () const noexcept;
 
-	void           set_main_info (int len);
-	void           set_table_base_address (int table, DataType *data_ptr);
-	inline void    set_sample (int table, int pos, DataType val);
+	void           set_main_info (int len) noexcept;
+	void           set_table_base_address (int table, DataType *data_ptr) noexcept;
+	inline void    set_sample (int table, int pos, DataType val) noexcept;
 	fstb_FORCEINLINE DataType
-	               get_sample (int table, int pos) const;
+	               get_sample (int table, int pos) const noexcept;
 	inline DataType *
-	               use_table (int table);
+	               use_table (int table) noexcept;
 	inline const DataType *
-	               use_table (int table) const;
+	               use_table (int table) const noexcept;
 
-	inline int     get_nbr_tables () const;
-	inline int     get_table_len (int table) const;
-	inline int     get_unrolled_table_len (int table) const;
+	inline int     get_nbr_tables () const noexcept;
+	inline int     get_table_len (int table) const noexcept;
+	inline int     get_unrolled_table_len (int table) const noexcept;
 
 	static fstb_FORCEINLINE void
-	               convert_position (fstb::FixedPoint &table_pos, const fstb::FixedPoint &abs_pos, int table);
+	               convert_position (fstb::FixedPoint &table_pos, const fstb::FixedPoint &abs_pos, int table) noexcept;
 	static fstb_FORCEINLINE void
-	               convert_position (fstb::FixedPoint &pos, int table);
+	               convert_position (fstb::FixedPoint &pos, int table) noexcept;
 
 
 

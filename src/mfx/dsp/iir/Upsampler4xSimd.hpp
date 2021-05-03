@@ -40,7 +40,7 @@ namespace iir
 
 
 template <int NC42, int NC21>
-void	Upsampler4xSimd <NC42, NC21>::set_coefs (const double coef_42 [NC42], const double coef_21 [NC21])
+void	Upsampler4xSimd <NC42, NC21>::set_coefs (const double coef_42 [NC42], const double coef_21 [NC21]) noexcept
 {
 	_us_42.set_coefs (coef_42);
 	_us_21.set_coefs (coef_21);
@@ -49,7 +49,7 @@ void	Upsampler4xSimd <NC42, NC21>::set_coefs (const double coef_42 [NC42], const
 
 
 template <int NC42, int NC21>
-void	Upsampler4xSimd <NC42, NC21>::process_sample (float dst_ptr [4], float src)
+void	Upsampler4xSimd <NC42, NC21>::process_sample (float dst_ptr [4], float src) noexcept
 {
 	assert (dst_ptr != nullptr);
 
@@ -62,7 +62,7 @@ void	Upsampler4xSimd <NC42, NC21>::process_sample (float dst_ptr [4], float src)
 
 
 template <int NC42, int NC21>
-void	Upsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Upsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -77,7 +77,7 @@ void	Upsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const float 
 
 
 template <int NC42, int NC21>
-void	Upsampler4xSimd <NC42, NC21>::process_sample_2x (float dst_ptr [2], float src)
+void	Upsampler4xSimd <NC42, NC21>::process_sample_2x (float dst_ptr [2], float src) noexcept
 {
 	assert (dst_ptr != nullptr);
 
@@ -87,7 +87,7 @@ void	Upsampler4xSimd <NC42, NC21>::process_sample_2x (float dst_ptr [2], float s
 
 
 template <int NC42, int NC21>
-void	Upsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Upsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -99,7 +99,7 @@ void	Upsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const flo
 
 
 template <int NC42, int NC21>
-void	Upsampler4xSimd <NC42, NC21>::clear_buffers ()
+void	Upsampler4xSimd <NC42, NC21>::clear_buffers () noexcept
 {
 	_us_21.clear_buffers ();
 	_us_42.clear_buffers ();

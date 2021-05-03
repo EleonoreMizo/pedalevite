@@ -60,45 +60,45 @@ public:
 	typedef	Biquad4SimdData::VectFloat4	VectFlt4;
 
 	               Biquad4SimdMorph () = default;
-	               Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other);
-	               Biquad4SimdMorph (Biquad4SimdMorph <VD, VS, VP> &&other);
+	               Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other) noexcept;
+	               Biquad4SimdMorph (Biquad4SimdMorph <VD, VS, VP> &&other) noexcept;
 
 	               ~Biquad4SimdMorph () = default;
 
 	Biquad4SimdMorph <VD, VS, VP> &
-	               operator = (const Biquad4SimdMorph <VD, VS, VP> &other);
+	               operator = (const Biquad4SimdMorph <VD, VS, VP> &other) noexcept;
 	Biquad4SimdMorph <VD, VS, VP> &
-	               operator = (Biquad4SimdMorph <VD, VS, VP> &&other);
+	               operator = (Biquad4SimdMorph <VD, VS, VP> &&other) noexcept;
 
-	void           copy_vectors (const Biquad4SimdMorph <VD, VS, VP> &other);
+	void           copy_vectors (const Biquad4SimdMorph <VD, VS, VP> &other) noexcept;
 
-	void           set_ramp_time (int nbr_spl);
-	inline int     get_ramp_time () const;
+	void           set_ramp_time (int nbr_spl) noexcept;
+	inline int     get_ramp_time () const noexcept;
 
-	void           set_z_eq (const VectFlt4 b [3], const VectFlt4 a [3], bool ramp_flag = false);
-	void           set_z_eq_same (const float b [3], const float a [3], bool ramp_flag = false);
-	void           set_z_eq_one (int biq, const float b [3], const float a [3], bool ramp_flag = false);
-	void           neutralise (bool ramp_flag = false);
-	void           neutralise_one (int biq, bool ramp_flag = false);
+	void           set_z_eq (const VectFlt4 b [3], const VectFlt4 a [3], bool ramp_flag = false) noexcept;
+	void           set_z_eq_same (const float b [3], const float a [3], bool ramp_flag = false) noexcept;
+	void           set_z_eq_one (int biq, const float b [3], const float a [3], bool ramp_flag = false) noexcept;
+	void           neutralise (bool ramp_flag = false) noexcept;
+	void           neutralise_one (int biq, bool ramp_flag = false) noexcept;
 
-	void           get_z_eq (VectFlt4 b [3], VectFlt4 a [3]) const;
-	void           get_z_eq_one (int biq, float b [3], float a [3]) const;
-	void           get_z_eq_one_ramp (int biq, float b [3], float a [3]) const;
-	void           get_z_eq_one_final (int biq, float b [3], float a [3]) const;
+	void           get_z_eq (VectFlt4 b [3], VectFlt4 a [3]) const noexcept;
+	void           get_z_eq_one (int biq, float b [3], float a [3]) const noexcept;
+	void           get_z_eq_one_ramp (int biq, float b [3], float a [3]) const noexcept;
+	void           get_z_eq_one_final (int biq, float b [3], float a [3]) const noexcept;
 
-	void           set_state_one (int biq, float const mem_x [2], const float mem_y [2]);
-	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const;
+	void           set_state_one (int biq, float const mem_x [2], const float mem_y [2]) noexcept;
+	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const noexcept;
 
-	inline bool    is_ramping () const;
-	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl);
-	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl);
-	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void           process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
+	inline bool    is_ramping () const noexcept;
+	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
+	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	void           process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
-	void           clear_buffers_one (int biq);
+	void           clear_buffers () noexcept;
+	void           clear_buffers_one (int biq) noexcept;
 
 
 
@@ -112,7 +112,7 @@ protected:
 
 private:
 
-	void           handle_ramp_post (int nbr_spl);
+	void           handle_ramp_post (int nbr_spl) noexcept;
 
 	BiqSimd        _biq;
 

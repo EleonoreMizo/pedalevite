@@ -44,13 +44,13 @@ class WsTanhFastPade
 public:
 
 	template <typename T>
-	fstb_FORCEINLINE T operator () (T x)
+	fstb_FORCEINLINE T operator () (T x) noexcept
 	{
 		return process_sample (x);
 	}
 
 	template <typename T>
-	static fstb_FORCEINLINE T process_sample (T x)
+	static fstb_FORCEINLINE T process_sample (T x) noexcept
 	{
 		// PadeApproximant [Tanh[x],{x,0,{7,7}}]
 		// (x^7 + 378x^5 + 17325x^3 + 135135x) / (28x^6 + 3150x^4 + 62370x^2 + 135135)

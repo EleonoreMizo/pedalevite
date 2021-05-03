@@ -39,7 +39,7 @@ namespace nz
 
 
 
-float	WhiteAccurate::process_sample ()
+float	WhiteAccurate::process_sample () noexcept
 {
 	return gen_new_val ();
 }
@@ -54,7 +54,7 @@ float	WhiteAccurate::process_sample ()
 
 
 
-float	WhiteAccurate::gen_new_val ()
+float	WhiteAccurate::gen_new_val () noexcept
 {
    const uint32_t val_raw = fstb::Hash::hash (_idx);
    const int32_t  val_sgn = int32_t (val_raw);

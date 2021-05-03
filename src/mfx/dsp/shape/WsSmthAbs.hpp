@@ -44,7 +44,7 @@ namespace shape
 
 template <typename A>
 template <typename T>
-T	WsSmthAbs <A>::operator () (T x)
+T	WsSmthAbs <A>::operator () (T x) noexcept
 {
 	return process_sample (x);
 }
@@ -53,7 +53,7 @@ T	WsSmthAbs <A>::operator () (T x)
 
 template <typename A>
 template <typename T>
-T	WsSmthAbs <A>::process_sample (T x)
+T	WsSmthAbs <A>::process_sample (T x) noexcept
 {
 	const T        a     = T (A::num) / T (A::den);
 	const T        a_inv = T (A::den) / T (A::num);
@@ -74,7 +74,7 @@ T	WsSmthAbs <A>::process_sample (T x)
 
 template <typename A>
 template <typename VD, typename VS>
-void  WsSmthAbs <A>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void  WsSmthAbs <A>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));

@@ -58,28 +58,28 @@ void	InterpolatorHermite43Simd::do_set_ovrspl_l2 (int ovrspl_l2)
 
 
 
-int	InterpolatorHermite43Simd::do_get_impulse_len () const
+int	InterpolatorHermite43Simd::do_get_impulse_len () const noexcept
 {
 	return IMPULSE_LEN;
 }
 
 
 
-fstb::FixedPoint	InterpolatorHermite43Simd::do_get_group_delay () const
+fstb::FixedPoint	InterpolatorHermite43Simd::do_get_group_delay () const noexcept
 {
 	return fstb::FixedPoint (1, 0);
 }
 
 
 
-void	InterpolatorHermite43Simd::do_start (int nbr_chn)
+void	InterpolatorHermite43Simd::do_start (int nbr_chn) noexcept
 {
 	_nbr_chn = nbr_chn;
 }
 
 
 
-int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept
 {
 	const auto     half = fstb::ToolsSimd::set1_f32 (0.5);
 
@@ -228,7 +228,7 @@ int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], 
 
 
 
-float	InterpolatorHermite43Simd::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+float	InterpolatorHermite43Simd::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) noexcept
 {
 	fstb::unused (rate);
 

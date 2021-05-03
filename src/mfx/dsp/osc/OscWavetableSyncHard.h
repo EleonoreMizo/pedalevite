@@ -99,42 +99,42 @@ public:
 
 	static const int  PITCH_FRAC_BITS = Oscillator::PITCH_FRAC_BITS;
 
-	Oscillator &   use_osc ();
+	Oscillator &   use_osc () noexcept;
 	const Oscillator &
-	               use_osc () const;
+	               use_osc () const noexcept;
 
-	void           set_wavetable (const WavetableDataType &wavetable);
+	void           set_wavetable (const WavetableDataType &wavetable) noexcept;
 	const WavetableDataType &
-	               use_wavetable () const;
+	               use_wavetable () const noexcept;
 
-	void           set_steptable (const AntialiasedStep &steptable);
+	void           set_steptable (const AntialiasedStep &steptable) noexcept;
 	const AntialiasedStep &
-	               use_steptable () const;
+	               use_steptable () const noexcept;
 
-	inline void    set_base_pitch (int32_t pitch);
-	inline int32_t get_base_pitch () const;
+	inline void    set_base_pitch (int32_t pitch) noexcept;
+	inline int32_t get_base_pitch () const noexcept;
 	fstb_FORCEINLINE void
-	               set_pitch (int32_t pitch);
-	inline int32_t get_pitch () const;
+	               set_pitch (int32_t pitch) noexcept;
+	inline int32_t get_pitch () const noexcept;
 	fstb_FORCEINLINE void
-	               set_pitch_slave (int32_t pitch);
-	inline int32_t get_pitch_slave () const;
+	               set_pitch_slave (int32_t pitch) noexcept;
+	inline int32_t get_pitch_slave () const noexcept;
 
-	void           reset_phase ();
-	void           set_phase (uint32_t phase);
+	void           reset_phase () noexcept;
+	void           set_phase (uint32_t phase) noexcept;
 	fstb_FORCEINLINE uint32_t
-	               get_phase () const;
+	               get_phase () const noexcept;
 
-	inline void    set_sync_pos (uint32_t pos);
+	inline void    set_sync_pos (uint32_t pos) noexcept;
 	fstb_FORCEINLINE uint32_t
-	               get_sync_pos () const;
+	               get_sync_pos () const noexcept;
 
-	void           clear_buffers ();
-	DataType       process_sample ();
-	void           process_block (DataType dst_ptr [], int nbr_spl);
+	void           clear_buffers () noexcept;
+	DataType       process_sample () noexcept;
+	void           process_block (DataType dst_ptr [], int nbr_spl) noexcept;
 
 	// Convenience function
-	inline int32_t conv_freq_to_pitch (float freq, float fs) const;
+	inline int32_t conv_freq_to_pitch (float freq, float fs) const noexcept;
 
 
 
@@ -157,11 +157,11 @@ private:
 
 	typedef std::array <DataType, BUF_SIZE> Buffer;
 
-	DataType       generate_sample ();
-	void           generate_block (DataType dst_ptr [], int nbr_spl);
-	void           check_and_handle_sync_point ();
-	void           generate_step ();
-	void           add_step (DataType step_amp, uint32_t stns_neg);
+	DataType       generate_sample () noexcept;
+	void           generate_block (DataType dst_ptr [], int nbr_spl) noexcept;
+	void           check_and_handle_sync_point () noexcept;
+	void           generate_step () noexcept;
+	void           add_step (DataType step_amp, uint32_t stns_neg) noexcept;
 
 	// Waveform oscillator
 	Oscillator     _osc;

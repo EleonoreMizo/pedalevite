@@ -60,21 +60,21 @@ class Downsampler8xSimd
 
 public:
 
-	void           set_coefs (const double coef_84 [NC84], const double coef_42 [NC42], const double coef_21 [NC21]);
+	void           set_coefs (const double coef_84 [NC84], const double coef_42 [NC42], const double coef_21 [NC21]) noexcept;
 
-	inline float   process_sample (const float src_ptr [8]);
-	void           process_block (float data_ptr [], int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	inline float   process_sample (const float src_ptr [8]) noexcept;
+	void           process_block (float data_ptr [], int nbr_spl) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	inline float   process_sample_4x (const float src_ptr [4]);
-	void           process_block_4x (float data_ptr [], int nbr_spl);
-	void           process_block_4x (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	inline float   process_sample_4x (const float src_ptr [4]) noexcept;
+	void           process_block_4x (float data_ptr [], int nbr_spl) noexcept;
+	void           process_block_4x (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	inline float   process_sample_2x (const float src_ptr [2]);
-	void           process_block_2x (float data_ptr [], int nbr_spl);
-	void           process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	inline float   process_sample_2x (const float src_ptr [2]) noexcept;
+	void           process_block_2x (float data_ptr [], int nbr_spl) noexcept;
+	void           process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

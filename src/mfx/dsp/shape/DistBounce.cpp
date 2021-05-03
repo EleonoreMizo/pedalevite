@@ -43,7 +43,7 @@ namespace shape
 
 
 
-void	DistBounce::set_sample_freq (double sample_freq)
+void	DistBounce::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -57,7 +57,7 @@ void	DistBounce::set_sample_freq (double sample_freq)
 
 
 
-void	DistBounce::clear_buffers ()
+void	DistBounce::clear_buffers () noexcept
 {
 	_pos      = 0;
 	_speed    = 0;
@@ -66,7 +66,7 @@ void	DistBounce::clear_buffers ()
 
 
 
-void	DistBounce::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DistBounce::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);

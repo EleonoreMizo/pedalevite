@@ -70,8 +70,8 @@ public:
 	int            compute_coefs (CoefList &coef_list, int len, const RemezSpec &spec, Type type);
 	void           free_resources ();
 
-	static int     estimate_order (double ripple_db, double atten_db, double trans_band);
-	static double  compute_ripple_ratio (double ripple_db, double atten_db);
+	static int     estimate_order (double ripple_db, double atten_db, double trans_band) noexcept;
+	static double  compute_ripple_ratio (double ripple_db, double atten_db) noexcept;
 
 
 

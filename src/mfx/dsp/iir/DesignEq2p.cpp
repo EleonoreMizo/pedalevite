@@ -81,7 +81,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double q, double lvl, double f0, double fs)
+void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double q, double lvl, double f0, double fs) noexcept
 {
 	assert (bz != nullptr);
 	assert (az != nullptr);
@@ -138,7 +138,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double g0, double g, double gb, double w0, double dw)
+void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double g0, double g, double gb, double w0, double dw) noexcept
 {
 	assert (bz != nullptr);
 	assert (az != nullptr);
@@ -211,7 +211,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-std::complex <double>	DesignEq2p::compute_butter_pole (int order, int biq)
+std::complex <double>	DesignEq2p::compute_butter_pole (int order, int biq) noexcept
 {
 	assert (order >= 2);
 	assert (biq >= 0);
@@ -254,7 +254,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	DesignEq2p::compute_butter_coef_a1 (int order, int biq)
+double	DesignEq2p::compute_butter_coef_a1 (int order, int biq) noexcept
 {
 	assert (order >= 2);
 	assert (biq >= 0);
@@ -286,7 +286,7 @@ Throws: Nothing
 */
 
 // Odd order 1-pole coefficients are always 1.
-double	DesignEq2p::compute_thiele_coef_a1 (int order, int biq, double k)
+double	DesignEq2p::compute_thiele_coef_a1 (int order, int biq, double k) noexcept
 {
 	assert (order >= 3);
 	assert (order <= 8);

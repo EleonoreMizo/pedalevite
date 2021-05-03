@@ -49,7 +49,7 @@ namespace dyn
 // https://www.desmos.com/calculator/t46nefssqd
 // t is the 63 % rise time
 template <typename T>
-inline T	EnvHelper::compute_env_coef_simple (T t, T fs)
+inline constexpr T	EnvHelper::compute_env_coef_simple (T t, T fs) noexcept
 {
 	assert (fs > 0);
 	assert (t >= 0);
@@ -87,7 +87,7 @@ inline T	EnvHelper::compute_env_coef_simple (T t, T fs)
 // the input with { 0.5, 0.5 }
 // t is the 63 % rise time
 template <typename T>
-inline T	EnvHelper::compute_env_coef_w_zero (T t, T fs)
+inline constexpr T	EnvHelper::compute_env_coef_w_zero (T t, T fs) noexcept
 {
 	assert (fs > 0);
 	assert (t >= 0);
@@ -105,7 +105,7 @@ inline T	EnvHelper::compute_env_coef_w_zero (T t, T fs)
 // Computes a new time compensating the latency caused by filter orders > 1,
 // so the 90% rise time remains more or less constant.
 template <typename T>
-inline T	EnvHelper::compensate_order (T t, int ord)
+inline constexpr T	EnvHelper::compensate_order (T t, int ord) noexcept
 {
 	assert (ord >= 1);
 

@@ -55,11 +55,11 @@ public:
 		static const int  DATA_PRE  = 0;
 		static const int  DATA_POST = 0;
 		fstb_FORCEINLINE float
-		               operator () (float frac_pos, const float data []) const;
+		               operator () (float frac_pos, const float data []) const noexcept;
 		fstb_FORCEINLINE float
-		               operator () (uint32_t frac_pos, const float data []) const;
+		               operator () (uint32_t frac_pos, const float data []) const noexcept;
 		fstb_FORCEINLINE int32_t
-		               operator () (uint32_t frac_pos, const int16_t data []) const;
+		               operator () (uint32_t frac_pos, const int16_t data []) const noexcept;
 	};
 
 	class Linear
@@ -68,11 +68,11 @@ public:
 		static const int  DATA_PRE  = 0;
 		static const int  DATA_POST = 1;
 		fstb_FORCEINLINE float
-		               operator () (float frac_pos, const float data []) const;
+		               operator () (float frac_pos, const float data []) const noexcept;
 		fstb_FORCEINLINE float
-		               operator () (uint32_t frac_pos, const float data []) const;
+		               operator () (uint32_t frac_pos, const float data []) const noexcept;
 		fstb_FORCEINLINE int32_t
-		               operator () (uint32_t frac_pos, const int16_t data []) const;
+		               operator () (uint32_t frac_pos, const int16_t data []) const noexcept;
 	};
 
 	class CubicHermite
@@ -81,11 +81,11 @@ public:
 		static const int  DATA_PRE  = 1;
 		static const int  DATA_POST = 2;
 		fstb_FORCEINLINE float
-		               operator () (float frac_pos, const float data []) const;
+		               operator () (float frac_pos, const float data []) const noexcept;
 		fstb_FORCEINLINE float
-		               operator () (uint32_t frac_pos, const float data []) const;
+		               operator () (uint32_t frac_pos, const float data []) const noexcept;
 		fstb_FORCEINLINE int32_t
-		               operator () (uint32_t frac_pos, const int16_t data []) const;
+		               operator () (uint32_t frac_pos, const int16_t data []) const noexcept;
 	};
 
 	class CubicCatmullRom
@@ -94,9 +94,9 @@ public:
 		static const int  DATA_PRE  = 1;
 		static const int  DATA_POST = 2;
 		fstb_FORCEINLINE float
-		               operator () (float frac_pos, const float data []) const;
+		               operator () (float frac_pos, const float data []) const noexcept;
 		fstb_FORCEINLINE float
-		               operator () (uint32_t frac_pos, const float data []) const;
+		               operator () (uint32_t frac_pos, const float data []) const noexcept;
 	};
 
 

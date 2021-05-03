@@ -48,7 +48,7 @@ namespace dyn
 
 
 
-MeterRmsPeakHold::MeterRmsPeakHold ()
+MeterRmsPeakHold::MeterRmsPeakHold () noexcept
 :	_hold_time_s (2.0)
 ,	_attack_time_s (0.025)
 ,	_release_time_s (0.250)
@@ -67,7 +67,7 @@ MeterRmsPeakHold::MeterRmsPeakHold ()
 
 
 
-void	MeterRmsPeakHold::set_sample_freq (double freq)
+void	MeterRmsPeakHold::set_sample_freq (double freq) noexcept
 {
 	assert (freq > 0);
 
@@ -77,7 +77,7 @@ void	MeterRmsPeakHold::set_sample_freq (double freq)
 
 
 
-void	MeterRmsPeakHold::set_hold_time_s (double t)
+void	MeterRmsPeakHold::set_hold_time_s (double t) noexcept
 {
 	assert (t > 0);
 
@@ -87,7 +87,7 @@ void	MeterRmsPeakHold::set_hold_time_s (double t)
 
 
 
-void	MeterRmsPeakHold::set_attack_time_s (double t)
+void	MeterRmsPeakHold::set_attack_time_s (double t) noexcept
 {
 	assert (t > 0);
 
@@ -97,7 +97,7 @@ void	MeterRmsPeakHold::set_attack_time_s (double t)
 
 
 
-void	MeterRmsPeakHold::set_release_time_s (double t)
+void	MeterRmsPeakHold::set_release_time_s (double t) noexcept
 {
 	assert (t > 0);
 
@@ -107,7 +107,7 @@ void	MeterRmsPeakHold::set_release_time_s (double t)
 
 
 
-void	MeterRmsPeakHold::clear_buffers ()
+void	MeterRmsPeakHold::clear_buffers () noexcept
 {
 	_peak_max     = 0;
 	_peak_hold    = 0;
@@ -117,7 +117,7 @@ void	MeterRmsPeakHold::clear_buffers ()
 
 
 
-void	MeterRmsPeakHold::process_block (const float data_ptr [], int nbr_spl)
+void	MeterRmsPeakHold::process_block (const float data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -133,7 +133,7 @@ void	MeterRmsPeakHold::process_block (const float data_ptr [], int nbr_spl)
 
 
 
-void	MeterRmsPeakHold::process_sample (float x)
+void	MeterRmsPeakHold::process_sample (float x) noexcept
 {
 	process_sample_internal (x);
 	fix_tiny_values ();
@@ -141,7 +141,7 @@ void	MeterRmsPeakHold::process_sample (float x)
 
 
 
-void	MeterRmsPeakHold::skip_block (int nbr_spl)
+void	MeterRmsPeakHold::skip_block (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -166,28 +166,28 @@ void	MeterRmsPeakHold::skip_block (int nbr_spl)
 
 
 
-double	MeterRmsPeakHold::get_peak () const
+double	MeterRmsPeakHold::get_peak () const noexcept
 {
 	return _peak_max;
 }
 
 
 
-double	MeterRmsPeakHold::get_peak_hold () const
+double	MeterRmsPeakHold::get_peak_hold () const noexcept
 {
 	return _peak_hold;
 }
 
 
 
-double	MeterRmsPeakHold::get_rms () const
+double	MeterRmsPeakHold::get_rms () const noexcept
 {
 	return sqrt (_rms_sq);
 }
 
 
 
-void	MeterRmsPeakHold::clear_peak ()
+void	MeterRmsPeakHold::clear_peak () noexcept
 {
 	_peak_max = 0;
 }
@@ -202,7 +202,7 @@ void	MeterRmsPeakHold::clear_peak ()
 
 
 
-void	MeterRmsPeakHold::update_times ()
+void	MeterRmsPeakHold::update_times () noexcept
 {
 	_hold_time  = fstb::ceil_int (_sample_freq * _hold_time_s);
 	_coef_r     =
@@ -215,7 +215,7 @@ void	MeterRmsPeakHold::update_times ()
 
 
 
-void	MeterRmsPeakHold::process_sample_internal (float x)
+void	MeterRmsPeakHold::process_sample_internal (float x) noexcept
 {
 	const float    x_a = fabs (x);
 	const float    x_2 = x * x;
@@ -252,7 +252,7 @@ void	MeterRmsPeakHold::process_sample_internal (float x)
 
 
 // Avoids entering the denormal zone with silent input.
-void	MeterRmsPeakHold::fix_tiny_values ()
+void	MeterRmsPeakHold::fix_tiny_values () noexcept
 {
 	const double   threshold = 1e-10;   // About -200 dB
 

@@ -61,27 +61,27 @@ public:
 	typedef F4 Filter4Type;
 
 	fstb_FORCEINLINE float
-	               process_sample (float sample);
+	               process_sample (float sample) noexcept;
 
 	inline Filter1Type &
-	               use_filter_1 ();
+	               use_filter_1 () noexcept;
 	inline const Filter1Type &
-	               use_filter_1 () const;
+	               use_filter_1 () const noexcept;
 
 	inline Filter2Type &
-	               use_filter_2 ();
+	               use_filter_2 () noexcept;
 	inline const Filter2Type &
-	               use_filter_2 () const;
+	               use_filter_2 () const noexcept;
 
 	inline Filter3Type &
-	               use_filter_3 ();
+	               use_filter_3 () noexcept;
 	inline const Filter3Type &
-	               use_filter_3 () const;
+	               use_filter_3 () const noexcept;
 
 	inline Filter4Type &
-	               use_filter_4 ();
+	               use_filter_4 () noexcept;
 	inline const Filter4Type &
-	               use_filter_4 () const;
+	               use_filter_4 () const noexcept;
 
 
 

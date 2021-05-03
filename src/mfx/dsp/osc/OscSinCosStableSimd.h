@@ -56,20 +56,26 @@ public:
 
 	static const int  _nbr_units = 4;
 
-	               OscSinCosStableSimd ();
+	               OscSinCosStableSimd () noexcept;
+	               OscSinCosStableSimd (const OscSinCosStableSimd &other) = default;
+	               OscSinCosStableSimd (OscSinCosStableSimd &&other)      = default;
+	OscSinCosStableSimd &
+	               operator = (const OscSinCosStableSimd &other) = default;
+	OscSinCosStableSimd &
+	               operator = (OscSinCosStableSimd &&other)      = default;
 
-	void           set_step (float angle_rad);
+	void           set_step (float angle_rad) noexcept;
 
-	void           step ();
-	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec);
+	void           step () noexcept;
+	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec) noexcept;
 
 	fstb::ToolsSimd::VectF32
-	               get_cos () const;
+	               get_cos () const noexcept;
 	fstb::ToolsSimd::VectF32
-	               get_sin () const;
+	               get_sin () const noexcept;
 
-	void           clear_buffers ();
-	void           correct_fast ();
+	void           clear_buffers () noexcept;
+	void           correct_fast () noexcept;
 
 
 
@@ -84,10 +90,10 @@ protected:
 private:
 
 	fstb_FORCEINLINE void
-	               step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta);
+	               step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta) noexcept;
 
 	static inline void
-	               compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad);
+	               compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad) noexcept;
 
 	alignas (16) fstb::ToolsSimd::VectF32
 	               _pos_cos;
@@ -104,12 +110,6 @@ private:
 
 private:
 
-	               OscSinCosStableSimd (const OscSinCosStableSimd &other)  = delete;
-	               OscSinCosStableSimd (const OscSinCosStableSimd &&other) = delete;
-	OscSinCosStableSimd &
-	               operator = (const OscSinCosStableSimd &other)           = delete;
-	OscSinCosStableSimd &
-	               operator = (const OscSinCosStableSimd &&other)          = delete;
 	bool           operator == (const OscSinCosStableSimd &other) const    = delete;
 	bool           operator != (const OscSinCosStableSimd &other) const    = delete;
 

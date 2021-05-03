@@ -43,7 +43,7 @@ class WsAsinh
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		return asinh (x);
 	}

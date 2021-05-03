@@ -56,16 +56,16 @@ public:
 	typedef T DataType;
 
 	fstb_FORCEINLINE void
-	               set_coef (T c);
+	               set_coef (T c) noexcept;
 	fstb_FORCEINLINE T
-	               process_sample (T x);
+	               process_sample (T x) noexcept;
 	fstb_FORCEINLINE T
-	               constant_block (T x, int nbr_spl);
+	               constant_block (T x, int nbr_spl) noexcept;
 	fstb_FORCEINLINE T &
-	               use_state ();
+	               use_state () noexcept;
 	fstb_FORCEINLINE const T &
-	               use_state () const;
-	void           clear_buffers ();
+	               use_state () const noexcept;
+	void           clear_buffers () noexcept;
 
 
 

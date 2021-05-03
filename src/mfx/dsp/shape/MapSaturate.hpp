@@ -40,7 +40,7 @@ namespace shape
 
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturate <T, C, XS, YS>::saturate (T x)
+constexpr T	MapSaturate <T, C, XS, YS>::saturate (T x) noexcept
 {
 	assert (x / get_xs () >= 0);
 	assert (x / get_xs () <= 1);
@@ -61,7 +61,7 @@ constexpr T	MapSaturate <T, C, XS, YS>::saturate (T x)
 
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturate <T, C, XS, YS>::desaturate (T y)
+constexpr T	MapSaturate <T, C, XS, YS>::desaturate (T y) noexcept
 {
 	assert (y / get_ys () >= 0);
 	assert (y / get_ys () <= 1);
@@ -82,19 +82,19 @@ constexpr T	MapSaturate <T, C, XS, YS>::desaturate (T y)
 
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturate <T, C, XS, YS>::get_c ()
+constexpr T	MapSaturate <T, C, XS, YS>::get_c () noexcept
 {
 	return T (C::num) / T (C::den);
 }
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturate <T, C, XS, YS>::get_xs ()
+constexpr T	MapSaturate <T, C, XS, YS>::get_xs () noexcept
 {
 	return T (XS::num) / T (XS::den);
 }
 
 template <typename T, class C, class XS, class YS>
-constexpr T	MapSaturate <T, C, XS, YS>::get_ys ()
+constexpr T	MapSaturate <T, C, XS, YS>::get_ys () noexcept
 {
 	return T (YS::num) / T (YS::den);
 }

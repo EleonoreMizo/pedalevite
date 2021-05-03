@@ -49,14 +49,14 @@ namespace mix
 
 
 
-bool	Generic::is_ready ()
+bool	Generic::is_ready () noexcept
 {
 	return (use_instance ()._state == State_READY);
 }
 
 
 
-void	Generic::setup ()
+void	Generic::setup () noexcept
 {
 	use_instance ().setup_internal ();
 }
@@ -64,169 +64,169 @@ void	Generic::setup ()
 
 
 // Scale
-void	(*Generic::scale_1_v) (float data_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::scale_1_vlr) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::scale_1_vlrauto) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::scale_1_v) (float data_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::scale_1_vlr) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::scale_1_vlrauto) (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::scale_2_v) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::scale_2_vlr) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::scale_2_vlrauto) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::scale_2_v) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::scale_2_vlr) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::scale_2_vlrauto) (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Copy
-void	(*Generic::copy_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::copy_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::copy_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::copy_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Spread copying
-void	(*Generic::copy_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) = nullptr;
-void	(*Generic::copy_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
-void	(*Generic::copy_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
+void	(*Generic::copy_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept = nullptr;
+void	(*Generic::copy_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
+void	(*Generic::copy_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
 
 // Cross-fade copying
-void	(*Generic::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf) = nullptr;
-void	(*Generic::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) = nullptr;
-void	(*Generic::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) = nullptr;
+void	(*Generic::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf) noexcept = nullptr;
+void	(*Generic::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept = nullptr;
+void	(*Generic::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept = nullptr;
 
-void	(*Generic::copy_xfade_3_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl) = nullptr;
+void	(*Generic::copy_xfade_3_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl) noexcept = nullptr;
 
 // Matrix copying
-void	(*Generic::copy_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) = nullptr;
-void	(*Generic::copy_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
-void	(*Generic::copy_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
+void	(*Generic::copy_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept = nullptr;
+void	(*Generic::copy_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
+void	(*Generic::copy_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
 
 // Copy and interleave
-void	(*Generic::copy_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::copy_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::copy_4_4i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_2_4i2) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
+void	(*Generic::copy_4_4i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_2_4i2) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
 
-void	(*Generic::copy_1_ni1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out) = nullptr;
+void	(*Generic::copy_1_ni1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out) noexcept = nullptr;
 
 // Copy and deinterleave
-void	(*Generic::copy_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::copy_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::copy_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::copy_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::copy_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::copy_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::copy_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::copy_4i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_4i_4) (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::copy_4i2_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
+void	(*Generic::copy_4i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_4i_4) (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::copy_4i2_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
 
-void	(*Generic::copy_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) = nullptr;
+void	(*Generic::copy_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) noexcept = nullptr;
 
 // Copy and convert interleaving
-void	(*Generic::copy_nip_mip) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out, int nbr_chn_in, int nbr_chn_copy) = nullptr;
+void	(*Generic::copy_nip_mip) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out, int nbr_chn_in, int nbr_chn_copy) noexcept = nullptr;
 
 // Mixing
-void	(*Generic::mix_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_1_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_1_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_1_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::mix_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::mix_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_2_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::mix_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Spread mixing
-void	(*Generic::mix_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) = nullptr;
-void	(*Generic::mix_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
-void	(*Generic::mix_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = nullptr;
+void	(*Generic::mix_spread_1_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept = nullptr;
+void	(*Generic::mix_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
+void	(*Generic::mix_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept = nullptr;
 
 // Matrix mixing
-void	(*Generic::mix_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) = nullptr;
-void	(*Generic::mix_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
-void	(*Generic::mix_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) = nullptr;
+void	(*Generic::mix_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept = nullptr;
+void	(*Generic::mix_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
+void	(*Generic::mix_mat_2_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept = nullptr;
 
 // Mix and interleave
-void	(*Generic::mix_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_1_2i) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_1_2i_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_1_2i_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_1_2i_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::mix_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_2_2i) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_2_2i_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_2_2i_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_2_2i_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
 // Mix and deinterleave
-void	(*Generic::mix_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_2i_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_2i_1_v) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_2i_1_vlr) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_2i_1_vlrauto) (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::mix_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mix_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) = nullptr;
-void	(*Generic::mix_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
-void	(*Generic::mix_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) = nullptr;
+void	(*Generic::mix_2i_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mix_2i_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept = nullptr;
+void	(*Generic::mix_2i_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
+void	(*Generic::mix_2i_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept = nullptr;
 
-void	(*Generic::mix_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) = nullptr;
+void	(*Generic::mix_ni1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in) noexcept = nullptr;
 
 // Multiply
-void	(*Generic::mult_1_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
+void	(*Generic::mult_1_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
 
 // Multiply, in-place
-void	(*Generic::mult_ip_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mult_ip_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::mult_ip_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) = nullptr;
+void	(*Generic::mult_ip_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mult_ip_1_2) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::mult_ip_2_2) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept = nullptr;
 
 // Misc
-void	(*Generic::clear) (float out_ptr [], int nbr_spl) = nullptr;
-void	(*Generic::clear_nim) (float out_ptr [], int nbr_spl, int clear_len, int skip_len) = nullptr;
+void	(*Generic::clear) (float out_ptr [], int nbr_spl) noexcept = nullptr;
+void	(*Generic::clear_nim) (float out_ptr [], int nbr_spl, int clear_len, int skip_len) noexcept = nullptr;
 
-void	(*Generic::fill) (float out_ptr [], int nbr_spl, float val) = nullptr;
-void	(*Generic::fill_lr) (float out_ptr [], int nbr_spl, float s_val, float e_val) = nullptr;
-void	(*Generic::fill_lrauto) (float out_ptr [], int nbr_spl, float s_val, float e_val) = nullptr;
+void	(*Generic::fill) (float out_ptr [], int nbr_spl, float val) noexcept = nullptr;
+void	(*Generic::fill_lr) (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept = nullptr;
+void	(*Generic::fill_lrauto) (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept = nullptr;
 
-void	(*Generic::add_cst_1_1) (float out_ptr [], int nbr_spl, float val) = nullptr;
-void	(*Generic::add_cst_1_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val) = nullptr;
+void	(*Generic::add_cst_1_1) (float out_ptr [], int nbr_spl, float val) noexcept = nullptr;
+void	(*Generic::add_cst_1_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val) noexcept = nullptr;
 
-void	(*Generic::linop_cst_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val) = nullptr;
-void	(*Generic::linop_cst_ip_1) (float data_ptr [], int nbr_spl, float mul_val, float add_val) = nullptr;
+void	(*Generic::linop_cst_1_1) (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val) noexcept = nullptr;
+void	(*Generic::linop_cst_ip_1) (float data_ptr [], int nbr_spl, float mul_val, float add_val) noexcept = nullptr;
 
-void	(*Generic::add_sub_ip_2_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl) = nullptr;
+void	(*Generic::add_sub_ip_2_2) (float out_1_ptr [], float out_2_ptr [], int nbr_spl) noexcept = nullptr;
 
-void	(*Generic::sum_square_n_1) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val) = nullptr;
-void	(*Generic::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol) = nullptr;
+void	(*Generic::sum_square_n_1) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val) noexcept = nullptr;
+void	(*Generic::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol) noexcept = nullptr;
 
 
 
@@ -238,7 +238,7 @@ void	(*Generic::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr
 
 
 
-Generic::Generic ()
+Generic::Generic () noexcept
 :	_state (Generic::State_UNBORN)
 {
 	setup_internal ();
@@ -246,7 +246,7 @@ Generic::Generic ()
 
 
 
-void	Generic::setup_internal ()
+void	Generic::setup_internal () noexcept
 {
 	if (_state != State_READY)
 	{
@@ -258,7 +258,7 @@ void	Generic::setup_internal ()
 
 
 
-void	Generic::setup_fpu ()
+void	Generic::setup_fpu () noexcept
 {
 	// Scale
 	scale_1_v               = Fpu::scale_1_v;
@@ -428,7 +428,7 @@ void	Generic::setup_fpu ()
 
 
 
-Generic &	Generic::use_instance ()
+Generic &	Generic::use_instance () noexcept
 {
 	static Generic	instance;
 

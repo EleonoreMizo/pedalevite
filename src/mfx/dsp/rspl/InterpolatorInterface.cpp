@@ -52,7 +52,7 @@ namespace rspl
 
 // Suitable for interpolators having an impulse response of ... 0 0 1 0 0...
 // at exact sample positons (group delay taken into account).
-bool	InterpolatorInterface::test_and_process_trivial_cases (int &nbr_spl_gen, int nbr_chn, float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, fstb::FixedPoint group_delay)
+bool	InterpolatorInterface::test_and_process_trivial_cases (int &nbr_spl_gen, int nbr_chn, float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, fstb::FixedPoint group_delay) noexcept
 {
 	bool				proc_flag = false;
 

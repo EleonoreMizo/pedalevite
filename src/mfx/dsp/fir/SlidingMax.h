@@ -59,11 +59,11 @@ public:
 	typedef T  DataType;
 
 	void           set_length (int len);
-	void           clear_buffers ();
-	void           fill (const DataType &val);
+	void           clear_buffers () noexcept;
+	void           fill (const DataType &val) noexcept;
 
-	DataType       process_sample (DataType x);
-	void           process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl);
+	DataType       process_sample (DataType x) noexcept;
+	void           process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept;
 
 
 

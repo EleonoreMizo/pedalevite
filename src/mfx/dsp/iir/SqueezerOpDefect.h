@@ -52,8 +52,8 @@ class SqueezerOpDefect
 
 public:
 
-	inline void    config (float reso, float p1);
-	inline float   process_sample (float x);
+	inline void    config (float reso, float p1) noexcept;
+	inline float   process_sample (float x) noexcept;
 
 
 

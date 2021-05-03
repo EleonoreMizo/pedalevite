@@ -44,7 +44,7 @@ namespace spat
 
 
 template <class D1, class D2>
-D1 &	Cascade <D1, D2>::use_proc_1 ()
+D1 &	Cascade <D1, D2>::use_proc_1 () noexcept
 {
 	return _d1;
 }
@@ -52,7 +52,7 @@ D1 &	Cascade <D1, D2>::use_proc_1 ()
 
 
 template <class D1, class D2>
-D2 &	Cascade <D1, D2>::use_proc_2 ()
+D2 &	Cascade <D1, D2>::use_proc_2 () noexcept
 {
 	return _d2;
 }
@@ -60,7 +60,7 @@ D2 &	Cascade <D1, D2>::use_proc_2 ()
 
 
 template <class D1, class D2>
-typename Cascade <D1, D2>::DataType	Cascade <D1, D2>::process_sample (DataType x)
+typename Cascade <D1, D2>::DataType	Cascade <D1, D2>::process_sample (DataType x) noexcept
 {
 	return _d2.process_sample (_d1.process_sample (x));
 }
@@ -68,7 +68,7 @@ typename Cascade <D1, D2>::DataType	Cascade <D1, D2>::process_sample (DataType x
 
 
 template <class D1, class D2>
-void	Cascade <D1, D2>::clear_buffers ()
+void	Cascade <D1, D2>::clear_buffers () noexcept
 {
 	_d1.clear_buffers ();
 	_d2.clear_buffers ();

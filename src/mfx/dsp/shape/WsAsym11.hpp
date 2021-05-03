@@ -39,7 +39,7 @@ namespace shape
 
 
 
-double	WsAsym11::operator () (double x) const
+double	WsAsym11::operator () (double x) const noexcept
 {
 	static const double	limit_h = 1.0954451150103322269139395656016;	// sqrt (6) / sqrt (5)
 	static const double	sqrt3_over_sqrt5 = 0.77459666924148337703585307995648;
@@ -56,7 +56,7 @@ double	WsAsym11::operator () (double x) const
 	y -= y_slope_max;
 	y *= -2;
 
-	return (y);
+	return y;
 }
 
 
@@ -70,12 +70,12 @@ double	WsAsym11::operator () (double x) const
 
 
 // y = 2 * x^3 - x^5
-double	WsAsym11::fnc (double x)
+double	WsAsym11::fnc (double x) noexcept
 {
 	const double	x2 = x * x;
 	const double	y = x * x2 * (2 - x2);
 
-	return (y);
+	return y;
 }
 
 

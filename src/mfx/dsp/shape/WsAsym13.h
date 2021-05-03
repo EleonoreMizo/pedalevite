@@ -57,7 +57,7 @@ class WsAsym13
 
 public:
 
-	inline double  operator () (double x) const;
+	inline double  operator () (double x) const noexcept;
 
 
 
@@ -72,7 +72,7 @@ protected:
 private:
 
 	static inline double
-	               fnc (double x);
+	               fnc (double x) noexcept;
 
 
 

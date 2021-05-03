@@ -80,13 +80,13 @@ public:
 	static const int PHASE_LEN   = InterpPhase::PHASE_LEN;
 	static const int IMPULSE_LEN = NBR_PHASES * PHASE_LEN;
 
-	void				set_impulse (const double impulse_ptr [IMPULSE_LEN]);
+	void				set_impulse (const double impulse_ptr [IMPULSE_LEN]) noexcept;
 	fstb_FORCEINLINE float
-	               interpolate (const float data_ptr [], uint32_t frac_pos) const;
+	               interpolate (const float data_ptr [], uint32_t frac_pos) const noexcept;
 	fstb_FORCEINLINE void
-	               interpolate_multi_chn (float * const out_ptr_arr [], long out_offset, const float * const in_ptr_arr [], long in_offset, uint32_t frac_pos, int nbr_chn) const;
+	               interpolate_multi_chn (float * const out_ptr_arr [], long out_offset, const float * const in_ptr_arr [], long in_offset, uint32_t frac_pos, int nbr_chn) const noexcept;
 	fstb_FORCEINLINE void
-	               interpolate_multi_chn (float out_ptr [], const float in_ptr [], uint32_t frac_pos, int nbr_chn, long chn_stride_in, long chn_stride_out) const;
+	               interpolate_multi_chn (float out_ptr [], const float in_ptr [], uint32_t frac_pos, int nbr_chn, long chn_stride_in, long chn_stride_out) const noexcept;
 
 
 
@@ -101,7 +101,7 @@ protected:
 private:
 
 	static fstb_FORCEINLINE void
-	               compute_phase_info (float &q, int &phase_index, uint32_t frac_pos);
+	               compute_phase_info (float &q, int &phase_index, uint32_t frac_pos) noexcept;
 
 	std::array <InterpPhase, NBR_PHASES>
 	               _phase_arr;

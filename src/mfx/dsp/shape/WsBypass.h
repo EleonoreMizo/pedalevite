@@ -42,10 +42,10 @@ class WsBypass
 public:
 
    template <typename T>
-   T              operator () (T x) { return x; }
+   T              operator () (T x) noexcept { return x; }
 
    template <typename T>
-   static T       process_sample (T x) { return x; }
+   static T       process_sample (T x) noexcept { return x; }
 
 
 

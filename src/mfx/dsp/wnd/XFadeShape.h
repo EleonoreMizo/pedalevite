@@ -6,8 +6,8 @@
 Template parameters:
 
 - OP: operation class. Requires:
-	static std::array <float, 2> OP::compute_gain (float x);
-	static std::array <fstb::ToolsSimd::VectF32, 2> OP::compute_gain (fstb::ToolsSimd::VectF32 x);
+	static std::array <float, 2> OP::compute_gain (float x) noexcept;
+	static std::array <fstb::ToolsSimd::VectF32, 2> OP::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept;
 
 --- Legal stuff ---
 
@@ -61,10 +61,10 @@ public:
 	void           set_duration (double duration, float fade_ratio = 1);
 	void           set_sample_freq (double sample_freq);
 
-	inline bool    is_ready () const;
-	inline int     get_len () const;
+	inline bool    is_ready () const noexcept;
+	inline int     get_len () const noexcept;
 	inline const float *
-	               use_shape () const;
+	               use_shape () const noexcept;
 
 
 

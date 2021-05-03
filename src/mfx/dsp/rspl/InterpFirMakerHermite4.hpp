@@ -40,7 +40,7 @@ namespace rspl
 
 
 template <typename DT>
-void	InterpFirMakerHermite4 <DT>::make_interpolator (DataType fir_ptr [], float pos)
+void	InterpFirMakerHermite4 <DT>::make_interpolator (DataType fir_ptr [], float pos) noexcept
 {
 	assert (fir_ptr != nullptr);
 	assert (pos >= 0);
@@ -56,7 +56,7 @@ void	InterpFirMakerHermite4 <DT>::make_interpolator (DataType fir_ptr [], float 
 
 
 template <typename DT>
-int	InterpFirMakerHermite4 <DT>::get_length ()
+int	InterpFirMakerHermite4 <DT>::get_length () noexcept
 {
 	return 4;
 }
@@ -64,7 +64,7 @@ int	InterpFirMakerHermite4 <DT>::get_length ()
 
 
 template <typename DT>
-int	InterpFirMakerHermite4 <DT>::get_delay ()
+int	InterpFirMakerHermite4 <DT>::get_delay () noexcept
 {
 	return 1;
 }

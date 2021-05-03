@@ -46,7 +46,7 @@ namespace dyn
 
 
 
-EnvFollowerPeak::EnvFollowerPeak ()
+EnvFollowerPeak::EnvFollowerPeak () noexcept
 :	_sample_freq (44100)
 ,	_time_a (0)
 ,	_time_r (0)
@@ -60,7 +60,7 @@ EnvFollowerPeak::EnvFollowerPeak ()
 
 
 
-void	EnvFollowerPeak::set_sample_freq (double fs)
+void	EnvFollowerPeak::set_sample_freq (double fs) noexcept
 {
 	assert (fs > 0);
 
@@ -70,7 +70,7 @@ void	EnvFollowerPeak::set_sample_freq (double fs)
 
 
 
-void	EnvFollowerPeak::set_times (float at, float rt)
+void	EnvFollowerPeak::set_times (float at, float rt) noexcept
 {
 	assert (at >= 0);
 	assert (rt >= 0);
@@ -82,7 +82,7 @@ void	EnvFollowerPeak::set_times (float at, float rt)
 
 
 
-void	EnvFollowerPeak::set_time_atk (float t)
+void	EnvFollowerPeak::set_time_atk (float t) noexcept
 {
 	assert (t >= 0);
 
@@ -92,7 +92,7 @@ void	EnvFollowerPeak::set_time_atk (float t)
 
 
 
-void	EnvFollowerPeak::set_time_rel (float t)
+void	EnvFollowerPeak::set_time_rel (float t) noexcept
 {
 	assert (t >= 0);
 
@@ -102,7 +102,7 @@ void	EnvFollowerPeak::set_time_rel (float t)
 
 
 
-void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -126,7 +126,7 @@ void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], in
 
 
 
-float	EnvFollowerPeak::analyse_block (const float data_ptr [], int nbr_spl)
+float	EnvFollowerPeak::analyse_block (const float data_ptr [], int nbr_spl) noexcept
 {
 	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -150,7 +150,7 @@ float	EnvFollowerPeak::analyse_block (const float data_ptr [], int nbr_spl)
 
 
 
-float	EnvFollowerPeak::analyse_block_cst (float x, int nbr_spl)
+float	EnvFollowerPeak::analyse_block_cst (float x, int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -170,7 +170,7 @@ float	EnvFollowerPeak::analyse_block_cst (float x, int nbr_spl)
 
 
 
-void	EnvFollowerPeak::clear_buffers ()
+void	EnvFollowerPeak::clear_buffers () noexcept
 {
 	_state = 0;
 }
@@ -185,7 +185,7 @@ void	EnvFollowerPeak::clear_buffers ()
 
 
 
-void	EnvFollowerPeak::update_parameters ()
+void	EnvFollowerPeak::update_parameters () noexcept
 {
 	_coef_a = EnvHelper::compute_env_coef_simple (_time_a, _sample_freq);
 	_coef_r = EnvHelper::compute_env_coef_simple (_time_r, _sample_freq);

@@ -39,7 +39,7 @@ namespace iir
 
 
 
-bool	SplitThiele8::is_dirty () const
+bool	SplitThiele8::is_dirty () const noexcept
 {
 	return _dirty_flag;
 }
@@ -47,7 +47,7 @@ bool	SplitThiele8::is_dirty () const
 
 
 // Returns { low, high }
-std::array <float, 2>	SplitThiele8::process_sample_split (float x)
+std::array <float, 2>	SplitThiele8::process_sample_split (float x) noexcept
 {
 	assert (! _dirty_flag);
 
@@ -65,7 +65,7 @@ std::array <float, 2>	SplitThiele8::process_sample_split (float x)
 
 
 
-float	SplitThiele8::process_sample_compensate (float x)
+float	SplitThiele8::process_sample_compensate (float x) noexcept
 {
 	assert (! _dirty_flag);
 
@@ -82,7 +82,7 @@ float	SplitThiele8::process_sample_compensate (float x)
 
 
 
-std::array <float, 2>	SplitThiele8::compute_ap4_lp4 (float x, SvfCore <> &filt_1, SvfCore <> &filt_2)
+std::array <float, 2>	SplitThiele8::compute_ap4_lp4 (float x, SvfCore <> &filt_1, SvfCore <> &filt_2) noexcept
 {
 	const auto     s1     = filt_1.process_sample_mm (x);
 	const float    lp2    = s1 [1];

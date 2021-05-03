@@ -52,9 +52,9 @@ class SPower_Bypass
 {
 public:
 	static inline constexpr float
-	               process_scalar (float in) { return in; }
+	               process_scalar (float in) noexcept { return in; }
 	static inline constexpr fstb::ToolsSimd::VectF32
-	               process_vect (fstb::ToolsSimd::VectF32 in) { return in; }
+	               process_vect (fstb::ToolsSimd::VectF32 in) noexcept { return in; }
 };
 
 
@@ -69,9 +69,9 @@ public:
 
 	typedef AP AddProc;
 
-	AddProc &      use_add_proc ();
+	AddProc &      use_add_proc () noexcept;
 
-	void           prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end);
+	void           prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end) noexcept;
 
 
 
@@ -85,9 +85,9 @@ protected:
 
 private:
 
-	void           prepare_env_input_1chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end);
-	void           prepare_env_input_2chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end);
-	void           prepare_env_input_nchn (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end);
+	void           prepare_env_input_1chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           prepare_env_input_2chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end) noexcept;
+	void           prepare_env_input_nchn (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end) noexcept;
 
 	AddProc        _add_proc;
 

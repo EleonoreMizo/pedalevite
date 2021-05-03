@@ -46,7 +46,7 @@ namespace iir
 
 
 template <class TS, class TZ>
-void	TransSZMatched::map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs)
+void	TransSZMatched::map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs) noexcept
 {
 	assert (z_eq_b != 0);
 	assert (z_eq_a != 0);
@@ -524,7 +524,7 @@ k = (1 - 1/b1) / g
 // Computes |H(w)|^2
 // w = pulsation (rad)
 template <class TS>
-double	TransSZMatched::compute_h2s (const TS s_eq_b [3], const TS s_eq_a [3], double w)
+double	TransSZMatched::compute_h2s (const TS s_eq_b [3], const TS s_eq_a [3], double w) noexcept
 {
 	const double   b0 = s_eq_b [0];
 	const double   b1 = s_eq_b [1];

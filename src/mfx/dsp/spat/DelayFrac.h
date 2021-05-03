@@ -11,12 +11,12 @@ Then set_delay_flt() or set_delay_fix()
 Template parameters:
 
 - T : Stored data type. Should have:
-	T::T ();
-	T::T (const T &);
-	T::T (float);
+	T::T () noexcept;
+	T::T (const T &) noexcept;
+	T::T (float) noexcept;
 	T::~T ();
-	T operator * (T, T);
-	T operator + (T, T);
+	T operator * (T, T) noexcept;
+	T operator + (T, T) noexcept;
 
 - NPL2 : log2 of the number of phases for the interpolator. Sets the
 	resolution of the fractional delay. 6 (64) should be fine for a generic
@@ -77,37 +77,37 @@ public:
 	void           set_max_len (int len);
 
 	fstb_FORCEINLINE void
-	               set_delay_flt (float len_spl);
+	               set_delay_flt (float len_spl) noexcept;
 	fstb_FORCEINLINE void
-	               set_delay_fix (int len_fixp);
+	               set_delay_fix (int len_fixp) noexcept;
 	fstb_FORCEINLINE int
-	               get_delay_len_int () const;
+	               get_delay_len_int () const noexcept;
 
 	fstb_FORCEINLINE T
-	               read () const;
+	               read () const noexcept;
 	fstb_FORCEINLINE T
-	               read_at (int delay) const;
+	               read_at (int delay) const noexcept;
 	fstb_FORCEINLINE void
-	               write (T x);
+	               write (T x) noexcept;
 	fstb_FORCEINLINE void
-	               step ();
+	               step () noexcept;
 	fstb_FORCEINLINE T
-	               process_sample (T x);
+	               process_sample (T x) noexcept;
 
 	fstb_FORCEINLINE int
-	               get_max_block_len () const;
+	               get_max_block_len () const noexcept;
 	fstb_FORCEINLINE void
-	               read_block (T dst_ptr [], int len) const;
+	               read_block (T dst_ptr [], int len) const noexcept;
 	fstb_FORCEINLINE void
-	               read_block_var_dly (T dst_ptr [], const int32_t dly_fix_ptr [], int len);
+	               read_block_var_dly (T dst_ptr [], const int32_t dly_fix_ptr [], int len) noexcept;
 	fstb_FORCEINLINE void
-	               read_block_at (T dst_ptr [], int delay, int len) const;
+	               read_block_at (T dst_ptr [], int delay, int len) const noexcept;
 	fstb_FORCEINLINE void
-	               write_block (const T src_ptr [], int len);
+	               write_block (const T src_ptr [], int len) noexcept;
 	fstb_FORCEINLINE void
-	               step_block (int len);
+	               step_block (int len) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -130,13 +130,13 @@ private:
 	typedef std::array <Phase, _nbr_phases> PhaseArray;
 
 	fstb_FORCEINLINE T
-	               read_safe (int pos_read, const Phase &phase) const;
+	               read_safe (int pos_read, const Phase &phase) const noexcept;
 	fstb_FORCEINLINE T
-	               read_nocheck (int pos_read, const Phase &phase) const;
+	               read_nocheck (int pos_read, const Phase &phase) const noexcept;
 	fstb_FORCEINLINE void
-	               find_phase_and_delay (const Phase * &phase_ptr, int &delay_int, int &delay_frc, int len_fixp) const;
+	               find_phase_and_delay (const Phase * &phase_ptr, int &delay_int, int &delay_frc, int len_fixp) const noexcept;
 
-	static void    init_interpolator ();
+	static void    init_interpolator () noexcept;
 
 	std::vector <T>
 	               _buffer;

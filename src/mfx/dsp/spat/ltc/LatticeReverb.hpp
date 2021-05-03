@@ -135,7 +135,7 @@ void	LatticeReverb <T, N, MAXDT>::set_sample_freq (double sample_freq)
 
 // Sets the time constant for the LPF on the parameter changes
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_smooth_time (float t)
+void	LatticeReverb <T, N, MAXDT>::set_smooth_time (float t) noexcept
 {
 	assert (_sample_freq > 0);
 	assert (t >= _time_min);
@@ -159,7 +159,7 @@ void	LatticeReverb <T, N, MAXDT>::set_smooth_time (float t)
 // 0 = independant channels
 // 1 = feedbacks are completely crossed (and inverted)
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_cross_feedback (float cf)
+void	LatticeReverb <T, N, MAXDT>::set_cross_feedback (float cf) noexcept
 {
 	assert (cf >= 0);
 	assert (cf <= 1);
@@ -173,7 +173,7 @@ void	LatticeReverb <T, N, MAXDT>::set_cross_feedback (float cf)
 // 0.5 = standard stereo
 // 1   = 200 % wide
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_stereo_spread (float spread)
+void	LatticeReverb <T, N, MAXDT>::set_stereo_spread (float spread) noexcept
 {
 	assert (spread >= 0);
 	assert (spread <= 1);
@@ -185,7 +185,7 @@ void	LatticeReverb <T, N, MAXDT>::set_stereo_spread (float spread)
 
 // Global multiplier on the time values
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_time_mul (Stereo s, float m)
+void	LatticeReverb <T, N, MAXDT>::set_time_mul (Stereo s, float m) noexcept
 {
 	assert (s >= 0);
 	assert (s < Stereo_NBR_ELT);
@@ -202,7 +202,7 @@ void	LatticeReverb <T, N, MAXDT>::set_time_mul (Stereo s, float m)
 
 // Global multiplier on the all-pass filter values
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_fdbk_apf_mul (Stereo s, float m)
+void	LatticeReverb <T, N, MAXDT>::set_fdbk_apf_mul (Stereo s, float m) noexcept
 {
 	assert (s >= 0);
 	assert (s < Stereo_NBR_ELT);
@@ -219,7 +219,7 @@ void	LatticeReverb <T, N, MAXDT>::set_fdbk_apf_mul (Stereo s, float m)
 
 // Global multiplier on the lattice coefficients
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_fdbk_ltc_mul (Stereo s, float m)
+void	LatticeReverb <T, N, MAXDT>::set_fdbk_ltc_mul (Stereo s, float m) noexcept
 {
 	assert (s >= 0);
 	assert (s < Stereo_NBR_ELT);
@@ -235,7 +235,7 @@ void	LatticeReverb <T, N, MAXDT>::set_fdbk_ltc_mul (Stereo s, float m)
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_time (Stereo s, int idx, float t)
+void	LatticeReverb <T, N, MAXDT>::set_time (Stereo s, int idx, float t) noexcept
 {
 	assert (s >= 0);
 	assert (s < Stereo_NBR_ELT);
@@ -253,7 +253,7 @@ void	LatticeReverb <T, N, MAXDT>::set_time (Stereo s, int idx, float t)
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_fdbk_apf (Stereo s, int idx, float c)
+void	LatticeReverb <T, N, MAXDT>::set_fdbk_apf (Stereo s, int idx, float c) noexcept
 {
 	assert (s >= 0);
 	assert (s < Stereo_NBR_ELT);
@@ -271,7 +271,7 @@ void	LatticeReverb <T, N, MAXDT>::set_fdbk_apf (Stereo s, int idx, float c)
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_fdbk_ltc (Stereo s, int idx, float c)
+void	LatticeReverb <T, N, MAXDT>::set_fdbk_ltc (Stereo s, int idx, float c) noexcept
 {
 	assert (s >= 0);
 	assert (s < Stereo_NBR_ELT);
@@ -290,7 +290,7 @@ void	LatticeReverb <T, N, MAXDT>::set_fdbk_ltc (Stereo s, int idx, float c)
 
 // Damping coefficient for the LPF within the all-pass delays
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_damping (int idx, float d)
+void	LatticeReverb <T, N, MAXDT>::set_damping (int idx, float d) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _depth);
@@ -304,7 +304,7 @@ void	LatticeReverb <T, N, MAXDT>::set_damping (int idx, float d)
 
 // The LFO modulates the time of the delay lines to improve the diffusion.
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_lfo_freq (float f)
+void	LatticeReverb <T, N, MAXDT>::set_lfo_freq (float f) noexcept
 {
 	assert (f > 0);
 
@@ -315,7 +315,7 @@ void	LatticeReverb <T, N, MAXDT>::set_lfo_freq (float f)
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::set_lfo_depth (int idx, float t)
+void	LatticeReverb <T, N, MAXDT>::set_lfo_depth (int idx, float t) noexcept
 {
 	assert (idx >= 0);
 	assert (idx < _depth);
@@ -327,7 +327,7 @@ void	LatticeReverb <T, N, MAXDT>::set_lfo_depth (int idx, float t)
 
 
 template <typename T, int N, typename MAXDT>
-std::pair <T, T>	LatticeReverb <T, N, MAXDT>::process_sample (T xl, T xr)
+std::pair <T, T>	LatticeReverb <T, N, MAXDT>::process_sample (T xl, T xr) noexcept
 {
 	-- _block_pos;
 	if (_block_pos <= 0)
@@ -376,7 +376,7 @@ std::pair <T, T>	LatticeReverb <T, N, MAXDT>::process_sample (T xl, T xr)
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::clear_buffers ()
+void	LatticeReverb <T, N, MAXDT>::clear_buffers () noexcept
 {
 	_rnd_gen.set_seed (0x0123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
 	_block_pos = 0;
@@ -401,6 +401,15 @@ void	LatticeReverb <T, N, MAXDT>::clear_buffers ()
 
 
 
+template <typename T, int N, typename MAXDT>
+constexpr int	LatticeReverb <T, N, MAXDT>::_depth;
+template <typename T, int N, typename MAXDT>
+constexpr float	LatticeReverb <T, N, MAXDT>::_time_min;
+template <typename T, int N, typename MAXDT>
+constexpr float	LatticeReverb <T, N, MAXDT>::_time_max;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -410,7 +419,7 @@ void	LatticeReverb <T, N, MAXDT>::clear_buffers ()
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::update_internal_parameters ()
+void	LatticeReverb <T, N, MAXDT>::update_internal_parameters () noexcept
 {
 	update_lfos ();
 
@@ -458,7 +467,7 @@ void	LatticeReverb <T, N, MAXDT>::update_internal_parameters ()
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::update_lfos ()
+void	LatticeReverb <T, N, MAXDT>::update_lfos () noexcept
 {
 	static int cnt = 0;
 
@@ -497,7 +506,7 @@ void	LatticeReverb <T, N, MAXDT>::update_lfos ()
 
 
 template <typename T, int N, typename MAXDT>
-void	LatticeReverb <T, N, MAXDT>::update_lfo_freq ()
+void	LatticeReverb <T, N, MAXDT>::update_lfo_freq () noexcept
 {
 	assert (_sample_freq > 0);
 
@@ -522,7 +531,7 @@ void	LatticeReverb <T, N, MAXDT>::update_lfo_freq ()
 // pan = +1 -> { 0      , 1 - mul }
 // Result in [0 ; 2]
 template <typename T, int N, typename MAXDT>
-inline std::array <T, LatticeReverb <T, N, MAXDT>::_nbr_chn>	LatticeReverb <T, N, MAXDT>::combine_spread (T pan, T mul)
+inline std::array <T, LatticeReverb <T, N, MAXDT>::_nbr_chn>	LatticeReverb <T, N, MAXDT>::combine_spread (T pan, T mul) noexcept
 {
 	assert (pan >= -1.f);
 	assert (pan <= +1.f);

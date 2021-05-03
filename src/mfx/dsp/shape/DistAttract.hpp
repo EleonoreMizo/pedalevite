@@ -44,7 +44,7 @@ namespace shape
 
 
 
-float	DistAttract::process_sample (float x)
+float	DistAttract::process_sample (float x) noexcept
 {
 	const float    env_val = _env.process_sample (x) + 1e-5f;   // + small cst to avoid log(0) later
 
@@ -63,7 +63,7 @@ float	DistAttract::process_sample (float x)
 
 
 
-void	DistAttract::attract (float x, float env_val)
+void	DistAttract::attract (float x, float env_val) noexcept
 {
 	assert (env_val > 0);
 
@@ -130,14 +130,14 @@ void	DistAttract::attract (float x, float env_val)
 
 
 
-constexpr DistAttract::Polarity	DistAttract::val_to_pol (float val)
+constexpr DistAttract::Polarity	DistAttract::val_to_pol (float val) noexcept
 {
 	return ((val < 0) ? Polarity_NEG : Polarity_POS);
 }
 
 
 
-constexpr float	DistAttract::pol_to_val (Polarity polarity)
+constexpr float	DistAttract::pol_to_val (Polarity polarity) noexcept
 {
 #if __cplusplus >= 201402L
 	assert (polarity >= 0);

@@ -45,13 +45,13 @@ class WsTanhFast
 public:
 
 	template <typename T>
-	fstb_FORCEINLINE T operator () (T x)
+	fstb_FORCEINLINE T operator () (T x) noexcept
 	{
 		return process_sample (x);
 	}
 
 	template <typename T>
-	static fstb_FORCEINLINE T process_sample (T x)
+	static fstb_FORCEINLINE T process_sample (T x) noexcept
 	{
 		const float    arg = float (x) * float (2 * fstb::LOG2_E);
 		const T        e2x = T (fstb::Approx::exp2 (arg));

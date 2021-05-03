@@ -46,14 +46,14 @@ class EnvHelper
 public:
 
 	template <typename T>
-	static inline T
-	               compute_env_coef_simple (T t, T fs);
+	static inline constexpr T
+	               compute_env_coef_simple (T t, T fs) noexcept;
 	template <typename T>
-	static inline T
-	               compute_env_coef_w_zero (T t, T fs);
+	static inline constexpr T
+	               compute_env_coef_w_zero (T t, T fs) noexcept;
 	template <typename T>
-	static inline T
-	               compensate_order (T t, int ord);
+	static inline constexpr T
+	               compensate_order (T t, int ord) noexcept;
 
 
 

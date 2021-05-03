@@ -73,7 +73,7 @@ void	PartInterface::prepare (const SimInfo &info)
 
 
 
-void	PartInterface::add_to_matrix (int it_cnt)
+void	PartInterface::add_to_matrix (int it_cnt) noexcept
 {
 	assert (it_cnt >= 0);
 
@@ -82,14 +82,14 @@ void	PartInterface::add_to_matrix (int it_cnt)
 
 
 
-void	PartInterface::step ()
+void	PartInterface::step () noexcept
 {
 	do_step ();
 }
 
 
 
-void	PartInterface::clear_buffers ()
+void	PartInterface::clear_buffers () noexcept
 {
 	do_clear_buffers ();
 }

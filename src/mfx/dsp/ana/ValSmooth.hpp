@@ -41,7 +41,7 @@ namespace ana
 
 
 template <typename T, int NV>
-void	ValSmooth <T, NV>::reset (T x)
+void	ValSmooth <T, NV>::reset (T x) noexcept
 {
 	_val_last = x;
 	_val_smth = x;
@@ -50,7 +50,7 @@ void	ValSmooth <T, NV>::reset (T x)
 
 
 template <typename T, int NV>
-T	ValSmooth <T, NV>::proc_val (T x)
+T	ValSmooth <T, NV>::proc_val (T x) noexcept
 {
 	if (_val_last == ValType (NV))
 	{
@@ -77,7 +77,7 @@ T	ValSmooth <T, NV>::proc_val (T x)
 
 
 template <typename T, int NV>
-T	ValSmooth <T, NV>::get_val () const
+T	ValSmooth <T, NV>::get_val () const noexcept
 {
 	return _val_smth;
 }
@@ -85,7 +85,7 @@ T	ValSmooth <T, NV>::get_val () const
 
 
 template <typename T, int NV>
-T	ValSmooth <T, NV>::get_raw_val () const
+T	ValSmooth <T, NV>::get_raw_val () const noexcept
 {
 	return _val_last;
 }
@@ -93,7 +93,7 @@ T	ValSmooth <T, NV>::get_raw_val () const
 
 
 template <typename T, int NV>
-void	ValSmooth <T, NV>::clear_buffers ()
+void	ValSmooth <T, NV>::clear_buffers () noexcept
 {
 	_val_smth = _val_last;
 }
@@ -101,7 +101,7 @@ void	ValSmooth <T, NV>::clear_buffers ()
 
 
 template <typename T, int NV>
-void	ValSmooth <T, NV>::set_responsiveness (T resp)
+void	ValSmooth <T, NV>::set_responsiveness (T resp) noexcept
 {
 	assert (resp >  ValType (0));
 	assert (resp <= ValType (1));
@@ -112,7 +112,7 @@ void	ValSmooth <T, NV>::set_responsiveness (T resp)
 
 
 template <typename T, int NV>
-void	ValSmooth <T, NV>::set_threshold (T thr)
+void	ValSmooth <T, NV>::set_threshold (T thr) noexcept
 {
 	assert (thr >= ValType (0));
 

@@ -58,7 +58,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::set_size (int size)
+void	RingBufVectorizer::set_size (int size) noexcept
 {
 	assert (size > 0);
 
@@ -87,7 +87,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::set_curs (int nbr_curs, const int pos_arr [])
+void	RingBufVectorizer::set_curs (int nbr_curs, const int pos_arr []) noexcept
 {
 	assert (nbr_curs > 0);
 	assert (nbr_curs <= _max_nbr_curs);
@@ -115,7 +115,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::start (int len, int pos)
+void	RingBufVectorizer::start (int len, int pos) noexcept
 {
 	assert (len > 0);
 	assert (pos >= 0);
@@ -143,7 +143,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::start (int len, int pos_0, int pos_1)
+void	RingBufVectorizer::start (int len, int pos_0, int pos_1) noexcept
 {
 	assert (len > 0);
 	assert (pos_0 >= 0);
@@ -175,7 +175,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::start (int len, int nbr_curs, const int pos_arr [])
+void	RingBufVectorizer::start (int len, int nbr_curs, const int pos_arr []) noexcept
 {
 	assert (len > 0);
 
@@ -199,7 +199,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::restart (int len)
+void	RingBufVectorizer::restart (int len) noexcept
 {
 	assert (_nbr_curs > 0);
 	assert (len > 0);
@@ -220,7 +220,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::next ()
+void	RingBufVectorizer::next () noexcept
 {
 	assert (_nbr_curs > 0);
 	assert (_len > 0);
@@ -258,7 +258,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	RingBufVectorizer::compute_seg ()
+void	RingBufVectorizer::compute_seg () noexcept
 {
 	assert (_nbr_curs > 0);
 

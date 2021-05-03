@@ -57,28 +57,17 @@ class DiodeClipDAngelo
 
 public:
 
-	               DiodeClipDAngelo ()                              = default;
-	               DiodeClipDAngelo (const DiodeClipDAngelo &other) = default;
-	               DiodeClipDAngelo (DiodeClipDAngelo &&other)      = default;
-
-						~DiodeClipDAngelo ()                             = default;
-
-	DiodeClipDAngelo &
-	               operator = (const DiodeClipDAngelo &other)       = default;
-	DiodeClipDAngelo &
-	               operator = (DiodeClipDAngelo &&other)            = default;
-
-	void           set_sample_freq (double sample_freq);
-	void           set_d1_is (float is);
-	void           set_d2_is (float is);
-	void           set_d1_n (float n);
-	void           set_d2_n (float n);
-	void           set_capa (float c);
-	void           set_cutoff_freq (float f);
+	void           set_sample_freq (double sample_freq) noexcept;
+	void           set_d1_is (float is) noexcept;
+	void           set_d2_is (float is) noexcept;
+	void           set_d1_n (float n) noexcept;
+	void           set_d2_n (float n) noexcept;
+	void           set_capa (float c) noexcept;
+	void           set_cutoff_freq (float f) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           clear_buffers ();
+	               process_sample (float x) noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -92,10 +81,10 @@ protected:
 
 private:
 
-	void           update_internal_coef_fs ();
-	void           update_internal_coef ();
+	void           update_internal_coef_fs () noexcept;
+	void           update_internal_coef () noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_internal (float x, float &mem_p);
+	               process_sample_internal (float x, float &mem_p) noexcept;
 
 	float          _sample_freq = 0; // Sampling rate, Hz. > 0. 0 = not init
 

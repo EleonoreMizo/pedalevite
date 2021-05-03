@@ -50,10 +50,10 @@ class DelayComb
 public:
 
 	void           set_delay (int len);
-	void           set_feedback (float coef);
-	void           set_damp (float damp);
-	void           clear_buffers ();
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           set_feedback (float coef) noexcept;
+	void           set_damp (float damp) noexcept;
+	void           clear_buffers () noexcept;
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 
@@ -67,7 +67,7 @@ protected:
 
 private:
 
-	void           update_fdbkdamp ();
+	void           update_fdbkdamp () noexcept;
 
 	DelayLineSimple
 	               _delay_line;

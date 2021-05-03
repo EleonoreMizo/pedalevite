@@ -70,13 +70,13 @@ public:
 
 	template <typename T>
 	fstb_FORCEINLINE T
-	               operator () (T x);
+	               operator () (T x) noexcept;
 
 	template <typename T>
 	static fstb_FORCEINLINE T
-	               process_sample (T x);
+	               process_sample (T x) noexcept;
 	template <typename VD, typename VS>
-	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
 
 
 

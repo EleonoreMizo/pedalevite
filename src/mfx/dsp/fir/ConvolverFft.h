@@ -56,17 +56,17 @@ public:
 	explicit       ConvolverFft (int nbr_spl, const DataType impulse_ptr []);
 	virtual        ~ConvolverFft () = default;
 
-	bool           is_valid () const;
+	bool           is_valid () const noexcept;
 	void           set_impulse (int nbr_spl, const DataType impulse_ptr []);
 
-	int            get_block_len () const;
-	DataType *     get_input_buffer () const;
+	int            get_block_len () const noexcept;
+	DataType *     get_input_buffer () const noexcept;
 	const DataType *
-	               get_output_buffer () const;
+	               get_output_buffer () const noexcept;
 
-	void           process ();
+	void           process () noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 

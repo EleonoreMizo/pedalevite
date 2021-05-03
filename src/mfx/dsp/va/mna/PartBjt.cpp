@@ -46,7 +46,7 @@ namespace mna
 
 
 
-PartBjt::PartBjt (IdNode nid_e, IdNode nid_b, IdNode nid_c, bool pnp_flag, Flt is, Flt beta_f, Flt beta_r)
+PartBjt::PartBjt (IdNode nid_e, IdNode nid_b, IdNode nid_c, bool pnp_flag, Flt is, Flt beta_f, Flt beta_r) noexcept
 :	_nid_e (nid_e)
 ,	_nid_b (nid_b)
 ,	_nid_c (nid_c)
@@ -70,7 +70,7 @@ PartBjt::PartBjt (IdNode nid_e, IdNode nid_b, IdNode nid_c, bool pnp_flag, Flt i
 
 
 
-void	PartBjt::set_is (Flt is)
+void	PartBjt::set_is (Flt is) noexcept
 {
 	assert (is >= 1e-20f);
 	assert (is <= 1e-1f);
@@ -82,7 +82,7 @@ void	PartBjt::set_is (Flt is)
 
 
 
-void	PartBjt::set_beta_f (Flt beta)
+void	PartBjt::set_beta_f (Flt beta) noexcept
 {
 	assert (beta > 0);
 
@@ -94,7 +94,7 @@ void	PartBjt::set_beta_f (Flt beta)
 
 
 
-void	PartBjt::set_beta_r (Flt beta)
+void	PartBjt::set_beta_r (Flt beta) noexcept
 {
 	assert (beta >= 0);
 
@@ -142,7 +142,7 @@ void	PartBjt::do_prepare (const SimInfo &info)
 
 
 
-void	PartBjt::do_add_to_matrix (int it_cnt)
+void	PartBjt::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -151,14 +151,14 @@ void	PartBjt::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartBjt::do_step ()
+void	PartBjt::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartBjt::do_clear_buffers ()
+void	PartBjt::do_clear_buffers () noexcept
 {
 	// Nothing
 }

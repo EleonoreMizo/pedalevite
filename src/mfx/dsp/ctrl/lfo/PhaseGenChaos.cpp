@@ -48,7 +48,7 @@ namespace lfo
 
 
 
-void	PhaseGenChaos::set_sample_freq (double sample_freq)
+void	PhaseGenChaos::set_sample_freq (double sample_freq) noexcept
 {
 	assert (sample_freq > 0);
 
@@ -58,7 +58,7 @@ void	PhaseGenChaos::set_sample_freq (double sample_freq)
 
 
 
-void	PhaseGenChaos::set_period (double per)
+void	PhaseGenChaos::set_period (double per) noexcept
 {
 	assert (per > 0);
 
@@ -68,7 +68,7 @@ void	PhaseGenChaos::set_period (double per)
 
 
 
-void	PhaseGenChaos::set_phase (double phase)
+void	PhaseGenChaos::set_phase (double phase) noexcept
 {
 	assert (phase >= 0);
 	assert (phase < 1);
@@ -78,7 +78,7 @@ void	PhaseGenChaos::set_phase (double phase)
 
 
 
-void	PhaseGenChaos::set_chaos (double chaos)
+void	PhaseGenChaos::set_chaos (double chaos) noexcept
 {
 	assert (chaos >= 0);
 	assert (chaos <= 1);
@@ -94,7 +94,7 @@ void	PhaseGenChaos::set_chaos (double chaos)
 
 
 
-void	PhaseGenChaos::clear_buffers ()
+void	PhaseGenChaos::clear_buffers () noexcept
 {
 	_ramp_flag   = false;
 	_speed       = 0;
@@ -106,7 +106,7 @@ void	PhaseGenChaos::clear_buffers ()
 
 
 
-void	PhaseGenChaos::tick (int nbr_spl)
+void	PhaseGenChaos::tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 
@@ -207,7 +207,7 @@ void	PhaseGenChaos::tick (int nbr_spl)
 
 
 
-double	PhaseGenChaos::get_phase () const
+double	PhaseGenChaos::get_phase () const noexcept
 {
 	double			pos = _phase_gen.get_phase ();
 	if (_chaos > 0)
@@ -232,7 +232,7 @@ double	PhaseGenChaos::get_phase () const
 
 
 
-void	PhaseGenChaos::update_retrig_len ()
+void	PhaseGenChaos::update_retrig_len () noexcept
 {
 	// Update every 2/3-cycles
 	const float		per = float (_phase_gen.get_period ());

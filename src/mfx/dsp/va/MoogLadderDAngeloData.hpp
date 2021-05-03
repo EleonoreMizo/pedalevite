@@ -43,7 +43,7 @@ namespace va
 
 
 template <int N>
-float	MoogLadderDAngeloData <N>::compute_g_max (float fmax_over_fs)
+float	MoogLadderDAngeloData <N>::compute_g_max (float fmax_over_fs) noexcept
 {
 	assert (fmax_over_fs > 0);
 	assert (fmax_over_fs < 0.5f);
@@ -54,7 +54,7 @@ float	MoogLadderDAngeloData <N>::compute_g_max (float fmax_over_fs)
 
 
 template <int N>
-float	MoogLadderDAngeloData <N>::compute_k0_max (float gmax)
+float	MoogLadderDAngeloData <N>::compute_k0_max (float gmax) noexcept
 {
 	assert (gmax > 0);
 
@@ -64,7 +64,7 @@ float	MoogLadderDAngeloData <N>::compute_k0_max (float gmax)
 
 
 template <int N>
-float	MoogLadderDAngeloData <N>::compute_alpha (float k)
+float	MoogLadderDAngeloData <N>::compute_alpha (float k) noexcept
 {
 	float          alpha = 1 + k;
 
@@ -80,7 +80,7 @@ float	MoogLadderDAngeloData <N>::compute_alpha (float k)
 
 
 template <int N>
-float	MoogLadderDAngeloData <N>::compute_knorm_factor ()
+float	MoogLadderDAngeloData <N>::compute_knorm_factor () noexcept
 {
 	return 1.f / fstb::ipowp (float (cos (fstb::PI / N)), N);
 }

@@ -53,11 +53,11 @@ public:
 	typedef DT DataType;
 
 	inline static void
-	               make_interpolator (DataType fir_ptr [], float pos);
+	               make_interpolator (DataType fir_ptr [], float pos) noexcept;
 	inline static int
-	               get_length ();
+	               get_length () noexcept;
 	inline static int
-	               get_delay ();
+	               get_delay () noexcept;
 
 
 

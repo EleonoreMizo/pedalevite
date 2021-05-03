@@ -46,7 +46,7 @@ namespace mna
 
 
 
-PartVccs::PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g)
+PartVccs::PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g) noexcept
 :	_nid_i_arr {{ nid_i_1, nid_i_2 }}
 ,	_nid_o_arr {{ nid_o_1, nid_o_2 }}
 ,	_g (g)
@@ -63,7 +63,7 @@ PartVccs::PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o
 
 
 
-void	PartVccs::set_transconductance (Flt g)
+void	PartVccs::set_transconductance (Flt g) noexcept
 {
 	_g = g;
 }
@@ -105,7 +105,7 @@ void	PartVccs::do_prepare (const SimInfo &info)
 
 
 
-void	PartVccs::do_add_to_matrix (int it_cnt)
+void	PartVccs::do_add_to_matrix (int it_cnt) noexcept
 {
 	fstb::unused (it_cnt);
 
@@ -117,14 +117,14 @@ void	PartVccs::do_add_to_matrix (int it_cnt)
 
 
 
-void	PartVccs::do_step ()
+void	PartVccs::do_step () noexcept
 {
 	// Nothing
 }
 
 
 
-void	PartVccs::do_clear_buffers ()
+void	PartVccs::do_clear_buffers () noexcept
 {
 	// Nothing
 }

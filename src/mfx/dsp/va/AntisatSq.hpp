@@ -42,7 +42,7 @@ namespace va
 
 
 
-void	AntisatSq::eval (float &y, float &dy, float x)
+void	AntisatSq::eval (float &y, float &dy, float x) noexcept
 {
 	const float    xl = fstb::limit (x, -2.f, 2.f);
 	const float    xa = fabs (xl);
@@ -52,7 +52,7 @@ void	AntisatSq::eval (float &y, float &dy, float x)
 
 
 
-float AntisatSq::eval_inv (float y)
+float AntisatSq::eval_inv (float y) noexcept
 {
 	assert (y >= -1);
 	assert (y <=  1);

@@ -48,22 +48,22 @@ class InterpPhaseFpu_Util
 {
 public:
 	static fstb_FORCEINLINE void
-	               sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []);
+	               sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []) noexcept;
 	static fstb_FORCEINLINE void
-	               sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []);
+	               sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []) noexcept;
 
 	static fstb_FORCEINLINE void
-	               lerp_imp (float q, float lerp_ptr [], const float imp_ptr [], const float dif_ptr []);
+	               lerp_imp (float q, float lerp_ptr [], const float imp_ptr [], const float dif_ptr []) noexcept;
 	static fstb_FORCEINLINE void
-	               sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []);
+	               sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []) noexcept;
 	static fstb_FORCEINLINE void
-	               sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []);
+	               sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []) noexcept;
 };
 
 
 
 template <int REM>
-inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	assert (fir_len == REM);
 
@@ -76,7 +76,7 @@ inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0,
 }
 
 template <>
-inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	fstb::unused (fir_len);
 	assert (fir_len == 1);
@@ -88,7 +88,7 @@ inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, f
 
 
 template <int REM>
-inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	const int		pos = fir_len - REM;
 	c_0 += (imp_ptr [pos+0] + dif_ptr [pos+0] * q) * data_ptr [pos+0];
@@ -100,7 +100,7 @@ inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, f
 }
 
 template <>
-inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	fstb::unused (c_1);
 
@@ -108,7 +108,7 @@ inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, flo
 }
 
 template <>
-inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	fstb::unused (fir_len, c_0, c_1, data_ptr, q, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
@@ -117,14 +117,14 @@ inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, flo
 
 
 template <int REM>
-inline void	InterpPhaseFpu_Util <REM>::lerp_imp (float q, float lerp_ptr [], const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseFpu_Util <REM>::lerp_imp (float q, float lerp_ptr [], const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	InterpPhaseFpu_Util <REM - 1>::lerp_imp (q, lerp_ptr, imp_ptr, dif_ptr);
 	lerp_ptr [REM - 1] = imp_ptr [REM - 1] + dif_ptr [REM - 1] * q;
 }
 
 template <>
-inline void	InterpPhaseFpu_Util <0>::lerp_imp (float q, float lerp_ptr [], const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseFpu_Util <0>::lerp_imp (float q, float lerp_ptr [], const float imp_ptr [], const float dif_ptr []) noexcept
 {
 	fstb::unused (q, lerp_ptr, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
@@ -133,7 +133,7 @@ inline void	InterpPhaseFpu_Util <0>::lerp_imp (float q, float lerp_ptr [], const
 
 
 template <int REM>
-inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
+inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []) noexcept
 {
 	assert (fir_len == REM);
 
@@ -146,7 +146,7 @@ inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0,
 }
 
 template <>
-inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
+inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []) noexcept
 {
 	fstb::unused (fir_len);
 	assert (fir_len == 1);
@@ -158,7 +158,7 @@ inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, f
 
 
 template <int REM>
-inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
+inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []) noexcept
 {
 	const int		pos = fir_len - REM;
 	c_0 += lerp_ptr [pos+0] * data_ptr [pos+0];
@@ -170,7 +170,7 @@ inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, f
 }
 
 template <>
-inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
+inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []) noexcept
 {
 	fstb::unused (c_1);
 
@@ -178,7 +178,7 @@ inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, flo
 }
 
 template <>
-inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
+inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr []) noexcept
 {
 	fstb::unused (fir_len, c_0, c_1, data_ptr, lerp_ptr);
 	// Nothing, stops the recursion
@@ -191,7 +191,7 @@ inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, flo
 
 
 template <int PL>
-void	InterpPhaseFpu <PL>::set_data (int pos, float imp, float dif)
+void	InterpPhaseFpu <PL>::set_data (int pos, float imp, float dif) noexcept
 {
 	assert (pos >= 0);
 	assert (pos < PHASE_LEN);
@@ -203,7 +203,7 @@ void	InterpPhaseFpu <PL>::set_data (int pos, float imp, float dif)
 
 
 template <int PL>
-void	InterpPhaseFpu <PL>::precompute_impulse (Buffer &imp, float q) const
+void	InterpPhaseFpu <PL>::precompute_impulse (Buffer &imp, float q) const noexcept
 {
 	assert (q >= 0);
 	assert (q <= 1);
@@ -214,7 +214,7 @@ void	InterpPhaseFpu <PL>::precompute_impulse (Buffer &imp, float q) const
 
 
 template <int PL>
-float	InterpPhaseFpu <PL>::convolve (const float data_ptr [], const Buffer &imp) const
+float	InterpPhaseFpu <PL>::convolve (const float data_ptr [], const Buffer &imp) const noexcept
 {
 	assert (data_ptr != nullptr);
 
@@ -229,7 +229,7 @@ float	InterpPhaseFpu <PL>::convolve (const float data_ptr [], const Buffer &imp)
 
 
 template <int PL>
-float	InterpPhaseFpu <PL>::convolve (const float data_ptr [], float q) const
+float	InterpPhaseFpu <PL>::convolve (const float data_ptr [], float q) const noexcept
 {
 	assert (_imp [0] != CHK_IMPULSE_NOT_SET);
 	assert (data_ptr != nullptr);

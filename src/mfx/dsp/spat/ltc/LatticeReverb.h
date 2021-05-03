@@ -97,29 +97,35 @@ public:
 	};
 
 	               LatticeReverb ();
+	               LatticeReverb (const LatticeReverb &other) = default;
+	               LatticeReverb (LatticeReverb &&other)      = default;
+	LatticeReverb &
+	               operator = (const LatticeReverb &other)    = default;
+	LatticeReverb &
+	               operator = (LatticeReverb &&other)         = default;
 
 	void           set_sample_freq (double sample_freq);
 
-	void           set_smooth_time (float t);
-	void           set_cross_feedback (float cf);
-	void           set_stereo_spread (float spread);
+	void           set_smooth_time (float t) noexcept;
+	void           set_cross_feedback (float cf) noexcept;
+	void           set_stereo_spread (float spread) noexcept;
 
-	void           set_time_mul (Stereo s, float m);
-	void           set_fdbk_apf_mul (Stereo s, float m);
-	void           set_fdbk_ltc_mul (Stereo s, float m);
+	void           set_time_mul (Stereo s, float m) noexcept;
+	void           set_fdbk_apf_mul (Stereo s, float m) noexcept;
+	void           set_fdbk_ltc_mul (Stereo s, float m) noexcept;
 
-	void           set_time (Stereo s, int idx, float t);
-	void           set_fdbk_apf (Stereo s, int idx, float c);
-	void           set_fdbk_ltc (Stereo s, int idx, float c);
+	void           set_time (Stereo s, int idx, float t) noexcept;
+	void           set_fdbk_apf (Stereo s, int idx, float c) noexcept;
+	void           set_fdbk_ltc (Stereo s, int idx, float c) noexcept;
 
-	void           set_damping (int idx, float d);
+	void           set_damping (int idx, float d) noexcept;
 
-	void           set_lfo_freq (float f);
-	void           set_lfo_depth (int idx, float t);
+	void           set_lfo_freq (float f) noexcept;
+	void           set_lfo_depth (int idx, float t) noexcept;
 
 	std::pair <T, T>
-	               process_sample (T xl, T xr);
-	void           clear_buffers ();
+	               process_sample (T xl, T xr) noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -159,12 +165,12 @@ private:
 		bool        _dirty_flag = true;
 	};
 
-	void           update_internal_parameters ();
-	void           update_lfos ();
-	void           update_lfo_freq ();
+	void           update_internal_parameters () noexcept;
+	void           update_lfos () noexcept;
+	void           update_lfo_freq () noexcept;
 
 	fstb_FORCEINLINE static std::array <T, LatticeReverb <T, N, MAXDT>::_nbr_chn>
-	               combine_spread (T pan, T mul);
+	               combine_spread (T pan, T mul) noexcept;
 
 	float          _sample_freq = 0.f;  // Hz, > 0. 0 = not set
 	float          _inv_fs      = 0.f;
@@ -198,15 +204,6 @@ private:
 
 private:
 
-#if 0
-	               LatticeReverb ()                               = delete;
-	               LatticeReverb (const LatticeReverb &other)     = delete;
-	               LatticeReverb (LatticeReverb &&other)          = delete;
-	LatticeReverb &
-	               operator = (const LatticeReverb &other)        = delete;
-	LatticeReverb &
-	               operator = (LatticeReverb &&other)             = delete;
-#endif
 	bool           operator == (const LatticeReverb &other) const = delete;
 	bool           operator != (const LatticeReverb &other) const = delete;
 

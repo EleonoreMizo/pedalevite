@@ -50,12 +50,12 @@ class PartDiodeAntipar
 
 public:
 
-	explicit       PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1, Flt is2, Flt n2);
+	explicit       PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1, Flt is2, Flt n2) noexcept;
 	virtual        ~PartDiodeAntipar () = default;
 
-	void           set_is (int dir, Flt is);
-	void           set_n (int dir, Flt n);
-	void           set_imax (int dir, Flt imax);
+	void           set_is (int dir, Flt is) noexcept;
+	void           set_n (int dir, Flt n) noexcept;
+	void           set_imax (int dir, Flt imax) noexcept;
 
 
 
@@ -66,9 +66,9 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix (int it_cnt) final;
-	void           do_step () final;
-	void           do_clear_buffers () final;
+	void           do_add_to_matrix (int it_cnt) noexcept final;
+	void           do_step () noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 
@@ -79,10 +79,10 @@ private:
 	class Direction
 	{
 	public:
-		Flt            compute_nvt_inv () const;
-		Flt            compute_mul_v () const;
-		Flt            compute_vcrit () const;
-		Flt            compute_vmax ();
+		Flt            compute_nvt_inv () const noexcept;
+		Flt            compute_mul_v () const noexcept;
+		Flt            compute_vcrit () const noexcept;
+		Flt            compute_vmax () noexcept;
 
 		const Flt      _vt      = Flt (0.026);    // Thermal voltage, volt
 		Flt            _is      = Flt (0.1e-15);  // Inverse saturation current, ampere, > 0 for direct, < 0 for inverse

@@ -48,8 +48,6 @@ namespace fv
 
 
 FreeverbCore::FreeverbCore ()
-:	_sample_freq (0)
-,	_chn_arr ()
 {
 	dsp::mix::Align::setup ();
 
@@ -99,7 +97,7 @@ void	FreeverbCore::reset (double sample_freq, int max_buf_len)
 
 
 
-void	FreeverbCore::set_reflectivity (float fdbk)
+void	FreeverbCore::set_reflectivity (float fdbk) noexcept
 {
 	assert (fdbk > -1);
 	assert (fdbk <= 1);
@@ -112,7 +110,7 @@ void	FreeverbCore::set_reflectivity (float fdbk)
 
 
 
-void	FreeverbCore::set_reflectivity (float fdbk, int chn_index)
+void	FreeverbCore::set_reflectivity (float fdbk, int chn_index) noexcept
 {
 	assert (fdbk > -1);
 	assert (fdbk <= 1);
@@ -128,7 +126,7 @@ void	FreeverbCore::set_reflectivity (float fdbk, int chn_index)
 
 
 
-void	FreeverbCore::set_damp (float damp)
+void	FreeverbCore::set_damp (float damp) noexcept
 {
 	assert (damp >= 0);
 	assert (damp <  1);
@@ -141,7 +139,7 @@ void	FreeverbCore::set_damp (float damp)
 
 
 
-void	FreeverbCore::set_damp (float damp, int chn_index)
+void	FreeverbCore::set_damp (float damp, int chn_index) noexcept
 {
 	assert (damp >= 0);
 	assert (damp <  1);
@@ -157,7 +155,7 @@ void	FreeverbCore::set_damp (float damp, int chn_index)
 
 
 
-void	FreeverbCore::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, int chn_index)
+void	FreeverbCore::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, int chn_index) noexcept
 {
 	assert (fstb::DataAlign <true>::check_ptr (dst_ptr));
 	assert (fstb::DataAlign <true>::check_ptr (src_ptr));
@@ -189,7 +187,7 @@ void	FreeverbCore::process_block (float dst_ptr [], const float src_ptr [], int 
 
 
 
-void	FreeverbCore::clear_buffers ()
+void	FreeverbCore::clear_buffers () noexcept
 {
 	for (auto &chn : _chn_arr)
 	{

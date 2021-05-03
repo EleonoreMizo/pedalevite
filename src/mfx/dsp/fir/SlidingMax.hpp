@@ -77,7 +77,7 @@ Throws: Nothing
 */
 
 template <typename T>
-void	SlidingMax <T>::clear_buffers ()
+void	SlidingMax <T>::clear_buffers () noexcept
 {
 	fill (std::numeric_limits <DataType>::lowest ());
 }
@@ -97,7 +97,7 @@ Throws: Nothing
 */
 
 template <typename T>
-void	SlidingMax <T>::fill (const DataType &val)
+void	SlidingMax <T>::fill (const DataType &val) noexcept
 {
 	_inmax    = val;
 	_scanmax  = _inmax;
@@ -125,7 +125,7 @@ Throws: Nothing
 */
 
 template <typename T>
-typename SlidingMax <T>::DataType	SlidingMax <T>::process_sample (DataType x)
+typename SlidingMax <T>::DataType	SlidingMax <T>::process_sample (DataType x) noexcept
 {
 	if (_len == 1)
 	{
@@ -178,7 +178,7 @@ Throws: Nothing
 */
 
 template <typename T>
-void	SlidingMax <T>::process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl)
+void	SlidingMax <T>::process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);

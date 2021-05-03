@@ -55,7 +55,7 @@ namespace mix
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_1_v (float data_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::scale_1_v (float data_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
@@ -92,7 +92,7 @@ void	Simd <VD, VS>::scale_1_v (float data_ptr [], int nbr_spl, float vol)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
@@ -129,7 +129,7 @@ void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -144,7 +144,7 @@ void	Simd <VD, VS>::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (data_1_ptr));
 	assert (V128Dst::check_ptr (data_2_ptr));
@@ -191,7 +191,7 @@ void	Simd <VD, VS>::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (data_1_ptr));
 	assert (V128Dst::check_ptr (data_2_ptr));
@@ -234,7 +234,7 @@ void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -258,7 +258,7 @@ void	Simd <VD, VS>::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], i
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -297,7 +297,7 @@ void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_s
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -346,7 +346,7 @@ void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -386,7 +386,7 @@ void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -401,7 +401,7 @@ void	Simd <VD, VS>::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], i
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -446,7 +446,7 @@ void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -500,7 +500,7 @@ void	Simd <VD, VS>::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -544,7 +544,7 @@ void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -559,7 +559,7 @@ void	Simd <VD, VS>::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -596,7 +596,7 @@ void	Simd <VD, VS>::copy_2_1 (float out_ptr [], const float in_1_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -650,7 +650,7 @@ void	Simd <VD, VS>::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -695,7 +695,7 @@ void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -710,7 +710,7 @@ void	Simd <VD, VS>::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -759,7 +759,7 @@ void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -818,7 +818,7 @@ void	Simd <VD, VS>::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -867,7 +867,7 @@ void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -890,7 +890,7 @@ void	Simd <VD, VS>::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
+void	Simd <VD, VS>::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -933,7 +933,7 @@ void	Simd <VD, VS>::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], c
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -985,7 +985,7 @@ void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	if (e_vol_l == s_vol_l && e_vol_r == s_vol_r)
 	{
@@ -1008,7 +1008,7 @@ void	Simd <VD, VS>::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf)
+void	Simd <VD, VS>::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1050,7 +1050,7 @@ void	Simd <VD, VS>::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf)
+void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1096,7 +1096,7 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf)
+void	Simd <VD, VS>::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf) noexcept
 {
 	if (e_xf == s_xf)
 	{
@@ -1111,7 +1111,7 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_p
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1162,7 +1162,7 @@ void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], c
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
+void	Simd <VD, VS>::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -1219,7 +1219,7 @@ void	Simd <VD, VS>::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], cons
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -1301,7 +1301,7 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1324,7 +1324,7 @@ void	Simd <VD, VS>::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr []
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -1361,7 +1361,7 @@ void	Simd <VD, VS>::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -1402,7 +1402,7 @@ void	Simd <VD, VS>::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -1447,7 +1447,7 @@ void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1462,7 +1462,7 @@ void	Simd <VD, VS>::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1503,7 +1503,7 @@ void	Simd <VD, VS>::copy_2_2i (float out_ptr [], const float in_1_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1549,7 +1549,7 @@ void	Simd <VD, VS>::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], cons
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1599,7 +1599,7 @@ void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1614,7 +1614,7 @@ void	Simd <VD, VS>::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr []
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1662,7 +1662,7 @@ void	Simd <VD, VS>::copy_4_4i (float out_ptr [], const float in_1_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1717,7 +1717,7 @@ void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -1754,7 +1754,7 @@ void	Simd <VD, VS>::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -1795,7 +1795,7 @@ void	Simd <VD, VS>::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -1840,7 +1840,7 @@ void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -1855,7 +1855,7 @@ void	Simd <VD, VS>::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -1895,7 +1895,7 @@ void	Simd <VD, VS>::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -1940,7 +1940,7 @@ void	Simd <VD, VS>::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -1989,7 +1989,7 @@ void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -2004,7 +2004,7 @@ void	Simd <VD, VS>::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], c
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -2042,7 +2042,7 @@ void	Simd <VD, VS>::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2090,7 +2090,7 @@ void	Simd <VD, VS>::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2152,7 +2152,7 @@ void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -2186,7 +2186,7 @@ void	Simd <VD, VS>::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_sp
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -2232,7 +2232,7 @@ void	Simd <VD, VS>::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -2274,7 +2274,7 @@ void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -2289,7 +2289,7 @@ void	Simd <VD, VS>::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], in
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2329,7 +2329,7 @@ void	Simd <VD, VS>::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2381,7 +2381,7 @@ void	Simd <VD, VS>::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2429,7 +2429,7 @@ void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -2444,7 +2444,7 @@ void	Simd <VD, VS>::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -2483,7 +2483,7 @@ void	Simd <VD, VS>::mix_2_1 (float out_ptr [], const float in_1_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -2535,7 +2535,7 @@ void	Simd <VD, VS>::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -2583,7 +2583,7 @@ void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], cons
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -2598,7 +2598,7 @@ void	Simd <VD, VS>::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2642,7 +2642,7 @@ void	Simd <VD, VS>::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2699,7 +2699,7 @@ void	Simd <VD, VS>::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2752,7 +2752,7 @@ void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -2775,7 +2775,7 @@ void	Simd <VD, VS>::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
+void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2825,7 +2825,7 @@ void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2884,7 +2884,7 @@ void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) noexcept
 {
 	if (e_vol_l == s_vol_l && e_vol_r == s_vol_r)
 	{
@@ -2907,7 +2907,7 @@ void	Simd <VD, VS>::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
+void	Simd <VD, VS>::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2968,7 +2968,7 @@ void	Simd <VD, VS>::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3053,7 +3053,7 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -3076,7 +3076,7 @@ void	Simd <VD, VS>::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -3116,7 +3116,7 @@ void	Simd <VD, VS>::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_s
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -3160,7 +3160,7 @@ void	Simd <VD, VS>::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -3208,7 +3208,7 @@ void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -3223,7 +3223,7 @@ void	Simd <VD, VS>::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], i
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -3267,7 +3267,7 @@ void	Simd <VD, VS>::mix_2_2i (float out_ptr [], const float in_1_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -3316,7 +3316,7 @@ void	Simd <VD, VS>::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -3369,7 +3369,7 @@ void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -3392,7 +3392,7 @@ void	Simd <VD, VS>::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -3431,7 +3431,7 @@ void	Simd <VD, VS>::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_s
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -3474,7 +3474,7 @@ void	Simd <VD, VS>::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -3521,7 +3521,7 @@ void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -3536,7 +3536,7 @@ void	Simd <VD, VS>::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], i
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3580,7 +3580,7 @@ void	Simd <VD, VS>::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3629,7 +3629,7 @@ void	Simd <VD, VS>::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3682,7 +3682,7 @@ void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol) noexcept
 {
 	if (e_vol == s_vol)
 	{
@@ -3705,7 +3705,7 @@ void	Simd <VD, VS>::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -3751,7 +3751,7 @@ void	Simd <VD, VS>::mult_1_1 (float out_ptr [], const float in_1_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -3785,7 +3785,7 @@ void	Simd <VD, VS>::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3826,7 +3826,7 @@ void	Simd <VD, VS>::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3876,7 +3876,7 @@ void	Simd <VD, VS>::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::clear (float out_ptr [], int nbr_spl)
+void	Simd <VD, VS>::clear (float out_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
@@ -3887,7 +3887,7 @@ void	Simd <VD, VS>::clear (float out_ptr [], int nbr_spl)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::fill (float out_ptr [], int nbr_spl, float val)
+void	Simd <VD, VS>::fill (float out_ptr [], int nbr_spl, float val) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
@@ -3921,7 +3921,7 @@ void	Simd <VD, VS>::fill (float out_ptr [], int nbr_spl, float val)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e_val)
+void	Simd <VD, VS>::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
@@ -3961,7 +3961,7 @@ void	Simd <VD, VS>::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, float e_val)
+void	Simd <VD, VS>::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, float e_val) noexcept
 {
 	if (e_val == s_val)
 	{
@@ -3976,7 +3976,7 @@ void	Simd <VD, VS>::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, flo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::add_cst_1_1 (float out_ptr [], int nbr_spl, float val)
+void	Simd <VD, VS>::add_cst_1_1 (float out_ptr [], int nbr_spl, float val) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
@@ -4009,7 +4009,7 @@ void	Simd <VD, VS>::add_cst_1_1 (float out_ptr [], int nbr_spl, float val)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val)
+void	Simd <VD, VS>::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -4048,7 +4048,7 @@ void	Simd <VD, VS>::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val)
+void	Simd <VD, VS>::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val) noexcept
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -4087,7 +4087,7 @@ void	Simd <VD, VS>::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float add_val)
+void	Simd <VD, VS>::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float add_val) noexcept
 {
 	assert (V128Dst::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
@@ -4123,7 +4123,7 @@ void	Simd <VD, VS>::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_va
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl)
+void	Simd <VD, VS>::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -4159,7 +4159,7 @@ void	Simd <VD, VS>::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val)
+void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val) noexcept
 {
 	static const int  max_nbr_chn = 64;
 	assert (out_ptr != nullptr);
@@ -4252,7 +4252,7 @@ void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_pt
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol)
+void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol) noexcept
 {
 	static const int  max_nbr_chn = 64;
 	assert (out_ptr != nullptr);
@@ -4354,7 +4354,7 @@ void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_
 
 template <class VD, class VS>
 template <typename OPS, typename OPV>
-void	Simd <VD, VS>::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OPS op_s, OPV op_v)
+void	Simd <VD, VS>::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OPS op_s, OPV op_v) noexcept
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -4387,7 +4387,7 @@ void	Simd <VD, VS>::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fst
 
 template <class VD, class VS>
 template <typename OPS, typename OPV>
-void	Simd <VD, VS>::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OPS op_s, OPV op_v)
+void	Simd <VD, VS>::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OPS op_s, OPV op_v) noexcept
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (lhs_ptr));

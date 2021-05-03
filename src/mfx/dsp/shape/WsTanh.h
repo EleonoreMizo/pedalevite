@@ -43,7 +43,7 @@ class WsTanh
 
 public:
 
-	double         operator () (double x)
+	double         operator () (double x) noexcept
 	{
 		return tanh (x);
 	}

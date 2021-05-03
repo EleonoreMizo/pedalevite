@@ -69,14 +69,14 @@ void	BigMuffPi::set_sample_freq (double sample_freq)
 
 
 
-void	BigMuffPi::clear_buffers ()
+void	BigMuffPi::clear_buffers () noexcept
 {
 	_dkm.clear_buffers ();
 }
 
 
 
-void	BigMuffPi::set_pot (Pot pot, float val)
+void	BigMuffPi::set_pot (Pot pot, float val) noexcept
 {
 	assert (pot >= 0);
 	assert (pot < Pot_NBR_ELT);
@@ -90,7 +90,7 @@ void	BigMuffPi::set_pot (Pot pot, float val)
 
 
 
-float	BigMuffPi::process_sample (float x)
+float	BigMuffPi::process_sample (float x) noexcept
 {
 	_dkm.set_src_v (_idx_in, x);
 	_dkm.process_sample ();
@@ -101,7 +101,7 @@ float	BigMuffPi::process_sample (float x)
 
 
 
-void	BigMuffPi::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	BigMuffPi::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);

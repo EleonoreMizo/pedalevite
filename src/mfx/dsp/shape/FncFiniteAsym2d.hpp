@@ -44,7 +44,7 @@ namespace shape
 
 
 template <int XL, int XU, int YL, int YU, class GF>
-FncFiniteAsym2d <XL, XU, YL, YU, GF>::FncFiniteAsym2d ()
+FncFiniteAsym2d <XL, XU, YL, YU, GF>::FncFiniteAsym2d () noexcept
 {
 	init_coef ();
 }
@@ -52,7 +52,7 @@ FncFiniteAsym2d <XL, XU, YL, YU, GF>::FncFiniteAsym2d ()
 
 
 template <int XL, int XU, int YL, int YU, class GF>
-void	FncFiniteAsym2d <XL, XU, YL, YU, GF>::init_coef ()
+void	FncFiniteAsym2d <XL, XU, YL, YU, GF>::init_coef () noexcept
 {
 	if (! _coef_init_flag)
 	{
@@ -75,7 +75,7 @@ void	FncFiniteAsym2d <XL, XU, YL, YU, GF>::init_coef ()
 
 
 template <int XL, int XU, int YL, int YU, class GF>
-float	FncFiniteAsym2d <XL, XU, YL, YU, GF>::operator () (float x, float y) const
+float	FncFiniteAsym2d <XL, XU, YL, YU, GF>::operator () (float x, float y) const noexcept
 {
    assert (_coef_init_flag);
 

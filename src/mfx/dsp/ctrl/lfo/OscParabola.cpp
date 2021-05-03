@@ -46,84 +46,84 @@ namespace lfo
 
 
 
-void	OscParabola::do_set_sample_freq (double sample_freq)
+void	OscParabola::do_set_sample_freq (double sample_freq) noexcept
 {
 	_phase_gen.set_sample_freq (sample_freq);
 }
 
 
 
-void	OscParabola::do_set_period (double per)
+void	OscParabola::do_set_period (double per) noexcept
 {
 	_phase_gen.set_period (per);
 }
 
 
 
-void	OscParabola::do_set_phase (double phase)
+void	OscParabola::do_set_phase (double phase) noexcept
 {
 	_phase_gen.set_phase (phase);
 }
 
 
 
-void	OscParabola::do_set_chaos (double chaos)
+void	OscParabola::do_set_chaos (double chaos) noexcept
 {
 	_phase_gen.set_chaos (chaos);
 }
 
 
 
-void	OscParabola::do_set_phase_dist (double dist)
+void	OscParabola::do_set_phase_dist (double dist) noexcept
 {
 	_phase_dist.set_phase_dist (dist);
 }
 
 
 
-void	OscParabola::do_set_phase_dist_offset (double ofs)
+void	OscParabola::do_set_phase_dist_offset (double ofs) noexcept
 {
 	_phase_dist.set_phase_dist_offset (ofs);
 }
 
 
 
-void	OscParabola::do_set_sign (bool inv_flag)
+void	OscParabola::do_set_sign (bool inv_flag) noexcept
 {
 	_inv_flag = inv_flag;
 }
 
 
 
-void	OscParabola::do_set_polarity (bool unipolar_flag)
+void	OscParabola::do_set_polarity (bool unipolar_flag) noexcept
 {
 	_unipolar_flag = unipolar_flag;
 }
 
 
 
-void	OscParabola::do_set_variation (int /*param*/, double /*val*/)
+void	OscParabola::do_set_variation (int /*param*/, double /*val*/) noexcept
 {
 	// Nothing
 }
 
 
 
-bool	OscParabola::do_is_using_variation (int /*param*/) const
+bool	OscParabola::do_is_using_variation (int /*param*/) const noexcept
 {
 	return false;
 }
 
 
 
-void	OscParabola::do_tick (int nbr_spl)
+void	OscParabola::do_tick (int nbr_spl) noexcept
 {
 	_phase_gen.tick (nbr_spl);
 }
 
 
 
-double	OscParabola::do_get_val () const
+double	OscParabola::do_get_val () const noexcept
 {
 	const float    phase =
 		float (_phase_dist.process_phase (_phase_gen.get_phase ()));
@@ -143,14 +143,14 @@ double	OscParabola::do_get_val () const
 
 
 
-double	OscParabola::do_get_phase () const
+double	OscParabola::do_get_phase () const noexcept
 {
 	return _phase_gen.get_phase ();
 }
 
 
 
-void	OscParabola::do_clear_buffers ()
+void	OscParabola::do_clear_buffers () noexcept
 {
 	_phase_gen.clear_buffers ();
 }

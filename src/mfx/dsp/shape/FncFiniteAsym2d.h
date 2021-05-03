@@ -13,7 +13,7 @@ Template parameters:
 - YL, YU: lower and upper bounds of the grid in the Y direction
 
 - GF: Functor of the function to interpolate. Requires:
-	double GF::operator () (double x, double y);
+	double GF::operator () (double x, double y) noexcept;
 
 Possible optimisation:
 
@@ -67,12 +67,18 @@ public:
 
 	typedef GF GenFtor;
 
-	               FncFiniteAsym2d ();
+	               FncFiniteAsym2d () noexcept;
+	               FncFiniteAsym2d (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other) = default;
+	               FncFiniteAsym2d (FncFiniteAsym2d <XL, XU, YL, YU, GF> &&other) = default;
 	virtual        ~FncFiniteAsym2d () = default;
+	FncFiniteAsym2d <XL, XU, YL, YU, GF> &
+	               operator = (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other) = default;
+	FncFiniteAsym2d <XL, XU, YL, YU, GF> &
+	               operator = (FncFiniteAsym2d <XL, XU, YL, YU, GF> &&other) = default;
 
-	static void    init_coef ();
+	static void    init_coef () noexcept;
 
-	inline float   operator () (float x, float y) const;
+	inline float   operator () (float x, float y) const noexcept;
 
 
 
@@ -98,12 +104,6 @@ private:
 
 private:
 
-	               FncFiniteAsym2d (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other)   = delete;
-	               FncFiniteAsym2d (FncFiniteAsym2d <XL, XU, YL, YU, GF> &&other)        = delete;
-	FncFiniteAsym2d <XL, XU, YL, YU, GF> &
-	               operator = (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other)        = delete;
-	FncFiniteAsym2d <XL, XU, YL, YU, GF> &
-	               operator = (FncFiniteAsym2d <XL, XU, YL, YU, GF> &&other)             = delete;
 	bool           operator == (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other) const = delete;
 	bool           operator != (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other) const = delete;
 

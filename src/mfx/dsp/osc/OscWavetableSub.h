@@ -75,48 +75,48 @@ public:
 
 	static const int  PITCH_FRAC_BITS = 16;
 
-	void           set_wavetable (const WavetableDataType &wavetable);
+	void           set_wavetable (const WavetableDataType &wavetable) noexcept;
 	const WavetableDataType &
-	               use_wavetable () const;
+	               use_wavetable () const noexcept;
 
-	void           set_wavetables (const WavetableDataType &wavetable_pos, const WavetableDataType &wavetable_neg);
+	void           set_wavetables (const WavetableDataType &wavetable_pos, const WavetableDataType &wavetable_neg) noexcept;
 	const WavetableDataType &
-	               use_wavetable (int number) const;
+	               use_wavetable (int number) const noexcept;
 
-	inline void    set_base_pitch (int32_t pitch);
-	inline int32_t get_base_pitch () const;
+	inline void    set_base_pitch (int32_t pitch) noexcept;
+	inline int32_t get_base_pitch () const noexcept;
 	fstb_FORCEINLINE uint32_t
-	               set_pitch (int32_t pitch);
+	               set_pitch (int32_t pitch) noexcept;
 	fstb_FORCEINLINE void
-	               set_pitch (int32_t pitch, uint32_t pre_step, int table);
-	inline int32_t get_pitch () const;
+	               set_pitch (int32_t pitch, uint32_t pre_step, int table) noexcept;
+	inline int32_t get_pitch () const noexcept;
 
-	void           reset_phase ();
+	void           reset_phase () noexcept;
 	fstb_FORCEINLINE void
-	               set_phase (uint32_t phase);
+	               set_phase (uint32_t phase) noexcept;
 	fstb_FORCEINLINE uint32_t
-	               get_phase () const;
+	               get_phase () const noexcept;
 
 	fstb_FORCEINLINE void
-	               set_phase_rel (uint32_t rel_phase, DataType dc_fixer = 0);
+	               set_phase_rel (uint32_t rel_phase, DataType dc_fixer = 0) noexcept;
 	fstb_FORCEINLINE uint32_t
-	               get_phase_rel () const;
+	               get_phase_rel () const noexcept;
 
 	fstb_FORCEINLINE DataType
-	               get_sample_at_phase (uint32_t phase) const;
+	               get_sample_at_phase (uint32_t phase) const noexcept;
 	fstb_FORCEINLINE void
-	               get_sample_at_phase (DataType &ref_data, DataType &sub_data, uint32_t phase) const;
+	               get_sample_at_phase (DataType &ref_data, DataType &sub_data, uint32_t phase) const noexcept;
 	fstb_FORCEINLINE DataType
-	               process_sample ();
+	               process_sample () noexcept;
 	fstb_FORCEINLINE void
-	               process_sample (DataType &ref_data, DataType &sub_data);
-	void           process_block (DataType sub_data_ptr [], int nbr_spl);
-	void           process_block (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl);
-	void           process_block_mix (DataType sub_data_ptr [], int nbr_spl);
-	void           process_block_mix (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl);
+	               process_sample (DataType &ref_data, DataType &sub_data) noexcept;
+	void           process_block (DataType sub_data_ptr [], int nbr_spl) noexcept;
+	void           process_block (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl) noexcept;
+	void           process_block_mix (DataType sub_data_ptr [], int nbr_spl) noexcept;
+	void           process_block_mix (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl) noexcept;
 
 	// Convenience function
-	int32_t        conv_freq_to_pitch (float freq, float fs) const;
+	int32_t        conv_freq_to_pitch (float freq, float fs) const noexcept;
 
 
 
@@ -133,15 +133,15 @@ private:
 	static const int  PITCH_FRAC_MASK = (1 << PITCH_FRAC_BITS) - 1;
 
 	fstb_FORCEINLINE void
-	               sync_sub_phase ();
+	               sync_sub_phase () noexcept;
 	fstb_FORCEINLINE void
-	               sync_sub_phase (const fstb::FixedPoint &position_pos, fstb::FixedPoint &position_neg) const;
+	               sync_sub_phase (const fstb::FixedPoint &position_pos, fstb::FixedPoint &position_neg) const noexcept;
 	fstb_FORCEINLINE DataType
-	               generate_sample (const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const;
+	               generate_sample (const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const noexcept;
 	fstb_FORCEINLINE void
-	               generate_sample (DataType &ref_data, DataType &sub_data, const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const;
+	               generate_sample (DataType &ref_data, DataType &sub_data, const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const noexcept;
 	fstb_FORCEINLINE void
-	               step_one_sample ();
+	               step_one_sample () noexcept;
 
 	// Pitch value for Nyquist frequency.
 	int32_t        _base_pitch         = 0;

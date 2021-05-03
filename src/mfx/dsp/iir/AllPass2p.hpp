@@ -61,7 +61,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	AllPass2p::set_z_eq (float b0, float b1)
+void	AllPass2p::set_z_eq (float b0, float b1) noexcept
 {
 	_eq_z_b [0] = b0;
 	_eq_z_b [1] = b1;
@@ -69,7 +69,7 @@ void	AllPass2p::set_z_eq (float b0, float b1)
 
 
 
-void	AllPass2p::get_z_eq (float &b0, float &b1) const
+void	AllPass2p::get_z_eq (float &b0, float &b1) const noexcept
 {
 	b0 = _eq_z_b [0];
 	b1 = _eq_z_b [1];
@@ -77,7 +77,7 @@ void	AllPass2p::get_z_eq (float &b0, float &b1) const
 
 
 
-void	AllPass2p::copy_z_eq (const AllPass2p &other)
+void	AllPass2p::copy_z_eq (const AllPass2p &other) noexcept
 {
 	_eq_z_b [0] = other._eq_z_b [0];
 	_eq_z_b [1] = other._eq_z_b [1];
@@ -85,7 +85,7 @@ void	AllPass2p::copy_z_eq (const AllPass2p &other)
 
 
 
-float	AllPass2p::process_sample (float x)
+float	AllPass2p::process_sample (float x) noexcept
 {
 	const int      alt_pos = 1 - _mem_pos;
 	const float    y =   _eq_z_b [0] * (x                 - _mem_y [ alt_pos])
@@ -101,7 +101,7 @@ float	AllPass2p::process_sample (float x)
 
 
 
-float	AllPass2p::process_sample (float x, const float inc_b [2])
+float	AllPass2p::process_sample (float x, const float inc_b [2]) noexcept
 {
 	assert (inc_b != nullptr);
 
@@ -121,7 +121,7 @@ float	AllPass2p::process_sample (float x, const float inc_b [2])
 
 
 
-void	AllPass2p::step_z_eq (const float inc_b [2])
+void	AllPass2p::step_z_eq (const float inc_b [2]) noexcept
 {
 	assert (inc_b != nullptr);
 

@@ -60,15 +60,15 @@ public:
 
 	PartInterface::IdNode
 	               allocate_node ();
-	bool           is_node_gnd (int node_idx) const;
-	Flt            get_voltage (int node_idx) const;
-	Flt            get_voltage (int n1_idx, int n2_idx) const;
-	void           add_coef_mat (int row, int col, Flt val);
-	void           add_coef_vec (int row, Flt val);
+	bool           is_node_gnd (int node_idx) const noexcept;
+	Flt            get_voltage (int node_idx) const noexcept;
+	Flt            get_voltage (int n1_idx, int n2_idx) const noexcept;
+	void           add_coef_mat (int row, int col, Flt val) noexcept;
+	void           add_coef_vec (int row, Flt val) noexcept;
 
 	// Convenience functions
-	void           add_passive (int n1_idx, int n2_idx, Flt g);
-	void           add_norton (int n1_idx, int n2_idx, Flt geq, Flt ieq);
+	void           add_passive (int n1_idx, int n2_idx, Flt g) noexcept;
+	void           add_norton (int n1_idx, int n2_idx, Flt geq, Flt ieq) noexcept;
 
 
 
@@ -78,11 +78,11 @@ protected:
 
 	virtual PartInterface::IdNode
 	               do_allocate_node () = 0;
-	virtual bool   do_is_node_gnd (int node_idx) const = 0;
-	virtual Flt    do_get_voltage (int node_idx) const = 0;
-	virtual Flt    do_get_voltage (int n1_idx, int n2_idx) const = 0;
-	virtual void   do_add_coef_mat (int row, int col, Flt val) = 0;
-	virtual void   do_add_coef_vec (int row, Flt val) = 0;
+	virtual bool   do_is_node_gnd (int node_idx) const noexcept = 0;
+	virtual Flt    do_get_voltage (int node_idx) const noexcept = 0;
+	virtual Flt    do_get_voltage (int n1_idx, int n2_idx) const noexcept = 0;
+	virtual void   do_add_coef_mat (int row, int col, Flt val) noexcept = 0;
+	virtual void   do_add_coef_vec (int row, Flt val) noexcept = 0;
 
 
 

@@ -45,7 +45,7 @@ namespace osc
 
 
 
-OscSinCosStableSimd::OscSinCosStableSimd ()
+OscSinCosStableSimd::OscSinCosStableSimd () noexcept
 :	_pos_cos ()
 ,	_pos_sin ()
 ,	_alpha ()
@@ -58,7 +58,7 @@ OscSinCosStableSimd::OscSinCosStableSimd ()
 
 
 
-void	OscSinCosStableSimd::set_step (float angle_rad)
+void	OscSinCosStableSimd::set_step (float angle_rad) noexcept
 {
 	fstb::ToolsSimd::VectF32   alpha;
 	fstb::ToolsSimd::VectF32   beta;
@@ -87,7 +87,7 @@ void	OscSinCosStableSimd::set_step (float angle_rad)
 
 
 
-void	OscSinCosStableSimd::step ()
+void	OscSinCosStableSimd::step () noexcept
 {
 	auto           alpha   = fstb::ToolsSimd::load_f32 (&_alpha);
 	auto           beta    = fstb::ToolsSimd::load_f32 (&_beta );
@@ -103,7 +103,7 @@ void	OscSinCosStableSimd::step ()
 
 
 // nbr_spl = nbr_vec * 4
-void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int nbr_vec)
+void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int nbr_vec) noexcept
 {
 	assert (fstb::DataAlign <true>::check_ptr (cos_ptr));
 	assert (fstb::DataAlign <true>::check_ptr (sin_ptr));
@@ -128,21 +128,21 @@ void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_cos () const
+fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_cos () const noexcept
 {
 	return (fstb::ToolsSimd::load_f32 (&_pos_cos));
 }
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_sin () const
+fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_sin () const noexcept
 {
 	return (fstb::ToolsSimd::load_f32 (&_pos_sin));
 }
 
 
 
-void	OscSinCosStableSimd::clear_buffers ()
+void	OscSinCosStableSimd::clear_buffers () noexcept
 {
 	fstb::ToolsSimd::store_f32 (&_pos_cos, fstb::ToolsSimd::set1_f32 (1));
 	fstb::ToolsSimd::store_f32 (&_pos_sin, fstb::ToolsSimd::set_f32_zero ());
@@ -150,7 +150,7 @@ void	OscSinCosStableSimd::clear_buffers ()
 
 
 
-void	OscSinCosStableSimd::correct_fast ()
+void	OscSinCosStableSimd::correct_fast () noexcept
 {
 	auto           c       = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	auto           s       = fstb::ToolsSimd::load_f32 (&_pos_sin);
@@ -172,7 +172,7 @@ void	OscSinCosStableSimd::correct_fast ()
 
 
 
-void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta)
+void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta) noexcept
 {
 	const auto     tmp = pos_cos - alpha * pos_sin;
 	pos_sin += beta * tmp;
@@ -181,7 +181,7 @@ void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSi
 
 
 
-void	OscSinCosStableSimd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad)
+void	OscSinCosStableSimd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad) noexcept
 {
    const double   a = tan (angle_rad * 0.5f);
    alpha = fstb::ToolsSimd::set1_f32 (float (a));

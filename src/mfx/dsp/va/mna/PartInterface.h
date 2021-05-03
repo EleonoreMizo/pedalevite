@@ -90,9 +90,9 @@ public:
 
 	void           get_info (SimulInterface &sim, PartInfo &info);
 	void           prepare (const SimInfo &info);
-	void           add_to_matrix (int it_cnt);
-	void           step ();
-	void           clear_buffers ();
+	void           add_to_matrix (int it_cnt) noexcept;
+	void           step () noexcept;
+	void           clear_buffers () noexcept;
 
 
 
@@ -102,9 +102,9 @@ protected:
 
 	virtual void   do_get_info (SimulInterface &sim, PartInfo &info) = 0;
 	virtual void   do_prepare (const SimInfo &info) = 0;
-	virtual void   do_add_to_matrix (int it_cnt) = 0;
-	virtual void   do_step () = 0;
-	virtual void   do_clear_buffers () = 0;
+	virtual void   do_add_to_matrix (int it_cnt) noexcept = 0;
+	virtual void   do_step () noexcept = 0;
+	virtual void   do_clear_buffers () noexcept = 0;
 
 
 

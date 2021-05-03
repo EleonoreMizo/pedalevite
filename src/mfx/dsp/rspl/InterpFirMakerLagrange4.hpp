@@ -40,7 +40,7 @@ namespace rspl
 
 
 template <typename DT>
-void	InterpFirMakerLagrange4 <DT>::make_interpolator (DataType fir_ptr [], float pos)
+void	InterpFirMakerLagrange4 <DT>::make_interpolator (DataType fir_ptr [], float pos) noexcept
 {
 	assert (fir_ptr != nullptr);
 	assert (pos >= 0);
@@ -61,7 +61,7 @@ void	InterpFirMakerLagrange4 <DT>::make_interpolator (DataType fir_ptr [], float
 
 
 template <typename DT>
-int	InterpFirMakerLagrange4 <DT>::get_length ()
+int	InterpFirMakerLagrange4 <DT>::get_length () noexcept
 {
 	return 4;
 }
@@ -69,7 +69,7 @@ int	InterpFirMakerLagrange4 <DT>::get_length ()
 
 
 template <typename DT>
-int	InterpFirMakerLagrange4 <DT>::get_delay ()
+int	InterpFirMakerLagrange4 <DT>::get_delay () noexcept
 {
 	return 1;
 }

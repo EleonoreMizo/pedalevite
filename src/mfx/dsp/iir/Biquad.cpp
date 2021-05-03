@@ -43,7 +43,7 @@ namespace iir
 
 
 
-Biquad::Biquad ()
+Biquad::Biquad () noexcept
 :	_eq_z_b ({{ 1, 0, 0 }})
 ,	_eq_z_a ({{ 0, 0, 0 }})
 ,	_mem_x ({{ 0, 0 }})
@@ -69,7 +69,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -141,7 +141,7 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 
 
-void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3])
+void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3]) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -218,7 +218,7 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 
 
-void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, std::function <float (float)> shaper)
+void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, std::function <float (float)> shaper) noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -294,7 +294,7 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 
 
-void	Biquad::clear_buffers ()
+void	Biquad::clear_buffers () noexcept
 {
 	_mem_x [0] = 0;
 	_mem_x [1] = 0;

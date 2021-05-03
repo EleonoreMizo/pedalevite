@@ -67,9 +67,9 @@ public:
 		Curve_NBR_ELT
 	};
 
-	void           set_nbr_steps (int nbr_steps);
-	void           set_val (int index, float val);
-	void           set_curve (int index, Curve c);
+	void           set_nbr_steps (int nbr_steps) noexcept;
+	void           set_val (int index, float val) noexcept;
+	void           set_curve (int index, Curve c) noexcept;
 
 
 
@@ -78,20 +78,20 @@ public:
 protected:
 
 	// mfx::dsp::ctrl::lfo::OscInterface
-	void           do_set_sample_freq (double sample_freq) final;
-	void           do_set_period (double per) final;
-	void           do_set_phase (double phase) final;
-	void           do_set_chaos (double chaos) final;
-	void           do_set_phase_dist (double dist) final;
-	void           do_set_phase_dist_offset (double ofs) final;
-	void           do_set_sign (bool inv_flag) final;
-	void           do_set_polarity (bool unipolar_flag) final;
-	void           do_set_variation (int param, double val) final;
-	bool           do_is_using_variation (int param) const final;
-	void           do_tick (int nbr_spl) final;
-	double         do_get_val () const final;
-	double         do_get_phase () const final;
-	void           do_clear_buffers () final;
+	void           do_set_sample_freq (double sample_freq) noexcept final;
+	void           do_set_period (double per) noexcept final;
+	void           do_set_phase (double phase) noexcept final;
+	void           do_set_chaos (double chaos) noexcept final;
+	void           do_set_phase_dist (double dist) noexcept final;
+	void           do_set_phase_dist_offset (double ofs) noexcept final;
+	void           do_set_sign (bool inv_flag) noexcept final;
+	void           do_set_polarity (bool unipolar_flag) noexcept final;
+	void           do_set_variation (int param, double val) noexcept final;
+	bool           do_is_using_variation (int param) const noexcept final;
+	void           do_tick (int nbr_spl) noexcept final;
+	double         do_get_val () const noexcept final;
+	double         do_get_phase () const noexcept final;
+	void           do_clear_buffers () noexcept final;
 
 
 
@@ -108,9 +108,9 @@ private:
 	typedef std::array <Step, _max_nbr_steps> StepArray;
 
 	static constexpr double
-	               map_pos (double pos, Curve c);
+	               map_pos (double pos, Curve c) noexcept;
 	static constexpr double
-	               smooth (double x);
+	               smooth (double x) noexcept;
 
 	PhaseGenChaos  _phase_gen;
 	PhaseDist      _phase_dist;

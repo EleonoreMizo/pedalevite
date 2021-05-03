@@ -50,45 +50,45 @@ class TransSZBilin
 public:
 
 	static inline double
-	               prewarp_freq (double f0, double fs);
-	static double  prewarp_freq_rel_1 (double f0, double fref, double fs);
-	static double  prewarp_freq_rel (double f0, double fref, double fs);
-	static double  prewarp_freq_rel_mul (double f0, double fref, double fs);
+	               prewarp_freq (double f0, double fs) noexcept;
+	static double  prewarp_freq_rel_1 (double f0, double fref, double fs) noexcept;
+	static double  prewarp_freq_rel (double f0, double fref, double fs) noexcept;
+	static double  prewarp_freq_rel_mul (double f0, double fref, double fs) noexcept;
 	static std::complex <double>
-	               prewarp_root_rel (const std::complex <double> &root, double fref, double fs);
-	static void    prewarp_biquad (double b [3], double a [3], double fref, double fs);
+	               prewarp_root_rel (const std::complex <double> &root, double fref, double fs) noexcept;
+	static void    prewarp_biquad (double b [3], double a [3], double fref, double fs) noexcept;
 	static inline double
-	               unwarp_freq (double f_w, double fs);
+	               unwarp_freq (double f_w, double fs) noexcept;
 
 	template <class TS, class TZ>
-	static void    map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs);
+	static void    map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs) noexcept;
 	template <class TS, class TZ>
-	static void    map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s_eq_b [2], const TS s_eq_a [2], double f0, double fs);
+	static void    map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s_eq_b [2], const TS s_eq_a [2], double f0, double fs) noexcept;
 	template <class TS, class TZ>
-	static void    map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs);
+	static void    map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs) noexcept;
 	template <class TS, class TZ>
-	static void    map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double fs);
+	static void    map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double fs) noexcept;
 
 	template <class TS, class TZ>
-	static void    map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3], const TZ z_eq_a [3], double f0, double fs);
+	static void    map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3], const TZ z_eq_a [3], double f0, double fs) noexcept;
 	template <class TS, class TZ>
-	static void    map_z_to_s_one_pole (TS s_eq_b [2], TS s_eq_a [2], const TZ z_eq_b [2], const TZ z_eq_a [2], double f0, double fs);
+	static void    map_z_to_s_one_pole (TS s_eq_b [2], TS s_eq_a [2], const TZ z_eq_b [2], const TZ z_eq_a [2], double f0, double fs) noexcept;
 
 	static inline float
-	               compute_k_approx (float f);
+	               compute_k_approx (float f) noexcept;
 	static inline fstb::ToolsSimd::VectF32
-	               compute_k_approx (fstb::ToolsSimd::VectF32 f);
-	static void    map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const float s_eq_b [3], const float s_eq_a [3], float k);
-	static void    map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 z_eq_a [3], const fstb::ToolsSimd::VectF32 s_eq_b [3], const fstb::ToolsSimd::VectF32 s_eq_a [3], fstb::ToolsSimd::VectF32 k);
-	static void    map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [2], const float s_eq_a [2], float k);
-	static void    map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 z_eq_a [2], const fstb::ToolsSimd::VectF32 s_eq_b [2], const fstb::ToolsSimd::VectF32 s_eq_a [2], fstb::ToolsSimd::VectF32 k);
-	static void    map_s_to_z_ap1_approx (float z_eq_b [2], float k);
-	static void    map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 k);
-	static float   map_s_to_z_ap1_approx_b0 (float k);
+	               compute_k_approx (fstb::ToolsSimd::VectF32 f) noexcept;
+	static void    map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const float s_eq_b [3], const float s_eq_a [3], float k) noexcept;
+	static void    map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 z_eq_a [3], const fstb::ToolsSimd::VectF32 s_eq_b [3], const fstb::ToolsSimd::VectF32 s_eq_a [3], fstb::ToolsSimd::VectF32 k) noexcept;
+	static void    map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [2], const float s_eq_a [2], float k) noexcept;
+	static void    map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 z_eq_a [2], const fstb::ToolsSimd::VectF32 s_eq_b [2], const fstb::ToolsSimd::VectF32 s_eq_a [2], fstb::ToolsSimd::VectF32 k) noexcept;
+	static void    map_s_to_z_ap1_approx (float z_eq_b [2], float k) noexcept;
+	static void    map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 k) noexcept;
+	static float   map_s_to_z_ap1_approx_b0 (float k) noexcept;
 	static fstb::ToolsSimd::VectF32
-	               map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd::VectF32 k);
-	static void    map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k);
-	static void    map_s_to_z_ap2_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 s_eq_b1, fstb::ToolsSimd::VectF32 k);
+	               map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd::VectF32 k) noexcept;
+	static void    map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k) noexcept;
+	static void    map_s_to_z_ap2_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 s_eq_b1, fstb::ToolsSimd::VectF32 k) noexcept;
 
 
 

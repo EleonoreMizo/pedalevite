@@ -11,7 +11,7 @@ Template parameters:
 	loop of each delay. The class requires at least:
 	P::P ();
 	P::~P ();
-	T P::process_sample (T x);
+	T P::process_sample (T x) noexcept;
 
 Ported from a code by Paul Batchelor
 https://pbat.ch/sndkit/bigverb/
@@ -97,7 +97,7 @@ template <typename T>
 class ReverbSC_FdbkProcBypass
 {
 public:
-	T              process_sample (T x) { return x; }
+	T              process_sample (T x) noexcept { return x; }
 };
 
 
@@ -118,12 +118,12 @@ public:
 
 	void           set_sample_freq (double sample_freq);
 
-	void           set_size (float size);
-	void           set_cutoff (float cutoff);
+	void           set_size (float size) noexcept;
+	void           set_cutoff (float cutoff) noexcept;
 
-	void           process_sample (T *outL, T *outR, T inL, T inR);
+	void           process_sample (T *outL, T *outR, T inL, T inR) noexcept;
 
-	void           clear_buffers ();
+	void           clear_buffers () noexcept;
 
 
 
@@ -143,7 +143,7 @@ private:
 
 	struct ParamSet
 	{
-		int            get_delay_size (float sr) const;
+		int            get_delay_size (float sr) const noexcept;
 
 		float          _delay;     // delay time, s
 		float          _drift;     // random variation in delay time, s
@@ -165,10 +165,10 @@ private:
 		static constexpr int _rng_scale = _rng_range >> 1;
 
 		void           init (const ParamSet &p, int sz, float sr);
-		T              compute (T in, T fdbk, T filt, float sr);
-		void           generate_next_line (float sr);
-		float          calculate_drift () const;
-		void           clear_buffers ();
+		T              compute (T in, T fdbk, T filt, float sr) noexcept;
+		void           generate_next_line (float sr) noexcept;
+		float          calculate_drift () const noexcept;
+		void           clear_buffers () noexcept;
 
 		std::vector <T>
 		               _buf;

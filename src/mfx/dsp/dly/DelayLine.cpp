@@ -78,7 +78,7 @@ void	DelayLine::set_interpolator (rspl::InterpolatorInterface &interp)
 
 
 
-const rspl::InterpolatorInterface &	DelayLine::use_interpolator () const
+const rspl::InterpolatorInterface &	DelayLine::use_interpolator () const noexcept
 {
 	assert (_interp_ptr != nullptr);
 
@@ -129,7 +129,7 @@ void	DelayLine::set_max_delay_time (double max_time)
 
 
 
-bool	DelayLine::is_ready () const
+bool	DelayLine::is_ready () const noexcept
 {
 	return (   _sample_freq > 0
 	        && _line_data.get_max_delay_time () > 0
@@ -138,7 +138,7 @@ bool	DelayLine::is_ready () const
 
 
 
-void	DelayLine::clear_buffers ()
+void	DelayLine::clear_buffers () noexcept
 {
 	_write_pos = 0;
 	_line_data.clear_buffers ();
@@ -147,7 +147,7 @@ void	DelayLine::clear_buffers ()
 
 
 // Input data is not oversampled (if oversampling has been set)
-void	DelayLine::push_block (const float src_ptr [], int nbr_spl)
+void	DelayLine::push_block (const float src_ptr [], int nbr_spl) noexcept
 {
 	assert (is_ready ());
 	assert (src_ptr != nullptr);
@@ -193,7 +193,7 @@ void	DelayLine::push_block (const float src_ptr [], int nbr_spl)
 
 
 
-void	DelayLine::push_sample (float src)
+void	DelayLine::push_sample (float src) noexcept
 {
 	assert (is_ready ());
 	assert (1 <= _line_data.get_len () - _imp_len);
@@ -218,7 +218,7 @@ void	DelayLine::push_sample (float src)
 
 
 // offset can be negative
-void	DelayLine::move_write_head (int offset)
+void	DelayLine::move_write_head (int offset) noexcept
 {
 	const int      mask = _line_data.get_mask ();
 	_write_pos = (_write_pos + offset) & mask;
@@ -230,21 +230,21 @@ void	DelayLine::move_write_head (int offset)
 
 
 
-double	DelayLine::do_get_sample_freq () const
+double	DelayLine::do_get_sample_freq () const noexcept
 {
 	return _sample_freq;
 }
 
 
 
-int	DelayLine::do_get_ovrspl_l2 () const
+int	DelayLine::do_get_ovrspl_l2 () const noexcept
 {
 	return _ovrspl_l2;
 }
 
 
 
-double	DelayLine::do_get_min_delay_time () const
+double	DelayLine::do_get_min_delay_time () const noexcept
 {
 	assert (is_ready ());
 
@@ -253,7 +253,7 @@ double	DelayLine::do_get_min_delay_time () const
 
 
 
-double	DelayLine::do_get_max_delay_time () const
+double	DelayLine::do_get_max_delay_time () const noexcept
 {
 	assert (is_ready ());
 
@@ -262,7 +262,7 @@ double	DelayLine::do_get_max_delay_time () const
 
 
 
-int	DelayLine::do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const
+int	DelayLine::do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const noexcept
 {
 	assert (is_ready ());
 	assert (min_dly_time >= do_get_min_delay_time ());
@@ -280,7 +280,7 @@ int	DelayLine::do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) co
 
 
 
-void	DelayLine::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const
+void	DelayLine::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const noexcept
 {
 	assert (is_ready ());
 	assert (dst_ptr != nullptr);
@@ -347,7 +347,7 @@ void	DelayLine::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, do
 
 
 
-float	DelayLine::do_read_sample (float dly) const
+float	DelayLine::do_read_sample (float dly) const noexcept
 {
 	float          dst;
 

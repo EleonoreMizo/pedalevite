@@ -63,7 +63,7 @@ class HannPoisson
 
 public:
 
-	void           set_alpha (double alpha);
+	void           set_alpha (double alpha) noexcept;
 
 
 

@@ -46,17 +46,17 @@ class SweepingSin
 public:
 
 	               SweepingSin ()                         = default;
-	explicit       SweepingSin (double fs, double f1, double f2);
+	explicit       SweepingSin (double fs, double f1, double f2) noexcept;
 	               SweepingSin (const SweepingSin &other) = default;
 	               SweepingSin (SweepingSin &&other)      = default;
 
-	               ~SweepingSin () = default;
+	               ~SweepingSin ()                        = default;
 
 	SweepingSin &  operator = (const SweepingSin &other)  = default;
 	SweepingSin &  operator = (SweepingSin &&other)       = default;
 
-	void           generate (float data_ptr [], int nbr_spl);
-	void           generate (float data_ptr [], int nbr_spl, int block_start, int block_len);
+	void           generate (float data_ptr [], int nbr_spl) noexcept;
+	void           generate (float data_ptr [], int nbr_spl, int block_start, int block_len) noexcept;
 
 
 

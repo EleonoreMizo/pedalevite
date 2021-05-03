@@ -52,16 +52,16 @@ class MapSaturateBipolar
 public:
 
 	static constexpr inline T
-						saturate (T x);
+						saturate (T x) noexcept;
 	static constexpr inline T
-						desaturate (T y);
+						desaturate (T y) noexcept;
 
 	static constexpr inline T
-	               get_c ();
+	               get_c () noexcept;
 	static constexpr inline T
-	               get_xs ();
+	               get_xs () noexcept;
 	static constexpr inline T
-	               get_ys ();
+	               get_ys () noexcept;
 
 
 
