@@ -23,19 +23,22 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "ffft/FFTRealFixLen.h"
+#include "ffft/FFTReal.h"
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
 #include "mfx/dsp/spec/FrameOverlapAna.h"
 #include "mfx/dsp/spec/FrameOverlapSyn.h"
 #include "mfx/dsp/wnd/ProcHann.h"
+#include "mfx/pi/scrush/Cst.h"
 #include "mfx/pi/scrush/SpectralCrusherDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
+#include <memory>
+#include <vector>
 
 
 
@@ -77,22 +80,21 @@ protected:
 
 private:
 
-	// Base-2 log of the FFT length, in samples
-	static constexpr int _fft_len_l2 = 9;
-	static constexpr int _fft_len    = 1 << _fft_len_l2;
+	// log2 of the ratio frame size / hop size. >= 1
+	static constexpr int _hop_ratio_l2  = 2;
 
-	// Range of "useful" bins. DC is 0 and Nyquist is _bin_end
-	static constexpr int _nbr_bins   = _fft_len / 2;
-	static constexpr int _bin_beg    = 1;
-	static constexpr int _bin_end    = _nbr_bins;
+	// First bin to process. Bin 0 is DC
+	static constexpr int _bin_beg       = 1;
 
-	// Base-2 log of the overlap, in samples. Must be <= _fft_len_l2
-	static constexpr int _overlap_l2 = _fft_len_l2 - 1;
-	static constexpr int _overlap    = 1 << _overlap_l2;
+	static constexpr int _nbr_fft_sizes =
+		Cst::_fft_len_l2_max + 1 - Cst::_fft_len_l2_min;
+
+	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
 	class Channel
 	{
 	public:
+		// Analysis and synthesis overlappers
 		dsp::spec::FrameOverlapAna <float>
 		               _fo_ana;
 		dsp::spec::FrameOverlapSyn <float>
@@ -100,10 +102,14 @@ private:
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
-	void           clear_buffers ();
-	void           update_param (bool force_flag = false);
+	typedef ffft::FFTReal <float> FftType;
+	typedef std::unique_ptr <FftType> FftUPtr;
+
+	void           clear_buffers () noexcept;
+	void           update_param (bool force_flag = false) noexcept;
 	int            conv_freq_to_bin (float f) const noexcept;
 	void           mutilate_bins () noexcept;
+	void           set_fft_param (int fft_len_l2) noexcept;
 
 	State          _state = State_CREATED;
 
@@ -121,17 +127,18 @@ private:
 	               _param_change_flag_misc;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_freq;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_res;
 
 	ChannelArray   _chn_arr;
 
-	ffft::FFTRealFixLen <_fft_len_l2>
-	               _fft;
-	dsp::wnd::ProcHann <float, (_fft_len_l2 - _hop_size_l2 == 1)>
+	std::array <FftUPtr, _nbr_fft_sizes>
+	               _fft_uptr_arr;
+	FftType *      _fft_cur_ptr = nullptr;
+	dsp::wnd::ProcHann <float>
 	               _frame_win;
-	std::array <float, _fft_len>
-	               _buf_pcm;
-	std::array <float, _fft_len>
-	               _buf_bins;
+	BufAlign       _buf_pcm;
+	BufAlign       _buf_bins;
 
 	// Threshold, added to the bin magnitude.
 	// Actually it's a squared value. > 0.
@@ -155,6 +162,19 @@ private:
 	// Other bins are left untouched
 	int            _bin_pbeg    = _bin_beg;
 	int            _bin_pend    = _bin_end;
+	float          _amp_limit   = 10; // Linear value
+
+	// Base-2 log of the FFT length, in samples
+	int            _fft_len_l2  = Cst::_fft_len_l2_min;
+	int            _fft_len     = 1 << _fft_len_l2;
+
+	// Base-2 log of the overlap, in samples. Must be <= _fft_len_l2
+	int            _hop_size_l2 = _fft_len_l2 - _hop_ratio_l2;
+	int            _hop_size    = 1 << _hop_size_l2;
+
+	// Range of "useful" bins. DC is 0 and Nyquist is _bin_end
+	int            _nbr_bins    = _fft_len / 2;
+	int            _bin_end     = _nbr_bins;
 
 
 

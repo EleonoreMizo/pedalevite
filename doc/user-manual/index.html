@@ -3070,6 +3070,12 @@ Le signal est divisé en une multitude de composantes spectrales.
 Chaque composante est quantifiée individuellement, puis le signal est
 reconstitué.</p>
 
+<p class="var">Resolution</p>
+<p>Résolution spectrale de l’effet, en nombre d’échantillons.
+Ce réglage influe sur la tonalité générale de l’effet, une résolution
+faible donne un son plus grumeleux.
+Note&#8239;: plus la résolution est élevée, plus la latence augmente.</p>
+
 <p class="var">Step</p>
 <p>Hauteur du pas de quantification, en dB.
 Plus celui-ci est élevé, plus l’effet sera marqué.</p>
@@ -3107,6 +3113,12 @@ Ce paramètre est donc assez peu précis à basses fréquence.</p>
 <p>Fréquence maximum en Hz au-dessous de laquelle les composantes spectrales
 sont traitées.
 Les fréquences supérieures ne sont pas touchées.</p>
+
+<p class="var">Amplification limit</p>
+<p>Amlification maximale, en dB, que l’effet peut appliquer à une fréquence
+donnée.
+Ce paramètre permet d’éviter des changements de volume soudains et très
+importants, ce qui peut arriver en fonction des réglages.</p>
 
 
 
@@ -3628,6 +3640,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r43, 2021-05-05</b></p>
+<ul>
+<li>Ajout de quelques paramètres sur le Spectral Crusher.</li>
+</ul>
 
 <p><b>r42, 2021-05-02</b></p>
 <ul>

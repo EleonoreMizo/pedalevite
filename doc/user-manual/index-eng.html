@@ -2866,6 +2866,11 @@ frequency domain.
 The signal is divided into a lot of frequency components.
 Each component is quantised individually, then the signal is rebuilt.</p>
 
+<p class="var">Resolution</p>
+<p>Spectral resolution for the effect, in number of samples.
+This setting changes the overall tone of the effect.
+Note&#8239;: the higher the resolution, the higher the latency.</p>
+
 <p class="var">Step</p>
 <p>Height of the quantisation step, in dB.
 The higher, the stronger the effect.</p>
@@ -2899,6 +2904,12 @@ Therefore this parameter is not accurate in the lowest frequency range.</p>
 
 <p class="var">Highest frequency</p>
 <p>Frequency in Hz above which the spectral processing is bypassed.</p>
+
+<p class="var">Amplification limit</p>
+<p>Maximum amlification in dB that the effect can cause on a give frequency
+band.
+This parameter avoids sudden and important volume changes that could occur
+depending on the settings.</p>
 
 
 
@@ -3388,6 +3399,11 @@ This precision can be changed with <span class="key">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r43, 2021-05-05</b></p>
+<ul>
+<li>Added a few parameters on Spectral Crusher.</li>
+</ul>
 
 <p><b>r42, 2021-05-02</b></p>
 <ul>

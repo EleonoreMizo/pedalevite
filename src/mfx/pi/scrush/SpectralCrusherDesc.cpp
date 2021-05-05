@@ -24,8 +24,10 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/scrush/Cst.h"
 #include "mfx/pi/scrush/SpectralCrusherDesc.h"
 #include "mfx/pi/scrush/Param.h"
+#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/Simple.h"
@@ -57,6 +59,19 @@ SpectralCrusherDesc::SpectralCrusherDesc ()
 	_info._name      = "Spectral crusher\nSpectral crush\nSpec crush\nSpeCru";
 	_info._tag_list  = { piapi::Tag::_spectral_0, piapi::Tag::_distortion_0 };
 	_info._chn_pref  = piapi::ChnPref::NONE;
+
+	// Resolution
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
+		"64\n128\n256\n512\n1024",
+		"Resolution\nResol\nRes",
+		"pts",
+		0,
+		"%s"
+	);
+	assert (
+		enu_sptr->get_nat_max () == Cst::_fft_len_l2_max - Cst::_fft_len_l2_min
+	);
+	_desc_set.add_glob (Param_RESOL, enu_sptr);
 
 	// Step
 	auto           log_sptr = std::make_shared <param::TplLog> (
@@ -127,6 +142,17 @@ SpectralCrusherDesc::SpectralCrusherDesc ()
 	);
 	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
 	_desc_set.add_glob (Param_HB, log_sptr);
+
+	// Amplification limit
+	log_sptr = std::make_shared <param::TplLog> (
+		1, 256,
+		"Amplification limit\nAmp limit\nLimit\nALm",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	_desc_set.add_glob (Param_LIMIT, log_sptr);
 }
 
 

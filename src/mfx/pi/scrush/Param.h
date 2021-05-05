@@ -37,13 +37,15 @@ namespace scrush
 enum Param
 {
 
-	Param_STEP = 0,
+	Param_RESOL = 0,
+	Param_STEP,
 	Param_BIAS,
 	Param_THR,
 	Param_SHAPE,
 	Param_DIF,
 	Param_LB,
 	Param_HB,
+	Param_LIMIT,
 
 	Param_NBR_ELT
 

@@ -1210,6 +1210,7 @@ commonsrc = \
         ../../src/mfx/pi/psh1/PitchShift1.h \
         ../../src/mfx/pi/psh1/PitchShift1Desc.cpp \
         ../../src/mfx/pi/psh1/PitchShift1Desc.h \
+        ../../src/mfx/pi/scrush/Cst.h \
         ../../src/mfx/pi/scrush/Param.h \
         ../../src/mfx/pi/scrush/SpectralCrusher.cpp \
         ../../src/mfx/pi/scrush/SpectralCrusher.h \

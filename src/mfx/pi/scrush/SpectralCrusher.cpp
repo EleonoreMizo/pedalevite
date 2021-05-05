@@ -65,6 +65,7 @@ SpectralCrusher::SpectralCrusher ()
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
+	_state_set.set_val_nat (desc_set, Param_RESOL, 0);
 	_state_set.set_val_nat (desc_set, Param_STEP , 2);
 	_state_set.set_val_nat (desc_set, Param_BIAS , 0.5);
 	_state_set.set_val (              Param_THR  , 0);
@@ -72,7 +73,9 @@ SpectralCrusher::SpectralCrusher ()
 	_state_set.set_val_nat (desc_set, Param_DIF  , 0);
 	_state_set.set_val (              Param_LB   , 0);
 	_state_set.set_val (              Param_HB   , 1);
+	_state_set.set_val_nat (desc_set, Param_LIMIT, 4);
 
+	_state_set.add_observer (Param_RESOL, _param_change_flag_res);
 	_state_set.add_observer (Param_STEP , _param_change_flag_misc);
 	_state_set.add_observer (Param_BIAS , _param_change_flag_misc);
 	_state_set.add_observer (Param_THR  , _param_change_flag_misc);
@@ -80,15 +83,27 @@ SpectralCrusher::SpectralCrusher ()
 	_state_set.add_observer (Param_DIF  , _param_change_flag_misc);
 	_state_set.add_observer (Param_LB   , _param_change_flag_freq);
 	_state_set.add_observer (Param_HB   , _param_change_flag_freq);
+	_state_set.add_observer (Param_LIMIT, _param_change_flag_freq);
 
+	_param_change_flag_res .add_observer (_param_change_flag);
 	_param_change_flag_misc.add_observer (_param_change_flag);
 	_param_change_flag_freq.add_observer (_param_change_flag);
 
+	constexpr int  fft_len_max  = 1 << Cst::_fft_len_l2_max;
+	constexpr int  hop_size_max = fft_len_max >> _hop_ratio_l2;
 	for (auto &chn : _chn_arr)
 	{
-		chn._fo_ana.setup (_fft_len, _overlap, 0);
-		chn._fo_syn.setup (_fft_len, _overlap, 0);
+		chn._fo_ana.reserve (fft_len_max);
+		chn._fo_syn.reserve (fft_len_max, hop_size_max);
 	}
+
+	for (int l2 = 0; l2 < _nbr_fft_sizes; ++l2)
+	{
+		const int      fft_size = 1 << (Cst::_fft_len_l2_min + l2);
+		_fft_uptr_arr [l2] = std::make_unique <FftType> (fft_size);
+	}
+
+	set_fft_param (_fft_len_l2);
 }
 
 
@@ -123,6 +138,7 @@ int	SpectralCrusher::do_reset (double sample_freq, int max_buf_len, int &latency
 		sound remains more or less the same whatever the sampling rate.
 	***/
 
+	/*** To do: the latency is actually variable. ***/
 	latency      = _fft_len;
 
 	_sample_freq = float (    sample_freq);
@@ -131,8 +147,10 @@ int	SpectralCrusher::do_reset (double sample_freq, int max_buf_len, int &latency
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 
-	_frame_win.setup (_fft_len);
+	_buf_pcm.resize (1 << Cst::_fft_len_l2_max);
+	_buf_bins.resize (1 << Cst::_fft_len_l2_max);
 
+	_param_change_flag_res.set ();
 	_param_change_flag_misc.set ();
 	_param_change_flag_freq.set ();
 
@@ -191,14 +209,14 @@ void	SpectralCrusher::do_process_block (piapi::ProcInfo &proc)
 				_frame_win.process_frame_mul (_buf_pcm.data ());
 
 				// PCM -> frequency bins
-				_fft.do_fft (_buf_bins.data (), _buf_pcm.data ());
+				_fft_cur_ptr->do_fft (_buf_bins.data (), _buf_pcm.data ());
 
 				// Frequency domain processing
 				mutilate_bins ();
 
 				// Frequency bins -> PCM
-				_fft.rescale (_buf_bins.data ());
-				_fft.do_ifft (_buf_bins.data (), _buf_pcm.data ());
+				_fft_cur_ptr->rescale (_buf_bins.data ());
+				_fft_cur_ptr->do_ifft (_buf_bins.data (), _buf_pcm.data ());
 
 				// Output frame windowing and overlap
 				_frame_win.process_frame_mul (_buf_pcm.data ());
@@ -227,7 +245,7 @@ void	SpectralCrusher::do_process_block (piapi::ProcInfo &proc)
 
 
 
-void	SpectralCrusher::clear_buffers ()
+void	SpectralCrusher::clear_buffers () noexcept
 {
 	for (auto &chn : _chn_arr)
 	{
@@ -238,10 +256,17 @@ void	SpectralCrusher::clear_buffers ()
 
 
 
-void	SpectralCrusher::update_param (bool force_flag)
+void	SpectralCrusher::update_param (bool force_flag) noexcept
 {
 	if (_param_change_flag (true) || force_flag)
 	{
+		// Resolution
+		if (_param_change_flag_res (true) || force_flag)
+		{
+			const int      resol = _state_set.get_val_int (Param_RESOL);
+			set_fft_param (Cst::_fft_len_l2_min + resol);
+		}
+
 		// Misc param
 		if (_param_change_flag_misc (true) || force_flag)
 		{
@@ -253,7 +278,7 @@ void	SpectralCrusher::update_param (bool force_flag)
 			_qt_bias   = std::min (bias, 0.999f);
 
 			const float    thr = float (_state_set.get_val_end_nat (Param_THR));
-			_threshold = (thr * thr) * _fft_len;
+			_threshold = fstb::sq (thr);
 
 			_qt_shape  = float (_state_set.get_val_end_nat (Param_SHAPE));
 			_lin_dif   = float (_state_set.get_val_end_nat (Param_DIF));
@@ -270,6 +295,8 @@ void	SpectralCrusher::update_param (bool force_flag)
 			}
 			_bin_pbeg = std::max (conv_freq_to_bin (lb_freq), _bin_beg);
 			_bin_pend = std::min (conv_freq_to_bin (hb_freq), _bin_end);
+
+			_amp_limit = float (_state_set.get_val_end_nat (Param_LIMIT));
 		}
 	}
 }
@@ -288,6 +315,8 @@ int	SpectralCrusher::conv_freq_to_bin (float f) const noexcept
 
 void	SpectralCrusher::mutilate_bins () noexcept
 {
+	const float    thr = _threshold * _fft_len;
+
 	for (int bin_idx = _bin_pbeg; bin_idx < _bin_pend; ++bin_idx)
 	{
 		// Loads bin
@@ -295,14 +324,14 @@ void	SpectralCrusher::mutilate_bins () noexcept
 			_buf_bins [bin_idx            ],
 			_buf_bins [bin_idx + _nbr_bins]
 		};
-		auto           bin    = bin_org;
+		auto           bin = bin_org;
 
 		// Squared module, log scale
 		const float    n2_old =
-			fstb::sq (bin.real ()) + fstb::sq (bin.imag ()) + _threshold;
+			fstb::sq (bin.real ()) + fstb::sq (bin.imag ()) + thr;
 		const float    n2_old_l2 = fstb::Approx::log2 (n2_old);
 
-		// Quantified
+		// Quantised
 		const float    n2_qnt_l2 =
 			_qt_step * fstb::trunc_int (n2_old_l2 * _qt_step_inv + _qt_bias);
 		const float    n2_new_l2 =
@@ -310,7 +339,8 @@ void	SpectralCrusher::mutilate_bins () noexcept
 
 		// Ratio between both amplitudes
 		const float    ratio2_l2 = n2_new_l2 - n2_old_l2;
-		const float    ratio = fstb::Approx::exp2 (ratio2_l2 * 0.5f);
+		float          ratio     = fstb::Approx::exp2 (ratio2_l2 * 0.5f);
+		ratio = std::min (ratio, _amp_limit);
 
 		// Rescales the bin
 		bin *= ratio;
@@ -320,6 +350,42 @@ void	SpectralCrusher::mutilate_bins () noexcept
 		_buf_bins [bin_idx            ] = bin.real ();
 		_buf_bins [bin_idx + _nbr_bins] = bin.imag ();
 	}
+}
+
+
+
+void	SpectralCrusher::set_fft_param (int fft_len_l2) noexcept
+{
+	assert (fft_len_l2 >= Cst::_fft_len_l2_min);
+	assert (fft_len_l2 <= Cst::_fft_len_l2_max);
+
+	_fft_len_l2  = fft_len_l2;
+	_fft_len     = 1 << _fft_len_l2;
+
+	_hop_size_l2 = _fft_len_l2 - _hop_ratio_l2;
+	_hop_size    = 1 << _hop_size_l2;
+
+	_nbr_bins    = _fft_len / 2;
+	_bin_end     = _nbr_bins;
+
+	_fft_cur_ptr = _fft_uptr_arr [_fft_len_l2 - Cst::_fft_len_l2_min].get ();
+
+	for (int chn_idx = 0; chn_idx < _max_nbr_chn; ++chn_idx)
+	{
+		auto &         chn = _chn_arr [chn_idx];
+
+		// Because we use small processing block size, the calculation load
+		// is unevenly spread across the blocks. With multiple channels, we
+		// can make the load more homogenous by interleaving the FFT frames
+		// of each channel.
+		// Ideally we should use bit reversal if _max_nbr_chn is high.
+		const int      ofs = _hop_size * chn_idx / _max_nbr_chn;
+
+		chn._fo_ana.setup (_fft_len, _hop_size, ofs);
+		chn._fo_syn.setup (_fft_len, _hop_size, ofs);
+	}
+
+	_frame_win.setup (_fft_len);
 }
 
 
