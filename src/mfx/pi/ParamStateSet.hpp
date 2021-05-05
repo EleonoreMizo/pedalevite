@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <type_traits>
+
 
 
 namespace mfx
@@ -41,6 +43,13 @@ T	ParamStateSet::get_val_enum (int index) const
    static_assert (std::is_enum <T>::value, "T must be an enum");
 
 	return static_cast <T> (get_val_int (index));
+}
+
+
+
+bool	ParamStateSet::get_val_bool (int index) const
+{
+	return static_cast <bool> (get_val_int (index));
 }
 
 

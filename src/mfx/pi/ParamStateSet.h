@@ -76,6 +76,7 @@ public:
 	double         get_val_tgt_nat (int index) const;
 	template <typename T>
 	inline T       get_val_enum (int index) const;
+	inline bool    get_val_bool (int index) const;
 	int            get_val_int (int index) const;
 	bool           check_change (int index);
 
