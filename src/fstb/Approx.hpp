@@ -191,6 +191,9 @@ void	Approx::sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept
 template <typename T>
 T	Approx::sin_nick (T x) noexcept
 {
+	assert (x >= T (-fstb::PI));
+	assert (x <= T (+fstb::PI));
+
 	constexpr T    b = T ( 4 /  fstb::PI);
 	constexpr T    c = T (-4 / (fstb::PI * fstb::PI));
 	constexpr T    d = 0.224008f;
@@ -221,6 +224,9 @@ ToolsSimd::VectF32	Approx::sin_nick (ToolsSimd::VectF32 x) noexcept
 template <typename T>
 T	Approx::sin_nick_2pi (T x) noexcept
 {
+	assert (x >= T (-0.5));
+	assert (x <= T (+0.5));
+
 	constexpr T    b = T (  8);
 	constexpr T    c = T (-16);
 	constexpr T    d = T (  0.224008);
@@ -241,6 +247,50 @@ ToolsSimd::VectF32	Approx::sin_nick_2pi (ToolsSimd::VectF32 x) noexcept
 	const auto     z = d * (y * ToolsSimd::abs (y) - y) + y;
 
 	return z;
+}
+
+
+
+// Retuns { cos, sin }
+template <typename T>
+std::array <T, 2>	Approx::cos_sin_nick_2pi (T x) noexcept
+{
+	assert (x >= T (-0.5));
+	assert (x <= T (+0.5));
+
+	// cos (x) = sin (x + pi/2)
+	const auto     xc = (x >= T (0.25)) ? x - T (0.75) : x + T (0.25);
+
+	constexpr T    b = T (  8);
+	constexpr T    c = T (-16);
+	constexpr T    d = T (  0.224008);
+
+	const T        yc = b * xc + c * xc * std::abs (xc);
+	const T        ys = b * x  + c * x  * std::abs (x );
+	const T        zc = d * (yc * std::abs (yc) - yc) + yc;
+	const T        zs = d * (ys * std::abs (ys) - ys) + ys;
+
+	return std::array <T, 2> { zc, zs };
+}
+
+std::array <ToolsSimd::VectF32, 2>	Approx::cos_sin_nick_2pi (ToolsSimd::VectF32 x) noexcept
+{
+	// cos (x) = sin (x + pi/2)
+	const auto     c_025  = ToolsSimd::set1_f32 (0.25f);
+	const auto     c_075  = ToolsSimd::set1_f32 (0.75f);
+	const auto     ge_025 = ToolsSimd::cmp_lt_f32 (c_025, x);
+	const auto     xc     = ToolsSimd::select (ge_025, x - c_075, x + c_025);
+
+	const auto     b  = ToolsSimd::set1_f32 (  8);
+	const auto     c  = ToolsSimd::set1_f32 (-16);
+	const auto     d  = ToolsSimd::set1_f32 (  0.224008f);
+
+	const auto     yc = b * xc + c * xc * ToolsSimd::abs (xc);
+	const auto     ys = b * x  + c * x  * ToolsSimd::abs (x );
+	const auto     zc = d * (yc * ToolsSimd::abs (yc) - yc) + yc;
+	const auto     zs = d * (ys * ToolsSimd::abs (ys) - ys) + ys;
+
+	return std::array <ToolsSimd::VectF32, 2> { zc, zs };
 }
 
 

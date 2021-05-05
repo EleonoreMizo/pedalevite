@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/ToolsSimd.h"
 
+#include <array>
+
 #include <cstdint>
 
 
@@ -71,6 +73,12 @@ public:
 	               sin_nick_2pi (T x) noexcept;
 	static inline ToolsSimd::VectF32
 	               sin_nick_2pi (ToolsSimd::VectF32 x) noexcept;
+
+	template <typename T>
+	static inline std::array <T, 2>
+	               cos_sin_nick_2pi (T x) noexcept;
+	static inline std::array <ToolsSimd::VectF32, 2>
+	               cos_sin_nick_2pi (ToolsSimd::VectF32 x) noexcept;
 
 	static inline float
 	               log2 (float val) noexcept;
