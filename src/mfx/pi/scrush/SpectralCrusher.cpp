@@ -287,28 +287,13 @@ void	SpectralCrusher::update_param (bool force_flag) noexcept
 		// Processed frequency band
 		if (_param_change_flag_freq (true) || force_flag)
 		{
-			float          lb_freq = float (_state_set.get_val_end_nat (Param_LB));
-			float          hb_freq = float (_state_set.get_val_end_nat (Param_HB));
-			if (hb_freq < lb_freq)
-			{
-				std::swap (lb_freq, hb_freq);
-			}
-			_bin_pbeg = std::max (conv_freq_to_bin (lb_freq), _bin_beg);
-			_bin_pend = std::min (conv_freq_to_bin (hb_freq), _bin_end);
+			_freq_min = float (_state_set.get_val_end_nat (Param_LB));
+			_freq_max = float (_state_set.get_val_end_nat (Param_HB));
+			update_bin_range ();
 
 			_amp_limit = float (_state_set.get_val_end_nat (Param_LIMIT));
 		}
 	}
-}
-
-
-
-int	SpectralCrusher::conv_freq_to_bin (float f) const noexcept
-{
-	assert (f >= 0);
-	assert (f < _sample_freq * 0.5f);
-
-	return fstb::round_int (f * _inv_fs * _fft_len);
 }
 
 
@@ -386,6 +371,31 @@ void	SpectralCrusher::set_fft_param (int fft_len_l2) noexcept
 	}
 
 	_frame_win.setup (_fft_len);
+
+	update_bin_range ();
+}
+
+
+
+void	SpectralCrusher::update_bin_range () noexcept
+{
+	if (_freq_max < _freq_min)
+	{
+		std::swap (_freq_min, _freq_max);
+	}
+
+	_bin_pbeg = std::max (conv_freq_to_bin (_freq_min), _bin_beg);
+	_bin_pend = std::min (conv_freq_to_bin (_freq_max), _bin_end);
+}
+
+
+
+int	SpectralCrusher::conv_freq_to_bin (float f) const noexcept
+{
+	assert (f >= 0);
+	assert (f < _sample_freq * 0.5f);
+
+	return fstb::round_int (f * _inv_fs * _fft_len);
 }
 
 

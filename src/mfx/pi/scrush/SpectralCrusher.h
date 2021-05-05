@@ -107,9 +107,10 @@ private:
 
 	void           clear_buffers () noexcept;
 	void           update_param (bool force_flag = false) noexcept;
-	int            conv_freq_to_bin (float f) const noexcept;
 	void           mutilate_bins () noexcept;
 	void           set_fft_param (int fft_len_l2) noexcept;
+	void           update_bin_range () noexcept;
+	int            conv_freq_to_bin (float f) const noexcept;
 
 	State          _state = State_CREATED;
 
@@ -158,11 +159,12 @@ private:
 	// Amount of original bin subtracted to the modified bin. [0 ; 1]
 	float          _lin_dif     = 0;
 
-	// Bin indexes defining the range to be processed. [1 ; _nbr_bins[
-	// Other bins are left untouched
-	int            _bin_pbeg    = _bin_beg;
-	int            _bin_pend    = _bin_end;
-	float          _amp_limit   = 10; // Linear value
+	// Frequency range for the effect, Hz
+	float          _freq_min    = 20;
+	float          _freq_max    = 20480;
+
+	// Amplification limit, linear value
+	float          _amp_limit   = 10;
 
 	// Base-2 log of the FFT length, in samples
 	int            _fft_len_l2  = Cst::_fft_len_l2_min;
@@ -175,6 +177,11 @@ private:
 	// Range of "useful" bins. DC is 0 and Nyquist is _bin_end
 	int            _nbr_bins    = _fft_len / 2;
 	int            _bin_end     = _nbr_bins;
+
+	// Bin indexes defining the range to be processed. [1 ; _nbr_bins[
+	// Other bins are left untouched
+	int            _bin_pbeg    = _bin_beg;
+	int            _bin_pend    = _bin_end;
 
 
 
