@@ -47,6 +47,34 @@ namespace spec
 
 /*
 ==============================================================================
+Name: reserve
+Description:
+	Allocates memory for a maximum frame size and hop size. This is useful when
+	the frame size is dynamic and is changed in a real-time thread, so setup()
+	is guaranteed not throwing.
+Input parameters:
+	- frame_size: maximum length of the frame, in samples. > 0
+	- hop_size: maximum time interval between two frames, in samples.
+		]0 ; frame_size]
+Throws: depends on std::vector
+==============================================================================
+*/
+
+template <typename T>
+void	FrameOverlapSyn <T>::reserve (int frame_size, int hop_size)
+{
+	assert (frame_size > 0);
+	assert (hop_size > 0);
+	assert (hop_size <= frame_size);
+
+	const int      buf_len = 1 << fstb::get_next_pow_2 (frame_size + hop_size);
+	_buf.reserve (buf_len);
+}
+
+
+
+/*
+==============================================================================
 Name: setup
 Description:
 	Sets the frame parameters, namely the frame size and the hop size.

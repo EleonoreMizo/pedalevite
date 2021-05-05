@@ -68,6 +68,7 @@ public:
 		bool           _frame_flag  = false;
 	};
 
+	void           reserve (int frame_size, int hop_size);
 	void           setup (int frame_size, int hop_size, int offset);
 
 	inline int     get_len_before_next_frame () const noexcept;
