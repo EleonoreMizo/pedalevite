@@ -5133,16 +5133,16 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\FrameOverlapSyn.hpp">
       <Filter>mfx\dsp\spec</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHalfSine.h">
-      <Filter>mfx\dsp\wnd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHalfSine.hpp">
-      <Filter>mfx\dsp\wnd</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowC2.h">
       <Filter>mfx\dsp\wnd</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowC2.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHann.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHann.hpp">
       <Filter>mfx\dsp\wnd</Filter>
     </ClInclude>
   </ItemGroup>

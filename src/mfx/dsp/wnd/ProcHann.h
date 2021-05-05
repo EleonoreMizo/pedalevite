@@ -1,12 +1,18 @@
 /*****************************************************************************
 
-        ProcHalfSine.h
+        ProcHann.h
         Author: Laurent de Soras, 2021
 
-Direct computation of a half-sine window, giving a Hann window (raised cosine)
-once squared.
+Direct computation of a Hann window (raised cosine), or a half-sine window
+giving a Hann window once squared.
 
-Uses a simple biquad sine oscillator.
+Uses a simple Reinsch sine oscillator.
+
+Template parameters:
+
+- T: data type, floating point
+
+- HSFLAG: indicates the generated window is a half-sine instead of a Hann.
 
 --- Legal stuff ---
 
@@ -21,8 +27,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_wnd_ProcHalfSine_HEADER_INCLUDED)
-#define mfx_dsp_wnd_ProcHalfSine_HEADER_INCLUDED
+#if ! defined (mfx_dsp_wnd_ProcHann_HEADER_INCLUDED)
+#define mfx_dsp_wnd_ProcHann_HEADER_INCLUDED
 
 
 
@@ -41,8 +47,8 @@ namespace wnd
 
 
 
-template <typename T>
-class ProcHalfSine
+template <typename T, bool HSFLAG = false>
+class ProcHann
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -70,11 +76,14 @@ protected:
 
 private:
 
+	static fstb_FORCEINLINE T
+	               iterate (T &u, T &v, T k);
+
 	int            _length = 0;
-	T              _k      = T (0); // Biquad oscillator coefficient parameter
-	T              _z1     = T (0);
-	T              _z2     = T (0);
-	T              _z2_org = T (0);
+	T              _k      = T (0); // Reinsch oscillator coefficient parameter
+	T              _u      = T (0);
+	T              _v      = T (0);
+	T              _v_org  = T (0);
 
 
 
@@ -82,10 +91,10 @@ private:
 
 private:
 
-	bool           operator == (const ProcHalfSine &other) const = delete;
-	bool           operator != (const ProcHalfSine &other) const = delete;
+	bool           operator == (const ProcHann &other) const = delete;
+	bool           operator != (const ProcHann &other) const = delete;
 
-}; // class ProcHalfSine
+}; // class ProcHann
 
 
 
@@ -95,11 +104,11 @@ private:
 
 
 
-#include "mfx/dsp/wnd/ProcHalfSine.hpp"
+#include "mfx/dsp/wnd/ProcHann.hpp"
 
 
 
-#endif   // mfx_dsp_wnd_ProcHalfSine_HEADER_INCLUDED
+#endif   // mfx_dsp_wnd_ProcHann_HEADER_INCLUDED
 
 
 

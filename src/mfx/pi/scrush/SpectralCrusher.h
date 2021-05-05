@@ -29,7 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/AllocAlign.h"
 #include "mfx/dsp/spec/FrameOverlapAna.h"
 #include "mfx/dsp/spec/FrameOverlapSyn.h"
-#include "mfx/dsp/wnd/ProcHalfSine.h"
+#include "mfx/dsp/wnd/ProcHann.h"
 #include "mfx/pi/scrush/SpectralCrusherDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -126,7 +126,7 @@ private:
 
 	ffft::FFTRealFixLen <_fft_len_l2>
 	               _fft;
-	dsp::wnd::ProcHalfSine <float>
+	dsp::wnd::ProcHann <float, (_fft_len_l2 - _hop_size_l2 == 1)>
 	               _frame_win;
 	std::array <float, _fft_len>
 	               _buf_pcm;

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ProcHalfSine.hpp
+        ProcHann.hpp
         Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if ! defined (mfx_dsp_wnd_ProcHalfSine_CODEHEADER_INCLUDED)
-#define mfx_dsp_wnd_ProcHalfSine_CODEHEADER_INCLUDED
+#if ! defined (mfx_dsp_wnd_ProcHann_CODEHEADER_INCLUDED)
+#define mfx_dsp_wnd_ProcHann_CODEHEADER_INCLUDED
 
 
 
@@ -51,15 +51,15 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T>
-void	ProcHalfSine <T>::setup (int length) noexcept
+template <typename T, bool HSFLAG>
+void	ProcHann <T, HSFLAG>::setup (int length) noexcept
 {
 	assert (length > 0);
 
 	const double   omega = fstb::PI / length;
 	_length = length;
-	_k      = T (2 * cos (omega));
-	_z2_org = T (sin (-omega));
+	_k      = T (4 * fstb::sq (sin (omega * 0.5)));
+	_v_org  = T (sin (omega));
 
 	start ();
 }
@@ -75,13 +75,13 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T>
-void	ProcHalfSine <T>::start () noexcept
+template <typename T, bool HSFLAG>
+void	ProcHann <T, HSFLAG>::start () noexcept
 {
 	assert (_length > 0);
 
-	_z1  = 0;
-	_z2  = _z2_org;
+	_u = 0;
+	_v = _v_org;
 }
 
 
@@ -99,17 +99,12 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T>
-T	ProcHalfSine <T>::process_sample () noexcept
+template <typename T, bool HSFLAG>
+T	ProcHann <T, HSFLAG>::process_sample () noexcept
 {
 	assert (_length > 0);
 
-	const auto     z1 = _z1;
-	const auto     z0 = _k * _z1 - _z2;
-	_z2 = z1;
-	_z1 = z0;
-
-	return z1;
+	return iterate (_u, _v, _k);
 }
 
 
@@ -126,21 +121,19 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T>
-void	ProcHalfSine <T>::process_frame_mul (T spl_ptr []) const noexcept
+template <typename T, bool HSFLAG>
+void	ProcHann <T, HSFLAG>::process_frame_mul (T spl_ptr []) const noexcept
 {
 	assert (spl_ptr != nullptr);
 
-	T              z1 = 0;
-	auto           z2 = _z2_org;
-	const auto     k  = _k;
+	T              u = 0;
+	auto           v = _v_org;
+	const auto     k = _k;
 
 	for (int pos = 0; pos < _length; ++pos)
 	{
-		spl_ptr [pos] *= z1;
-		const auto     z0 = k * z1 - z2;
-		z2 = z1;
-		z1 = z0;
+		const auto     u_n = iterate (u, v, k);
+		spl_ptr [pos] *= u_n;
 	}
 }
 
@@ -160,23 +153,21 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T>
-void	ProcHalfSine <T>::process_frame_mul (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr) const noexcept
+template <typename T, bool HSFLAG>
+void	ProcHann <T, HSFLAG>::process_frame_mul (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr) const noexcept
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
 	assert (src_ptr != dst_ptr);
 
-	T              z1 = 0;
-	auto           z2 = _z2_org;
-	const auto     k  = _k;
+	T              u = 0;
+	auto           v = _v_org;
+	const auto     k = _k;
 
 	for (int pos = 0; pos < _length; ++pos)
 	{
-		dst_ptr [pos] = src_ptr [pos] * z1;
-		const auto     z0 = k * z1 - z2;
-		z2 = z1;
-		z1 = z0;
+		const auto     u_n = iterate (u, v, k);
+		dst_ptr [pos] = src_ptr [pos] * u_n;
 	}
 }
 
@@ -190,13 +181,30 @@ void	ProcHalfSine <T>::process_frame_mul (T * fstb_RESTRICT dst_ptr, const T * f
 
 
 
+template <typename T, bool HSFLAG>
+T	ProcHann <T, HSFLAG>::iterate (T &u, T &v, T k)
+{
+	const auto     u_n = u;
+	u += v;
+	v -= u * k;
+
+	if (HSFLAG)
+	{
+		return u_n;
+	}
+
+	return fstb::sq (u_n);
+}
+
+
+
 }  // namespace wnd
 }  // namespace dsp
 }  // namespace mfx
 
 
 
-#endif   // mfx_dsp_wnd_ProcHalfSine_CODEHEADER_INCLUDED
+#endif   // mfx_dsp_wnd_ProcHann_CODEHEADER_INCLUDED
 
 
 

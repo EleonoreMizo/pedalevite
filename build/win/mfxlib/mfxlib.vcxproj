@@ -1218,8 +1218,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Ultraspherical.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp" />
-    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHalfSine.h" />
-    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHalfSine.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHann.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHann.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpLin.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpPoly3.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpPoly3.hpp" />
