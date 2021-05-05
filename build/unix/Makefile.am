@@ -1216,6 +1216,11 @@ commonsrc = \
         ../../src/mfx/pi/scrush/SpectralCrusher.h \
         ../../src/mfx/pi/scrush/SpectralCrusherDesc.cpp \
         ../../src/mfx/pi/scrush/SpectralCrusherDesc.h \
+        ../../src/mfx/pi/sfreeze/Param.h \
+        ../../src/mfx/pi/sfreeze/SpectralFreeze.cpp \
+        ../../src/mfx/pi/sfreeze/SpectralFreeze.h \
+        ../../src/mfx/pi/sfreeze/SpectralFreezeDesc.cpp \
+        ../../src/mfx/pi/sfreeze/SpectralFreezeDesc.h \
         ../../src/mfx/pi/spkem/Param.h \
         ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
         ../../src/mfx/pi/spkem/SpeakerEmu.h \

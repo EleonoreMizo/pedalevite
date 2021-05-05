@@ -457,6 +457,9 @@
     <Filter Include="mfx\pi\scrush">
       <UniqueIdentifier>{76962640-4435-42df-a137-41c7af04d485}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\sfreeze">
+      <UniqueIdentifier>{5aef6e80-eb70-41bc-a75c-6a4c92799a37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5145,6 +5148,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\ProcHann.hpp">
       <Filter>mfx\dsp\wnd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\Param.h">
+      <Filter>mfx\pi\sfreeze</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreeze.h">
+      <Filter>mfx\pi\sfreeze</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreezeDesc.h">
+      <Filter>mfx\pi\sfreeze</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\scrush\Cst.h">
       <Filter>mfx\pi\scrush</Filter>
     </ClInclude>
@@ -6547,6 +6559,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\scrush\SpectralCrusherDesc.cpp">
       <Filter>mfx\pi\scrush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreeze.cpp">
+      <Filter>mfx\pi\sfreeze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreezeDesc.cpp">
+      <Filter>mfx\pi\sfreeze</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

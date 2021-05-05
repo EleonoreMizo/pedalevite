@@ -112,6 +112,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/ramp/RampDesc.h"
 #include "mfx/pi/scrush/SpectralCrusher.h"
 #include "mfx/pi/scrush/SpectralCrusherDesc.h"
+#include "mfx/pi/sfreeze/SpectralFreeze.h"
+#include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
 #include "mfx/pi/smood/SkoolMood.h"
 #include "mfx/pi/smood/SkoolMoodDesc.h"
 #include "mfx/pi/syn0/Synth0.h"
@@ -218,6 +220,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	FactoryTpl <tomo::ToMonoDesc        , tomo::ToMono             >::create ()
 		,	FactoryTpl <pidet2::PitchDetect2Desc, pidet2::PitchDetect2     >::create ()
 		,	FactoryTpl <scrush::SpectralCrusherDesc,scrush::SpectralCrusher>::create ()
+		,	FactoryTpl <sfreeze::SpectralFreezeDesc,sfreeze::SpectralFreeze>::create ()
 		};
 
 		fact_list = l;
