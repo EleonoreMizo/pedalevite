@@ -243,10 +243,9 @@ void	FrameOverlapSyn <T>::set_frame (const T frame_ptr []) noexcept
 	assert (_hop_pos == 0);
 	assert (frame_ptr != nullptr);
 
-	const int      pos_dst = (_buf_pos - _frame_size) & _buf_msk;
 	dly::RingBufVectorizer  rbv (_buf_len);
 	int            pos_src = 0;
-	for (rbv.start (_frame_size, pos_dst); rbv.end (); rbv.next ())
+	for (rbv.start (_frame_size, _buf_pos); rbv.end (); rbv.next ())
 	{
 		const int      blk_len = rbv.get_seg_len ();
 		const int      blk_pos = rbv.get_curs_pos (0);
