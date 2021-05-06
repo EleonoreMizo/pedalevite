@@ -5160,6 +5160,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\scrush\Cst.h">
       <Filter>mfx\pi\scrush</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\Cst.h">
+      <Filter>mfx\pi\sfreeze</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

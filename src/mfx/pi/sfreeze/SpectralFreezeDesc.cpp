@@ -24,9 +24,13 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+#include "mfx/pi/sfreeze/Cst.h"
 #include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
 #include "mfx/pi/sfreeze/Param.h"
 #include "mfx/pi/param/TplEnum.h"
+#include "mfx/pi/param/MapPiecewiseLinLog.h"
+#include "mfx/pi/param/TplMapped.h"
 #include "mfx/piapi/Tag.h"
 
 #include <cassert>
@@ -56,11 +60,10 @@ SpectralFreezeDesc::SpectralFreezeDesc ()
 	_info._tag_list  = { piapi::Tag::_spectral_0 };
 	_info._chn_pref  = piapi::ChnPref::NONE;
 
-	// Freeze
-	auto           enu_sptr = std::make_shared <param::TplEnum> (
-		"Off\nOn", "Freeze\nFrz", "", 0, "%s"
-	);
-	_desc_set.add_glob (Param_FREEZE, enu_sptr);
+	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
+	{
+		configure_slot (slot_idx);
+	}
 }
 
 
@@ -107,6 +110,40 @@ const piapi::ParamDescInterface &	SpectralFreezeDesc::do_get_param_info (piapi::
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	SpectralFreezeDesc::configure_slot (int slot_idx)
+{
+	assert (slot_idx >= 0);
+	assert (slot_idx < Cst::_nbr_slots);
+
+	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+
+	const int      base = Param_SLOT_BASE + slot_idx * ParamSlot_NBR_ELT;
+
+	// Freeze
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
+		"Off\nOn",
+		"Slot %d freeze\nS%d freeze\nS%d frz\nS%dF",
+		"",
+		slot_idx,
+		"%s"
+	);
+	_desc_set.add_glob (base + ParamSlot_FREEZE, enu_sptr);
+
+	// Gain
+	auto           pll_sptr = std::make_shared <TplPll> (
+		0, 2,
+		"Slot %d gain\nS%d gain\nS%dG",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		slot_idx,
+		"%+5.1f"
+	);
+	pll_sptr->use_mapper ().gen_log (10, fstb::SQRT2);
+	_desc_set.add_glob (base + ParamSlot_GAIN, pll_sptr);
+}
 
 
 

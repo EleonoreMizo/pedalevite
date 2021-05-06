@@ -67,11 +67,19 @@ SpectralFreeze::SpectralFreeze ()
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_FREEZE, 0);
+	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
+	{
+		const int      base = Param_SLOT_BASE + slot_idx * ParamSlot_NBR_ELT;
+		auto &         pcf  = _param_change_flag_slot_arr [slot_idx];
 
-	_state_set.add_observer (Param_FREEZE, _param_change_flag_misc);
+		_state_set.set_val_nat (desc_set, base + ParamSlot_FREEZE, 0);
+		_state_set.set_val_nat (desc_set, base + ParamSlot_GAIN  , 1);
 
-	_param_change_flag_misc.add_observer (_param_change_flag);
+		_state_set.add_observer (base + ParamSlot_FREEZE, pcf);
+		_state_set.add_observer (base + ParamSlot_GAIN  , pcf);
+
+		pcf.add_observer (_param_change_flag);
+	}
 }
 
 
@@ -134,11 +142,21 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 		chn._fo_ana.setup (_fft_len, _hop_size, ofs_com);
 		chn._fo_syn.setup (_fft_len, _hop_size, ofs_com + ofs_syn);
+
+		for (auto &slot : chn._slot_arr)
+		{
+			slot._frz_state = FreezeState::NONE;
+			slot._nbr_hops  = 0;
+		}
 	}
 
 	_frame_win.setup (_fft_len);
 
-	_param_change_flag_misc.set ();
+	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
+	{
+		auto &         pcf  = _param_change_flag_slot_arr [slot_idx];
+		pcf.set ();
+	}
 
 	update_param (true);
 	_param_proc.req_steady ();
@@ -211,7 +229,7 @@ void	SpectralFreeze::do_process_block (piapi::ProcInfo &proc)
 			if (req_syn_flag)
 			{
 				// Synthesis
-				sythesise_bins (chn);
+				synthesise_bins (chn);
 
 				// Frequency bins -> PCM
 				_fft.do_ifft (_buf_bins.data (), _buf_pcm.data ());
@@ -258,19 +276,32 @@ void	SpectralFreeze::update_param (bool force_flag)
 {
 	if (_param_change_flag (true) || force_flag)
 	{
-		// Misc param
-		if (_param_change_flag_misc (true) || force_flag)
+		// Slot parameters
+		for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
 		{
-			const bool     frz_flag = _state_set.get_val_bool (Param_FREEZE);
-			for (auto &chn : _chn_arr)
+			const int      base = Param_SLOT_BASE + slot_idx * ParamSlot_NBR_ELT;
+
+			if (_param_change_flag_slot_arr [slot_idx] (true) || force_flag)
 			{
-				if (! frz_flag)
+				const bool     frz_flag =
+					_state_set.get_val_bool (base + ParamSlot_FREEZE);
+				const float    gain     =
+					float (_state_set.get_val_end_nat (base + ParamSlot_GAIN));
+
+				for (auto &chn : _chn_arr)
 				{
-					chn._frz_state = FreezeState::NONE;
-				}
-				else if (chn._frz_state == FreezeState::NONE)
-				{
-					chn._frz_state = FreezeState::CAPTURE1;
+					auto &         slot = chn._slot_arr [slot_idx];
+
+					if (! frz_flag)
+					{
+						slot._frz_state = FreezeState::NONE;
+					}
+					else if (slot._frz_state == FreezeState::NONE)
+					{
+						slot._frz_state = FreezeState::CAPTURE1;
+					}
+
+					slot._gain = gain;
 				}
 			}
 		}
@@ -291,103 +322,135 @@ int	SpectralFreeze::conv_freq_to_bin (float f) const noexcept
 
 void	SpectralFreeze::analyse_bins (Channel &chn) noexcept
 {
-	if (chn._frz_state == FreezeState::CAPTURE1)
+	for (auto &slot : chn._slot_arr)
 	{
-		// Normalizes each bin, so we keep only its phase information
-		for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
+		if (slot._frz_state == FreezeState::CAPTURE1)
 		{
-			std::complex <float> bin {
-				_buf_bins [bin_idx            ],
-				_buf_bins [bin_idx + _nbr_bins]
-			};
-
-			/*** To do: optimise this with a fast inverse square root ***/
-			const float    mag = std::abs (bin);
-			if (fstb::is_null (mag))
-			{
-				bin = std::complex <float> { 1, 0 };
-			}
-			else
-			{
-				const float    inv_mag = (mag > 0) ? 1.f / mag : 0;
-				bin *= inv_mag;
-			}
-
-			chn._buf_freeze [bin_idx            ] = bin.real ();
-			chn._buf_freeze [bin_idx + _nbr_bins] = bin.imag ();
+			analyse_capture1 (slot);
 		}
-
-		chn._frz_state = FreezeState::CAPTURE2;
-	}
-
-	else if (chn._frz_state == FreezeState::CAPTURE2)
-	{
-		// For each bin, evaluates the phase difference between this frame and
-		// the previous one.
-		for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
+		else if (slot._frz_state == FreezeState::CAPTURE2)
 		{
-			std::complex <float> bin {
-				_buf_bins [bin_idx            ],
-				_buf_bins [bin_idx + _nbr_bins]
-			};
-			std::complex <float> bin_old {
-				chn._buf_freeze [bin_idx            ],
-				chn._buf_freeze [bin_idx + _nbr_bins]
-			};
-
-			// Phase difference
-			float          arg_n = 0;
-			const float    b0r   = bin_old.real ();
-			const float    b0i   = bin_old.imag ();
-			if (! fstb::is_null (fabsf (b0r) + fabsf (b0i)))
-			{
-				// Division formula without scaling: bin / bin_old = b1 / b0
-				const float    b1r   = bin.real ();
-				const float    b1i   = bin.imag ();
-				const float    dr    = b1r * b0r + b1i * b0i;
-				const float    di    = b1i * b0r - b1r * b0i;
-
-				// Extracts the angle
-				/*** To do: use a faster approximation ***/
-				const float    angle = atan2f (di, dr);
-
-				// Scales the resulting phase from [-pi ; +pi] to [-1/2; +1/2]
-				arg_n = angle * float (0.5 / fstb::PI);
-			}
-
-			chn._buf_freeze [bin_idx            ] = std::abs (bin);
-			chn._buf_freeze [bin_idx + _nbr_bins] = arg_n;
+			analyse_capture2 (slot);
 		}
-
-		chn._frz_state = FreezeState::REPLAY;
-		chn._nbr_hops  = 1;
 	}
 }
 
 
 
-void	SpectralFreeze::sythesise_bins (Channel &chn) noexcept
+void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 {
-	clear_bins ();
-
-	if (chn._frz_state == FreezeState::REPLAY)
+	// Normalizes each bin, so we keep only its phase information
+	for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
 	{
+		std::complex <float> bin {
+			_buf_bins [bin_idx            ],
+			_buf_bins [bin_idx + _nbr_bins]
+		};
 
-		++ chn._nbr_hops;
+		/*** To do: optimise this with a fast inverse square root ***/
+		const float    mag = std::abs (bin);
+		if (fstb::is_null (mag))
+		{
+			bin = std::complex <float> { 1, 0 };
+		}
+		else
+		{
+			const float    inv_mag = (mag > 0) ? 1.f / mag : 0;
+			bin *= inv_mag;
+		}
 
-		// FFT normalisation factor combined with window scaling
-		constexpr int     hop_ratio = 1 << (_fft_len_l2 - _hop_size_l2);
-		constexpr float   scale_win = (hop_ratio <= 2) ? 1 : 8.f / (3 * hop_ratio);
-		constexpr float   scale_fft = 1.f / _fft_len;
-		constexpr float   scale     = scale_fft * scale_win;
+		slot._buf_freeze [bin_idx            ] = bin.real ();
+		slot._buf_freeze [bin_idx + _nbr_bins] = bin.imag ();
+	}
 
+	slot._frz_state = FreezeState::CAPTURE2;
+}
+
+
+
+void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
+{
+	// For each bin, evaluates the phase difference between this frame and
+	// the previous one.
+	for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
+	{
+		std::complex <float> bin {
+			_buf_bins [bin_idx            ],
+			_buf_bins [bin_idx + _nbr_bins]
+		};
+		std::complex <float> bin_old {
+			slot._buf_freeze [bin_idx            ],
+			slot._buf_freeze [bin_idx + _nbr_bins]
+		};
+
+		// Phase difference
+		float          arg_n = 0;
+		const float    b0r   = bin_old.real ();
+		const float    b0i   = bin_old.imag ();
+		if (! fstb::is_null (fabsf (b0r) + fabsf (b0i)))
+		{
+			// Division formula without scaling: bin / bin_old = b1 / b0
+			const float    b1r   = bin.real ();
+			const float    b1i   = bin.imag ();
+			const float    dr    = b1r * b0r + b1i * b0i;
+			const float    di    = b1i * b0r - b1r * b0i;
+
+			// Extracts the angle
+			// If the 3rd-order approximation is not accurate enough, we can
+			// still use the 7th-order one.
+			const float    angle = fstb::Approx::atan2_3th (di, dr);
+
+			// Scales the resulting phase from [-pi ; +pi] to [-1/2; +1/2]
+			arg_n = angle * float (0.5 / fstb::PI);
+		}
+
+		slot._buf_freeze [bin_idx            ] = std::abs (bin);
+		slot._buf_freeze [bin_idx + _nbr_bins] = arg_n;
+	}
+
+	slot._frz_state = FreezeState::REPLAY;
+	slot._nbr_hops  = 1;
+}
+
+
+
+void	SpectralFreeze::synthesise_bins (Channel &chn) noexcept
+{
+	_buf_bins.fill (0.f);
+
+	for (auto &slot : chn._slot_arr)
+	{
+		if (slot._frz_state == FreezeState::REPLAY)
+		{
+			synthesise_playback (slot);
+		}
+	}
+}
+
+
+
+void	SpectralFreeze::synthesise_playback (Slot &slot) noexcept
+{
+	++ slot._nbr_hops;
+
+	// FFT normalisation factor combined with window scaling
+	constexpr int     hop_ratio = 1 << (_fft_len_l2 - _hop_size_l2);
+	constexpr float   scale_win = (hop_ratio <= 2) ? 1 : 8.f / (3 * hop_ratio);
+	constexpr float   scale_fft = 1.f / _fft_len;
+	constexpr float   scale     = scale_fft * scale_win;
+
+	const float       gain      = scale * slot._gain;
+	constexpr float   gain_thr  = 1e-6f; // -120 dB
+
+	if (gain >= gain_thr)
+	{
 		for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
 		{
-			const float    mag   = chn._buf_freeze [bin_idx            ];
-			float          arg_n = chn._buf_freeze [bin_idx + _nbr_bins];
+			const float    mag   = slot._buf_freeze [bin_idx            ];
+			float          arg_n = slot._buf_freeze [bin_idx + _nbr_bins];
 
 			// Reports the phase difference between the two initial frames
-			arg_n *= chn._nbr_hops;
+			arg_n *= slot._nbr_hops;
 
 			// Why 0.5? Got this by trial & error. Maths behind this are clear
 			// like mud
@@ -397,22 +460,15 @@ void	SpectralFreeze::sythesise_bins (Channel &chn) noexcept
 			// Keeps [-1/2; +1/2] range
 			arg_n -= float (fstb::round_int (arg_n));
 
-			const float    mag_scale = mag * scale;
+			const float    mag_gain = mag * gain;
 			const auto     cs = fstb::Approx::cos_sin_nick_2pi (arg_n);
-			const float    br = cs [0] * mag_scale;
-			const float    bi = cs [1] * mag_scale;
+			const float    br = cs [0] * mag_gain;
+			const float    bi = cs [1] * mag_gain;
 
-			_buf_bins [bin_idx            ] = br;
-			_buf_bins [bin_idx + _nbr_bins] = bi;
+			_buf_bins [bin_idx            ] += br;
+			_buf_bins [bin_idx + _nbr_bins] += bi;
 		}
 	}
-}
-
-
-
-void	SpectralFreeze::clear_bins () noexcept
-{
-	_buf_bins.fill (0.f);
 }
 
 

@@ -23,6 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/sfreeze/Cst.h"
+
 
 
 namespace mfx
@@ -33,13 +35,19 @@ namespace sfreeze
 {
 
 
+enum ParamSlot
+{
+	ParamSlot_FREEZE = 0,
+	ParamSlot_GAIN,
+
+	ParamSlot_NBR_ELT
+};
 
 enum Param
 {
+	Param_SLOT_BASE = 0,
 
-	Param_FREEZE = 0,
-
-	Param_NBR_ELT
+	Param_NBR_ELT = Param_SLOT_BASE + Cst::_nbr_slots * ParamSlot_NBR_ELT
 
 }; // enum Param
 

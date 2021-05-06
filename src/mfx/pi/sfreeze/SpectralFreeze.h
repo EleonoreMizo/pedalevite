@@ -30,6 +30,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/spec/FrameOverlapAna.h"
 #include "mfx/dsp/spec/FrameOverlapSyn.h"
 #include "mfx/dsp/wnd/ProcHann.h"
+#include "mfx/pi/sfreeze/Cst.h"
 #include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -98,15 +99,9 @@ private:
 		REPLAY
 	};
 
-	class Channel
+	class Slot
 	{
 	public:
-		// Analysis and synthesis overlappers
-		dsp::spec::FrameOverlapAna <float>
-		               _fo_ana;
-		dsp::spec::FrameOverlapSyn <float>
-		               _fo_syn;
-
 		// Current freeze state for the channel
 		FreezeState    _frz_state   = FreezeState::NONE;
 
@@ -121,6 +116,22 @@ private:
 		// Number of hops elapsed since the freeze beginning. Helps to adjust
 		// the phase of each bin.
 		int            _nbr_hops    = 0;
+
+		// Current gain for the slot
+		float          _gain        = 1;
+	};
+	typedef std::array <Slot, Cst::_nbr_slots> SlotArray;
+
+	class Channel
+	{
+	public:
+		// Analysis and synthesis overlappers
+		dsp::spec::FrameOverlapAna <float>
+		               _fo_ana;
+		dsp::spec::FrameOverlapSyn <float>
+		               _fo_syn;
+
+		SlotArray      _slot_arr;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -128,8 +139,10 @@ private:
 	void           update_param (bool force_flag = false);
 	int            conv_freq_to_bin (float f) const noexcept;
 	void           analyse_bins (Channel &chn) noexcept;
-	void           sythesise_bins (Channel &chn) noexcept;
-	void           clear_bins () noexcept;
+	void           analyse_capture1 (Slot &slot) noexcept;
+	void           analyse_capture2 (Slot &slot) noexcept;
+	void           synthesise_bins (Channel &chn) noexcept;
+	void           synthesise_playback (Slot &slot) noexcept;
 
 	State          _state = State_CREATED;
 
@@ -143,8 +156,8 @@ private:
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
-	fstb::util::NotificationFlagCascadeSingle
-	               _param_change_flag_misc;
+	std::array <fstb::util::NotificationFlagCascadeSingle, Cst::_nbr_slots>
+	               _param_change_flag_slot_arr;
 
 	ChannelArray   _chn_arr;
 

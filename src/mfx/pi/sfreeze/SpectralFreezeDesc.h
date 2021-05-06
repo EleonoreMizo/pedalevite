@@ -70,6 +70,8 @@ protected:
 
 private:
 
+	void           configure_slot (int slot_idx);
+
 	ParamDescSet   _desc_set;
 	piapi::PluginInfo
 	               _info;
