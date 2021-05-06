@@ -102,8 +102,6 @@ SpectralCrusher::SpectralCrusher ()
 		const int      fft_size = 1 << (Cst::_fft_len_l2_min + l2);
 		_fft_uptr_arr [l2] = std::make_unique <FftType> (fft_size);
 	}
-
-	set_fft_param (_fft_len_l2);
 }
 
 
@@ -149,6 +147,8 @@ int	SpectralCrusher::do_reset (double sample_freq, int max_buf_len, int &latency
 
 	_buf_pcm.resize (1 << Cst::_fft_len_l2_max);
 	_buf_bins.resize (1 << Cst::_fft_len_l2_max);
+
+	set_fft_param (_fft_len_l2);
 
 	_param_change_flag_res.set ();
 	_param_change_flag_misc.set ();
