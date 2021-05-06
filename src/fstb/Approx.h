@@ -126,6 +126,12 @@ public:
 	               atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept;
 
 	template <typename T>
+	static inline constexpr T
+	               atan2_7th (T y, T x) noexcept;
+	static inline ToolsSimd::VectF32
+	               atan2_7th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept;
+
+	template <typename T>
 	static inline T
 	               tanh_mystran (T x) noexcept;
 	static inline ToolsSimd::VectF32
@@ -180,6 +186,12 @@ private:
 	               restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp) noexcept;
 	static inline ToolsSimd::VectF32
 	               restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p) noexcept;
+
+	template <typename T>
+	static fstb_FORCEINLINE constexpr std::array <T, 2>
+	               atan2_beg (T y, T x) noexcept;
+	static fstb_FORCEINLINE std::array <ToolsSimd::VectF32, 2>
+	               atan2_beg (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept;
 
 
 

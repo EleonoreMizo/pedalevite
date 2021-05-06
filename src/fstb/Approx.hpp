@@ -704,57 +704,42 @@ ToolsSimd::VectF32	Approx::tan_pade55 (ToolsSimd::VectF32 x) noexcept
 /*
 Formula by Jim Shima
 http://dspguru.com/dsp/tricks/fixed-point-atan2-with-self-normalization/
-Max error: +/-6.5e-3 rad
+Max error: +/-6.2e-3 rad
 The original formula minimizes the average absolute error, so a coefficient
 was tweaked to reduce the maximum error (1.015e-2 previously).
+
+order-5 version:
+	c5  = -0.0775572
+	c3  =  0.287314
+	c1  = -sum(c*)
+	err = 8.4e-4
+order-7 version:
+	c7  =  0.0386379
+	c5  = -0.145917
+	c3  =  0.321088
+	c1  = -sum(c*)
+	err = 1.2e-4
+FindFit[
+	Table[Pi/4 - ArcTan[(x-1)/999], {x, 1000}],
+	Pi/4 + (-Pi/4 - c3 - c5 - c7) ((x-1)/999)
+		   + c3 ((x-1)/999)^3
+		   + c5 ((x-1)/999)^5
+		   + c7 ((x-1)/999)^7,
+	{c7, c5, c3},
+	x
+]
 */
 
 template <typename T>
 constexpr T	Approx::atan2_3th (T y, T x) noexcept
 {
-	/*
-	order-5 version:
-		c5  = -0.076
-		c3  =  0.28535
-		c1  = -sum(c*)
-		err = 7.07e-4
-	order-7 version:
-		c7  =  0.0320356
-		c5  = -0.144434
-		c3  =  0.378
-		c1  = -sum(c*)
-		err = 1e-4
-	FindFit[
-		Table[Pi/4 - ArcTan[(x-1)/999], {x, 1000}],
-		Pi/4 + (-Pi/4 - c3 - c5 - c7) ((x-1)/999)
-		     + c3 ((x-1)/999)^3
-		     + c5 ((x-1)/999)^5
-		     + c7 ((x-1)/999)^7,
-		{c7, c5, c3},
-		x
-	]
-	*/
-
-	constexpr T    c0p = T (fstb::PI * 0.25);
-	constexpr T    c0n = T (fstb::PI * 0.75);
-	constexpr T    c3  = T (0.1834); // Original formula: 0.1963
-	constexpr T    c1  = - c0p - c3;
-
-	const T        ya = T (std::abs (y)) + T (1e-10);
-	T              c0 = T (0);
-	T              r  = T (0);
-	if (x < T (0))
-	{
-		r  = (x + ya) / (ya - x);
-		c0 = c0n;
-	}
-	else
-	{
-		r  = (x - ya) / (x + ya);
-		c0 = c0p;
-	}
-
-	T              a = ((r * r * c3) + c1) * r + c0;
+	constexpr T    c3 = T (0.18208); // Original formula: 0.1963
+	constexpr T    c1 = - T (fstb::PI * 0.25) - c3;
+	const auto     b  = atan2_beg (y, x);
+	const auto     r  = b [0];
+	const auto     c0 = b [1];
+	const auto     r2 = r * r;
+	T              a  = ((c3 * r2) + c1) * r + c0;
 	if (y < T (0))
 	{
 		a = -a;
@@ -767,24 +752,64 @@ ToolsSimd::VectF32	Approx::atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x
 {
 	using TS = fstb::ToolsSimd;
 
-	const auto     c0p  = TS::set1_f32 (float (fstb::PI * 0.25));
-	const auto     c0n  = TS::set1_f32 (float (fstb::PI * 0.75));
-	const auto     c3   = TS::set1_f32 (0.1834f);
-	const auto     c1   = TS::set1_f32 (float (fstb::PI * -0.25 - 0.1834));
-	const auto     eps  = TS::set1_f32 (1e-10f);
+	const auto     c3 = TS::set1_f32 (0.18208f);
+	const auto     c1 = TS::set1_f32 (float (fstb::PI * -0.25 - 0.18208));
 
-	const auto     ys   = TS::signbit (y);
-	const auto     ya   = TS::abs (y) + eps;
-	const auto     xlt0 = TS::cmp_lt0_f32 (x);
-	const auto     xpya = x + ya;
-	const auto     xmya = x - ya;
-	const auto     yamx = ya - x;
-	const auto     c0   = TS::select (xlt0, c0n, c0p);
-	const auto     rnum = TS::select (xlt0, xpya, xmya);
-	const auto     rden = TS::select (xlt0, yamx, xpya);
-	const auto     r    = TS::div_approx2 (rnum, rden);
-	const auto     r2   = r * r;
-	auto           a    = c3;
+	const auto     ys = TS::signbit (y);
+	const auto     b  = atan2_beg (y, x);
+	const auto     r  = b [0];
+	const auto     c0 = b [1];
+	const auto     r2 = r * r;
+	auto           a  = c3;
+	a = TS::fmadd (a, r2, c1);
+	a = TS::fmadd (a, r , c0);
+	a = TS::xor_f32 (a, ys);
+
+	return a;
+}
+
+
+
+template <typename T>
+constexpr T	Approx::atan2_7th (T y, T x) noexcept
+{
+	const auto     c7 = T ( 0.0386379);
+	const auto     c5 = T (-0.145917);
+	const auto     c3 = T ( 0.0386379);
+	const auto     c1 = T (fstb::PI * -0.25 - 0.0386379 - -0.145917 - 0.0386379);
+
+	const auto     b  = atan2_beg (y, x);
+	const auto     r  = b [0];
+	const auto     c0 = b [1];
+	const auto     r2 = r * r;
+	T              a  = ((((c7 * r2 + c5) * r2 + c3) * r2) + c1) * r + c0;
+	if (y < T (0))
+	{
+		a = -a;
+	}
+
+	return a;
+}
+
+ToolsSimd::VectF32	Approx::atan2_7th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept
+{
+	using TS = fstb::ToolsSimd;
+
+	const auto     c7 = TS::set1_f32 ( 0.0386379f);
+	const auto     c5 = TS::set1_f32 (-0.145917f);
+	const auto     c3 = TS::set1_f32 ( 0.0386379f);
+	const auto     c1 = TS::set1_f32 (float (
+		fstb::PI * -0.25 - 0.0386379 - -0.145917 - 0.0386379
+	));
+
+	const auto     ys = TS::signbit (y);
+	const auto     b  = atan2_beg (y, x);
+	const auto     r  = b [0];
+	const auto     c0 = b [1];
+	const auto     r2 = r * r;
+	auto           a  = c7;
+	a = TS::fmadd (a, r2, c5);
+	a = TS::fmadd (a, r2, c3);
 	a = TS::fmadd (a, r2, c1);
 	a = TS::fmadd (a, r , c0);
 	a = TS::xor_f32 (a, ys);
@@ -1108,6 +1133,53 @@ ToolsSimd::VectF32	Approx::restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x,
 	);
 
 	return x;
+}
+
+
+
+template <typename T>
+constexpr std::array <T, 2>	Approx::atan2_beg (T y, T x) noexcept
+{
+	constexpr T    c0p = T (fstb::PI * 0.25);
+	constexpr T    c0n = T (fstb::PI * 0.75);
+	constexpr T    eps = T (1e-10);
+
+	const T        ya  = T (std::abs (y)) + eps;
+	T              c0  = T (0);
+	T              r   = T (0);
+	if (x < T (0))
+	{
+		r  = (x + ya) / (ya - x);
+		c0 = c0n;
+	}
+	else
+	{
+		r  = (x - ya) / (x + ya);
+		c0 = c0p;
+	}
+
+	return std::array <T, 2> { r, c0 };
+}
+
+std::array <ToolsSimd::VectF32, 2>	Approx::atan2_beg (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept
+{
+	using TS = fstb::ToolsSimd;
+
+	const auto     c0p  = TS::set1_f32 (float (fstb::PI * 0.25));
+	const auto     c0n  = TS::set1_f32 (float (fstb::PI * 0.75));
+	const auto     eps  = TS::set1_f32 (1e-10f);
+
+	const auto     ya   = TS::abs (y) + eps;
+	const auto     xlt0 = TS::cmp_lt0_f32 (x);
+	const auto     xpya = x + ya;
+	const auto     xmya = x - ya;
+	const auto     yamx = ya - x;
+	const auto     c0   = TS::select (xlt0, c0n, c0p);
+	const auto     rnum = TS::select (xlt0, xpya, xmya);
+	const auto     rden = TS::select (xlt0, yamx, xpya);
+	const auto     r    = TS::div_approx2 (rnum, rden);
+
+	return std::array <ToolsSimd::VectF32, 2> { r, c0 };
 }
 
 
