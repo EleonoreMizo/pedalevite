@@ -117,6 +117,9 @@ private:
 		// the phase of each bin.
 		int            _nbr_hops    = 0;
 
+		// Accumulated phase for the phasing effect
+		float          _phase_acc   = 0;
+
 		// Current gain for the slot
 		float          _gain        = 1;
 	};
@@ -142,7 +145,7 @@ private:
 	void           analyse_capture1 (Slot &slot) noexcept;
 	void           analyse_capture2 (Slot &slot) noexcept;
 	void           synthesise_bins (Channel &chn) noexcept;
-	void           synthesise_playback (Slot &slot) noexcept;
+	void           synthesise_playback (Slot &slot, float gain) noexcept;
 
 	State          _state = State_CREATED;
 
@@ -158,6 +161,8 @@ private:
 	               _param_change_flag;
 	std::array <fstb::util::NotificationFlagCascadeSingle, Cst::_nbr_slots>
 	               _param_change_flag_slot_arr;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_misc;
 
 	ChannelArray   _chn_arr;
 
@@ -169,6 +174,16 @@ private:
 	               _buf_pcm;
 	std::array <float, _fft_len>
 	               _buf_bins;
+
+	// Crossfading position, [0 ; Cst::_nbr_slots]. Integer = pure slot.
+	// Wraps to 0 for Cst::_nbr_slots
+	float          _xfade_pos  = 0;
+
+	// Linear volume for the crossfade result
+	float          _xfade_gain = 0;
+
+	// Cycles/hop
+	float          _phasing    = 0;
 
 
 

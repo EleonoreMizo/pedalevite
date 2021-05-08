@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/dsp/mix/Generic.h"
+#include "mfx/dsp/wnd/XFadeEqPowPoly8.h"
 #include "mfx/pi/sfreeze/Param.h"
 #include "mfx/pi/sfreeze/SpectralFreeze.h"
 #include "mfx/piapi/Dir.h"
@@ -80,6 +81,16 @@ SpectralFreeze::SpectralFreeze ()
 
 		pcf.add_observer (_param_change_flag);
 	}
+
+	_state_set.set_val_nat (desc_set, Param_XFADE , 0);
+	_state_set.set_val_nat (desc_set, Param_XFGAIN, 0);
+	_state_set.set_val_nat (desc_set, Param_PHASE , 0);
+
+	_state_set.add_observer (Param_XFADE , _param_change_flag_misc);
+	_state_set.add_observer (Param_XFGAIN, _param_change_flag_misc);
+	_state_set.add_observer (Param_PHASE , _param_change_flag_misc);
+
+	_param_change_flag_misc.add_observer (_param_change_flag);
 }
 
 
@@ -305,6 +316,19 @@ void	SpectralFreeze::update_param (bool force_flag)
 				}
 			}
 		}
+
+		// Misc
+		if (_param_change_flag_misc (true) || force_flag)
+		{
+			_xfade_pos  = float (_state_set.get_val_end_nat (Param_XFADE ));
+			_xfade_gain = float (_state_set.get_val_end_nat (Param_XFGAIN));
+
+			const float   speed   =
+				float (_state_set.get_val_end_nat (Param_PHASE));
+			const float   hop_dur = _inv_fs * _hop_size;
+			// * 0.5f because the phase difference is set in both directions
+			_phasing = speed * hop_dur * 0.5f;
+		}
 	}
 }
 
@@ -418,20 +442,53 @@ void	SpectralFreeze::synthesise_bins (Channel &chn) noexcept
 {
 	_buf_bins.fill (0.f);
 
-	for (auto &slot : chn._slot_arr)
+	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
 	{
+		auto &         slot = chn._slot_arr [slot_idx];
 		if (slot._frz_state == FreezeState::REPLAY)
 		{
-			synthesise_playback (slot);
+			float          gain       = slot._gain;
+
+			// 0 = pure slot, >= 1 = silent
+			float          xf_pos_rel = std::min (
+				fabsf (_xfade_pos - slot_idx),
+				fabsf (_xfade_pos - slot_idx - Cst::_nbr_slots)
+			);
+			if (xf_pos_rel < 1)
+			{
+#if 1
+				// This curve is a bit flat at the top which is great when
+				// automating/controlling the crossfade position, so the "pure"
+				// slot position is a bit wider and therefore less sensitive to
+				// position errors. Calculation complexity is similar to the
+				// sine curve.
+				const auto     xf_res  =
+					dsp::wnd::XFadeEqPowPoly8 <false>::compute_gain (xf_pos_rel);
+				const float    gain_xf = xf_res [0];
+#else
+				// Old version, for reference: sine-based crossfade curve
+				const float    gain_xf =
+					fstb::Approx::sin_rbj_halfpi (1 - xf_pos_rel);
+#endif
+				gain += gain_xf * _xfade_gain;
+			}
+
+			synthesise_playback (slot, gain);
 		}
 	}
 }
 
 
 
-void	SpectralFreeze::synthesise_playback (Slot &slot) noexcept
+void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 {
 	++ slot._nbr_hops;
+
+	slot._phase_acc += _phasing;
+	if (slot._phase_acc >= 1)
+	{
+		slot._phase_acc -= 1;
+	}
 
 	// FFT normalisation factor combined with window scaling
 	constexpr int     hop_ratio = 1 << (_fft_len_l2 - _hop_size_l2);
@@ -439,11 +496,12 @@ void	SpectralFreeze::synthesise_playback (Slot &slot) noexcept
 	constexpr float   scale_fft = 1.f / _fft_len;
 	constexpr float   scale     = scale_fft * scale_win;
 
-	const float       gain      = scale * slot._gain;
+	const float       gain_sc   = gain * scale;
 	constexpr float   gain_thr  = 1e-6f; // -120 dB
 
-	if (gain >= gain_thr)
+	if (gain_sc >= gain_thr)
 	{
+		float          phase_val = slot._phase_acc * ((_bin_beg & 1) * 2 - 1);
 		for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
 		{
 			const float    mag   = slot._buf_freeze [bin_idx            ];
@@ -451,6 +509,9 @@ void	SpectralFreeze::synthesise_playback (Slot &slot) noexcept
 
 			// Reports the phase difference between the two initial frames
 			arg_n *= slot._nbr_hops;
+
+			// Experimental
+			arg_n += phase_val;
 
 			// Why 0.5? Got this by trial & error. Maths behind this are clear
 			// like mud
@@ -460,13 +521,16 @@ void	SpectralFreeze::synthesise_playback (Slot &slot) noexcept
 			// Keeps [-1/2; +1/2] range
 			arg_n -= float (fstb::round_int (arg_n));
 
-			const float    mag_gain = mag * gain;
+			const float    mag_gain = mag * gain_sc;
 			const auto     cs = fstb::Approx::cos_sin_nick_2pi (arg_n);
 			const float    br = cs [0] * mag_gain;
 			const float    bi = cs [1] * mag_gain;
 
 			_buf_bins [bin_idx            ] += br;
 			_buf_bins [bin_idx + _nbr_bins] += bi;
+
+			// Next
+			phase_val = -phase_val;
 		}
 	}
 }

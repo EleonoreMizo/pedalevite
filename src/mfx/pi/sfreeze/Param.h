@@ -47,7 +47,10 @@ enum Param
 {
 	Param_SLOT_BASE = 0,
 
-	Param_NBR_ELT = Param_SLOT_BASE + Cst::_nbr_slots * ParamSlot_NBR_ELT
+	Param_XFADE = Param_SLOT_BASE + Cst::_nbr_slots * ParamSlot_NBR_ELT,
+	Param_XFGAIN,
+	Param_PHASE,
+	Param_NBR_ELT
 
 }; // enum Param
 

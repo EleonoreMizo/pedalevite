@@ -28,8 +28,10 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/sfreeze/Cst.h"
 #include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
 #include "mfx/pi/sfreeze/Param.h"
-#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
+#include "mfx/pi/param/Simple.h"
+#include "mfx/pi/param/TplLin.h"
+#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/piapi/Tag.h"
 
@@ -60,10 +62,50 @@ SpectralFreezeDesc::SpectralFreezeDesc ()
 	_info._tag_list  = { piapi::Tag::_spectral_0 };
 	_info._chn_pref  = piapi::ChnPref::NONE;
 
+	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+
 	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
 	{
 		configure_slot (slot_idx);
 	}
+
+	// Crossfade
+	auto           lin_sptr = std::make_shared <param::TplLin> (
+		0, Cst::_nbr_slots,
+		"Crossfade\nXFade\nXFd",
+		"",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		"%5.1f"
+	);
+	_desc_set.add_glob (Param_XFADE, lin_sptr);
+
+	// Crossfade gain
+	auto           pll_sptr = std::make_shared <TplPll> (
+		0, 2,
+		"Crossfade gain\nXFade gain\nXfd gain\nXfG",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	pll_sptr->use_mapper ().gen_log (10, fstb::SQRT2);
+	_desc_set.add_glob (Param_XFGAIN, pll_sptr);
+
+	// Phasing speed
+	pll_sptr = std::make_shared <TplPll> (
+		0, 20,
+		"Phasing speed\nPhasing spd\nPhasing\nPhase\nPha",
+		"Hz",
+		param::HelperDispNum::Preset_FLOAT_STD,
+		0,
+		"%6.3f"
+	);
+	pll_sptr->use_mapper ().set_first_value (0);
+	pll_sptr->use_mapper ().add_segment (0.1,  0.01, false);
+	pll_sptr->use_mapper ().add_segment (0.5,  1   , true);
+	pll_sptr->use_mapper ().add_segment (0.9, 10   , true);
+	pll_sptr->use_mapper ().add_segment (1.0, 20   , false);
+	_desc_set.add_glob (Param_PHASE, pll_sptr);
 }
 
 
