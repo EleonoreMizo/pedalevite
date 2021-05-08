@@ -74,7 +74,7 @@ std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (
 	const auto     a   = x * xi;
 	const auto     b0  = OFLAG ? one : TS::set1_f32 (0.975f);
 	const auto     b1  = TS::set1_f32 (OFLAG ? 1.4186f : 1.51f);
-	const auto     b   = a * (one + b1 * a);
+	const auto     b   = a * (b0 + b1 * a);
 	const auto     c   = b + x;
 	const auto     d   = b + xi;
 	const auto     fi  = c * c;
