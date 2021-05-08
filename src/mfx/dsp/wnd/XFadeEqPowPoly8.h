@@ -3,10 +3,21 @@
         XFadeEqPowPoly8.h
         Author: Laurent de Soras, 2021
 
-Formula:
-
+Original formula:
 Geraint Luff, A cheap energy-preserving-ish crossfade, 2021-02-12
 https://signalsmith-audio.co.uk/writing/2021/cheap-energy-crossfade/
+
+Maximum is 1.003 at 0.1058
+
+Modification:
+(0.975 + 1.51 * a) gives a result always <= 1 while keeping the ripples low
+for the power sum, although derivative at the top (out = 1) is not 0.
+
+https://www.desmos.com/calculator/pu6axgieum
+
+Template parameters:
+
+- OFLAG: uses the original formula instead of the original one
 
 --- Legal stuff ---
 
@@ -43,6 +54,7 @@ namespace wnd
 
 
 
+template <bool OFLAG>
 class XFadeEqPowPoly8
 {
 

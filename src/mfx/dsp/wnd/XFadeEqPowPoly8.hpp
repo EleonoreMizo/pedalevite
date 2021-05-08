@@ -39,15 +39,18 @@ namespace wnd
 
 
 
+template <bool OFLAG>
 template <typename T>
-std::array <T, 2>	XFadeEqPowPoly8::compute_gain (T x) noexcept
+std::array <T, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (T x) noexcept
 {
 	assert (x >= T (0));
 	assert (x <= T (1));
 
 	const T        xi = T (1) - x;
 	const T        a  = x * xi;
-	const T        b  = a * (T (1) + T (1.4186) * a);
+	const T        b0 = T (OFLAG ? 1      : 0.975);
+	const T        b1 = T (OFLAG ? 1.4186 : 1.51 );
+	const T        b  = a * (b0 + b1 * a);
 	const T        c  = b + x;
 	const T        d  = b + xi;
 	const T        fi = c * c;
@@ -58,7 +61,8 @@ std::array <T, 2>	XFadeEqPowPoly8::compute_gain (T x) noexcept
 
 
 
-std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowPoly8::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept
+template <bool OFLAG>
+std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept
 {
 	using TS = fstb::ToolsSimd;
 
@@ -66,10 +70,11 @@ std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowPoly8::compute_gain (fstb::To
 	assert (! TS::or_h (TS::cmp_gt_f32 (x, TS::set1_f32 (1))));
 
 	const auto     one = TS::set1_f32 (1);
-	const auto     k   = TS::set1_f32 (1.4186f);
 	const auto     xi  = one - x;
 	const auto     a   = x * xi;
-	const auto     b   = a * (one + k * a);
+	const auto     b0  = OFLAG ? one : TS::set1_f32 (0.975f);
+	const auto     b1  = TS::set1_f32 (OFLAG ? 1.4186f : 1.51f);
+	const auto     b   = a * (one + b1 * a);
 	const auto     c   = b + x;
 	const auto     d   = b + xi;
 	const auto     fi  = c * c;
