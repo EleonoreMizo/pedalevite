@@ -87,6 +87,15 @@ private:
 	static constexpr int _bin_beg    = 1;
 	static constexpr int _bin_end    = _nbr_bins;
 
+	// Vector and scalar ranges and indexes
+#if defined (fstb_HAS_SIMD)
+	static constexpr int _simd_w      = 4;
+	static constexpr int _bin_end_vec = _bin_beg + ((_bin_end - _bin_beg) & ~(_simd_w - 1));
+	static constexpr int _bin_beg_sca = _bin_end_vec;
+#else
+	static constexpr int _bin_beg_sca = _bin_beg;
+#endif
+
 	// Base-2 log of the overlap, in samples. Must be <= _fft_len_l2
 	static constexpr int _hop_size_l2 = _fft_len_l2 - 2;
 	static constexpr int _hop_size    = 1 << _hop_size_l2;

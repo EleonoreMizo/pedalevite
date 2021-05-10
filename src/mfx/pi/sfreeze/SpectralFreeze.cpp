@@ -27,6 +27,9 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/Approx.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
+#if defined (fstb_HAS_SIMD)
+	#include "fstb/ToolsSimd.h"
+#endif // fstb_HAS_SIMD
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/wnd/XFadeEqPowPoly8.h"
@@ -361,17 +364,39 @@ void	SpectralFreeze::analyse_bins (Channel &chn) noexcept
 
 
 
+// Normalizes each bin, so we keep only its phase information
 void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 {
-	// Normalizes each bin, so we keep only its phase information
-	for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
-	{
-		std::complex <float> bin {
-			_buf_bins [bin_idx            ],
-			_buf_bins [bin_idx + _nbr_bins]
-		};
+#if defined (fstb_HAS_SIMD)
 
-		/*** To do: optimise this with a fast inverse square root ***/
+	using TS = fstb::ToolsSimd;
+	const auto     eps = TS::set1_f32 (1e-9f);
+	const auto     one = TS::set1_f32 (1.f);
+	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
+	{
+		const int      img_idx = bin_idx + _nbr_bins;
+		auto           b_r  = TS::loadu_f32 (&_buf_bins [bin_idx]);
+		auto           b_i  = TS::loadu_f32 (&_buf_bins [img_idx]);
+
+		const auto     mag2 = b_r * b_r + b_i * b_i;
+		const auto     mgt0 = TS::cmp_gt_f32 (mag2, eps);
+		const auto     mult = TS::rsqrt_approx (mag2);
+		b_r *= mult;
+		b_i *= mult;
+		b_r  = TS::select (mgt0, b_r, one);
+		b_i  = TS::and_f32 (mgt0, b_i);
+
+		TS::storeu_f32 (&slot._buf_freeze [bin_idx], b_r);
+		TS::storeu_f32 (&slot._buf_freeze [img_idx], b_i);
+	}
+
+#endif // fstb_HAS_SIMD
+
+	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+	{
+		const int      img_idx = bin_idx + _nbr_bins;
+		std::complex <float> bin { _buf_bins [bin_idx], _buf_bins [img_idx] };
+
 		const float    mag = std::abs (bin);
 		if (fstb::is_null (mag))
 		{
@@ -383,8 +408,8 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 			bin *= inv_mag;
 		}
 
-		slot._buf_freeze [bin_idx            ] = bin.real ();
-		slot._buf_freeze [bin_idx + _nbr_bins] = bin.imag ();
+		slot._buf_freeze [bin_idx] = bin.real ();
+		slot._buf_freeze [img_idx] = bin.imag ();
 	}
 
 	slot._frz_state = FreezeState::CAPTURE2;
@@ -392,19 +417,46 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 
 
 
+// For each bin, evaluates the phase difference between this frame and
+// the previous one.
 void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 {
-	// For each bin, evaluates the phase difference between this frame and
-	// the previous one.
-	for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
+	// Angle normalisation factor 2 * pi -> 1
+	constexpr float   angle_norm = float (0.5 / fstb::PI);
+
+#if defined (fstb_HAS_SIMD)
+
+	using TS = fstb::ToolsSimd;
+	const auto     angle_norm_v = TS::set1_f32 (angle_norm);
+	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
+		const int      img_idx = bin_idx + _nbr_bins;
+		auto           b1r = TS::loadu_f32 (&_buf_bins [bin_idx]);
+		auto           b1i = TS::loadu_f32 (&_buf_bins [img_idx]);
+		const auto     b0r = TS::loadu_f32 (&slot._buf_freeze [bin_idx]);
+		const auto     b0i = TS::loadu_f32 (&slot._buf_freeze [img_idx]);
+
+		const auto     dr    = b1r * b0r + b1i * b0i;
+		const auto     di    = b1i * b0r - b1r * b0i;
+		const auto     angle = fstb::Approx::atan2_3th (di, dr);
+		const auto     arg_n = angle * angle_norm_v;
+		const auto     mag2  = b1r * b1r + b1i * b1i;
+		const auto     mag   = TS::sqrt_approx (mag2);
+
+		TS::storeu_f32 (&slot._buf_freeze [bin_idx], mag  );
+		TS::storeu_f32 (&slot._buf_freeze [img_idx], arg_n);
+	}
+
+#endif // fstb_HAS_SIMD
+
+	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+	{
+		const int      img_idx = bin_idx + _nbr_bins;
 		std::complex <float> bin {
-			_buf_bins [bin_idx            ],
-			_buf_bins [bin_idx + _nbr_bins]
+			_buf_bins [bin_idx], _buf_bins [img_idx]
 		};
-		std::complex <float> bin_old {
-			slot._buf_freeze [bin_idx            ],
-			slot._buf_freeze [bin_idx + _nbr_bins]
+		const std::complex <float> bin_old {
+			slot._buf_freeze [bin_idx], slot._buf_freeze [img_idx]
 		};
 
 		// Phase difference
@@ -425,11 +477,11 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 			const float    angle = fstb::Approx::atan2_3th (di, dr);
 
 			// Scales the resulting phase from [-pi ; +pi] to [-1/2; +1/2]
-			arg_n = angle * float (0.5 / fstb::PI);
+			arg_n = angle * angle_norm;
 		}
 
-		slot._buf_freeze [bin_idx            ] = std::abs (bin);
-		slot._buf_freeze [bin_idx + _nbr_bins] = arg_n;
+		slot._buf_freeze [bin_idx] = std::abs (bin);
+		slot._buf_freeze [img_idx] = arg_n;
 	}
 
 	slot._frz_state = FreezeState::REPLAY;
@@ -490,22 +542,65 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 		slot._phase_acc -= 1;
 	}
 
-	// FFT normalisation factor combined with window scaling
-	constexpr int     hop_ratio = 1 << (_fft_len_l2 - _hop_size_l2);
-	constexpr float   scale_win = (hop_ratio <= 2) ? 1 : 8.f / (3 * hop_ratio);
-	constexpr float   scale_fft = 1.f / _fft_len;
-	constexpr float   scale     = scale_fft * scale_win;
-
-	const float       gain_sc   = gain * scale;
 	constexpr float   gain_thr  = 1e-6f; // -120 dB
-
-	if (gain_sc >= gain_thr)
+	if (gain >= gain_thr)
 	{
-		float          phase_val = slot._phase_acc * ((_bin_beg & 1) * 2 - 1);
-		for (int bin_idx = _bin_beg; bin_idx < _nbr_bins; ++bin_idx)
+		// FFT normalisation factor combined with window scaling
+		constexpr int     hop_ratio = 1 << (_fft_len_l2 - _hop_size_l2);
+		constexpr float   scale_win = (hop_ratio <= 2) ? 1 : 8.f / (3 * hop_ratio);
+		constexpr float   scale_fft = 1.f / _fft_len;
+		constexpr float   scale     = scale_fft * scale_win;
+
+		const float       gain_sc   = gain * scale;
+
+#if defined (fstb_HAS_SIMD)
+
+		using TS = fstb::ToolsSimd;
+		const auto     gain_sc_v   = TS::set1_f32 (gain_sc);
+		const int      sign        = ((_bin_beg & 1) * 2 - 1);
+		const auto     phase_val_v =
+			TS::set1_f32 (slot._phase_acc) * TS::set_2f32_fill (sign, -sign);
+		const auto     nbr_hops    = TS::set1_f32 (float (slot._nbr_hops));
+		auto           omega_v     = TS::set1_f32 (0.5f) * TS::set_f32 (
+			_bin_beg, _bin_beg + 1, _bin_beg + 2, _bin_beg + 3
+		);
+		const auto     omega_step  = TS::set1_f32 (0.5f * _simd_w);
+		for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 		{
-			const float    mag   = slot._buf_freeze [bin_idx            ];
-			float          arg_n = slot._buf_freeze [bin_idx + _nbr_bins];
+			const int      img_idx = bin_idx + _nbr_bins;
+			const auto     mag   = TS::loadu_f32 (&slot._buf_freeze [bin_idx]);
+			auto           arg_n = TS::loadu_f32 (&slot._buf_freeze [img_idx]);
+			auto           sum_r = TS::loadu_f32 (&_buf_bins [bin_idx]);
+			auto           sum_i = TS::loadu_f32 (&_buf_bins [img_idx]);
+
+			arg_n *= nbr_hops;
+			arg_n += phase_val_v;
+			arg_n += omega_v;
+			arg_n -= TS::round (arg_n);
+
+			const auto     mag_gain = mag * gain_sc_v;
+			const auto     cs = fstb::Approx::cos_sin_nick_2pi (arg_n);
+			const auto     br = cs [0] * mag_gain;
+			const auto     bi = cs [1] * mag_gain;
+
+			sum_r += br;
+			sum_i += bi;
+			TS::storeu_f32 (&_buf_bins [bin_idx], sum_r);
+			TS::storeu_f32 (&_buf_bins [img_idx], sum_i);
+
+			// Next
+			omega_v += omega_step;
+			static_assert ((_simd_w & 1) == 0, "Oops");
+		}
+
+#endif // fstb_HAS_SIMD
+
+		float          phase_val = slot._phase_acc * ((_bin_beg_sca & 1) * 2 - 1);
+		for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+		{
+			const int      img_idx = bin_idx + _nbr_bins;
+			const float    mag   = slot._buf_freeze [bin_idx];
+			float          arg_n = slot._buf_freeze [img_idx];
 
 			// Reports the phase difference between the two initial frames
 			arg_n *= slot._nbr_hops;
@@ -526,8 +621,8 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 			const float    br = cs [0] * mag_gain;
 			const float    bi = cs [1] * mag_gain;
 
-			_buf_bins [bin_idx            ] += br;
-			_buf_bins [bin_idx + _nbr_bins] += bi;
+			_buf_bins [bin_idx] += br;
+			_buf_bins [img_idx] += bi;
 
 			// Next
 			phase_val = -phase_val;
