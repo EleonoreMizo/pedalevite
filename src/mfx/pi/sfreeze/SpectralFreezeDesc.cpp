@@ -26,8 +26,9 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/def.h"
 #include "mfx/pi/sfreeze/Cst.h"
-#include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
+#include "mfx/pi/sfreeze/DMode.h"
 #include "mfx/pi/sfreeze/Param.h"
+#include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/Simple.h"
 #include "mfx/pi/param/TplLin.h"
@@ -74,8 +75,11 @@ SpectralFreezeDesc::SpectralFreezeDesc ()
 		0, Cst::_nbr_slots,
 		"Crossfade\nXFade\nXFd",
 		"",
-		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		0,
 		"%5.1f"
+	);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
 	_desc_set.add_glob (Param_XFADE, lin_sptr);
 
@@ -106,6 +110,17 @@ SpectralFreezeDesc::SpectralFreezeDesc ()
 	pll_sptr->use_mapper ().add_segment (0.9, 10   , true);
 	pll_sptr->use_mapper ().add_segment (1.0, 20   , false);
 	_desc_set.add_glob (Param_PHASE, pll_sptr);
+
+	// Dry mode
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
+		"Mix\nCut\nMute",
+		"Dry mode\nDMode\nDrM",
+		"",
+		0,
+		"%s"
+	);
+	assert (enu_sptr->get_nat_max () == DMode_NBR_ELT - 1);
+	_desc_set.add_glob (Param_DMODE, enu_sptr);
 }
 
 

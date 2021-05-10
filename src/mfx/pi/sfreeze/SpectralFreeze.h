@@ -27,10 +27,12 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
+#include "mfx/dsp/ctrl/Ramp.h"
 #include "mfx/dsp/spec/FrameOverlapAna.h"
 #include "mfx/dsp/spec/FrameOverlapSyn.h"
 #include "mfx/dsp/wnd/ProcHann.h"
 #include "mfx/pi/sfreeze/Cst.h"
+#include "mfx/pi/sfreeze/DMode.h"
 #include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -144,6 +146,10 @@ private:
 		               _fo_syn;
 
 		SlotArray      _slot_arr;
+
+		// Not the real volume actually, more a position within a fade curve.
+		dsp::ctrl::Ramp
+		               _vol_dry { 1.f };
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -155,6 +161,9 @@ private:
 	void           analyse_capture2 (Slot &slot) noexcept;
 	void           synthesise_bins (Channel &chn) noexcept;
 	void           synthesise_playback (Slot &slot, float gain) noexcept;
+	void           check_dry_level (Channel &chn) noexcept;
+
+	static float   conv_pos_to_dry_lvl (float x) noexcept;
 
 	State          _state = State_CREATED;
 
@@ -193,6 +202,9 @@ private:
 
 	// Cycles/hop
 	float          _phasing    = 0;
+
+	// Playback mode
+	DMode          _dry_mode   = DMode_MIX;
 
 
 

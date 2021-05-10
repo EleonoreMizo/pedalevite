@@ -1217,6 +1217,7 @@ commonsrc = \
         ../../src/mfx/pi/scrush/SpectralCrusherDesc.cpp \
         ../../src/mfx/pi/scrush/SpectralCrusherDesc.h \
         ../../src/mfx/pi/sfreeze/Cst.h \
+        ../../src/mfx/pi/sfreeze/DMode.h \
         ../../src/mfx/pi/sfreeze/Param.h \
         ../../src/mfx/pi/sfreeze/SpectralFreeze.cpp \
         ../../src/mfx/pi/sfreeze/SpectralFreeze.h \

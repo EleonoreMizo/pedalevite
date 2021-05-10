@@ -1344,6 +1344,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\scrush\SpectralCrusherDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\DMode.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreeze.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreezeDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\LfoType.h" />

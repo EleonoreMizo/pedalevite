@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Param.h
-        Author: Laurent de Soras, 2020
+        DMode.h
+        Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
 
@@ -16,14 +16,12 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_sfreeze_Param_HEADER_INCLUDED)
-#define mfx_pi_sfreeze_Param_HEADER_INCLUDED
+#if ! defined (mfx_pi_sfreeze_DMode_HEADER_INCLUDED)
+#define mfx_pi_sfreeze_DMode_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include "mfx/pi/sfreeze/Cst.h"
 
 
 
@@ -35,25 +33,17 @@ namespace sfreeze
 {
 
 
-enum ParamSlot
+
+enum DMode
 {
-	ParamSlot_FREEZE = 0,
-	ParamSlot_GAIN,
 
-	ParamSlot_NBR_ELT
-};
+   DMode_MIX = 0,
+   DMode_CUT,
+   DMode_MUTE,
 
-enum Param
-{
-	Param_SLOT_BASE = 0,
+   DMode_NBR_ELT
 
-	Param_XFADE = Param_SLOT_BASE + Cst::_nbr_slots * ParamSlot_NBR_ELT,
-	Param_XFGAIN,
-	Param_PHASE,
-	Param_DMODE,
-	Param_NBR_ELT
-
-}; // enum Param
+}; // enum DMode
 
 
 
@@ -63,11 +53,11 @@ enum Param
 
 
 
-//#include "mfx/pi/sfreeze/Param.hpp"
+//#include "mfx/pi/sfreeze/DMode.hpp"
 
 
 
-#endif   // mfx_pi_sfreeze_Param_HEADER_INCLUDED
+#endif   // mfx_pi_sfreeze_DMode_HEADER_INCLUDED
 
 
 

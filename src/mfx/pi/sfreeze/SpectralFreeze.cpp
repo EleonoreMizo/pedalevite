@@ -88,10 +88,12 @@ SpectralFreeze::SpectralFreeze ()
 	_state_set.set_val_nat (desc_set, Param_XFADE , 0);
 	_state_set.set_val_nat (desc_set, Param_XFGAIN, 0);
 	_state_set.set_val_nat (desc_set, Param_PHASE , 0);
+	_state_set.set_val_nat (desc_set, Param_DMODE , 0);
 
 	_state_set.add_observer (Param_XFADE , _param_change_flag_misc);
 	_state_set.add_observer (Param_XFGAIN, _param_change_flag_misc);
 	_state_set.add_observer (Param_PHASE , _param_change_flag_misc);
+	_state_set.add_observer (Param_DMODE , _param_change_flag_misc);
 
 	_param_change_flag_misc.add_observer (_param_change_flag);
 }
@@ -162,6 +164,8 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 			slot._frz_state = FreezeState::NONE;
 			slot._nbr_hops  = 0;
 		}
+
+		chn._vol_dry.set_time (_fft_len / 2, 2.f / _fft_len);
 	}
 
 	_frame_win.setup (_fft_len);
@@ -218,11 +222,6 @@ void	SpectralFreeze::do_process_block (piapi::ProcInfo &proc)
 
 			chn._fo_ana.process_block (proc._src_arr [chn_index] + pos, work_len);
 			chn._fo_syn.process_block (proc._dst_arr [chn_index] + pos, work_len);
-			dsp::mix::Generic::mix_1_1 (
-				proc._dst_arr [chn_index] + pos,
-				proc._src_arr [chn_index] + pos,
-				work_len
-			);
 
 			const bool     req_ana_flag = chn._fo_ana.is_frame_proc_required ();
 			const bool     req_syn_flag = chn._fo_syn.is_frame_proc_required ();
@@ -251,7 +250,23 @@ void	SpectralFreeze::do_process_block (piapi::ProcInfo &proc)
 				// Output frame windowing and overlap
 				_frame_win.process_frame_mul (_buf_pcm.data ());
 				chn._fo_syn.set_frame (_buf_pcm.data ());
+
+				check_dry_level (chn);
 			}
+
+			// Dry mix
+			chn._vol_dry.tick (work_len);
+			const float    dry_pos_beg = chn._vol_dry.get_beg ();
+			const float    dry_pos_end = chn._vol_dry.get_end ();
+			const float    dry_lvl_beg = conv_pos_to_dry_lvl (dry_pos_beg);
+			const float    dry_lvl_end = conv_pos_to_dry_lvl (dry_pos_end);
+			dsp::mix::Generic::mix_1_1_vlrauto (
+				proc._dst_arr [chn_index] + pos,
+				proc._src_arr [chn_index] + pos,
+				work_len,
+				dry_lvl_beg,
+				dry_lvl_end
+			);
 
 			pos += work_len;
 		}
@@ -281,6 +296,7 @@ void	SpectralFreeze::clear_buffers ()
 	{
 		chn._fo_ana.clear_buffers ();
 		chn._fo_syn.clear_buffers ();
+		chn._vol_dry.clear_buffers ();
 	}
 }
 
@@ -330,7 +346,9 @@ void	SpectralFreeze::update_param (bool force_flag)
 				float (_state_set.get_val_end_nat (Param_PHASE));
 			const float   hop_dur = _inv_fs * _hop_size;
 			// * 0.5f because the phase difference is set in both directions
-			_phasing = speed * hop_dur * 0.5f;
+			_phasing  = speed * hop_dur * 0.5f;
+
+			_dry_mode = _state_set.get_val_enum <DMode> (Param_DMODE);
 		}
 	}
 }
@@ -628,6 +646,52 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 			phase_val = -phase_val;
 		}
 	}
+}
+
+
+
+void	SpectralFreeze::check_dry_level (Channel &chn) noexcept
+{
+	bool           play_mode_flag = false;
+	for (auto &slot : chn._slot_arr)
+	{
+		if (slot._frz_state == FreezeState::REPLAY)
+		{
+			play_mode_flag = true;
+			break;
+		}
+	}
+
+	// Updates the dry level
+	float          dry_lvl = 1;
+	if (    _dry_mode == DMode_MUTE
+	    || (_dry_mode == DMode_CUT  && play_mode_flag))
+	{
+		dry_lvl = 0;
+	}
+	if (chn._vol_dry.get_tgt () != dry_lvl)
+	{
+		chn._vol_dry.set_val (dry_lvl);
+	}
+}
+
+
+
+// Loosely approximates the fade curve required to preserve constant power
+// with the fading out window.
+// https://www.desmos.com/calculator/upfsolpl3a
+float	SpectralFreeze::conv_pos_to_dry_lvl (float x) noexcept
+{
+	assert (x >= 0);
+	assert (x <= 1);
+
+	x += fstb::ipowpc <4> (x);
+	x = 1 - x;
+	x = std::max (x, 0.f);
+	x = fstb::ipowpc <4> (x);
+	x = 1 - x;
+
+	return x;
 }
 
 
