@@ -255,6 +255,13 @@ void	SpectralFreeze::do_process_block (piapi::ProcInfo &proc)
 			}
 
 			// Dry mix
+			// Current issue: the transition in Cut mode is not smooth, there
+			// is a volume loss in the middle of the fade.
+			// This is most likely because the phase of the dry signal is not
+			// synchronized with the phase of the frozen signal. Adding the
+			// original phase doesn't help much, it makes the volume issue
+			// appear again (the analysis window shape is shifted in the
+			// resynthesised signal).
 			chn._vol_dry.tick (work_len);
 			const float    dry_pos_beg = chn._vol_dry.get_beg ();
 			const float    dry_pos_end = chn._vol_dry.get_end ();
@@ -470,17 +477,14 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
 	{
 		const int      img_idx = bin_idx + _nbr_bins;
-		std::complex <float> bin {
+		const std::complex <float> bin {
 			_buf_bins [bin_idx], _buf_bins [img_idx]
-		};
-		const std::complex <float> bin_old {
-			slot._buf_freeze [bin_idx], slot._buf_freeze [img_idx]
 		};
 
 		// Phase difference
 		float          arg_n = 0;
-		const float    b0r   = bin_old.real ();
-		const float    b0i   = bin_old.imag ();
+		const float    b0r   = slot._buf_freeze [bin_idx];
+		const float    b0i   = slot._buf_freeze [img_idx];
 		if (! fstb::is_null (fabsf (b0r) + fabsf (b0i)))
 		{
 			// Division formula without scaling: bin / bin_old = b1 / b0
@@ -617,8 +621,8 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 		for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
 		{
 			const int      img_idx = bin_idx + _nbr_bins;
-			const float    mag   = slot._buf_freeze [bin_idx];
-			float          arg_n = slot._buf_freeze [img_idx];
+			const float    mag     = slot._buf_freeze [bin_idx];
+			float          arg_n   = slot._buf_freeze [img_idx];
 
 			// Reports the phase difference between the two initial frames
 			arg_n *= slot._nbr_hops;
