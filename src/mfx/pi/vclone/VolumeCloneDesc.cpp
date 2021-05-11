@@ -103,7 +103,7 @@ VolumeCloneDesc::VolumeCloneDesc ()
 	// Maximum gain
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.01, 100,
-		"Minimum gain\nMin gain\nMiGain\nMiG",
+		"Maximum gain\nMax gain\nMaGain\nMaG",
 		"dB",
 		param::HelperDispNum::Preset_DB,
 		0,
