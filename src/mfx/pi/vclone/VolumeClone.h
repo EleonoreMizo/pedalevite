@@ -89,6 +89,9 @@ private:
 	// amplifying the background noise.
 	static constexpr float  _thr_silence = 1e-4f; // -80 dB
 
+	// Constant added to denominators that may be null to avoid divisions by 0.
+	static constexpr float  _eps         = 1e-15f;
+
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
 	typedef dsp::dyn::EnvFollowerAHR1LrSimdHelper <

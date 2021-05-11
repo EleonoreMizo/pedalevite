@@ -299,7 +299,7 @@ void	VolumeClone::do_process_block (piapi::ProcInfo &proc)
 			const float    den_1  = fstb::lerp (_vol_ref, vol_c, m_c);
 			const float    num_2  = vol_c2;
 			const float    den_2  = vol_c2 + fstb::sq (_thr_silence);
-			const float    g_raw  = (num_1 * num_2) / (den_1 * den_2);
+			const float    g_raw  = (num_1 * num_2) / (den_1 * den_2 + _eps);
 			const float    g_lim  = fstb::limit (g_raw, gmi, gma);
 			const float    g_out  = fstb::lerp (1.f, g_lim, str);
 
@@ -343,6 +343,13 @@ void	VolumeClone::do_process_block (piapi::ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+// Makes the compiler happy
+constexpr float	VolumeClone::_vol_ref;
+constexpr float	VolumeClone::_thr_silence;
+constexpr float	VolumeClone::_eps;
 
 
 
