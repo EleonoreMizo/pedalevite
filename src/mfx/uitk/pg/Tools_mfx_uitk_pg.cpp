@@ -684,7 +684,7 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, std::stri
 			while (del_flag && slot_id >= 0);
 			slot_id = -1;
 		}
-		else if (! chain_flag)
+		else if (! chain_flag && slot_id >= 0)
 		{
 			model.remove_slot (slot_id);
 			slot_id = -1;
