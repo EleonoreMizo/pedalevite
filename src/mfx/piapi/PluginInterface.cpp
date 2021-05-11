@@ -29,7 +29,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include	"mfx/piapi/PluginInterface.h"
 #include	"mfx/piapi/ProcInfo.h"
 
+#include <algorithm>
+
 #include	<cassert>
+#include <cmath>
 
 
 
@@ -101,10 +104,48 @@ void	PluginInterface::process_block (ProcInfo &proc)
 	assert (proc._evt_arr != nullptr || proc._nbr_evt == 0);
 	assert (proc._nbr_evt >= 0);
 
+#if ! defined (NDEBUG)
+	// Checks just a single pin
+	for (int chn_idx = 0; chn_idx < proc._dir_arr [Dir_IN ]._nbr_chn; ++chn_idx)
+	{
+		assert (
+			std::find_if (
+				proc._src_arr [chn_idx],
+				proc._src_arr [chn_idx] + proc._nbr_spl,
+				[] (const auto &x) { return ! std::isfinite (x); }
+			) == proc._src_arr [chn_idx] + proc._nbr_spl
+		);
+	}
+#endif
+
 	do_process_block (proc);
 
 	assert (proc._byp_state >= 0);
 	assert (proc._byp_state < BypassState_NBR_ELT);
+
+#if ! defined (NDEBUG)
+	// Checks just a single pin
+	for (int chn_idx = 0; chn_idx < proc._dir_arr [Dir_OUT]._nbr_chn; ++chn_idx)
+	{
+		assert (
+			std::find_if (
+				proc._dst_arr [chn_idx],
+				proc._dst_arr [chn_idx] + proc._nbr_spl,
+				[] (const auto &x) { return ! std::isfinite (x); }
+			) == proc._dst_arr [chn_idx] + proc._nbr_spl
+		);
+		if (proc._byp_state == BypassState_PRODUCED)
+		{
+			assert (
+				std::find_if (
+					proc._byp_arr [chn_idx],
+					proc._byp_arr [chn_idx] + proc._nbr_spl,
+					[] (const auto &x) { return ! std::isfinite (x); }
+				) == proc._byp_arr [chn_idx] + proc._nbr_spl
+			);
+		}
+	}
+#endif
 }
 
 
