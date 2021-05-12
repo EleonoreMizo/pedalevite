@@ -460,6 +460,12 @@
     <Filter Include="mfx\pi\sfreeze">
       <UniqueIdentifier>{5aef6e80-eb70-41bc-a75c-6a4c92799a37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hiir\test">
+      <UniqueIdentifier>{5727919b-1ca9-4158-a388-f54aa02f1252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ffft\test">
+      <UniqueIdentifier>{9e36c360-b03c-4325-a992-db5d59a1997c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5166,6 +5172,135 @@
     <ClInclude Include="..\..\..\src\mfx\pi\sfreeze\DMode.h">
       <Filter>mfx\pi\sfreeze</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\AlignedObject.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\AlignedObject.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\BlockSplitter.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\conf.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\CpuId.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\FileOp.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\FileOp.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\ResultCheck.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\ResultCheck.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\SpeedTester.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\SpeedTester.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\SpeedTesterBase.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\SpeedTesterBase.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\SweepingSine.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\SweepingSine.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesFnc.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesFnc.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesSpeed.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesSpeed.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestDownsampler2x.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestDownsampler2x.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestPhaseHalfPi.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestPhaseHalfPi.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestUpsampler2x.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TestUpsampler2x.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TimerAccurate.h">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\test\TimerAccurate.hpp">
+      <Filter>hiir\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\conf.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\fnc.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\fnc.hpp">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestAccuracy.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestAccuracy.hpp">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestHelperFixLen.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestHelperFixLen.hpp">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestHelperNormal.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestHelperNormal.hpp">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestSpeed.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestSpeed.hpp">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestWhiteNoiseGen.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TestWhiteNoiseGen.hpp">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TimerAccurate.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\TimerAccurate.hpp">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\test\Demangler.h">
+      <Filter>ffft\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6571,6 +6706,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreezeDesc.cpp">
       <Filter>mfx\pi\sfreeze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\hiir\test\BlockSplitter.cpp">
+      <Filter>hiir\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\hiir\test\CpuId_hiir_test.cpp">
+      <Filter>hiir\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\hiir\test\SweepingSine_hiir_test.cpp">
+      <Filter>hiir\test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

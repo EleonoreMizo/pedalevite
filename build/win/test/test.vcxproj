@@ -136,8 +136,10 @@
     <ClCompile Include="..\..\..\src\test\TestConvolverFft.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDkmSimulator.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestFfft.cpp" />
     <ClCompile Include="..\..\..\src\test\TestHardclipBl.cpp" />
     <ClCompile Include="..\..\..\src\test\TestHash.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestHiir.cpp" />
     <ClCompile Include="..\..\..\src\test\TestHiirDesigner.cpp" />
     <ClCompile Include="..\..\..\src\test\Testlal.cpp" />
     <ClCompile Include="..\..\..\src\test\TestMoogLadderDAngelo.cpp" />
@@ -200,8 +202,10 @@
     <ClInclude Include="..\..\..\src\test\TestConvolverFft.h" />
     <ClInclude Include="..\..\..\src\test\TestDiodeClipJcm.h" />
     <ClInclude Include="..\..\..\src\test\TestDkmSimulator.h" />
+    <ClInclude Include="..\..\..\src\test\TestFfft.h" />
     <ClInclude Include="..\..\..\src\test\TestHardclipBl.h" />
     <ClInclude Include="..\..\..\src\test\TestHash.h" />
+    <ClInclude Include="..\..\..\src\test\TestHiir.h" />
     <ClInclude Include="..\..\..\src\test\TestHiirDesigner.h" />
     <ClInclude Include="..\..\..\src\test\Testlal.h" />
     <ClInclude Include="..\..\..\src\test\TestMoogLadderDAngelo.h" />

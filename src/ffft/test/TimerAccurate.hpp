@@ -1,0 +1,119 @@
+/*****************************************************************************
+
+        TimerAccurate.hpp
+        Author: Laurent de Soras, 2021
+
+--- Legal stuff ---
+
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://www.wtfpl.net/ for more details.
+
+*Tab=3***********************************************************************/
+
+
+
+#if ! defined (ffft_test_TimerAccurate_CODEHEADER_INCLUDED)
+#define ffft_test_TimerAccurate_CODEHEADER_INCLUDED
+
+
+
+/*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include <cassert>
+
+
+
+namespace ffft
+{
+namespace test
+{
+
+
+
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	TimerAccurate::reset () noexcept
+{
+	_best = MaxResClock::duration::max ();
+}
+
+
+
+void	TimerAccurate::start () noexcept
+{
+	_start = MaxResClock::now ();
+}
+
+
+
+void	TimerAccurate::stop () noexcept
+{
+	const auto     now = MaxResClock::now ();
+	const auto     dur = now - _start;
+	if (dur < _best && dur.count () > 0)
+	{
+		_best = dur;
+	}
+}
+
+
+
+void	TimerAccurate::stop_lap () noexcept
+{
+	const auto     now = MaxResClock::now ();
+	const auto     dur = now - _start;
+	if (dur < _best && dur.count () > 0)
+	{
+		_best = dur;
+	}
+	_start = now;
+}
+
+
+
+TimerAccurate::MaxResClock::duration	TimerAccurate::get_best_duration () const noexcept
+{
+	assert (_best != MaxResClock::duration::max ());
+
+	return _best;
+}
+
+
+
+double	TimerAccurate::get_best_rate (long nbr_spl) const noexcept
+{
+	static const double  per =
+		  double (MaxResClock::duration::period::num)
+		/ double (MaxResClock::duration::period::den);
+
+	const double   dur  = double (get_best_duration ().count ()) * per;
+	const double   rate = double (nbr_spl) / dur;
+
+	return rate;
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+}  // namespace test
+}  // namespace ffft
+
+
+
+#endif   // ffft_test_TimerAccurate_CODEHEADER_INCLUDED
+
+
+
+/*\\\ EOF \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

@@ -68,8 +68,10 @@
 #include "test/TestDiodeClipJcm.h"
 #include "test/TestDiodeClipScreamer.h"
 #include "test/TestDkmSimulator.h"
+#include "test/TestFfft.h"
 #include "test/TestHardclipBl.h"
 #include "test/TestHash.h"
+#include "test/TestHiir.h"
 #include "test/TestHiirDesigner.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
@@ -1897,7 +1899,7 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestDesignPhaseMin::perform_test ();
 #endif
 
@@ -1959,6 +1961,14 @@ int main (int argc, char *argv [])
 
 #if 0
 	if (ret_val == 0) ret_val = TestHash::perform_test ();
+#endif
+
+#if 0
+	if (ret_val == 0) ret_val = TestFfft::perform_test ();
+#endif
+
+#if 0
+	if (ret_val == 0) ret_val = TestHiir::perform_test ();
 #endif
 
 #if 0

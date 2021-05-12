@@ -1764,6 +1764,52 @@ pedalevite_SOURCES = $(commonsrc) \
         ../../src/main.cpp
 
 mfxtest_SOURCES = $(commonsrc) \
+        ../../src/ffft/test/conf.h \
+        ../../src/ffft/test/fnc.h \
+        ../../src/ffft/test/fnc.hpp \
+        ../../src/ffft/test/Demangler.h \
+        ../../src/ffft/test/TestAccuracy.h \
+        ../../src/ffft/test/TestAccuracy.hpp \
+        ../../src/ffft/test/TestHelperFixLen.h \
+        ../../src/ffft/test/TestHelperFixLen.hpp \
+        ../../src/ffft/test/TestHelperNormal.h \
+        ../../src/ffft/test/TestHelperNormal.hpp \
+        ../../src/ffft/test/TestSpeed.h \
+        ../../src/ffft/test/TestSpeed.hpp \
+        ../../src/ffft/test/TestWhiteNoiseGen.h \
+        ../../src/ffft/test/TestWhiteNoiseGen.hpp \
+        ../../src/ffft/test/TimerAccurate.h \
+        ../../src/ffft/test/TimerAccurate.hpp \
+        ../../src/hiir/test/AlignedObject.h \
+        ../../src/hiir/test/AlignedObject.hpp \
+        ../../src/hiir/test/BlockSplitter.cpp \
+        ../../src/hiir/test/BlockSplitter.h \
+        ../../src/hiir/test/conf.h \
+        ../../src/hiir/test/CpuId_hiir_test.cpp \
+        ../../src/hiir/test/CpuId.h \
+        ../../src/hiir/test/FileOp.h \
+        ../../src/hiir/test/FileOp.hpp \
+        ../../src/hiir/test/ResultCheck.h \
+        ../../src/hiir/test/ResultCheck.hpp \
+        ../../src/hiir/test/SpeedTester.h \
+        ../../src/hiir/test/SpeedTester.hpp \
+        ../../src/hiir/test/SpeedTesterBase.h \
+        ../../src/hiir/test/SpeedTesterBase.hpp \
+        ../../src/hiir/test/SweepingSine_hiir_test.cpp \
+        ../../src/hiir/test/SweepingSine.h \
+        ../../src/hiir/test/SweepingSine.hpp \
+        ../../src/hiir/test/TestAllClassesFnc.h \
+        ../../src/hiir/test/TestAllClassesFnc.hpp \
+        ../../src/hiir/test/TestAllClassesSpeed.h \
+        ../../src/hiir/test/TestAllClassesSpeed.hpp \
+        ../../src/hiir/test/TestDownsampler2x.h \
+        ../../src/hiir/test/TestDownsampler2x.hpp \
+        ../../src/hiir/test/TestPhaseHalfPi.h \
+        ../../src/hiir/test/TestPhaseHalfPi.hpp \
+        ../../src/hiir/test/TestUpsampler2x.h \
+        ../../src/hiir/test/TestUpsampler2x.hpp \
+        ../../src/hiir/test/TimerAccurate.h \
+        ../../src/hiir/test/TimerAccurate.hpp \
         ../../src/test/Axis.cpp \
         ../../src/test/Axis.h \
         ../../src/test/BufferFiller.cpp \
@@ -1797,10 +1843,14 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestDiodeClipScreamer.h \
         ../../src/test/TestDkmSimulator.cpp \
         ../../src/test/TestDkmSimulator.h \
+        ../../src/test/TestFfft.cpp \
+        ../../src/test/TestFfft.h \
         ../../src/test/TestHardclipBl.cpp \
         ../../src/test/TestHardclipBl.h \
         ../../src/test/TestHash.cpp \
         ../../src/test/TestHash.h \
+        ../../src/test/TestHiir.cpp \
+        ../../src/test/TestHiir.h \
         ../../src/test/TestHiirDesigner.cpp \
         ../../src/test/TestHiirDesigner.h \
         ../../src/test/TestInterpFtor.cpp \

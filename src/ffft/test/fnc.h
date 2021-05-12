@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        def.h
+        fnc.h
         By Laurent de Soras
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (ffft_def_HEADER_INCLUDED)
-#define	ffft_def_HEADER_INCLUDED
+#if ! defined (ffft_test_fnc_HEADER_INCLUDED)
+#define	ffft_test_fnc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -31,43 +31,26 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace ffft
 {
+namespace test
+{
 
 
 
-constexpr double  PI    = 3.1415926535897932384626433832795;
-constexpr double  SQRT2 = 1.41421356237309514547462185873883;
-
-#if defined (_MSC_VER)
-
-	#define	ffft_FORCEINLINE	__forceinline
-
-#else
-
-	#define	ffft_FORCEINLINE	inline
-
-#endif
-
-// Compiler type
-#define ffft_COMPILER_UNKNOWN (-1)
-#define ffft_COMPILER_GCC     (1)
-#define ffft_COMPILER_MSVC    (2)
-
-#if defined (__GNUC__) || defined (__clang__)
-	#define ffft_COMPILER ffft_COMPILER_GCC
-#elif defined (_MSC_VER)
-	#define ffft_COMPILER ffft_COMPILER_MSVC
-#else
-	#define ffft_COMPILER ffft_COMPILER_UNKNOWN
-#endif
+template <class T>
+inline T	limit (const T &x, const T &inf, const T &sup);
 
 
 
-
+}	// namespace test
 }	// namespace ffft
 
 
 
-#endif	// ffft_def_HEADER_INCLUDED
+#include	"ffft/test/fnc.hpp"
+
+
+
+#endif	// ffft_test_fnc_HEADER_INCLUDED
 
 
 
