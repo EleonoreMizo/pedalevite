@@ -35,6 +35,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+#if defined (_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable : 4740)
+#endif
+
+
+
 namespace hiir
 {
 
@@ -308,6 +315,12 @@ void	Upsampler2x3dnow <NC>::clear_buffers () noexcept
 
 
 }  // namespace hiir
+
+
+
+#if defined (_MSC_VER)
+#pragma warning (pop)
+#endif
 
 
 

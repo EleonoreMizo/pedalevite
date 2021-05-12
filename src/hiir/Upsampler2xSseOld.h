@@ -65,7 +65,7 @@ public:
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
 
-	               Upsampler2xSseOld ();
+	               Upsampler2xSseOld () noexcept;
 	               Upsampler2xSseOld (const Upsampler2xSseOld <NC> &other) = default;
 	               Upsampler2xSseOld (Upsampler2xSseOld <NC> &&other)      = default;
 	               ~Upsampler2xSseOld ()                            = default;
