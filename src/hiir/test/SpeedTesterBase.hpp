@@ -53,7 +53,7 @@ SpeedTesterBase <TO>::SpeedTesterBase () noexcept
 		for (size_t pos = 0; pos < buf.size (); ++pos)
 		{
 			const float    val =
-				(float (rand ())) * (2.0f / RAND_MAX) - 1.0f;
+				(float (rand ())) * float (2.0 / RAND_MAX) - 1.0f;
 			buf [pos] = val;
 		}
 	}
