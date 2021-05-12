@@ -118,8 +118,8 @@ private:
 	float          _sample_freq = 0;
 	float          _inv_fs      = 0;
 
-	float          _g     = 0;
-	float          _g_inv = 0;
+	float          _g     = 1;
+	float          _g_inv = 1;
 	float          _b     = 0;
 	float          _k     = 0;  // R - 1
 

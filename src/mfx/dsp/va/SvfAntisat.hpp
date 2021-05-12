@@ -211,6 +211,8 @@ void	SvfAntisat <AS>::EqBp::set_a (float a) noexcept
 template <class AS>
 void	SvfAntisat <AS>::EqBp::set_b (float b) noexcept
 {
+	assert (b != 0);
+
 	_b = b;
 	_one_over_b = 1.f / b;
 	if (b != 1)
