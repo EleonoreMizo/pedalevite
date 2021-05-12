@@ -52,16 +52,16 @@ public:
 	>::type;
 
 	fstb_FORCEINLINE void
-						reset ();
+						reset () noexcept;
 	fstb_FORCEINLINE void
-						start ();
+						start () noexcept;
 	fstb_FORCEINLINE void
-						stop ();
+						stop () noexcept;
 	fstb_FORCEINLINE void
-						stop_lap ();
+						stop_lap () noexcept;
 	MaxResClock::duration
-	               get_best_duration () const;
-	double			get_best_rate (long nbr_spl) const;
+	               get_best_duration () const noexcept;
+	double			get_best_rate (long nbr_spl) const noexcept;
 
 
 

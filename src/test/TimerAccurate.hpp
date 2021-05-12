@@ -28,21 +28,21 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-void	TimerAccurate::reset ()
+void	TimerAccurate::reset () noexcept
 {
 	_best = MaxResClock::duration::max ();
 }
 
 
 
-void	TimerAccurate::start ()
+void	TimerAccurate::start () noexcept
 {
 	_start = MaxResClock::now ();
 }
 
 
 
-void	TimerAccurate::stop ()
+void	TimerAccurate::stop () noexcept
 {
 	const auto     now = MaxResClock::now ();
 	const auto     dur = now - _start;
@@ -54,7 +54,7 @@ void	TimerAccurate::stop ()
 
 
 
-void	TimerAccurate::stop_lap ()
+void	TimerAccurate::stop_lap () noexcept
 {
 	const auto     now = MaxResClock::now ();
 	const auto     dur = now - _start;

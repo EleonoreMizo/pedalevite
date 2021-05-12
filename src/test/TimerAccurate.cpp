@@ -34,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-TimerAccurate::MaxResClock::duration	TimerAccurate::get_best_duration () const
+TimerAccurate::MaxResClock::duration	TimerAccurate::get_best_duration () const noexcept
 {
 	assert (_best != MaxResClock::duration::max ());
 
@@ -43,7 +43,7 @@ TimerAccurate::MaxResClock::duration	TimerAccurate::get_best_duration () const
 
 
 
-double	TimerAccurate::get_best_rate (long nbr_spl) const
+double	TimerAccurate::get_best_rate (long nbr_spl) const noexcept
 {
 	static const double  per =
 		  double (MaxResClock::duration::period::num)
