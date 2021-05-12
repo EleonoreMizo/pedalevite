@@ -46,7 +46,7 @@ namespace hiir
 
 #if defined (_MSC_VER)
 #pragma warning (push)
-#pragma warning (4 : 4799)
+#pragma warning (disable : 4799)
 #endif
 
 

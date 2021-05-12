@@ -73,7 +73,7 @@ public:
 	Downsampler2x8F64Avx512 <NC> &
 	               operator = (Downsampler2x8F64Avx512 <NC> &&other)      = default;
 
-	void           set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []) noexcept;
 
 	hiir_FORCEINLINE __m512d
 	               process_sample (const double in_ptr [_nbr_chn * 2]) noexcept;

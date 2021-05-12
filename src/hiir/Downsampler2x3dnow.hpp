@@ -35,6 +35,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+#if defined (_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable : 4740)
+#endif
+
+
+
 namespace hiir
 {
 
@@ -335,8 +342,6 @@ void	Downsampler2x3dnow <NC>::process_sample_split (float &low, float &high, con
 	}
 	// Result storing could be optimized on Athlon with:
 	// pfmul + pfpnacc + movd + punpckhdq + movd (not tested)
-
-	return result;
 }
 
 
@@ -458,6 +463,12 @@ void	Downsampler2x3dnow <NC>::clear_buffers () noexcept
 
 
 }  // namespace hiir
+
+
+
+#if defined (_MSC_VER)
+#pragma warning (pop)
+#endif
 
 
 
