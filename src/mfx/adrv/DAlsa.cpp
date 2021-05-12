@@ -110,7 +110,7 @@ int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 
 	if (driver_0 == 0)
 	{
-		driver_0 = "plughw:0";
+		driver_0 = "plughw:CARD=USB";
 	}
 	_driver = driver_0;
 
