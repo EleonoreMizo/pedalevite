@@ -115,7 +115,7 @@ namespace fstb
 #define fstb_COMPILER_GCC  (1)
 #define fstb_COMPILER_MSVC (2)
 
-#if defined (__GNUC__)
+#if defined (__GNUC__) || defined (__clang__)
 	#define fstb_COMPILER fstb_COMPILER_GCC
 #elif defined (_MSC_VER)
 	#define fstb_COMPILER fstb_COMPILER_MSVC
