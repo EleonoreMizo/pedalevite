@@ -80,9 +80,9 @@ protected:
 
 private:
 
-	static const int  CHK_IMPULSE_NOT_SET = 12345;
+	static constexpr int  _chk_impulse_not_set = 12345;
 
-	Buffer         _imp = Buffer {{ float (CHK_IMPULSE_NOT_SET) }}; // Impulse
+	Buffer         _imp = Buffer {{ float (_chk_impulse_not_set) }}; // Impulse
 	Buffer         _dif; // Difference between next impulse and current impulse
 
 
@@ -91,9 +91,6 @@ private:
 
 private:
 
-	               InterpPhaseFpu (const InterpPhaseFpu &other)    = delete;
-	InterpPhaseFpu &
-	               operator = (const InterpPhaseFpu &other)        = delete;
 	bool           operator == (const InterpPhaseFpu &other) const = delete;
 	bool           operator != (const InterpPhaseFpu &other) const = delete;
 

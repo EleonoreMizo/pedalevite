@@ -67,9 +67,9 @@ public:
 	{
 	public:
 		conc_FORCEINLINE bool
-		               operator == (const Data128 & other) const;
+		               operator == (const Data128 & other) const noexcept;
 		conc_FORCEINLINE bool
-		               operator != (const Data128 & other) const;
+		               operator != (const Data128 & other) const noexcept;
 
 		int64_t        _data [2];
 	};

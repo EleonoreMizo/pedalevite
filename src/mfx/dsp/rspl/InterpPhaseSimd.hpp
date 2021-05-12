@@ -191,7 +191,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], const Buffer &imp
 template <int PL>
 float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const noexcept
 {
-	assert (_imp [0] != CHK_IMPULSE_NOT_SET);
+	assert (_imp [0] != _chk_impulse_not_set);
 	assert (data_ptr != nullptr);
 	assert (q >= 0);
 	assert (q <= 1);

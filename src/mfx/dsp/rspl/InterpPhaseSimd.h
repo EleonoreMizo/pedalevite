@@ -83,10 +83,10 @@ protected:
 
 private:
 
-	static constexpr int CHK_IMPULSE_NOT_SET = 12345;
+	static constexpr int _chk_impulse_not_set = 12345;
 
 	alignas (16) Buffer  // Impulse
-	               _imp = Buffer {{ float (CHK_IMPULSE_NOT_SET) }};
+	               _imp = Buffer {{ float (_chk_impulse_not_set) }};
 	alignas (16) Buffer  // Difference between next impulse and current impulse
 	               _dif;
 

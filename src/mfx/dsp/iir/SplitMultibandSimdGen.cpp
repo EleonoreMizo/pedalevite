@@ -1575,7 +1575,7 @@ SplitMultibandSimdGen::GroupOutArray	SplitMultibandSimdGen::find_simd_group_inpu
 			{
 				coord._group_idx = grp_idx_tst;
 				coord._lane_idx  =
-					std::distance (grp_src._node_out_arr.begin (), it);
+					int (std::distance (grp_src._node_out_arr.begin (), it));
 				break;
 			}
 		}
