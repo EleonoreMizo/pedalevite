@@ -1899,6 +1899,8 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
+#define main_TEST_SPEED 1
+
 #if 0
 	if (ret_val == 0) ret_val = TestDesignPhaseMin::perform_test ();
 #endif
@@ -1911,15 +1913,15 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestSplitMultibandSimdGen::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestSplitMultibandBustad::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestSplitMultibandLin::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestSplitMultiband::perform_test ();
 #endif
 
@@ -1927,7 +1929,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = Testadrv::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestOscSinCosStable::perform_test ();
 #endif
 
@@ -1935,15 +1937,15 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestAnalysisFreq::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestSplitAp5::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestSplitThiele8::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestReverb::perform_test ();
 #endif
 
@@ -1955,19 +1957,19 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = Testlal::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestRndXoroshiro128p::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestHash::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestFfft::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestHiir::perform_test ();
 #endif
 
@@ -1975,51 +1977,51 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestHiirDesigner::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestBigMuffPi::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestDkmSimulator::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestMnaSimulator::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestMoogLadderMystran::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestPinkShade::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestHardclipBl::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestMoogLadderDAngelo::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestSvfAntisat::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestRcClipGeneric::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestDiodeClipJcm::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestDiodeClipScreamer::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestDiodeClipDAngelo::perform_test ();
 #endif
 
@@ -2039,7 +2041,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestPsu::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = test_conv_int_fast ();
 #endif
 
@@ -2071,7 +2073,7 @@ int main (int argc, char *argv [])
 	#endif
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
 #endif
 
@@ -2083,27 +2085,27 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestSlidingOp::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestOscWavetableSyncHard::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestOscWavetableSub::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestOscWavetable::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestOscSampleSyncFade::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestOscSampleSyncHard::perform_test ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestOscSample::perform_test ();
 #endif
 
@@ -2127,7 +2129,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = test_osc_sin_cos_stable_simd ();
 #endif
 
-#if 0
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseFpu <4>, 6>::perform_test ();
 	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseSimd <4>, 6>::perform_test ();
 	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseFpu <12>, 6>::perform_test ();

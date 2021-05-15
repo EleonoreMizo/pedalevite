@@ -122,9 +122,9 @@ int	TestSpeed <FO>::perform_test_d (FO &fft, const char *class_name_0)
 	}
 
 	const double   spl_per_s = tim.get_best_rate (len * nbr_loops);
-	const double   kilo_sps  = spl_per_s / 1e3;
+	const double   mega_sps  = spl_per_s / 1e6;
 	const double   rt_mul    = spl_per_s / double (_sample_freq);
-	printf ("%12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+	printf ("%12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
 
 	return (0);
 }
@@ -169,9 +169,9 @@ int	TestSpeed <FO>::perform_test_i (FO &fft, const char *class_name_0)
 	}
 
 	const double   spl_per_s = tim.get_best_rate (len * nbr_loops);
-	const double   kilo_sps  = spl_per_s / 1e3;
+	const double   mega_sps  = spl_per_s / 1e6;
 	const double   rt_mul    = spl_per_s / double (_sample_freq);
-	printf ("%12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+	printf ("%12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
 
 	return (0);
 }
@@ -219,9 +219,9 @@ int	TestSpeed <FO>::perform_test_di (FO &fft, const char *class_name_0)
 	}
 
 	const double   spl_per_s = tim.get_best_rate (len * nbr_loops);
-	const double   kilo_sps  = spl_per_s / 1e3;
+	const double   mega_sps  = spl_per_s / 1e6;
 	const double   rt_mul    = spl_per_s / double (_sample_freq);
-	printf ("%12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+	printf ("%12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
 
 	return (0);
 }

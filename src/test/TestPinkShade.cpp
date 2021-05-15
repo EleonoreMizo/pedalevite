@@ -28,6 +28,7 @@ http://www.wtfpl.net/ for more details.
 #include "test/TestPinkShade.h"
 #include "mfx/dsp/nz/PinkShade.h"
 #include "mfx/FileOpWav.h"
+#include "test/TimerAccurate.h"
 
 #include <cassert>
 #include <cstdlib>
@@ -53,7 +54,24 @@ int	TestPinkShade::perform_test ()
 
 	mfx::FileOpWav::save ("results/pinkshade1.wav", dst, sample_freq, 0.5f);
 
-	printf ("Done.\n");
+	// Speed test
+	constexpr int  nbr_loops = 100;
+	TimerAccurate  tim;
+
+	tim.start ();
+	for (int loop_cnt = 0; loop_cnt < nbr_loops; ++loop_cnt)
+	{
+		gen.process_block (dst.data (), len);
+		tim.stop_lap ();
+	}
+
+	const auto     p         = dst.back ();
+	const double   spl_per_s = tim.get_best_rate (len) + p * 1e-300;
+	const double   mega_sps  = spl_per_s / 1e6;
+	const double   rt_mul    = spl_per_s / sample_freq;
+	printf ("Speed: %12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
+
+	printf ("Done.\n\n");
 
 	return ret_val;
 }

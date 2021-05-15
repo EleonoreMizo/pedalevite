@@ -26,6 +26,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/RndXoroshiro128p.h"
 #include "test/TestRndXoroshiro128p.h"
+#include "test/TimerAccurate.h"
 
 #include <cassert>
 #include <cstdio>
@@ -57,7 +58,24 @@ int	TestRndXoroshiro128p::perform_test ()
 		printf ("\n");
 	}
 
-	printf ("Done.\n");
+	// Speed test
+	constexpr double  sample_freq = 44100;
+	constexpr int     len         = 100'000'000;
+	TimerAccurate  tim;
+	tim.start ();
+	for (int k = 0; k < len; ++k)
+	{
+		rndgen.gen_int ();
+	}
+	tim.stop ();
+	const auto     p = rndgen.gen_flt ();
+	
+	const double   spl_per_s = tim.get_best_rate (len) + p * 1e-300;
+	const double   mega_sps  = spl_per_s / 1e6;
+	const double   rt_mul    = spl_per_s / sample_freq;
+	printf ("Speed: %12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
+
+	printf ("Done.\n\n");
 
 	return ret_val;
 }

@@ -46,7 +46,7 @@ int	TestOscSinCosStable::perform_test ()
 	printf ("Testing mfx::dsp::osc::OscSinCosStable...\n");
 
 	constexpr double  sample_freq = 44100; // Hz
-	constexpr int     len         = 100 * 1000 * 1000;
+	constexpr int     len         = 100'000'000;
 
 	// Tested angles, rad
 	std::array <float, 4> angle_arr {{ 1e-6f, 1e-3f, 0.1f, 2.f }};
@@ -84,9 +84,9 @@ int	TestOscSinCosStable::perform_test ()
 		printf ("module = %8f after %d iterations.\n", m, len);
 	}
 
-	const double   kilo_sps  = spl_per_s / 1e3;
+	const double   mega_sps  = spl_per_s / 1e6;
 	const double   rt_mul    = spl_per_s / sample_freq;
-	printf ("Speed: %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+	printf ("Speed: %12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
 
 	printf ("Done.\n\n");
 
