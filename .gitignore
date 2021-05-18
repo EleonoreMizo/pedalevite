@@ -6,7 +6,7 @@
 *.opensdf
 *.o
 *.out
-*.dxf~
+*~
 *.pkf
 [Dd]ebug*/
 [Rr]elease*/
