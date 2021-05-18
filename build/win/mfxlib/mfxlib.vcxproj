@@ -1039,6 +1039,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetable.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetable.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSub.h" />

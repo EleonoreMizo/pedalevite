@@ -596,6 +596,7 @@ commonsrc = \
         ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
+        ../../src/mfx/dsp/osc/OscSinCosStableSimd.hpp \
         ../../src/mfx/dsp/osc/OscWavetable.h \
         ../../src/mfx/dsp/osc/OscWavetable.hpp \
         ../../src/mfx/dsp/osc/OscWavetableSub.h \

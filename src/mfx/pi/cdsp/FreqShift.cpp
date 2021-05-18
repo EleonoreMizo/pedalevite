@@ -115,10 +115,10 @@ void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const
 	assert (nbr_spl > 0);
 	assert (nbr_chn > 0);
 
-	_ali->_osc.process_block (
+	_ali->_osc.process_block <fstb::DataAlign <true> > (
 		&_buf_arr [Buf_COS] [0],
 		&_buf_arr [Buf_SIN] [0],
-		nbr_spl / dsp::osc::OscSinCosStableSimd::_nbr_units
+		nbr_spl
 	);
 
 	for (int c = 0; c < nbr_chn; ++c)

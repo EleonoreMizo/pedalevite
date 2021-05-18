@@ -5301,6 +5301,9 @@
     <ClInclude Include="..\..\..\src\ffft\test\Demangler.h">
       <Filter>ffft\test</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

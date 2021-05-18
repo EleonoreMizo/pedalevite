@@ -24,11 +24,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/DataAlign.h"
 #include "mfx/dsp/osc/OscSinCosStableSimd.h"
 
 #include <cassert>
-#include <cmath>
 
 
 
@@ -102,46 +100,6 @@ void	OscSinCosStableSimd::step () noexcept
 
 
 
-// nbr_spl = nbr_vec * 4
-void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int nbr_vec) noexcept
-{
-	assert (fstb::DataAlign <true>::check_ptr (cos_ptr));
-	assert (fstb::DataAlign <true>::check_ptr (sin_ptr));
-	assert (nbr_vec > 0);
-
-	auto           alpha   = fstb::ToolsSimd::load_f32 (&_alpha);
-	auto           beta    = fstb::ToolsSimd::load_f32 (&_beta );
-	auto           pos_cos = fstb::ToolsSimd::load_f32 (&_pos_cos);
-	auto           pos_sin = fstb::ToolsSimd::load_f32 (&_pos_sin);
-
-	const int      nbs_spl = nbr_vec * _nbr_units;
-	for (int pos = 0; pos < nbs_spl; pos += _nbr_units)
-	{
-		fstb::ToolsSimd::store_f32 (cos_ptr + pos, pos_cos);
-		fstb::ToolsSimd::store_f32 (sin_ptr + pos, pos_sin);
-		step (pos_cos, pos_sin, alpha, beta);
-	}
-
-	fstb::ToolsSimd::store_f32 (&_pos_cos, pos_cos);
-	fstb::ToolsSimd::store_f32 (&_pos_sin, pos_sin);
-}
-
-
-
-fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_cos () const noexcept
-{
-	return (fstb::ToolsSimd::load_f32 (&_pos_cos));
-}
-
-
-
-fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_sin () const noexcept
-{
-	return (fstb::ToolsSimd::load_f32 (&_pos_sin));
-}
-
-
-
 void	OscSinCosStableSimd::clear_buffers () noexcept
 {
 	fstb::ToolsSimd::store_f32 (&_pos_cos, fstb::ToolsSimd::set1_f32 (1));
@@ -169,27 +127,6 @@ void	OscSinCosStableSimd::correct_fast () noexcept
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta) noexcept
-{
-	const auto     tmp = pos_cos - alpha * pos_sin;
-	pos_sin += beta * tmp;
-	pos_cos  = tmp - alpha * pos_sin;
-}
-
-
-
-void	OscSinCosStableSimd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad) noexcept
-{
-   const double   a = tan (angle_rad * 0.5f);
-   alpha = fstb::ToolsSimd::set1_f32 (float (a));
-
-// const double   b = sin (angle_rad);
-	const double   b = 2 * a / (1 + a * a);
-   beta  = fstb::ToolsSimd::set1_f32 (float (b));
-}
 
 
 

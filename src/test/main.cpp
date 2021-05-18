@@ -1739,13 +1739,25 @@ int test_osc_sin_cos_stable_simd ()
 	mfx::dsp::osc::OscSinCosStableSimd   osc;
 
 	const int      len_vec = 10000;
-	const int      len     = len_vec * 4;
+	const int      len     = len_vec * mfx::dsp::osc::OscSinCosStableSimd::_nbr_units;
 	std::vector <float>  cos_arr (len);
 	std::vector <float>  sin_arr (len);
 
 	osc.clear_buffers ();
 	osc.set_step (step);
-	osc.process_block (&cos_arr [0], &sin_arr [0], len_vec);
+
+	{
+		int            pos      = 0;
+		int            work_len = 64;
+		do
+		{
+			work_len = std::min (work_len, len - pos);
+			osc.process_block (&cos_arr [pos], &sin_arr [pos], work_len);
+			pos     += work_len;
+			work_len = 1 + (work_len & 0x7F);
+		}
+		while (pos < len);
+	}
 
 	double         err_sum = 0;
 	float          err_max = 0;
@@ -1899,7 +1911,7 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
-#define main_TEST_SPEED 1
+#define main_TEST_SPEED 0
 
 #if 0
 	if (ret_val == 0) ret_val = TestDesignPhaseMin::perform_test ();
@@ -2125,7 +2137,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestInterpFtor::perform_test ();
 #endif
 
-#if 0
+#if 1
 	if (ret_val == 0) ret_val = test_osc_sin_cos_stable_simd ();
 #endif
 

@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/DataAlign.h"
 #include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
@@ -67,11 +68,13 @@ public:
 	void           set_step (float angle_rad) noexcept;
 
 	void           step () noexcept;
-	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec) noexcept;
 
-	fstb::ToolsSimd::VectF32
+	template <class VD = fstb::DataAlign <false> >
+	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_spl) noexcept;
+
+	inline fstb::ToolsSimd::VectF32
 	               get_cos () const noexcept;
-	fstb::ToolsSimd::VectF32
+	inline fstb::ToolsSimd::VectF32
 	               get_sin () const noexcept;
 
 	void           clear_buffers () noexcept;
@@ -123,7 +126,7 @@ private:
 
 
 
-//#include "mfx/dsp/osc/OscSinCosStableSimd.hpp"
+#include "mfx/dsp/osc/OscSinCosStableSimd.hpp"
 
 
 
