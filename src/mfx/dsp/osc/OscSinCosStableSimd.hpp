@@ -40,8 +40,6 @@ namespace osc
 
 
 
-// cos_ptr and sin_ptr must point to buffers aligned in position AND length.
-// Extra-data between nbr_spl and the next aligned position will be overwritten.
 template <class VD>
 void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int nbr_spl) noexcept
 {
