@@ -53,7 +53,7 @@ int	TestRndXoroshiro128p::perform_test ()
 		for (int i = 0; i < 4; ++i)
 		{
 			const uint64_t x = rndgen.gen_int ();
-			printf ("%016llX ", x);
+			printf ("%016llX ", static_cast <long long> (x));
 		}
 		printf ("\n");
 	}

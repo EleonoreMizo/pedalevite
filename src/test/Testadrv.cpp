@@ -301,7 +301,12 @@ void	Testadrv::test_nanosleep ()
 
 		printf (
 			"Target: %4lld, avg: %6.1f, min: %4lld, max: %4lld, stddev: %5.1f, ovrhd: %5.1f\n",
-			us_tgt, us_avg, us_min, us_max, us_dev, us_dif
+			static_cast <long long> (us_tgt),
+			us_avg,
+			static_cast <long long> (us_min),
+			static_cast <long long> (us_max),
+			us_dev,
+			us_dif
 		);
 	}
 #endif
