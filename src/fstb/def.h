@@ -169,12 +169,12 @@ namespace fstb
 #endif
 #if fstb_SYS == fstb_SYS_WIN
 	#if defined (__GNUC__)
-		#define fstb_EXPORT(f) extern "C" __attribute__((dllexport)) f
+		#define fstb_EXPORT(f) extern "C" __attribute__((dllexport)) f noexcept
 	#else
-		#define fstb_EXPORT(f) extern "C" __declspec(dllexport) f
+		#define fstb_EXPORT(f) extern "C" __declspec(dllexport) f noexcept
 	#endif
 #else
-	#define fstb_EXPORT(f) extern "C" __attribute__((visibility("default"))) f
+	#define fstb_EXPORT(f) extern "C" __attribute__((visibility("default"))) f noexcept
 #endif
 
 
