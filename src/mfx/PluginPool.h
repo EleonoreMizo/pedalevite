@@ -147,8 +147,9 @@ private:
 
 	typedef std::array <PluginSlot, Cst::_max_nbr_plugins> PluginArray;
 
-	typedef std::vector <std::shared_ptr <piapi::FactoryInterface> > FactoryList;
-	typedef std::map <std::string, std::shared_ptr <piapi::FactoryInterface> > MapIdToFactory;
+	typedef std::unique_ptr <piapi::FactoryInterface> FactoryUPtr;
+	typedef std::vector <FactoryUPtr> FactoryList;
+	typedef std::map <std::string, piapi::FactoryInterface *> MapIdToFactory;
 
 	int            add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc);
 

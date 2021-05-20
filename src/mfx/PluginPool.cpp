@@ -60,15 +60,15 @@ PluginPool::PluginPool ()
 		);
 	}
 
-	for (auto &sptr : _fact_arr)
+	for (auto &uptr : _fact_arr)
 	{
-		if (sptr.get () == nullptr)
+		if (uptr.get () == nullptr)
 		{
 			throw std::runtime_error (
 				"Pointer to the factory is null"
 			);
 		}
-		const piapi::PluginDescInterface &  desc = sptr->describe ();
+		const piapi::PluginDescInterface &  desc = uptr->describe ();
 		const piapi::PluginInfo info { desc.get_info () };
 		const std::string  model_id = info._unique_id;
 		if (_map_model_to_factory.find (model_id) != _map_model_to_factory.end ())
@@ -78,7 +78,7 @@ PluginPool::PluginPool ()
 				"Plug-in model found twice in the factory list"
 			);
 		}
-		_map_model_to_factory [model_id] = sptr;
+		_map_model_to_factory [model_id] = uptr.get ();
 	}
 }
 

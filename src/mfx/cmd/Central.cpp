@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/BypassState.h"
 #include "mfx/piapi/Err.h"
+#include "mfx/piapi/FactoryInterface.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/piapi/PluginInterface.h"
 #include "mfx/piapi/ProcInfo.h"

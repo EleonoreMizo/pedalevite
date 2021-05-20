@@ -52,7 +52,7 @@ class FactoryInterface
 public:
 
 	// Use fstb_EXPORT() to export the function
-	typedef int (fstb_CDECL * EnumFactoriesPtr) (std::vector <std::shared_ptr <FactoryInterface> > &fact_list);
+	typedef int (fstb_CDECL * EnumFactoriesPtr) (std::vector <std::unique_ptr <FactoryInterface> > &fact_list);
 
 	               FactoryInterface ()                              = default;
 	               FactoryInterface (const FactoryInterface &other) = default;

@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/piapi/FactoryInterface.h"
 
+#include <memory>
+
 
 
 namespace mfx
@@ -47,7 +49,7 @@ class FactoryTpl
 
 public:
 
-	static std::shared_ptr <FactoryInterface>
+	static std::unique_ptr <FactoryInterface>
 	               create ();
 
 

@@ -146,84 +146,90 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+template <class D, class P>
+static void	add (std::vector <std::unique_ptr <mfx::piapi::FactoryInterface> > &fl)
+{
+	fl.emplace_back (mfx::piapi::FactoryTpl <D, P>::create ());
+}
+
+
+
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::piapi::FactoryInterface> > &fact_list))
+fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::unique_ptr <mfx::piapi::FactoryInterface> > &fact_list))
 {
 	int            ret_val = fstb::Err_OK;
 
 	try
 	{
 		using namespace mfx::pi;
-		using namespace mfx::piapi;
 
-		static const std::vector <std::shared_ptr <mfx::piapi::FactoryInterface> > l =
-		{
-			FactoryTpl <dwm::DryWetDesc         , dwm::DryWet              >::create ()
-		,	FactoryTpl <tuner::TunerDesc        , tuner::Tuner             >::create ()
-		,	FactoryTpl <dist1::DistoSimpleDesc  , dist1::DistoSimple       >::create ()
-		,	FactoryTpl <freqsh::FreqShiftDesc   , freqsh::FrequencyShifter >::create ()
-		,	FactoryTpl <trem1::TremoloDesc      , trem1::Tremolo           >::create ()
-		,	FactoryTpl <wah1::WahDesc           , wah1::Wah                >::create ()
-		,	FactoryTpl <dtone1::DistToneDesc    , dtone1::DistTone         >::create ()
-		,	FactoryTpl <iifix::IIFixDesc        , iifix::IIFix             >::create ()
-		,	FactoryTpl <flancho::FlanchoDesc    , flancho::Flancho         >::create ()
-		,	FactoryTpl <dly1::DelayDesc         , dly1::Delay              >::create ()
-		,	FactoryTpl <cpx::CompexDesc         , cpx::Compex              >::create ()
-		,	FactoryTpl <fv::FreeverbDesc        , fv::Freeverb             >::create ()
-		,	FactoryTpl <peq::PEqDesc < 4>       , peq::PEq < 4>            >::create ()
-		,	FactoryTpl <peq::PEqDesc < 8>       , peq::PEq < 8>            >::create ()
-		,	FactoryTpl <peq::PEqDesc <16>       , peq::PEq <16>            >::create ()
-		,	FactoryTpl <phase1::PhaserDesc      , phase1::Phaser           >::create ()
-		,	FactoryTpl <lpfs::SqueezerDesc      , lpfs::Squeezer           >::create ()
-		,	FactoryTpl <lfo1::LfoDesc <false>   , lfo1::Lfo <false>        >::create ()
-		,	FactoryTpl <envf::EnvFollowDesc     , envf::EnvFollow          >::create ()
-		,	FactoryTpl <dist2::Disto2xDesc      , dist2::Disto2x           >::create ()
-		,	FactoryTpl <spkem::SpeakerEmuDesc   , spkem::SpeakerEmu        >::create ()
-		,	FactoryTpl <tost::ToStereoDesc      , tost::ToStereo           >::create ()
-		,	FactoryTpl <distpwm::DistoPwmDesc   , distpwm::DistoPwm        >::create ()
-		,	FactoryTpl <tremh::HarmTremDesc     , tremh::HarmTrem          >::create ()
-		,	FactoryTpl <nzbl::NoiseBleachDesc   , nzbl::NoiseBleach        >::create ()
-		,	FactoryTpl <nzcl::NoiseChlorineDesc , nzcl::NoiseChlorine      >::create ()
-		,	FactoryTpl <click::ClickDesc        , click::Click             >::create ()
-		,	FactoryTpl <wah2::Wah2Desc          , wah2::Wah2               >::create ()
-		,	FactoryTpl <ramp::RampDesc          , ramp::Ramp               >::create ()
-		,	FactoryTpl <dly2::Delay2Desc        , dly2::Delay2             >::create ()
-		,	FactoryTpl <colorme::ColorMeDesc    , colorme::ColorMe         >::create ()
-		,	FactoryTpl <phase2::Phaser2Desc     , phase2::Phaser2          >::create ()
-		,	FactoryTpl <pidet::PitchDetectDesc  , pidet::PitchDetect       >::create ()
-		,	FactoryTpl <osdet::OnsetDetectDesc  , osdet::OnsetDetect       >::create ()
-		,	FactoryTpl <syn0::Synth0Desc        , syn0::Synth0             >::create ()
-		,	FactoryTpl <hcomb::HyperCombDesc    , hcomb::HyperComb         >::create ()
-		,	FactoryTpl <testgen::TestGenDesc    , testgen::TestGen         >::create ()
-		,	FactoryTpl <psh1::PitchShift1Desc   , psh1::PitchShift1        >::create ()
-		,	FactoryTpl <distpwm2::DistoPwm2Desc , distpwm2::DistoPwm2      >::create ()
-//		,	FactoryTpl <osdet2::OnsetDetect2Desc, osdet2::OnsetDetect2     >::create () // Does not work well enough
-		,	FactoryTpl <distapf::DistApfDesc    , distapf::DistApf         >::create ()
-		,	FactoryTpl <lfo1::LfoDesc <true>    , lfo1::Lfo <true>         >::create ()
-		,	FactoryTpl <adsr::EnvAdsrDesc       , adsr::EnvAdsr            >::create ()
-		,	FactoryTpl <dly0::DelayDesc         , dly0::Delay              >::create ()
-		,	FactoryTpl <fsplit::FreqSplitDesc   , fsplit::FreqSplit        >::create ()
-		,	FactoryTpl <dist3::Dist3Desc        , dist3::Dist3             >::create ()
-		,	FactoryTpl <moog1::MoogLpfDesc      , moog1::MoogLpf           >::create ()
-		,	FactoryTpl <dclip::DiodeClipperDesc , dclip::DiodeClipper      >::create ()
-		,	FactoryTpl <smood::SkoolMoodDesc    , smood::SkoolMood         >::create ()
-		,	FactoryTpl <bmp1::BigMuff1Desc      , bmp1::BigMuff1           >::create ()
-		,	FactoryTpl <verb2::PlatitudeDesc    , verb2::Platitude         >::create ()
-		,	FactoryTpl <vclone::VolumeCloneDesc , vclone::VolumeClone      >::create ()
-		,	FactoryTpl <cmerge::ChnMergeDesc    , cmerge::ChnMerge         >::create ()
-		,	FactoryTpl <csplit::ChnSplitDesc    , csplit::ChnSplit         >::create ()
-		,	FactoryTpl <ms::MidSideDesc         , ms::MidSide              >::create ()
-		,	FactoryTpl <pan::StereoPanDesc      , pan::StereoPan           >::create ()
-		,	FactoryTpl <tomo::ToMonoDesc        , tomo::ToMono             >::create ()
-		,	FactoryTpl <pidet2::PitchDetect2Desc, pidet2::PitchDetect2     >::create ()
-		,	FactoryTpl <scrush::SpectralCrusherDesc,scrush::SpectralCrusher>::create ()
-		,	FactoryTpl <sfreeze::SpectralFreezeDesc,sfreeze::SpectralFreeze>::create ()
-		};
+		std::vector <std::unique_ptr <mfx::piapi::FactoryInterface> > fl;
 
-		fact_list = l;
+		add <dwm::DryWetDesc            , dwm::DryWet              > (fl);
+		add <tuner::TunerDesc           , tuner::Tuner             > (fl);
+		add <dist1::DistoSimpleDesc     , dist1::DistoSimple       > (fl);
+		add <freqsh::FreqShiftDesc      , freqsh::FrequencyShifter > (fl);
+		add <trem1::TremoloDesc         , trem1::Tremolo           > (fl);
+		add <wah1::WahDesc              , wah1::Wah                > (fl);
+		add <dtone1::DistToneDesc       , dtone1::DistTone         > (fl);
+		add <iifix::IIFixDesc           , iifix::IIFix             > (fl);
+		add <flancho::FlanchoDesc       , flancho::Flancho         > (fl);
+		add <dly1::DelayDesc            , dly1::Delay              > (fl);
+		add <cpx::CompexDesc            , cpx::Compex              > (fl);
+		add <fv::FreeverbDesc           , fv::Freeverb             > (fl);
+		add <peq::PEqDesc < 4>          , peq::PEq < 4>            > (fl);
+		add <peq::PEqDesc < 8>          , peq::PEq < 8>            > (fl);
+		add <peq::PEqDesc <16>          , peq::PEq <16>            > (fl);
+		add <phase1::PhaserDesc         , phase1::Phaser           > (fl);
+		add <lpfs::SqueezerDesc         , lpfs::Squeezer           > (fl);
+		add <lfo1::LfoDesc <false>      , lfo1::Lfo <false>        > (fl);
+		add <envf::EnvFollowDesc        , envf::EnvFollow          > (fl);
+		add <dist2::Disto2xDesc         , dist2::Disto2x           > (fl);
+		add <spkem::SpeakerEmuDesc      , spkem::SpeakerEmu        > (fl);
+		add <tost::ToStereoDesc         , tost::ToStereo           > (fl);
+		add <distpwm::DistoPwmDesc      , distpwm::DistoPwm        > (fl);
+		add <tremh::HarmTremDesc        , tremh::HarmTrem          > (fl);
+		add <nzbl::NoiseBleachDesc      , nzbl::NoiseBleach        > (fl);
+		add <nzcl::NoiseChlorineDesc    , nzcl::NoiseChlorine      > (fl);
+		add <click::ClickDesc           , click::Click             > (fl);
+		add <wah2::Wah2Desc             , wah2::Wah2               > (fl);
+		add <ramp::RampDesc             , ramp::Ramp               > (fl);
+		add <dly2::Delay2Desc           , dly2::Delay2             > (fl);
+		add <colorme::ColorMeDesc       , colorme::ColorMe         > (fl);
+		add <phase2::Phaser2Desc        , phase2::Phaser2          > (fl);
+		add <pidet::PitchDetectDesc     , pidet::PitchDetect       > (fl);
+		add <osdet::OnsetDetectDesc     , osdet::OnsetDetect       > (fl);
+		add <syn0::Synth0Desc           , syn0::Synth0             > (fl);
+		add <hcomb::HyperCombDesc       , hcomb::HyperComb         > (fl);
+		add <testgen::TestGenDesc       , testgen::TestGen         > (fl);
+		add <psh1::PitchShift1Desc      , psh1::PitchShift1        > (fl);
+		add <distpwm2::DistoPwm2Desc    , distpwm2::DistoPwm2      > (fl);
+//		add <osdet2::OnsetDetect2Desc   , osdet2::OnsetDetect2     > (fl); // Does not work well enough
+		add <distapf::DistApfDesc       , distapf::DistApf         > (fl);
+		add <lfo1::LfoDesc <true>       , lfo1::Lfo <true>         > (fl);
+		add <adsr::EnvAdsrDesc          , adsr::EnvAdsr            > (fl);
+		add <dly0::DelayDesc            , dly0::Delay              > (fl);
+		add <fsplit::FreqSplitDesc      , fsplit::FreqSplit        > (fl);
+		add <dist3::Dist3Desc           , dist3::Dist3             > (fl);
+		add <moog1::MoogLpfDesc         , moog1::MoogLpf           > (fl);
+		add <dclip::DiodeClipperDesc    , dclip::DiodeClipper      > (fl);
+		add <smood::SkoolMoodDesc       , smood::SkoolMood         > (fl);
+		add <bmp1::BigMuff1Desc         , bmp1::BigMuff1           > (fl);
+		add <verb2::PlatitudeDesc       , verb2::Platitude         > (fl);
+		add <vclone::VolumeCloneDesc    , vclone::VolumeClone      > (fl);
+		add <cmerge::ChnMergeDesc       , cmerge::ChnMerge         > (fl);
+		add <csplit::ChnSplitDesc       , csplit::ChnSplit         > (fl);
+		add <ms::MidSideDesc            , ms::MidSide              > (fl);
+		add <pan::StereoPanDesc         , pan::StereoPan           > (fl);
+		add <tomo::ToMonoDesc           , tomo::ToMono             > (fl);
+		add <pidet2::PitchDetect2Desc   , pidet2::PitchDetect2     > (fl);
+		add <scrush::SpectralCrusherDesc, scrush::SpectralCrusher  > (fl);
+		add <sfreeze::SpectralFreezeDesc, sfreeze::SpectralFreeze  > (fl);
+
+		fact_list.swap (fl);
 	}
 	catch (...)
 	{

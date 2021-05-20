@@ -38,11 +38,9 @@ namespace piapi
 
 
 template <class DSC, class PI>
-std::shared_ptr <FactoryInterface>	FactoryTpl <DSC, PI>::create ()
+std::unique_ptr <FactoryInterface>	FactoryTpl <DSC, PI>::create ()
 {
-	return std::static_pointer_cast <FactoryInterface> (
-		std::make_shared <FactoryTpl <DSC, PI> > ()
-	);
+	return std::make_unique <FactoryTpl <DSC, PI> > ();
 }
 
 

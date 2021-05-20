@@ -42,7 +42,7 @@ namespace piapi
 }
 }
 
-fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::piapi::FactoryInterface> > &fact_list));
+fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::unique_ptr <mfx::piapi::FactoryInterface> > &fact_list));
 
 
 
