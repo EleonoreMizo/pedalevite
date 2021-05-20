@@ -50,7 +50,7 @@ const PluginDescInterface &	FactoryInterface::describe ()
 
 
 // Returns 0 on failure
-PluginInterface *	FactoryInterface::create ()
+std::unique_ptr <PluginInterface>	FactoryInterface::create ()
 {
 	return do_create ();
 }

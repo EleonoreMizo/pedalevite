@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/piapi/PluginInterface.h"
 #include "fstb/def.h"
 
 #include <memory>
@@ -67,7 +68,7 @@ public:
 
 	const PluginDescInterface &
 	               describe ();
-	PluginInterface *
+	std::unique_ptr <PluginInterface>
 	               create ();
 
 
@@ -78,7 +79,7 @@ protected:
 
 	virtual const PluginDescInterface &
 	               do_describe () = 0;
-	virtual PluginInterface *
+	virtual std::unique_ptr <PluginInterface>
 	               do_create () = 0;
 
 

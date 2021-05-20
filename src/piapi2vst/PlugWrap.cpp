@@ -58,7 +58,7 @@ namespace piapi2vst
 PlugWrap::PlugWrap (audioMasterCallback audio_master, mfx::piapi::FactoryInterface &factory)
 :	_audio_master (audio_master)
 ,	_desc (factory.describe ())
-,	_plugin_aptr (factory.create ())
+,	_plugin_uptr (factory.create ())
 ,	_info (_desc.get_info ())
 ,	_nbr_i (1)
 ,	_nbr_o (1)
@@ -288,7 +288,7 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 
 	// Processing
 	_proc._nbr_spl = sampleFrames;
-	_plugin_aptr->process_block (_proc);
+	_plugin_uptr->process_block (_proc);
 
 	// Returns the event cells
 	for (int evt_cnt = 0; evt_cnt < nbr_evt; ++evt_cnt)
@@ -454,7 +454,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 	PlugWrap *     wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
 
-	mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_aptr);
+	mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_uptr);
 		
 	int            ret_val = 0;
 
@@ -675,7 +675,7 @@ float	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
 		static_cast <const PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
 
-	const mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_aptr);
+	const mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_uptr);
 
 	return float (
 		plugin.get_param_val (mfx::piapi::ParamCateg_GLOBAL, index, 0)

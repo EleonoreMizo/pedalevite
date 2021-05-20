@@ -131,8 +131,8 @@ private:
 	               _audio_master;
 	const mfx::piapi::PluginDescInterface &
 	               _desc;
-	std::auto_ptr <mfx::piapi::PluginInterface>
-	               _plugin_aptr;
+	std::unique_ptr <mfx::piapi::PluginInterface>
+	               _plugin_uptr;
 	::AEffect      _vst;
 
 	mfx::piapi::PluginInfo

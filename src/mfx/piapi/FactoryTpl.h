@@ -60,7 +60,7 @@ protected:
 	// mfx::piapi::FactoryInterface
 	const PluginDescInterface &
 	               do_describe () override;
-	PluginInterface *
+	std::unique_ptr <PluginInterface>
 	               do_create () override;
 
 

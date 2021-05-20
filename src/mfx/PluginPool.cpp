@@ -104,7 +104,7 @@ int	PluginPool::create (std::string model_id)
 		const piapi::PluginDescInterface &  desc = fact.describe ();
 
 		// Creates the plug-in
-		PluginUPtr     pi_uptr (fact.create ());
+		auto           pi_uptr { fact.create () };
 		if (pi_uptr.get () == nullptr)
 		{
 			assert (false);
