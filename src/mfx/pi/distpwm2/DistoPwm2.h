@@ -67,7 +67,7 @@ class DistoPwm2 final
 
 public:
 
-	               DistoPwm2 ();
+	explicit       DistoPwm2 (piapi::HostInterface &host);
 
 
 
@@ -160,6 +160,8 @@ private:
 	inline bool    has_vol_proc () const;
 	void           square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DistoPwm2Desc  _desc;
@@ -203,8 +205,11 @@ private:
 
 private:
 
+	               DistoPwm2 ()                               = delete;
 	               DistoPwm2 (const DistoPwm2 &other)         = delete;
+	               DistoPwm2 (DistoPwm2 &&other)              = delete;
 	DistoPwm2 &    operator = (const DistoPwm2 &other)        = delete;
+	DistoPwm2 &    operator = (DistoPwm2 &&other)             = delete;
 	bool           operator == (const DistoPwm2 &other) const = delete;
 	bool           operator != (const DistoPwm2 &other) const = delete;
 

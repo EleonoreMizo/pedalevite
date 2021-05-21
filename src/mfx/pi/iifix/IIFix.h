@@ -56,7 +56,7 @@ class IIFix final
 
 public:
 
-	               IIFix ();
+	explicit       IIFix (piapi::HostInterface &host);
 
 
 
@@ -81,6 +81,8 @@ private:
 	void           clear_buffers ();
 	void           update_filter ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	IIFixDesc   _desc;
@@ -103,8 +105,11 @@ private:
 
 private:
 
+	               IIFix ()                               = delete;
 	               IIFix (const IIFix &other)             = delete;
+	               IIFix (IIFix &&other)                  = delete;
 	IIFix &        operator = (const IIFix &other)        = delete;
+	IIFix &        operator = (IIFix &&other)             = delete;
 	bool           operator == (const IIFix &other) const = delete;
 	bool           operator != (const IIFix &other) const = delete;
 

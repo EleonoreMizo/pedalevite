@@ -58,7 +58,7 @@ class SkoolMood final
 
 public:
 
-	               SkoolMood ();
+	explicit       SkoolMood (piapi::HostInterface &host);
 	               ~SkoolMood () = default;
 
 
@@ -154,6 +154,8 @@ private:
 	static inline float
 	               compute_pan_lvl (float x);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	SkoolMoodDesc _desc;
@@ -229,6 +231,7 @@ private:
 
 private:
 
+	               SkoolMood ()                               = delete;
 	               SkoolMood (const SkoolMood &other)         = delete;
 	               SkoolMood (SkoolMood &&other)              = delete;
 	SkoolMood &    operator = (const SkoolMood &other)        = delete;

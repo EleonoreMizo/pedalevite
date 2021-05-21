@@ -57,7 +57,7 @@ class FrequencyShifter final
 
 public:
 
-	               FrequencyShifter ();
+	explicit       FrequencyShifter (piapi::HostInterface &host);
 
 
 
@@ -79,6 +79,8 @@ private:
 
 	void           clear_buffers ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	FreqShiftDesc  _desc;
@@ -99,9 +101,13 @@ private:
 
 private:
 
+	               FrequencyShifter ()                               = delete;
 	               FrequencyShifter (const FrequencyShifter &other)  = delete;
+	               FrequencyShifter (FrequencyShifter &&other)       = delete;
 	FrequencyShifter &
 	               operator = (const FrequencyShifter &other)        = delete;
+	FrequencyShifter &
+	               operator = (FrequencyShifter &&other)             = delete;
 	bool           operator == (const FrequencyShifter &other) const = delete;
 	bool           operator != (const FrequencyShifter &other) const = delete;
 

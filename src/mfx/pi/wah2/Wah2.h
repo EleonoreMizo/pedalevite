@@ -63,7 +63,7 @@ class Wah2 final
 
 public:
 
-	               Wah2 ();
+	explicit       Wah2 (piapi::HostInterface &host);
 
 
 
@@ -137,6 +137,8 @@ private:
 	static constexpr float
 	               shaper (float x);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	Wah2Desc       _desc;
@@ -176,8 +178,11 @@ private:
 
 private:
 
-	               Wah2 (const Wah2 &other)        = delete;
-	Wah2 &   operator = (const Wah2 &other)        = delete;
+	               Wah2 ()                               = delete;
+	               Wah2 (const Wah2 &other)              = delete;
+	               Wah2 (Wah2 &&other)                   = delete;
+	Wah2 &         operator = (const Wah2 &other)        = delete;
+	Wah2 &         operator = (Wah2 &&other)             = delete;
 	bool           operator == (const Wah2 &other) const = delete;
 	bool           operator != (const Wah2 &other) const = delete;
 

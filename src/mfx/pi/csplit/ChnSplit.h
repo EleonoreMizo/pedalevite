@@ -47,7 +47,7 @@ class ChnSplit final
 
 public:
 
-	               ChnSplit ();
+	explicit       ChnSplit (piapi::HostInterface &host);
 	               ~ChnSplit () = default;
 
 
@@ -70,6 +70,8 @@ private:
 
 	void           clear_buffers ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	ChnSplitDesc   _desc;
@@ -83,6 +85,7 @@ private:
 
 private:
 
+	               ChnSplit ()                               = delete;
 	               ChnSplit (const ChnSplit &other)          = delete;
 	               ChnSplit (ChnSplit &&other)               = delete;
 	ChnSplit &     operator = (const ChnSplit &other)        = delete;

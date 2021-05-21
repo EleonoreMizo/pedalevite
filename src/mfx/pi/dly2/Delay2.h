@@ -62,7 +62,7 @@ class Delay2 final
 
 public:
 
-	               Delay2 ();
+	explicit       Delay2 (piapi::HostInterface &host);
 
 
 
@@ -135,6 +135,8 @@ private:
 	static void    square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 	static void    min_block (float dst_ptr [], int nbr_spl, float val_max);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	Delay2Desc     _desc;
@@ -182,8 +184,11 @@ private:
 
 private:
 
+	               Delay2 ()                               = delete;
 	               Delay2 (const Delay2 &other)            = delete;
+	               Delay2 (Delay2 &&other)                 = delete;
 	Delay2 &       operator = (const Delay2 &other)        = delete;
+	Delay2 &       operator = (Delay2 &&other)             = delete;
 	bool           operator == (const Delay2 &other) const = delete;
 	bool           operator != (const Delay2 &other) const = delete;
 

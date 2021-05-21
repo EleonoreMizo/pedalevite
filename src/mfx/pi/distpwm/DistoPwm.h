@@ -58,7 +58,7 @@ class DistoPwm final
 
 public:
 
-	               DistoPwm ();
+	explicit       DistoPwm (piapi::HostInterface &host);
 
 
 
@@ -96,6 +96,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DistoPwmDesc   _desc;
@@ -119,8 +121,11 @@ private:
 
 private:
 
+	               DistoPwm ();
 	               DistoPwm (const DistoPwm &other)          = delete;
+	               DistoPwm (DistoPwm &&other)               = delete;
 	DistoPwm &     operator = (const DistoPwm &other)        = delete;
+	DistoPwm &     operator = (DistoPwm &&other)             = delete;
 	bool           operator == (const DistoPwm &other) const = delete;
 	bool           operator != (const DistoPwm &other) const = delete;
 

@@ -63,7 +63,7 @@ class NoiseBleach final
 
 public:
 
-	               NoiseBleach ();
+	explicit       NoiseBleach (piapi::HostInterface &host);
 
 
 
@@ -101,6 +101,8 @@ private:
 	void           update_all_levels ();
 	void           check_band_activity ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	NoiseBleachDesc
@@ -135,8 +137,11 @@ private:
 
 private:
 
+	               NoiseBleach ()                               = delete;
 	               NoiseBleach (const NoiseBleach &other)       = delete;
+	               NoiseBleach (NoiseBleach &&other)            = delete;
 	NoiseBleach &  operator = (const NoiseBleach &other)        = delete;
+	NoiseBleach &  operator = (NoiseBleach &&other)             = delete;
 	bool           operator == (const NoiseBleach &other) const = delete;
 	bool           operator != (const NoiseBleach &other) const = delete;
 

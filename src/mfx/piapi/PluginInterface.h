@@ -40,6 +40,7 @@ namespace piapi
 
 
 
+class HostInterface;
 class ProcInfo;
 
 class PluginInterface

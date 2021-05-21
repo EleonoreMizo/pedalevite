@@ -49,7 +49,7 @@ class StereoPan final
 
 public:
 
-	               StereoPan ();
+	explicit       StereoPan (piapi::HostInterface &host);
 	               ~StereoPan () = default;
 
 
@@ -76,6 +76,8 @@ private:
 	static void    compute_matrix (dsp::StereoLevel &mat, float pos, float pos_l, float pos_r, float law, bool mono_flag);
 	static float   compute_pan_l (float pos, float law);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	StereoPanDesc  _desc;
@@ -103,6 +105,7 @@ private:
 
 private:
 
+	               StereoPan ()                               = delete;
 	               StereoPan (const StereoPan &other)         = delete;
 	               StereoPan (StereoPan &&other)              = delete;
 	StereoPan &    operator = (const StereoPan &other)        = delete;

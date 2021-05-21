@@ -58,7 +58,14 @@ namespace piapi2vst
 PlugWrap::PlugWrap (audioMasterCallback audio_master, mfx::piapi::FactoryInterface &factory)
 :	_audio_master (audio_master)
 ,	_desc (factory.describe ())
-,	_plugin_uptr (factory.create ())
+#if defined (_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable : 4355)
+#endif // 'this': used in base member initializer list
+,	_plugin_uptr (factory.create (*this))
+#if defined (_MSC_VER)
+#pragma warning (pop)
+#endif
 ,	_info (_desc.get_info ())
 ,	_nbr_i (1)
 ,	_nbr_o (1)

@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        FactoryTpl.h
-        Author: Laurent de Soras, 2016
+        PluginPoolHostMini.h
+        Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
 
@@ -9,59 +9,46 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
 #pragma once
-#if ! defined (mfx_piapi_FactoryTpl_HEADER_INCLUDED)
-#define mfx_piapi_FactoryTpl_HEADER_INCLUDED
-
-#if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
-#endif
+#if ! defined (mfx_PluginPoolHostMini_HEADER_INCLUDED)
+#define mfx_PluginPoolHostMini_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/piapi/FactoryInterface.h"
-
-#include <memory>
+#include "mfx/PluginPoolHostInterface.h"
 
 
 
 namespace mfx
 {
-namespace piapi
-{
 
 
 
-template <class DSC, class PI>
-class FactoryTpl
-:	public FactoryInterface
+class PluginPoolHostMini
+:	public PluginPoolHostInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static std::unique_ptr <FactoryInterface>
-	               create ();
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 protected:
 
-	// mfx::piapi::FactoryInterface
-	const PluginDescInterface &
-	               do_describe () override;
-	std::unique_ptr <PluginInterface>
-	               do_create (HostInterface &host) override;
+	// PluginPoolHostInterface
+	void           do_set_plugin_id (int pi_id) noexcept override { _pi_id = pi_id; }
+	int            do_get_plugin_id () const noexcept override { return _pi_id; }
 
 
 
@@ -69,7 +56,7 @@ protected:
 
 private:
 
-	DSC            _desc;
+	int            _pi_id = -1;
 
 
 
@@ -77,23 +64,22 @@ private:
 
 private:
 
-	bool           operator == (const FactoryTpl &other) const = delete;
-	bool           operator != (const FactoryTpl &other) const = delete;
+	bool           operator == (const PluginPoolHostMini &other) const = delete;
+	bool           operator != (const PluginPoolHostMini &other) const = delete;
 
-}; // class FactoryTpl
+}; // class PluginPoolHostMini
 
 
 
-}  // namespace piapi
 }  // namespace mfx
 
 
 
-#include "mfx/piapi/FactoryTpl.hpp"
+//#include "mfx/PluginPoolHostMini.hpp"
 
 
 
-#endif   // mfx_piapi_FactoryTpl_HEADER_INCLUDED
+#endif   // mfx_PluginPoolHostMini_HEADER_INCLUDED
 
 
 

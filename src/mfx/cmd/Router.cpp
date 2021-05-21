@@ -32,7 +32,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/Cst.h"
 #include "mfx/PluginPool.h"
-#include "mfx/PluginPoolHostInterface.h"
+#include "mfx/PluginPoolHostMini.h"
 #include "mfx/ProcessingContext.h"
 
 #include <algorithm>
@@ -47,25 +47,6 @@ namespace mfx
 {
 namespace cmd
 {
-
-
-
-class Router_DelayCb
-:	public PluginPoolHostInterface
-{
-protected:
-	// PluginPoolHostInterface
-	void           do_set_plugin_id (int pi_id) noexcept override
-	{
-		_pi_id = pi_id;
-	}
-	int            do_get_plugin_id () const noexcept override
-	{
-		return _pi_id;
-	}
-private:
-	int            _pi_id = -1;
-};
 
 
 
@@ -528,7 +509,7 @@ PluginAux &	Router::create_plugin_aux (Document &doc, PluginPool &plugin_pool, D
 
 	plug._model = model;
 	plug._pi_id = plugin_pool.create (
-		plug._model, std::make_unique <Router_DelayCb> ()
+		plug._model, std::make_unique <PluginPoolHostMini> ()
 	);
 	assert (plug._pi_id >= 0);
 

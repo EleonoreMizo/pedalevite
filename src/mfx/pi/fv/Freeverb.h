@@ -61,7 +61,7 @@ class Freeverb final
 
 public:
 
-	               Freeverb ();
+	explicit       Freeverb (piapi::HostInterface &host);
 
 
 
@@ -96,6 +96,8 @@ private:
 	void           clear_buffers ();
 	void           update_param ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	FreeverbDesc   _desc;
@@ -128,8 +130,11 @@ private:
 
 private:
 
+	               Freeverb ()                               = delete;
 	               Freeverb (const Freeverb &other)          = delete;
+	               Freeverb (Freeverb &&other)               = delete;
 	Freeverb &     operator = (const Freeverb &other)        = delete;
+	Freeverb &     operator = (Freeverb &&other)             = delete;
 	bool           operator == (const Freeverb &other) const = delete;
 	bool           operator != (const Freeverb &other) const = delete;
 

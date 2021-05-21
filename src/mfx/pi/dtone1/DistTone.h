@@ -56,7 +56,7 @@ class DistTone final
 
 public:
 
-	               DistTone ();
+	explicit       DistTone (piapi::HostInterface &host);
 
 
 
@@ -82,6 +82,8 @@ private:
 	void           update_filter_shape ();
 	void           update_filter_coef ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DistToneDesc   _desc;
@@ -111,8 +113,11 @@ private:
 
 private:
 
+	               DistTone ()                               = delete;
 	               DistTone (const DistTone &other)          = delete;
+	               DistTone (DistTone &&other)               = delete;
 	DistTone &     operator = (const DistTone &other)        = delete;
+	DistTone &     operator = (DistTone &&other)             = delete;
 	bool           operator == (const DistTone &other) const = delete;
 	bool           operator != (const DistTone &other) const = delete;
 

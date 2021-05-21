@@ -54,8 +54,9 @@ namespace dist1
 
 
 
-DistoSimple::DistoSimple ()
-:	_state (State_CREATED)
+DistoSimple::DistoSimple (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

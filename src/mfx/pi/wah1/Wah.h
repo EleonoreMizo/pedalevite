@@ -55,7 +55,7 @@ class Wah final
 
 public:
 
-	               Wah ();
+	explicit       Wah (piapi::HostInterface &host);
 
 
 
@@ -82,6 +82,8 @@ private:
 
 	void           clear_buffers ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	WahDesc        _desc;
@@ -104,8 +106,11 @@ private:
 
 private:
 
+	               Wah ()                               = delete;
 	               Wah (const Wah &other)               = delete;
+	               Wah (Wah &&other)                    = delete;
 	Wah &          operator = (const Wah &other)        = delete;
+	Wah &          operator = (Wah &&other)             = delete;
 	bool           operator == (const Wah &other) const = delete;
 	bool           operator != (const Wah &other) const = delete;
 

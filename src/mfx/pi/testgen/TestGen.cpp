@@ -56,8 +56,9 @@ namespace testgen
 
 
 
-TestGen::TestGen ()
-:	_state (State_CREATED)
+TestGen::TestGen (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

@@ -67,7 +67,7 @@ class MoogLpf final
 
 public:
 
-	               MoogLpf ();
+	explicit       MoogLpf (piapi::HostInterface &host);
 	               ~MoogLpf () = default;
 
 
@@ -142,6 +142,8 @@ private:
 
 	static void    init_ovrspl_coef ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	MoogLpfDesc    _desc;
@@ -193,6 +195,7 @@ private:
 
 private:
 
+	               MoogLpf ()                               = delete;
 	               MoogLpf (const MoogLpf &other)           = delete;
 	               MoogLpf (MoogLpf &&other)                = delete;
 	MoogLpf &      operator = (const MoogLpf &other)        = delete;

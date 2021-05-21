@@ -42,7 +42,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Cst.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
+#include "mfx/PluginPoolHostMini.h"
 #include "mfx/View.h"
+
+#include <memory>
 
 #include <cassert>
 #include <cstring>
@@ -79,7 +82,8 @@ FxLfo::FxLfo (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_nbr_param (Param_BASE)
 ,	_nbr_cycles_idx (0)
 ,	_prec_idx (0)
-,	_lfo ()
+,	_host_dummy ()
+,	_lfo (_host_dummy)
 ,	_evt_list ()
 {
 	// Nothing

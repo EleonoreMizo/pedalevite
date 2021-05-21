@@ -59,7 +59,7 @@ class SpeakerEmu final
 
 public:
 
-	               SpeakerEmu ();
+	explicit       SpeakerEmu (piapi::HostInterface &host);
 
 
 
@@ -120,6 +120,8 @@ private:
 	void           set_pass_h (int conf, int stage, float freq, float lvl, float q);
 	void           add_gain (int conf, float gain);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	SpeakerEmuDesc _desc;
@@ -157,8 +159,11 @@ private:
 
 private:
 
+	               SpeakerEmu ()                               = delete;
 	               SpeakerEmu (const SpeakerEmu &other)        = delete;
+	               SpeakerEmu (SpeakerEmu &&other)             = delete;
 	SpeakerEmu &   operator = (const SpeakerEmu &other)        = delete;
+	SpeakerEmu &   operator = (SpeakerEmu &&other)             = delete;
 	bool           operator == (const SpeakerEmu &other) const = delete;
 	bool           operator != (const SpeakerEmu &other) const = delete;
 

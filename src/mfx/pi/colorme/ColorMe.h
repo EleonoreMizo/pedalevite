@@ -71,7 +71,7 @@ class ColorMe final
 
 public:
 
-	               ColorMe ();
+	explicit       ColorMe (piapi::HostInterface &host);
 
 
 
@@ -142,6 +142,8 @@ private:
 	void           update_param (bool force_flag = false);
 	void           update_formants ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	ColorMeDesc    _desc;
@@ -180,8 +182,11 @@ private:
 
 private:
 
+	               ColorMe ()                               = delete;
 	               ColorMe (const ColorMe &other)           = delete;
+	               ColorMe (ColorMe &&other)                = delete;
 	ColorMe &      operator = (const ColorMe &other)        = delete;
+	ColorMe &      operator = (ColorMe &&other)             = delete;
 	bool           operator == (const ColorMe &other) const = delete;
 	bool           operator != (const ColorMe &other) const = delete;
 

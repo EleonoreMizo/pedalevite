@@ -54,6 +54,7 @@
 #include "mfx/piapi/ProcInfo.h"
 #include "mfx/FileIOInterface.h"
 #include "mfx/FileOpWav.h"
+#include "mfx/PluginPoolHostMini.h"
 #include "test/DrawShapers.h"
 #include "test/EPSPlot.h"
 #include "test/Gridaxis.h"
@@ -407,7 +408,8 @@ int	test_testgen ()
 	if (ret_val == 0)
 	{
 		const size_t   len = chn_arr [0].size ();
-		mfx::pi::testgen::TestGen  plugin;
+		mfx::PluginPoolHostMini host;
+		mfx::pi::testgen::TestGen  plugin (host);
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
@@ -471,7 +473,8 @@ int	test_disto ()
 	if (ret_val == 0)
 	{
 		const size_t   len = chn_arr [0].size ();
-		mfx::pi::dist1::DistoSimple   dist;
+		mfx::PluginPoolHostMini host;
+		mfx::pi::dist1::DistoSimple   dist (host);
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
@@ -536,7 +539,8 @@ int	test_phaser ()
 	if (ret_val == 0)
 	{
 		const size_t   len = chn_arr [0].size ();
-		mfx::pi::phase1::Phaser plugin;
+		mfx::PluginPoolHostMini host;
+		mfx::pi::phase1::Phaser plugin (host);
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
@@ -608,7 +612,8 @@ int	test_noise_chlorine ()
 	if (ret_val == 0)
 	{
 		const size_t   len = chn_arr [0].size ();
-		mfx::pi::nzcl::NoiseChlorine plugin;
+		mfx::PluginPoolHostMini host;
+		mfx::pi::nzcl::NoiseChlorine plugin (host);
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
@@ -684,7 +689,8 @@ int	test_noise_bleach ()
 	if (ret_val == 0)
 	{
 		const size_t   len = chn_arr [0].size ();
-		mfx::pi::nzbl::NoiseBleach plugin;
+		mfx::PluginPoolHostMini host;
+		mfx::pi::nzbl::NoiseBleach plugin (host);
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
@@ -1289,7 +1295,8 @@ int	test_delay2 ()
 	if (ret_val == 0)
 	{
 		const size_t   len = chn_arr [0].size ();
-		mfx::pi::dly2::Delay2 plugin;
+		mfx::PluginPoolHostMini host;
+		mfx::pi::dly2::Delay2 plugin (host);
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
@@ -1366,7 +1373,8 @@ int test_osdet ()
 	if (ret_val == 0)
 	{
 		const size_t   len = chn_arr [0].size ();
-		mfx::pi::osdet::OnsetDetect plugin;
+		mfx::PluginPoolHostMini host;
+		mfx::pi::osdet::OnsetDetect plugin (host);
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;

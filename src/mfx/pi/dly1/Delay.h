@@ -57,7 +57,7 @@ class Delay final
 
 public:
 
-	               Delay ();
+	explicit       Delay (piapi::HostInterface &host);
 
 
 
@@ -94,6 +94,8 @@ private:
 	void           update_times (int nbr_spl);
 	float          compute_delay_time (int chn) const;
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DelayDesc      _desc;
@@ -142,8 +144,11 @@ private:
 
 private:
 
+	               Delay ()                               = delete;
 	               Delay (const Delay &other)             = delete;
+	               Delay (Delay &&other)                  = delete;
 	Delay &        operator = (const Delay &other)        = delete;
+	Delay &        operator = (Delay &&other)             = delete;
 	bool           operator == (const Delay &other) const = delete;
 	bool           operator != (const Delay &other) const = delete;
 

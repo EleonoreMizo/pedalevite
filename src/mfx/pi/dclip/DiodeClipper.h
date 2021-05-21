@@ -60,7 +60,7 @@ class DiodeClipper final
 
 public:
 
-	               DiodeClipper ();
+	explicit       DiodeClipper (piapi::HostInterface &host);
 	               ~DiodeClipper () = default;
 
 
@@ -120,6 +120,8 @@ private:
 	               compute_gain_pre_post (float gain);
 	static void    init_ovrspl_coef ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DiodeClipperDesc
@@ -160,6 +162,7 @@ private:
 
 private:
 
+	               DiodeClipper ()                               = delete;
 	               DiodeClipper (const DiodeClipper &other)      = delete;
 	               DiodeClipper (DiodeClipper &&other)           = delete;
 	DiodeClipper & operator = (const DiodeClipper &other)        = delete;

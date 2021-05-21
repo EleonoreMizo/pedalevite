@@ -111,7 +111,7 @@ int	PluginPool::create (std::string model_id, HostUPtr host_uptr)
 
 		// Creates the plug-in
 		host_uptr->set_plugin_id (pi_id);
-		auto           pi_uptr { fact.create () };
+		auto           pi_uptr { fact.create (*host_uptr) };
 		if (pi_uptr.get () == nullptr)
 		{
 			assert (false);

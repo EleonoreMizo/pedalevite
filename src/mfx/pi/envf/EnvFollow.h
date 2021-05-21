@@ -61,7 +61,7 @@ class EnvFollow final
 
 public:
 
-	               EnvFollow ();
+	explicit       EnvFollow (piapi::HostInterface &host);
 
 
 
@@ -113,6 +113,8 @@ private:
 	void           square_block (const piapi::ProcInfo &proc);
 	void           clip_block (int nbr_spl);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	EnvFollowDesc  _desc;
@@ -153,8 +155,11 @@ private:
 
 private:
 
+	               EnvFollow ()                               = delete;
 	               EnvFollow (const EnvFollow &other)         = delete;
+	               EnvFollow (EnvFollow &&other)              = delete;
 	EnvFollow &    operator = (const EnvFollow &other)        = delete;
+	EnvFollow &    operator = (EnvFollow &&other)             = delete;
 	bool           operator == (const EnvFollow &other) const = delete;
 	bool           operator != (const EnvFollow &other) const = delete;
 

@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "conc/LockFreeCell.h"
 #include "conc/LockFreeQueue.h"
 #include "fstb/AllocAlign.h"
+#include "mfx/piapi/HostInterface.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/piapi/PluginInterface.h"
 #include "mfx/piapi/ProcInfo.h"
@@ -70,6 +71,7 @@ namespace piapi2vst
 
 
 class PlugWrap
+:	public mfx::piapi::HostInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

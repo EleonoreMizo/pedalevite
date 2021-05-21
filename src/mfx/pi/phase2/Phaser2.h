@@ -60,7 +60,7 @@ class Phaser2 final
 
 public:
 
-	               Phaser2 ();
+	explicit       Phaser2 (piapi::HostInterface &host);
 
 
 
@@ -102,6 +102,8 @@ private:
 	static inline constexpr float
 	               saturate (float x);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	Phaser2Desc    _desc;
@@ -147,8 +149,11 @@ private:
 
 private:
 
+	               Phaser2 ()                               = delete;
 	               Phaser2 (const Phaser2 &other)           = delete;
+	               Phaser2 (Phaser2 &&other)                = delete;
 	Phaser2 &      operator = (const Phaser2 &other)        = delete;
+	Phaser2 &      operator = (Phaser2 &&other)             = delete;
 	bool           operator == (const Phaser2 &other) const = delete;
 	bool           operator != (const Phaser2 &other) const = delete;
 

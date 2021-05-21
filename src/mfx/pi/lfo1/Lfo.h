@@ -3,6 +3,10 @@
         Lfo.h
         Author: Laurent de Soras, 2016
 
+Template parameters:
+
+- SLOW: indicates that the time range is very low in frequencies
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -55,7 +59,7 @@ class Lfo final
 
 public:
 
-	               Lfo ();
+	explicit       Lfo (piapi::HostInterface &host);
 
 
 
@@ -78,6 +82,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	LfoDesc <SLOW> _desc;

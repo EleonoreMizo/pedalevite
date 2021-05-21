@@ -72,7 +72,7 @@ class DistApf final
 
 public:
 
-	               DistApf ();
+	explicit       DistApf (piapi::HostInterface &host);
 
 
 
@@ -120,6 +120,8 @@ private:
 
 	static void    init_coef ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DistApfDesc    _desc;
@@ -161,8 +163,11 @@ private:
 
 private:
 
+	               DistApf ()                               = delete;
 	               DistApf (const DistApf &other)           = delete;
+	               DistApf (DistApf &&other)                = delete;
 	DistApf &      operator = (const DistApf &other)        = delete;
+	DistApf &      operator = (DistApf &&other)             = delete;
 	bool           operator == (const DistApf &other) const = delete;
 	bool           operator != (const DistApf &other) const = delete;
 

@@ -58,8 +58,9 @@ namespace verb2
 
 
 
-Platitude::Platitude ()
-:	_state (State_CREATED)
+Platitude::Platitude (piapi::HostInterface & host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

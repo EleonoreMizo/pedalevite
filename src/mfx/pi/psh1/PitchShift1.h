@@ -61,7 +61,7 @@ class PitchShift1 final
 
 public:
 
-	               PitchShift1 ();
+	explicit       PitchShift1 (piapi::HostInterface &host);
 
 
 
@@ -96,6 +96,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	PitchShift1Desc
@@ -123,8 +125,11 @@ private:
 
 private:
 
-	               PitchShift1 (const PitchShift1 &other)        = delete;
+	               PitchShift1 ()                               = delete;
+	               PitchShift1 (const PitchShift1 &other)       = delete;
+	               PitchShift1 (PitchShift1 &&other)            = delete;
 	PitchShift1 &  operator = (const PitchShift1 &other)        = delete;
+	PitchShift1 &  operator = (PitchShift1 &&other)             = delete;
 	bool           operator == (const PitchShift1 &other) const = delete;
 	bool           operator != (const PitchShift1 &other) const = delete;
 

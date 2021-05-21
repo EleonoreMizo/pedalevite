@@ -63,7 +63,7 @@ class Flancho final
 
 public:
 
-	               Flancho ();
+	explicit       Flancho (piapi::HostInterface &host);
 
 
 
@@ -110,6 +110,8 @@ private:
 	void				update_param (bool force_flag = false);
 	void				update_lfo_period ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	FlanchoDesc    _desc;
@@ -167,8 +169,11 @@ private:
 
 private:
 
+	               Flancho ()                               = delete;
 	               Flancho (const Flancho &other)           = delete;
+	               Flancho (Flancho &&other)                = delete;
 	Flancho &      operator = (const Flancho &other)        = delete;
+	Flancho &      operator = (Flancho &&other)             = delete;
 	bool           operator == (const Flancho &other) const = delete;
 	bool           operator != (const Flancho &other) const = delete;
 

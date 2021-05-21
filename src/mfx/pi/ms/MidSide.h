@@ -55,7 +55,7 @@ class MidSide final
 
 public:
 
-	               MidSide ();
+	explicit       MidSide (piapi::HostInterface &host);
 	               ~MidSide () = default;
 
 
@@ -90,6 +90,8 @@ private:
 
 	static void    compute_matrix (dsp::StereoLevel &mat, const Conf &conf, bool mono_flag);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	MidSideDesc    _desc;
@@ -109,6 +111,7 @@ private:
 
 private:
 
+	               MidSide ()                               = delete;
 	               MidSide (const MidSide &other)           = delete;
 	               MidSide (MidSide &&other)                = delete;
 	MidSide &      operator = (const MidSide &other)        = delete;

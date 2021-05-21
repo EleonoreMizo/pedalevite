@@ -58,8 +58,9 @@ namespace distpwm2
 
 
 
-DistoPwm2::DistoPwm2 ()
-:	_state (State_CREATED)
+DistoPwm2::DistoPwm2 (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

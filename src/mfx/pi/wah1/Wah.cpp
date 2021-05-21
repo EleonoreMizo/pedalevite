@@ -54,8 +54,9 @@ namespace wah1
 
 
 
-Wah::Wah ()
-:	_state (State_CREATED)
+Wah::Wah (piapi::HostInterface & host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

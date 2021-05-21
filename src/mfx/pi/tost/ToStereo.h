@@ -51,7 +51,7 @@ class ToStereo final
 
 public:
 
-	               ToStereo ();
+	explicit       ToStereo (piapi::HostInterface &host);
 
 
 
@@ -71,6 +71,8 @@ protected:
 
 private:
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	ToStereoDesc   _desc;
@@ -84,8 +86,11 @@ private:
 
 private:
 
+	               ToStereo ()                               = delete;
 	               ToStereo (const ToStereo &other)          = delete;
+	               ToStereo (ToStereo &&other)               = delete;
 	ToStereo &     operator = (const ToStereo &other)        = delete;
+	ToStereo &     operator = (ToStereo &&other)             = delete;
 	bool           operator == (const ToStereo &other) const = delete;
 	bool           operator != (const ToStereo &other) const = delete;
 

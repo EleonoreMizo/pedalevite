@@ -51,7 +51,7 @@ class ToMono final
 
 public:
 
-	               ToMono ();
+	explicit       ToMono (piapi::HostInterface &host);
 	               ~ToMono () = default;
 
 
@@ -83,6 +83,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	ToMonoDesc     _desc;
@@ -103,6 +105,7 @@ private:
 
 private:
 
+	               ToMono ()                               = delete;
 	               ToMono (const ToMono &other)            = delete;
 	               ToMono (ToMono &&other)                 = delete;
 	ToMono &       operator = (const ToMono &other)        = delete;

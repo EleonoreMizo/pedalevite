@@ -58,8 +58,9 @@ namespace dly2
 
 
 
-Delay2::Delay2 ()
-:	_state (State_CREATED)
+Delay2::Delay2 (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

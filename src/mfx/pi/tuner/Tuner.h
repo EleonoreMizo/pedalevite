@@ -53,7 +53,7 @@ class Tuner final
 
 public:
 
-	               Tuner ()  = default;
+	explicit       Tuner (piapi::HostInterface &host);
 
 	float          get_freq () const;
 
@@ -82,8 +82,10 @@ private:
 
 	void           clear_buffers ();
 
-	TunerDesc      _desc;
+	piapi::HostInterface &
+	               _host;
 	State          _state   = State_CREATED;
+	TunerDesc      _desc;
 
 	dsp::ana::FreqYinCheap
 	               _analyser;
@@ -96,8 +98,11 @@ private:
 
 private:
 
+	               Tuner ()                               = delete;
 	               Tuner (const Tuner &other)             = delete;
+	               Tuner (Tuner &&other)                  = delete;
 	Tuner &        operator = (const Tuner &other)        = delete;
+	Tuner &        operator = (Tuner &&other)             = delete;
 	bool           operator == (const Tuner &other) const = delete;
 	bool           operator != (const Tuner &other) const = delete;
 

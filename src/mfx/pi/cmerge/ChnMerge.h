@@ -47,7 +47,7 @@ class ChnMerge final
 
 public:
 
-	               ChnMerge ();
+	explicit       ChnMerge (piapi::HostInterface &host);
 	               ~ChnMerge () = default;
 
 
@@ -70,6 +70,8 @@ private:
 
 	void           clear_buffers ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	ChnMergeDesc   _desc;
@@ -83,10 +85,11 @@ private:
 
 private:
 
-	               ChnMerge (const ChnMerge &other)              = delete;
-	               ChnMerge (ChnMerge &&other)                   = delete;
-	ChnMerge &         operator = (const ChnMerge &other)        = delete;
-	ChnMerge &         operator = (ChnMerge &&other)             = delete;
+	               ChnMerge ()                               = delete;
+	               ChnMerge (const ChnMerge &other)          = delete;
+	               ChnMerge (ChnMerge &&other)               = delete;
+	ChnMerge &     operator = (const ChnMerge &other)        = delete;
+	ChnMerge &     operator = (ChnMerge &&other)             = delete;
 	bool           operator == (const ChnMerge &other) const = delete;
 	bool           operator != (const ChnMerge &other) const = delete;
 

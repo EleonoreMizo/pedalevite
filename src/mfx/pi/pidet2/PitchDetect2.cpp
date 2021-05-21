@@ -53,7 +53,8 @@ namespace pidet2
 
 
 
-PitchDetect2::PitchDetect2 ()
+PitchDetect2::PitchDetect2 (piapi::HostInterface &host)
+:	_host (host)
 {
 	dsp::mix::Align::setup ();
 

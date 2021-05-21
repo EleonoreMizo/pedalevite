@@ -51,8 +51,9 @@ namespace lfo1
 
 
 template <bool SLOW>
-Lfo <SLOW>::Lfo ()
-:	_state (State_CREATED)
+Lfo <SLOW>::Lfo (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

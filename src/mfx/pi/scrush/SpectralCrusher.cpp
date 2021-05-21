@@ -58,7 +58,8 @@ namespace scrush
 
 
 
-SpectralCrusher::SpectralCrusher ()
+SpectralCrusher::SpectralCrusher (piapi::HostInterface &host)
+:	_host (host)
 {
 	dsp::mix::Align::setup ();
 

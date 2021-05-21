@@ -53,8 +53,9 @@ namespace click
 
 
 
-Click::Click ()
-:	_state (State_CREATED)
+Click::Click (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_sample_freq (0)

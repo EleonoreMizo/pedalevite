@@ -56,7 +56,7 @@ class Synth0 final
 
 public:
 
-	               Synth0 ();
+	explicit       Synth0 (piapi::HostInterface &host);
 
 
 
@@ -83,6 +83,8 @@ private:
 	template <typename OP>
 	inline void    fix_edge_polyblep (float &x, float &pos, OP op);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	Synth0Desc     _desc;
@@ -112,8 +114,11 @@ private:
 
 private:
 
+	               Synth0 ()                               = delete;
 	               Synth0 (const Synth0 &other)            = delete;
+	               Synth0 (Synth0 &&other)                 = delete;
 	Synth0 &       operator = (const Synth0 &other)        = delete;
+	Synth0 &       operator = (Synth0 &&other)             = delete;
 	bool           operator == (const Synth0 &other) const = delete;
 	bool           operator != (const Synth0 &other) const = delete;
 

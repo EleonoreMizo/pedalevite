@@ -63,7 +63,7 @@ class Squeezer final
 
 public:
 
-	               Squeezer ();
+	explicit       Squeezer (piapi::HostInterface &host);
 
 
 
@@ -110,6 +110,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	SqueezerDesc   _desc;
@@ -144,8 +146,11 @@ private:
 
 private:
 
+	               Squeezer ()                               = delete;
 	               Squeezer (const Squeezer &other)          = delete;
+	               Squeezer (Squeezer &other)                = delete;
 	Squeezer &     operator = (const Squeezer &other)        = delete;
+	Squeezer &     operator = (Squeezer &other)              = delete;
 	bool           operator == (const Squeezer &other) const = delete;
 	bool           operator != (const Squeezer &other) const = delete;
 

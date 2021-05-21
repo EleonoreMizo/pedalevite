@@ -61,7 +61,7 @@ class DistoSimple final
 
 public:
 
-	               DistoSimple ();
+	explicit       DistoSimple (piapi::HostInterface &host);
 
 
 
@@ -117,6 +117,8 @@ private:
 	void           update_filter_in ();
 	void           distort_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DistoSimpleDesc
@@ -142,8 +144,11 @@ private:
 
 private:
 
+	               DistoSimple ()                               = delete;
 	               DistoSimple (const DistoSimple &other)       = delete;
+	               DistoSimple (DistoSimple &&other)            = delete;
 	DistoSimple &  operator = (const DistoSimple &other)        = delete;
+	DistoSimple &  operator = (DistoSimple &&other)             = delete;
 	bool           operator == (const DistoSimple &other) const = delete;
 	bool           operator != (const DistoSimple &other) const = delete;
 

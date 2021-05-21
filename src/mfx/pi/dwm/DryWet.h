@@ -55,7 +55,7 @@ class DryWet final
 
 public:
 
-	               DryWet ();
+	explicit       DryWet (piapi::HostInterface &host);
 
 
 
@@ -94,6 +94,8 @@ private:
 	void           copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float lvl);
 	void           mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DryWetDesc     _desc;
@@ -119,8 +121,11 @@ private:
 
 private:
 
+	               DryWet ()                               = delete;
 	               DryWet (const DryWet &other)            = delete;
+	               DryWet (DryWet &&other)                 = delete;
 	DryWet &       operator = (const DryWet &other)        = delete;
+	DryWet &       operator = (DryWet &&other)             = delete;
 	bool           operator == (const DryWet &other) const = delete;
 	bool           operator != (const DryWet &other) const = delete;
 

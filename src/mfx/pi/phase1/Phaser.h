@@ -68,7 +68,7 @@ public:
 		Buf_NBR_ELT
 	};
 
-	               Phaser ();
+	explicit       Phaser (piapi::HostInterface &host);
 
 
 
@@ -96,6 +96,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	PhaserDesc     _desc;
@@ -136,8 +138,11 @@ private:
 
 private:
 
+	               Phaser ()                               = delete;
 	               Phaser (const Phaser &other)            = delete;
+	               Phaser (Phaser &&other)                 = delete;
 	Phaser &       operator = (const Phaser &other)        = delete;
+	Phaser &       operator = (Phaser &&other)             = delete;
 	bool           operator == (const Phaser &other) const = delete;
 	bool           operator != (const Phaser &other) const = delete;
 

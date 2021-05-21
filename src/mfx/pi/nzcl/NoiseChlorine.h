@@ -58,7 +58,7 @@ class NoiseChlorine final
 
 public:
 
-	               NoiseChlorine ();
+	explicit       NoiseChlorine (piapi::HostInterface &host);
 
 
 
@@ -92,6 +92,8 @@ private:
 	void           update_param (bool force_flag);
 	void           update_all_levels ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	NoiseChlorineDesc
@@ -125,8 +127,11 @@ private:
 
 private:
 
+	               NoiseChlorine ()                               = delete;
 	               NoiseChlorine (const NoiseChlorine &other)     = delete;
+	               NoiseChlorine (NoiseChlorine &&other)          = delete;
 	NoiseChlorine& operator = (const NoiseChlorine &other)        = delete;
+	NoiseChlorine& operator = (NoiseChlorine &&other)             = delete;
 	bool           operator == (const NoiseChlorine &other) const = delete;
 	bool           operator != (const NoiseChlorine &other) const = delete;
 

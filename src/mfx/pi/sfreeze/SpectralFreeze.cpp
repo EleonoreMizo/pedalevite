@@ -63,7 +63,8 @@ namespace sfreeze
 
 
 
-SpectralFreeze::SpectralFreeze ()
+SpectralFreeze::SpectralFreeze (piapi::HostInterface &host)
+:	_host (host)
 {
 	dsp::mix::Align::setup ();
 	dsp::mix::Generic::setup ();

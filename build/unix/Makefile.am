@@ -1567,6 +1567,7 @@ commonsrc = \
         ../../src/mfx/PluginPool.h \
         ../../src/mfx/PluginPoolHostInterface.cpp \
         ../../src/mfx/PluginPoolHostInterface.h \
+        ../../src/mfx/PluginPoolHostMini.h \
         ../../src/mfx/ProcessingContext.cpp \
         ../../src/mfx/ProcessingContext.h \
         ../../src/mfx/ProcessingContextNode.cpp \

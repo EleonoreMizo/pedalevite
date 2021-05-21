@@ -62,7 +62,7 @@ class TestGen final
 
 public:
 
-	               TestGen ();
+	explicit       TestGen (piapi::HostInterface &host);
 
 
 
@@ -108,6 +108,8 @@ private:
 	static inline constexpr float
 	               compute_cos (uint32_t phase);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	TestGenDesc    _desc;
@@ -153,8 +155,11 @@ private:
 
 private:
 
+	               TestGen ()                               = delete;
 	               TestGen (const TestGen &other)           = delete;
+	               TestGen (TestGen &&other)                = delete;
 	TestGen &      operator = (const TestGen &other)        = delete;
+	TestGen &      operator = (TestGen &&other)             = delete;
 	bool           operator == (const TestGen &other) const = delete;
 	bool           operator != (const TestGen &other) const = delete;
 

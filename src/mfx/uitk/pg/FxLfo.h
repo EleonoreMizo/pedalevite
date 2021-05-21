@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/PluginPoolHostMini.h"
 
 #include <array>
 #include <memory>
@@ -142,6 +143,8 @@ private:
 	int            _nbr_cycles_idx;  // Position within _nbr_cycles_arr, must be valid
 	int            _prec_idx;     // Precision for modifying parameters, [0 ; 3]
 
+	PluginPoolHostMini
+	               _host_dummy;
 	pi::lfo1::Lfo <false>
 	               _lfo;
 	std::vector <piapi::EventTs>

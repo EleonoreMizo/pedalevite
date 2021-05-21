@@ -56,7 +56,7 @@ class Click final
 
 public:
 
-	               Click ();
+	explicit       Click (piapi::HostInterface &host);
 
 
 
@@ -81,6 +81,8 @@ private:
 	void           clear_buffers ();
 	void           update_rates ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	ClickDesc      _desc;
@@ -116,8 +118,11 @@ private:
 
 private:
 
+	               Click ()                               = delete;
 	               Click (const Click &other)             = delete;
+	               Click (Click &&other)                  = delete;
 	Click &        operator = (const Click &other)        = delete;
+	Click &        operator = (Click &&other)             = delete;
 	bool           operator == (const Click &other) const = delete;
 	bool           operator != (const Click &other) const = delete;
 

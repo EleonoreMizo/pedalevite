@@ -58,8 +58,9 @@ namespace smood
 
 
 
-SkoolMood::SkoolMood ()
-:	_state (State_CREATED)
+SkoolMood::SkoolMood (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

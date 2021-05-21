@@ -66,7 +66,7 @@ public:
 
 	static const int  _nbr_stages = 2;
 
-	               Disto2x ();
+	explicit       Disto2x (piapi::HostInterface &host);
 
 
 
@@ -131,6 +131,8 @@ private:
 	void           update_lpf_pre ();
 	void           square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	Disto2xDesc    _desc;
@@ -184,8 +186,11 @@ private:
 
 private:
 
+	               Disto2x ()                               = delete;
 	               Disto2x (const Disto2x &other)           = delete;
+	               Disto2x (Disto2x &&other)                = delete;
 	Disto2x &      operator = (const Disto2x &other)        = delete;
+	Disto2x &      operator = (Disto2x &&other)             = delete;
 	bool           operator == (const Disto2x &other) const = delete;
 	bool           operator != (const Disto2x &other) const = delete;
 

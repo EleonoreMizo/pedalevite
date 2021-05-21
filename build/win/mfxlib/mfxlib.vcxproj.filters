@@ -5313,6 +5313,9 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\PluginCb.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\PluginPoolHostMini.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

@@ -59,7 +59,7 @@ class SpectralCrusher final
 
 public:
 
-	               SpectralCrusher ();
+	explicit       SpectralCrusher (piapi::HostInterface &host);
 	               ~SpectralCrusher () = default;
 
 
@@ -112,6 +112,8 @@ private:
 	void           update_bin_range () noexcept;
 	int            conv_freq_to_bin (float f) const noexcept;
 
+	piapi::HostInterface &
+	               _host;
 	State          _state = State_CREATED;
 
 	SpectralCrusherDesc
@@ -189,6 +191,7 @@ private:
 
 private:
 
+	               SpectralCrusher ()                               = delete;
 	               SpectralCrusher (const SpectralCrusher &other)   = delete;
 	               SpectralCrusher (SpectralCrusher &&other)        = delete;
 	SpectralCrusher &

@@ -71,7 +71,7 @@ class Compex final
 
 public:
 
-	               Compex ();
+	explicit       Compex (piapi::HostInterface &host);
 
 
 
@@ -153,6 +153,8 @@ private:
 	static fstb_FORCEINLINE T &
 	               usew (WrapperAlign <T> &wrap);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	CompexDesc     _desc;
@@ -192,8 +194,11 @@ private:
 
 private:
 
+	               Compex ()                               = delete;
 	               Compex (const Compex &other)            = delete;
+	               Compex (Compex &&other)                 = delete;
 	Compex &       operator = (const Compex &other)        = delete;
+	Compex &       operator = (Compex &&other)             = delete;
 	bool           operator == (const Compex &other) const = delete;
 	bool           operator != (const Compex &other) const = delete;
 

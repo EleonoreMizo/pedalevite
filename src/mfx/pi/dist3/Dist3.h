@@ -58,7 +58,7 @@ class Dist3 final
 
 public:
 
-	               Dist3 ();
+	explicit       Dist3 (piapi::HostInterface &host);
 	               ~Dist3 () = default;
 
 
@@ -84,6 +84,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	Dist3Desc      _desc;
@@ -114,6 +116,7 @@ private:
 
 private:
 
+	               Dist3 ()                               = delete;
 	               Dist3 (const Dist3 &other)             = delete;
 	               Dist3 (Dist3 &&other)                  = delete;
 	Dist3 &        operator = (const Dist3 &other)        = delete;

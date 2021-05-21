@@ -58,7 +58,7 @@ class Platitude final
 
 public:
 
-	               Platitude ();
+	explicit       Platitude (piapi::HostInterface &host);
 	               ~Platitude () = default;
 
 
@@ -97,6 +97,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	PlatitudeDesc  _desc;
@@ -143,6 +145,7 @@ private:
 
 private:
 
+	               Platitude ()                               = delete;
 	               Platitude (const Platitude &other)         = delete;
 	               Platitude (Platitude &&other)              = delete;
 	Platitude &    operator = (const Platitude &other)        = delete;

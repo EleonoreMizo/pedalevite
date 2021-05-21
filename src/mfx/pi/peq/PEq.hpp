@@ -51,8 +51,9 @@ namespace peq
 
 
 template <int NB>
-PEq <NB>::PEq ()
-:	_state (State_CREATED)
+PEq <NB>::PEq (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

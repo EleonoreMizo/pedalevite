@@ -59,7 +59,7 @@ class SpectralFreeze final
 
 public:
 
-	               SpectralFreeze ();
+	explicit       SpectralFreeze (piapi::HostInterface &host);
 	               ~SpectralFreeze () = default;
 
 
@@ -165,6 +165,8 @@ private:
 
 	static float   conv_pos_to_dry_lvl (float x) noexcept;
 
+	piapi::HostInterface &
+	               _host;
 	State          _state = State_CREATED;
 
 	SpectralFreezeDesc
@@ -212,8 +214,9 @@ private:
 
 private:
 
-	               SpectralFreeze (const SpectralFreeze &other)   = delete;
-	               SpectralFreeze (SpectralFreeze &&other)        = delete;
+	               SpectralFreeze ()                               = delete;
+	               SpectralFreeze (const SpectralFreeze &other)    = delete;
+	               SpectralFreeze (SpectralFreeze &&other)         = delete;
 	SpectralFreeze &
 	               operator = (const SpectralFreeze &other)        = delete;
 	SpectralFreeze &

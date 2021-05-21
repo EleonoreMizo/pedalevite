@@ -57,7 +57,7 @@ class PitchDetect final
 
 public:
 
-	               PitchDetect ();
+	explicit       PitchDetect (piapi::HostInterface &host);
 
 
 
@@ -93,6 +93,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	PitchDetectDesc
@@ -122,8 +124,11 @@ private:
 
 private:
 
+	               PitchDetect ()                               = delete;
 	               PitchDetect (const PitchDetect &other)       = delete;
+	               PitchDetect (PitchDetect &&other)            = delete;
 	PitchDetect &  operator = (const PitchDetect &other)        = delete;
+	PitchDetect &  operator = (PitchDetect &&other)             = delete;
 	bool           operator == (const PitchDetect &other) const = delete;
 	bool           operator != (const PitchDetect &other) const = delete;
 

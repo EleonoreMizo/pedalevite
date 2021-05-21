@@ -52,7 +52,7 @@ class Eton final
 
 public:
 
-	               Eton ();
+	explicit       Eton (piapi::HostInterface &host);
 	               ~Eton () = default;
 
 
@@ -84,6 +84,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state = State_CREATED;
 
 	EtonDesc       _desc;
@@ -104,6 +106,7 @@ private:
 
 private:
 
+	               Eton ()                               = delete;
 	               Eton (const Eton &other)              = delete;
 	               Eton (Eton &&other)                   = delete;
 	Eton &         operator = (const Eton &other)        = delete;

@@ -53,7 +53,7 @@ class Tremolo final
 
 public:
 
-	               Tremolo ();
+	explicit       Tremolo (piapi::HostInterface &host);
 
 
 
@@ -76,6 +76,8 @@ private:
 	void           clear_buffers ();
 	float          get_lfo_val (float pos) const;
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	TremoloDesc    _desc;
@@ -102,8 +104,11 @@ private:
 
 private:
 
+	               Tremolo ()                               = delete;
 	               Tremolo (const Tremolo &other)           = delete;
+	               Tremolo (Tremolo &&other)                = delete;
 	Tremolo &      operator = (const Tremolo &other)        = delete;
+	Tremolo &      operator = (Tremolo &&other)             = delete;
 	bool           operator == (const Tremolo &other) const = delete;
 	bool           operator != (const Tremolo &other) const = delete;
 

@@ -57,7 +57,7 @@ class FreqSplit final
 
 public:
 
-	               FreqSplit ();
+	explicit       FreqSplit (piapi::HostInterface &host);
 	               ~FreqSplit () = default;
 
 
@@ -83,6 +83,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	FreqSplitDesc  _desc;
@@ -104,6 +106,7 @@ private:
 
 private:
 
+	               FreqSplit ()                               = delete;
 	               FreqSplit (const FreqSplit &other)         = delete;
 	               FreqSplit (FreqSplit &&other)              = delete;
 	FreqSplit &    operator = (const FreqSplit &other)        = delete;

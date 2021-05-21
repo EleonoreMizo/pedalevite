@@ -57,7 +57,7 @@ class BigMuff1 final
 
 public:
 
-	               BigMuff1 ();
+	explicit       BigMuff1 (piapi::HostInterface &host);
 	               ~BigMuff1 () = default;
 
 
@@ -103,6 +103,8 @@ private:
 	void           update_param (bool force_flag = false);
 	void           update_oversampling ();
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	BigMuff1Desc   _desc;
@@ -164,6 +166,7 @@ private:
 
 private:
 
+	               BigMuff1 ()                               = delete;
 	               BigMuff1 (const BigMuff1 &other)          = delete;
 	               BigMuff1 (BigMuff1 &&other)               = delete;
 	BigMuff1 &     operator = (const BigMuff1 &other)        = delete;

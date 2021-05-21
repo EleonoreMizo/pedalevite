@@ -1410,6 +1410,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\Platitude.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\PlatitudeDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\PluginPoolHostInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\PluginPoolHostMini.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\Stop.h" />

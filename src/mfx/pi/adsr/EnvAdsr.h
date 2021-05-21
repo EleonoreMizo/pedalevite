@@ -55,7 +55,7 @@ class EnvAdsr final
 
 public:
 
-	               EnvAdsr ();
+	explicit       EnvAdsr (piapi::HostInterface &host);
 
 
 
@@ -81,6 +81,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	EnvAdsrDesc    _desc;
@@ -109,8 +111,11 @@ private:
 
 private:
 
+	               EnvAdsr ()                               = delete;
 	               EnvAdsr (const EnvAdsr &other)           = delete;
+	               EnvAdsr (EnvAdsr &&other)                = delete;
 	EnvAdsr &      operator = (const EnvAdsr &other)        = delete;
+	EnvAdsr &      operator = (EnvAdsr &&other)             = delete;
 	bool           operator == (const EnvAdsr &other) const = delete;
 	bool           operator != (const EnvAdsr &other) const = delete;
 

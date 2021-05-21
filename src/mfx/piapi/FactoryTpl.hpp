@@ -58,12 +58,12 @@ const PluginDescInterface &	FactoryTpl <DSC, PI>::do_describe ()
 
 
 template <class DSC, class PI>
-std::unique_ptr <PluginInterface>	FactoryTpl <DSC, PI>::do_create ()
+std::unique_ptr <PluginInterface>	FactoryTpl <DSC, PI>::do_create (HostInterface &host)
 {
 	std::unique_ptr <PluginInterface>   pi_uptr;
 	try
 	{
-		pi_uptr = std::make_unique <PI> ();
+		pi_uptr = std::make_unique <PI> (host);
 	}
 	catch (...)
 	{

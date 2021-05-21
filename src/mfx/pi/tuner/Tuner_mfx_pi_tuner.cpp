@@ -48,6 +48,14 @@ namespace tuner
 
 
 
+Tuner::Tuner (piapi::HostInterface &host)
+:	_host (host)
+{
+	// Nothing
+}
+
+
+
 float	Tuner::get_freq () const
 {
 	return _freq;

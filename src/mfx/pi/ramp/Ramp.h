@@ -55,7 +55,7 @@ class Ramp final
 
 public:
 
-	               Ramp ();
+	explicit       Ramp (piapi::HostInterface &host);
 
 
 
@@ -78,6 +78,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	RampDesc       _desc;
@@ -105,8 +107,11 @@ private:
 
 private:
 
+	               Ramp ()                               = delete;
 	               Ramp (const Ramp &other)              = delete;
+	               Ramp (Ramp &&other)                   = delete;
 	Ramp &         operator = (const Ramp &other)        = delete;
+	Ramp &         operator = (Ramp &&other)             = delete;
 	bool           operator == (const Ramp &other) const = delete;
 	bool           operator != (const Ramp &other) const = delete;
 

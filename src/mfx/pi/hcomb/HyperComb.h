@@ -60,7 +60,7 @@ class HyperComb final
 
 public:
 
-	               HyperComb ();
+	explicit       HyperComb (piapi::HostInterface &host);
 
 
 
@@ -104,6 +104,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	HyperCombDesc  _desc;
@@ -138,8 +140,11 @@ private:
 
 private:
 
+	               HyperComb ()                               = delete;
 	               HyperComb (const HyperComb &other)         = delete;
+	               HyperComb (HyperComb &&other)              = delete;
 	HyperComb &    operator = (const HyperComb &other)        = delete;
+	HyperComb &    operator = (HyperComb &&other)             = delete;
 	bool           operator == (const HyperComb &other) const = delete;
 	bool           operator != (const HyperComb &other) const = delete;
 

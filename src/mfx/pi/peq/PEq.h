@@ -71,7 +71,7 @@ public:
 	static const int  _nbr_bands    = DescType::_nbr_bands;
 	static const int  _update_resol = 64; // Samples, multiple of 4
 
-	               PEq ();
+	explicit       PEq (piapi::HostInterface &host);
 
 
 
@@ -135,6 +135,8 @@ private:
 	static constexpr float
 	               compute_pole_delta (float a1, float a2);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	DescType       _desc;
@@ -159,8 +161,11 @@ private:
 
 private:
 
+	               PEq ()                                    = delete;
 	               PEq (const PEq <NB> &other)               = delete;
+	               PEq (PEq <NB> &&other)                    = delete;
 	PEq <NB> &     operator = (const PEq <NB> &other)        = delete;
+	PEq <NB> &     operator = (PEq <NB> &&other)             = delete;
 	bool           operator == (const PEq <NB> &other) const = delete;
 	bool           operator != (const PEq <NB> &other) const = delete;
 

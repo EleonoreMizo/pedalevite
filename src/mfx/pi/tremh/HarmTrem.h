@@ -59,7 +59,7 @@ class HarmTrem final
 
 public:
 
-	               HarmTrem ();
+	explicit       HarmTrem (piapi::HostInterface &host);
 
 
 
@@ -95,6 +95,8 @@ private:
 	void           update_filter_freq ();
 	void           mix_buf (float dst_ptr [], int buf, int nbr_spl, fstb::ToolsSimd::VectF32 v_gain, bool r_flag, bool copy_flag) const;
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	HarmTremDesc   _desc;
@@ -142,8 +144,11 @@ private:
 
 private:
 
+	               HarmTrem ()                               = delete;
 	               HarmTrem (const HarmTrem &other)          = delete;
+	               HarmTrem (HarmTrem &&other)               = delete;
 	HarmTrem &     operator = (const HarmTrem &other)        = delete;
+	HarmTrem &     operator = (HarmTrem &&other)             = delete;
 	bool           operator == (const HarmTrem &other) const = delete;
 	bool           operator != (const HarmTrem &other) const = delete;
 

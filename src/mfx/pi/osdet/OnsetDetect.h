@@ -63,7 +63,7 @@ class OnsetDetect final
 
 public:
 
-	               OnsetDetect ();
+	explicit       OnsetDetect (piapi::HostInterface &host);
 
 
 
@@ -88,6 +88,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	OnsetDetectDesc
@@ -132,8 +134,11 @@ private:
 
 private:
 
+	               OnsetDetect ()                               = delete;
 	               OnsetDetect (const OnsetDetect &other)       = delete;
+	               OnsetDetect (OnsetDetect &&other)            = delete;
 	OnsetDetect &  operator = (const OnsetDetect &other)        = delete;
+	OnsetDetect &  operator = (OnsetDetect &&other)             = delete;
 	bool           operator == (const OnsetDetect &other) const = delete;
 	bool           operator != (const OnsetDetect &other) const = delete;
 

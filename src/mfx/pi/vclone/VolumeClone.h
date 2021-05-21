@@ -57,7 +57,7 @@ class VolumeClone final
 
 public:
 
-	               VolumeClone ();
+	explicit       VolumeClone (piapi::HostInterface &host);
 	               ~VolumeClone () = default;
 
 
@@ -112,6 +112,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 
+	piapi::HostInterface &
+	               _host;
 	State          _state;
 
 	VolumeCloneDesc 
@@ -149,6 +151,7 @@ private:
 
 private:
 
+	               VolumeClone ()                               = delete;
 	               VolumeClone (const VolumeClone &other)       = delete;
 	               VolumeClone (VolumeClone &&other)            = delete;
 	VolumeClone &  operator = (const VolumeClone &other)        = delete;

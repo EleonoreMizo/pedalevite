@@ -57,8 +57,9 @@ namespace phase2
 
 
 
-Phaser2::Phaser2 ()
-:	_state (State_CREATED)
+Phaser2::Phaser2 (piapi::HostInterface &host)
+:	_host (host)
+,	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
 ,	_param_proc (_state_set)

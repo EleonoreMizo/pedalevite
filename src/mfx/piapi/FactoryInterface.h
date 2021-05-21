@@ -42,6 +42,7 @@ namespace piapi
 
 
 
+class HostInterface;
 class PluginDescInterface;
 class PluginInterface;
 
@@ -69,7 +70,7 @@ public:
 	const PluginDescInterface &
 	               describe ();
 	std::unique_ptr <PluginInterface>
-	               create ();
+	               create (HostInterface &host);
 
 
 
@@ -80,7 +81,7 @@ protected:
 	virtual const PluginDescInterface &
 	               do_describe () = 0;
 	virtual std::unique_ptr <PluginInterface>
-	               do_create () = 0;
+	               do_create (HostInterface &host) = 0;
 
 
 
