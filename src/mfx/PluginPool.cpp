@@ -92,9 +92,12 @@ int	PluginPool::get_room () const
 
 
 // Please ensure there is room first.
-int	PluginPool::create (std::string model_id)
+// host_uptr ownership is transferred to the pool.
+int	PluginPool::create (std::string model_id, HostUPtr host_uptr)
 {
-	int            found_pos = -1;
+	assert (host_uptr.get () != nullptr);
+
+	int            pi_id = -1;
 
 	// Finds the factory
 	auto           it = _map_model_to_factory.find (model_id);
@@ -103,19 +106,24 @@ int	PluginPool::create (std::string model_id)
 		piapi::FactoryInterface & fact = *(it->second);
 		const piapi::PluginDescInterface &  desc = fact.describe ();
 
+		// Finds a free location
+		pi_id = find_free_slot ();
+
 		// Creates the plug-in
+		host_uptr->set_plugin_id (pi_id);
 		auto           pi_uptr { fact.create () };
 		if (pi_uptr.get () == nullptr)
 		{
 			assert (false);
+			pi_id = -1;
 		}
 		else
 		{
-			found_pos = add (pi_uptr, desc);
+			add (pi_id, std::move (pi_uptr), std::move (host_uptr), desc);
 		}
 	}
 
-	return found_pos;
+	return pi_id;
 }
 
 
@@ -144,6 +152,7 @@ void	PluginPool::release (int index)
 	if (slot._state != SharedRscState_FREE)
 	{
 		slot._details._pi_uptr.reset ();
+		slot._details._host_uptr.reset ();
 		slot._details._param_arr.clear ();
 		slot._details._param_mod_arr.clear ();
 		slot._state = SharedRscState_FREE;
@@ -256,52 +265,65 @@ PluginPool::PluginSlot::~PluginSlot ()
 
 
 
-int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc)
+int	PluginPool::find_free_slot () const noexcept
 {
 	assert (get_room () > 0);
-	assert (pi_uptr.get () != nullptr);
 
 	int            found_pos = -1;
 	for (int index = 0; index < Cst::_max_nbr_plugins && found_pos < 0; ++index)
 	{
-		PluginSlot &      slot = _pi_arr [index];
+		const PluginSlot &   slot = _pi_arr [index];
 		if (slot._state == SharedRscState_FREE)
 		{
 			assert (slot._details._pi_uptr.get () == nullptr);
-			slot._state = SharedRscState_INUSE;
-
-			// Parameters
-			const int      nbr_param =
-				desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
-			slot._details._param_arr.resize (nbr_param);
-			slot._details._param_mod_arr.resize (nbr_param);
-			slot._details._param_update.set_nbr_elt (nbr_param);
-			slot._details._param_update_from_audio.clear ();
-			slot._details._param_update_from_audio.resize (nbr_param, false);
-
-			for (int param_index = 0; param_index < nbr_param; ++param_index)
-			{
-				slot._details._param_arr [param_index] = float (
-					pi_uptr->get_param_val (
-						piapi::ParamCateg_GLOBAL,
-						param_index,
-						0
-					)
-				);
-				slot._details._param_mod_arr [param_index] = -1;
-			}
-
-			slot._details._pi_uptr.swap (pi_uptr);
-			slot._details._desc_ptr = &desc;
-
 			found_pos = index;
-			++ _nbr_plugins;
 		}
 	}
-
-	assert (pi_uptr.get () == nullptr);
+	assert (found_pos >= 0);
 
 	return found_pos;
+}
+
+
+
+void	PluginPool::add (int pi_pos, PluginUPtr pi_uptr, HostUPtr host_uptr, const piapi::PluginDescInterface &desc)
+{
+	assert (get_room () > 0);
+	assert (pi_pos >= 0);
+	assert (pi_pos < int (_pi_arr.size ()));
+	assert (pi_uptr.get () != nullptr);
+	assert (host_uptr.get () != nullptr);
+
+	PluginSlot &      slot = _pi_arr [pi_pos];
+	assert (slot._state == SharedRscState_FREE);
+	assert (slot._details._pi_uptr.get () == nullptr);
+	slot._state = SharedRscState_INUSE;
+
+	// Parameters
+	const int      nbr_param = desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
+	slot._details._param_arr.resize (nbr_param);
+	slot._details._param_mod_arr.resize (nbr_param);
+	slot._details._param_update.set_nbr_elt (nbr_param);
+	slot._details._param_update_from_audio.clear ();
+	slot._details._param_update_from_audio.resize (nbr_param, false);
+
+	for (int param_index = 0; param_index < nbr_param; ++param_index)
+	{
+		slot._details._param_arr [param_index] = float (
+			pi_uptr->get_param_val (
+				piapi::ParamCateg_GLOBAL,
+				param_index,
+				0
+			)
+		);
+		slot._details._param_mod_arr [param_index] = -1;
+	}
+
+	slot._details._pi_uptr.swap (pi_uptr);
+	slot._details._host_uptr.swap (host_uptr);
+	slot._details._desc_ptr = &desc;
+
+	++ _nbr_plugins;
 }
 
 

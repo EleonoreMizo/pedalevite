@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "mfx/cmd/Central.h"
 #include "mfx/cmd/CentralCbInterface.h"
+#include "mfx/cmd/PluginCb.h"
 #include "mfx/doc/CtrlLinkSet.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/BypassState.h"
@@ -89,7 +90,9 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 {
 	_msg_pool.expand_to (1024);
 
-	_dummy_mix_id = _plugin_pool.create (Cst::_plugin_dwm);
+	_dummy_mix_id = _plugin_pool.create (
+		Cst::_plugin_dwm, std::make_unique <PluginCb> (*this)
+	);
 }
 
 
@@ -434,7 +437,9 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 
 	for (int pi_cnt = 0; pi_cnt < nbr_inst; ++ pi_cnt)
 	{
-		const int      pi_id = _plugin_pool.create (model);
+		const int      pi_id = _plugin_pool.create (
+			model, std::make_unique <PluginCb> (*this)
+		);
 		PluginPool::PluginDetails &   details =
 			_plugin_pool.use_plugin (pi_id);
 		if (_sample_freq > 0)
@@ -1031,7 +1036,9 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 		// Not found? Create one
 		if (pi_id < 0)
 		{
-			pi_id = _plugin_pool.create (model);
+			pi_id = _plugin_pool.create (
+				model, std::make_unique <PluginCb> (*this)
+			);
 			PluginPool::PluginDetails &   details =
 				_plugin_pool.use_plugin (pi_id);
 			if (_sample_freq > 0)

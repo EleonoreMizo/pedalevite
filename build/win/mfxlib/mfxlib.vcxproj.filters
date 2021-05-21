@@ -5304,6 +5304,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\HostInterface.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\PluginPoolHostInterface.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\PluginCb.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6718,6 +6727,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\hiir\test\SweepingSine_hiir_test.cpp">
       <Filter>hiir\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\piapi\HostInterface.cpp">
+      <Filter>mfx\piapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\PluginPoolHostInterface.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\PluginCb.cpp">
+      <Filter>mfx\cmd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

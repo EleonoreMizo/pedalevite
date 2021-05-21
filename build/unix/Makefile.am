@@ -256,6 +256,8 @@ commonsrc = \
         ../../src/mfx/cmd/Document.h \
         ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
+        ../../src/mfx/cmd/PluginCb.cpp \
+        ../../src/mfx/cmd/PluginCb.h \
         ../../src/mfx/cmd/PluginAux.h \
         ../../src/mfx/cmd/Router.cpp \
         ../../src/mfx/cmd/Router.h \
@@ -1336,6 +1338,8 @@ commonsrc = \
         ../../src/mfx/piapi/FactoryInterface.h \
         ../../src/mfx/piapi/FactoryTpl.h \
         ../../src/mfx/piapi/FactoryTpl.hpp \
+        ../../src/mfx/piapi/HostInterface.cpp \
+        ../../src/mfx/piapi/HostInterface.h \
         ../../src/mfx/piapi/ParamCateg.h \
         ../../src/mfx/piapi/ParamDescInterface.h \
         ../../src/mfx/piapi/ParamDescInterface.hpp \
@@ -1561,6 +1565,8 @@ commonsrc = \
         ../../src/mfx/PedalLoc.h \
         ../../src/mfx/PluginPool.cpp \
         ../../src/mfx/PluginPool.h \
+        ../../src/mfx/PluginPoolHostInterface.cpp \
+        ../../src/mfx/PluginPoolHostInterface.h \
         ../../src/mfx/ProcessingContext.cpp \
         ../../src/mfx/ProcessingContext.h \
         ../../src/mfx/ProcessingContextNode.cpp \

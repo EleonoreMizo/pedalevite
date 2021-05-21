@@ -776,6 +776,7 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Plugin.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\PluginAux.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\PluginCb.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Router.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\CompressSimple.h" />
@@ -1320,6 +1321,7 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Err.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\EventReset.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\HostInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\PluginInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Tag.h" />
@@ -1407,6 +1409,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\Platitude.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\PlatitudeDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\PluginPoolHostInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\Stop.h" />
@@ -1807,6 +1810,7 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\PluginAux.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\PluginCb.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp" />
     <ClCompile Include="..\..\..\src\mfx\CompressSimple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
@@ -2001,6 +2005,7 @@
     <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\PageSet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\piapi\HostInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\Tag.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.cpp" />
@@ -2142,6 +2147,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\verb2\PlatitudeDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\PluginPoolHostInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProgSwitcher.cpp" />
     <ClCompile Include="..\..\..\src\mfx\RecD2d.cpp" />

@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/BitFieldSparse.h"
 #include "mfx/piapi/PluginInterface.h"
 #include "mfx/Cst.h"
+#include "mfx/PluginPoolHostInterface.h"
 #include "mfx/SharedRscState.h"
 
 #include <array>
@@ -60,11 +61,13 @@ class PluginPool
 public:
 
 	typedef std::unique_ptr <piapi::PluginInterface> PluginUPtr;
+	typedef std::unique_ptr <PluginPoolHostInterface> HostUPtr;
 
 	class PluginDetails
 	{
 	public:
 		PluginUPtr     _pi_uptr;
+		HostUPtr       _host_uptr;
 		const piapi::PluginDescInterface *
 		               _desc_ptr = nullptr;
 
@@ -103,7 +106,7 @@ public:
 
 	// Command thread
 	int            get_room () const;
-	int            create (std::string model_id);
+	int            create (std::string model_id, HostUPtr host_uptr);
 	void           schedule_for_release (int index);
 	void           release (int index);
 	std::vector <int>
@@ -151,7 +154,8 @@ private:
 	typedef std::vector <FactoryUPtr> FactoryList;
 	typedef std::map <std::string, piapi::FactoryInterface *> MapIdToFactory;
 
-	int            add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc);
+	int            find_free_slot () const noexcept;
+	void           add (int pi_pos, PluginUPtr pi_uptr, HostUPtr host_uptr, const piapi::PluginDescInterface &desc);
 
 	FactoryList    _fact_arr;
 	MapIdToFactory _map_model_to_factory;
