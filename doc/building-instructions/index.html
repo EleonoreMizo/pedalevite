@@ -1235,7 +1235,7 @@ premier démarrage et commencer depuis le terminal local.</p>
 <p>Si nécessaire, on peut commencer par régler les préférences de langue et de
 clavier&#8239;:</p>
 <pre class="term">sudo raspi-config</pre>
-<p>Sélectionner <code>4. Localisation Options</code> et
+<p>Sélectionner <code>5. Localisation Options</code> et
 régler les préférences voulues.
 Finalement, flèche gauche pour sélectionner <code>Finish</code>.
 Inutile de redémarrer tout de suite même si les messages de la console vous
@@ -1334,9 +1334,14 @@ Taper&#8239;:</p>
 <p>Si la commande ne peut être trouvée ou que la version indiquée est
 antérieure à 2.52, il faut installer manuellement la dernière
 version&#8239;:</p>
-<pre class="term">cd /tmp
+<!-- pre class="term">cd /tmp
 wget https://project-downloads.drogon.net/wiringpi-latest.deb
 sudo dpkg -i wiringpi-latest.deb
+gpio -v</pre -->
+<pre class="term">cd /tmp
+git clone https://github.com/WiringPi/WiringPi.git
+cd WiringPi
+./build
 gpio -v</pre>
 <p>Encore une fois, s’assurer que la version est bien 2.52 ou postérieure.</p>
 
@@ -1349,24 +1354,24 @@ Clang.
 Cette étape est facultative, mais Clang permet une accélération substantielle
 (environ +25&#8239;% selon mes mesures) du programme Pédale Vite par rapport à
 GCC, le compilateur installé par défaut.
-Ici, nous allons installer Clang 11.0.0, la dernière version en date, mais il
+Ici, nous allons installer Clang 12.0.0, la dernière version en date, mais il
 est probable que des versions plus récentes soient
 <a href="http://releases.llvm.org">disponibles</a> à l’heure où vous lisez
 ces lignes.
-Si c’est le cas, remplacer les <code>11.0.0</code> dans les lignes suivantes
+Si c’est le cas, remplacer les <code>12.0.0</code> dans les lignes suivantes
 par le numéro de version en question.
-Il est aussi possible de rester sur Clang 11.0.0, qui conviendra très bien.</p>
+Il est aussi possible de rester sur Clang 12.0.0, qui conviendra très bien.</p>
 <p>Vérifier au préalable qu’il y a suffisamment d’espace sur le disque si
 celui-ci est de faible capacité&#8239;: installer Clang nécessite environ
 3&#8239;Go de libre.</p>
 <pre class="term">cd ~
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
-tar -xvf clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
-rm clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
-mv clang+llvm-11.0.0-armv7a-linux-gnueabihf clang_11.0.0
-sudo mv clang_11.0.0 /usr/local
-echo 'export PATH=/usr/local/clang_11.0.0/bin:$PATH' >> .bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/clang_11.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
+tar -xvf clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
+rm clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
+mv clang+llvm-12.0.0-armv7a-linux-gnueabihf clang_12.0.0
+sudo mv clang_12.0.0 /usr/local
+echo 'export PATH=/usr/local/clang_12.0.0/bin:$PATH' >> .bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/clang_12.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
 . .bashrc
 clang++ --version</pre>
 <p>La partie commençant par <code>wget</code> et finissant par <code>.xz</code>
@@ -1375,7 +1380,7 @@ En principe, tout devrait marcher correctement, cependant j’ai eu des
 problèmes à lancer des exécutables utilisant la libc++ intégrée à Clang, qui
 n’était pas trouvée.
 Les lignes suivantes pallieront le problème&#8239;:</p>
-<pre class="term">echo '/usr/local/clang_11.0.0/lib/' > ./clang.conf
+<pre class="term">echo '/usr/local/clang_12.0.0/lib/' > ./clang.conf
 sudo mv ./clang.conf /etc/ld.so.conf.d/
 sudo ldconfig</pre>
 
@@ -1517,7 +1522,7 @@ sudo rm -rf /var/lib/lightdm /var/cache/lightdm
 sudo ln -s /tmp /var/lib/lightdm
 sudo ln -s /tmp /var/cache/lightdm</pre>
 
-<p>Éditer var.conf&#8239;:</p>
+<p>Éditer <code>var.conf</code>&#8239;:</p>
 <pre class="term">sudo nano /usr/lib/tmpfiles.d/var.conf</pre>
 <p>Remplacer la permission du spool <code>0755</code> par
 <code>1777</code>&#8239;:</p>

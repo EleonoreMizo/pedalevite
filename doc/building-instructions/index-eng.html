@@ -1097,7 +1097,7 @@ start up and use the local terminal.</p>
 <p>If required, you can set your language and keyboard preferences
 (optional)&#8239;:</p>
 <pre class="term">sudo raspi-config</pre>
-<p>Select <code>4. Localisation Options</code> and set your
+<p>Select <code>5. Localisation Options</code> and set your
 language and keyboard preferences.
 Finally, hit the left arrow to select <code>Finish</code>.
 No need to reboot once it is done, we’ll do it a bit later.</p>
@@ -1193,9 +1193,14 @@ Type&#8239;:</p>
 <pre class="term">gpio -v</pre>
 <p>If the command cannot be found or if the displayed version is earlier than
 2.52, the latest version should be manally installed&#8239;:</p>
-<pre class="term">cd /tmp
+<!-- pre class="term">cd /tmp
 wget https://project-downloads.drogon.net/wiringpi-latest.deb
 sudo dpkg -i wiringpi-latest.deb
+gpio -v</pre -->
+<pre class="term">cd /tmp
+git clone https://github.com/WiringPi/WiringPi.git
+cd WiringPi
+./build
 gpio -v</pre>
 <p>Again, check that the version is 2.52 or later.</p>
 
@@ -1207,21 +1212,21 @@ gpio -v</pre>
 This step is optional, but Clang allows a significant speed-up (about
 +25&#8239;%) of the Pédale Vite application, relative to the default GCC
 compiler.
-Here, we’re going to install Clang 11.0.0, the latest version at the time of
+Here, we’re going to install Clang 12.0.0, the latest version at the time of
 writing, but more recent versions may exist.
-If so, you can replace the <code>11.0.0</code> in the following lines with the
+If so, you can replace the <code>12.0.0</code> in the following lines with the
 newer version identifiers.
-Anyway you could also keep Clang 11.0.0 which does perfectly the job.</p>
+Anyway you could also keep Clang 12.0.0 which does perfectly the job.</p>
 <p>Note that Clang requires about 3&#8239;GB on the drive.
 Make sure you’re not going to run short on space.</p>
 <pre class="term">cd ~
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
-tar -xvf clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
-rm clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
-mv clang+llvm-11.0.0-armv7a-linux-gnueabihf clang_11.0.0
-sudo mv clang_11.0.0 /usr/local
-echo 'export PATH=/usr/local/clang_11.0.0/bin:$PATH' >> .bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/clang_11.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
+tar -xvf clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
+rm clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
+mv clang+llvm-12.0.0-armv7a-linux-gnueabihf clang_12.0.0
+sudo mv clang_12.0.0 /usr/local
+echo 'export PATH=/usr/local/clang_12.0.0/bin:$PATH' >> .bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/clang_12.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
 . .bashrc
 clang++ --version</pre>
 <p>The part beginning with <code>wget</code> and ending with <code>.xz</code>
@@ -1230,7 +1235,7 @@ Theoretically, everything should work well, however I encountered some
 issues when running executable files using the bundled libc++, which was not
 found.
 The following lines will fix the problem&#8239;:</p>
-<pre class="term">echo '/usr/local/clang_11.0.0/lib/' > ./clang.conf
+<pre class="term">echo '/usr/local/clang_12.0.0/lib/' > ./clang.conf
 sudo mv ./clang.conf /etc/ld.so.conf.d/
 sudo ldconfig</pre>
 
@@ -1370,7 +1375,7 @@ sudo rm -rf /var/lib/lightdm /var/cache/lightdm
 sudo ln -s /tmp /var/lib/lightdm
 sudo ln -s /tmp /var/cache/lightdm</pre>
 
-<p>Edot var.conf&#8239;:</p>
+<p>Edit <code>var.conf</code>&#8239;:</p>
 <pre class="term">sudo nano /usr/lib/tmpfiles.d/var.conf</pre>
 <p>Replace the spool permission <code>0755</code> with
 <code>1777</code>&#8239;:</p>
