@@ -3,6 +3,8 @@
         Preset.h
         Author: Laurent de Soras, 2016
 
+This is actually a "Program", as named in the user interface and user manual.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

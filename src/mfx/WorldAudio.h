@@ -138,6 +138,7 @@ private:
 	void           copy_input (const float * const * src_arr, int nbr_spl);
 	void           check_signal_level (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	bool           check_silent_buffer () const;
+	void           store_send (int nbr_spl);
 	void           copy_output (float * const * dst_arr, int nbr_spl);
 	void           process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl);
 	void           process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info);

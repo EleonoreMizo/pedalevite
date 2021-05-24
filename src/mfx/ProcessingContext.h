@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ControlledParam.h"
 #include "mfx/ControlSource.h"
+#include "mfx/Cst.h"
 #include "mfx/PiType.h"
 #include "mfx/ProcessingContextNode.h"
 
@@ -36,6 +37,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <map>
 #include <memory>
 #include <vector>
+
+#include <climits>
 
 
 
@@ -85,15 +88,30 @@ public:
 	typedef std::multimap <ControlSource, std::shared_ptr <ControlledParam> > MapSourceParam;
 	typedef std::multimap <ControlSource, std::shared_ptr <CtrlUnit> > MapSourceUnit;
 
+	class IoDevice
+	{
+	public:
+		ProcessingContextNode        // Initial and final aligned buffers
+		               _ctx;
+		PluginContext::MixInputArray // For the output pins
+		               _mix;
+	};
+
+	typedef int RsMask;
+	static_assert (sizeof (RsMask) * CHAR_BIT >= Cst::_max_nbr_send, "");
+
 	               ProcessingContext ()  = default;
 
 	void           compute_graph_crc (fstb::Crc32 &crc) const;
 	std::string    dump_as_str (const PluginPool &plugin_pool) const;
 
-	ProcessingContextNode        // Initial and final aligned buffers
-	               _interface_ctx;
-	PluginContext::MixInputArray // For the output pins
-	               _interface_mix;
+	IoDevice       _interface;
+	IoDevice       _send;
+
+	// Bitmask indicating if send and return pins are used.
+	RsMask         _mask_send = 0;
+	RsMask         _mask_ret  = 0;
+
 	PluginCtxArray _context_arr;
 
 	MapParamCtrl   _map_param_ctrl;

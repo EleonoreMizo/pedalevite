@@ -96,7 +96,7 @@ bool	ToolsRouting::has_loops (const NodeMap &graph)
 
 
 // Returns graph.end () if not found
-ToolsRouting::NodeMap::const_iterator	ToolsRouting::find_audio_io (const NodeMap &graph)
+ToolsRouting::NodeMap::const_iterator	ToolsRouting::find_audio_io (const NodeMap &graph) noexcept
 {
 	const NodeMap::const_iterator it = std::find_if (
 		graph.begin (),
@@ -104,6 +104,23 @@ ToolsRouting::NodeMap::const_iterator	ToolsRouting::find_audio_io (const NodeMap
 		[] (const NodeMap::value_type &node_vt)
 		{
 			return (node_vt.first.get_type () == doc::CnxEnd::Type_IO);
+		}
+	);
+
+	return it;
+}
+
+
+
+// Returns graph.end () if not found
+ToolsRouting::NodeMap::const_iterator	ToolsRouting::find_return_send (const NodeMap &graph) noexcept
+{
+	const NodeMap::const_iterator it = std::find_if (
+		graph.begin (),
+		graph.end (),
+		[] (const NodeMap::value_type &node_vt)
+		{
+			return (node_vt.first.get_type () == doc::CnxEnd::Type_RS);
 		}
 	);
 
@@ -141,6 +158,8 @@ void	ToolsRouting::build_ordered_node_lists (std::vector <int> &audio_list, std:
 		if (! prog.is_slot_empty (it))
 		{
 			const doc::Slot & slot = *(it->second);
+
+			// Is this plug-in a signal one (not audio)?
 			if (aud_pi_list.find (slot._pi_model) == aud_pi_list.end ())
 			{
 				assert (
@@ -161,6 +180,13 @@ void	ToolsRouting::build_ordered_node_lists (std::vector <int> &audio_list, std:
 	if (it_audio_io != graph.end ())
 	{
 		visit_node_rec (audio_list, unvisit_set, it_audio_io, graph);
+	}
+
+	// Same with the send pins
+	const NodeMap::const_iterator it_send = find_return_send (graph);
+	if (it_send != graph.end ())
+	{
+		visit_node_rec (audio_list, unvisit_set, it_send, graph);
 	}
 
 	// Finds all unvisited audio nodes with disconnected output
@@ -497,7 +523,7 @@ void	ToolsRouting::move_slot (CnxSet &cnx_set, int slot_id, int pos_aud, const s
 /*
 Finds all up-stream and down-stream slots, for a given slot.
 The slot should exist.
-Result sets may include the audio I/O nodes.
+Result sets may include the audio I/O and send/return nodes.
 */
 void	ToolsRouting::find_coverage (std::set <Node> &node_list_u, std::set <Node> &node_list_d, const NodeMap &graph, int slot_id)
 {
@@ -553,7 +579,7 @@ bool	ToolsRouting::are_slot_connected (const NodeMap &graph, int slot1_id, int s
 				for (const auto &cnx : pin)
 				{
 					const doc::CnxEnd &  cnx_end = cnx.use_end (dir);
-					if (   cnx_end.get_type () == doc::CnxEnd::Type_NORMAL
+					if (   cnx_end.get_type ()    == doc::CnxEnd::Type_NORMAL
 					    && cnx_end.get_slot_id () == slot2_id)
 					{
 						return true;
@@ -586,8 +612,8 @@ bool	ToolsRouting::are_audio_io_connected (const NodeMap &graph)
 
 /*
 Returns true if the slot is:
-- Fed by a single connection on pin 0
-- Has only audio outputs
+- fed by a single connection on pin 0, and
+- has only audio outputs
 */
 bool	ToolsRouting::is_slot_last_and_neutral (const NodeMap &graph, int slot_id)
 {

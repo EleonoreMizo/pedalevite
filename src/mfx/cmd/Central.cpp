@@ -677,10 +677,10 @@ void	Central::add_cnx (const Cnx &cnx)
 {
 	assert (   cnx.is_valid ());
 	assert (   cnx._src._slot_type != CnxEnd::SlotType_DLY);
-	assert (   cnx._src._slot_type == CnxEnd::SlotType_IO
+	assert (   cnx._src._slot_type != CnxEnd::SlotType_NORMAL
 	        || cnx._src._slot_pos < int (_new_sptr->_slot_list.size ()));
 	assert (   cnx._dst._slot_type != CnxEnd::SlotType_DLY);
-	assert (   cnx._dst._slot_type == CnxEnd::SlotType_IO
+	assert (   cnx._dst._slot_type != CnxEnd::SlotType_NORMAL
 	        || cnx._dst._slot_pos < int (_new_sptr->_slot_list.size ()));
 
 	modify ();

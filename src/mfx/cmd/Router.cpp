@@ -66,7 +66,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Router::set_process_info (double sample_freq, int max_block_size)
+void	Router::set_process_info (double sample_freq, int max_block_size) noexcept
 {
 	assert (sample_freq > 0);
 	assert (max_block_size > 0);
@@ -214,7 +214,10 @@ void	Router::prepare_graph_for_latency_analysis (const Document &doc)
 	_lat_algo.reset ();
 	const int      nbr_cnx   = int (doc._cnx_list.size ());
 	_nbr_slots = int (doc._slot_list.size ());
-	const int      nbr_nodes = _nbr_slots + _nbr_a_src + _nbr_a_dst;
+	const int      nbr_nodes =
+		  _nbr_slots
+		+ Cst::_max_nbr_send * 2
+		+ _nbr_a_src + _nbr_a_dst;
 	_lat_algo.set_nbr_elt (nbr_nodes, nbr_cnx);
 
 	// Builds the connection list
@@ -251,6 +254,30 @@ void	Router::prepare_graph_for_latency_analysis (const Document &doc)
 		node.set_latency (latency);
 	}
 
+	// Send/return nodes
+	for (int rs_idx = 0; rs_idx < Cst::_max_nbr_send; ++rs_idx)
+	{
+		// Return
+		{
+			const int      node_idx =
+				conv_rs_pin_to_lat_node_index (piapi::Dir_IN , rs_idx);
+			lat::Node &    node = _lat_algo.use_node (node_idx);
+			node.set_nature (lat::Node::Nature_NORMAL);
+			node.set_latency (0);
+			assert (node.is_pure (piapi::Dir_OUT));
+		}
+
+		// Send
+		{
+			const int      node_idx =
+				conv_rs_pin_to_lat_node_index (piapi::Dir_OUT, rs_idx);
+			lat::Node &    node = _lat_algo.use_node (node_idx);
+			node.set_nature (lat::Node::Nature_NORMAL);
+			node.set_latency (0);
+			assert (node.is_pure (piapi::Dir_IN ));
+		}
+	}
+
 	// Source nodes (audio inputs)
 	for (int pin_cnt = 0; pin_cnt < _nbr_a_src; ++pin_cnt)
 	{
@@ -282,6 +309,8 @@ Name: conv_doc_slot_to_lat_node_index
 Description:
 	Maps the document slot indexes to lat::Algo node indexes. In this order:
 	- Standard plug-in slots
+	- Return
+	- Send
 	- Audio inputs
 	- Audio outputs
 Input parameters:
@@ -294,7 +323,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	Router::conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) const
+int	Router::conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) const noexcept
 {
 	const CnxEnd & end = (dir != piapi::Dir_IN) ? cnx._dst : cnx._src;
 	int            node_index = end._slot_pos;
@@ -304,8 +333,15 @@ int	Router::conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) con
 	case CnxEnd::SlotType_NORMAL:
 		// Nothing
 		break;
-	case CnxEnd::SlotType_IO:
+	case CnxEnd::SlotType_RS:
 		node_index += _nbr_slots;
+		if (dir != piapi::Dir_IN)
+		{
+			node_index += Cst::_max_nbr_send;
+		}
+		break;
+	case CnxEnd::SlotType_IO:
+		node_index += _nbr_slots + Cst::_max_nbr_send * 2;
 		if (dir != piapi::Dir_IN)
 		{
 			node_index += _nbr_a_src;
@@ -340,12 +376,49 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	Router::conv_io_pin_to_lat_node_index (piapi::Dir dir, int pin) const
+int	Router::conv_io_pin_to_lat_node_index (piapi::Dir dir, int pin) const noexcept
 {
+	assert (pin >= 0);
+
+	int            node_index = _nbr_slots + Cst::_max_nbr_send * 2 + pin;
+	if (dir != piapi::Dir_IN)
+	{
+		assert (pin < _nbr_a_dst);
+		node_index += _nbr_a_src;
+	}
+	else
+	{
+		assert (pin < _nbr_a_src);
+	}
+
+	return node_index;
+}
+
+
+
+/*
+==============================================================================
+Name: conv_rs_pin_to_lat_node_index
+Description:
+	Maps the document Send/Return pin indexes to lat::Algo node indexes.
+Input parameters:
+	- dir: desired direction of the connection, relative to the whole graph.
+	- pin: index of the pin in the given direction.
+Returns:
+	The lat::Algo node index.
+Throws: Nothing
+==============================================================================
+*/
+
+int	Router::conv_rs_pin_to_lat_node_index (piapi::Dir dir, int pin) const noexcept
+{
+	assert (pin >= 0);
+	assert (pin < Cst::_max_nbr_send);
+
 	int            node_index = _nbr_slots + pin;
 	if (dir != piapi::Dir_IN)
 	{
-		node_index += _nbr_a_src;
+		node_index += Cst::_max_nbr_send;
 	}
 
 	return node_index;
@@ -575,7 +648,7 @@ Description:
 
 	Graph course starts from the sink nodes and traces back recursively up to
 	the source nodes. ProcessingContextNode are created during the down-stream
-	descent (end of the recursion) so their order correspounds to the
+	descent (end of the recursion) so their order corresponds to the
 	processing order. Plug-in without audio output (signal analysis) are
 	considered as first sink nodes.
 
@@ -595,6 +668,9 @@ Throws: standard container exceptions
 
 void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
 {
+	// Check if there are connected send or return
+	check_send_return (doc);
+
 	NodeCategList  categ_list;
 	init_node_categ_list (doc, categ_list);
 
@@ -602,6 +678,7 @@ void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
 
 	// Make sure audio input buffers are allocated
 	allocate_buf_audio_i (doc, buf_alloc);
+	allocate_buf_return (doc);
 
 	// First, visit all plug-ins without output connection.
 	// These are "analysis" plug-ins not generating any audio data, but
@@ -621,6 +698,10 @@ void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
 		}
 	}
 
+	// Traversal from the Return pins
+	NodeInfo &     node_info_sr = categ_list [CnxEnd::SlotType_RS] [0];
+	check_source_nodes (doc, plugin_pool, buf_alloc, categ_list, node_info_sr);
+
 	// Now, starts the traversal from the audio output pins
 	NodeInfo &     node_info_io = categ_list [CnxEnd::SlotType_IO] [0];
 	check_source_nodes (doc, plugin_pool, buf_alloc, categ_list, node_info_io);
@@ -631,12 +712,47 @@ void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
 	// Allocates output buffers if necessary, and add a reference for
 	// all of them to make sure they are kept allocated
 	allocate_buf_audio_o (doc, buf_alloc, categ_list);
+	allocate_buf_send (doc, buf_alloc, categ_list);
 
 	// Deallocates audio input and output buffers (for sanity checks)
 	free_buf_audio_i (doc, buf_alloc);
 	free_buf_audio_o (doc, buf_alloc);
+	free_buf_send (doc, buf_alloc);
 	assert (   buf_alloc.get_nbr_alloc_buf ()
 	        == count_nbr_signal_buf (doc, categ_list));
+}
+
+
+
+/*
+==============================================================================
+Name: check_send_return
+Description:
+	Checks which send and return devices are used.
+Input/output parameters:
+	- doc: on input, _cnx_list should be valid. On output, _ctx_sptr is updated
+		with the masks.
+Throws: Nothing
+==============================================================================
+*/
+
+void	Router::check_send_return (Document &doc) noexcept
+{
+	ProcessingContext &  ctx = *doc._ctx_sptr;
+	ctx._mask_send = 0;
+	ctx._mask_ret  = 0;
+
+	for (const auto &cnx : doc._cnx_list)
+	{
+		if (cnx._src._slot_type == CnxEnd::SlotType_RS)
+		{
+			ctx._mask_ret  |= ProcessingContext::RsMask (1) << cnx._src._pin;
+		}
+		if (cnx._dst._slot_type == CnxEnd::SlotType_RS)
+		{
+			ctx._mask_send |= ProcessingContext::RsMask (1) << cnx._dst._pin;
+		}
+	}
 }
 
 
@@ -647,7 +763,10 @@ Name: init_node_categ_list
 Description:
 	Initialises all the NodeInfo, sorted by category.
 	categ_list is an internal node list, sorted by categories.
-	A node is a plug-in, auxiliary or standard, or an audio input or output.
+	A node is either:
+	- a plug-in, auxiliary or standard,
+	- an audio input or output, or
+	- a return or a send.
 	Connections are given by doc._cnx_list.
 Input parameters:
 	- doc: the final graph structure, including auxiliary plug-ins
@@ -668,12 +787,14 @@ void	Router::init_node_categ_list (const Document &doc, NodeCategList &categ_lis
 	categ_list [CnxEnd::SlotType_NORMAL].resize (doc._slot_list.size ());
 	categ_list [CnxEnd::SlotType_DLY   ].resize (doc._plugin_dly_list.size ());
 	categ_list [CnxEnd::SlotType_IO    ].resize (1); // For the audio output node
+	categ_list [CnxEnd::SlotType_RS    ].resize (1); // For the send node
 
 	// For each category, counts the number of input pins fed by each output pin
 	for (auto &cnx : _cnx_list)
 	{
-		// Does not count the audio input node
-		if (cnx._src._slot_type != CnxEnd::SlotType_IO)
+		// Does not count the audio input node nor the return node
+		if (   cnx._src._slot_type != CnxEnd::SlotType_IO
+		    && cnx._src._slot_type != CnxEnd::SlotType_RS)
 		{
 			NodeCateg &    categ = categ_list [cnx._src._slot_type];
 			assert (cnx._src._slot_pos < int (categ.size ()));
@@ -720,8 +841,8 @@ Throws: Nothing
 void	Router::allocate_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
-	ProcessingContextNode::Side & audio_i =
-		ctx._interface_ctx._side_arr [Dir_IN ];
+	ProcessingContext::IoDevice & dev     = ctx._interface;
+	ProcessingContextNode::Side & audio_i = dev._ctx._side_arr [Dir_IN ];
 	const int      nbr_pins = _nbr_a_src;
 	audio_i._nbr_chn     = ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_IN);
 	audio_i._nbr_chn_tot = nbr_pins * audio_i._nbr_chn;
@@ -753,22 +874,22 @@ void	Router::allocate_buf_audio_o (const Document &doc, BufAlloc &buf_alloc, con
 	const NodeInfo &  node_info = categ_list [CnxEnd::SlotType_IO] [0];
 
 	ProcessingContext &  ctx = *doc._ctx_sptr;
-	ProcessingContextNode::Side & audio_o =
-		ctx._interface_ctx._side_arr [Dir_OUT];
+	ProcessingContext::IoDevice & dev     = ctx._interface;
+	ProcessingContextNode::Side & audio_o = dev._ctx._side_arr [Dir_OUT];
 	const int      nbr_pins = _nbr_a_dst;
 	audio_o._nbr_chn     = ctx._nbr_chn_out;
 	audio_o._nbr_chn_tot = nbr_pins * audio_o._nbr_chn;
 	assert (audio_o._nbr_chn_tot <= Cst::_nbr_chn_out);
 	assert (int (node_info._cnx_src_list.size ()) <= nbr_pins);
 
-	ctx._interface_mix.clear (); // Default: no mix
+	dev._mix.clear (); // Default: no mix
 
 	// Use the source buffers as audio output buffers or allocates some to mix
 	// several inputs
 	collects_mix_source_buffers (
 		ctx, buf_alloc, categ_list, node_info,
 		audio_o, nbr_pins, audio_o._nbr_chn,
-		ctx._interface_mix
+		dev._mix
 	);
 
 	// Keeps all the destination buffers allocated
@@ -781,7 +902,90 @@ void	Router::allocate_buf_audio_o (const Document &doc, BufAlloc &buf_alloc, con
 	free_source_buffers (
 		ctx, buf_alloc, categ_list, node_info,
 		audio_o, nbr_pins, audio_o._nbr_chn,
-		ctx._interface_mix
+		dev._mix
+	);
+}
+
+
+
+/*
+==============================================================================
+Name: allocate_buf_return
+Description:
+	Sets the return buffers to the processing context. Actually there is no
+	allocation, the buffers are fixed and persistent.
+	Mixing or channel replication is handled by WorldAudio.
+Input/output parameters:
+	- doc: processing context to be modified.
+Throws: Nothing
+==============================================================================
+*/
+
+void	Router::allocate_buf_return (const Document &doc)
+{
+	ProcessingContext &  ctx = *doc._ctx_sptr;
+	ProcessingContext::IoDevice & dev  = ctx._send;
+	ProcessingContextNode::Side & rs_i = dev._ctx._side_arr [Dir_IN ];
+	const int      nbr_pins = Cst::_max_nbr_send;
+	rs_i._nbr_chn     = get_nbr_chn_send_ret (doc);
+	rs_i._nbr_chn_tot = nbr_pins * rs_i._nbr_chn;
+	for (int chn_cnt = 0; chn_cnt < rs_i._nbr_chn_tot; ++chn_cnt)
+	{
+		const int      buf = Cst::BufSpecial_RET + chn_cnt;
+		rs_i._buf_arr [chn_cnt] = buf;
+	}
+}
+
+
+
+/*
+==============================================================================
+Name: allocate_buf_send
+Description:
+	We allocate only buffers we need, given the pin configuration.
+Input parameters:
+	- categ_list: NodeInfo lists for all the node categories
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+Throws: standard container exceptions
+==============================================================================
+*/
+
+void	Router::allocate_buf_send (const Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list)
+{
+	const NodeInfo &  node_info = categ_list [CnxEnd::SlotType_RS] [0];
+
+	ProcessingContext &  ctx = *doc._ctx_sptr;
+	ProcessingContext::IoDevice & dev  = ctx._send;
+	ProcessingContextNode::Side & rs_o = dev._ctx._side_arr [Dir_OUT];
+	const int      nbr_pins = Cst::_max_nbr_send;
+	rs_o._nbr_chn     = get_nbr_chn_send_ret (doc);
+	rs_o._nbr_chn_tot = nbr_pins * rs_o._nbr_chn;
+	assert (rs_o._nbr_chn_tot <= Cst::_nbr_buf_ret);
+	assert (int (node_info._cnx_src_list.size ()) <= nbr_pins);
+
+	dev._mix.clear (); // Default: no mix
+
+	// Use the source buffers as audio output buffers or allocates some to mix
+	// several inputs
+	collects_mix_source_buffers (
+		ctx, buf_alloc, categ_list, node_info,
+		rs_o, nbr_pins, rs_o._nbr_chn,
+		dev._mix
+	);
+
+	// Keeps all the destination buffers allocated
+	for (int chn_cnt = 0; chn_cnt < rs_o._nbr_chn_tot; ++chn_cnt)
+	{
+		buf_alloc.use_more_if_std (rs_o._buf_arr [chn_cnt]);
+	}
+
+	// Deallocates the source buffers
+	free_source_buffers (
+		ctx, buf_alloc, categ_list, node_info,
+		rs_o, nbr_pins, rs_o._nbr_chn,
+		dev._mix
 	);
 }
 
@@ -799,11 +1003,11 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Router::free_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
+void	Router::free_buf_audio_i (const Document &doc, BufAlloc &buf_alloc) noexcept
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 	ProcessingContextNode::Side & audio_i =
-		ctx._interface_ctx._side_arr [Dir_IN ];
+		ctx._interface._ctx._side_arr [Dir_IN ];
 
 	for (int chn_cnt = 0; chn_cnt < audio_i._nbr_chn_tot; ++chn_cnt)
 	{
@@ -825,15 +1029,41 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Router::free_buf_audio_o (const Document &doc, BufAlloc &buf_alloc)
+void	Router::free_buf_audio_o (const Document &doc, BufAlloc &buf_alloc) noexcept
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 	ProcessingContextNode::Side & audio_o =
-		ctx._interface_ctx._side_arr [Dir_OUT];
+		ctx._interface._ctx._side_arr [Dir_OUT];
 
 	for (int chn_cnt = 0; chn_cnt < audio_o._nbr_chn_tot; ++chn_cnt)
 	{
 		buf_alloc.ret_if_std (audio_o._buf_arr [chn_cnt]);
+	}
+}
+
+
+
+/*
+==============================================================================
+Name: free_buf_send
+Description:
+	Inverse of allocate_buf_send
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+Throws: Nothing
+==============================================================================
+*/
+
+void	Router::free_buf_send (const Document &doc, BufAlloc &buf_alloc) noexcept
+{
+	ProcessingContext &  ctx = *doc._ctx_sptr;
+	ProcessingContextNode::Side & rs_o =
+		ctx._send._ctx._side_arr [Dir_OUT];
+
+	for (int chn_cnt = 0; chn_cnt < rs_o._nbr_chn_tot; ++chn_cnt)
+	{
+		buf_alloc.ret_if_std (rs_o._buf_arr [chn_cnt]);
 	}
 }
 
@@ -1257,6 +1487,18 @@ void	Router::check_source_nodes (Document &doc, const PluginPool &plugin_pool, B
 				nbr_chn_src = ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_IN);
 			}
 
+			// Source is a return
+			else if (cnx_src._src._slot_type == CnxEnd::SlotType_RS)
+			{
+				/***
+				To do: find a better way to evaluate the number of channels.
+				We should travel the graph first with nbr_chn_src = 1, find the
+				resulting number of channel of the corresponding send, then use
+				it for the final value.
+				***/
+				nbr_chn_src = get_nbr_chn_send_ret (doc);
+			}
+
 			// Source is a plug-in: process it
 			else
 			{
@@ -1434,7 +1676,8 @@ void	Router::free_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_al
 				node_info._cnx_src_list [pin_cnt];
 			for (auto &cnx_src : cnx_list)
 			{
-				if (cnx_src._src._slot_type != CnxEnd::SlotType_IO)
+				if (   cnx_src._src._slot_type != CnxEnd::SlotType_IO
+				    && cnx_src._src._slot_type != CnxEnd::SlotType_RS)
 				{
 					const ProcessingContextNode::Side & src_side_o =
 						use_source_side (categ_list, ctx, cnx_src);
@@ -1471,7 +1714,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList &categ_list, const ProcessingContext &ctx, const Cnx &cnx_src) const
+const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList &categ_list, const ProcessingContext &ctx, const Cnx &cnx_src) const noexcept
 {
 	const NodeInfo &  node_src =
 		categ_list [cnx_src._src._slot_type] [cnx_src._src._slot_pos];
@@ -1479,7 +1722,12 @@ const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList
 
 	if (cnx_src._src._slot_type == CnxEnd::SlotType_IO)
 	{
-		src_side_o_ptr = &ctx._interface_ctx._side_arr [Dir_IN];
+		src_side_o_ptr = &ctx._interface._ctx._side_arr [Dir_IN];
+	}
+
+	else if (cnx_src._src._slot_type == CnxEnd::SlotType_RS)
+	{
+		src_side_o_ptr = &ctx._send._ctx._side_arr [Dir_IN];
 	}
 
 	else
@@ -1514,7 +1762,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &categ_list) const
+int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &categ_list) const noexcept
 {
 	int            nbr_buf = 0;
 
@@ -1563,12 +1811,36 @@ Throws: Nothing
 ==============================================================================
 */
 
-int	Router::clip_channel (int chn_idx, int nbr_chn)
+int	Router::clip_channel (int chn_idx, int nbr_chn) noexcept
 {
 	assert (chn_idx >= 0);
 	assert (nbr_chn > 0);
 
 	return std::min (chn_idx, nbr_chn - 1);
+}
+
+
+
+/*
+==============================================================================
+Name: get_send_ret_nbr_chn
+Description:
+	Retrieves the number of channels for the send/return devices.
+	This is a temporary solution, because we could find better values,
+	depending on the send position in the graph.
+Input parameters:
+	- doc: needed to check the channel mode
+Returns:
+	The number of channels
+Throws: Nothing
+==============================================================================
+*/
+
+int	Router::get_nbr_chn_send_ret (const Document &doc) noexcept
+{
+	const int      nbr_chn = ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_OUT);
+
+	return nbr_chn;
 }
 
 

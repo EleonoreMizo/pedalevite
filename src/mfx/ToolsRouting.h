@@ -86,7 +86,9 @@ public:
 	static void    build_node_graph (NodeMap &graph, const CnxSet &cnx_set);
 	static bool    has_loops (const NodeMap &graph);
 	static NodeMap::const_iterator
-	               find_audio_io (const NodeMap &graph);
+	               find_audio_io (const NodeMap &graph) noexcept;
+	static NodeMap::const_iterator
+	               find_return_send (const NodeMap &graph) noexcept;
 	static void    build_ordered_node_lists (std::vector <int> &audio_list, std::vector <int> &sig_list, const doc::Preset &prog, const NodeMap &graph, const std::set <std::string> &aud_pi_list);
 	static int     build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag, const doc::Preset &prog, const std::vector <std::string> &pi_aud_list);
 	static void    insert_slot_before (CnxSet &cnx_set, int slot_id_new, int slot_id_aft);

@@ -48,7 +48,8 @@ public:
 		SlotType_INVALID = -1,
 
 		SlotType_NORMAL = 0,
-		SlotType_IO,   // Input or output depends on the context
+		SlotType_IO,   // Audio In/Out. Input or output depends on the context
+		SlotType_RS,   // Return/Send. Same
 		SlotType_DLY,
 
 		SlotType_NBR_ELT

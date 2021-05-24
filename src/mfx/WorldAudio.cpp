@@ -206,6 +206,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 			process_plugin_bundle (pi_ctx, nbr_spl);
 		}
 
+		store_send (nbr_spl);
 		copy_output (dst_arr, nbr_spl);
 
 		check_signal_level (dst_arr, src_arr, nbr_spl);
@@ -549,7 +550,7 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 	> MixUnalignToAlign;
 
 	const ProcessingContextNode::Side & side =
-		_ctx_ptr->_interface_ctx._side_arr [Dir_IN];
+		_ctx_ptr->_interface._ctx._side_arr [Dir_IN];
 
 	if (side._nbr_chn_tot == 2)
 	{
@@ -656,6 +657,61 @@ bool	WorldAudio::check_silent_buffer () const
 
 
 
+// Stores the send buffers into the persistent return buffers for the next
+// frame.
+void	WorldAudio::store_send (int nbr_spl)
+{
+	if (_ctx_ptr->_mask_ret != 0)
+	{
+		const ProcessingContextNode::Side & side_dst =
+			_ctx_ptr->_send._ctx._side_arr [Dir_IN ];
+
+		// At least one send is connected to the graph
+		if (_ctx_ptr->_mask_send != 0)
+		{
+			const ProcessingContextNode::Side & side_src =
+				_ctx_ptr->_send._ctx._side_arr [Dir_OUT];
+
+			// Clipping set to +24 dBFS
+			constexpr float   vmax = 16.f;
+			const auto     mi = fstb::ToolsSimd::set1_f32 (-vmax);
+			const auto     ma = fstb::ToolsSimd::set1_f32 (+vmax);
+
+			assert (side_src._nbr_chn_tot == side_dst._nbr_chn_tot);
+			for (int buf_cnt = 0; buf_cnt < side_dst._nbr_chn_tot; ++buf_cnt)
+			{
+				const int      buf_dst_idx = side_dst._buf_arr [buf_cnt];
+				const int      buf_src_idx = side_src._buf_arr [buf_cnt];
+				float * fstb_RESTRICT        buf_dst_ptr = _buf_pack.use (buf_dst_idx);
+				const float * fstb_RESTRICT  buf_src_ptr = _buf_pack.use (buf_src_idx);
+
+				// Copy the buffers while clipping data; feedback could quicly lead
+				// to insane levels.
+				for (int pos = 0; pos < nbr_spl; pos += 4)
+				{
+					auto           x = fstb::ToolsSimd::load_f32 (buf_src_ptr + pos);
+					x = fstb::ToolsSimd::min_f32 (x, ma);
+					x = fstb::ToolsSimd::max_f32 (x, mi);
+					fstb::ToolsSimd::store_f32 (buf_dst_ptr + pos, x);
+				}
+			}
+		}
+
+		// No send at all: clears the return buffers
+		else
+		{
+			for (int buf_cnt = 0; buf_cnt < side_dst._nbr_chn_tot; ++buf_cnt)
+			{
+				const int      buf_dst_idx = side_dst._buf_arr [buf_cnt];
+				float *        buf_dst_ptr = _buf_pack.use (buf_dst_idx);
+				dsp::mix::Align::clear (buf_dst_ptr, nbr_spl);
+			}
+		}
+	}
+}
+
+
+
 void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 {
 	typedef dsp::mix::Simd <
@@ -663,17 +719,17 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 		fstb::DataAlign <true>
 	> MixAlignToUnalign;
 
-	if (! _ctx_ptr->_interface_mix.empty ())
+	if (! _ctx_ptr->_interface._mix.empty ())
 	{
 		mix_source_channels (
-			_ctx_ptr->_interface_ctx._side_arr [Dir_OUT],
-			_ctx_ptr->_interface_mix,
+			_ctx_ptr->_interface._ctx._side_arr [Dir_OUT],
+			_ctx_ptr->_interface._mix,
 			nbr_spl
 		);
 	}
 
 	const ProcessingContextNode::Side & side =
-		_ctx_ptr->_interface_ctx._side_arr [Dir_OUT];
+		_ctx_ptr->_interface._ctx._side_arr [Dir_OUT];
 
 	_prog_switcher.process_buffers_o (side, nbr_spl);
 

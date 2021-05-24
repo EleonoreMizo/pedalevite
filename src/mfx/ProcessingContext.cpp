@@ -51,8 +51,11 @@ void	ProcessingContext::compute_graph_crc (fstb::Crc32 &crc) const
 	// 8 bits are enough
 	crc.process_byte (_nbr_chn_out);
 
-	_interface_ctx.compute_graph_crc (crc);
-	PluginContext::compute_graph_crc_mix_i (crc, _interface_mix);
+	_interface._ctx.compute_graph_crc (crc);
+	PluginContext::compute_graph_crc_mix_i (crc, _interface._mix);
+
+	_send._ctx.compute_graph_crc (crc);
+	PluginContext::compute_graph_crc_mix_i (crc, _send._mix);
 
 	for (const auto &pi : _context_arr)
 	{
@@ -122,10 +125,19 @@ std::string	ProcessingContext::dump_as_str (const PluginPool &plugin_pool) const
 
 	// Audio in/out
 	out += "* Audio interface node:\n";
-	out += _interface_ctx.dump_as_str (plugin_pool);
-	if (! _interface_mix.empty ())
+	out += _interface._ctx.dump_as_str (plugin_pool);
+	if (! _interface._mix.empty ())
 	{
-		out += "Audio intput mix: " + dump_input_mix (_interface_mix);
+		out += "Audio intput mix: " + dump_input_mix (_interface._mix);
+	}
+	out += "\n";
+
+	// Return/Send
+	out += "* Return/send node    :\n";
+	out += _send._ctx.dump_as_str (plugin_pool);
+	if (! _send._mix.empty ())
+	{
+		out += "Send mix:         " + dump_input_mix (_send._mix);
 	}
 	out += "\n";
 

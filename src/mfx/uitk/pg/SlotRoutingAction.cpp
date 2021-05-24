@@ -382,6 +382,16 @@ void	SlotRoutingAction::build_possible_cnx_set (PageMgrInterface::NavLocList &na
 			ce_excl_list, nbr_pins, entry_list
 		);
 	}
+
+	// Adds the send/return pins
+	for (int pin_idx = 0; pin_idx < Cst::_max_nbr_send; ++pin_idx)
+	{
+		list_target (
+			nav_list, nid, pos_y,
+			doc::CnxEnd (doc::CnxEnd::Type_RS, 0, pin_idx),
+			ce_excl_list, Cst::_max_nbr_send, entry_list
+		);
+	}
 }
 
 

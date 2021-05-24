@@ -1183,7 +1183,7 @@ void	Tools::print_action_param (std::string &model_name, std::string &param_name
 void	Tools::print_cnx_name (NText &txtbox, int width, const std::vector <Tools::NodeEntry> &entry_list, piapi::Dir dir, const doc::CnxEnd &cnx_end, const char prefix_0 [], int nbr_pins)
 {
 	assert (width > 0);
-	assert (   cnx_end.get_type () == doc::CnxEnd::Type_IO
+	assert (   cnx_end.get_type () != doc::CnxEnd::Type_NORMAL
 	        || ! entry_list.empty ());
 	assert (dir >= 0);
 	assert (dir < piapi::Dir_NBR_ELT);
@@ -1195,11 +1195,18 @@ void	Tools::print_cnx_name (NText &txtbox, int width, const std::vector <Tools::
 
 	const doc::CnxEnd::Type end_type = cnx_end.get_type ();
 	std::string    multilabel;
+
 	if (end_type == doc::CnxEnd::Type_IO)
 	{
 		multilabel = "Audio ";
 		multilabel += _dir_txt_arr [dir];
 	}
+
+	else if (end_type == doc::CnxEnd::Type_RS)
+	{
+		multilabel = (dir == piapi::Dir_IN) ? "Return" : "Send";
+	}
+
 	else
 	{
 		// Retrieves plug-in name

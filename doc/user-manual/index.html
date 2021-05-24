@@ -747,7 +747,7 @@ si l’effet concerné dispose de plusieurs broches.</p>
 du brochage réel de l’effet situé sur l’emplacement courant.
 Cela permet de changer d’effet à la volée sans détruire toutes les connexions
 à chaque fois qu’elles sont incompatibles avec l’effet courant.</p>
-<p><span class="key">Select</span> sur une broche permet d’ajouter une
+<p>Presser <span class="key">Select</span> sur une broche permet d’ajouter une
 connexion à cette broche, parmi la liste présentée.
 Seules sont affichées les nouvelles connexions possibles, ne créant pas de
 boucle dans le circuit.
@@ -758,6 +758,20 @@ boucle dans le circuit.
 apparaissant dans la liste.
 <span class="key">Esc</span> pour annuler l’opération.</p>
 <div class="pic"><img src="fx-routing-edit.png" class="reduce" /></div>
+<p>Il existe deux autres types d’entrées et sorties, les envois et retours
+(respectivement <span class="ui">Send</span> et
+<span class="ui">Return</span>).
+C’est un moyen de créer des boucles dans le graphe de connexion des effets.
+En effet, tout ce qui est envoyé à un <span class="ui">Send</span> ressort
+par le <span class="ui">Return</span> correspondant, qu’on peut placer en
+amont de l’envoi.
+Pédale Vite met à disposition 4 chemins différents d’envois et de retours.
+Le bouclage du son n’est cependant pas instantané comme sur un effet purement
+analogique, il y a un retard de l’ordre de la milliseconde.
+Comme les bouclages peuvent très vite s’emballer et dégénérer, tout signal
+rentrant dans un envoi est systématiquement écrêté à +24&#8239;dBFS.
+Il est cependant fortement recommandé d’ajouter un limiteur juste avant afin
+de garder le signal sous contrôle.</p>
 
 <h4><a id="screen-fx-presets"></a>Presets</h4>
 
@@ -3640,6 +3654,12 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r44, 2021-05-24</b></p>
+<ul>
+<li>Ajout des envois et retours interne dans le graphe audio de connexion des
+effets, afin de pouvoir créer des boucles.</li>
+</ul>
 
 <p><b>r43, 2021-05-05</b></p>
 <ul>

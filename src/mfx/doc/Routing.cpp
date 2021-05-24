@@ -49,8 +49,8 @@ bool	Routing::has_slots () const
 {
 	for (const auto &cnx : _cnx_audio_set)
 	{
-		if (   cnx.use_src ().get_type () != CnxEnd::Type_IO
-		    || cnx.use_dst ().get_type () != CnxEnd::Type_IO)
+		if (   cnx.use_src ().get_type () == CnxEnd::Type_NORMAL
+		    || cnx.use_dst ().get_type () == CnxEnd::Type_NORMAL)
 		{
 			return true;
 		}

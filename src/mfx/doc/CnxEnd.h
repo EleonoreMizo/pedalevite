@@ -46,8 +46,9 @@ public:
 	{
 		Type_INVALID = -1,
 
-		Type_NORMAL = 0,
-		Type_IO,
+		Type_NORMAL = 0, // Plug-in
+		Type_IO,         // Audio input or output
+		Type_RS,         // Internal return or send
 
 		Type_NBR_ELT
 	};
@@ -88,7 +89,7 @@ protected:
 private:
 
 	Type           _type    = Type_INVALID;
-	int            _slot_id = -1;
+	int            _slot_id = -1;           // 0 for the I/O and S/R
 	int            _pin     = -1;
 
 

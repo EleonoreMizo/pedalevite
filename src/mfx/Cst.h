@@ -49,7 +49,7 @@ class Cst
 public:
 
 	// Saved document format version
-	static const int  _format_version  =  11;
+	static const int  _format_version  =  12;
 
 	static const int  _nbr_pedals      =  12;
 	static const int  _nbr_presets_per_bank = 16;
@@ -84,6 +84,7 @@ public:
 	static const int  _max_nbr_sig     =   4;
 	static const int  _max_nbr_sig_ports = 256;
 	static const int  _max_nbr_plugins = 256;
+	static const int  _max_nbr_send    =   4;
 	static const int  _nbr_chn_inout   =   2; // Max of _nbr_chn_in and _nbr_chn_out
 	static const int  _nbr_chn_in      = _nbr_chn_inout;
 	static const int  _nbr_chn_out     = _nbr_chn_inout;
@@ -106,12 +107,16 @@ public:
 
 	static const double  _step_param;         // Unit step on normalized parameter value
 
+	// Number of buffers, per side, for the return device
+	static const int  _nbr_buf_ret     = _nbr_chn_inout * _max_nbr_send;
+
 	enum BufSpecial
 	{
 		BufSpecial_SILENCE = 0,
 		BufSpecial_TRASH,
+		BufSpecial_RET,
 
-		BufSpecial_NBR_ELT
+		BufSpecial_NBR_ELT = BufSpecial_RET + _nbr_buf_ret 
 	};
 
 	static const std::string      // Dry-wet mix

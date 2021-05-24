@@ -674,6 +674,19 @@ the audio graph.
 replace it by another one from the list.
 <span class="key">Esc</span> to cancel.</p>
 <div class="pic"><img src="fx-routing-edit.png" class="reduce" /></div>
+<p>There are two other types of input and output, <span class="ui">Send</span>
+and <span class="ui">Return</span>.
+This is a way to build loops across the effect connection graph and create
+internal feedback.
+Indeed, anything entering a <span class="ui">Send</span> exits from the
+corresponding <span class="ui">Return</span>, that can be located upstream.
+There are 4 different send-return paths available.
+The feedback is not instantaneous like in an analogue effect, there is a delay
+of about a millisecond.
+Because feedback can quickly build up and degenerate, any signal entering a
+<span class="ui">Send</span> is systematically clipped to +24&#8239;dBFS.
+Nevertheless, it is strongly recommended to insert a limiter just before in
+order to tame the signal.</p>
 
 <h4><a id="screen-fx-presets"></a>Presets</h4>
 
@@ -3399,6 +3412,12 @@ This precision can be changed with <span class="key">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r44, 2021-05-24</b></p>
+<ul>
+<li>Added <span class="ui">Send</span> and <span class="ui">Return</span>
+devices to the audio routing to create internal feedback loops.</li>
+</ul>
 
 <p><b>r43, 2021-05-05</b></p>
 <ul>

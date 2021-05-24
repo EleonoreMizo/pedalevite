@@ -3484,12 +3484,23 @@ cmd::Cnx	Model::convert_connection (const doc::Cnx &cnx_doc, const SlotIdToPosMa
 
 void	Model::convert_cnx_end (cmd::CnxEnd &ce_c, const doc::CnxEnd &ce_d, const SlotIdToPosMap &pos_map)
 {
+	// Audio I/O
 	if (ce_d.get_type () == doc::CnxEnd::Type_IO)
 	{
 		ce_c._slot_type = cmd::CnxEnd::SlotType_IO;
 		ce_c._slot_pos  = 0;
 		ce_c._pin       = ce_d.get_pin ();
 	}
+
+	// Send / Return
+	else if (ce_d.get_type () == doc::CnxEnd::Type_RS)
+	{
+		ce_c._slot_type = cmd::CnxEnd::SlotType_RS;
+		ce_c._slot_pos  = 0;
+		ce_c._pin       = ce_d.get_pin ();
+	}
+
+	// Standard node
 	else
 	{
 		assert (ce_d.get_type () == doc::CnxEnd::Type_NORMAL);
