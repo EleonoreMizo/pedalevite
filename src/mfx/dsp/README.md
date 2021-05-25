@@ -7,6 +7,7 @@
 - **`dly`**: delay tools
 - **`dyn`**: tools to analyse dynamics (envelope followers)
 - **`fir`**: Finite Impulse Response filters
+- **`grn`**: Granular resynthesis
 - **`iir`**: Infinite Impulse Response filters, s-plane design tools
 - **`mix`**: Basic copy/mix/volume tools
 - **`nz`**: Noise generators

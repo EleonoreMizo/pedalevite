@@ -932,6 +932,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingMax.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingOp.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingOp.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\grn\VelvetConv.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\grn\VelvetConv.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.h" />
@@ -2299,6 +2301,7 @@
     <None Include="..\..\..\src\mfx\dsp\dly\README.md" />
     <None Include="..\..\..\src\mfx\dsp\dyn\README.md" />
     <None Include="..\..\..\src\mfx\dsp\fir\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\grn\README.md" />
     <None Include="..\..\..\src\mfx\dsp\iir\README.md" />
     <None Include="..\..\..\src\mfx\dsp\mix\README.md" />
     <None Include="..\..\..\src\mfx\dsp\nz\README.md" />

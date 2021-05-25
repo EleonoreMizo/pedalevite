@@ -106,6 +106,7 @@
 #include "test/TestSplitThiele8.h"
 #include "test/TestSvf.h"
 #include "test/TestSvfAntisat.h"
+#include "test/TestVelvetConv.h"
 #include "test/TestWindows.h"
 
 #if fstb_SYS == fstb_SYS_LINUX
@@ -1920,6 +1921,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #define main_TEST_SPEED 0
+
+#if 1
+	if (ret_val == 0) ret_val = TestVelvetConv::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestDesignPhaseMin::perform_test ();

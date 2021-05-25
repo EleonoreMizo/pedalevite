@@ -466,6 +466,9 @@
     <Filter Include="ffft\test">
       <UniqueIdentifier>{9e36c360-b03c-4325-a992-db5d59a1997c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\grn">
+      <UniqueIdentifier>{beaa2c69-b40b-4fe8-8989-d1a0b437d4c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5316,6 +5319,12 @@
     <ClInclude Include="..\..\..\src\mfx\PluginPoolHostMini.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\grn\VelvetConv.h">
+      <Filter>mfx\dsp\grn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\grn\VelvetConv.hpp">
+      <Filter>mfx\dsp\grn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6885,6 +6894,9 @@
     </None>
     <None Include="..\..\..\src\mfx\dsp\spat\README.md">
       <Filter>mfx\dsp\spat</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\grn\README.md">
+      <Filter>mfx\dsp\grn</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

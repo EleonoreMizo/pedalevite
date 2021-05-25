@@ -465,6 +465,8 @@ commonsrc = \
         ../../src/mfx/dsp/fir/SlidingMax.hpp \
         ../../src/mfx/dsp/fir/SlidingOp.h \
         ../../src/mfx/dsp/fir/SlidingOp.hpp \
+        ../../src/mfx/dsp/grn/VelvetConv.h \
+        ../../src/mfx/dsp/grn/VelvetConv.hpp \
         ../../src/mfx/dsp/iir/AllPass1p.cpp \
         ../../src/mfx/dsp/iir/AllPass1p.h \
         ../../src/mfx/dsp/iir/AllPass1p.hpp \
@@ -1925,6 +1927,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSvf.h \
         ../../src/test/TestSvfAntisat.cpp \
         ../../src/test/TestSvfAntisat.h \
+        ../../src/test/TestVelvetConv.cpp \
+        ../../src/test/TestVelvetConv.h \
         ../../src/test/TestWindows.cpp \
         ../../src/test/TestWindows.h \
         ../../src/test/TimerAccurate.cpp \
