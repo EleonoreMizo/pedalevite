@@ -274,27 +274,31 @@ void	VelvetConv <T>::adapt_ring_buf_size (int grain_len)
 		_buf.resize (_buf_len);
 
 		const int      add_len = buf_len_new - buf_len_old;
-		auto           it      = _buf.begin ();
+		const auto     it      = _buf.begin ();
 
-		// First, copies the beginning of the buffer to the newly created space.
-		const int      beg_len = std::min (add_len, _buf_pos);
-		fstb::copy_no_overlap (&*it + buf_len_old, &*it, beg_len);
+		dly::RingBufVectorizer  rbv (_buf_len);
 
-		// Moves the remaining data to the end
-		const int      mov_rem_len = add_len - beg_len;
-		if (mov_rem_len > 0)
+		// Moves data previously located before the cursor at the beginning of
+		// the newly created area
+		const int      move_len = std::min (add_len, _buf_pos);
+		if (move_len > 0)
 		{
-			std::copy (it + _buf_pos - mov_rem_len, it + _buf_pos, it);
+			for (rbv.start (move_len, buf_len_old, 0); rbv.end (); rbv.next ())
+			{
+				const int      seg_len = rbv.get_seg_len ();
+				const int      dst_pos = rbv.get_curs_pos (0);
+				const int      src_pos = rbv.get_curs_pos (1);
+				std::copy (it + src_pos, it + src_pos + seg_len, it + dst_pos);
+			}
 		}
 
-		// Now clears data ahead of the previously stored data
-		const int      clr_pos = (_buf_pos + buf_len_old) & _buf_msk;
-		const int      clr_len = std::min (add_len, buf_len_new - clr_pos);
-		std::fill (it + clr_pos, it + clr_pos + clr_len, T (0));
-		const int      clr_rem_len = add_len - clr_len;
-		if (clr_rem_len > 0)
+		// Clears data located after (therefore just before the cursor)
+		const int      clr_pos = (_buf_pos - add_len) & _buf_msk;
+		for (rbv.start (add_len, clr_pos); rbv.end (); rbv.next ())
 		{
-			std::fill (it, it + clr_rem_len, T (0));
+			const int      seg_len = rbv.get_seg_len ();
+			const int      seg_pos = rbv.get_curs_pos (0);
+			std::fill (it + seg_pos, it + seg_pos + seg_len, T (0));
 		}
 	}
 }
@@ -310,7 +314,7 @@ void	VelvetConv <T>::update_density () noexcept
 	const float    proba = _density / float (_grain.size ());
 
 	// Scales to the PRNG value range. We use double as intermediate type
-	// to keep the whole 32 bits, but actually this is not really necessary.
+	// to keep the full 32 bits, but actually this is not really necessary.
 	_dens_thr  = uint32_t (std::min (
 		proba * double (fstb::TWOP32) + 0.5,
 		double (fstb::TWOP32 - 1)
@@ -360,7 +364,6 @@ void	VelvetConv <T>::generate_grain_conditional (int buf_pos) noexcept
 
 
 
-// Result: { grain flag, sign }
 template <typename T>
 typename VelvetConv <T>::DiceRes	VelvetConv <T>::roll_dices () noexcept
 {

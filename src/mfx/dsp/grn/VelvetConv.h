@@ -4,6 +4,7 @@
         Author: Laurent de Soras, 2021
 
 Convolution between a single granule and velvet noise.
+This class doesn't include any volume compensation code.
 
 Template parameters:
 
