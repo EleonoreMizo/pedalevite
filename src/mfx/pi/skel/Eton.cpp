@@ -145,19 +145,19 @@ void	Eton::do_process_block (piapi::ProcInfo &proc)
 	}
 
 	// Signal processing
-	for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
+	for (int chn_idx = 0; chn_idx < nbr_chn_proc; ++chn_idx)
 	{
-		Channel &      chn = _chn_arr [chn_index];
+		Channel &      chn = _chn_arr [chn_idx];
 
 		/*** To do ***/
 
 	}
 
 	// Duplicates the remaining output channels
-	for (int chn_index = nbr_chn_proc; chn_index < nbr_chn_dst; ++chn_index)
+	for (int chn_idx = nbr_chn_proc; chn_idx < nbr_chn_dst; ++chn_idx)
 	{
 		dsp::mix::Align::copy_1_1 (
-			proc._dst_arr [chn_index],
+			proc._dst_arr [chn_idx],
 			proc._dst_arr [0],
 			proc._nbr_spl
 		);
