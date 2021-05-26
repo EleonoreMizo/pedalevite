@@ -672,7 +672,7 @@ bool	ToolsRouting::is_slot_last_and_neutral (const NodeMap &graph, int slot_id)
 
 
 
-ToolsRouting::Node::Node (doc::CnxEnd::Type type, int slot_id)
+ToolsRouting::Node::Node (doc::CnxEnd::Type type, int slot_id) noexcept
 :	_type (type)
 ,	_slot_id (slot_id)
 {
@@ -683,7 +683,7 @@ ToolsRouting::Node::Node (doc::CnxEnd::Type type, int slot_id)
 
 
 
-ToolsRouting::Node::Node (const doc::CnxEnd &cnx_end)
+ToolsRouting::Node::Node (const doc::CnxEnd &cnx_end) noexcept
 {
 	assert (cnx_end.is_valid ());
 
@@ -693,7 +693,7 @@ ToolsRouting::Node::Node (const doc::CnxEnd &cnx_end)
 
 
 
-void	ToolsRouting::Node::set (doc::CnxEnd::Type type, int slot_id)
+void	ToolsRouting::Node::set (doc::CnxEnd::Type type, int slot_id) noexcept
 {
 	assert (type >= 0);
 	assert (type < doc::CnxEnd::Type_NBR_ELT);

@@ -57,20 +57,20 @@ public:
 	class Node
 	{
 	public:
-		explicit       Node (doc::CnxEnd::Type type, int slot_id);
-		explicit       Node (const doc::CnxEnd &cnx_end);
+		explicit       Node (doc::CnxEnd::Type type, int slot_id) noexcept;
+		explicit       Node (const doc::CnxEnd &cnx_end) noexcept;
 		               Node ()                        = default;
 		               Node (const Node &other)       = default;
 		Node &         operator = (const Node &other) = default;
 
-		inline bool    operator == (const Node &other) const;
-		inline bool    operator != (const Node &other) const;
+		inline bool    operator == (const Node &other) const noexcept;
+		inline bool    operator != (const Node &other) const noexcept;
 
-		void           set (doc::CnxEnd::Type type, int slot_id);
-		inline bool    is_valid () const;
+		void           set (doc::CnxEnd::Type type, int slot_id) noexcept;
+		inline bool    is_valid () const noexcept;
 		inline doc::CnxEnd::Type
-		               get_type () const;
-		inline int     get_slot_id () const;
+		               get_type () const noexcept;
+		inline int     get_slot_id () const noexcept;
 
 	private:
 		doc::CnxEnd::Type

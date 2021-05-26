@@ -35,34 +35,34 @@ namespace mfx
 
 
 
-bool	ToolsRouting::Node::operator == (const Node &other) const
+bool	ToolsRouting::Node::operator == (const Node &other) const noexcept
 {
    return (_type == other._type && _slot_id == other._slot_id);
 }
 
 
 
-bool	ToolsRouting::Node::operator != (const Node &other) const
+bool	ToolsRouting::Node::operator != (const Node &other) const noexcept
 {
    return ! (*this == other);
 }
 
 
-bool	ToolsRouting::Node::is_valid () const
+bool	ToolsRouting::Node::is_valid () const noexcept
 {
    return (_type >= 0);
 }
 
 
 
-doc::CnxEnd::Type	ToolsRouting::Node::get_type () const
+doc::CnxEnd::Type	ToolsRouting::Node::get_type () const noexcept
 {
    return _type;
 }
 
 
 
-int	ToolsRouting::Node::get_slot_id () const
+int	ToolsRouting::Node::get_slot_id () const noexcept
 {
    return _slot_id;
 }
