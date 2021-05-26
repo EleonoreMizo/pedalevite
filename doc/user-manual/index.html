@@ -78,6 +78,7 @@
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
 	<li><a href="#fx-spec-crush">Spectral Crusher — Quantification spectrale</a></li>
+	<li><a href="#fx-spec-freeze">Spectral Freeze — Gel de timbre</a></li>
 	<li><a href="#fx-pan">Stereo Panning — Balance stéréo</a></li>
 	<li><a href="#fx-testgen">Test Generator — Générateur de tonalités de test</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
@@ -3133,6 +3134,52 @@ Les fréquences supérieures ne sont pas touchées.</p>
 donnée.
 Ce paramètre permet d’éviter des changements de volume soudains et très
 importants, ce qui peut arriver en fonction des réglages.</p>
+
+
+
+<h3><a id="fx-spec-freeze"></a>Spectral Freeze — Gel de timbre</h3>
+
+<p>Le Spectral Freeze est un effet qui permet de geler le signal et
+reproduire indéfiniment son timbre à l’instant du gel.
+Il y a 4 cellules de gel indépendantes qui peuvent se superposer.
+Un cinquième générateur permet de faire des transitions entre les cellules
+successives.</p>
+<p>Dans cet effet, le gel est obtenu dans le domaine fréquentiel (vocodeur de
+phase).</p>
+
+<p class="var">Slot 1–4 freeze</p>
+<p>Active le gel de la cellule concernée.
+Au moment du basculement, le son entrant dans l’effet est mémorisé et sera
+restitué jusqu’au basculement inverse.</p>
+
+<p class="var">Slot 1–4 gain</p>
+<p>Volume en dB de la cellule concernée.
+Le volume est relatif à celui du capturé lors du gel.</p>
+
+<p class="var">Crossfade</p>
+<p>Règle le mélange entre les cellules successives.
+La partie entière indique le numéro d’une des deux cellules mélangées, et la
+partie après la virgule indique la proportion de mélange de la cellule
+suivante.
+En fin de course du paramètre, la cellule 4 s’enchaîne avec la première
+cellule.</p>
+
+<p class="var">Crossfade gain</p>
+<p>Volume en dB de le la partie mélangée.</p>
+
+<p class="var">Dry mode</p>
+<p>Spécifie le comportement du signal d’origine&#8239;:</p>
+<table>
+<tr><td><span class="ui">Mix </span></td><td>Mélangé aux cellules gelées</td></tr>
+<tr><td><span class="ui">Cut </span></td><td>Coupé dès qu’au moins une cellule est gelée</td></tr>
+<tr><td><span class="ui">Mute</span></td><td>Systématiquement coupé</td></tr>
+</table>
+
+<p class="var">Phasing speed</p>
+<p>Il est possible de donner au son gelé un peu d’évolutivité en introduisant
+une modulation qui peut faire penser à du
+<i><span lang="en">phasing</span></i>.
+Ce paramètre permet de régler la vitesse de la modulation.</p>
 
 
 

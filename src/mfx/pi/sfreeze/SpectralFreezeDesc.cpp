@@ -95,6 +95,17 @@ SpectralFreezeDesc::SpectralFreezeDesc ()
 	pll_sptr->use_mapper ().gen_log (10, fstb::SQRT2);
 	_desc_set.add_glob (Param_XFGAIN, pll_sptr);
 
+	// Dry mode
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
+		"Mix\nCut\nMute",
+		"Dry mode\nDMode\nDrM",
+		"",
+		0,
+		"%s"
+	);
+	assert (enu_sptr->get_nat_max () == DMode_NBR_ELT - 1);
+	_desc_set.add_glob (Param_DMODE, enu_sptr);
+
 	// Phasing speed
 	pll_sptr = std::make_shared <TplPll> (
 		0, 20,
@@ -110,17 +121,6 @@ SpectralFreezeDesc::SpectralFreezeDesc ()
 	pll_sptr->use_mapper ().add_segment (0.9, 10   , true);
 	pll_sptr->use_mapper ().add_segment (1.0, 20   , false);
 	_desc_set.add_glob (Param_PHASE, pll_sptr);
-
-	// Dry mode
-	auto           enu_sptr = std::make_shared <param::TplEnum> (
-		"Mix\nCut\nMute",
-		"Dry mode\nDMode\nDrM",
-		"",
-		0,
-		"%s"
-	);
-	assert (enu_sptr->get_nat_max () == DMode_NBR_ELT - 1);
-	_desc_set.add_glob (Param_DMODE, enu_sptr);
 }
 
 
@@ -179,7 +179,7 @@ void	SpectralFreezeDesc::configure_slot (int slot_idx)
 
 	const int      base = Param_SLOT_BASE + slot_idx * ParamSlot_NBR_ELT;
 
-	// Freeze
+	// Slot N freeze
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"Slot %d freeze\nS%d freeze\nS%d frz\nS%dF",
@@ -189,7 +189,7 @@ void	SpectralFreezeDesc::configure_slot (int slot_idx)
 	);
 	_desc_set.add_glob (base + ParamSlot_FREEZE, enu_sptr);
 
-	// Gain
+	// Slot N gain
 	auto           pll_sptr = std::make_shared <TplPll> (
 		0, 2,
 		"Slot %d gain\nS%d gain\nS%dG",

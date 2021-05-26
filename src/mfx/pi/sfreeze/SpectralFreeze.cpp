@@ -88,13 +88,13 @@ SpectralFreeze::SpectralFreeze (piapi::HostInterface &host)
 
 	_state_set.set_val_nat (desc_set, Param_XFADE , 0);
 	_state_set.set_val_nat (desc_set, Param_XFGAIN, 0);
-	_state_set.set_val_nat (desc_set, Param_PHASE , 0);
 	_state_set.set_val_nat (desc_set, Param_DMODE , 0);
+	_state_set.set_val_nat (desc_set, Param_PHASE , 0);
 
 	_state_set.add_observer (Param_XFADE , _param_change_flag_misc);
 	_state_set.add_observer (Param_XFGAIN, _param_change_flag_misc);
-	_state_set.add_observer (Param_PHASE , _param_change_flag_misc);
 	_state_set.add_observer (Param_DMODE , _param_change_flag_misc);
+	_state_set.add_observer (Param_PHASE , _param_change_flag_misc);
 
 	_param_change_flag_misc.add_observer (_param_change_flag);
 }

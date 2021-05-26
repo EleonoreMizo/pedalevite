@@ -78,6 +78,7 @@
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator</a></li>
 	<li><a href="#fx-spec-crush">Spectral Crusher</a></li>
+	<li><a href="#fx-spec-freeze">Spectral Freeze — Tone freeze</a></li>
 	<li><a href="#fx-pan">Stereo Panning</a></li>
 	<li><a href="#fx-testgen">Test Generator — Test signal generator</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
@@ -2923,6 +2924,49 @@ Therefore this parameter is not accurate in the lowest frequency range.</p>
 band.
 This parameter avoids sudden and important volume changes that could occur
 depending on the settings.</p>
+
+
+
+<h3><a id="fx-spec-freeze"></a>Spectral Freeze — Tone freeze</h3>
+
+<p>Spectral Freeze can freeze the input signal and playback for ever its tone
+at the freeze moment.
+There are 4 independent freeze slots that can be mixed together.
+A fifth generator can output smooth crossfades between successive slots.</p>
+<p>In this effect, the frozen state is produced in the frequency domain (phase
+vocoder).</p>
+
+<p class="var">Slot 1–4 freeze</p>
+<p>Activates the frozen state for the given slot.
+At the switching instant, the input sound is captured and will be played back
+until the slot is switched off.</p>
+
+<p class="var">Slot 1–4 gain</p>
+<p>Gain in dB of the given slot.
+The gain is relative to the captured sound volume.</p>
+
+<p class="var">Crossfade</p>
+<p>Sets the mix between successive slots.
+The integer part of the value indicates the number of the first mixed slot.
+The fractional part indicates the amount of the next slot in the mix.
+When the parameter reaches the end, the 4th slot is mixed with the first
+one.</p>
+
+<p class="var">Crossfade gain</p>
+<p>Gain in dB of the crossfaded slots.</p>
+
+<p class="var">Dry mode</p>
+<p>Specifies how the original signal is mixed with the frozen slots&#8239;:</p>
+<table>
+<tr><td><span class="ui">Mix </span></td><td>Mixed to the frozen slots</td></tr>
+<tr><td><span class="ui">Cut </span></td><td>Cut as soon as at least one slot is frozen</td></tr>
+<tr><td><span class="ui">Mute</span></td><td>Always muted</td></tr>
+</table>
+
+<p class="var">Phasing speed</p>
+<p>It is possible to give a bit of life to the frozen sound by adding a
+phasing-like modulation.
+This parameter sets the modulation speed.</p>
 
 
 
