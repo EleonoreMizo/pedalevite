@@ -74,7 +74,8 @@ class EnvFollowerAHR4SimdHelper
 
 public:
 
-	static const int  _nbr_env = 4;  // Number of processing units
+	static constexpr int _filter_order = ORD;
+	static constexpr int _nbr_env = 4;  // Number of processing units
 
 	typedef VD V128Dest;
 	typedef VS V128Src;
@@ -90,6 +91,8 @@ public:
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
 	               process_sample (const fstb::ToolsSimd::VectF32 &in) noexcept;
 	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
+	fstb::ToolsSimd::VectF32
+	               analyse_block (const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
 	void           process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
 	void           clear_buffers () noexcept;

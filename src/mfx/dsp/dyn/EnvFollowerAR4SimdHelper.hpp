@@ -132,6 +132,11 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 	{ \
 		V128Dest::store_f32 (out_ptr + pos, state##ord); \
 	}
+#define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN( ord) \
+	if (ord == ORD) \
+	{ \
+		return state##ord; \
+	}
 #define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE( fltn) \
 	if (fltn - 1 < ORD) \
 	{ \
@@ -198,9 +203,72 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd:
 	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (8)
 }
 
+
+
+// Input data must contain only positive values!
+template <class VD, class VS, class VP, int ORD>
+fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept
+{
+	assert (V128Src::check_ptr (in_ptr));
+	assert (nbr_spl > 0);
+
+	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
+	const auto     coef_a = V128Par::load_f32 (_coef_atk);
+	const auto     coef_r = V128Par::load_f32 (_coef_rls);
+
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (1)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (2)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (3)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (4)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (5)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (6)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (7)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (8)
+
+	int            pos = 0;
+	do
+	{
+		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
+		assert (test_ge_0 (state0));
+
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (0, 1)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (1, 2)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (2, 3)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (3, 4)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (4, 5)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (5, 6)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (6, 7)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (7, 8)
+
+		++ pos;
+	}
+	while (pos < nbr_spl);
+
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (1)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (2)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (3)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (4)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (5)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (6)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (7)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (8)
+
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (1)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (2)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (3)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (4)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (5)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (6)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (7)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN (8)
+}
+
+
+
 #undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD
 #undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC
 #undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT
+#undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RETURN
 #undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE
 
 

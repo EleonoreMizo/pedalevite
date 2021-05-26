@@ -74,7 +74,8 @@ class EnvFollowerAHR1LrSimdHelper
 
 public:
 
-	static const int  _nbr_sub = 4;  // Number of sub-processing units
+	static constexpr int _filter_order = ORD;
+	static constexpr int _nbr_sub      = 4;  // Number of sub-processing units
 
 	typedef VP V128Par;
 
