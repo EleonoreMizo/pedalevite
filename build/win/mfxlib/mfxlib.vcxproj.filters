@@ -466,6 +466,9 @@
     <Filter Include="ffft\test">
       <UniqueIdentifier>{9e36c360-b03c-4325-a992-db5d59a1997c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\vfreeze">
+      <UniqueIdentifier>{a0b3c7e6-88ef-401a-bd53-1a9f958c49a8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="mfx\dsp\grn">
       <UniqueIdentifier>{beaa2c69-b40b-4fe8-8989-d1a0b437d4c3}</UniqueIdentifier>
     </Filter>
@@ -5319,6 +5322,21 @@
     <ClInclude Include="..\..\..\src\mfx\PluginPoolHostMini.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\Param.h">
+      <Filter>mfx\pi\vfreeze</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreeze.h">
+      <Filter>mfx\pi\vfreeze</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreezeDesc.h">
+      <Filter>mfx\pi\vfreeze</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\Cst.h">
+      <Filter>mfx\pi\vfreeze</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\DMode.h">
+      <Filter>mfx\pi\vfreeze</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\grn\VelvetConv.h">
       <Filter>mfx\dsp\grn</Filter>
     </ClInclude>
@@ -6748,6 +6766,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\PluginCb.cpp">
       <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreeze.cpp">
+      <Filter>mfx\pi\vfreeze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreezeDesc.cpp">
+      <Filter>mfx\pi\vfreeze</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

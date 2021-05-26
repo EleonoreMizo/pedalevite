@@ -136,6 +136,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/vclone/VolumeCloneDesc.h"
 #include "mfx/pi/verb2/Platitude.h"
 #include "mfx/pi/verb2/PlatitudeDesc.h"
+#include "mfx/pi/vfreeze/VelvetFreeze.h"
+#include "mfx/pi/vfreeze/VelvetFreezeDesc.h"
 #include "mfx/pi/wah1/Wah.h"
 #include "mfx/pi/wah1/WahDesc.h"
 #include "mfx/pi/wah2/Wah2.h"
@@ -228,6 +230,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::unique_ptr <mfx::p
 		add <pidet2::PitchDetect2Desc   , pidet2::PitchDetect2     > (fl);
 		add <scrush::SpectralCrusherDesc, scrush::SpectralCrusher  > (fl);
 		add <sfreeze::SpectralFreezeDesc, sfreeze::SpectralFreeze  > (fl);
+		add <vfreeze::VelvetFreezeDesc  , vfreeze::VelvetFreeze    > (fl);
 
 		fact_list.swap (fl);
 	}

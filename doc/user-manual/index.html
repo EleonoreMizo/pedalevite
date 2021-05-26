@@ -82,6 +82,7 @@
 	<li><a href="#fx-pan">Stereo Panning — Balance stéréo</a></li>
 	<li><a href="#fx-testgen">Test Generator — Générateur de tonalités de test</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
+	<li><a href="#fx-velvet-freeze">Velvet Freeze — Gel de timbre</a></li>
 	<li><a href="#fx-volumeclone">Volume Clone — Suiveur de volume</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
@@ -3295,6 +3296,56 @@ temps d’ouverture.</p>
 
 
 
+<h3><a id="fx-velvet-freeze"></a>Velvet Freeze — Gel de timbre</h3>
+
+<p>Le Velvet Freeze est un effet qui permet de geler le signal et
+reproduire indéfiniment son timbre à l’instant du gel.
+Il y a 4 cellules de gel indépendantes qui peuvent se superposer.
+Un cinquième générateur permet de faire des transitions entre les cellules
+successives.</p>
+<p>Dans cet effet, le gel est obtenu dans le domaine temporel par convolution
+d’une granule sonore avec un «&#8239;bruit de velours&#8239;».</p>
+
+<p class="var">Slot 1–4 freeze</p>
+<p>Active le gel de la cellule concernée.
+Au moment du basculement, le son entrant dans l’effet est mémorisé et sera
+restitué jusqu’au basculement inverse.</p>
+
+<p class="var">Slot 1–4 gain</p>
+<p>Volume en dB de la cellule concernée.
+Le volume est relatif à celui du capturé lors du gel.</p>
+
+<p class="var">Crossfade</p>
+<p>Règle le mélange entre les cellules successives.
+La partie entière indique le numéro d’une des deux cellules mélangées, et la
+partie après la virgule indique la proportion de mélange de la cellule
+suivante.
+En fin de course du paramètre, la cellule 4 s’enchaîne avec la première
+cellule.</p>
+
+<p class="var">Crossfade gain</p>
+<p>Volume en dB de le la partie mélangée.</p>
+
+<p class="var">Dry mode</p>
+<p>Spécifie le comportement du signal d’origine&#8239;:</p>
+<table>
+<tr><td><span class="ui">Mix </span></td><td>Mélangé aux cellules gelées</td></tr>
+<tr><td><span class="ui">Cut </span></td><td>Coupé dès qu’au moins une cellule est gelée</td></tr>
+<tr><td><span class="ui">Mute</span></td><td>Systématiquement coupé</td></tr>
+</table>
+
+<p class="var">Grain size</p>
+<p>Durée de la granule capturée, en millisecondes.
+Plus celle-ci est longue, plus le son figé va être organique et fluide,
+à condition que le son capturé évolue lentement.
+Les petites valeurs sont plus adaptées aux sons percussifs mais peuvent
+ajouter une coloration artificielle importante.</p>
+
+<p class="var">Density</p>
+<p>Densité du bruit de velours générant les granules.</p>
+
+
+
 <h3><a id="fx-volumeclone"></a>Volume Clone — Suiveur de volume</h3>
 
 <p>Cet effet essentiellement utilitaire permet de calquer le volume de
@@ -3701,6 +3752,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r45, 2021-05-26</b></p>
+<ul>
+<li>Ajout des effets Spectral Freeze et Velvet Freeze.</li>
+</ul>
 
 <p><b>r44, 2021-05-24</b></p>
 <ul>

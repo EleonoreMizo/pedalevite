@@ -1300,6 +1300,13 @@ commonsrc = \
         ../../src/mfx/pi/verb2/Platitude.h \
         ../../src/mfx/pi/verb2/PlatitudeDesc.cpp \
         ../../src/mfx/pi/verb2/PlatitudeDesc.h \
+        ../../src/mfx/pi/vfreeze/Cst.h \
+        ../../src/mfx/pi/vfreeze/DMode.h \
+        ../../src/mfx/pi/vfreeze/Param.h \
+        ../../src/mfx/pi/vfreeze/VelvetFreeze.cpp \
+        ../../src/mfx/pi/vfreeze/VelvetFreeze.h \
+        ../../src/mfx/pi/vfreeze/VelvetFreezeDesc.cpp \
+        ../../src/mfx/pi/vfreeze/VelvetFreezeDesc.h \
         ../../src/mfx/pi/wah1/Param.h \
         ../../src/mfx/pi/wah1/Wah.cpp \
         ../../src/mfx/pi/wah1/Wah.h \
