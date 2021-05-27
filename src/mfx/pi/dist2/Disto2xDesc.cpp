@@ -121,7 +121,7 @@ Disto2xDesc::Disto2xDesc ()
 	// Stage 1-2 mix
 	auto           mix_sptr = std::make_shared <TplMix> (
 			0, 1,
-			"Stage 1-2 Mix\nS12 Mix",
+			"Stage 1-2 mix\nS12 mix",
 			"%",
 			param::HelperDispNum::Preset_FLOAT_PERCENT,
 			0,
@@ -136,7 +136,7 @@ Disto2xDesc::Disto2xDesc ()
 	// Low band gain
 	mix_sptr = std::make_shared <TplMix> (
 		0, 1,
-		"Low band mix\nLow mix\nL Mix",
+		"Low band mix\nLow mix\nL mix",
 		"%",
 		param::HelperDispNum::Preset_FLOAT_PERCENT,
 		0,
@@ -239,7 +239,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 	// Bias
 	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
-		"Stage %d Bias\nS%d Bias",
+		"Stage %d bias\nS%d bias",
 		"%",
 		stage,
 		"%+6.1f"
@@ -267,7 +267,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 	// Gain
 	log_sptr = std::make_shared <param::TplLog> (
 		double (_gain_min), double (_gain_max),
-		"Stage %d Distortion Gain\nStage %d Gain\nS%d Gain",
+		"Stage %d distortion gain\nStage %d gain\nS%d gain",
 		"dB",
 		param::HelperDispNum::Preset_DB,
 		stage,
