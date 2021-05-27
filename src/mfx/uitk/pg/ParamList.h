@@ -95,17 +95,32 @@ private:
 		Entry_GUI
 	};
 
+	enum Col
+	{
+		Col_NAME = 0,
+		Col_VAL,
+		Col_UNIT,
+
+		Col_NBR_ELT
+	};
+
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
+
+	typedef std::array <TxtArray, Col_NBR_ELT> ColArray;
+	typedef std::array <int, Col_NBR_ELT> NodeIdRow;
 
 	void           set_param_info ();
 	void           check_gui (const std::string &pi_model);
 	void           update_param_txt (PiType type, int index);
 	void           update_loc_edit (int node_id);
+	int            get_param_list_length () const;
 	int            conv_loc_edit_to_node_id () const;
-	int            conv_param_to_node_id (PiType type, int index) const;
+	bool           conv_param_to_node_id (NodeIdRow &nid_row, PiType type, int index) const;
 	void           conv_node_id_to_param (PiType &type, int &index, int node_id);
+	int            conv_param_to_list_pos (PiType type, int index) const;
+	bool           is_nid_in_param_list (int node_id) const;
 	EvtProp        change_param (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;
@@ -121,10 +136,11 @@ private:
 	WinSPtr        _menu_sptr;    // Contains 1 or 2 entries + the parameter list
 	TxtSPtr        _fx_setup_sptr;
 	TxtSPtr        _gui_sptr;
-	TxtArray       _param_list;   // Parameters are grouped by pairs (name/value). First the mixer parameters, then the plug-in parameters.
+	ColArray       _param_list;   // First the mixer parameters, then the plug-in parameters.
 	bool           _mixer_flag;   // Indicates that we should display the mixer parameter (not needed for signal generators)
 	bool           _gui_flag;     // We have a GUI to edit this effect
 	PageType       _gui_page;
+	bool           _unit_flag;    // UI is wide enough to display the parameter unit
 
 
 

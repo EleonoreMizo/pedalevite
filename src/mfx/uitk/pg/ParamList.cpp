@@ -72,6 +72,7 @@ ParamList::ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_mixer_flag (true)
 ,	_gui_flag (false)
 ,	_gui_page (PageType_INVALID)
+,	_unit_flag (false)
 {
 	_fx_setup_sptr->set_text ("FX Setup\xE2\x80\xA6");
 	_gui_sptr     ->set_text ("Graphic editing\xE2\x80\xA6");
@@ -96,6 +97,9 @@ void	ParamList::do_connect (Model &model, const View &view, PageMgrInterface &pa
 	const int      scr_w = _page_size [0];
 	const int      frm_w = (scr_w * 3) >> 2;
 	const int      h_m   = _fnt_ptr->get_char_h ();
+
+	const int      w_m   = _fnt_ptr->get_char_w (U'M');
+	_unit_flag = (scr_w >= 40 * w_m);
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
@@ -133,18 +137,31 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 	if (evt.is_cursor ())
 	{
 		const NodeEvt::Curs  curs = evt.get_cursor ();
-		if (node_id >= 0 && node_id < int (_param_list.size ()))
+		if (is_nid_in_param_list (node_id))
 		{
 			if (curs == NodeEvt::Curs_ENTER)
 			{
 				update_loc_edit (node_id);
 			}
 
-			// Reflects the (un)selection on the value node
-			assert ((node_id & 1) == 0);
-			const int      val_id = node_id + 1;
-			NodeEvt        evt2 (NodeEvt::create_cursor (val_id, curs));
-			_param_list [val_id]->handle_evt (evt2);
+			// Reflects the (un)selection on the value and unit nodes
+			PiType         type  = PiType_INVALID;
+			int            index = -1;
+			conv_node_id_to_param (type, index, node_id);
+			const int      list_pos = conv_param_to_list_pos (type, index);
+			NodeIdRow      nid_row;
+			conv_param_to_node_id (nid_row, type, index);
+
+			assert (node_id == nid_row [Col_NAME]);
+
+			NodeEvt        evt_v (NodeEvt::create_cursor (nid_row [Col_VAL ], curs));
+			_param_list [Col_VAL ] [list_pos]->handle_evt (evt_v);
+
+			if (_unit_flag)
+			{
+				NodeEvt        evt_u (NodeEvt::create_cursor (nid_row [Col_UNIT], curs));
+				_param_list [Col_UNIT] [list_pos]->handle_evt (evt_u);
+			}
 		}
 	}
 
@@ -171,7 +188,7 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 					ret_val = EvtProp_PASS;
 				}
 			}
-			else if (node_id >= 0 && node_id < int (_param_list.size ()))
+			else if (is_nid_in_param_list (node_id))
 			{
 				update_loc_edit (node_id);
 				if (_loc_edit._param_index >= 0)
@@ -346,7 +363,16 @@ void	ParamList::set_param_info ()
 	const int      nbr_param_tot = nbr_param_arr [0] + nbr_param_arr [1];
 
 	PageMgrInterface::NavLocList  nav_list;
-	_param_list.resize (nbr_param_tot * 2);
+	_param_list [Col_NAME].resize (nbr_param_tot);
+	_param_list [Col_VAL ].resize (nbr_param_tot);
+	if (_unit_flag)
+	{
+		_param_list [Col_UNIT].resize (nbr_param_tot);
+	}
+	else
+	{
+		_param_list [Col_UNIT].clear ();
+	}
 	_menu_sptr->clear_all_nodes ();
 
 	const int      win_h = _menu_sptr->get_bounding_box ().get_size () [1];
@@ -370,6 +396,14 @@ void	ParamList::set_param_info ()
 		PiType_MAIN
 	}};
 
+	int            w_unit = 0;
+	if (_unit_flag)
+	{
+		w_unit = 8 * _fnt_ptr->get_char_w (U'M');
+	}
+	const int      x_val  = scr_w - w_unit;
+	const int      x_unit = x_val + _fnt_ptr->get_char_w (U' ');
+
 	int            param_pos = 0;
 	for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
 	{
@@ -384,32 +418,40 @@ void	ParamList::set_param_info ()
 				ctrl_flag = settings_ptr_arr [type_cnt]->has_ctrl (index);
 			}
 
-			const int      pos_disp = param_pos     + pos_base;
-#if ! defined (NDEBUG)
-			const int      pos_menu = param_pos * 2 + pos_base;
-#endif
-			const int      node_id  = param_pos * 2;
+			const int      pos_disp = param_pos + pos_base;
+			const int      nid_base = param_pos * Col_NBR_ELT;
 
-			TxtSPtr        name_sptr { std::make_shared <NText> (node_id) };
+			const int      nid_name = nid_base + Col_NAME;
+			TxtSPtr        name_sptr { std::make_shared <NText> (nid_name) };
 			name_sptr->set_coord (Vec2d (0, h_m * pos_disp));
 			name_sptr->set_font (*_fnt_ptr);
 			name_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 			name_sptr->set_bold (ctrl_flag, true);
+			_param_list [Col_NAME] [param_pos] = name_sptr;
+			_menu_sptr->push_back (name_sptr);
 
-			TxtSPtr        val_sptr { std::make_shared <NText> (node_id + 1) };
-			val_sptr->set_coord (Vec2d (scr_w, h_m * pos_disp));
+			const int      nid_val  = nid_base + Col_VAL;
+			TxtSPtr        val_sptr { std::make_shared <NText> (nid_val) };
+			val_sptr->set_coord (Vec2d (x_val, h_m * pos_disp));
 			val_sptr->set_font (*_fnt_ptr);
 			val_sptr->set_justification (1, 0, false);
 			val_sptr->set_bold (ctrl_flag, true);
-
-			_param_list [node_id    ] = name_sptr;
-			_param_list [node_id + 1] = val_sptr;
-
-			PageMgrInterface::add_nav (nav_list, node_id);
-
-			assert (pos_menu == _menu_sptr->get_nbr_nodes ());
-			_menu_sptr->push_back (name_sptr);
+			_param_list [Col_VAL] [param_pos] = val_sptr;
 			_menu_sptr->push_back (val_sptr);
+
+			if (_unit_flag)
+			{
+				const int      nid_unit = nid_base + Col_UNIT;
+				TxtSPtr        unit_sptr { std::make_shared <NText> (nid_unit) };
+				unit_sptr->set_coord (Vec2d (x_unit, h_m * pos_disp));
+				unit_sptr->set_font (*_fnt_ptr);
+				unit_sptr->set_justification (0, 0, false);
+				unit_sptr->set_bold (ctrl_flag, true);
+				_param_list [Col_UNIT] [param_pos] = unit_sptr;
+				_menu_sptr->push_back (unit_sptr);
+			}
+
+			PageMgrInterface::add_nav (nav_list, nid_name);
 
 			update_param_txt (type, index);
 
@@ -426,15 +468,23 @@ void	ParamList::set_param_info ()
 
 void	ParamList::update_param_txt (PiType type, int index)
 {
-	const int      node_id    = conv_param_to_node_id (type, index);
-	TxtSPtr &      name_sptr  = _param_list [node_id    ];
-	TxtSPtr &      val_sptr   = _param_list [node_id + 1];
-	const int      slot_id    = _loc_edit._slot_id;
+	NodeIdRow      nid_row;
+	if (conv_param_to_node_id (nid_row, type, index))
+	{
+		const int      list_pos  = conv_param_to_list_pos (type, index);
+		TxtSPtr &      name_sptr = _param_list [Col_NAME] [list_pos];
+		TxtSPtr &      val_sptr  = _param_list [Col_VAL ] [list_pos];
+		NText *        unit_ptr  =
+			  (_unit_flag)
+			? _param_list [Col_UNIT] [list_pos].get ()
+			: nullptr;
+		const int      slot_id   = _loc_edit._slot_id;
 
-	Tools::set_param_text (
-		*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_id, type,
-		name_sptr.get (), *val_sptr, 0, 0, false
-	);
+		Tools::set_param_text (
+			*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_id, type,
+			name_sptr.get (), *val_sptr, unit_ptr, nullptr, false
+		);
+	}
 }
 
 
@@ -446,43 +496,62 @@ void	ParamList::update_loc_edit (int node_id)
 
 
 
+int	ParamList::get_param_list_length () const
+{
+	return int (_param_list [Col_NAME].size ());
+}
+
+
+
 // Returns the first node of the pair (param name)
 int	ParamList::conv_loc_edit_to_node_id () const
 {
 	// Default on the first parameter of the main effect
-	int            node_id = conv_param_to_node_id (PiType_MAIN, 0);
+	int            list_pos = conv_param_to_list_pos (PiType_MAIN, 0);
 
 	if (_loc_edit._param_index >= 0)
 	{
-		node_id = conv_param_to_node_id (
+		list_pos = conv_param_to_list_pos (
 			_loc_edit._pi_type,
 			_loc_edit._param_index
 		);
 	}
 
-	node_id = std::min (node_id, int (_param_list.size ()) - 2);
+	// Could become negative is there is no parameter
+	list_pos = std::min (list_pos, get_param_list_length () - 1);
+
+	int            node_id = Entry_FX_SETUP;
+	if (list_pos >= 0)
+	{
+		node_id = list_pos * Col_NBR_ELT;
+	}
 
 	return node_id;
 }
 
 
 
-// Returns the first node of the pair (param name)
-int	ParamList::conv_param_to_node_id (PiType type, int index) const
+// On output: nid_row [2] contains -1 if the unit is not displayed
+// Returns false if the parameter does not exist
+bool	ParamList::conv_param_to_node_id (NodeIdRow &nid_row, PiType type, int index) const
 {
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	int            line_pos = index;
-	if (_mixer_flag && type == PiType_MAIN)
+	const int      line_pos = conv_param_to_list_pos (type, index);
+	if (line_pos >= get_param_list_length ())
 	{
-		line_pos += pi::dwm::Param_NBR_ELT;
+		std::fill (nid_row.begin (), nid_row.end (), -1);
+		return false;
 	}
 
-	const int      node_id = line_pos * 2;
+	const int      node_id = line_pos * Col_NBR_ELT;
+	nid_row [0] = node_id + 0;
+	nid_row [1] = node_id + 1;
+	nid_row [2] = (_unit_flag) ? node_id + 2 : -1;
 
-	return node_id;
+	return true;
 }
 
 
@@ -490,21 +559,52 @@ int	ParamList::conv_param_to_node_id (PiType type, int index) const
 void	ParamList::conv_node_id_to_param (PiType &type, int &index, int node_id)
 {
 	type = PiType_MIX;
-	if (node_id < 0 || node_id >= int (_param_list.size ()))
+	if (! is_nid_in_param_list (node_id))
 	{
 		index = -1;
 	}
 	else
 	{
 		const int      nbr_param_mix = (_mixer_flag) ? pi::dwm::Param_NBR_ELT : 0;
-		int            line_pos = node_id >> 1;
+		int            line_pos      = node_id / Col_NBR_ELT;
 		if (line_pos >= nbr_param_mix)
 		{
-			type = PiType_MAIN;
+			type      = PiType_MAIN;
 			line_pos -= nbr_param_mix;
 		}
 		index = line_pos;
 	}
+}
+
+
+
+// It is possible to call it with a non-existing parameter
+int	ParamList::conv_param_to_list_pos (PiType type, int index) const
+{
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	int            list_pos = index;
+	if (_mixer_flag && type == PiType_MAIN)
+	{
+		list_pos += pi::dwm::Param_NBR_ELT;
+	}
+
+	return list_pos;
+}
+
+
+
+bool	ParamList::is_nid_in_param_list (int node_id) const
+{
+	int            len = get_param_list_length () * Col_NBR_ELT;
+	if (! _unit_flag)
+	{
+		-- len;
+	}
+
+	return (node_id >= 0 && node_id < len);
 }
 
 
