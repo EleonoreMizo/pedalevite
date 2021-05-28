@@ -179,10 +179,7 @@ bool	FrameOverlapAna <T>::process_sample (T x) noexcept
 
 	const int      hop_rem    = _hop_size - _hop_pos;
 	const bool     frame_flag = (hop_rem <= 0);
-	if (frame_flag)
-	{
-		_hop_pos = 0;
-	}
+	check_frame_ready (frame_flag);
 
 	return frame_flag;
 }
@@ -234,10 +231,7 @@ typename FrameOverlapAna <T>::ResProcBlock	FrameOverlapAna <T>::process_block (c
 	_hop_pos += proc_len;
 
 	const bool     frame_flag = (_hop_pos >= _hop_size);
-	if (frame_flag)
-	{
-		_hop_pos = 0;
-	}
+	check_frame_ready (frame_flag);
 
 	return ResProcBlock { nbr_spl - proc_len, frame_flag };
 }
@@ -249,7 +243,7 @@ typename FrameOverlapAna <T>::ResProcBlock	FrameOverlapAna <T>::process_block (c
 Name: get_frame
 Description:
 	Retrieves the frame content, when it is ready.
-Input parameters:
+Output parameters:
 	- frame_ptr: pointer on the frame data. Buffer should be allocated by the
 		client, and big enough to receive all the data.
 Throws: Nothing
@@ -257,16 +251,15 @@ Throws: Nothing
 */
 
 template <typename T>
-void	FrameOverlapAna <T>::get_frame (T frame_ptr []) noexcept
+void	FrameOverlapAna <T>::get_frame (T frame_ptr []) const noexcept
 {
 	assert (_frame_size > 0);
 	assert (_hop_pos == 0);
 	assert (frame_ptr != nullptr);
 
-	const int      pos_src = (_buf_pos - _frame_size) & _buf_msk;
 	dly::RingBufVectorizer  rbv (_buf_len);
 	int            pos_dst = 0;
-	for (rbv.start (_frame_size, pos_src); rbv.end (); rbv.next ())
+	for (rbv.start (_frame_size, _read_pos); rbv.end (); rbv.next ())
 	{
 		const int      blk_len = rbv.get_seg_len ();
 		const int      blk_pos = rbv.get_curs_pos (0);
@@ -276,6 +269,34 @@ void	FrameOverlapAna <T>::get_frame (T frame_ptr []) noexcept
 
 		pos_dst += blk_len;
 	}
+}
+
+
+
+/*
+==============================================================================
+Name: get_frame
+Description:
+	Retrieves a single sample of the frame content, when it is ready.
+Input parameters:
+	- idx: index of the sample to retrieve within the frame. [0 ; _frame_size[.
+Returns:
+	The requested sample value.
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename T>
+T	FrameOverlapAna <T>::get_frame_sample (int idx) const noexcept
+{
+	assert (_frame_size > 0);
+	assert (_hop_pos == 0);
+	assert (idx >= 0);
+	assert (idx < _frame_size);
+
+	const int      pos_buf = (_read_pos + idx) & _buf_msk;
+
+	return _buf [pos_buf];
 }
 
 
@@ -307,6 +328,18 @@ void	FrameOverlapAna <T>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <typename T>
+void	FrameOverlapAna <T>::check_frame_ready (bool frame_flag) noexcept
+{
+	if (frame_flag)
+	{
+		_hop_pos  = 0;
+		_read_pos = (_buf_pos - _frame_size) & _buf_msk;
+	}
+}
 
 
 

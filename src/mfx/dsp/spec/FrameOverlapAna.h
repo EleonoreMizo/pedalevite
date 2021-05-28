@@ -70,7 +70,8 @@ public:
 
 	inline bool    process_sample (T x) noexcept;
 	ResProcBlock   process_block (const T src_ptr [], int nbr_spl) noexcept;
-	void           get_frame (T frame_ptr []) noexcept;
+	void           get_frame (T frame_ptr []) const noexcept;
+	inline T       get_frame_sample (int idx) const noexcept;
 
 	void           clear_buffers () noexcept;
 
@@ -87,6 +88,8 @@ protected:
 private:
 
 	typedef std::vector <T> RingBuffer;
+
+	inline void    check_frame_ready (bool frame_flag) noexcept;
 
 	// Input ring buffer
 	RingBuffer     _buf;
@@ -113,6 +116,10 @@ private:
 	// Initial value indicating the distance in samples between the current
 	// point and the next frame. [0 ; _hop_size[
 	int            _hop_reset  = 0;
+
+	// Position of the beginning of the frame within the buffer, when it is
+	// ready. When it is not ready, this value has no meaning.
+	int            _read_pos   = 0;
 
 
 
