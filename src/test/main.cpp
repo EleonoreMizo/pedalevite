@@ -80,6 +80,7 @@
 #include "test/TestLatAlgo.h"
 #include "test/TestMoogLadderDAngelo.h"
 #include "test/TestMoogLadderMystran.h"
+#include "test/TestOnsetNinos2.h"
 #include "test/TestOscSample.h"
 #include "test/TestOscSampleSyncFade.h"
 #include "test/TestOscSampleSyncHard.h"
