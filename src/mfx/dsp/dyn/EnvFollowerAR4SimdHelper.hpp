@@ -152,7 +152,6 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd:
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
 	const auto     coef_a = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r = V128Par::load_f32 (_coef_rls);
 
@@ -212,7 +211,6 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::analyse_blo
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
 	const auto     coef_a = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r = V128Par::load_f32 (_coef_rls);
 
