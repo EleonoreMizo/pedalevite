@@ -5343,6 +5343,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\grn\VelvetConv.hpp">
       <Filter>mfx\dsp\grn</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\OnsetNinos2.h">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\OnsetNinos2.hpp">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

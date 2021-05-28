@@ -831,6 +831,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYinCheap.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\OnsetNinos2.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\OnsetNinos2.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.h" />

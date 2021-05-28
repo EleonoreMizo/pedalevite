@@ -342,6 +342,8 @@ commonsrc = \
         ../../src/mfx/dsp/ana/FreqYin.hpp \
         ../../src/mfx/dsp/ana/FreqYinCheap.cpp \
         ../../src/mfx/dsp/ana/FreqYinCheap.h \
+        ../../src/mfx/dsp/ana/OnsetNinos2.h \
+        ../../src/mfx/dsp/ana/OnsetNinos2.hpp \
         ../../src/mfx/dsp/ana/ValSmooth.h \
         ../../src/mfx/dsp/ana/ValSmooth.hpp \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.cpp \
@@ -1882,6 +1884,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestMoogLadderDAngelo.h \
         ../../src/test/TestMoogLadderMystran.cpp \
         ../../src/test/TestMoogLadderMystran.h \
+        ../../src/test/TestOnsetNinos2.cpp \
+        ../../src/test/TestOnsetNinos2.h \
         ../../src/test/TestOscSample.cpp \
         ../../src/test/TestOscSample.h \
         ../../src/test/TestOscSampleSyncFade.cpp \

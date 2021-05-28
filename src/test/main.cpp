@@ -1923,6 +1923,10 @@ int main (int argc, char *argv [])
 #define main_TEST_SPEED 0
 
 #if 1
+	if (ret_val == 0) ret_val = TestOnsetNinos2::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestVelvetConv::perform_test ();
 #endif
 
