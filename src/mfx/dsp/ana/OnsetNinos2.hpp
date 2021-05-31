@@ -211,12 +211,12 @@ void	OnsetNinos2 <FFT>::set_deadzone (float deadzone) noexcept
 
 /*
 ==============================================================================
-Name: set_threshold
+Name: set_thr_add
 Description:
-	Sets the delta parameter of the algorithm. Too low values give false
-	positives, and too high values miss onsets.
-	Empirical tests showed that 0.9 is a decent value, but refinement could be
-	useful to improve the results on specific sources.
+	Sets the delta parameter of the algorithm. While the main threshold is
+	lambda with set_thr_mul(), this delta helps removing false positive at
+	very low volumes, ignoring instrument noises. 0.1 is a good value for a
+	signal whose peaks are close to 0 dBFS.
 Input parameters:
 	- delta: tunable threshold, >= 0
 Throws: Nothing
@@ -224,11 +224,34 @@ Throws: Nothing
 */
 
 template <class FFT>
-void	OnsetNinos2 <FFT>::set_threshold (float delta) noexcept
+void	OnsetNinos2 <FFT>::set_thr_add (float delta) noexcept
 {
 	assert (delta >= 0);
 
 	_delta = delta;
+}
+
+
+
+/*
+==============================================================================
+Name: set_thr_mul
+Description:
+	Sets the lambda parameter of the algorithm. Too low values give false
+	positives, and too high values miss onsets. 1.5 seems a good overall value.
+	Lambda does not depend on the signal level.
+Input parameters:
+	- lambda: tunable threshold, >= 1
+Throws: Nothing
+==============================================================================
+*/
+
+template <class FFT>
+void	OnsetNinos2 <FFT>::set_thr_mul (float lambda) noexcept
+{
+	assert (lambda >= 1);
+
+	_lambda = lambda;
 }
 
 
@@ -449,8 +472,10 @@ bool	OnsetNinos2 <FFT>::analyse_new_frame () noexcept
 	// Peak-picking
 	const float    odf_ref = _odf_mem.read_at (_delay);
 	const float    odf_max = compute_odf_local_max ();
-	const float    odf_avg = compute_odf_ofs_avg ();
-	if (odf_ref >= odf_max && odf_ref >= odf_avg && _nfsl > _theta)
+	const float    odf_avg = compute_odf_avg ();
+	if (   odf_ref >= odf_max
+	    && odf_ref > odf_avg * _lambda + _delta
+	    &&   _nfsl > _theta)
 	{
 		onset_flag = true;
 		_nfsl      = 0;
@@ -504,7 +529,7 @@ float	OnsetNinos2 <FFT>::compute_odf_local_max () const noexcept
 
 
 template <class FFT>
-float	OnsetNinos2 <FFT>::compute_odf_ofs_avg () const noexcept
+float	OnsetNinos2 <FFT>::compute_odf_avg () const noexcept
 {
 	float          sum     = 0;
 	for (int k = _delay + _a; k >= _delay - _b; --k)
@@ -512,10 +537,9 @@ float	OnsetNinos2 <FFT>::compute_odf_ofs_avg () const noexcept
 		const float    odf = _odf_mem.read_at (k);
 		sum += odf;
 	}
-	const float    avg     = sum / (_a + 1 + _b);
-	const float    avg_ofs = avg + _delta;
+	const float    avg = sum / (_a + 1 + _b);
 
-	return avg_ofs;
+	return avg;
 }
 
 

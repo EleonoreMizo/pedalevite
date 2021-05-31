@@ -65,7 +65,8 @@ int	TestOnsetNinos2::perform_test ()
 
 	mfx::dsp::ana::OnsetNinos2 <ffft::FFTRealFixLen <11> > os_det;
 	os_det.set_sample_freq (sample_freq);
-	os_det.set_threshold (0.9f);
+	os_det.set_thr_add (0.1f);
+	os_det.set_thr_mul (1.5f);
 	os_det.clear_buffers ();
 
 	const int      latency_spl = os_det.compute_latency ();

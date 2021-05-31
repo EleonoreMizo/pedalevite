@@ -3,7 +3,12 @@
         OnsetNinos2.h
         Author: Laurent de Soras, 2021
 
-Onset detector tuned for the guitar.
+Onset detector tuned for the guitar using a slightly modified NINOS2
+algorithm.
+
+The modification is about the delta additive parameter, which is assisted
+with the multiplicative parameter lambda. This makes the algorithm more
+independant of the overal volume of the input.
 
 Template parameters:
 
@@ -88,7 +93,8 @@ public:
 	void           set_gamma (float gamma) noexcept;
 	void           set_pp_param (float alpha, float beta, float a, float b) noexcept;
 	void           set_deadzone (float deadzone) noexcept;
-	void           set_threshold (float delta) noexcept;
+	void           set_thr_add (float delta) noexcept;
+	void           set_thr_mul (float lambda) noexcept;
 
 	int            compute_latency () const noexcept;
 
@@ -118,7 +124,7 @@ private:
 	bool           analyse_new_frame () noexcept;
 	float          compute_odf () const noexcept;
 	float          compute_odf_local_max () const noexcept;
-	float          compute_odf_ofs_avg () const noexcept;
+	float          compute_odf_avg () const noexcept;
 
 	// Sampling rate, Hz. > 0
 	float          _sample_freq = 0;
@@ -180,8 +186,11 @@ private:
 	int            _theta    = 0;
 	int            _delay    = 0;
 
-	// Tunable threshold. >= 0
-	float          _delta    = 0.9f;
+	// Tunable threshold, additive. >= 0
+	float          _delta    = 0.f;
+
+	// Tunable threshold, multiplicative. >= 1
+	float          _lambda   = 1.5f;
 
 	// Number of frames since the last offset.
 	// Initialised to a big number > _theta.
