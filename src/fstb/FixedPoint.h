@@ -213,6 +213,8 @@ inline bool	operator >= (const FixedPoint &left, const FixedPoint &right) noexce
 
 inline FixedPoint	operator + (FixedPoint left, const FixedPoint &right) noexcept;
 inline FixedPoint	operator - (FixedPoint left, const FixedPoint &right) noexcept;
+inline FixedPoint operator * (FixedPoint left, int32_t right) noexcept;
+inline FixedPoint operator * (FixedPoint left, double right) noexcept;
 
 
 

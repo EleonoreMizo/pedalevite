@@ -509,6 +509,24 @@ FixedPoint	operator - (FixedPoint left, const FixedPoint &right) noexcept
 
 
 
+FixedPoint	operator * (FixedPoint left, int32_t right) noexcept
+{
+	left.mul_int (right);
+
+	return left;
+}
+
+
+
+FixedPoint	operator * (FixedPoint left, double right) noexcept
+{
+	left.mul_flt (right);
+
+	return left;
+}
+
+
+
 }  // namespace fstb
 
 
