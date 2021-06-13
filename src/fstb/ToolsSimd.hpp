@@ -699,8 +699,12 @@ float	ToolsSimd::sum_h_flt (VectF32 v) noexcept
 	v = _mm_add_ps (v, s); // v0+v3,v1+v2,v2+v1,v3+v0
 	return _mm_cvtss_f32 (_mm_add_ss (v, _mm_movehl_ps (s, v)));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	float32x2_t    v2 = vadd_f32 (vget_high_f32 (v), vget_low_f32 (v));
-	return vget_lane_f32 (vpadd_f32 (v2, v2), 0);
+	#if fstb_WORD_SIZE == 64
+		return vaddvq_f32 (v);
+	#else
+		float32x2_t    v2 = vadd_f32 (vget_high_f32 (v), vget_low_f32 (v));
+		return vget_lane_f32 (vpadd_f32 (v2, v2), 0);
+	#endif
 #endif // fstb_ARCHI
 }
 
