@@ -167,7 +167,7 @@ private:
 	// Uses:
 	// - Volume analysis and windowing and for a captured grain,
 	// - Grain rendering
-	BufAlign       _buf_tmp;     
+	BufAlign       _buf_tmp;
 
 	dsp::wnd::ProcHann <float>
 	               _grain_win;
