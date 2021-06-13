@@ -318,14 +318,14 @@ public:
 		printFloatAndSpace(x);
 		printFloatAndSpace(y);
 		printString("translate\n");
-		if (angle) {
+		if (angle != 0) {
 			printFloatAndSpace(angle);
 			printString("rotate\n");
 		}
 		newPath();
 		printString("(");
 		printString(text);
-		if (halign) {
+		if (halign != 0) {
 			printString(") dup dup stringwidth pop\n");
 			printFloatAndSpace(-halign);
 			printString("mul dup ");
@@ -343,7 +343,7 @@ public:
 		stroke();
 		newPath();
 		setGray(0);
-		if (!halign)
+		if (halign == 0)
 		{
 			printFloatAndSpace(0);
 		}
@@ -609,7 +609,7 @@ public:
 			printString("%%Trailer\n");
 			fclose(stream);
 		}
-	};
+	}
 };
 
 #endif

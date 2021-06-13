@@ -31,7 +31,7 @@ namespace lal
 {
 	template <typename T> class MatInterface;
 	template <typename T> class MatResizableInterface;
-};
+}
 
 class Testlal
 {

@@ -183,7 +183,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x, float stage_in_ptr
 	check_coef ();
 
 	float          yo = process_sample_input (x);
-	float          y;
+	float          y  = 0.f;
 	for (int n = 0; n < N; ++n)
 	{
 		stage_in_ptr [n] = yo * _d._gc_mul_s;

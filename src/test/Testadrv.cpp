@@ -268,7 +268,7 @@ void	Testadrv::test_nanosleep ()
 		uint64_t  us_sum2 = 0;
 		timespec slp;
 		slp.tv_sec  = 0;
-		slp.tv_nsec = us_tgt * 1000;
+		slp.tv_nsec = long (us_tgt * 1000);
 		timeval t_ref;
 		timeval t_end;
 		gettimeofday (&t_ref, nullptr);

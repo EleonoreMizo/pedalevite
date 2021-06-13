@@ -400,7 +400,7 @@ void	SkoolMood::do_process_block (piapi::ProcInfo &proc)
 				const float    emitterfb = 25.f / fx;
 
 				// 4 stages phasing
-				float          ocvolt;
+				float          ocvolt = 0.f;
 				for (int stage_cnt = 0; stage_cnt < _nbr_stages; ++stage_cnt)
 				{
 					Stage &        stage = chn._stage_arr [stage_cnt];

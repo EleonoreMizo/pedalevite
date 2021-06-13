@@ -86,7 +86,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 ,	_dummy_mix_id (-1)
 ,	_d2d_rec ()
 ,	_d2d_buf_arr ()
-,	_d2d_buf_ptr_arr ({{ 0 }})
+,	_d2d_buf_ptr_arr ({{ nullptr }})
 {
 	_msg_pool.expand_to (1024);
 

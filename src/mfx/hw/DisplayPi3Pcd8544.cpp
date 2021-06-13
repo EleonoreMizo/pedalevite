@@ -218,8 +218,8 @@ void	DisplayPi3Pcd8544::send_data (uint8_t a)
 // data_ptr is not const because the input buffer will be altered.
 void	DisplayPi3Pcd8544::send_line (int x, int row, uint8_t data_ptr [], int len)
 {
-	send_cmd (Cmd_SET_Y | row);
-	send_cmd (Cmd_SET_X | x);
+	send_cmd (uint8_t (Cmd_SET_Y | row));
+	send_cmd (uint8_t (Cmd_SET_X | x  ));
 
 	::digitalWrite (_pin_dc, HIGH);
 	::digitalWrite (_pin_cs, LOW);

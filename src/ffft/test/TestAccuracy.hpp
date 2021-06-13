@@ -124,7 +124,7 @@ int	TestAccuracy <FO>::perform_test_d (FO &fft, const char *class_name_0)
 		compare_vect_display (&s1 [0], &s2 [0], len, max_err);
 		err_avg += max_err;
 	}
-	err_avg /= NBR_ACC_TESTS;
+	err_avg /= BigFloat (NBR_ACC_TESTS);
 
 	printf ("done.\n");
 	printf (
@@ -172,7 +172,7 @@ int	TestAccuracy <FO>::perform_test_i (FO &fft, const char *class_name_0)
 		compare_vect_display (&x1 [0], &x2 [0], len, max_err);
 		err_avg += max_err;
 	}
-	err_avg /= NBR_ACC_TESTS;
+	err_avg /= BigFloat (NBR_ACC_TESTS);
 
 	printf ("done.\n");
 	printf (
@@ -225,7 +225,7 @@ int	TestAccuracy <FO>::perform_test_di (FO &fft, const char *class_name_0)
 		compare_vect_display (&x [0], &y [0], len, max_err);
 		err_avg += max_err;
 	}
-	err_avg /= NBR_ACC_TESTS;
+	err_avg /= BigFloat (NBR_ACC_TESTS);
 
 	printf ("done.\n");
 	printf (

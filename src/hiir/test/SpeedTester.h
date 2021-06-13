@@ -72,7 +72,7 @@ protected:
 
 private:
 
-	enum {         NBR_COEFS = TestedObject::NBR_COEFS };
+	static constexpr int NBR_COEFS = TestedObject::NBR_COEFS;
 
 	TestedObject   _tested_object;
 

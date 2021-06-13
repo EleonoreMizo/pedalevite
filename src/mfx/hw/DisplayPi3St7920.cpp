@@ -446,10 +446,10 @@ void	DisplayPi3St7920::prepare_line_data (SpiBuffer &buf, int &pos, const uint8_
 
 		const uint8_t   d1508 = val >> 8;
 		const uint8_t   d0700 = val & 0xFF;
-		buf [pos + 0] = d1508 & 0xF0;
-		buf [pos + 1] = d1508 << 4;
-		buf [pos + 2] = d0700 & 0xF0;
-		buf [pos + 3] = d0700 << 4;
+		buf [pos + 0] = uint8_t (d1508 & 0xF0);
+		buf [pos + 1] = uint8_t (d1508 << 4  );
+		buf [pos + 2] = uint8_t (d0700 & 0xF0);
+		buf [pos + 3] = uint8_t (d0700 << 4  );
 		pos += 4;
 	}
 }
@@ -459,8 +459,8 @@ void	DisplayPi3St7920::prepare_line_data (SpiBuffer &buf, int &pos, const uint8_
 void	DisplayPi3St7920::send_line_prologue (int x, int y, SpiBuffer &spibuf, int &spipos)
 {
 	::digitalWrite (_pin_cs, HIGH);
-	send_byte_header (0, Cmd_GDRAM_ADR | y);
-	send_byte_raw (      Cmd_GDRAM_ADR | x);
+	send_byte_header (0, uint8_t (Cmd_GDRAM_ADR | y));
+	send_byte_raw (      uint8_t (Cmd_GDRAM_ADR | x));
 	::delayMicroseconds (_delay_chg);
 
 	spibuf [spipos] = Serial_HEADER | Serial_RS;
