@@ -419,6 +419,8 @@ commonsrc = \
         ../../src/mfx/dsp/dly/RingBufVectorizer.cpp \
         ../../src/mfx/dsp/dly/RingBufVectorizer.h \
         ../../src/mfx/dsp/dly/RingBufVectorizer.hpp \
+        ../../src/mfx/dsp/dly/RingFifo.h \
+        ../../src/mfx/dsp/dly/RingFifo.hpp \
         ../../src/mfx/dsp/dyn/Compander.cpp \
         ../../src/mfx/dsp/dyn/Compander.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.h \

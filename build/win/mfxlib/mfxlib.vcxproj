@@ -892,6 +892,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelaySimple.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingFifo.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingFifo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\Compander.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR1LrSimdHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR1LrSimdHelper.hpp" />
