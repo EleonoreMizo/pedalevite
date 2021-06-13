@@ -298,7 +298,7 @@ void	ParamEdit::update_param_txt ()
 
 	Tools::set_param_text (
 		*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_id, type,
-		_name_sptr.get (), *_val_unit_sptr, 0, 0, true
+		_name_sptr.get (), *_val_unit_sptr, nullptr, nullptr, true
 	);
 }
 

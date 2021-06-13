@@ -143,7 +143,7 @@ MsgHandlerInterface::EvtProp	PedalboardConfig::do_handle_evt (const NodeEvt &evt
 					const doc::PedalboardLayout & layout = use_layout ();
 					_ctx._content = layout._pedal_arr [pedal];
 					_page_switcher.call_page (
-						PageType_PEDAL_ACTION_TYPE, 0, node_id
+						PageType_PEDAL_ACTION_TYPE, nullptr, node_id
 					);
 					ret_val = EvtProp_CATCH;
 				}

@@ -55,7 +55,7 @@ std::string	trim_spaces (const char *txt_0);
 long	strstr_ci (const char *s1_0, const char *s2_0);
 bool	strcmp_ci (const char *s1_0, const char *s2_0);
 
-bool	conv_str_to_int64 (int64_t &val, const char *txt_0, int base = 10, long *stop_pos_ptr = 0);
+bool	conv_str_to_int64 (int64_t &val, const char *txt_0, int base = 10, long *stop_pos_ptr = nullptr);
 
 
 

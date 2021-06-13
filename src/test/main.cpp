@@ -1565,7 +1565,7 @@ int	test_adrv_dpvab ()
 
 	double            sample_freq;
 	int               max_block_size;
-	pvab.init (sample_freq, max_block_size, cb, 0, 0, 0);
+	pvab.init (sample_freq, max_block_size, cb, nullptr, 0, 0);
 
 	pvab.start ();
 	std::this_thread::sleep_for (std::chrono::seconds (600));
@@ -2155,7 +2155,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestInterpFtor::perform_test ();
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = test_osc_sin_cos_stable_simd ();
 #endif
 

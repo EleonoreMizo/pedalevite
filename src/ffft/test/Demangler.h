@@ -53,7 +53,8 @@ public:
 	:	_name_0 (name_0)
 	{
 #if ffft_COMPILER == ffft_COMPILER_GCC
-		const char *   dem_0 = abi::__cxa_demangle (name_0, 0, 0, &_status);
+		const char *   dem_0 =
+			abi::__cxa_demangle (name_0, nullptr, nullptr, &_status);
 		if (_status == 0)
 		{
 			_name_0 = dem_0;

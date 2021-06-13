@@ -169,7 +169,7 @@ void	SplitMultiband <T, O0, O1>::set_nbr_bands (int nbr_bands, T * const band_pt
 		// output band indexes
 		int           split_ord = 0;
 		int           band_idx  = 0;
-		build_layout_rec (split_ord, band_idx, 0, 0, 0);
+		build_layout_rec (split_ord, band_idx, 0, 0, nullptr);
 		assert (split_ord == nbr_split);
 		assert (band_idx == nbr_bands);
 		assert (std::count_if (

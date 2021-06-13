@@ -556,10 +556,8 @@ void	Delay2::update_param (bool force_flag)
 
 		if (_param_change_flag_duck (true) || force_flag)
 		{
-			const float    at =
-				float (_state_set.get_val_end_nat (Param_DUCK_TIME));
-			const float    rt = at * 4;
-			_env_duck.set_times (at, rt);
+			_duck_time = float (_state_set.get_val_end_nat (Param_DUCK_TIME));
+			_env_duck.set_times (_duck_time, _duck_time * 4);
 
 			const float    sensitivity =
 				float (_state_set.get_val_end_nat (Param_DUCK_SENS));

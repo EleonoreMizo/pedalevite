@@ -284,7 +284,7 @@ private:
 
 #if (fstb_SYS == fstb_SYS_LINUX)
 
-Context * Context::_instance_ptr = 0;
+Context * Context::_instance_ptr = nullptr;
 
 void	Context::signal_handler (int sig)
 {
@@ -477,7 +477,7 @@ void	Context::do_set_tuner (bool active_flag)
 		const mfx::uitk::Page & page_mgr = _page_set.use_page_mgr ();
 		page_switcher.call_page (
 			mfx::uitk::pg::PageType_TUNER,
-			0,
+			nullptr,
 			page_mgr.get_cursor_node ()
 		);
 	}

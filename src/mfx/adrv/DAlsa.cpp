@@ -49,7 +49,7 @@ namespace adrv
 
 
 DAlsa::DAlsa ()
-:	_cb_ptr (0)
+:	_cb_ptr (nullptr)
 ,	_block_size (0)
 ,	_sample_freq (0)
 ,	_chn_base_arr ({{ 0, 0 }})
@@ -62,8 +62,8 @@ DAlsa::DAlsa ()
 ,	_thread_audio ()
 ,	_quit_flag (false)
 {
-	assert (_instance_ptr == 0);
-	if (_instance_ptr != 0)
+	assert (_instance_ptr == nullptr);
+	if (_instance_ptr != nullptr)
 	{
 		throw std::runtime_error ("mfx::adrv::DAlsa already instantiated.");
 	}
@@ -74,16 +74,16 @@ DAlsa::DAlsa ()
 
 DAlsa::~DAlsa ()
 {
-	_instance_ptr = 0;
+	_instance_ptr = nullptr;
 
 	stop ();
 
 	for (int dir = 0; dir < Dir_NBR_ELT; ++ dir)
 	{
-		if (_handle_arr [dir] != 0)
+		if (_handle_arr [dir] != nullptr)
 		{
 			::snd_pcm_close (_handle_arr [dir]);
-			_handle_arr [dir] = 0;
+			_handle_arr [dir] = nullptr;
 		}
 	}
 }
@@ -108,7 +108,7 @@ int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 	_chn_base_arr [Dir_IN ] = chn_idx_in;
 	_chn_base_arr [Dir_OUT] = chn_idx_out;
 
-	if (driver_0 == 0)
+	if (driver_0 == nullptr)
 	{
 		driver_0 = "plughw:CARD=USB";
 	}
@@ -300,7 +300,7 @@ int	DAlsa::configure_alsa_audio (int dir) noexcept
 	fprintf (stderr, "Configuring %s stream...\n", _dir_name_0_arr [dir]);
 
 	// Allocate memory for hardware parameter structure
-	::snd_pcm_hw_params_t * hw_params_ptr = 0;
+	::snd_pcm_hw_params_t * hw_params_ptr = nullptr;
 	if (ret_val == 0)
 	{
 		ret_val = ::snd_pcm_hw_params_malloc (&hw_params_ptr);
@@ -365,7 +365,7 @@ int	DAlsa::configure_alsa_audio (int dir) noexcept
 	{
 		unsigned int   rate = 44100;
 		ret_val = ::snd_pcm_hw_params_set_rate_near (
-			_handle_arr [dir], hw_params_ptr, &rate, 0
+			_handle_arr [dir], hw_params_ptr, &rate, nullptr
 		);
 		if (ret_val == 0)
 		{
@@ -403,7 +403,7 @@ int	DAlsa::configure_alsa_audio (int dir) noexcept
 	{
 		unsigned int   nper = _tgt_nbr_periods;
 		ret_val = ::snd_pcm_hw_params_set_periods_near (
-			_handle_arr [dir], hw_params_ptr, &nper, 0
+			_handle_arr [dir], hw_params_ptr, &nper, nullptr
 		);
 		if (ret_val == 0)
 		{
@@ -425,7 +425,7 @@ int	DAlsa::configure_alsa_audio (int dir) noexcept
 	{
 		::snd_pcm_uframes_t  per_size = _tgt_period_size;
 		ret_val = ::snd_pcm_hw_params_set_period_size_near (
-			_handle_arr [dir], hw_params_ptr, &per_size, 0
+			_handle_arr [dir], hw_params_ptr, &per_size, nullptr
 		);
 		if (ret_val == 0)
 		{
@@ -456,10 +456,10 @@ int	DAlsa::configure_alsa_audio (int dir) noexcept
 		}
 	}
 
-	if (hw_params_ptr != 0)
+	if (hw_params_ptr != nullptr)
 	{
 		::snd_pcm_hw_params_free (hw_params_ptr);
-		hw_params_ptr = 0;
+		hw_params_ptr = nullptr;
 	}
 
 	return ret_val;
@@ -644,7 +644,7 @@ fprintf (stderr, "w Short write\n");
 
 
 
-DAlsa *	DAlsa::_instance_ptr = 0;
+DAlsa *	DAlsa::_instance_ptr = nullptr;
 
 
 

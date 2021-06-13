@@ -61,9 +61,9 @@ int	TestDisplayFrameBufSimple::perform_test ()
 	printf ("Bits per pixel: %d\n", vinfo.bits_per_pixel);
 	printf ("Stride (bytes): %d\n", finfo.line_length);
 
-	uint32_t * fb_ptr = reinterpret_cast <uint32_t *> (
-		mmap (0, finfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0)
-	);
+	uint32_t * fb_ptr = reinterpret_cast <uint32_t *> (mmap (
+		nullptr, finfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0
+	));
 
 	const int nbr_frames = vinfo.xres;
 

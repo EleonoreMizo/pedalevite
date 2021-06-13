@@ -50,7 +50,7 @@ MmapPtr::MmapPtr (uint32_t base, uint32_t len, const char dev_0 [], int flags)
 ,	_len (0)
 {
 	assert (len > 0);
-	assert (dev_0 != 0);
+	assert (dev_0 != nullptr);
 	assert (dev_0 [0] != '\0');
 
 	int            fd = open (dev_0, flags);
@@ -60,7 +60,7 @@ MmapPtr::MmapPtr (uint32_t base, uint32_t len, const char dev_0 [], int flags)
 	}
 
 	void *         v_ptr =
-		mmap (0, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, base);
+		mmap (nullptr, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, base);
 	close (fd);
 
 	if (v_ptr == MAP_FAILED)

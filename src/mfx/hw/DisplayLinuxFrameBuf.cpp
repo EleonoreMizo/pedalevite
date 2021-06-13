@@ -72,7 +72,7 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 ,	_info_var ()
 ,	_mm_fb_ptr (nullptr)
 ,	_map_len (0)
-,	_pix_fb_ptr (0)
+,	_pix_fb_ptr (nullptr)
 ,	_stride_s (0)
 ,	_true_w (0)
 ,	_true_h (0)
@@ -127,7 +127,7 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 
 		_map_len   = _info_fix.smem_len;
 		_mm_fb_ptr = reinterpret_cast <uint8_t *> (mmap (
-			0, _map_len, PROT_READ | PROT_WRITE, MAP_SHARED, _fb_fd, 0
+			nullptr, _map_len, PROT_READ | PROT_WRITE, MAP_SHARED, _fb_fd, 0
 		));
 		if (_mm_fb_ptr == MAP_FAILED)
 		{

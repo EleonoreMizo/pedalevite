@@ -52,9 +52,9 @@ public:
 	inline unsigned long
 	               compute_internal_sort_code2 () const;
 
-	int32_t        _upper;                       // UnicodeData.txt, column 12. Code point of the upper case equivalent, or 0 if none
-	int32_t        _lower;                       // UnicodeData.txt, column 13. Code point of the lower case equivalent, or 0 if none
-	int32_t        _title;                       // UnicodeData.txt, column 14. Code point of the title case equivalent, or 0 if none
+	char32_t       _upper;                       // UnicodeData.txt, column 12. Code point of the upper case equivalent, or 0 if none
+	char32_t       _lower;                       // UnicodeData.txt, column 13. Code point of the lower case equivalent, or 0 if none
+	char32_t       _title;                       // UnicodeData.txt, column 14. Code point of the title case equivalent, or 0 if none
 	uint8_t        _digit;                       // UnicodeData.txt, column 6. Decimal digit, or 0 if none
 	uint8_t        _categ;                       // UnicodeData.txt, column 2. General Category (Categ type)
 	uint8_t        _kangxi_radical_stroke_cnt;   // (Currently ignored, always 0) Unihan.txt, kRSUnicode field, first number. KangXi Radical Stroke Count

@@ -126,7 +126,6 @@ private:
 	dsp::ctrl::Ramp                     // Samples
 	               _input_gain;
 	float          _bbd_speed;
-	float          _pitch_oct;
 	dsp::ctrl::Ramp
 	               _fdbk;
 	dsp::ctrl::Ramp

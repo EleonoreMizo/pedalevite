@@ -47,15 +47,15 @@ namespace adrv
 
 
 DJack::DJack ()
-:	_cb_ptr (0)
+:	_cb_ptr (nullptr)
 ,	_chn_base_arr ({{ 0, 0 }})
-,	_client_ptr (0)
+,	_client_ptr (nullptr)
 ,	_mfx_port_arr ()
 ,	_status (::JackServerFailed)
 ,	_msg_err ()
 {
-	assert (_instance_ptr == 0);
-	if (_instance_ptr != 0)
+	assert (_instance_ptr == nullptr);
+	if (_instance_ptr != nullptr)
 	{
 		throw std::runtime_error ("mfx::adrv::DJack already instantiated.");
 	}
@@ -67,7 +67,7 @@ DJack::DJack ()
 DJack::~DJack ()
 {
 	stop ();
-	_instance_ptr = 0;
+	_instance_ptr = nullptr;
 }
 
 
@@ -92,7 +92,7 @@ int	DJack::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 	_client_ptr = ::jack_client_open (
 		"Pedalevite", ::JackNullOption, &_status, 0
 	);
-	if (_client_ptr == 0)
+	if (_client_ptr == nullptr)
 	{
 		char           txt_0 [1023+1];
 		fstb::snprintf4all (
@@ -161,7 +161,7 @@ int	DJack::do_start () noexcept
 					port_dir [dir],
 					0
 				);
-				if (_mfx_port_arr [dir] [chn] == 0)
+				if (_mfx_port_arr [dir] [chn] == nullptr)
 				{
 					_msg_err = "No more JACK ports available.";
 					ret_val = -1;
@@ -189,11 +189,11 @@ int	DJack::do_start () noexcept
 	{
 		const char **  port_0_arr = ::jack_get_ports (
 			_client_ptr,
-			0,
-			0,
+			nullptr,
+			nullptr,
 			::JackPortIsPhysical | port_dir [1 - dir]
 		);
-		if (port_0_arr == 0)
+		if (port_0_arr == nullptr)
 		{
 			char           txt_0 [1023+1];
 			fstb::snprintf4all (
@@ -207,7 +207,7 @@ int	DJack::do_start () noexcept
 		else
 		{
 			fprintf (stderr, "Available ports for %s:\n", _dir_name_0_arr [dir]);
-			for (int index = 0; port_0_arr [index] != 0; ++index)
+			for (int index = 0; port_0_arr [index] != nullptr; ++index)
 			{
 				fprintf (stderr, "%d: %s\n", index, port_0_arr [index]);
 			}
@@ -215,7 +215,7 @@ int	DJack::do_start () noexcept
 			for (int chn = 0; chn < _nbr_chn && ret_val == 0; ++chn)
 			{
 				const int      chn_jack = chn + _chn_base_arr [dir];
-				if (port_0_arr [chn_jack] == 0)
+				if (port_0_arr [chn_jack] == nullptr)
 				{
 					char           txt_0 [1023+1];
 					fstb::snprintf4all (
@@ -247,7 +247,7 @@ int	DJack::do_start () noexcept
 			}
 		}
 
-		if (port_0_arr != 0)
+		if (port_0_arr != nullptr)
 		{
 			::jack_free (port_0_arr);
 		}
@@ -274,10 +274,10 @@ int	DJack::do_stop () noexcept
 {
 	_msg_err.clear ();
 
-	if (_client_ptr != 0)
+	if (_client_ptr != nullptr)
 	{
 		::jack_client_close (_client_ptr);
-		_client_ptr = 0;
+		_client_ptr = nullptr;
 	}
 
 	return 0;
@@ -344,7 +344,7 @@ int	DJack::process_jack (::jack_nframes_t nbr_spl, void *arg) noexcept
 
 
 
-DJack *	DJack::_instance_ptr = 0;
+DJack *	DJack::_instance_ptr = nullptr;
 
 
 

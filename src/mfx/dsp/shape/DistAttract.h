@@ -87,7 +87,6 @@ private:
 
 	BipolarVal		_lvl_a {{ 1, -1 }};  // |a| < b
 	float          _lvl_b         = 2.f;
-	float          _center_a      = 0;  // (_lvl_a [0] + _lvl_a [1]) / 2
 
 	bool           _mad_flag      = false; // Mode
 	float          _sign          = 1;  // for Mad mode

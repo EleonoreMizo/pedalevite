@@ -80,7 +80,7 @@ namespace adrv
 
 DPvabDirect::DPvabDirect ()
 :	_gpio ()
-,	_cb_ptr (0)
+,	_cb_ptr (nullptr)
 ,	_lrclk_cur (0)
 ,	_btclk_cur (0)
 ,	_clk_cnt (0)
@@ -565,7 +565,7 @@ volatile uint32_t *	DPvabDirect::GpioAccess::map_periph (uint32_t base, uint32_t
 	}
 
 	void *         v_ptr =
-		mmap (0, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, base);
+		mmap (nullptr, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, base);
 	close (fd);
 
 	if (v_ptr == MAP_FAILED)

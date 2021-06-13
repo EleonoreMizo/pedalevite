@@ -190,7 +190,7 @@ MsgHandlerInterface::EvtProp	PedalEditStep::do_handle_evt (const NodeEvt &evt)
 					_ctx._action_index = nbr_actions;
 					update_model ();
 					_page_switcher.call_page (
-						PageType_PEDAL_EDIT_ACTION, 0, node_id
+						PageType_PEDAL_EDIT_ACTION, nullptr, node_id
 					);
 				}
 				break;
@@ -213,7 +213,7 @@ MsgHandlerInterface::EvtProp	PedalEditStep::do_handle_evt (const NodeEvt &evt)
 				{
 					_ctx._action_index = node_id - Entry_ACTION_LIST;
 					_page_switcher.call_page (
-						PageType_PEDAL_EDIT_ACTION, 0, node_id
+						PageType_PEDAL_EDIT_ACTION, nullptr, node_id
 					);
 				}
 				else

@@ -146,8 +146,8 @@ private:
 		alignas (_simd_alig) Buffer
 		               _buf_tmp;
 
-		// Output buffer, provided by class user. 0 = not set
-		float *        _out_ptr = 0;
+		// Output buffer, provided by class user. nullptr = not set
+		float *        _out_ptr = nullptr;
 	};
 	typedef std::vector <Band, fstb::AllocAlign <Band, _simd_alig> > BandArray;
 

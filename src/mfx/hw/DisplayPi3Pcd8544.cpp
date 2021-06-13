@@ -83,16 +83,16 @@ DisplayPi3Pcd8544::~DisplayPi3Pcd8544 ()
 {
 	_thread_spi.remove_cb (*this);
 
-	MsgCell *      cell_ptr = 0;
+	MsgCell *      cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _msg_queue.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 
 	close (_hnd_spi);
 	_hnd_spi = -1;
@@ -142,7 +142,7 @@ const uint8_t *	DisplayPi3Pcd8544::do_use_screen_buf () const
 void	DisplayPi3Pcd8544::do_refresh (int x, int y, int w, int h)
 {
 	MsgCell *      cell_ptr = _msg_pool.take_cell (true);
-	if (cell_ptr == 0)
+	if (cell_ptr == nullptr)
 	{
 		assert (false);
 	}
@@ -261,11 +261,11 @@ void	DisplayPi3Pcd8544::check_msg ()
 	int            y1 = INT_MAX;
 	int            x2 = INT_MIN;
 	int            y2 = INT_MIN;
-	MsgCell *      cell_ptr = 0;
+	MsgCell *      cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _msg_queue.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			x1 = std::min (x1, cell_ptr->_val._x);
 			y1 = std::min (y1, cell_ptr->_val._y);
@@ -275,7 +275,7 @@ void	DisplayPi3Pcd8544::check_msg ()
 			return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 
 	if (x1 < x2)
 	{

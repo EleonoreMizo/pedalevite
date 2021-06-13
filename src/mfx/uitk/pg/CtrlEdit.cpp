@@ -559,7 +559,7 @@ void	CtrlEdit::update_display ()
 				Tools::set_param_text (
 					*_model_ptr, *_view_ptr, _val_unit_w,
 					index, val, _loc_edit._slot_id, type,
-					0, *(_minmax [mm]._val_unit_sptr), 0, 0, true
+					nullptr, *(_minmax [mm]._val_unit_sptr), nullptr, nullptr, true
 				);
 				_minmax [mm]._val_unit_sptr->show (! _curve_mode_flag);
 				_minmax [mm]._label_sptr->show (! _curve_mode_flag);

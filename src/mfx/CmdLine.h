@@ -41,7 +41,7 @@ class CmdLine
 
 public:
 
-	void           set (int argc, char *argv [], char *envp [] = 0);
+	void           set (int argc, char *argv [], char *envp [] = nullptr);
 	int            get_argc () const;
 	char * const * use_argv () const;
 	char * const * use_envp () const;

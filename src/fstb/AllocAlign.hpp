@@ -80,7 +80,7 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 #elif (defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) \
 	&& ! defined (STM32H750xx)
 
-	pointer        zone_ptr = 0;
+	pointer        zone_ptr = nullptr;
 	void *         tmp_ptr;
 	if (posix_memalign (&tmp_ptr, ALIG, nbr_bytes) == 0)
 	{
@@ -93,8 +93,8 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 	const size_t   offset      = ptr_size + ALIG - 1;
 	const size_t   alloc_bytes = offset + nbr_bytes;
 	void *         alloc_ptr   = new char [alloc_bytes];
-	pointer        zone_ptr    = 0;
-	if (alloc_ptr != 0)
+	pointer        zone_ptr    = nullptr;
+	if (alloc_ptr != nullptr)
 	{
 		const intptr_t    alloc_l = reinterpret_cast <intptr_t> (alloc_ptr);
 		const intptr_t    zone_l  = (alloc_l + offset) & (-ALIG);
@@ -149,7 +149,7 @@ void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n) noexcept
 		const intptr_t zone_l    = reinterpret_cast <intptr_t> (ptr);
 		void **			ptr_ptr   = reinterpret_cast <void **> (zone_l - ptr_size);
 		void *			alloc_ptr = *ptr_ptr;
-		assert (alloc_ptr != 0);
+		assert (alloc_ptr != nullptr);
 		assert (reinterpret_cast <intptr_t> (alloc_ptr) < zone_l);
 
 		delete [] reinterpret_cast <char *> (alloc_ptr);

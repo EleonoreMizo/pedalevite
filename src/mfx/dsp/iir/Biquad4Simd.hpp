@@ -1114,8 +1114,8 @@ void	Biquad4Simd <VD, VS, VP>::process_block_serial_immediate (float out_ptr [],
 		Proc::process_block_serial_immediate_post (
 			_data,
 			&out_ptr [nbr_spl - _latency_serial],
-			0,
-			0
+			nullptr,
+			nullptr
 		);
 	}
 }
@@ -1333,8 +1333,8 @@ void	Biquad4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], co
 		Proc::process_block_2x2_immediate_post (
 			_data,
 			&out_ptr [(nbr_spl - _latency_2x2) * 2],
-			0,
-			0
+			nullptr,
+			nullptr
 		);
 	}
 }

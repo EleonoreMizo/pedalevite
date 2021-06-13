@@ -60,7 +60,7 @@ int	TestUserInputPi3::perform_test ()
 	do
 	{
 		MQueue::CellType * cell_ptr = queue_input.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			const mfx::ui::UserInputMsg & msg  = cell_ptr->_val;
 			const mfx::ui::UserInputType  type = msg.get_type ();

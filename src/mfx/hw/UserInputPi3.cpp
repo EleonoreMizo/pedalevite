@@ -170,7 +170,7 @@ UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 	{
 		const int      nbr_dev =
 			do_get_nbr_param (static_cast <ui::UserInputType> (i));
-		_recip_list [i].resize (nbr_dev, 0);
+		_recip_list [i].resize (nbr_dev, nullptr);
 	}
 
 	for (int p = 0; p < _nbr_dev_23017; ++p)
@@ -234,7 +234,7 @@ int	UserInputPi3::do_get_nbr_param (ui::UserInputType type) const
 void	UserInputPi3::do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr)
 {
 	const bool     send_flag =
-		(queue_ptr != 0 &&_recip_list [type] [index] != queue_ptr);
+		(queue_ptr != nullptr &&_recip_list [type] [index] != queue_ptr);
 
 	_recip_list [type] [index] = queue_ptr;
 
@@ -504,10 +504,10 @@ void	UserInputPi3::handle_pot (int index, int val, std::chrono::nanoseconds cur_
 void	UserInputPi3::enqueue_val (std::chrono::nanoseconds date, ui::UserInputType type, int index, float val)
 {
 	MsgQueue *     queue_ptr = _recip_list [type] [index];
-	if (queue_ptr != 0)
+	if (queue_ptr != nullptr)
 	{
 		MsgCell *      cell_ptr = _msg_pool.take_cell (true);
-		if (cell_ptr == 0)
+		if (cell_ptr == nullptr)
 		{
 			assert (false);
 		}
