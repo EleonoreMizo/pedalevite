@@ -22,6 +22,16 @@ AC_DEFINE_UNQUOTED([PV_VERSION], [($pv_version)], [Pedale Vite version. 1 or 2.]
 AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [Compilation options required for debugging. [default=no]]))
 AC_ARG_ENABLE([clang], AS_HELP_STRING([--enable-clang], [Use Clang as compiler along with libc++. [default=no]]))
 
+
+
+X86="false"
+PPC="false"
+ARM="false"
+WIN="false"
+UNX="false"
+MAC="false"
+CLG="false"
+
 AS_IF(
     [test "x$enable_debug" = "xyes"],
     [
@@ -34,6 +44,7 @@ AS_IF(
 AS_IF(
     [test "x$enable_clang" = "xyes"],
     [
+        CLG="true"
         CXX="clang++"
         CC="clang"
         LD="clang++"
@@ -44,15 +55,6 @@ AS_IF(
     ],
     [COMPWARNFLAGS="-Wduplicated-cond -Wduplicated-branches -Wlogical-op"]
 )
-
-
-
-X86="false"
-PPC="false"
-ARM="false"
-WIN="false"
-UNX="false"
-MAC="false"
 
 AS_CASE(
     [$host_cpu],
@@ -77,9 +79,6 @@ AC_LANG_PUSH([C++])
 #AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++17], [CXXSTD="c++17"]))
 AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++14], [CXXSTD="c++14"]))
 AS_IF([test "x$CXXSTD" = "x"], AC_MSG_ERROR([Minimum requirement: C++14]))
-AX_CHECK_COMPILE_FLAG([-Wunused-private-field]        , [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-unused-private-field"]        , , [-Werror])
-AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument], [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-unused-command-line-argument"], , [-Werror])
-AX_CHECK_COMPILE_FLAG([-Wexpansion-to-defined]        , [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-expansion-to-defined"]        , , [-Werror])
 AC_LANG_POP([C++])
 
 AX_PTHREAD
@@ -121,7 +120,8 @@ AS_IF(
 AS_IF(
     [test "x$X86" = "xtrue"],
     [
-        MFLAGS="$MFLAGS -mfpmath=sse -msse2 -Wno-ignored-attributes"
+        MFLAGS="$MFLAGS -mfpmath=sse -msse2"
+        COMPWARNFLAGS="$COMPWARNFLAGS -Wno-ignored-attributes"
         # We need this to use CMPXCHG16B for 2x64-bit CAS (compare and swap)
         AS_IF([test "x$BITS" = "x64"], [MFLAGS="$MFLAGS -mcx16"])
     ]
@@ -150,7 +150,7 @@ AS_IF(
             [MFLAGS="$MFLAGS -march=armv8-a -mtune=cortex-a53"]
         )
         # GCC 7 emits some warnings about ABI changes when using std::vector
-        AX_CHECK_COMPILE_FLAG([-Wpsabi], [MFLAGS="$MFLAGS -Wno-psabi"], , [-Werror])
+        AX_CHECK_COMPILE_FLAG([-Wpsabi], [COMPWARNFLAGS="$COMPWARNFLAGS -Wno-psabi"], , [-Werror])
     ]
 )
 
@@ -168,6 +168,7 @@ AM_CONDITIONAL([X86], [test "x$X86" = "xtrue"])
 AM_CONDITIONAL([ARM], [test "x$ARM" = "xtrue"])
 AM_CONDITIONAL([UNX], [test "x$UNX" = "xtrue"])
 AM_CONDITIONAL([WIN], [test "x$WIN" = "xtrue"])
+AM_CONDITIONAL([CLG], [test "x$CLG" = "xtrue"])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

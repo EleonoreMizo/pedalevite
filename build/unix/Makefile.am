@@ -9,6 +9,22 @@ warningflags = \
         -Wnull-dereference \
         -Wvla \
         $(COMPWARNFLAGS)
+
+if CLG
+
+# Clang
+warningflags += \
+        -Wno-unused-private-field \
+        -Wno-unused-command-line-argument
+
+else
+
+# GCC
+warningflags += \
+        -Wno-expansion-to-defined
+
+endif
+
 warnflagscpp =
 includeflags = -I$(srcdir)/../../src
 if WIN
