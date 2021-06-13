@@ -23,7 +23,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/dsp/dly/RingBufVectorizer.h"
 
 #include <cassert>

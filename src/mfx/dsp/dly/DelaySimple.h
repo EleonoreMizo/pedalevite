@@ -97,8 +97,8 @@ private:
 	               delay (int pos) const noexcept;
 	int            write_block_internal (const T src_ptr [], int nbr_spl) noexcept;
 
-	Buffer         _buf           = Buffer (64, 0);
-	int            _len           = 64; // Buffer length in samples, power of 2, > 0
+	Buffer         _buf           = Buffer (64, T (0));
+	int            _len           = int (_buf.size ()); // Buffer length in samples, power of 2, > 0
 	int            _mask          = _len - 1;
 	int            _pos_w         = 0;  // Writing position, [0 ; _len[
 	int            _dly           = 0;  // Samples, >= 0
