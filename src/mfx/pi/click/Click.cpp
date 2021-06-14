@@ -194,7 +194,7 @@ void	Click::do_process_block (piapi::ProcInfo &proc)
 				}
 				if (_rnd_pos >= 1)
 				{
-					_rnd_val = ((_rnd_gen () >> 16) & 2) - 1.f;
+					_rnd_val = float ((_rnd_gen () >> 16) & 2) - 1.f;
 					_rnd_pos -= 1;
 				}
 			}

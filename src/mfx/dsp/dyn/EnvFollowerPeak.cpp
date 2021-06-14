@@ -154,7 +154,7 @@ float	EnvFollowerPeak::analyse_block_cst (float x, int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
-	const float    xa    = fabs (x);
+	const float    xa    = fabsf (x);
 	const float    delta = xa - _state;
 	const float    coef  = (delta >= 0) ? _coef_a : _coef_r;
 

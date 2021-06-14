@@ -231,7 +231,7 @@ void	PitchDetect2::do_process_block (piapi::ProcInfo &proc)
 			{
 				// 220 * 2^0.25
 				const float    fmult = 1.0f / 261.6255653005986346778499935233f;
-				pitch = log2 (_freq * fmult);
+				pitch = log2f (_freq * fmult);
 				_last_valid_output = pitch;
 			}
 		}

@@ -571,8 +571,8 @@ void	Levels::draw_dsp_meter (const MeterResult &meter)
 #endif // PV_VERSION
 	const Vec2d    size  = _dsp_sptr->get_bounding_box ().get_size ();
 	const int      bar_w = size [0] - 2 * _scale;
-	int            pl   = fstb::floor_int (meter._rms * bar_w);
-	int            pr   = fstb::ceil_int (meter._peak * bar_w);
+	int            pl   = fstb::floor_int (meter._rms * float (bar_w));
+	int            pr   = fstb::ceil_int (meter._peak * float (bar_w));
 	pl = fstb::limit (pl,      1, bar_w - 1);
 	pr = fstb::limit (pr, pl + 1, bar_w    );
 
@@ -616,7 +616,7 @@ float	Levels::conv_level_to_pix (float lvl) const
 #else // PV_VERSION
 	const float    db_min = -80;
 #endif // PV_VERSION
-	const float    db = 20 * log10 (std::max (lvl, 1e-10f));
+	const float    db = 20 * log10f (std::max (lvl, 1e-10f));
 	// -80...-20 -> 0...40
 	// -20...0...? -> 40...104...124
 	float          x = 0;

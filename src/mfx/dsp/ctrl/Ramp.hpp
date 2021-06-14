@@ -54,7 +54,7 @@ void	Ramp::set_time (int nbr_spl, float time_step) noexcept
 {
 	assert (nbr_spl > 0);
 	assert (time_step > 0);
-	assert (fabs (nbr_spl * time_step - 1) < 1e-6f);
+	assert (fabsf (float (nbr_spl) * time_step - 1) < 1e-6f);
 
 	if (nbr_spl != _ramp_time)
 	{
@@ -95,7 +95,7 @@ void	Ramp::tick (int nbr_spl) noexcept
 	_val_beg   = _val_end;
 	if (_ramp_pos > 0)
 	{
-		_val_end  += _step * nbr_spl;
+		_val_end  += _step * float (nbr_spl);
 		_ramp_pos -= nbr_spl;
 		if (_ramp_pos <= 0)
 		{

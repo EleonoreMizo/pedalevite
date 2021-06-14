@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include	"mfx/dsp/rspl/Voice.h"
 #include	"mfx/dsp/rspl/InterpolatorInterface.h"
@@ -344,7 +345,7 @@ void	Voice::process_block (float *out_ptr_arr [], int nbr_spl) noexcept
 	if (_fade_rem_spl > 0)
 	{
 		const int      fade_len = std::min (_fade_rem_spl, nbr_spl);
-		const float    fade_end_val = _fade_val + _fade_step * fade_len;
+		const float    fade_end_val = _fade_val + _fade_step * float (fade_len);
 
 		for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
 		{
@@ -383,13 +384,11 @@ void	Voice::process_block (float *out_ptr_arr [], int nbr_spl) noexcept
 
 void	Voice::conv_pos_flt_to_fix (int64_t &pos_int, uint32_t &pos_frac, double pos) noexcept
 {
-	const float		uint_scale = 65536.0f * 65536.0f;
-
 	pos_int = fstb::floor_int64 (pos);
 	const int64_t	frac =
-		fstb::floor_int64 ((pos - pos_int) * uint_scale);
+		fstb::floor_int64 ((pos - double (pos_int)) * fstb::TWOPM32);
 	assert (frac >= 0);
-	assert (double (frac) < double (uint_scale));	// double required here (> 32 bit mantissa)
+	assert (frac < int64_t (fstb::TWOP32));
 	pos_frac = uint32_t (frac);
 }
 
@@ -427,7 +426,7 @@ void	Voice::fade_to (float val) noexcept
 		_fade_rem_spl = std::max (_fade_rem_spl, 1);
 
 		const float		dif = val - _fade_val;
-		_fade_step = dif / _fade_rem_spl;
+		_fade_step = dif / float (_fade_rem_spl);
 	}
 }
 

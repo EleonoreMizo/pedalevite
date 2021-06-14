@@ -33,7 +33,7 @@ void ASIOConvertSamples::convertMono8Unsigned(long *source, char *dest, long fra
 		a = c[0];
 #endif
 		c += 4;
-		a -= 0x80U;
+		a -= (unsigned char) (0x80U);
 		*++dest = a;
 	}
 }
@@ -176,8 +176,8 @@ void ASIOConvertSamples::convertStereo8InterleavedUnsigned(long *left, long *rig
 #endif
 		cl += 4;
 		cr += 4;
-		a -= 0x80U;
-		b -= 0x80U;
+		a -= (unsigned char) (0x80U);
+		b -= (unsigned char) (0x80U);
 		*++dest = a;
 		*++dest = b;
 	}	
@@ -362,8 +362,8 @@ void ASIOConvertSamples::convertStereo8Unsigned(long *left, long *right, char *d
 #endif
 		cl += 4;
 		cr += 4;
-		a -= 0x80U;
-		b -= 0x80U;
+		a -= (unsigned char) (0x80U);
+		b -= (unsigned char) (0x80U);
 		*++dLeft = a;
 		*++dRight = b;
 	}	
@@ -574,13 +574,13 @@ void ASIOConvertSamples::int32msb16shiftedTo16inPlace(long *in, long frames, lon
 void ASIOConvertSamples::int24msbto16inPlace(unsigned char *in, long frames)
 {
 	short a;
-	short* out = (short*)in;
+	short* out = reinterpret_cast <short*> (in);
 	while(--frames >= 0)
 	{
 #if ASIO_LITTLE_ENDIAN
 		a = (short)in[2];
 		a <<= 8;
-		a |= (in[1] & 0xff);
+		a |= short (in[1] & 0xff);
 #else
 		a = (short)in[0];
 		a <<= 8;

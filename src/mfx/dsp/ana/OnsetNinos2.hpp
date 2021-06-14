@@ -404,7 +404,7 @@ void	OnsetNinos2 <FFT>::update_peak_pick_cst () noexcept
 {
 	assert (_sample_freq > 0);
 
-	const float    mult = _sample_freq / _hop_size;
+	const float    mult = _sample_freq / float (_hop_size);
 	_alpha = fstb::round_int (_alpha_s * mult);
 	_beta  = fstb::round_int (_beta_s  * mult);
 	_a     = fstb::round_int (_a_s     * mult);
@@ -427,7 +427,7 @@ void	OnsetNinos2 <FFT>::update_theta () noexcept
 	{
 		_theta_s = _fft_len / _sample_freq;
 	}
-	_theta = fstb::ceil_int (_theta_s * _sample_freq / _hop_size);
+	_theta = fstb::ceil_int (_theta_s * _sample_freq / float (_hop_size));
 }
 
 
@@ -537,10 +537,17 @@ float	OnsetNinos2 <FFT>::compute_odf_avg () const noexcept
 		const float    odf = _odf_mem.read_at (k);
 		sum += odf;
 	}
-	const float    avg = sum / (_a + 1 + _b);
+	const float    avg = sum / float (_a + 1 + _b);
 
 	return avg;
 }
+
+
+
+template <class FFT>
+constexpr int	OnsetNinos2 <FFT>::_fft_len;
+template <class FFT>
+constexpr int	OnsetNinos2 <FFT>::_nbr_bins;
 
 
 

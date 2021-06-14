@@ -433,7 +433,7 @@ void	Delay2::do_process_block (piapi::ProcInfo &proc)
 		}
 
 		// Feedback
-		float          xfdbk_end = xfdbk_beg + xfdbk_stp * work_len;
+		float          xfdbk_end = xfdbk_beg + xfdbk_stp * float (work_len);
 		if (_nbr_lines == 1)
 		{
 			dsp::mix::Align::copy_1_1_vlrauto (
@@ -758,8 +758,9 @@ void	Delay2::square_block (float dst_ptr [], const float * const src_ptr_arr [],
 	}
 	else
 	{
+		const float    gain = 1.f / float (nbr_chn);
 		dsp::mix::Align::sum_square_n_1_v (
-			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 1.0f / nbr_chn
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, gain
 		);
 	}
 }

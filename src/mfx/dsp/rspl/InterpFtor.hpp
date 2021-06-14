@@ -90,7 +90,7 @@ float	InterpFtor::Linear::operator () (float frac_pos, const float data []) cons
 
 float	InterpFtor::Linear::operator () (uint32_t frac_pos, const float data []) const noexcept
 {
-	return operator () (frac_pos * float (fstb::TWOPM32), data);
+	return operator () (float (frac_pos) * fstb::TWOPM32, data);
 }
 
 
@@ -172,7 +172,7 @@ float	InterpFtor::CubicHermite::operator () (float frac_pos, const float data []
 
 float	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const float data []) const noexcept
 {
-	return operator () (frac_pos * float (fstb::TWOPM32), data);
+	return operator () (float (frac_pos) * fstb::TWOPM32, data);
 }
 
 
@@ -254,7 +254,7 @@ float	InterpFtor::CubicCatmullRom::operator () (float frac_pos, const float data
 
 float	InterpFtor::CubicCatmullRom::operator () (uint32_t frac_pos, const float data []) const noexcept
 {
-	return operator () (frac_pos * float (fstb::TWOPM32), data);
+	return operator () (float (frac_pos) * fstb::TWOPM32, data);
 }
 
 

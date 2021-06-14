@@ -241,6 +241,9 @@ protected:
 
 private:
 
+	static inline float
+	               compute_step (float s_vol, float e_vol, int nbr_spl) noexcept;
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

@@ -712,7 +712,7 @@ void	DelayLineBbdPitch::check_and_start_transition ()
 				if (_ps_flag)
 				{
 					const float    add_step = 1 - _rate_grain;
-					const float    ofs_tgt  = add_step * xfade_dur;
+					const float    ofs_tgt  = add_step * float (xfade_dur);
 
 					if (! g_old.is_ramping ())
 					{
@@ -752,7 +752,7 @@ void	DelayLineBbdPitch::check_and_start_transition ()
 			{
 				const float    dif = dly - g._dly_cur;
 				assert (nbr_spl > 0);
-				g._dly_stp   = dif / nbr_spl;
+				g._dly_stp   = dif / float (nbr_spl);
 				g._dly_tgt   = dly;
 				g._trans_pos = 0;
 				g._trans_len = nbr_spl;
@@ -779,8 +779,8 @@ bool	DelayLineBbdPitch::process_grain (Grain &g, float dest_ptr [], int src_pos,
 	float          dly_end   = dly_beg;
 	if (g.is_ramping ())
 	{
-		g._dly_cur   += nbr_spl * g._dly_stp;
-		g._trans_pos += nbr_spl;
+		g._dly_cur   += float (nbr_spl) * g._dly_stp;
+		g._trans_pos +=        nbr_spl;
 		if (g._trans_pos >= g._trans_len)
 		{
 			g._trans_len = -1;

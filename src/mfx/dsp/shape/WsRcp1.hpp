@@ -44,7 +44,7 @@ namespace shape
 
 float	WsRcp1::process_sample (float x) noexcept
 {
-	return x / (fabs (x) + 1);
+	return x / (fabsf (x) + 1);
 }
 
 

@@ -229,7 +229,7 @@ int    generate_test_signal_short_sine (double &sample_freq, std::vector <std::v
 		for (size_t k = 0; k < len_s; ++k)
 		{
 			float          env = 1;
-			const double   t   = k * inv_fs;
+			const double   t   = double (k) * inv_fs;
 			if (t < fade)
 			{
 				env = 0.5f - float (cos (fstb::PI * t / fade)) * 0.5f;
@@ -239,7 +239,7 @@ int    generate_test_signal_short_sine (double &sample_freq, std::vector <std::v
 				env = 0.5f - float (cos (fstb::PI * (sine_duration - t) / fade)) * 0.5f;
 			}
 			const float    vv  = float (vol) * env;
-			chn [k] = float (sin (2 * fstb::PI * freq * inv_fs * k)) * vv;
+			chn [k] = float (sin (2 * fstb::PI * freq * inv_fs * double (k))) * vv;
 		}
 	}
 
@@ -825,7 +825,7 @@ int	test_transients ()
 			float          a = chn_arr [0] [pos];
 			a = hpf.process_sample (a);
 
-			auto           x = fstb::ToolsSimd::set1_f32 (fabs (a));
+			auto           x = fstb::ToolsSimd::set1_f32 (fabsf (a));
 			x = env.process_sample (x);
 			for (int chn = 0; chn < 4; ++chn)
 			{
@@ -1509,13 +1509,13 @@ int	test_envelope_detector ()
 			env_hlp.process_block (&chn_arr [0] [pos], &chn_arr [0] [pos], block_len);
 			for (size_t p2 = pos; p2 < pos + block_len; ++p2)
 			{
-				chn_arr [0] [p2] = sqrt (chn_arr [0] [p2]);
+				chn_arr [0] [p2] = sqrtf (chn_arr [0] [p2]);
 			}
 #else
 			const int      block_len = 1;
 			const float    x  = chn_arr [0] [pos];
 			const float    y2 = env_hlp.process_sample (x * x);
-			chn_arr [0] [pos] = sqrt (y2);
+			chn_arr [0] [pos] = sqrtf (y2);
 #endif
 
 			pos += block_len;
@@ -1773,12 +1773,12 @@ int test_osc_sin_cos_stable_simd ()
 	float          err_max = 0;
 	for (int pos = 0; pos < len && ret_val == 0; ++pos)
 	{
-		const double   angle = pos * step;
+		const double   angle = double (pos) * step;
 		const float    c     = float (cos (angle));
 		const float    s     = float (sin (angle));
 
-		const float    dif_c = fabs (cos_arr [pos] - c);
-		const float    dif_s = fabs (sin_arr [pos] - s);
+		const float    dif_c = fabsf (cos_arr [pos] - c);
+		const float    dif_s = fabsf (sin_arr [pos] - s);
 
 		if (dif_c > tol || dif_s > tol)
 		{
@@ -1856,7 +1856,7 @@ int	test_conv_int_fast ()
 	bool           floor_flag = true;
 	for (int k = -8; k <= 8; ++k)
 	{
-		const float    v_flt = k * 0.5f;
+		const float    v_flt = float (k) * 0.5f;
 		const int      v_int = fstb::conv_int_fast (v_flt);
 		printf ("%+6.2f -> %+3d\n", v_flt, v_int);
 

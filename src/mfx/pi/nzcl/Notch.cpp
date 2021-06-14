@@ -168,7 +168,7 @@ Not sure if the benefit is interesting, especially for small buffers.
 			float *        ds2_ptr   = dst_ptr      + block_pos;
 			const int      max_len   = _dspl_rate;
 			const int      block_len = std::min (nbr_spl - block_pos, max_len);
-			const float    blen_inv  = 1.0f / block_len;
+			const float    blen_inv  = 1.0f / float (block_len);
 
 			// Downsamples input^2 by averaging
 			auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();
@@ -252,7 +252,7 @@ void	Notch::update_filter ()
 	// 2.5 periods) so we can catch an accurate and stable volume while still
 	// keeping a fast response.
 	const int      mult  = 16;
-	const float    delta = sqrt (4 * _q * _q + 1);
+	const float    delta = sqrtf (4 * _q * _q + 1);
 	const float    f1    = _freq * (delta - 1) * bw_rel * 0.5f; // Lowest freq at -3 dB
 	const float    t     = float (mult / (2 * fstb::PI)) / f1;
 	// Longer release helps preventing amplitude modulation on periodic

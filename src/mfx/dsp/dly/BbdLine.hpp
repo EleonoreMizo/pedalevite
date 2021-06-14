@@ -145,7 +145,7 @@ template <int MSL2, typename AL>
 float	BbdLine <MSL2, AL>::compute_min_delay () const noexcept
 {
 	return std::max (
-		(_imp_len - _group_dly.get_val_flt ()) * _speed,
+		(float (_imp_len) - _group_dly.get_val_flt ()) * _speed,
 		1.0f
 	);
 }
@@ -198,8 +198,8 @@ void	BbdLine <MSL2, AL>::read_block (float dst_ptr [], long nbr_spl, float dly_b
 	assert (nbr_spl > 0);
 	assert (dly_beg >= compute_min_delay ());
 	assert (dly_end >= compute_min_delay ());
-	assert (dly_beg <= get_bbd_size ());
-	assert (dly_end <= get_bbd_size ());
+	assert (dly_beg <= float (get_bbd_size ()));
+	assert (dly_end <= float (get_bbd_size ()));
 
 	const int      ts_mask      = _line_ts.get_mask ();
 	const fstb::FixedPoint *   ts_buf_ptr = _line_ts.get_buffer ();
@@ -325,7 +325,7 @@ float	BbdLine <MSL2, AL>::read_sample (float dly_cur, int ts_mask, const fstb::F
 	const float    pib_sc     = float (pos_in_block) * _ovrspl_inv;
 	const float    read_pos_f = _ts_pos_w - dly_cur + pib_sc;
 	const int      read_pos_i = fstb::floor_int (read_pos_f);
-	const float    read_pos_r = read_pos_f - read_pos_i;
+	const float    read_pos_r = read_pos_f - float (read_pos_i);
 	const int      idx_0      =  read_pos_i      & ts_mask;
 	const int      idx_1      = (read_pos_i + 1) & ts_mask;
 	fstb::FixedPoint  t_0     = ts_buf_ptr [idx_0];
@@ -356,7 +356,7 @@ void	BbdLine <MSL2, AL>::push_timestamps (int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
-	const float    ts_span = _speed * nbr_spl;
+	const float    ts_span = _speed * float (nbr_spl);
 	assert (ts_span <= float (_bbd_size)); // This is an upper bound. Real limit depends on the relative reading position.
 	float          ts_pos_w_end = _ts_pos_w + ts_span;
 
@@ -366,7 +366,7 @@ void	BbdLine <MSL2, AL>::push_timestamps (int nbr_spl) noexcept
 	const int      ts_pos_w_i_end = fstb::ceil_int (ts_pos_w_end);
 
 	// Finds the position within the data for bbd_pos_w_i_beg
-	const float    delta = ts_pos_w_i_beg - _ts_pos_w;
+	const float    delta = float (ts_pos_w_i_beg) - _ts_pos_w;
 	const fstb::FixedPoint  offset (delta * _speed_inv);
 	fstb::FixedPoint  data_pos_cur (_data_pos_w, 0);
 	data_pos_cur += offset;

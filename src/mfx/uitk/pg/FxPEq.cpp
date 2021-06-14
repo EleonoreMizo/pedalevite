@@ -320,7 +320,8 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 		const float    f = float (pow (10, p));
 		for (int m = 1; m < 10; ++ m)
 		{
-			const int      x = conv_freq_to_x (f * m, f_beg, f_end, nbr_freq);
+			const int      x =
+				conv_freq_to_x (f * float (m), f_beg, f_end, nbr_freq);
 			if (x >= 0 && x < nbr_freq)
 			{
 #if PV_VERSION == 2
@@ -686,7 +687,7 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 	std::vector <int> y_arr (nbr_freq);
 
 	const float    range = float (_range_db_arr [_range_db_idx]);
-	const float    hh    = pix_h * 0.5f;
+	const float    hh    = float (pix_h) * 0.5f;
 	const auto     mul   = fstb::ToolsSimd::set1_f32 (float (
 		-20 * fstb::LOG10_2 * hh / range
 	));
@@ -768,9 +769,9 @@ int	FxPEq::conv_freq_to_x (float f, float f_beg, float f_end, int nbr_freq) cons
 {
 	const float    f_rel = f     / f_beg;
 	const float    f_amp = f_end / f_beg;
-	const float    l_rel = log2 (f_rel);
-	const float    l_amp = log2 (f_amp);
-	const float    x_flt = l_rel * nbr_freq / l_amp;
+	const float    l_rel = log2f (f_rel);
+	const float    l_amp = log2f (f_amp);
+	const float    x_flt = l_rel * float (nbr_freq) / l_amp;
 	const int      x     = fstb::round_int (x_flt);
 
 	return x;
@@ -782,7 +783,7 @@ int	FxPEq::conv_db_to_y (float db, int pix_h) const
 {
 	const float    range_db = float (_range_db_arr [_range_db_idx]);
 	const float    pos_rel  = db / range_db;
-	const float    hh       = pix_h * 0.5f;
+	const float    hh       = float (pix_h) * 0.5f;
 	const float    y_flt    = hh * (1 - pos_rel);
 	const int      y        = fstb::round_int (y_flt);
 

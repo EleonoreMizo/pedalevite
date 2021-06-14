@@ -274,8 +274,8 @@ void	Wah2::update_model ()
 
 	// Resonant filter
 	const float    rpri = para (rp, spec._ri);
-	const float    f0   = 0.5f / (float (fstb::PI) * sqrt (spec._lp * spec._cf));
-	const float    q    = rpri * sqrt (spec._cf / spec._lp);
+	const float    f0   = 0.5f / (float (fstb::PI) * sqrtf (spec._lp * spec._cf));
+	const float    q    = rpri * sqrtf (spec._cf / spec._lp);
 	const float    gi   = spec._rs / (spec._ri + spec._rs);
 	const float    gbpf = 0.5f / (float (fstb::PI) * f0 * spec._ri * spec._cf);
 

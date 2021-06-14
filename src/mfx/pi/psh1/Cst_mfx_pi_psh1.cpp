@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        LimiterRms.hpp
-        Author: Laurent de Soras, 2017
+        Cst.cpp
+        Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
 
@@ -9,26 +9,32 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
-#if ! defined (mfx_dsp_dyn_LimiterRms_CODEHEADER_INCLUDED)
-#define mfx_dsp_dyn_LimiterRms_CODEHEADER_INCLUDED
+#if defined (_MSC_VER)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
+#endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/psh1/Cst.h"
+
+#include <cassert>
+
 
 
 namespace mfx
 {
-namespace dsp
+namespace pi
 {
-namespace dyn
+namespace psh1
 {
 
 
@@ -37,23 +43,9 @@ namespace dyn
 
 
 
-float	LimiterRms::process_sample (float x) noexcept
-{
-	const float    vol_sq = _env.process_sample_no_sqrt (x);
-	if (vol_sq > _lvl_sq)
-	{
-		x *= _lvl / sqrtf (vol_sq);
-	}
-
-	return x;
-}
-
-
-
-void	LimiterRms::apply_volume (float gain) noexcept
-{
-	_env.apply_volume (gain);
-}
+constexpr int	Cst::_max_pitch_dw;
+constexpr int	Cst::_max_pitch_up;
+constexpr int	Cst::_max_win_size;
 
 
 
@@ -65,13 +57,9 @@ void	LimiterRms::apply_volume (float gain) noexcept
 
 
 
-}  // namespace dyn
-}  // namespace dsp
+}  // namespace psh1
+}  // namespace pi
 }  // namespace mfx
-
-
-
-#endif   // mfx_dsp_dyn_LimiterRms_CODEHEADER_INCLUDED
 
 
 

@@ -58,10 +58,6 @@ static const double	TestAccuracy_LN10	= 2.3025850929940456840179914546844;
 template <class FO>
 int	TestAccuracy <FO>::perform_test_single_object (FO &fft)
 {
-	assert (&fft != 0);
-
-	using namespace std;
-
 	int				ret_val = 0;
 
 	const std::type_info &	ti = typeid (fft);
@@ -93,10 +89,7 @@ int	TestAccuracy <FO>::perform_test_single_object (FO &fft)
 template <class FO>
 int	TestAccuracy <FO>::perform_test_d (FO &fft, const char *class_name_0)
 {
-	assert (&fft != 0);
    assert (class_name_0 != 0);
-
-	using namespace std;
 
 	int				ret_val = 0;
 	const long		len = fft.get_length ();
@@ -129,8 +122,8 @@ int	TestAccuracy <FO>::perform_test_d (FO &fft, const char *class_name_0)
 	printf ("done.\n");
 	printf (
 		"Average maximum error: %.6f %% (%f dB)\n",
-		static_cast <double> (err_avg * 100),
-		static_cast <double> ((20 / TestAccuracy_LN10) * log (err_avg + 1e-300))
+		double (err_avg * 100),
+		(20 / TestAccuracy_LN10) * log (double (err_avg + 1e-300))
 	);
 
 	return (ret_val);
@@ -141,10 +134,7 @@ int	TestAccuracy <FO>::perform_test_d (FO &fft, const char *class_name_0)
 template <class FO>
 int	TestAccuracy <FO>::perform_test_i (FO &fft, const char *class_name_0)
 {
-	assert (&fft != 0);
    assert (class_name_0 != 0);
-
-	using namespace std;
 
 	int				ret_val = 0;
 	const long		len = fft.get_length ();
@@ -177,8 +167,8 @@ int	TestAccuracy <FO>::perform_test_i (FO &fft, const char *class_name_0)
 	printf ("done.\n");
 	printf (
 		"Average maximum error: %.6f %% (%f dB)\n",
-		static_cast <double> (err_avg * 100),
-		static_cast <double> ((20 / TestAccuracy_LN10) * log (err_avg + 1e-300))
+		double (err_avg * 100),
+		(20 / TestAccuracy_LN10) * log (double (err_avg + 1e-300))
 	);
 
 	return (ret_val);
@@ -189,10 +179,7 @@ int	TestAccuracy <FO>::perform_test_i (FO &fft, const char *class_name_0)
 template <class FO>
 int	TestAccuracy <FO>::perform_test_di (FO &fft, const char *class_name_0)
 {
-	assert (&fft != 0);
    assert (class_name_0 != 0);
-
-	using namespace std;
 
 	int				ret_val = 0;
 	const long		len = fft.get_length ();
@@ -230,8 +217,8 @@ int	TestAccuracy <FO>::perform_test_di (FO &fft, const char *class_name_0)
 	printf ("done.\n");
 	printf (
 		"Average maximum error: %.6f %% (%f dB)\n",
-		static_cast <double> (err_avg * 100),
-		static_cast <double> ((20 / TestAccuracy_LN10) * log (err_avg + 1e-300))
+		double (err_avg * 100),
+		(20 / TestAccuracy_LN10) * log (double (err_avg + 1e-300))
 	);
 
 	return (ret_val);
@@ -344,7 +331,6 @@ int	TestAccuracy <FO>::compare_vect_display (const DataType x_ptr [], const Data
 	assert (x_ptr != 0);
 	assert (y_ptr != 0);
 	assert (len > 0);
-	assert (&max_err_rel != 0);
 
 	using namespace std;
 
@@ -434,8 +420,6 @@ void	TestAccuracy <FO>::compare_vect (const DataType x_ptr [], const DataType y_
 	assert (x_ptr != 0);
 	assert (y_ptr != 0);
 	assert (len > 0);
-	assert (&power != 0);
-	assert (&max_err_pos != 0);
 
 	power = 0;
 	BigFloat			max_dif2 = 0;

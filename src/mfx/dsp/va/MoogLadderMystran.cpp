@@ -385,7 +385,7 @@ constexpr float	MoogLadderMystran::tanh_xdx (float x) noexcept
 	float          xx = fstb::limit (x, -1.5f, 1.5f);
 	const float    u  = fstb::limit (x, -0.5f, 0.5f);
 	xx -= u;
-	return (x == 0) ? 1 : (u + xx * (1 - 0.5f * fabs (xx))) / x;
+	return (x == 0) ? 1 : (u + xx * (1 - 0.5f * fabsf (xx))) / x;
 
 #endif
 }

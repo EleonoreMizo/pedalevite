@@ -313,7 +313,7 @@ float	Approx::log2 (float val) noexcept
 	const float		c = 2*a;
 	val = (a * val + b) * val + c;
 
-	return (val + log_2);
+	return (val + float (log_2));
 }
 
 

@@ -366,7 +366,7 @@ std::vector <int32_t>	FxCpx::build_values (int nbr_steps, int h)
 	for (int x = 0; x < nbr_steps; ++x)
 	{
 		const float    lvl_l2_i =
-			fstb::lerp (_lvl_l2_min, _lvl_l2_max, x * mul_x);
+			fstb::lerp (_lvl_l2_min, _lvl_l2_max, float (x) * mul_x);
 		const float    gain_l2  =
 			_gain_fnc.compute_gain_l2 <false> (lvl_l2_i * 2);
 		const float    lvl_l2_o = lvl_l2_i + gain_l2;
@@ -407,7 +407,7 @@ void	FxCpx::display_scales ()
 		{
 			const bool     coarse_flag = ((lvl_l2_pos & 3) == 0);
 
-			const float    r = (lvl_l2_pos - _lvl_l2_min) * mul_lvl;
+			const float    r = (float (lvl_l2_pos) - _lvl_l2_min) * mul_lvl;
 			const int      x =
 				fstb::round_int (fstb::lerp (0.f, float (w - 1), r));
 			const int      y =

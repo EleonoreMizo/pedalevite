@@ -170,7 +170,7 @@ fstb_FORCEINLINE T	ControlCurve_map_range_mon (T val, FNC f)
 	const T        va = T (fabs (val));
 	if (va <= T (1))
 	{
-		val = std::copysign (f (va), val);
+		val = std::copysign (T (f (va)), val);
 	}
 
 	return val;
@@ -246,7 +246,7 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 		val = val * val * val;
 		break;
 	case ControlCurve_CB + inv:
-		val = cbrt (val);
+		val = cbrtf (val);
 		break;
 
 	case ControlCurve_SQINV:
@@ -272,7 +272,7 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 	case ControlCurve_CBINV + inv:
 		{
 			val = ControlCurve_map_range_mon (val, [] (float x) {
-				return 1 - cbrt (1 - x);
+				return 1 - cbrtf (1 - x);
 			});
 		}
 		break;

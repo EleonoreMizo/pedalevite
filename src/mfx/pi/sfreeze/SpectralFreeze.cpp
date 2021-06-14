@@ -526,8 +526,8 @@ void	SpectralFreeze::synthesise_bins (Channel &chn) noexcept
 
 			// 0 = pure slot, >= 1 = silent
 			float          xf_pos_rel = std::min (
-				fabsf (_xfade_pos - slot_idx),
-				fabsf (_xfade_pos - slot_idx - Cst::_nbr_slots)
+				fabsf (_xfade_pos - float (slot_idx)),
+				fabsf (_xfade_pos - float (slot_idx + Cst::_nbr_slots))
 			);
 			if (xf_pos_rel < 1)
 			{
@@ -626,14 +626,14 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 			float          arg_n   = slot._buf_freeze [img_idx];
 
 			// Reports the phase difference between the two initial frames
-			arg_n *= slot._nbr_hops;
+			arg_n *= float (slot._nbr_hops);
 
 			// Experimental
 			arg_n += phase_val;
 
 			// Why 0.5? Got this by trial & error. Maths behind this are clear
 			// like mud
-			const float    omega = 0.5f * bin_idx;
+			const float    omega = 0.5f * float (bin_idx);
 			arg_n += omega;
 
 			// Keeps [-1/2; +1/2] range

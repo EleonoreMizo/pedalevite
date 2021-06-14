@@ -193,7 +193,7 @@ float	SqueezerSimd <BR, LFOP>::process_sample (float x) noexcept
 	if (BR)
 	{
 		const float    fdbk_i =
-			fstb::trunc_int (fdbk * _br_scale_inv) * _br_scale;
+			float (fstb::trunc_int (fdbk * _br_scale_inv)) * _br_scale;
 		fdbk += (fdbk_i - fdbk) * _br_amt;
 	}
 	const float    xp = x - fdbk;
@@ -308,7 +308,7 @@ void	SqueezerSimd <BR, LFOP>::update_internal_variables (float &r, float &g, flo
 
 	// Cutoff
 	// Mapped frequency for bilinear tranform
-	const float    k = 1 / tan (f * float (fstb::PI));
+	const float    k = 1 / tanf (f * float (fstb::PI));
 	g = float (1 / (1 + k));
 	p = float ((1 - k) * g);
 

@@ -46,7 +46,7 @@ void	AntisatSinh::eval (float &y, float &dy, float x) noexcept
 {
 	const float    xd = 2 * x;
 	y  = 0.5f * asinh_fast (xd);
-	dy = 1 / sqrt (xd * xd + 1);
+	dy = 1 / sqrtf (xd * xd + 1);
 }
 
 
@@ -79,7 +79,7 @@ float	AntisatSinh::sinh_fast (float x) noexcept
 
 float	AntisatSinh::asinh_fast (float x) noexcept
 {
-	const float    u   = x + sqrt (x * x + 1);
+	const float    u   = x + sqrtf (x * x + 1);
 	const float    ash = float (fstb::LN2) * fstb::Approx::log2 (u);
 
 	return ash;

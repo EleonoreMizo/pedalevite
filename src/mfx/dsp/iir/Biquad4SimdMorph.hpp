@@ -211,7 +211,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFl
 			_nbr_rem_spl = _ramp_len;
 			_prog_flag = false;
 
-			const float    step_flt = 1.0f / _ramp_len;
+			const float    step_flt = 1.0f / float (_ramp_len);
 			const auto     step_mul = fstb::ToolsSimd::set1_f32 (step_flt);
 			const auto     dif_b0   = b0 - fstb::ToolsSimd::load_f32 (_tmp_b [0]);
 			const auto     dif_b1   = b1 - fstb::ToolsSimd::load_f32 (_tmp_b [1]);
@@ -322,7 +322,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], co
 			V128Par::store_f32 (_step_a [2], fstb::ToolsSimd::set_f32_zero ());
 			_nbr_rem_spl = _ramp_len;
 
-			const float    step_flt = 1.0f / _ramp_len;
+			const float    step_flt = 1.0f / float (_ramp_len);
 			_step_b [0] [biq] = (b [0] - _target_b [0] [biq]) * step_flt;
 			_step_b [1] [biq] = (b [1] - _target_b [1] [biq]) * step_flt;
 			_step_b [2] [biq] = (b [2] - _target_b [2] [biq]) * step_flt;
@@ -346,7 +346,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], co
 				float	         a_old [3];
 				_biq.get_z_eq_one (biq, b_old, a_old);
 
-				const float    step_flt = 1.0f / _ramp_len;
+				const float    step_flt = 1.0f / float (_ramp_len);
 				_step_b [0] [biq] = (b [0] - b_old [0]) * step_flt;
 				_step_b [1] [biq] = (b [1] - b_old [1]) * step_flt;
 				_step_b [2] [biq] = (b [2] - b_old [2]) * step_flt;
@@ -795,7 +795,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::handle_ramp_post (int nbr_spl) noexcept
 				const auto     a1_dif = a1 - a1_old;
 				const auto     a2_dif = a2 - a2_old;
 
-				const float    step_flt = 1.0f / _ramp_len;
+				const float    step_flt = 1.0f / float (_ramp_len);
 				const auto     step = fstb::ToolsSimd::set1_f32 (step_flt);
 
 				V128Par::store_f32 (_step_b [0], b0_dif * step);

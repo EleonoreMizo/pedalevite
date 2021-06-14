@@ -61,8 +61,8 @@ OscSinCosEulerSimd::OscSinCosEulerSimd () noexcept
 // phase in radian
 void	OscSinCosEulerSimd::set_phase (float phase) noexcept
 {
-	const float    c = cos (phase);
-	const float    s = sin (phase);
+	const float    c = cosf (phase);
+	const float    s = sinf (phase);
 
 	resync (c, s);
 }
@@ -72,10 +72,10 @@ void	OscSinCosEulerSimd::set_phase (float phase) noexcept
 // step in radian/sample
 void	OscSinCosEulerSimd::set_step (float stp) noexcept
 {
-	_step_cos1 = cos (stp);
-	_step_sin1 = sin (stp);
-	_step_cosn = cos (stp * _nbr_units);
-	_step_sinn = sin (stp * _nbr_units);
+	_step_cos1 = cosf (stp);
+	_step_sin1 = sinf (stp);
+	_step_cosn = cosf (stp * _nbr_units);
+	_step_sinn = sinf (stp * _nbr_units);
 
 	const float    c0 = fstb::ToolsSimd::Shift <0>::extract (
 		fstb::ToolsSimd::load_f32 (&_pos_cos)

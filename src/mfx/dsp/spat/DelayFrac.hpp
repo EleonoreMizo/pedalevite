@@ -532,7 +532,7 @@ void  DelayFrac <T, NPL2>::init_interpolator () noexcept
 	for (int ph_idx = 0; ph_idx < _nbr_phases; ++ph_idx)
 	{
 		Phase &        phase = _phase_arr [ph_idx];
-		const float    frac  = 1 - ph_idx * frac_mul;
+		const float    frac  = 1 - float (ph_idx) * frac_mul;
 		for (int pos = 0; pos < _phase_len; ++pos)
 		{
 			std::array <float, _phase_len> imp {};

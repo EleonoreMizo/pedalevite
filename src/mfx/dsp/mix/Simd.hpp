@@ -1229,7 +1229,7 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 
 	StereoLevel		step = e_vol;
 	step -= s_vol;
-	step *= 4.0f / nbr_spl;
+	step *= 4.f / float (nbr_spl);
 	
 	const auto  c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
 
@@ -2978,7 +2978,7 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 
 	StereoLevel		step = e_vol;
 	step -= s_vol;
-	step *= 4.0f / nbr_spl;
+	step *= 4.f / float (nbr_spl);
 	
 	const auto  c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
 
@@ -3929,7 +3929,7 @@ void	Simd <VD, VS>::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e
 	const int		nbr_loop = nbr_spl >> 2;
 	int				pos = 0;
 
-	const float		step = (e_val - s_val) / nbr_spl;
+	const float		step = (e_val - s_val) / float (nbr_spl);
 	
 	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
 	auto			vec_val = fstb::ToolsSimd::set1_f32 (s_val);

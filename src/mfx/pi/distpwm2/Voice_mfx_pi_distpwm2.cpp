@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -170,7 +171,7 @@ float	Voice::process_sample ()
 			float          pos      = _dur_cycle * _pw_inv * 0.5f;
 			const float    amp      = std::max (1 - pos * t_scale, 0.f);
 			const int      pos_i    = fstb::floor_int (pos);
-			pos -= pos_i;
+			pos -= float (pos_i);
 			val  = (pos * 2 * _lvl - _lvl) * amp;
 		}
 		break;
@@ -250,8 +251,8 @@ void	Voice::process_block_rect (float dst_ptr [], int nbr_spl)
 			int            work_len = -fstb::floor_int (dif);
 			work_len = std::min (work_len, nbr_spl - pos);
 			dsp::mix::Generic::fill (dst_ptr + pos, work_len, _lvl);
-			pos += work_len;
-			_dur_cycle += work_len;
+			pos        +=        work_len;
+			_dur_cycle += float (work_len);
 		}
 
 		// Falling edge
@@ -267,8 +268,8 @@ void	Voice::process_block_rect (float dst_ptr [], int nbr_spl)
 		{
 			const int      work_len = nbr_spl - pos;
 			dsp::mix::Generic::fill (dst_ptr + pos, work_len, -_lvl);
-			pos += work_len;
-			_dur_cycle += work_len;
+			pos        +=        work_len;
+			_dur_cycle += float (work_len);
 		}
 	}
 }
@@ -333,7 +334,7 @@ void	Voice::process_block_cycle (float dst_ptr [], int nbr_spl)
 					p_c += _pw_inv;
 				}
 			}
-			_dur_cycle += work_len;
+			_dur_cycle += float (work_len);
 		}
 
 		pos += work_len;
@@ -356,7 +357,7 @@ void	Voice::process_block_sine (float dst_ptr [], int nbr_spl)
 		p_c += _pw_inv;
 		amp  = std::max (amp - amp_step, 0.f);
 	}
-	_dur_cycle += nbr_spl;
+	_dur_cycle += float (nbr_spl);
 }
 
 
@@ -370,13 +371,13 @@ void	Voice::process_block_saw (float dst_ptr [], int nbr_spl)
 	const float    amp_step = _lvl * p_c_step * t_scale;
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		const float    p_c_f = p_c - fstb::floor_int (p_c);
+		const float    p_c_f = p_c - floorf (p_c);
 		const float    val   = (p_c_f * 2 - 1) * amp;
 		dst_ptr [pos] = val;
 		p_c += p_c_step;
 		amp  = std::max (amp - amp_step, 0.f);
 	}
-	_dur_cycle += nbr_spl;
+	_dur_cycle += float (nbr_spl);
 }
 
 
@@ -410,7 +411,7 @@ float	Voice::gen_wf_multi (float pos)
 	{
 		pos -= 0.5f;
 		const int   pos_int = fstb::floor_int (pos);
-		pos -= pos_int & ~1;
+		pos -= float (pos_int & ~1);
 		if ((pos_int & 1) == 0)
 		{
 			val = 2 * gen_poly (1 - pos) - 1;

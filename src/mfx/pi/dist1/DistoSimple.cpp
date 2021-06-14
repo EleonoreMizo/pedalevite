@@ -236,7 +236,7 @@ void	DistoSimple::do_process_block (piapi::ProcInfo &proc)
 #else // Reference implementation
 		for (int pos = 0; pos < nbr_spl; ++pos)
 		{
-			chn._buf_env [pos] = fabs (chn._buf [pos]);
+			chn._buf_env [pos] = fabsf (chn._buf [pos]);
 		}
 #endif
 		chn._env_lpf.process_block (

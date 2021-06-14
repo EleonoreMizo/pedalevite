@@ -101,7 +101,7 @@ void	FreqShift::set_freq (float f)
 
 bool	FreqShift::is_active () const
 {
-	return (fabs (_freq) >= 1e-3f);
+	return (fabsf (_freq) >= 1e-3f);
 }
 
 

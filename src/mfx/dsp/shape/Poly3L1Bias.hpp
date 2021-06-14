@@ -50,10 +50,10 @@ float	Poly3L1Bias <BIAS>::process_sample (float sample) noexcept
 
 	// Waveshapping
 	sample = fstb::limit (sample, -1.0f, 1.0f);
-	sample += sample * (fabs (sample) - sample * sample);
+	sample += sample * (fabsf (sample) - sample * sample);
 
 	// Unbias
-	const float    bias_abs = fabs (float (BIAS::num) / float (BIAS::den));
+	const float    bias_abs = fabsf (float (BIAS::num) / float (BIAS::den));
 	const float		unbias   = bias + bias * (bias_abs - bias * bias);
 	sample -= unbias;
 

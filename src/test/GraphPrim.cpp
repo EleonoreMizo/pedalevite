@@ -170,7 +170,7 @@ void	GraphPrim::print_legend (const char *txt_0, int level) const
 	const float    offset = (level < 0) ? 0 : _h;
 	_plot_ptr->drawLegend (
 		_x + _w,
-		_y + offset - 4 - 8 * level,
+		_y + offset - 4 - 8 * float (level),
 		txt_0
 	);
 }

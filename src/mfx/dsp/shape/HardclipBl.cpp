@@ -65,7 +65,7 @@ float	HardclipBl::process_sample (float x) noexcept
 
 	// Implements clipping and detects clipping points (corners)
 	_y_arr [0] = x;
-	const bool     clip_flag = (float (fabs (x)) > _lvl);
+	const bool     clip_flag = (fabsf (x) > _lvl);
 	if (clip_flag)
 	{
 		_y_arr [0] = std::copysign (_lvl, x);
@@ -98,7 +98,7 @@ float	HardclipBl::process_sample (float x) noexcept
 			const float   f0  = ((p_a * xd + p_b) * xd + p_c ) * xd + p_e - cv;
 			const float   f1  = (           pa_3  * xd + pb_2) * xd + p_c;
 			const float   dif = f0 / f1;
-			if (float (fabs (dif)) < max_dif)
+			if (fabsf (dif) < max_dif)
 			{
 				break;
 			}
@@ -106,7 +106,7 @@ float	HardclipBl::process_sample (float x) noexcept
 		}
 
 		// Estimates slope at clipping point
-		const float    mu = float (fabs ((pa_3 * xd + pb_2) * xd + p_c));
+		const float    mu = fabsf ((pa_3 * xd + pb_2) * xd + p_c);
 
 		// Fractional delay required to center polyBLAMP
 		const float    d  = xd - 1;
@@ -153,7 +153,7 @@ float	HardclipBl::process_sample (float x) noexcept
 		// We limit here the amplitude of the correction because it truns into
 		// an error when the slope is very high. The limit is arbitrary;
 		// something between 4 and 10 looks like an acceptable compromise.
-		const float    mu = std::min (float (fabs (cx._yd)), 8.0f);
+		const float    mu = std::min (fabsf (cx._yd), 8.0f);
 
 		// Fractional delay required to center polyBLAMP
 		const float    d  = cx._xrel;
@@ -268,11 +268,11 @@ void	HardclipBl::find_crossings (CrossingList &cxm, CrossingList &cxp, float xm1
 		if (d > 0)
 		{
 			// Checks both solutions
-			const float   ds = sqrt (d);
+			const float    ds = sqrtf (d);
 			for (int x_cnt = 0; x_cnt < 2; ++x_cnt)
 			{
-				const float   dsx = (x_cnt == 0) ? ds : -ds;
-				float         x   = (dsx - b) * rcp2a;
+				const float    dsx = (x_cnt == 0) ? ds : -ds;
+				float          x   = (dsx - b) * rcp2a;
 				if (x >= -0.5f && x < 0.5f)
 				{
 					const float    yd     = 2 * a * x + b;

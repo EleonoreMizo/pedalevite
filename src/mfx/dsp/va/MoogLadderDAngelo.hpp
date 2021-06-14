@@ -216,8 +216,8 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m,
 	const float    k0s = fstb::limit (_d._k0s + _d._k0si * m, 0.f, _d._k0smax);
 	const float    g   = fstb::limit (_d._g   + _d._gi   * m, 0.f, _d._gmax  );
 
-	float          yo = process_sample_input (x);
-	float          y;
+	float          yo  = process_sample_input (x);
+	float          y   = 0;
 	for (int n = 0; n < N; ++n)
 	{
 		stage_in_ptr [n] = yo * _d._gc_mul_s;
@@ -336,8 +336,9 @@ void	MoogLadderDAngelo <N, SL, SF>::update_coef () noexcept
 	float          gm1p0s_n = gm1p0s;
 	for (int k = 0; k < N; ++k)
 	{
-		_d._r_arr [k] =               - _d._bin_arr [k] * kgn;
-		_d._q_arr [k] = _d._r_arr [k] - _d._bin_arr [k] * gm1p0s_n;
+		const float    bin = float (_d._bin_arr [k]);
+		_d._r_arr [k] =               - bin * kgn;
+		_d._q_arr [k] = _d._r_arr [k] - bin * gm1p0s_n;
 		gm1p0s_n *= gm1p0s;
 	}
 	_d._k0g = -_d._vt2i * p0g;
@@ -360,7 +361,7 @@ template <int N, class SL, class SF>
 float	MoogLadderDAngelo <N, SL, SF>::process_sample_internal (float x, float g, float k0s) noexcept
 {
 	float          yo = process_sample_input (x);
-	float          y;
+	float          y  = 0;
 	for (int n = 0; n < N; ++n)
 	{
 		process_sample_stage (y, yo, n, g, k0s);

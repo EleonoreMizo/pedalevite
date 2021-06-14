@@ -322,7 +322,7 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 			float *        buf2_ptr  = buf_ptr + block_pos;
 			const int      max_len   = _dspl_rate;
 			const int      block_len = std::min (nbr_spl - block_pos, max_len);
-			const float    blen_inv  = 1.0f / block_len;
+			const float    blen_inv  = 1.f / float (block_len);
 
 			// Downsamples input^2 by averaging
 			auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();

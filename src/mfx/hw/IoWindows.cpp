@@ -245,7 +245,7 @@ std::chrono::microseconds	IoWindows::do_get_cur_date () const
 	::LARGE_INTEGER   d;
 	::QueryPerformanceCounter (&d);
 	const int64_t  date_us = int64_t (
-		double (d.QuadPart) * (1000 * 1000) / _clock_freq
+		double (d.QuadPart) * 1e6 / double (_clock_freq)
 	);
 
 	return std::chrono::microseconds (date_us);
@@ -590,7 +590,7 @@ bool	IoWindows::process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 	fstb::unused (hwnd);
 
 	const int      index = int (wparam);
-	const float    val   = lparam / 65535.f;
+	const float    val   = float (lparam) / 65535.f;
 	_led_arr [index] = val;
 
 	const int      led_x1 =  index      * _disp_w / _nbr_led;
@@ -813,7 +813,7 @@ void	IoWindows::enqueue_val (int64_t date, ui::UserInputType type, int index, fl
 		else
 		{
 			const std::chrono::microseconds  date_us (int64_t (
-				double (date) * (1000 * 1000) / _clock_freq
+				double (date) * 1e6 / double (_clock_freq)
 			));
 			cell_ptr->_val.set (date_us, type, index, val);
 			queue_ptr->enqueue (*cell_ptr);

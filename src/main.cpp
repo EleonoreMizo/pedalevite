@@ -579,8 +579,8 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 		// LEDs
 		if (! tuner_flag)
 		{
-			const int      nbr_led           = 3;
-			float          lum_arr [nbr_led] = { 0, 0, 0 };
+			constexpr int  nbr_led = 3;
+			std::array <float, nbr_led>   lum_arr = { 0, 0, 0 };
 			if (meters.check_signal_clipping ())
 			{
 				lum_arr [0] = 1;
@@ -589,9 +589,9 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 			{
 				if (restart_count >= restart_limit)
 				{
-					lum_arr [0] = sqrt (0.375f);
-					lum_arr [1] = sqrt (0.125f);
-					lum_arr [2] = sqrt (0.5f  );
+					lum_arr [0] = sqrtf (0.375f);
+					lum_arr [1] = sqrtf (0.125f);
+					lum_arr [2] = sqrtf (0.5f  );
 				}
 				else
 				{

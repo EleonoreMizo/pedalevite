@@ -246,6 +246,12 @@ void	SpectralCrusher::do_process_block (piapi::ProcInfo &proc)
 
 
 
+constexpr int	SpectralCrusher::_hop_ratio_l2;
+constexpr int	SpectralCrusher::_bin_beg;
+constexpr int	SpectralCrusher::_nbr_fft_sizes;
+
+
+
 void	SpectralCrusher::clear_buffers () noexcept
 {
 	for (auto &chn : _chn_arr)
@@ -301,7 +307,7 @@ void	SpectralCrusher::update_param (bool force_flag) noexcept
 
 void	SpectralCrusher::mutilate_bins () noexcept
 {
-	const float    thr = _threshold * _fft_len;
+	const float    thr = _threshold * float (_fft_len);
 
 	for (int bin_idx = _bin_pbeg; bin_idx < _bin_pend; ++bin_idx)
 	{
@@ -318,8 +324,9 @@ void	SpectralCrusher::mutilate_bins () noexcept
 		const float    n2_old_l2 = fstb::Approx::log2 (n2_old);
 
 		// Quantised
-		const float    n2_qnt_l2 =
-			_qt_step * fstb::trunc_int (n2_old_l2 * _qt_step_inv + _qt_bias);
+		const float    n2_qnt_l2 = _qt_step * float (fstb::trunc_int (
+			n2_old_l2 * _qt_step_inv + _qt_bias
+		));
 		const float    n2_new_l2 =
 			n2_old_l2 + _qt_shape * (n2_qnt_l2 - n2_old_l2);
 
@@ -396,7 +403,7 @@ int	SpectralCrusher::conv_freq_to_bin (float f) const noexcept
 	assert (f >= 0);
 	assert (f < _sample_freq * 0.5f);
 
-	return fstb::round_int (f * _inv_fs * _fft_len);
+	return fstb::round_int (f * _inv_fs * float (_fft_len));
 }
 
 

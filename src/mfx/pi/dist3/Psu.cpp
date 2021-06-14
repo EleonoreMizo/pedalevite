@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/Approx.h"
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
 #include "mfx/pi/dist3/Psu.h"
@@ -104,10 +105,9 @@ void	Psu::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
 		// AC generation
-		const float    ph_mul = 1.f / float (1ULL << 32);
-		const float    ph_nrm = _phase * ph_mul;
+		const float    ph_nrm = float (_phase) * fstb::TWOPM32;
 		const float    ac_val = fstb::Approx::sin_nick_2pi (ph_nrm) * _ac_lvl;
-		const float    ac_abs = fabs (ac_val);
+		const float    ac_abs = fabsf (ac_val);
 		_phase += _step;
 
 		float          x = src_ptr [pos];
@@ -219,12 +219,13 @@ void	Psu::update_constants ()
 	if (_sample_freq > 0 && _ratio > 0 && _ac_freq > 0)
 	{
 		const float    hlen   = 0.5f * _sample_freq / _ac_freq;
-		_capa_inv = 1 - exp (log (_ratio) / hlen);
+		_capa_inv = 1 - expf (logf (_ratio) / hlen);
 		_capa     = 1 / _capa_inv;
 
 		// Oscillator step for the AC voltage
-		const float    ph_mul = float (1ULL << 32);
-		_step = int32_t (fstb::round_int (ph_mul * _ac_freq / _sample_freq));
+		_step = int32_t (fstb::round_int (
+			fstb::TWOPM32 * _ac_freq / _sample_freq
+		));
 	}
 }
 

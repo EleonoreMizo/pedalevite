@@ -433,7 +433,8 @@ void	DAsio::process_block (long buf_index) noexcept
 
 		for (int pos = 0; pos < _block_size; ++pos)
 		{
-			src_arr [chn] [pos] = asio_src_ptr [pos] * (1.0f / (32768.0f * 65536.0f));
+			src_arr [chn] [pos] =
+				float (asio_src_ptr [pos]) * (2.f * fstb::TWOPM32);
 		}
 	}
 

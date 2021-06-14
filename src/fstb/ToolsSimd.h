@@ -379,6 +379,11 @@ private:
 	static const float
 	               _inv_table_4 [_inv_table_4_len];
 
+	static constexpr int8_t  _sign8  = INT8_MIN;
+	static constexpr int16_t _sign16 = INT16_MIN;
+	static constexpr int32_t _sign32 = INT32_MIN;
+	static constexpr int64_t _sign64 = INT64_MIN;
+
 	template <typename MEM>
 	static inline void
 	               store_f32_part_n13 (MEM *ptr, VectF32 v, int n) noexcept;

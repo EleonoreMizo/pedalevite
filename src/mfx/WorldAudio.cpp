@@ -126,7 +126,7 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 #endif
 
 	_lvl_meter->set_sample_freq (_sample_freq);
-	_proc_analyser.set_sample_freq (_sample_freq / max_block_size);
+	_proc_analyser.set_sample_freq (_sample_freq / float (max_block_size));
 
 	for (auto &x : _sig_res_arr) { x = 0; }
 

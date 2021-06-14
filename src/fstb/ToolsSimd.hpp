@@ -1950,12 +1950,12 @@ ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w64 (VectF32 x) noexcept
 		x._ [1] - x._ [3]
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 0, 1 << 31, 1 << 31));
+	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 0, _sign32, _sign32));
 	const auto x0   = _mm_shuffle_ps (x, x, (2<<0) + (3<<2) + (0<<4) + (1<<6)); // c, d, a, b
 	const auto x1   = _mm_xor_ps (x, sign); // a, b, -c, -d
 	return x0 + x1;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	const auto sign = int32x4_t { 0, 0, -(1<<31), -(1<<31) };
+	const auto sign = int32x4_t { 0, 0, _sign32, _sign32 };
 	const auto x0   = vcombine_f32 (vget_high_f32 (x), vget_low_f32 (x)); // c, d, a, b
 	const auto x1   = // a, b, -c, -d
 		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (x), sign));
@@ -1976,12 +1976,12 @@ ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w32 (VectF32 x) noexcept
 		x._ [2] - x._ [3]
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 1 << 31, 0, 1 << 31));
+	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, _sign32, 0, _sign32));
 	const auto x0   = _mm_shuffle_ps (x, x, (1<<0) + (0<<2) + (3<<4) + (2<<6)); // b, a, d, c
 	const auto x1   = _mm_xor_ps (x, sign); // a, -b, c, -d
 	return x0 + x1;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	const auto sign = int32x4_t { 0, -(1<<31), 0, -(1<<31) };
+	const auto sign = int32x4_t { 0, _sign32, 0, _sign32 };
 	const auto x0   = vrev64q_f32 (x); // b, a, d, c
 	const auto x1   = // a, -b, c, -d
 		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (x), sign));

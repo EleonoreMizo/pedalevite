@@ -331,7 +331,7 @@ void	VelvetFreeze::update_param (bool force_flag)
 			_grain_win.setup (_grain_len);
 
 			const int      vd_len = (_grain_len + 1) >> 1;
-			const float    vd_stp = 1.f / vd_len;
+			const float    vd_stp = 1.f / float (vd_len);
 
 			for (auto &chn : _chn_arr)
 			{
@@ -371,7 +371,7 @@ void	VelvetFreeze::capture_slot (Slot &slot, int nbr_spl) noexcept
 	{
 		sq_sum += fstb::sq (_buf_tmp [pos]);
 	}
-	slot._grain_lvl = sqrtf (float (sq_sum) / _grain_len);
+	slot._grain_lvl = sqrtf (float (sq_sum) / float (_grain_len));
 
 	// Windowing
 	_grain_win.process_frame_mul (_buf_tmp.data ());
@@ -397,8 +397,8 @@ void	VelvetFreeze::synthesise_channel (Channel &chn, float dst_ptr [], int nbr_s
 
 			// 0 = pure slot, >= 1 = silent
 			float          xf_pos_rel = std::min (
-				fabsf (_xfade_pos - slot_idx),
-				fabsf (_xfade_pos - slot_idx - Cst::_nbr_slots)
+				fabsf (_xfade_pos - float (slot_idx)),
+				fabsf (_xfade_pos - float (slot_idx + Cst::_nbr_slots))
 			);
 			if (xf_pos_rel < 1)
 			{

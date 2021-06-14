@@ -136,7 +136,7 @@ float	DiodeClipJcm::process_sample (float x) noexcept
 	const float    p     = _wi0_r * i0;
 	const float    wd_a  = _wpf_kt * (p - _wcf_s) - p;
 	const float    tmp   = _wd_k1 + _wd_k2 * fstb::Approx::wright_omega_4 (
-		_wd_k3x + _wd_k4 * fabs (wd_a)
+		_wd_k3x + _wd_k4 * fabsf (wd_a)
 	);
 	float          wd_b  = wd_a;
 	if (wd_a >= 0)

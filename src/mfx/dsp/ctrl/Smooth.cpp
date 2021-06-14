@@ -195,9 +195,9 @@ float	Smooth::process_block (float x, int nbr_spl) noexcept
 	assert (nbr_spl > 0);
 
 	_val = x;
-	const float    f0_blk = _f0 * nbr_spl;
+	const float    f0_blk = _f0 * float (nbr_spl);
 	const float    g0_blk = compute_g0 (f0_blk);
-	const float    se_blk = _sense * nbr_spl;
+	const float    se_blk = _sense * float (nbr_spl);
 
 	return process_sample (x, g0_blk, se_blk);
 }
@@ -320,7 +320,7 @@ float	Smooth::process_sample (float x, float g0, float sense) noexcept
 	const float    low1z = _low1;
 	const float    low2z = _low2;
 	const float    bandz = low1z - low2z;
-	const float    g     = std::min (g0 + sense * float (fabs (bandz)), 1.0f);
+	const float    g     = std::min (g0 + sense * fabsf (bandz), 1.0f);
 	_low1 = low1z + g * (x     - low1z);
 	_low2 = low2z + g * (_low1 - low2z);
 

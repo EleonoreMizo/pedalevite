@@ -66,6 +66,15 @@ namespace iir
 
 
 template <int O>
+constexpr int	SplitMultibandLin <O>::_order;
+template <int O>
+constexpr int	SplitMultibandLin <O>::_nbr_2p;
+template <int O>
+constexpr int	SplitMultibandLin <O>::_nbr_1p;
+
+
+
+template <int O>
 SplitMultibandLin <O>::SplitMultibandLin ()
 {
 	mix::Generic::setup ();
@@ -523,6 +532,11 @@ void	SplitMultibandLin <O>::process_block (const float src_ptr [], int nbr_spl) 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int O>
+constexpr int	SplitMultibandLin <O>::_max_buf_size;
 
 
 

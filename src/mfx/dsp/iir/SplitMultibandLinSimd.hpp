@@ -69,6 +69,15 @@ namespace iir
 
 
 template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_order;
+template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_nbr_2p;
+template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_nbr_1p;
+
+
+
+template <int O>
 SplitMultibandLinSimd <O>::SplitMultibandLinSimd ()
 {
 	mix::Generic::setup ();
@@ -635,6 +644,19 @@ void	SplitMultibandLinSimd <O>::process_block (const float src_ptr [], int nbr_s
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_simd_alig_l2;
+template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_simd_alig;
+template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_simd_w_l2;
+template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_simd_w;
+template <int O>
+constexpr int	SplitMultibandLinSimd <O>::_max_buf_size;
 
 
 

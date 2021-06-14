@@ -53,8 +53,6 @@ namespace test
 template <class FO>
 int	TestSpeed <FO>::perform_test_single_object (FO &fft)
 {
-	assert (&fft != 0);
-
    int            ret_val = 0;
 
 	const std::type_info &	ti = typeid (fft);
@@ -86,7 +84,6 @@ int	TestSpeed <FO>::perform_test_single_object (FO &fft)
 template <class FO>
 int	TestSpeed <FO>::perform_test_d (FO &fft, const char *class_name_0)
 {
-	assert (&fft != 0);
    assert (class_name_0 != 0);
 
 	const long		len = fft.get_length ();
@@ -134,7 +131,6 @@ int	TestSpeed <FO>::perform_test_d (FO &fft, const char *class_name_0)
 template <class FO>
 int	TestSpeed <FO>::perform_test_i (FO &fft, const char *class_name_0)
 {
-	assert (&fft != 0);
    assert (class_name_0 != 0);
 
 	const long		len = fft.get_length ();
@@ -181,7 +177,6 @@ int	TestSpeed <FO>::perform_test_i (FO &fft, const char *class_name_0)
 template <class FO>
 int	TestSpeed <FO>::perform_test_di (FO &fft, const char *class_name_0)
 {
-	assert (&fft != 0);
    assert (class_name_0 != 0);
 
 	const long		len = fft.get_length ();

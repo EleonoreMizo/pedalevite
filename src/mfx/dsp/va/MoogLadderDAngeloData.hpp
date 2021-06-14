@@ -70,7 +70,7 @@ float	MoogLadderDAngeloData <N>::compute_alpha (float k) noexcept
 
 	if (N > 1)
 	{
-		const float    k_nrt = pow (k, 1.0f / N);
+		const float    k_nrt = powf (k, 1.f / float (N));
 		alpha = float (sqrt (1 + k_nrt * (k_nrt - 2 * cos (fstb::PI / N))));
 	}
 

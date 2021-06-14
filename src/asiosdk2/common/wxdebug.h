@@ -295,7 +295,7 @@ typedef struct tag_ObjectDesc {
 class CDispBasic
 {
 public:
-    CDispBasic() { m_pString = m_String; };
+    CDispBasic() { m_pString = m_String; }
     ~CDispBasic();
 protected:
     PTCHAR m_pString;  // normally points to m_String... unless too much data
@@ -319,7 +319,7 @@ public:
     operator LPCTSTR()
     {
         return (LPCTSTR)m_pString;
-    };
+    }
 };
 
 #endif // __WXDEBUG__

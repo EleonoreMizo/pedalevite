@@ -42,6 +42,13 @@ namespace iir
 
 
 
+template <int O>
+constexpr int	SplitMultibandLinBase <O>::_nbr_2p;
+template <int O>
+constexpr int	SplitMultibandLinBase <O>::_nbr_1p;
+
+
+
 /*
 ==============================================================================
 Name: get_actual_xover_freq
@@ -97,9 +104,8 @@ int	SplitMultibandLinBase <O>::get_global_delay () const noexcept
 
 
 
-// 100 ms should be enough for most uses.
 template <int O>
-const double	SplitMultibandLinBase <O>::_max_dly_time = 0.100;
+constexpr double	SplitMultibandLinBase <O>::_max_dly_time;
 
 
 
@@ -219,7 +225,7 @@ bool	SplitMultibandLinBase <O>::update_single_splitter (int split_idx) noexcept
 		// Evaluates the actual cutoff frequency corresponding to this
 		// rounded delay time
 		float          ratio = 1;
-		ratio = split._dly_comp / split._dly_int;
+		ratio = split._dly_comp / float (split._dly_int);
 		split._freq_act = split._freq_warp * ratio;
 	}
 

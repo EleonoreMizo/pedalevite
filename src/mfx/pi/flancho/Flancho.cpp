@@ -355,7 +355,7 @@ void	Flancho::update_param (bool force_flag)
 			if (_ovrspl_flag != ovrspl_old_flag)
 			{
 				_ovrspl_cur  = (_ovrspl_flag) ? _ovrspl : 1;
-				const float    fs = float (_sample_freq) * _ovrspl_cur;
+				const float    fs = float (_sample_freq) * float (_ovrspl_cur);
 				dsp::rspl::InterpolatorInterface * interp_ptr =
 					(_ovrspl_flag)
 					? static_cast <dsp::rspl::InterpolatorInterface *> (&_interp_linear)

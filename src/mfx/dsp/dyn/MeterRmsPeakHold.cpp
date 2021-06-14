@@ -217,7 +217,7 @@ void	MeterRmsPeakHold::update_times () noexcept
 
 void	MeterRmsPeakHold::process_sample_internal (float x) noexcept
 {
-	const float    x_a = fabs (x);
+	const float    x_a = fabsf (x);
 	const float    x_2 = x * x;
 
 	// Peak

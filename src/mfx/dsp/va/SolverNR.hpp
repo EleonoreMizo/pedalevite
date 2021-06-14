@@ -96,7 +96,7 @@ typename SolverNR <FNC, MAXIT, PVF>::DataType SolverNR <FNC, MAXIT, PVF>::slove 
  		dif_x = fstb::limit (dif_x, -_max_dif, _max_dif);
  		x -= dif_x;
 
-		if (fabs (dif_x) <= _prec)
+		if (DataType (fabs (dif_x)) <= _prec)
 		{
 			return x;
 		}

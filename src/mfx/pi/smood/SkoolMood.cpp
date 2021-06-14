@@ -437,8 +437,8 @@ void	SkoolMood::do_process_block (piapi::ProcInfo &proc)
 	{
 		const float    send_b  = _chncross.get_beg ();
 		const float    send_e  = _chncross.get_end ();
-		const float    self_b  = 1 - float (fabs (send_b));
-		const float    self_e  = 1 - float (fabs (send_e));
+		const float    self_b  = 1 - fabsf (send_b);
+		const float    self_e  = 1 - fabsf (send_e);
 		const float    wet_l_b = _chn_arr [0]._pan_lvl.get_beg () * wet_b;
 		const float    wet_l_e = _chn_arr [0]._pan_lvl.get_end () * wet_e;
 		const float    wet_r_b = _chn_arr [1]._pan_lvl.get_beg () * wet_b;

@@ -100,7 +100,7 @@ void	DesignEq2p::make_3db_shelf_lo (T bs [3], T as [3], T q, T lvl) noexcept
 	assert (q > 0);
 	assert (lvl >= 0);
 
-	const T        lvl_r2 = sqrt (lvl);
+	const T        lvl_r2 = T (sqrt (lvl));
 
 	bs [0] = lvl;
 	bs [1] = lvl_r2 / q;
@@ -137,7 +137,7 @@ void	DesignEq2p::make_3db_shelf_hi (T bs [3], T as [3], T q, T lvl) noexcept
 	assert (q > 0);
 	assert (lvl >= 0);
 
-	const T        lvl_r2 = sqrt (lvl);
+	const T        lvl_r2 = T (sqrt (lvl));
 
 	bs [0] = 1;
 	bs [1] = lvl_r2 / q;
@@ -209,8 +209,8 @@ void	DesignEq2p::make_mid_shelf_lo (T bs [3], T as [3], T q, T lvl) noexcept
 	assert (q > 0);
 	assert (lvl > 0);
 
-	const T        lvl_r2  = sqrt (lvl);
-	const T        lvl_r4  = sqrt (lvl_r2);
+	const T        lvl_r2  = T (sqrt (lvl   ));
+	const T        lvl_r4  = T (sqrt (lvl_r2));
 	const T        lvl_r4q = lvl_r4 / q;
 
 	bs [0] = lvl;
@@ -248,8 +248,8 @@ void	DesignEq2p::make_mid_shelf_hi (T bs [3], T as [3], T q, T lvl) noexcept
 	assert (q > 0);
 	assert (lvl > 0);
 
-	const T        lvl_r2  = sqrt (lvl);
-	const T        lvl_r4  = sqrt (lvl_r2);
+	const T        lvl_r2  = T (sqrt (lvl   ));
+	const T        lvl_r4  = T (sqrt (lvl_r2));
 	const T        lvl_r4q = lvl_r4 / q;
 	const T        lvl_r2i = 1 / lvl_r2;
 
@@ -289,7 +289,7 @@ void	DesignEq2p::make_mid_peak (T bs [3], T as [3], T q, T lvl) noexcept
 	assert (q > 0);
 	assert (lvl > 0);
 
-	const T        lvl_r2 = sqrt (lvl);
+	const T        lvl_r2 = T (sqrt (lvl));
 
 	bs [0] = 1;
 	bs [1] = lvl_r2 / q;

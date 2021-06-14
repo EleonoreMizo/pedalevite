@@ -50,11 +50,11 @@ float	DistRandWalk::process_sample (float x) noexcept
 
 	if (_pos >= _nbr_spl)
 	{
-		const float    val_end = _sum / _nbr_spl;
+		const float    val_end = _sum / float (_nbr_spl);
 		const float    rnd_val = _rnd.process_sample ();
 		_nbr_spl = fstb::ceil_int (_avg_per * fstb::Approx::exp2 (rnd_val));
 		assert (_nbr_spl > 0);
-		_inc = (val_end - _val) / _nbr_spl;
+		_inc = (val_end - _val) / float (_nbr_spl);
 		_pos = 0;
 		_sum = 0;
 	}

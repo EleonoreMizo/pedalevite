@@ -46,7 +46,7 @@ void	BufferFiller::gen_rnd_non_zero (float buf_ptr [], int nbr_spl)
 		const int      rnd = rand ();
 		const float    mag = 0.5f + (float (rnd & 0xFFF) + 0.5f) / 0x1000;
 		const int      sgn = ((rnd >> 12) & 2) - 1;
-		const float    val = mag * sgn;
+		const float    val = mag * float (sgn);
 		buf_ptr [pos] = val;
 	}
 }

@@ -54,7 +54,7 @@ void	SqueezerOpDefect <HA>::config (float reso, float p1) noexcept
 template <int HA>
 float	SqueezerOpDefect <HA>::process_sample (float x) noexcept
 {
-	const float    xa = fabs (x);
+	const float    xa = fabsf (x);
 	if (xa > _param)
 	{
 		x = -x;

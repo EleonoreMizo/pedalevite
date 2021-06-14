@@ -1230,6 +1230,7 @@ commonsrc = \
         ../../src/mfx/pi/pidet2/PitchDetect2Desc.cpp \
         ../../src/mfx/pi/pidet2/PitchDetect2Desc.h \
         ../../src/mfx/pi/psh1/Cst.h \
+        ../../src/mfx/pi/psh1/Cst_mfx_pi_psh1.cpp \
         ../../src/mfx/pi/psh1/Param.h \
         ../../src/mfx/pi/psh1/PitchShift1.cpp \
         ../../src/mfx/pi/psh1/PitchShift1.h \
@@ -1242,6 +1243,7 @@ commonsrc = \
         ../../src/mfx/pi/scrush/SpectralCrusherDesc.cpp \
         ../../src/mfx/pi/scrush/SpectralCrusherDesc.h \
         ../../src/mfx/pi/sfreeze/Cst.h \
+        ../../src/mfx/pi/sfreeze/Cst_mfx_pi_sfreeze.cpp \
         ../../src/mfx/pi/sfreeze/DMode.h \
         ../../src/mfx/pi/sfreeze/Param.h \
         ../../src/mfx/pi/sfreeze/SpectralFreeze.cpp \
@@ -1321,6 +1323,7 @@ commonsrc = \
         ../../src/mfx/pi/verb2/PlatitudeDesc.cpp \
         ../../src/mfx/pi/verb2/PlatitudeDesc.h \
         ../../src/mfx/pi/vfreeze/Cst.h \
+        ../../src/mfx/pi/vfreeze/Cst_mfx_pi_vfreeze.cpp \
         ../../src/mfx/pi/vfreeze/DMode.h \
         ../../src/mfx/pi/vfreeze/Param.h \
         ../../src/mfx/pi/vfreeze/VelvetFreeze.cpp \

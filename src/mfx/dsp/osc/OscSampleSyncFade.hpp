@@ -433,7 +433,7 @@ T	OscSampleSyncFade_ScaleHelper <T>::scale_float (T data, float scale) noexcept
 template <>
 inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale_float (int32_t data, float scale) noexcept
 {
-	return fstb::conv_int_fast (data * scale);
+	return fstb::conv_int_fast (float (data) * scale);
 }
 
 

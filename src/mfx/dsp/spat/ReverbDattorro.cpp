@@ -801,7 +801,7 @@ void	ReverbDattorro::reset_lfo () noexcept
 		{
 			auto &         mds = chn._lfo_arr [lfo_cnt];
 			const int      idx = chn_cnt * 2 + lfo_cnt;
-			mds._lfo_val  = idx * (2.f / _nbr_lfo_tot) - 1.f;
+			mds._lfo_val  = float (idx) * (2.f / float (_nbr_lfo_tot)) - 1.f;
 			mds._rnd_pos  = idx * mds._rnd_per / _nbr_lfo_tot;
 		}
 	}
@@ -894,10 +894,10 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 			dly_mod_fix += dly_inc_fix;
 		}
 
-		mds._lfo_val += work_len * mds._lfo_step;
-		mds._rnd_val += work_len * mds._rnd_step;
-		mds._rnd_pos += work_len;
-		pos_blk      += work_len;
+		mds._lfo_val += float (work_len) * mds._lfo_step;
+		mds._rnd_val += float (work_len) * mds._rnd_step;
+		mds._rnd_pos +=        work_len;
+		pos_blk      +=        work_len;
 	}
 	while (pos_blk < nbr_spl);
 
@@ -946,7 +946,7 @@ void	ReverbDattorro::check_mod_counters (ModDlyState &mds) noexcept
 	{
 		mds._rnd_pos  = 0;
 		const float    val_tgt = _rnd_gen.gen_flt () * 2 - 1;
-		mds._rnd_step = (val_tgt - mds._rnd_val) / mds._rnd_per;
+		mds._rnd_step = (val_tgt - mds._rnd_val) / float (mds._rnd_per);
 	}
 }
 

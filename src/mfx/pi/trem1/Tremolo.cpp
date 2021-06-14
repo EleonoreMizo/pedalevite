@@ -258,7 +258,7 @@ float	Tremolo::get_lfo_val (float pos) const
 		val = (pos >= 0) ? 1.0f : -1.0f;
 		break;
 	case Waveform_TRI:
-		val = 1 - 4 * fabs (0.5f - fabs (pos + 0.25f));
+		val = 1 - 4 * fabsf (0.5f - fabsf (pos + 0.25f));
 		break;
 	case Waveform_RAMP_U:
 		val = pos * 2;

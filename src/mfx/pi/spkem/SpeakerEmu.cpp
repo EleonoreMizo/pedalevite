@@ -350,7 +350,7 @@ void	SpeakerEmu::update_param (bool force_flag)
 		{
 			set_shelf_h (0, 3, _mid_freq, _mid_lvl, 1.5f);
 
-			const float    treble_lvl_cbrt = cbrt (_treble_lvl);
+			const float    treble_lvl_cbrt = cbrtf (_treble_lvl);
 			for (int i = 0; i < 3; ++i)
 			{
 				set_shelf_h (0, i + 5, _treble_freq, treble_lvl_cbrt, 0.75f);

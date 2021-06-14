@@ -81,7 +81,7 @@ private:
 
 	int            _ramp_time = 64;       // Samples
 	int            _ramp_pos  = 0;        // 0 = no active ramp
-	float          _time_step = 1.0f / _ramp_time;
+	float          _time_step = 1.0f / float (_ramp_time);
 	float          _val_beg   = 0;
 	float          _val_end   = 0;
 	float          _val_tgt   = 0;

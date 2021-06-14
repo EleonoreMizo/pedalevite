@@ -592,7 +592,7 @@ void	CtrlEdit::update_display ()
 			for (int mm = 0; mm < 2; ++mm)
 			{
 				const float    val_rel = fstb::limit (
-					val_cur + (mm * 2 - 1) * _ctrl_link._amp,
+					val_cur + float (mm * 2 - 1) * _ctrl_link._amp,
 					0.0f, 1.0f
 				);
 				Tools::print_param_with_pres (
@@ -895,7 +895,7 @@ void	CtrlEdit::change_step (int dir)
 			}
 		}
 		assert (nbr_steps_new > 0);
-		cl._step = 1.0f / nbr_steps_new;
+		cl._step = 1.0f / float (nbr_steps_new);
 	}
 
 	const int      slot_id = _loc_edit._slot_id;
@@ -969,7 +969,8 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 	else
 	{
 		cl._base = 0;
-		cl._amp  = fstb::limit (_ctrl_link._amp + step * dir, -4.0f, 4.0f);
+		cl._amp  =
+			fstb::limit (_ctrl_link._amp + step * float (dir), -4.0f, 4.0f);
 	}
 
 	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
@@ -1003,7 +1004,7 @@ void	CtrlEdit::change_clip_val (int clip_index, int dir)
 		:                                                      100;
 
 	float          val   = use_clip_val (cl, clip_index);
-	int            val_i = fstb::round_int (val * scale);
+	int            val_i = fstb::round_int (val * float (scale));
 	val_i += dir;
 	val = float (val_i) / float (scale);
 	val = fstb::limit (val, -4.0f, 4.0f);
@@ -1112,7 +1113,7 @@ void	CtrlEdit::draw_curve (NBitmap &gfx, ControlCurve curve)
 		const float    mul_y  =        float (height - 1);
 		for (int pix_x = 0; pix_x < width; ++pix_x)
 		{
-			const float    x     = pix_x * step_x;
+			const float    x     = float (pix_x) * step_x;
 			const float    y     = ControlCurve_apply_curve (x, curve, false);
 			const int      pix_y = height - 1 - fstb::round_int (y * mul_y);
 			if (pix_y >= 0 && pix_y < height)
@@ -1124,7 +1125,7 @@ void	CtrlEdit::draw_curve (NBitmap &gfx, ControlCurve curve)
 			if ((pix_x & 1) == 0)
 			{
 				const int      pix_y2 =
-					height - 1 - fstb::round_int (pix_x * (step_x * mul_y));
+					height - 1 - fstb::round_int (float (pix_x) * (step_x * mul_y));
 				pix_ptr [pix_y2 * stride + pix_x] = 255;
 			}
 		}
@@ -1134,7 +1135,7 @@ void	CtrlEdit::draw_curve (NBitmap &gfx, ControlCurve curve)
 		const float    mul_x  =        float (width  - 1);
 		for (int pix_y = 0; pix_y < height; ++pix_y)
 		{
-			const float    y     = (height - 1 - pix_y) * step_y;
+			const float    y     = float (height - 1 - pix_y) * step_y;
 			const float    x     = ControlCurve_apply_curve (y, curve, true);
 			const int      pix_x = fstb::round_int (x * mul_x);
 			if (pix_x >= 0 && pix_x < width)

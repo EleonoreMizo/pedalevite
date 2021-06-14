@@ -217,8 +217,8 @@ float	CtrlUnit::evaluate (float param_val) const
 			const float    v1 = *it_l;
 			-- it_l;
 			const float    v0 = *it_l;
-			const float    d1 = fabs (param_val - v1);
-			const float    d0 = fabs (param_val - v0);
+			const float    d1 = fabsf (param_val - v1);
+			const float    d0 = fabsf (param_val - v0);
 			param_val = (d0 < d1) ? v0 : v1;
 		}
 	}

@@ -2124,6 +2124,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetect.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetectDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\psh1\Cst_mfx_pi_psh1.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\psh1\PitchShift1.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\psh1\PitchShift1Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\Ramp.cpp" />
@@ -2131,6 +2132,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\scrush\SpectralCrusher.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\scrush\SpectralCrusherDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\sfreeze\Cst_mfx_pi_sfreeze.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreeze.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\sfreeze\SpectralFreezeDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\skel\Eton.cpp">
@@ -2157,6 +2159,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\vclone\VolumeCloneDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\verb2\Platitude.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\verb2\PlatitudeDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\vfreeze\Cst_mfx_pi_vfreeze.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreeze.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreezeDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />

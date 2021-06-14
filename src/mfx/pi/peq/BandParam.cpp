@@ -135,7 +135,7 @@ void	BandParam::create_filter (float bz [3], float az [3], float fs, float inv_f
 {
 	assert (fs > 0);
 	assert (inv_fs > 0);
-	assert (fabs (fs * inv_fs - 1) < 1e-4);
+	assert (fabs (fs * inv_fs - 1.0) < 1e-4);
 
 	float          bs [3];
 	float          as [3];

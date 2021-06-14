@@ -45,7 +45,7 @@ namespace va
 void	AntisatSq::eval (float &y, float &dy, float x) noexcept
 {
 	const float    xl = fstb::limit (x, -2.f, 2.f);
-	const float    xa = fabs (xl);
+	const float    xa = fabsf (xl);
 	y  = xl * (1 - 0.25f * xa);
 	dy =      (1 - 0.5f  * xa);
 }
@@ -57,7 +57,7 @@ float AntisatSq::eval_inv (float y) noexcept
 	assert (y >= -1);
 	assert (y <=  1);
 
-	return (2 - 2 * sqrt (1 - fabs (y))) * fstb::sgn (y);
+	return (2 - 2 * sqrtf (1 - fabsf (y))) * float (fstb::sgn (y));
 }
 
 

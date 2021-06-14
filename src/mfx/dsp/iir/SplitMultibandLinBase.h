@@ -81,7 +81,8 @@ protected:
 	typedef std::array <Eq1p, _nbr_1p> Eq1pArray;
 
 	// Maximum delay time, s
-	static const double  _max_dly_time;
+	// 100 ms should be enough for most uses.
+	static constexpr double _max_dly_time = 0.100;
 
 	class Splitter
 	{

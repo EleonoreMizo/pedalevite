@@ -375,12 +375,12 @@ void	OnsetDetect2::update_os_stuff ()
 	if (_sample_freq != float (_fs_ref))
 	{
 		const float    r = _sample_freq / float (_fs_ref);
-		a = fstb::round_int (a * r);
-		b = fstb::round_int (b * r);
+		a = fstb::round_int (float (a) * r);
+		b = fstb::round_int (float (b) * r);
 	}
 
 	_flt_sum.set_win_len (a + b);
-	_sum_mul = 1.f / (a + b);
+	_sum_mul = 1.f / float (a + b);
 
 	_flt_med.set_len (a + b);
 	_flt_med.set_rank ((a + b) >> 1);

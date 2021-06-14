@@ -47,7 +47,7 @@ namespace shape
 float	WsRcp2::process_sample (float x) noexcept
 {
 	const float    t = 0.5f;
-	const float    a = fabs (x);
+	const float    a = fabsf (x);
 	const float    m = std::max (a, t);
 	const float    f = t / m;
 	const float    g = f * (2 - f);

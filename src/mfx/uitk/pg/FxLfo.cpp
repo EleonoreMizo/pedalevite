@@ -373,7 +373,7 @@ void	FxLfo::setup_lfo (const doc::PluginSettings &settings, const piapi::PluginD
 		case pi::lfo1::Param_SPEED:
 			{
 				const float    speed =
-					_sample_freq * len_cycles / (nbr_steps * _proc_blk_size);
+					_sample_freq * len_cycles / float (nbr_steps * _proc_blk_size);
 				nrm = float (desc_param.conv_nat_to_nrm (speed));
 			}
 			break;
@@ -477,7 +477,7 @@ int	FxLfo::conv_val_to_y (float val, int pix_h) const
 {
 	assert (pix_h >= 2);
 
-	return fstb::round_int ((1 - val) * 0.5f * (pix_h - 1));
+	return fstb::round_int ((1 - val) * 0.5f * float (pix_h - 1));
 }
 
 

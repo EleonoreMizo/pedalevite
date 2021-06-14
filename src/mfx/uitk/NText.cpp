@@ -324,8 +324,8 @@ void	NText::update_content ()
 
 		// Sets the origin
 		_origin = Vec2d (
-			-fstb::round_int (fw_pix * _justification [0]),
-			-fstb::round_int (fh_pix * _justification [1])
+			-fstb::round_int (float (fw_pix) * _justification [0]),
+			-fstb::round_int (float (fh_pix) * _justification [1])
 		);
 		if (_baseline_flag)
 		{
@@ -334,12 +334,12 @@ void	NText::update_content ()
 
 		// Margins from the top-left corner
 		const int      margin_x = fstb::round_int (
-			  _margin [0]      * (1 - _justification [0])
-			+ (fw_pix - w_pix) *      _justification [0]
+			  float (_margin [0]   ) * (1 - _justification [0])
+			+ float (fw_pix - w_pix) *      _justification [0]
 		);
 		const int      margin_y = fstb::round_int (
-			  _margin [1]      * (1 - _justification [1])
-			+ (fh_pix - h_pix) *      _justification [1]
+			  float (_margin [1]   ) * (1 - _justification [1])
+			+ float (fh_pix - h_pix) *      _justification [1]
 		);
 
 		uint8_t *      buf_ptr = use_buffer ();

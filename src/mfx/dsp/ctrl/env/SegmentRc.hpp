@@ -79,7 +79,7 @@ float	SegmentRc::process_sample () noexcept
 
 bool	SegmentRc::is_finished () const noexcept
 {
-	return (fabs (_raw_val) <= _end_thr);
+	return (fabsf (_raw_val) <= _end_thr);
 }
 
 

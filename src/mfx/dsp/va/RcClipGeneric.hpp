@@ -131,7 +131,7 @@ float	RcClipGeneric <F>::process_sample (float x) noexcept
 		// Checks for convergence failure
 		if (nbr_it >= _max_it)
 		{
-			if (fabs (_v2) < fabs (v2))
+			if (fabsf (_v2) < fabsf (v2))
 			{
 				// We are really lost. Reuses the previous output value.
 				v2 = _v2;
@@ -154,7 +154,7 @@ float	RcClipGeneric <F>::process_sample (float x) noexcept
 		v2 = fstb::limit (v2, v2_old - max_step, v2_old + max_step);
 		++ nbr_it;
 	}
-	while (fabs (v2 - v2_old) > _max_dif_a);
+	while (fabsf (v2 - v2_old) > _max_dif_a);
 
 	// Updates the Ic state (integration) and saves v2
 	_v2   = v2;

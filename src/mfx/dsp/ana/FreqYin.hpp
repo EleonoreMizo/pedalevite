@@ -396,7 +396,7 @@ void	FreqYin <PP>::analyse () noexcept
 
 		// Step 3: cumulative mean normalized difference function
 		dif_sum += sum;
-		const float    cmndf = float (sum * delta / dif_sum);
+		const float    cmndf = sum * float (delta) / dif_sum;
 
 		d_info._cmndf [s_idx] = cmndf;
 
@@ -413,7 +413,7 @@ void	FreqYin <PP>::analyse () noexcept
 				const float    frac = (r1 - r3) * 0.5f / (r1 + r3 - 2 * r2);
 				assert (frac >= -1);
 				assert (frac <= 1);
-				freq = _sample_freq / (delta - 1 + frac);
+				freq = _sample_freq / (float (delta - 1) + frac);
 			}
 		}
 	}

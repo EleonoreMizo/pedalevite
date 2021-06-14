@@ -204,7 +204,7 @@ void	Tuner::i_set_freq (float freq)
 	{
 		_scale_sptr->set_text ("");
 
-		const float    midi_pitch = log2 (freq / 220) * 12 - 3 + 60;
+		const float    midi_pitch = log2f (freq / 220) * 12 - 3 + 60;
 
 		// LEDs
 		const float    target     = find_closest_note (midi_pitch, _scale);
@@ -212,7 +212,7 @@ void	Tuner::i_set_freq (float freq)
 		const int      tg_octave  = tg_midi / 12;
 		const int      tg_note    = tg_midi - tg_octave * 12;
 		const float    dist_cent  = (midi_pitch - target) * 100;
-		const float    cents_abs  = fabs (dist_cent);
+		const float    cents_abs  = fabsf (dist_cent);
 		lum_arr [1] = std::max (5 - cents_abs, 0.0f) * (1.0f / 5);
 
 		const float    lum        = fstb::limit (cents_abs * (1.0f / 25), 0.0f, 1.0f);
@@ -271,7 +271,7 @@ float	Tuner::find_closest_note (float note, Scale sc)
 		float       best_note = -1;
 		for (auto tst : note_set)
 		{
-			const float    dist = fabs (tst - note);
+			const float    dist = fabsf (tst - note);
 			if (dist < best_dist)
 			{
 				best_note = tst;

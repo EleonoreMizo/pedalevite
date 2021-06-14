@@ -523,7 +523,7 @@ constexpr float	TestGen::compute_cos (uint32_t phase)
 	// The RBJ sine approximation gives about -150 dB of THD, enough for
 	// this job.
 	const float    mult      = (4.0f / ((1 << 16)) / (1 << 16));
-	float          phase_flt = (phase & 0x7FFFFFFF) * mult;
+	float          phase_flt = float (phase & 0x7FFFFFFF) * mult;
 	if ((phase & (1U << 31)) != 0)
 	{
 		phase_flt -= 1;

@@ -130,7 +130,7 @@ void	FxDisto::update_gains ()
 	_gain_post = std::max (_gain_post, 1.0f);
 
 	const int      nbr_steps = fstb::round_int (12 * _fold_cur);
-	_clip_val = 1.5f * std::min (1.0f + nbr_steps, 8.0f);
+	_clip_val = 1.5f * std::min (float (1 + nbr_steps), 8.0f);
 }
 
 

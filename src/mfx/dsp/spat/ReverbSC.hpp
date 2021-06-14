@@ -191,18 +191,22 @@ template <typename T, typename P>
 void	ReverbSC <T, P>::Delay::init (const ParamSet &p, int sz, float sr)
 {
 	_buf.resize (sz);
-	_sz = sz;
-	_drift = p._drift;
-	_seed  = p._seed;
-	_dels = p._delay;
-	float readpos = _dels;
-	readpos += calculate_drift ();
-	readpos = sz - readpos * sr;
-	_irpos = fstb::floor_int (readpos);
-	_frpos = fstb::floor_int ((readpos - _irpos) * float (FRACSCALE));
-	_inc = 0;
-	_counter = 0;
+	_sz       = sz;
+
+	_drift    = p._drift;
+	_seed     = p._seed;
+	_dels     = p._delay;
+
+	float          readpos = _dels;
+	readpos  += calculate_drift ();
+	readpos   = float (sz) - readpos * sr;
+
+	_irpos    = fstb::floor_int (readpos);
+	_frpos    = fstb::floor_int ((readpos - float (_irpos)) * float (FRACSCALE));
+	_inc      = 0;
+	_counter  = 0;
 	_maxcount = fstb::round_int (sr / p._randfreq);
+
 	generate_next_line (sr);
 
 	clear_buffers ();
@@ -312,18 +316,19 @@ void	ReverbSC <T, P>::Delay::generate_next_line (float sr) noexcept
 	}
 
 	_counter = _maxcount;
-	float curdel = _wpos - (_irpos + float (_frpos) / float (FRACSCALE));
+	float          curdel =
+		float (_wpos) - (float (_irpos) + float (_frpos) / float (FRACSCALE));
 	while (curdel < 0)
 	{
-		curdel += _sz;
+		curdel += float (_sz);
 	}
 	curdel /= sr;
 
 	// Next delay time in seconds
-	float nxtdel = _dels + calculate_drift ();
+	float          nxtdel = _dels + calculate_drift ();
 
 	// Calculate phase increment per sample
-	float inc = ((curdel - nxtdel) / float (_counter)) * sr;
+	float          inc    = ((curdel - nxtdel) / float (_counter)) * sr;
 	inc += 1;
 	_inc = fstb::floor_int (inc * FRACSCALE);
 }

@@ -336,9 +336,9 @@ void	ColorMe::update_formants ()
 	const float    k   = 1.0f / _vow_q;
 	const float    v1m = (_vow_reso - 1) * k;
 
-	const float    morph  = _vow_morph * (_vow_nbr_vow - 1);
+	const float    morph  = _vow_morph * float (_vow_nbr_vow - 1);
 	const int      v0_idx = fstb::floor_int (morph);
-	const float    m_pos  = morph - v0_idx;
+	const float    m_pos  = morph - float (v0_idx);
 
 	const int         idx_max = Cst::_nbr_vow_morph - 1;
 	const int         v1_idx  = std::min (v0_idx + 1, idx_max);

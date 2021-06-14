@@ -176,7 +176,7 @@ void	Compander::update_coef () noexcept
 
 void	Compander::set_new_state (float x) noexcept
 {
-	const float    xa = fabs (x);
+	const float    xa = fabsf (x);
 	if (xa < _lvl_thr)
 	{
 		_state = 0;

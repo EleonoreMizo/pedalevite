@@ -190,7 +190,7 @@ void	EnvFollow::do_process_block (piapi::ProcInfo &proc)
 	}
 	else
 	{
-		val = sqrt (val2) * _gain;
+		val = sqrtf (val2) * _gain;
 	}
 	val -= _thresh;
 	val  = std::max (val, 0.0f);
@@ -333,8 +333,9 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 		}
 		else
 		{
+			const float    gain = 1.f / float (nbr_chn_src);
 			dsp::mix::Align::sum_square_n_1_v (
-				dst_ptr, proc._src_arr, nbr_spl, nbr_chn_src, 0, 1.0f / nbr_chn_src
+				dst_ptr, proc._src_arr, nbr_spl, nbr_chn_src, 0, gain
 			);
 		}
 	}
@@ -342,7 +343,8 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 	else
 	{
 		float *        tmp_ptr = &_buf_env [0];
-		const auto     v       = fstb::ToolsSimd::set1_f32 (1.0f / nbr_chn_src);
+		const auto     v       =
+			fstb::ToolsSimd::set1_f32 (1.f / float (nbr_chn_src));
 		for (int chn_index = 0; chn_index < nbr_chn_src; ++chn_index)
 		{
 			const float *  src_ptr = proc._src_arr [chn_index];

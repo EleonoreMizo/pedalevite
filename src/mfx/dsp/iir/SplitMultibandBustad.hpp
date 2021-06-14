@@ -45,6 +45,15 @@ namespace iir
 
 
 
+template <int O>
+constexpr int	SplitMultibandBustad <O>::_nbr_2p;
+template <int O>
+constexpr int	SplitMultibandBustad <O>::_nbr_1p;
+template <int O>
+constexpr int	SplitMultibandBustad <O>::_order;
+
+
+
 /*
 ==============================================================================
 Name: reserve
@@ -538,6 +547,11 @@ void	SplitMultibandBustad <O>::process_block_merge (float dst_ptr [], int nbr_sp
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int O>
+constexpr int	SplitMultibandBustad <O>::_max_buf_size;
 
 
 

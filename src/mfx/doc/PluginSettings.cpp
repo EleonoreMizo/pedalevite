@@ -317,11 +317,11 @@ void	PluginSettings::ser_read (SerRInterface &ser, std::string model_id)
 
 		// Rounds to 0 or 1 very small values, probably resulting from the
 		// accumulation of rounding errors.
-		if (fabs (v) <= 1e-7f)
+		if (fabsf (v) <= 1e-7f)
 		{
 			v = 0;
 		}
-		else if (fabs (1 - v) <= 1e-7f)
+		else if (fabsf (1 - v) <= 1e-7f)
 		{
 			v = 1;
 		}

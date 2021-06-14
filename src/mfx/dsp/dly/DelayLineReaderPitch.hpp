@@ -396,7 +396,7 @@ void	DelayLineReaderPitch <TC>::check_and_start_transition () noexcept
 		else
 		{
 			const TC       rate =
-				1 + (_time_cur - dly) * sample_freq / nbr_spl_normal_rate;
+				1 + (_time_cur - dly) * sample_freq / TC (nbr_spl_normal_rate);
 
 			req_xfade_flag |= (rate < _rate_inf || rate > _rate_sup);
 		}
@@ -426,13 +426,13 @@ void	DelayLineReaderPitch <TC>::check_and_start_transition () noexcept
 					if (! g_old.is_ramping ())
 					{
 						g_old._dly_stp   = add_step;
-						g_old._dly_tgt   = g_old._dly_cur + add_step * xfade_dur;
+						g_old._dly_tgt   = g_old._dly_cur + add_step * TC (xfade_dur);
 						g_old._trans_len = xfade_dur;
 						g_old._trans_pos = 0;
 					}
 
 					g_new._dly_stp    = add_step;
-					g_new._dly_tgt   += add_step * xfade_dur;
+					g_new._dly_tgt   += add_step * TC (xfade_dur);
 					g_new._trans_len  = xfade_dur;
 					g_new._trans_pos  = 0;
 				}
@@ -461,7 +461,7 @@ void	DelayLineReaderPitch <TC>::check_and_start_transition () noexcept
 			{
 				const TC       dif = dly - g._dly_cur;
 				assert (nbr_spl > 0);
-				g._dly_stp   = dif / nbr_spl;
+				g._dly_stp   = dif / TC (nbr_spl);
 				g._dly_tgt   = dly;
 				g._trans_pos = 0;
 				g._trans_len = nbr_spl;
@@ -489,8 +489,8 @@ bool	DelayLineReaderPitch <TC>::process_grain (Grain &g, float dest_ptr [], int 
 	TC             dly_end   = dly_beg;
 	if (g.is_ramping ())
 	{
-		g._dly_cur   += nbr_spl * g._dly_stp;
-		g._trans_pos += nbr_spl;
+		g._dly_cur   += TC (nbr_spl) * g._dly_stp;
+		g._trans_pos +=     nbr_spl;
 		if (g._trans_pos >= g._trans_len)
 		{
 			g._trans_len = -1;

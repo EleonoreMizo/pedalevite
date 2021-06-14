@@ -83,7 +83,7 @@ bool	Biquad4::check_stability (float a1, float a2) noexcept
 {
 	const float    margin = 5e-6f;
 
-	return (fabs (a1) < a2 + (1 + margin) && fabs (a2) < (1 + margin));
+	return (fabsf (a1) < a2 + (1 + margin) && fabsf (a2) < (1 + margin));
 }
 
 

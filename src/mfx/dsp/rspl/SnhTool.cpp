@@ -685,7 +685,7 @@ void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], int
 					++ pos;
 				}
 				while (pos < sub_block_end);
-				interp_val += _interp_step * _hold_time;
+				interp_val += _interp_step * float (_hold_time);
 			}
 
 			do

@@ -168,7 +168,7 @@ public:
 
     static LONG ObjectsActive() {
         return m_cObjects;
-    };
+    }
 };
 
 
@@ -189,13 +189,13 @@ protected:                      /* So we can override NonDelegatingRelease() */
 public:
 
     CUnknown(TCHAR *pName, LPUNKNOWN pUnk, HRESULT *phr);
-    virtual ~CUnknown() {};
+    virtual ~CUnknown() {}
 
     /* Return the owner of this object */
 
     LPUNKNOWN GetOwner() const {
         return m_pUnknown;
-    };
+    }
 
     /* Called from the class factory to create a new instance, it is
        pure virtual so it must be overriden in your derived class */
@@ -256,11 +256,11 @@ public:
 
     BOOL IsClassID(REFCLSID rclsid) const {
         return (IsEqualCLSID(*m_ClsID,rclsid));
-    };
+    }
 
     CUnknown *CreateInstance(LPUNKNOWN pUnk, HRESULT *phr) const {
         return m_lpfnNew(pUnk, phr);
-    };
+    }
 };
 
 

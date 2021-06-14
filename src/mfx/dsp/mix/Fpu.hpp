@@ -117,6 +117,15 @@ void	Fpu::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT
 
 
 
+float	Fpu::compute_step (float s_vol, float e_vol, int nbr_spl) noexcept
+{
+	assert (nbr_spl > 0);
+
+	return (e_vol - s_vol) / float (nbr_spl);
+}
+
+
+
 }  // namespace mix
 }  // namespace dsp
 }  // namespace mfx

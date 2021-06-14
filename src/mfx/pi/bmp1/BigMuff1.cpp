@@ -313,7 +313,7 @@ void	BigMuff1::update_oversampling ()
 	_ovrspl_rate = 1 << int (_ovrspl);
 	for (auto &chn : _chn_arr)
 	{
-		chn._bmp.set_sample_freq (_sample_freq * _ovrspl_rate);
+		chn._bmp.set_sample_freq (_sample_freq * double (_ovrspl_rate));
 	}
 }
 

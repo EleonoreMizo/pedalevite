@@ -108,7 +108,7 @@ void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nb
 			float          x      = src_loc_ptr [pos];
 			if (vol_sq > _lvl_sq)
 			{
-				x *= _lvl / sqrt (vol_sq);
+				x *= _lvl / sqrtf (vol_sq);
 			}
 			dst_loc_ptr [pos] = x;
 		}

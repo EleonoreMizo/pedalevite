@@ -87,8 +87,8 @@ void	DistAttract::attract (float x, float env_val) noexcept
 			_sign = -_sign;
 		}
 
-		if (   fabs (x) < fabs (_cur_val)
-		    && fabs (_cur_val) < _lvl_b)
+		if (   fabsf (x) < fabsf (_cur_val)
+		    && fabsf (_cur_val) < _lvl_b)
 		{
 			_mad_flag = false;
 		}
@@ -96,13 +96,13 @@ void	DistAttract::attract (float x, float env_val) noexcept
 
 	else
 	{
-		if (fabs (x) < 1e-3f)
+		if (fabsf (x) < 1e-3f)
 		{
 			_cur_val = x;
 		}
 		else
 		{
-			const float    amount   = 1 - 1 / (fabs (x) * 4 + 1);
+			const float    amount   = 1 - 1 / (fabsf (x) * 4 + 1);
 
 			const Polarity	pol      = val_to_pol (x);
 			const float    attract_point = _lvl_a [pol];
@@ -118,7 +118,7 @@ void	DistAttract::attract (float x, float env_val) noexcept
 
 			_cur_val += step;
 
-			if (fabs (x) >= _lvl_b)
+			if (fabsf (x) >= _lvl_b)
 			{
 				_mad_flag = true;
 				_sign     = (_cur_val < 0) ? 1.0f : -1.0f;

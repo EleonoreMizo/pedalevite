@@ -262,7 +262,7 @@ void	FreqYinCheap::analyse_sample () noexcept
 
 		_dif_sum += sum;
 
-		_cmndf_arr [_delta] = float (sum * _delta / _dif_sum);
+		_cmndf_arr [_delta] = sum * float (_delta) / _dif_sum;
 
 		if (_delta >= _min_delta)
 		{
@@ -277,13 +277,13 @@ void	FreqYinCheap::analyse_sample () noexcept
 				const float    frac = (r1 - r3) * 0.5f / (r1 + r3 - 2 * r2);
 				assert (frac >= -1);
 				assert (frac <= 1);
-				_freq = _sample_freq / (_delta - 1 + frac);
+				_freq = _sample_freq / (float (_delta - 1) + frac);
 
 				// Smoothing
 				if (_freq_prev > 0)
 				{
 					const float    dif = _freq - _freq_prev;
-					if (fabs (dif) < _smooth_thr * _freq)
+					if (fabsf (dif) < _smooth_thr * _freq)
 					{
 						_freq = _freq_prev + dif * _smoothing;
 					}

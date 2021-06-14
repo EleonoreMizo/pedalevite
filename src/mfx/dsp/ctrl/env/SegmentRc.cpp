@@ -174,7 +174,7 @@ void	SegmentRc::skip_block (int nbr_spl) noexcept
 
 void	SegmentRc::setup_partial (float final_val, float mult, float end_thr) noexcept
 {
-	assert (fabs (mult) <= 1);
+	assert (fabsf (mult) <= 1);
 	assert (end_thr >= 0);
 
 	_final_val = final_val;
@@ -190,7 +190,7 @@ void	SegmentRc::set_val_direct (float val) noexcept
    const float    dif = val - _final_val;
 
    // Constant case: we already reached the value
-   const float    dif_abs = fabs (dif);
+   const float    dif_abs = fabsf (dif);
    if (   dif_abs <= 0.05f
        && dif_abs <= _end_thr)
    {

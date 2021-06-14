@@ -77,8 +77,8 @@ Phaser2::Phaser2 (piapi::HostInterface &host)
 ,	_lfo ()
 ,	_nbr_stages (4)
 ,	_fdbk_pos (4)
-,	_freq_min_l2 (log2 ( 350.f))
-,	_freq_max_l2 (log2 (2000.f))
+,	_freq_min_l2 (log2f ( 350.f))
+,	_freq_max_l2 (log2f (2000.f))
 ,	_feedback (0)
 ,	_mix (0.5f)
 ,	_chn_arr ()
@@ -249,7 +249,7 @@ void	Phaser2::do_process_block (piapi::ProcInfo &proc)
 		float          b0_step = 1.0f / _int_block_size;
 		if (len_blk != _int_block_size)
 		{
-			b0_step = 1.0f / len_blk;
+			b0_step = 1.0f / float (len_blk);
 		}
 		b0_step *= b0_new - b0_cur;
 		const float    b0_save = b0_cur;

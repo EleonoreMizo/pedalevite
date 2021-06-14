@@ -141,7 +141,7 @@ float	FilterComb <IM, FP, OP, AL>::get_freq () const noexcept
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::set_feedback (float feedback) noexcept
 {
-	assert (fabs (feedback) <= 1);
+	assert (fabsf (feedback) <= 1);
 
 	_feedback = feedback;
 	update_feedback ();
@@ -257,7 +257,7 @@ void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const fl
 	assert (nbr_spl > 0);
 	assert (final_freq >= get_min_freq ());
 	assert (final_freq <= get_max_freq ());
-	assert (fabs (final_feedback) <= 1);
+	assert (fabsf (final_feedback) <= 1);
 
 	VariableFreqFeedbackData   data;
 	init_variable_freq_feedback (data, nbr_spl, final_freq, final_feedback);
@@ -281,7 +281,7 @@ void	FilterComb <IM, FP, OP, AL>::process_block_vff_mix (float dest_ptr [], cons
 	assert (nbr_spl > 0);
 	assert (final_freq >= get_min_freq ());
 	assert (final_freq <= get_max_freq ());
-	assert (fabs (final_feedback) <= 1);
+	assert (fabsf (final_feedback) <= 1);
 
 	VariableFreqFeedbackData   data;
 	init_variable_freq_feedback (data, nbr_spl, final_freq, final_feedback);
@@ -344,10 +344,10 @@ void	FilterComb <IM, FP, OP, AL>::update_buffer ()
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::update_interpolator () noexcept
 {
-	_period = _sample_freq / _freq + _interpolator_maker.get_delay ();
+	_period = _sample_freq / _freq + float (_interpolator_maker.get_delay ());
 	_period_int = fstb::ceil_int (_period);
 	_buf.set_time (_period_int);
-	const float    d = _period_int - _period;
+	const float    d = float (_period_int) - _period;
 	update_interpolator_base_only (d);
 
 	update_feedback ();
@@ -410,11 +410,11 @@ void	FilterComb <IM, FP, OP, AL>::init_variable_freq_feedback (VariableFreqFeedb
 	assert (nbr_spl > 0);
 	assert (final_freq >= get_min_freq ());
 	assert (final_freq <= get_max_freq ());
-	assert (fabs (final_feedback) <= 1);
+	assert (fabsf (final_feedback) <= 1);
 
 	const float    final_period =
-		_sample_freq / final_freq + _interpolator_maker.get_delay ();
-	const float    inv_nbr_spl  = 1.0f / nbr_spl;
+		_sample_freq / final_freq + float (_interpolator_maker.get_delay ());
+	const float    inv_nbr_spl  = 1.0f / float (nbr_spl);
 	data._cur_feedback  = _feedback;
 	data._cur_period    = _period;
 	data._feedback_step = (final_feedback - _feedback) * inv_nbr_spl;
@@ -428,7 +428,7 @@ float	FilterComb <IM, FP, OP, AL>::iterate_variable_freq_feedback (VariableFreqF
 {
 	_period_int = fstb::ceil_int (data._cur_period);
 	_buf.set_time (_period_int);
-	const float    d        = _period_int - data._cur_period;
+	const float    d        = float (_period_int) - data._cur_period;
 	update_interpolator_base_only (d);
 	const float    read_val = read_sample_without_feedback () * data._cur_feedback;
 	const float    fdbk_val = _feedback_proc.process_sample (read_val);

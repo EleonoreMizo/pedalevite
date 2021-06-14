@@ -397,7 +397,7 @@ void	DistoPwm2::do_process_block (piapi::ProcInfo &proc)
 		const float    lvl_post_inv = 1.0f / lvl_post;
 		const float    lvl_t = std::max (lvl_pre, _sust_lvl);      // Modified input level doesn't go below the threshold
 		const float    r  = std::min (lvl_t * lvl_post_inv, 1.0f); // Amplification factor to reach the modified input level
-		float          gd = pow (r, 1 - _density);                 // Moderated by the density
+		float          gd = powf (r, 1 - _density);                // Moderated by the density
 		if (_gate_lvl > 0 && lvl_pre < _gate_lvl)
 		{
 			float          gain_red = lvl_pre / _gate_lvl;
@@ -692,8 +692,9 @@ void	DistoPwm2::square_block (float dst_ptr [], const float * const src_ptr_arr 
 	}
 	else
 	{
+		const float    gain = 1.f / float (nbr_chn);
 		dsp::mix::Align::sum_square_n_1_v (
-			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 1.0f / nbr_chn
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, gain
 		);
 	}
 }

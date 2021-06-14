@@ -125,7 +125,7 @@ constexpr double	FixedPoint::get_val_dbl () const noexcept
 
 constexpr float	FixedPoint::get_val_flt () const noexcept
 {
-	return _val._part._msw + get_frac_val_flt ();
+	return float (_val._part._msw) + get_frac_val_flt ();
 }
 
 
@@ -173,14 +173,14 @@ constexpr void	FixedPoint::set_frac_val (uint32_t frac_val) noexcept
 
 constexpr double	FixedPoint::get_frac_val_dbl () const noexcept
 {
-	return _val._part._lsw * double (fstb::TWOPM32);
+	return double (_val._part._lsw) * fstb::TWOPM32;
 }
 
 
 
 constexpr float	FixedPoint::get_frac_val_flt () const noexcept
 {
-	return float (_val._part._lsw * fstb::TWOPM32);
+	return float (_val._part._lsw) * fstb::TWOPM32;
 }
 
 

@@ -132,8 +132,8 @@ std::set <float>::const_iterator	ToolsParam::find_closest_notch (float val, cons
 		const float    v1 = *it_l;
 		-- it_l;
 		const float    v0 = *it_l;
-		const float    d1 = fabs (val - v1);
-		const float    d0 = fabs (val - v0);
+		const float    d1 = fabsf (val - v1);
+		const float    d0 = fabsf (val - v0);
 		if (d0 < d1)
 		{
 			it_found = it_l;

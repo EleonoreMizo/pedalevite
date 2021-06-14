@@ -211,7 +211,7 @@ void	OscNPhase::update_period () noexcept
 	else
 	{
 		_np = fstb::round_int (2 + 6 * _variation_arr [Variation_SHAPE]);
-		_inv_np = 1.0f / _np;
+		_inv_np = 1.f / float (_np);
 	}
 
 	const double	ps = _period * _sample_freq;

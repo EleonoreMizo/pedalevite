@@ -139,7 +139,7 @@ DrawShapers::BufAlign	DrawShapers::create_src (float xmin, float xmax)
 	const float    step = (xmax - xmin) / float (_nbr_spl - 1);
 	for (int pos = 0; pos < nbr_spl_align; ++pos)
 	{
-		src_arr [pos] = xmin + step * pos;
+		src_arr [pos] = xmin + step * float (pos);
 	}
 
 	return src_arr;

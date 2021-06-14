@@ -293,7 +293,7 @@ void	DelayLineBbd::read_line (float dst_ptr [], int nbr_spl, float &f_beg, float
 		// The new delay time requires crossfading?
 		const float    read_speed =
 			1 - (dly_end - dly_beg) * fstb::rcp_uint <float> (nbr_spl);
-		if (fabs (read_speed) > _speed_limit)
+		if (fabsf (read_speed) > _speed_limit)
 		{
 			_xfade_pos     = _xfade_len;
 			_xfade_dly_old = _delay_time.get_beg ();

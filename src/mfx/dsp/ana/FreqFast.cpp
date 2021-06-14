@@ -434,7 +434,7 @@ bool	FreqFast::is_period_similar (float p1, float p2) noexcept
 
 	const float    thr = 0.06f;    // 6% = 1/2 tone
 
-	return (fabs (p1 - p2) < (thr * 0.5f) * (p1 + p2));
+	return (fabsf (p1 - p2) < (thr * 0.5f) * (p1 + p2));
 }
 
 

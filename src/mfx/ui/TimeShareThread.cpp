@@ -222,7 +222,7 @@ std::chrono::nanoseconds	TimeShareThread::get_time ()
 		::QueryPerformanceFrequency (&f);
 		per = 1e9 / double (f.QuadPart);
 	}
-	return std::chrono::nanoseconds (int64_t (t.QuadPart * per));
+	return std::chrono::nanoseconds (int64_t (double (t.QuadPart) * per));
 #else
 	#error
 

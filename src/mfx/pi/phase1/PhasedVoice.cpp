@@ -424,7 +424,7 @@ void	PhasedVoice::update_osc_phase (int nbr_spl)
 
 	if (! _osc_hold_flag)
 	{
-		_phase_osc_cur += _phase_osc_step * nbr_spl;
+		_phase_osc_cur += _phase_osc_step * float (nbr_spl);
 	}
 
 	if (_osc_freq_update_flag)
@@ -443,7 +443,7 @@ void	PhasedVoice::update_osc_phase (int nbr_spl)
 		{
 			const float    phase_dif =
 				_phase_man_cur - _phase_man_old + _phase_hold_cur - _phase_hold_old;
-			const float    freq_dif_rad_spl = phase_dif / nbr_spl;
+			const float    freq_dif_rad_spl = phase_dif / float (nbr_spl);
 
 			freq_rad_spl += freq_dif_rad_spl;
 
@@ -507,7 +507,7 @@ void	PhasedVoice::update_apf ()
 	// Last element: fractional delay
 	if (nbr_apf_flt < float (nbr_apf))
 	{
-		const float     delay   = nbr_apf_flt - (nbr_apf - 1);
+		const float     delay   = nbr_apf_flt - float (nbr_apf - 1);
 		float           coef    = _apfd_coef;
 		const float     nodelay = (coef < 0) ? -1.f : 1.f;
 		coef = nodelay + delay * (coef - nodelay);
@@ -561,7 +561,8 @@ void	PhasedVoice::process_block_cfc (float * const dst_ptr_arr [_nbr_chn_out], c
 	const float *  buf_c_ptr = use_buf (Buf_C);
 	const float *  buf_s_ptr = use_buf (Buf_S);
 
-	const float    fdbk_level_step = (_fdbk_level - _fdbk_lvl_old) / nbr_spl;
+	const float    fdbk_level_step =
+		(_fdbk_level - _fdbk_lvl_old) / float (nbr_spl);
 	_fdbk_lvl_cur = _fdbk_lvl_old;
 
 	int            pos = 0;
@@ -600,7 +601,7 @@ void	PhasedVoice::process_block_vfc (float * const dst_ptr_arr [_nbr_chn_out], c
 	const float *  buf_fc_c_ptr = use_buf (Buf_FC_C);
 	const float *  buf_fc_s_ptr = use_buf (Buf_FC_S);
 
-	const float    inv_nbr_spl = 1.0f / nbr_spl;
+	const float    inv_nbr_spl = 1.f / float (nbr_spl);
 	const float    old_phase = _fdbk_color_old * float (2 * fstb::PI);
 	const float    new_phase = _fdbk_color     * float (2 * fstb::PI);
 	_fdbk_color_ramper.set_phase (old_phase);
