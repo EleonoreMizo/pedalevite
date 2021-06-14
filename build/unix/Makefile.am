@@ -8,19 +8,43 @@ warningflags = \
         -Wmisleading-indentation \
         -Wnull-dereference \
         -Wvla \
-        $(COMPWARNFLAGS)
+        -Wstrict-aliasing \
+        -Wuninitialized \
+        -Wunused-parameter \
+        -Wreorder \
+        -Wsign-compare \
+        -Wunreachable-code \
+        -Wcast-align \
+        -Wconversion \
+        -Wno-sign-conversion \
+         $(COMPWARNFLAGS)
+# -Wsign-conversion
+# -Wswitch-enum
 
 if CLG
 
 # Clang
 warningflags += \
+        -Wshadow-all \
+        -Wshorten-64-to-32 \
+        -Wint-conversion \
+        -Wconditional-uninitialized \
+        -Wconstant-conversion \
+        -Wunused-private-field \
+        -Wbool-conversion \
+        -Wextra-semi \
+        -Wnullable-to-nonnull-conversion \
+        -Wno-implicit-int-float-conversion \
         -Wno-unused-private-field \
         -Wno-unused-command-line-argument
+# -Wzero-as-null-pointer-constant
 
 else
 
 # GCC
 warningflags += \
+        -Wredundant-decls \
+        -Wno-ignored-attributes \
         -Wno-expansion-to-defined
 
 endif

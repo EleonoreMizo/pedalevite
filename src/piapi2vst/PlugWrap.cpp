@@ -812,6 +812,12 @@ void	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outp
 
 
 
+// Currently disabled because stumbling on:
+// error LNK2005: _DllMain@12 already defined in MSVCRTD.lib(dllmain.obj)
+#if 0
+
+
+
 #if defined (_MSC_VER)
 static int __cdecl	piapi2vst_PlugWrap_new_handler_cb (size_t dummy)
 {
@@ -929,9 +935,6 @@ static void	piapi2vst_PlugWrap_main_prog_end ()
 
 
 
-// Currently disabled because stumbling on:
-// error LNK2005: _DllMain@12 already defined in MSVCRTD.lib(dllmain.obj)
-#if 0 
 #if defined (_MSC_VER)
 
 ::BOOL WINAPI DllMain (::HINSTANCE hinst, ::DWORD reason, ::LPVOID reserved_ptr)
@@ -952,7 +955,10 @@ static void	piapi2vst_PlugWrap_main_prog_end ()
 }
 
 #endif	// _MSC_VER
-#endif
+
+
+
+#endif // Disabled
 
 
 
