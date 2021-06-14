@@ -32,30 +32,6 @@ UNX="false"
 MAC="false"
 CLG="false"
 
-AS_IF(
-    [test "x$enable_debug" = "xyes"],
-    [
-        DEBUGCFLAGS="-O0 -g3 -ggdb"
-        AC_MSG_NOTICE([Debug mode enabled.])
-    ],
-    [DEBUGCFLAGS="-O3 -g3 -DNDEBUG"]
-)
-
-AS_IF(
-    [test "x$enable_clang" = "xyes"],
-    [
-        CLG="true"
-        CXX="clang++"
-        CC="clang"
-        LD="clang++"
-        EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -stdlib=libc++ -D_LIBCPP_ABI_ENABLE_UNIQUE_PTR_TRIVIAL_ABI -D_LIBCPP_ABI_ENABLE_SHARED_PTR_TRIVIAL_ABI"
-        MFLAGS="$MFLAGS -fexperimental-new-pass-manager -mllvm -inline-threshold=1000"
-        COMPWARNFLAGS=""
-        AC_MSG_NOTICE([Using clang as compiler.])
-    ],
-    [COMPWARNFLAGS="-Wduplicated-cond -Wduplicated-branches -Wlogical-op"]
-)
-
 AS_CASE(
     [$host_cpu],
     [i?86],     [BITS="32" X86="true"],
@@ -72,7 +48,35 @@ AS_CASE(
     [*linux*|gnu*|dragonfly*|*bsd*], [UNX="true"]
 )
 
+AS_IF(
+    [test "x$enable_debug" = "xyes"],
+    [
+        DEBUGCFLAGS="-O0 -g3 -ggdb"
+        AC_MSG_NOTICE([Debug mode enabled.])
+    ],
+    [DEBUGCFLAGS="-O3 -g3 -DNDEBUG"]
+)
 
+AS_IF(
+    [test "x$enable_clang" = "xyes"],
+    [
+        CLG="true"
+        CXX="clang++"
+        CC="clang"
+        LD="clang++"
+        MFLAGS="$MFLAGS -fexperimental-new-pass-manager -mllvm -inline-threshold=1000"
+        COMPWARNFLAGS=""
+        AC_MSG_NOTICE([Using clang as compiler.])
+        AS_IF(
+            [test "x$host_os" != "xmingw32" && test "x$host_os" != "xmingw64"],
+            [
+                AC_MSG_NOTICE([Using libc++.])
+                EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -stdlib=libc++ -D_LIBCPP_ABI_ENABLE_UNIQUE_PTR_TRIVIAL_ABI -D_LIBCPP_ABI_ENABLE_SHARED_PTR_TRIVIAL_ABI"
+            ]
+        )
+    ],
+    [COMPWARNFLAGS="-Wduplicated-cond -Wduplicated-branches -Wlogical-op"]
+)
 
 AC_LANG_PUSH([C++])
 #AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++20], [CXXSTD="c++20"]))
@@ -126,7 +130,6 @@ AS_IF(
         AS_IF([test "x$BITS" = "x64"], [MFLAGS="$MFLAGS -mcx16"])
     ]
 )
-
 
 AS_IF(
     [test "x$ARM" = "xtrue"],
