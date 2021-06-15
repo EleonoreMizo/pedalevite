@@ -56,7 +56,7 @@ int	TestSvf::perform_test ()
 	const int      per = fstb::round_int (sample_freq / 55.0);
 	for (int pos = 0; pos < len; ++pos)
 	{
-		src [pos] = (pos % per) * (2.f / per) - 1.f;
+		src [pos] = float (pos % per) * (2.f / float (per)) - 1.f;
 	}
 
 	mfx::dsp::iir::Svf2p       design;

@@ -145,7 +145,7 @@ int	TestOscWavetableSub::test_valid ()
 	osc.set_phase_rel (0x40000000, 0);
 	for (int pos = 0; pos < len; pos += block_len)
 	{
-		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
+		const int32_t  pitch = offset + fstb::floor_int (float (pos) * mult);
 		osc.set_pitch (pitch);
 		osc.process_block (&data_pos [pos], &data_sub [pos], block_len);
 	}
@@ -157,7 +157,7 @@ int	TestOscWavetableSub::test_valid ()
 	osc.set_phase_rel (0x40000000, 0);
 	for (int pos = 0; pos < len; ++ pos)
 	{
-		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
+		const int32_t  pitch = offset + fstb::floor_int (float (pos) * mult);
 		osc.set_pitch (pitch);
 		osc.process_sample (data_pos [pos], data_sub [pos]);
 	}
@@ -275,11 +275,11 @@ void	TestOscWavetableSub::configure_osc (O &osc, typename O::WavetableDataType &
 		wt.set_sample (
 			last_table,
 			(pos - table_len / 4) & (table_len - 1),
-			DataType (((float (pos * 2 + 1) / table_len) - 1) * scale)
+			DataType (((float (pos * 2 + 1) / float (table_len)) - 1) * scale)
 		);
 #else
 		// Parabola
-		const float    p = (float (pos)) / table_len - 0.5f;
+		const float    p = float (pos) / float (table_len) - 0.5f;
 		wt.set_sample (
 			last_table,
 			pos,

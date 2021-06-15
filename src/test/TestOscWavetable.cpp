@@ -142,7 +142,7 @@ int	TestOscWavetable::test_valid ()
 	const int32_t  offset  = base_pitch - (nbr_oct << OscType::PITCH_FRAC_BITS);
 	for (int pos = 0; pos < len; pos += block_len)
 	{
-		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
+		const int32_t  pitch = offset + fstb::floor_int (float (pos) * mult);
 		osc.set_pitch (pitch);
 		osc.process_block (&data [pos], block_len);
 	}
@@ -151,7 +151,7 @@ int	TestOscWavetable::test_valid ()
 
 	for (int pos = 0; pos < len; ++ pos)
 	{
-		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
+		const int32_t  pitch = offset + fstb::floor_int (float (pos) * mult);
 		osc.set_pitch (pitch);
 		data [pos] = osc.process_sample ();
 	}
@@ -245,14 +245,14 @@ void	TestOscWavetable::configure_osc (O &osc, typename O::WavetableDataType &wt)
 		wt.set_sample (
 			last_table,
 			(pos - table_len / 4) & (table_len - 1),
-			DataType (((float (pos * 2 + 1) / table_len) - 1) * scale)
+			DataType (((float (pos * 2 + 1) / float (table_len)) - 1) * scale)
 		);
 #else
 		// Sine
 		wt.set_sample (
 			last_table,
 			pos,
-			DataType (cos (pos * (2 * basic::PI) / table_len) * scale)
+			DataType (cos (pos * (2 * basic::PI) / double (table_len) * scale)
 		);
 #endif
 	}

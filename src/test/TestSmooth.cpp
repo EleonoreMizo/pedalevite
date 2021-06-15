@@ -92,7 +92,7 @@ int	TestSmooth::perform_test ()
 	const int      ofs_sin = len_saw;
 	for (int pos = 0; pos < len_sin; ++pos)
 	{
-		src [ofs_sin + pos] = float (sin (pos * sin_mul)) * 0.5f;
+		src [ofs_sin + pos] = sinf (float (pos) * sin_mul) * 0.5f;
 	}
 
 	// Test

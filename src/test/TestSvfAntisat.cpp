@@ -110,7 +110,7 @@ int	TestSvfAntisat::perform_test (const char classname_0 [], const char filename
 	const float    gain = 1.0f;
 	for (int pos = 0; pos < len; ++pos)
 	{
-		src [pos] = ((pos % per) * (2.f / per) - 1.f) * gain;
+		src [pos] = (float (pos % per) * (2.f / float (per)) - 1.f) * gain;
 	}
 
 	mfx::dsp::va::SvfAntisat <T> svf;

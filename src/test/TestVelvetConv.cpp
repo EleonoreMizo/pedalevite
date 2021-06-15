@@ -58,7 +58,9 @@ int	TestVelvetConv::perform_test ()
 #else
 	for (int k = 0; k < grain_size; ++k)
 	{
-		grain [k] = lvl * sinf (k * float (2 * fstb::PI * 997 / sample_freq));
+		grain [k] = lvl * sinf (
+			float (k) * float (2 * fstb::PI * 997 / sample_freq)
+		);
 	}
 #endif
 	mfx::dsp::wnd::ProcHann <float> hann;

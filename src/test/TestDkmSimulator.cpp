@@ -494,10 +494,10 @@ int	TestDkmSimulator::perform_test ()
 void	TestDkmSimulator::gen_saw (std::vector <float> &data, double sample_freq, double freq, int len)
 {
 	const int      per   = fstb::round_int (sample_freq / freq);
-	const float    scale = 2.f / (per - 1);
+	const float    scale = 2.f / float (per - 1);
 	for (int pos = 0; pos < len; ++pos)
 	{
-		const float    val = (pos % per) * scale - 1.f;
+		const float    val = float (pos % per) * scale - 1.f;
 		data.push_back (val);
 	}
 }

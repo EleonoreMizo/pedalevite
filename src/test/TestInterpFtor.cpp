@@ -72,8 +72,8 @@ int	TestInterpFtor::perform_test ()
 
 		for (int frac_cnt = 0; frac_cnt < nbr_frac && ret_val == 0; ++frac_cnt)
 		{
-			const uint32_t frac_u32 = frac_cnt * frac_mul_u32;
-			const float    frac_flt = frac_cnt * frac_mul_flt;
+			const uint32_t frac_u32 =        frac_cnt  * frac_mul_u32;
+			const float    frac_flt = float (frac_cnt) * frac_mul_flt;
 			const float    res_flt = ftor (frac_flt, &src_flt [Interp::DATA_PRE]);
 			const int32_t  res_i32 = ftor (frac_u32, &src_i16 [Interp::DATA_PRE]);
 

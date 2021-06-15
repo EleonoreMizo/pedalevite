@@ -98,7 +98,7 @@ int	TestOscSample::perform_test ()
 	std::vector <float>	dest;
 	for (size_t pos = 0; pos < dest_int.size (); ++pos)
 	{
-		dest.push_back (dest_int [pos] * (1.0f / 0x8000));
+		dest.push_back (float (dest_int [pos]) * (1.0f / 0x8000));
 	}
 
 	mfx::FileOpWav::save ("results/oscsample0.wav", dest, 44100, 0.5f);

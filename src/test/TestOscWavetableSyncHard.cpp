@@ -377,14 +377,14 @@ void	TestOscWavetableSyncHard::configure_osc (O &osc, typename O::WavetableDataT
 		wt.set_sample (
 			last_table,
 			(pos - table_len / 4) & (table_len - 1),
-			DataType (((float (pos * 2 + 1) / table_len) - 1) * scale)
+			DataType (((float (pos * 2 + 1) / float (table_len)) - 1) * scale)
 		);
 #else
 		// Sine
 		wt.set_sample (
 			last_table,
 			pos,
-			DataType (cos (pos * (2 * basic::PI) / table_len) * scale)
+			DataType (cos (pos * (2 * basic::PI) / double (table_len)) * scale)
 		);
 #endif
 	}

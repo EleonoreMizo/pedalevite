@@ -101,7 +101,7 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 	const float    gain = 1.0f;
 	for (int pos = 0; pos < len; ++pos)
 	{
-		src [pos] = ((pos % per) * (2.f / per) - 1.f) * gain;
+		src [pos] = (float (pos % per) * (2.f / float (per)) - 1.f) * gain;
 	}
 
 	const int      nbr_coef_42 = 4;
@@ -205,7 +205,9 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 	for (int pos = 0; pos < len; ++pos)
 	{
 		const float    freq = float (20 * pow (1000, double (pos) / len));
-		const float    mval = float (tanh ((sin (pos * mo1) + sin (pos * mo2)) * 2) * mamp);
+		const float    mval = tanhf (
+			(sinf (float (pos) * mo1) + sinf (float (pos) * mo2)) * 2
+		) * mamp;
 		filter.set_freq_compensated (freq);
 		float          x = src [pos];
 		updw->_up.process_sample (tmp1.data (), x);

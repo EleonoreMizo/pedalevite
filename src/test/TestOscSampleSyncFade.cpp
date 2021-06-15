@@ -199,7 +199,7 @@ void	TestOscSampleSyncFade::perform_test_internal_2 (OscType &osc, std::vector <
 	const int      src_len    = osc.use_sample_data ().get_table_len (0);
 
 	fstb::FixedPoint  sync_pos (sync_pos_start);
-	fstb::FixedPoint  sync_step (sync_pos_speed * block_len);
+	fstb::FixedPoint  sync_step (sync_pos_speed * float (block_len));
 
 	fstb::FixedPoint  master_pitch (master_pitch_start);
 	fstb::FixedPoint  master_pitch_step (double (master_pitch_end - master_pitch_start) / nbr_blocks);
@@ -242,7 +242,7 @@ void	TestOscSampleSyncFade::add_to_dest (std::vector <float> &result_m, const st
 	// Format conversion
 	for (size_t pos = 0; pos < dest_int.size (); ++pos)
 	{
-		result_m.push_back (dest_int [pos] * (1.0f / 0x8000));
+		result_m.push_back (float (dest_int [pos]) * (1.0f / 0x8000));
 	}
 }
 
