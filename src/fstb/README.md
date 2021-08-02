@@ -20,6 +20,7 @@ The classes:
 - **`DataAlign`**: A helper class to load and save float data and check pointers, their alignment being a bool template parameter.
 - **`FixedPoint`**: A class handling 32:32 fixed point data with all required operations.
 - **`Hash`**: A fast, reversible 32 and 64-bit bijective hash function.
+- **`RndPcgXshRr6432`**: PCG XSH RR 64/32, a fast 32-bit random generator.
 - **`RndXoroshiro128p`**: xoroshiro128+, a fast and compact 64-bit random generator.
 - **`Scale`**: A way to multiply two numbers whatever their type; integers are considered as fixed point data. This class simplifies template constructions
 - **`SingleObj`**: A class to wrap any object with aligned memory. Easier than using a single-element vector.
@@ -27,3 +28,6 @@ The classes:
 - **`ToolsSse2`**, **`ToolsAvx2`**: provide various functions using SSE2 and AVX2 instructions. These classes were written mainly with 16-bit pixel processing in mind.
 
 **`def`** and **`fnc`** provide miscellaneous functions, macros and constants.
+
+About the random number generators: `Hash` is the fastest one, but only when the datasize is not greater than the architecture word length.
+`RndPcgXshRr6432` is probably sligthly better than `RndXoroshiro128p` regarding statistical quality but always slower, particularly on a 32-bit arch.
