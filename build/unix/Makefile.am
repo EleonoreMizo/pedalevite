@@ -1955,8 +1955,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestRcClipGeneric.h \
         ../../src/test/TestRemez.cpp \
         ../../src/test/TestRemez.h \
-        ../../src/test/TestRndXoroshiro128p.cpp \
-        ../../src/test/TestRndXoroshiro128p.h \
+        ../../src/test/TestRnd.cpp \
+        ../../src/test/TestRnd.h \
         ../../src/test/TestSampleMipMapper.cpp \
         ../../src/test/TestSampleMipMapper.h \
         ../../src/test/TestMnaSimulator.cpp \
