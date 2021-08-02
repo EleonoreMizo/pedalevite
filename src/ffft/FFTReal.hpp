@@ -371,11 +371,11 @@ void	FFTReal <DT>::init_trigo_lut ()
 			const long		level_len = 1L << (level - 1);
 			DataType	* const	level_ptr =
 				&_trigo_lut [get_trigo_level_index (level)];
-			const double	mul = PI / (level_len << 1);
+			const double	mul = PI / double (level_len << 1);
 
 			for (long i = 0; i < level_len; ++ i)
 			{
-				level_ptr [i] = static_cast <DataType> (cos (i * mul));
+				level_ptr [i] = static_cast <DataType> (cos (double (i) * mul));
 			}
 		}
 	}
@@ -396,7 +396,7 @@ void	FFTReal <DT>::init_trigo_osc ()
 			OscType &		osc = _trigo_osc [osc_cnt];
 
 			const long		len = 1L << (TRIGO_BD_LIMIT + osc_cnt);
-			const double	mul = (0.5 * PI) / len;
+			const double	mul = (0.5 * PI) / double (len);
 			osc.set_step (mul);
 		}
 	}
