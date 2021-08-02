@@ -100,6 +100,10 @@ int32_t	Interlocked::cas (int32_t volatile &dest, int32_t excg, int32_t comp) no
 		::LONG (comp)
 	));
 
+#elif defined (__GNUC__)
+
+	return (__sync_val_compare_and_swap (&dest, comp, excg));
+
 #elif defined (__APPLE__)
 
 	return (::OSAtomicCompareAndSwap32Barrier (
@@ -107,10 +111,6 @@ int32_t	Interlocked::cas (int32_t volatile &dest, int32_t excg, int32_t comp) no
 		excg,
 		const_cast <int32_t *> (reinterpret_cast <int32_t volatile *> (&dest))
 	) ? comp : excg);
-
-#elif defined (__GNUC__)
-
-	return (__sync_val_compare_and_swap (&dest, comp, excg));
 
 #else
 
@@ -214,6 +214,10 @@ int64_t	Interlocked::cas (int64_t volatile &dest, int64_t excg, int64_t comp) no
 
 	return (old);
 
+#elif defined (__GNUC__)
+
+	return (__sync_val_compare_and_swap (&dest, comp, excg));
+
 #elif defined (__APPLE__)
 
 	return (::OSAtomicCompareAndSwap64Barrier (
@@ -221,10 +225,6 @@ int64_t	Interlocked::cas (int64_t volatile &dest, int64_t excg, int64_t comp) no
 		excg, 
 		const_cast <int64_t *> (reinterpret_cast <int64_t volatile *> (&dest))
 	) ? comp : excg);
-
-#elif defined (__GNUC__)
-
-	return (__sync_val_compare_and_swap (&dest, comp, excg));
 
 #else
 
