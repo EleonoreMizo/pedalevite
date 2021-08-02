@@ -98,6 +98,11 @@ inline constexpr T       lerp (T v0, T v1, T p) noexcept;
 template <class T>
 inline constexpr T       find_extremum_pos_parabolic (T r1, T r2, T r3) noexcept;
 
+template <class T>
+inline constexpr T       rotl (T x, int k) noexcept;
+template <class T>
+inline constexpr T       rotr (T x, int k) noexcept;
+
 template <std::size_t N, typename T>
 constexpr std::array <T, N> make_array (const T &init_val);
 

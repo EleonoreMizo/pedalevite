@@ -23,6 +23,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 
 #include <cassert>
 
@@ -54,8 +55,8 @@ uint64_t	RndXoroshiro128p::gen_int () noexcept
 	const uint64_t res = s0 + s1;
 
 	s1    ^= s0;
-	_s [0] = rotl (s0, _a) ^ s1 ^ (s1 << _b);
-	_s [1] = rotl (s1, _c);
+	_s [0] = fstb::rotl (s0, _a) ^ s1 ^ (s1 << _b);
+	_s [1] = fstb::rotl (s1, _c);
 
 	return res;
 }
@@ -130,13 +131,6 @@ void	RndXoroshiro128p::compute_jump (const Storage &jump) noexcept
 
 	_s [0] = s0;
 	_s [1] = s1;
-}
-
-
-
-uint64_t RndXoroshiro128p::rotl (uint64_t x, int k) noexcept
-{
-   return (x << k) | (x >> (64 - k));
 }
 
 

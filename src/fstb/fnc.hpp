@@ -986,6 +986,36 @@ constexpr T	find_extremum_pos_parabolic (T r1, T r2, T r3) noexcept
 
 
 
+// Uses the full data width
+template <class T>
+constexpr T	rotl (T x, int k) noexcept
+{
+	static_assert (std::is_integral <T>::value, "T must be integer");
+	static_assert (std::is_unsigned <T>::value, "T must be unsigned");
+	constexpr int  bitdepth = sizeof (T) * CHAR_BIT;
+	assert (k >= 0);
+	assert (k < bitdepth);
+
+	return (x << k) | (x >> (bitdepth - k));
+}
+
+
+
+// Uses the full data width
+template <class T>
+constexpr T	rotr (T x, int k) noexcept
+{
+	static_assert (std::is_integral <T>::value, "T must be integer");
+	static_assert (std::is_unsigned <T>::value, "T must be unsigned");
+	constexpr int  bitdepth = sizeof (T) * CHAR_BIT;
+	assert (k >= 0);
+	assert (k < bitdepth);
+
+	return (x >> k) | (x << (bitdepth - k));
+}
+
+
+
 namespace detail
 {
 	template <typename T, std::size_t... IS>

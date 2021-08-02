@@ -94,8 +94,6 @@ private:
 	typedef std::array <uint64_t, 2> Storage;
 
 	inline void    compute_jump (const Storage &jump) noexcept;
-	static inline uint64_t
-	               rotl (uint64_t x, int k) noexcept;
 
 	Storage        _s {{ _seed_0_def, _seed_1_def }};
 
