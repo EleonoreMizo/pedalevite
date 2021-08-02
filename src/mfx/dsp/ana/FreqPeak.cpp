@@ -179,14 +179,14 @@ float	FreqPeak::process_sample (float x) noexcept
 	    && pol_det._mem_y [1] > pol_det._mem_y [2]
 	    && pol_det._mem_y [1] > _threshold)
 	{
-		const float    r1 = pol_det._mem_x [0];
-		const float    r2 = pol_det._mem_x [1];
-		const float    r3 = pol_det._mem_x [2];
+		// The peak is located between _mem_x [0] and _mem_x [2]
+		// frac is relative to the _mem_x [1] position.
+		const float    frac = fstb::find_extremum_pos_parabolic (
+			pol_det._mem_x [0],
+			pol_det._mem_x [1],
+			pol_det._mem_x [2]
+		);
 
-		// The peak is located between r1 and r3
-		// Parabolic interpolation
-		// frac is relative to the r2 position.
-		const float    frac = (r1 - r3) * 0.5f / (r1 + r3 - 2 * r2);
 		const float    dist = pol_det._peak_age + frac;
 		assert (dist > 0);
 		const float    freq = _sample_freq / dist;

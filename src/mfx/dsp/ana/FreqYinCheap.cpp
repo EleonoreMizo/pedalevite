@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/dsp/ana/FreqYinCheap.h"
 #if defined (mfx_dsp_ana_USE_SIMD)
 #include "fstb/ToolsSimd.h"
@@ -274,7 +275,8 @@ void	FreqYinCheap::analyse_sample () noexcept
 			{
 				// The peak is located between r1 and r3
 				// Parabolic interpolation
-				const float    frac = (r1 - r3) * 0.5f / (r1 + r3 - 2 * r2);
+				const float    frac =
+					fstb::find_extremum_pos_parabolic (r1, r2, r3);
 				assert (frac >= -1);
 				assert (frac <= 1);
 				_freq = _sample_freq / (float (_delta - 1) + frac);

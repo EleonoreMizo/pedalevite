@@ -967,6 +967,25 @@ constexpr T	lerp (T v0, T v1, T p) noexcept
 
 
 
+// Finds the x position of the extremum (min or max) in the parabolic-
+// interpolated curve passes through (-1, r1), (0, r2) and (+1, r3).
+// The curve is implicitely defined by:
+// f(x) = ((r3 + r1) / 2 - r2) * x^2 + ((r3 - r1) / 2) * x + r2
+// The points must not be aligned so the extremum exists.
+// It is not necessariy located between -1 and 1.
+template <class T>
+constexpr T	find_extremum_pos_parabolic (T r1, T r2, T r3) noexcept
+{
+	const T        den = T (2) * r2 - (r3 + r1);
+	assert (den != T (0));
+
+	const T        pos = (r3 - r1) * T (0.5) / den;
+
+	return pos;
+}
+
+
+
 namespace detail
 {
 	template <typename T, std::size_t... IS>

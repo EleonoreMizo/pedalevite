@@ -23,6 +23,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 
 #include <algorithm>
 
@@ -410,7 +411,8 @@ void	FreqYin <PP>::analyse () noexcept
 			{
 				// Step 5: parabolic interpolation
 				// The peak is located between r1 and r3
-				const float    frac = (r1 - r3) * 0.5f / (r1 + r3 - 2 * r2);
+				const float    frac =
+					fstb::find_extremum_pos_parabolic (r1, r2, r3);
 				assert (frac >= -1);
 				assert (frac <= 1);
 				freq = _sample_freq / (float (delta - 1) + frac);
