@@ -41,9 +41,12 @@ inline constexpr T	Hash_nr_int (T x, T y) noexcept
 
 
 
+// x must be odd
 template <typename T>
 inline constexpr T	Hash_find_inverse_n (T x, int n) noexcept
 {
+	assert ((x & T (1)) != T (0));
+
 	T              y = x;
 
 	for (int k = 0; k < n; ++k)
