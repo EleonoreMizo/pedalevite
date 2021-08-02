@@ -25,7 +25,10 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 
+#include <array>
+
 #include <cassert>
+#include <climits>
 
 
 
@@ -103,6 +106,59 @@ void	RndXoroshiro128p::jump_2_96 () noexcept
 
 
 
+void	RndXoroshiro128p::seed (result_type value) noexcept
+{
+	const auto     s0 = splitmix64 (value);
+	const auto     s1 = splitmix64 (value);
+	set_seed (s0, s1);
+}
+
+
+
+template <class Sseq>
+void	RndXoroshiro128p::seed (Sseq &seq) noexcept
+{
+	std::array <typename Sseq::result_type, 4> sval_32;
+	seq.generate (sval_32.begin (), sval_32.end ());
+	const auto     s0 = sval_32 [0] + (uint64_t (sval_32 [1]) << 32);
+	const auto     s1 = sval_32 [2] + (uint64_t (sval_32 [3]) << 32);
+	set_seed (s0, s1);
+}
+
+
+
+// Naive implementation. May take ages before returning.
+void	RndXoroshiro128p::discard (unsigned long long z) noexcept
+{
+#if ((ULLONG_MAX >> 32) >> 32) > 0
+	constexpr auto step_96 = 1ULL << 96;
+	while (z >= step_96)
+	{
+		jump_2_96 ();
+		z -= step_96;
+	}
+
+	constexpr auto step_64 = 1ULL << 64;
+	while (z >= step_64)
+	{
+		jump_2_64 ();
+		z -= step_64;
+	}
+#endif
+
+	// Not an error, but given the current implementation, this would be
+	// way too long to complete.
+	assert (z <= 10'000'000'000ULL);
+
+	while (z > 0)
+	{
+		gen_int ();
+		-- z;
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -131,6 +187,22 @@ void	RndXoroshiro128p::compute_jump (const Storage &jump) noexcept
 
 	_s [0] = s0;
 	_s [1] = s1;
+}
+
+
+
+// https://xorshift.di.unimi.it/splitmix64.c
+uint64_t	RndXoroshiro128p::splitmix64 (uint64_t &state) noexcept
+{
+	state += 0x9E3779B97f4A7C15ULL;
+	auto           z = state;
+	z ^= z >> 30;
+	z *= 0xBF58476D1CE4E5B9ULL;
+	z ^= z >> 27;
+	z *= 0x94D049BB133111EBULL;
+	z ^= z >> 31;
+
+	return z;
 }
 
 

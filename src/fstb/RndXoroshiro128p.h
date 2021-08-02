@@ -5,7 +5,7 @@
         David Blackman and Sebastiano Vigna, 2016-2018
         Laurent de Soras, 2020
 
-This is xoroshiro128+ 1.0, our best and fastest small-state generator
+"This is xoroshiro128+ 1.0, our best and fastest small-state generator
 for floating-point numbers. We suggest to use its upper bits for
 floating-point generation, as it is slightly faster than
 xoroshiro128++/xoroshiro128**. It passes all tests we are aware of
@@ -24,8 +24,13 @@ The state must be seeded so that it is not everywhere zero. If you have
 a 64-bit seed, we suggest to seed a splitmix64 generator and use its
 output to fill s. 
 
-NOTE: the parameters (a=24, b=16, b=37) of this version give slightly
-better results in our test than the 2016 version (a=55, b=14, c=36).
+NOTE 1: the parameters (a=24, b=16, b=37) of this version give slightly
+better results in our test than the 2016 version (a=55, b=14, c=36)."
+
+NOTE 2 (LDS): the generator is far from perfect from a statistical point
+of view, although it is quite fast for generating 64-bit data on a 64-bit
+architecture.
+https://www.pcg-random.org/posts/xoroshiro-fails-truncated.html
 
 --- Legal stuff ---
 
@@ -75,6 +80,25 @@ public:
 	inline void    jump_2_64 () noexcept;
 	inline void    jump_2_96 () noexcept;
 
+	// Compatibility with random generators of the standard library
+
+	typedef uint64_t result_type;
+
+	inline void    seed (result_type value = default_seed) noexcept;
+	template <class Sseq>
+	inline void    seed (Sseq &seq) noexcept;
+
+	result_type    operator () () noexcept { return gen_int (); }
+	inline void    discard (unsigned long long z) noexcept;
+
+	static constexpr result_type
+	               min () noexcept { return 0ULL; }
+	static constexpr result_type
+	               max () noexcept { return 0xFFFFFFFFFFFFFFFFULL; }
+
+	static constexpr result_type
+	               default_seed = _seed_0_def;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -94,6 +118,8 @@ private:
 	typedef std::array <uint64_t, 2> Storage;
 
 	inline void    compute_jump (const Storage &jump) noexcept;
+	inline uint64_t
+	               splitmix64 (uint64_t &state) noexcept;
 
 	Storage        _s {{ _seed_0_def, _seed_1_def }};
 
