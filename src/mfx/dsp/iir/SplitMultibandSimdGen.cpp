@@ -1040,6 +1040,8 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_main () const
 	r._decl += txt_0;
 	r._decl +=
 "\tinline void    set_band_ptr (float * const band_ptr_arr [" + nbr_bands + "]) noexcept;\n"
+"\tinline constexpr int\n"
+"\t               get_nbr_bands () const noexcept { return _nbr_bands; };\n"
 "\tinline void    offset_band_ptr (ptrdiff_t offset) noexcept;\n"
 		+ r_setup._decl +
 "\tvoid           clear_buffers () noexcept;\n"
@@ -1083,7 +1085,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_main () const
 	r._code += r_subf._code;
 	r._code += r_setup._code;
 	r._code +=
-"void\tSplitMultibandSimd::clear_buffers () noexcept\n"
+"void\t" + _classname + "::clear_buffers () noexcept\n"
 "{\n";
 	for (int group_idx = 0; group_idx < nbr_groups; ++group_idx)
 	{
@@ -1095,7 +1097,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_main () const
 	r._code +=
 "}\n"
 "\n"
-"void\tSplitMultibandSimd::process_block (const float *src_ptr, int nbr_spl) noexcept\n"
+"void\t" + _classname + "::process_block (const float *src_ptr, int nbr_spl) noexcept\n"
 "{\n"
 "\tfor (int pos = 0; pos < nbr_spl; ++pos)\n"
 "\t{\n"
@@ -1635,6 +1637,8 @@ std::string	SplitMultibandSimdGen::get_autogen_header ()
 std::string	SplitMultibandSimdGen::generate_include ()
 {
 	return
+"#pragma once\n"
+"\n"
 "#include <algorithm>\n"
 "#include <iterator>\n"
 #if 1
