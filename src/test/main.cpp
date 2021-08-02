@@ -92,7 +92,7 @@
 #include "test/TestPsu.h"
 #include "test/TestRcClipGeneric.h"
 #include "test/TestRemez.h"
-#include "test/TestRndXoroshiro128p.h"
+#include "test/TestRnd.h"
 #include "test/TestSampleMipMapper.h"
 #include "test/TestMnaSimulator.h"
 #include "test/TestReverb.h"
@@ -1988,7 +1988,7 @@ int main (int argc, char *argv [])
 #endif
 
 #if main_TEST_SPEED
-	if (ret_val == 0) ret_val = TestRndXoroshiro128p::perform_test ();
+	if (ret_val == 0) ret_val = TestRnd::perform_test ();
 #endif
 
 #if main_TEST_SPEED

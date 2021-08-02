@@ -5355,6 +5355,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingFifo.hpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\RndPcgXshRr6432.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\RndPcgXshRr6432.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
