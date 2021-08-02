@@ -1262,6 +1262,15 @@ commonsrc = \
         ../../src/mfx/pi/psh1/PitchShift1.h \
         ../../src/mfx/pi/psh1/PitchShift1Desc.cpp \
         ../../src/mfx/pi/psh1/PitchShift1Desc.h \
+        ../../src/mfx/pi/ramp/CurveType.h \
+        ../../src/mfx/pi/ramp/Param.h \
+        ../../src/mfx/pi/ramp/Ramp.cpp \
+        ../../src/mfx/pi/ramp/Ramp.h \
+        ../../src/mfx/pi/ramp/RampDesc.cpp \
+        ../../src/mfx/pi/ramp/RampDesc.h \
+        ../../src/mfx/pi/ramp/RampModule.cpp \
+        ../../src/mfx/pi/ramp/RampModule.h \
+        ../../src/mfx/pi/ramp/RampModule.hpp \
         ../../src/mfx/pi/scrush/Cst.h \
         ../../src/mfx/pi/scrush/Param.h \
         ../../src/mfx/pi/scrush/SpectralCrusher.cpp \
@@ -1276,26 +1285,17 @@ commonsrc = \
         ../../src/mfx/pi/sfreeze/SpectralFreeze.h \
         ../../src/mfx/pi/sfreeze/SpectralFreezeDesc.cpp \
         ../../src/mfx/pi/sfreeze/SpectralFreezeDesc.h \
-        ../../src/mfx/pi/spkem/Param.h \
-        ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
-        ../../src/mfx/pi/spkem/SpeakerEmu.h \
-        ../../src/mfx/pi/spkem/SpeakerEmuDesc.cpp \
-        ../../src/mfx/pi/spkem/SpeakerEmuDesc.h \
-        ../../src/mfx/pi/ramp/CurveType.h \
-        ../../src/mfx/pi/ramp/Param.h \
-        ../../src/mfx/pi/ramp/Ramp.cpp \
-        ../../src/mfx/pi/ramp/Ramp.h \
-        ../../src/mfx/pi/ramp/RampDesc.cpp \
-        ../../src/mfx/pi/ramp/RampDesc.h \
-        ../../src/mfx/pi/ramp/RampModule.cpp \
-        ../../src/mfx/pi/ramp/RampModule.h \
-        ../../src/mfx/pi/ramp/RampModule.hpp \
         ../../src/mfx/pi/smood/LfoType.h \
         ../../src/mfx/pi/smood/Param.h \
         ../../src/mfx/pi/smood/SkoolMood.cpp \
         ../../src/mfx/pi/smood/SkoolMood.h \
         ../../src/mfx/pi/smood/SkoolMoodDesc.cpp \
         ../../src/mfx/pi/smood/SkoolMoodDesc.h \
+        ../../src/mfx/pi/spkem/Param.h \
+        ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
+        ../../src/mfx/pi/spkem/SpeakerEmu.h \
+        ../../src/mfx/pi/spkem/SpeakerEmuDesc.cpp \
+        ../../src/mfx/pi/spkem/SpeakerEmuDesc.h \
         ../../src/mfx/pi/syn0/Param.h \
         ../../src/mfx/pi/syn0/Synth0.cpp \
         ../../src/mfx/pi/syn0/Synth0.h \
