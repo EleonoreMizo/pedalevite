@@ -1041,7 +1041,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_main () const
 	r._decl +=
 "\tinline void    set_band_ptr (float * const band_ptr_arr [" + nbr_bands + "]) noexcept;\n"
 "\tinline constexpr int\n"
-"\t               get_nbr_bands () const noexcept { return _nbr_bands; };\n"
+"\t               get_nbr_bands () const noexcept { return _nbr_bands; }\n"
 "\tinline void    offset_band_ptr (ptrdiff_t offset) noexcept;\n"
 		+ r_setup._decl +
 "\tvoid           clear_buffers () noexcept;\n"
