@@ -4,43 +4,10 @@
         Author: Laurent de Soras, 2017
 
 Multi-band noise gate. Monophonic. SIMD version.
+Instances of this class must be aligned on 16-byte boundaries.
 
 The signal is split into spectrum bands that can be summed with a gain of 1 on
 the full spectrum and some phasing. Each band is processed individually.
-
-The splitter works with pairs of low-pass and high-pass filters that can be
-summed with these conditions (ex: Linkwitz-Riley). To keep everything in
-phase, all bands are filtered at all boundary frequencies, by the low- or
-high-pass filters depending on the band position, according to the flowgraph
-described by Christofer Bustad on the Music-DSP mailing list:
-http://music.columbia.edu/pipermail/music-dsp/2004-March/059520.html
-
-In -+-->HP1----+--->HP2----+--> ... ---+--->HP6----+--->HP7--.
-    |          |           |           |           |         |
-    v          v           v           v           v         |
-   LP1        LP2         LP3         LP6         LP7        |
-    |          |           |           |           |         |
-    v          v           v           v           v         v
-    P1         P2          P3          P6          P7        P8
-    |          |           |           |           |         |
-    |          v           v           v           v         v
-    `-->LP2-->(+)-->LP3-->(+)-> ... ->(+)-->LP7-->(+)------>(+)-> Out
-
-HPi/LPi are the filters at the i-th frequency between band i and i + 1.
-Pi is the processing for the i-th band.
-
-Because the bands are filtered multiple times, the actual filter slopes
-become steeper accross the bands. Therefore the need for an asymptotically
-steep slope is much reduced for the core filters. It's possible to focus on
-the direct neighbourhood of the cutoff frequencies despite lower asymptotical
-performances. We use here 4th order Thiele filters (modified L-R filters) with
-a coefficient of 0.65. With such a setting, their single performances are
-poorly balanced but these filters become interesting when grouped in the bank.
-
-Ref:
-Neville Thiele, Loudspeaker Crossovers with Notched Response,
-Journal of the Audio Engineering Society, vol. 48, no. 9, pp. 786-799,
-2000-09
 
 --- Legal stuff ---
 
@@ -67,10 +34,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
-#include "fstb/DataAlign.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/dsp/iir/Biquad4Simd.h"
 #include "mfx/pi/nzbl/Cst.h"
+#include "mfx/pi/nzbl/SplitterSimd.h"
 
 #include <vector>
 
@@ -87,6 +54,7 @@ namespace nzbl
 
 class FilterBankSimd
 {
+	static_assert (SplitterSimd::_nbr_bands == Cst::_nbr_bands, "");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -101,8 +69,10 @@ public:
 
 	               ~FilterBankSimd ()                           = default;
 
-	FilterBankSimd &   operator = (const FilterBankSimd &other) = default;
-	FilterBankSimd &   operator = (FilterBankSimd &&other)      = default;
+	FilterBankSimd &
+	               operator = (const FilterBankSimd &other)     = default;
+	FilterBankSimd &
+	               operator = (FilterBankSimd &&other)          = default;
 
 	void           reset (double sample_freq, int max_buf_len, double &latency);
 	void           set_level (int band_idx, float lvl);
@@ -126,24 +96,7 @@ private:
 
 	void           process_band (int band_idx, int nbr_spl);
 
-	static constexpr float
-	               compute_split_freq (int split_idx);
-
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-
-	typedef dsp::iir::Biquad4Simd <
-		fstb::DataAlign <true>,
-		fstb::DataAlign <true>,
-		fstb::DataAlign <true>
-	> Biq4;
-
-	class Split
-	{
-	public:
-		Biq4           _main;      // 2x2 processing: left = LP, right = HP
-		Biq4           _fix;       // 1x2 serial processing
-	};
-	typedef std::vector <Split, fstb::AllocAlign <Split, 16> > SplitArray;
 
 	class Band
 	{
@@ -155,13 +108,15 @@ private:
 	};
 	typedef std::vector <Band, fstb::AllocAlign <Band, 16> > BandArray;
 
-	float          _sample_freq;  // Sample frequency, Hz. > 0. 0 = not set
-	float          _inv_fs;       // 1 / _sample_freq. 0 = not set
-	int            _max_block_size;
-	float          _rel_thr;      // Threshold (relative to _lvl) above which the notch has no effect
-	SplitArray     _split_arr;
-	BandArray      _band_arr;
-	BufAlign       _buf;          // Stereo content (size 2x)
+	float          _sample_freq = 0;    // Sample frequency, Hz. > 0. 0 = not set
+	float          _inv_fs      = 0;    // 1 / _sample_freq. 0 = not set
+	int            _max_block_size = 0;
+	float          _rel_thr     = 20;   // Threshold (linear, relative to _lvl) above which the notch has no effect
+	float          _ka          = 0.5f; // Filter parameters
+	float          _kb          = 1.0f;
+	SplitterSimd   _splitter;
+	BandArray      _band_arr { BandArray (_nbr_bands) };
+	BufAlign       _buf;                // Stereo content (size 2x)
 
 
 

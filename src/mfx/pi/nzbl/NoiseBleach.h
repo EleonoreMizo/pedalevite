@@ -92,7 +92,11 @@ private:
 		FilterBank     _filter_bank;
 #endif
 	};
+#if defined (fstb_HAS_SIMD)
+	typedef std::vector <Channel, fstb::AllocAlign <Channel, 16> > ChannelArray;
+#else
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+#endif
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 

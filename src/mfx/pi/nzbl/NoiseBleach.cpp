@@ -62,7 +62,11 @@ NoiseBleach::NoiseBleach (piapi::HostInterface &host)
 ,	_param_change_flag ()
 ,	_param_change_flag_misc ()
 ,	_param_change_flag_band ()
+#if defined (fstb_HAS_SIMD)
+,	_chn_arr (_max_nbr_chn)
+#else
 ,	_chn_arr ()
+#endif
 ,	_lvl_base (1e-4f)
 ,	_lvl_band_arr ()
 ,	_band_active_flag (false)

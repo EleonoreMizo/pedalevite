@@ -1146,10 +1146,15 @@ commonsrc = \
         ../../src/mfx/pi/nzbl/FilterBank.h \
         ../../src/mfx/pi/nzbl/FilterBankSimd.cpp \
         ../../src/mfx/pi/nzbl/FilterBankSimd.h \
+        ../../src/mfx/pi/nzbl/NgSetup.h \
+        ../../src/mfx/pi/nzbl/NgSetup.hpp \
         ../../src/mfx/pi/nzbl/NoiseBleach.cpp \
         ../../src/mfx/pi/nzbl/NoiseBleach.h \
         ../../src/mfx/pi/nzbl/NoiseBleachDesc.cpp \
         ../../src/mfx/pi/nzbl/NoiseBleachDesc.h \
+        ../../src/mfx/pi/nzbl/SplitterSimd.cpp \
+        ../../src/mfx/pi/nzbl/SplitterSimd.h \
+        ../../src/mfx/pi/nzbl/SplitterSimd.hpp \
         ../../src/mfx/pi/nzbl/Param.h \
         ../../src/mfx/pi/nzcl/Cst.h \
         ../../src/mfx/pi/nzcl/NoiseChlorine.cpp \

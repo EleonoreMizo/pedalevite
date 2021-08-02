@@ -24,10 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/iir/DesignEq2p.h"
-#include "mfx/dsp/iir/TransSZBilin.h"
+#include "fstb/DataAlign.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/nzbl/FilterBankSimd.h"
+#include "mfx/pi/nzbl/NgSetup.h"
 
 #include <algorithm>
 
@@ -50,13 +50,6 @@ namespace nzbl
 
 
 FilterBankSimd::FilterBankSimd ()
-:	_sample_freq (0)
-,	_inv_fs (0)
-,	_max_block_size (0)
-,	_rel_thr (20)
-,	_split_arr (_nbr_bands - 1)
-,	_band_arr (_nbr_bands)
-,	_buf ()
 {
 	dsp::mix::Align::setup ();
 }
@@ -79,81 +72,23 @@ void	FilterBankSimd::reset (double sample_freq, int max_buf_len, double &latency
 	const int      mbs_align = (max_buf_len + 3) & -4;
 	_buf.resize (mbs_align * 2);
 
+	std::array <float *, _nbr_bands> band_ptr_arr {};
 	for (int band_cnt = 0; band_cnt < _nbr_bands; ++band_cnt)
 	{
 		Band &         band = _band_arr [band_cnt];
 		band._buf.resize (mbs_align);
+		band_ptr_arr [band_cnt] = band._buf.data ();
 
 		band._env.set_sample_freq (sample_freq);
 
-		float          f = 30;
-		if (band_cnt > 0)
-		{
-			f = compute_split_freq (band_cnt - 1);
-		}
-		const int      mult   = 16;
-		float          t      = float (mult / (2 * fstb::PI)) / f;
-		// Longer release helps preventing amplitude modulation on periodic
-		// noise bursts
-		const float    min_at = 0.005f;
-		const float    min_rt = 0.050f;
-		const float    at = std::max (t, min_at);
-		const float    rt = std::max (t, min_rt);
-		band._env.set_times (at, rt);
+		const auto     env_times = NgSetup::compute_env_times (band_cnt);
+		band._env.set_times (env_times._at, env_times._rt);
 	}
 
-	const float          k        = 0.65f;
-	const float          alpha    = float (sqrt (2 * (1 - k * k)));
-	static const float   as [3]   = { 1, alpha, 1 };
-	static const float   bl0s [3] = { 1, 0, 0 };
-	static const float   bl1s [3] = { 1, 0, k };
-	static const float   bh0s [3] = { 0, 0, 1 };
-	static const float   bh1s [3] = { k, 0, 1 };
+	_splitter.set_band_ptr (band_ptr_arr.data ());
 
-	const double         f_lat = 700;   // Base frequency for latency evaluation. Hz
-
-	for (int split_cnt = 0; split_cnt < _nbr_split; ++split_cnt)
-	{
-		Split &        split = _split_arr [split_cnt];
-		const float    f0    = compute_split_freq (split_cnt);
-		const float    kf    =
-			dsp::iir::TransSZBilin::compute_k_approx (f0 * _inv_fs);
-
-		split._fix.neutralise ();
-
-		float          bz [3];
-		float          az [3];
-
-		// LP
-		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bl0s, as, kf);
-		split._main.set_z_eq_one (0, bz, az);
-		split._fix.set_z_eq_one (0, bz, az);
-		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bl1s, as, kf);
-		split._main.set_z_eq_one (2, bz, az);
-		split._fix.set_z_eq_one (1, bz, az);
-
-		// HP
-		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bh0s, as, kf);
-		split._main.set_z_eq_one (1, bz, az);
-		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bh1s, as, kf);
-		split._main.set_z_eq_one (3, bz, az);
-
-		if (lat_flag)
-		{
-			// Evaluates the group delay
-			// Uses the HPs or LPs depending on the tested frequency
-			const int      ofs = (f0 < f_lat) ? 1 : 0;
-			for (int stage = 0; stage < 2; ++stage)
-			{
-				split._main.get_z_eq_one (ofs + stage * 2, bz, az);
-				az [0] = 1;
-				const double      gd = dsp::iir::DesignEq2p::compute_group_delay (
-					bz, az, sample_freq, f_lat
-				);
-				latency += gd;
-			}
-		}
-	}
+	latency = NgSetup::update_filters_compute_latency (
+		_splitter, lat_flag ? 700 : -1, sample_freq, _ka, _kb);
 
 	clear_buffers ();
 }
@@ -180,63 +115,8 @@ void	FilterBankSimd::process_block (float dst_ptr [], const float src_ptr [], in
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
 
-	float *           buf_ptr = &_buf [0];
-
-	// Prepare the interleaved input buffer for the first splitter
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		const auto     x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-		fstb::ToolsSimd::VectF32   xi0;
-		fstb::ToolsSimd::VectF32   xi1;
-		fstb::ToolsSimd::interleave_f32 (xi0, xi1, x, x);
-		fstb::ToolsSimd::store_f32 (buf_ptr + pos * 2    , xi0);
-		fstb::ToolsSimd::store_f32 (buf_ptr + pos * 2 + 4, xi1);
-	}
-
 	// Splits the signal in several bands
-	for (int split_idx = 0; split_idx < _nbr_split; ++split_idx)
-	{
-		Split &        split = _split_arr [split_idx];
-
-		// Splits in place
-		split._main.process_block_2x2_immediate (buf_ptr, buf_ptr, nbr_spl);
-
-		if (split_idx == _nbr_split - 1)
-		{
-			// Last split: distributes the low and high parts to the current
-			// and the last bands
-			dsp::mix::Align::copy_2i_2 (
-				&_band_arr [split_idx    ]._buf [0],
-				&_band_arr [split_idx + 1]._buf [0],
-				buf_ptr,
-				nbr_spl
-			);
-		}
-		else
-		{
-			dsp::mix::Align::copy_2i_1 (
-				&_band_arr [split_idx]._buf [0],
-				buf_ptr,
-				nbr_spl
-			);
-
-			// Stores the lower part into the band buffer and spreads the high
-			// part in both channels
-			float *        band_ptr   = &_band_arr [split_idx]._buf [0];
-			for (int pos = 0; pos < nbr_spl; pos += 4)
-			{
-				const int      pos_2 = pos * 2;
-				const auto     x0    = fstb::ToolsSimd::load_f32 (buf_ptr + pos_2    );
-				const auto     x1    = fstb::ToolsSimd::load_f32 (buf_ptr + pos_2 + 4);
-				const auto     l     = fstb::ToolsSimd::deinterleave_f32_lo (x0, x1);
-				const auto     h0    = fstb::ToolsSimd::monofy_2f32_hi (x0);
-				const auto     h1    = fstb::ToolsSimd::monofy_2f32_hi (x1);
-				fstb::ToolsSimd::store_f32 (band_ptr + pos      , l);
-				fstb::ToolsSimd::store_f32 (buf_ptr  + pos_2    , h0);
-				fstb::ToolsSimd::store_f32 (buf_ptr  + pos_2 + 4, h1);
-			}
-		}
-	}
+	_splitter.process_block (src_ptr, nbr_spl);
 
 	// Band processing
 	for (int band_cnt = 0; band_cnt < _nbr_bands; ++band_cnt)
@@ -245,40 +125,39 @@ void	FilterBankSimd::process_block (float dst_ptr [], const float src_ptr [], in
 	}
 
 	// Band merging
-	for (int split_idx = 1; split_idx < _nbr_split; ++split_idx)
+	static_assert (_nbr_bands >= 2, "");
+	dsp::mix::Align::copy_2_1 (
+		dst_ptr,
+		_band_arr [0]._buf.data (),
+		_band_arr [1]._buf.data (),
+		nbr_spl
+	);
+	constexpr int  pair_end = _nbr_bands & ~(2-1);
+	for (int band_cnt = 2; band_cnt < pair_end; band_cnt += 2)
 	{
-		Split &        split = _split_arr [split_idx];
-
-		split._fix.process_block_serial_immediate (
-			&_band_arr [split_idx - 1]._buf [0],
-			&_band_arr [split_idx - 1]._buf [0],
-			nbr_spl
-		);
-		dsp::mix::Align::mix_1_1 (
-			&_band_arr [split_idx    ]._buf [0],
-			&_band_arr [split_idx - 1]._buf [0],
+		dsp::mix::Align::mix_2_1 (
+			dst_ptr,
+			_band_arr [band_cnt    ]._buf.data (),
+			_band_arr [band_cnt + 1]._buf.data (),
 			nbr_spl
 		);
 	}
-	// The last two bands don't need compensation processing
-	dsp::mix::Align::copy_2_1 (
-		dst_ptr,
-		&_band_arr [_nbr_bands - 2]._buf [0],
-		&_band_arr [_nbr_bands - 1]._buf [0],
-		nbr_spl
-	);
+	if (pair_end < _nbr_bands)
+	{
+		// Odd number of bands
+		dsp::mix::Align::mix_1_1 (
+			dst_ptr,
+			_band_arr [pair_end]._buf.data (),
+			nbr_spl
+		);
+	}
 }
 
 
 
 void	FilterBankSimd::clear_buffers ()
 {
-	for (int split_cnt = 0; split_cnt < _nbr_split; ++split_cnt)
-	{
-		Split &        split = _split_arr [split_cnt];
-		split._main.clear_buffers ();
-		split._fix.clear_buffers ();
-	}
+	_splitter.clear_buffers ();
 
 	for (int band_cnt = 0; band_cnt < _nbr_bands; ++band_cnt)
 	{
@@ -310,11 +189,11 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 	{
 		float *        buf_ptr = &band._buf [0];
 
-		const auto     lvl   = fstb::ToolsSimd::set1_f32 (band._lvl);
-		const auto     thr   = fstb::ToolsSimd::set1_f32 (_rel_thr);
-		const auto     mul   = fstb::ToolsSimd::set1_f32 (1.0f / (_rel_thr - 1));
-		const auto     one   = fstb::ToolsSimd::set1_f32 (1);
-		const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
+		const auto     lvl  = fstb::ToolsSimd::set1_f32 (band._lvl);
+		const auto     thr  = fstb::ToolsSimd::set1_f32 (_rel_thr);
+		const auto     mul  = fstb::ToolsSimd::set1_f32 (1.0f / (_rel_thr - 1));
+		const auto     one  = fstb::ToolsSimd::set1_f32 (1);
+		const auto     zero = fstb::ToolsSimd::set_f32_zero ();
 
 		int            block_pos = 0;
 		do
@@ -357,13 +236,6 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 		}
 		while (block_pos < nbr_spl);
 	}
-}
-
-
-
-constexpr float	FilterBankSimd::compute_split_freq (int split_idx)
-{
-	return float (125 << split_idx);
 }
 
 

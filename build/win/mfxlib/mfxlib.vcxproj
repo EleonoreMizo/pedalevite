@@ -1378,6 +1378,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ms\Op.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ms\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\FilterBankSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NgSetup.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NgSetup.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\SplitterSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\SplitterSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\pan\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\pan\StereoPan.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\pan\StereoPanDesc.h" />
@@ -2099,6 +2103,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBankSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\SplitterSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorineDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzcl\Notch.cpp" />
