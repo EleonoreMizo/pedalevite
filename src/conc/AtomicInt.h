@@ -41,6 +41,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "conc/def.h"
 
+#include <type_traits>
+
 #include <cstdint>
 
 #if (conc_ARCHI == conc_ARCHI_X86)
