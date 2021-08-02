@@ -3,13 +3,26 @@
         Hash.h
         Author: Laurent de Soras, 2020
 
-Hash functions with a low bias
+Hash functions with a low bias. These hash functions are invertible.
+Note: hash of 0 is still 0, for any data size.
 
 Source: Chris Wellons
 https://nullprogram.com/blog/2018/07/31/
 
 Also: Vincent Lunot
 https://lemire.me/blog/2017/09/18/computing-the-inverse-of-odd-integers/
+
+Other hash functions. Probably invertible, but formula was not given.
+They make even better peseudo-random generators when feed with a counter.
+
+rrmxmx: Pelle Evensen,
+http://mostlymangling.blogspot.com/2018/07/on-mixing-functions-in-fast-splittable.html
+
+nasam: Pelle Evensen,
+http://mostlymangling.blogspot.com/2020/01/nasam-not-another-strange-acronym-mixer.html
+
+pelican: Tommy Ettinger, similar to nasam, but without fixed point at 0,
+https://github.com/tommyettinger/sarong/blob/master/src/main/java/sarong/PelicanRNG.java
 
 --- Legal stuff ---
 
@@ -58,6 +71,13 @@ public:
 	               hash (uint64_t x) noexcept;
 	static fstb_FORCEINLINE constexpr uint64_t
 	               hash_inv (uint64_t x) noexcept;
+
+	static fstb_FORCEINLINE constexpr uint64_t
+	               rrmxmx (uint64_t x) noexcept;
+	static fstb_FORCEINLINE constexpr uint64_t
+	               nasam (uint64_t x) noexcept;
+	static fstb_FORCEINLINE constexpr uint64_t
+	               pelican (uint64_t x) noexcept;
 
 
 

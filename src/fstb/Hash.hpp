@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
+
 #include <cassert>
 #include <climits>
 
@@ -164,6 +166,48 @@ constexpr uint64_t	Hash::hash_inv (uint64_t x) noexcept
 	x  = Hash_reverse_xor_shift (x, 27);
 	x *= Hash_find_inverse (uint64_t (0xBF58476D1CE4E5B9llu));
 	x  = Hash_reverse_xor_shift (x, 30);
+
+	return x;
+}
+
+
+
+constexpr uint64_t	Hash::rrmxmx (uint64_t x) noexcept
+{
+	constexpr int        s = 28;
+	constexpr uint64_t   m = 0x9FB21C651E98DF25ULL;
+
+	x ^= fstb::rotr (x, 49) ^ fstb::rotr (x, 24);
+	x *= m;
+	x ^= x >> s;
+	x *= m;
+	x ^= x >> s;
+
+	return x;
+}
+
+
+
+constexpr uint64_t	Hash::nasam (uint64_t x) noexcept
+{
+	x ^= fstb::rotr (x, 25) ^ fstb::rotr (x, 47);
+	x *= 0x9E6C63D0676A9A99ULL;
+	x ^= (x >> 23) ^ (x >> 51);
+	x *= 0x9E6D62D06F6A9A9BULL;
+	x ^= (x >> 23) ^ (x >> 51);
+
+	return x;
+}
+
+
+
+constexpr uint64_t	Hash::pelican (uint64_t x) noexcept
+{
+	x ^= fstb::rotr (x, 23) ^ fstb::rotr (x, 47) ^ 0xD1B54A32D192ED03ULL;
+	x *= 0xAEF17502108EF2D9ULL;
+	x ^= (x >> 43) ^ (x >> 31) ^ (x >> 23);
+	x *= 0xDB4F0B9175AE2165ULL;
+	x ^= x >> 28;
 
 	return x;
 }
