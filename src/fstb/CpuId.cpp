@@ -113,6 +113,7 @@ void	CpuId::call_cpuid (unsigned int fnc_nbr, unsigned int subfnc_nbr, unsigned 
 	#if defined (__x86_64__)
 	__cpuid_count (fnc_nbr, subfnc_nbr, v_eax, v_ebx, v_ecx, v_edx);
 	#else
+	fstb::unused (subfnc_nbr);
 	__cpuid (fnc_nbr, v_eax, v_ebx, v_ecx, v_edx);
 	#endif
 
