@@ -347,10 +347,20 @@ bool	Interlocked::Data128::operator != (const Data128 & other) const noexcept
 
 void *	Interlocked::swap (void * volatile &dest_ptr, void *excg_ptr) noexcept
 {
+	// We cannot just cast void * to IntPtr and relying on it to match
+	// either int32_t or int64_t, because it's possible that we have
+	//   typedef long IntPtr;
+	//   typedef long long int64_t;
+	// on a 64-bit system (i.e. macOS) thus making them incompatible.
 	return (reinterpret_cast <void *> (
 		swap (
-			*reinterpret_cast <IntPtr volatile *> (&dest_ptr),
-			reinterpret_cast <IntPtr> (excg_ptr)
+#if conc_WORD_SIZE == 32
+			*reinterpret_cast <int32_t volatile *> (&dest_ptr),
+			reinterpret_cast <int32_t> (excg_ptr)
+#else
+			*reinterpret_cast <int64_t volatile *> (&dest_ptr),
+			reinterpret_cast <int64_t> (excg_ptr)
+#endif
 		)
 	));
 }
@@ -361,9 +371,15 @@ void *	Interlocked::cas (void * volatile &dest_ptr, void *excg_ptr, void *comp_p
 {
 	return (reinterpret_cast <void *> (
 		cas (
-			*reinterpret_cast <IntPtr volatile *> (&dest_ptr),
-			reinterpret_cast <IntPtr> (excg_ptr),
-			reinterpret_cast <IntPtr> (comp_ptr)
+#if conc_WORD_SIZE == 32
+			*reinterpret_cast <int32_t volatile *> (&dest_ptr),
+			reinterpret_cast <int32_t> (excg_ptr),
+			reinterpret_cast <int32_t> (comp_ptr)
+#else
+			*reinterpret_cast <int64_t volatile *> (&dest_ptr),
+			reinterpret_cast <int64_t> (excg_ptr),
+			reinterpret_cast <int64_t> (comp_ptr)
+#endif
 		)
 	));
 }
