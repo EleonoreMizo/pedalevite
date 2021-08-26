@@ -188,6 +188,7 @@ void	Approx::sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept
 // f1(x) ~ sin (x)
 // x in [-pi ; pi]
 // Max error: 0.919e-3
+// d = 1 - pi/4 gives exact derivative at 0 but a max error of 2.787e-3
 template <typename T>
 T	Approx::sin_nick (T x) noexcept
 {
@@ -196,7 +197,7 @@ T	Approx::sin_nick (T x) noexcept
 
 	constexpr T    b = T ( 4 /  fstb::PI);
 	constexpr T    c = T (-4 / (fstb::PI * fstb::PI));
-	constexpr T    d = 0.224008f;
+	constexpr T    d = T (0.224008);
 
 	const T        y = b * x + c * x * std::abs (x);
 	const T        z = d * (y * std::abs (y) - y) + y;
@@ -657,6 +658,36 @@ ToolsSimd::VectF32	Approx::tan_mystran (ToolsSimd::VectF32 x) noexcept
 
 
 
+// Formula: Andrew Simper
+// https://discord.com/channels/507604115854065674/548502835608944681/872677465003274282
+// Max relative error: 0.111 % on the +/-0.965 * pi/2 range
+template <typename T>
+constexpr T	Approx::tan_pade33 (T x) noexcept
+{
+//	x = fstb::limit (x, T (-1.54), T (1.54));
+	const T        x2  = x * x;
+	const T        num = T (-0.075021) * x2 + T (1.00111);
+	const T        den = T (-0.405097) * x2 + T (1);
+
+	return x * num / den;
+}
+
+ToolsSimd::VectF32	Approx::tan_pade33 (ToolsSimd::VectF32 x) noexcept
+{
+	const auto     n0  = fstb::ToolsSimd::set1_f32 ( 1.00111f);
+	const auto     n2  = fstb::ToolsSimd::set1_f32 (-0.075021f);
+	const auto     d0  = fstb::ToolsSimd::set1_f32 ( 1.f);
+	const auto     d2  = fstb::ToolsSimd::set1_f32 (-0.405097f);
+
+	const auto     x2  = x * x;
+	const auto     num = n2 * x2 + n0;
+	const auto     den = d2 * x2 + d0;
+
+	return x * num * fstb::ToolsSimd::rcp_approx2 (den);
+}
+
+
+
 /*
 Very high precision. Relative error is 1 % at 0.9993 * pi/2
 PadeApproximant [Tan[x],{x,0,{5,5}}]
@@ -678,8 +709,8 @@ constexpr T	Approx::tan_pade55 (T x) noexcept
 //	constexpr T    a   = 15;
 	constexpr T    a   = T (14.999975509385927280627711005255);
 	const T        x2  = x * x;
-	const T        num = (    x2 - 105) * x2 + 945;
-	const T        den = (a * x2 - 420) * x2 + 945;
+	const T        num = (    x2 - T (105)) * x2 + T (945);
+	const T        den = (a * x2 - T (420)) * x2 + T (945);
 
 	return x * num / den;
 }

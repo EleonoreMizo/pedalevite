@@ -115,6 +115,12 @@ public:
 
 	template <typename T>
 	static inline constexpr T
+	               tan_pade33 (T x) noexcept;
+	static inline ToolsSimd::VectF32
+	               tan_pade33 (ToolsSimd::VectF32 x) noexcept;
+
+	template <typename T>
+	static inline constexpr T
 	               tan_pade55 (T x) noexcept;
 	static inline ToolsSimd::VectF32
 	               tan_pade55 (ToolsSimd::VectF32 x) noexcept;
