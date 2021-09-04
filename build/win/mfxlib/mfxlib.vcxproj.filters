@@ -5373,6 +5373,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NgSetup.hpp">
       <Filter>mfx\pi\nzbl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsNoisifier.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

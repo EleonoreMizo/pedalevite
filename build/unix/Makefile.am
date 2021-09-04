@@ -758,6 +758,7 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsLight3.hpp \
         ../../src/mfx/dsp/shape/WsLopsided.h \
         ../../src/mfx/dsp/shape/WsNegCond.h \
+        ../../src/mfx/dsp/shape/WsNoisifier.h \
         ../../src/mfx/dsp/shape/WsOvershootAsym.h \
         ../../src/mfx/dsp/shape/WsProgClipper.h \
         ../../src/mfx/dsp/shape/WsPuncherA.h \

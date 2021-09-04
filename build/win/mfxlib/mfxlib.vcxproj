@@ -1147,6 +1147,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight3.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLopsided.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsNegCond.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsNoisifier.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsOvershootAsym.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsProgClipper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsPuncherA.h" />
