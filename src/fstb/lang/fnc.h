@@ -41,6 +41,9 @@ namespace lang
 template <typename TConstReturn, class TObj, typename... TArgs>
 typename NonConst <TConstReturn>::type like_const_version (TObj const* obj, TConstReturn (TObj::*memFun) (TArgs...) const, TArgs&&... args);
 
+template <typename T>
+constexpr void assert_on_type_failure ();
+
 
 
 }  // namespace lang

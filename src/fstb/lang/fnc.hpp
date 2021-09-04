@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <utility>
+#include <type_traits>
 
 
 
@@ -38,6 +39,21 @@ template <typename TConstReturn, class TObj, typename... TArgs>
 typename NonConst <TConstReturn>::type	like_const_version (TObj const* obj, TConstReturn (TObj::*memFun) (TArgs...) const, TArgs&&... args)
 {
 	return const_cast <typename NonConst <TConstReturn>::type> ((obj->*memFun) (std::forward <TArgs> (args)...));
+}
+
+
+
+// Issues a compilation error if the function is instanciated.
+// static_assert condition should be dependent on T.
+// This is helpful when only the specialisations of a function are allowed
+// to be called. Call this from the generic function.
+template <typename T>
+constexpr void assert_on_type_failure ()
+{
+	static_assert (
+		(std::is_void <T>::value && ! std::is_void <T>::value),
+		"You must specialize this template"
+	);
 }
 
 
