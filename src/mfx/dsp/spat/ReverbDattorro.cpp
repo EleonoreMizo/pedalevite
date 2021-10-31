@@ -468,14 +468,14 @@ void	ReverbDattorro::process_block (float dst_l_ptr [], float dst_r_ptr [], cons
 	assert (src_r_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_01;
-	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_02;
-	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_11;
-	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_12;
-	alignas (16) std::array <float  , _max_blk_size>   buf_l;
-	alignas (16) std::array <float  , _max_blk_size>   buf_r;
-	alignas (16) std::array <float  , _max_blk_size>   buf_a;
-	alignas (16) std::array <float  , _max_blk_size>   buf_b;
+	alignas (fstb_SIMD128_ALIGN) std::array <int32_t, _max_blk_size> dly_apd_01;
+	alignas (fstb_SIMD128_ALIGN) std::array <int32_t, _max_blk_size> dly_apd_02;
+	alignas (fstb_SIMD128_ALIGN) std::array <int32_t, _max_blk_size> dly_apd_11;
+	alignas (fstb_SIMD128_ALIGN) std::array <int32_t, _max_blk_size> dly_apd_12;
+	alignas (fstb_SIMD128_ALIGN) std::array <float  , _max_blk_size> buf_l;
+	alignas (fstb_SIMD128_ALIGN) std::array <float  , _max_blk_size> buf_r;
+	alignas (fstb_SIMD128_ALIGN) std::array <float  , _max_blk_size> buf_a;
+	alignas (fstb_SIMD128_ALIGN) std::array <float  , _max_blk_size> buf_b;
 
 	const int32_t * const   dly_apd_01_ptr = dly_apd_01.data ();
 	const int32_t * const   dly_apd_02_ptr = dly_apd_02.data ();
@@ -860,7 +860,7 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 		((_max_blk_size & 15) == 0),
 		"_max_blk_size must be a multiple of 16"
 	);
-	alignas (16) std::array <float, _max_blk_size> dly_fix_flt;
+	alignas (fstb_SIMD128_ALIGN) std::array <float, _max_blk_size> dly_fix_flt;
 
 	// First, computes all the delays as floating point data, premultiplied
 	int            pos_blk = 0;

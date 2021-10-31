@@ -190,11 +190,21 @@ namespace fstb
 
 // SIMD instruction set availability
 #undef fstb_HAS_SIMD
+#undef fstb_SIMD128_ALIGN
+
 #if fstb_ARCHI == fstb_ARCHI_ARM
+
 	#if defined (__ARM_NEON_FP)
-		#define fstb_HAS_SIMD (1)
+		#define fstb_HAS_SIMD      (1)
+		#if (fstb_WORD_SIZE == 64)
+			#define fstb_SIMD128_ALIGN (16)
+		#else
+			#define fstb_SIMD128_ALIGN (8)
+		#endif
 	#endif
+
 #elif fstb_ARCHI == fstb_ARCHI_X86
+
 	#if (fstb_WORD_SIZE == 64)
 		#define fstb_HAS_SIMD (1)
 	#elif fstb_COMPILER == fstb_COMPILER_MSVC
@@ -206,7 +216,12 @@ namespace fstb
 			#define fstb_HAS_SIMD (1)
 		#endif
 	#endif
-#endif
+
+	#if defined (fstb_HAS_SIMD)
+		#define fstb_SIMD128_ALIGN (16)
+	#endif
+
+#endif // fstb_ARCHI
 
 
 

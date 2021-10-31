@@ -23,6 +23,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/DataAlign.h"
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "fstb/Hash.h"
 #include "mfx/dsp/mix/Simd.h"
@@ -208,7 +209,7 @@ void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr []
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	alignas (16) std::array <T, _max_blk_size>   buf;
+	alignas (fstb_SIMD128_ALIGN) std::array <T, _max_blk_size> buf;
 
 	using Mix = dsp::mix::Simd <
 		fstb::DataAlign <false>,

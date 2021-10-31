@@ -23,6 +23,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/DataAlign.h"
+#include "fstb/def.h"
 #include "mfx/dsp/iir/DesignEq2p.h"
 #include "mfx/dsp/mix/Simd.h"
 
@@ -494,8 +495,8 @@ void	SplitMultibandBustad <O>::process_block_merge (float dst_ptr [], int nbr_sp
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	alignas (16) Buffer  buf_fix;
-	alignas (16) Buffer  buf_sum;
+	alignas (fstb_SIMD128_ALIGN) Buffer buf_fix;
+	alignas (fstb_SIMD128_ALIGN) Buffer buf_sum;
 
 	const int      nbr_split = int (_split_arr.size ());
 	int            pos       = 0;
