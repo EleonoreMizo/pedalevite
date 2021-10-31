@@ -108,6 +108,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\vstsdk24;..\..\..\src\vstsdk24\pluginterfaces\vst2.x;..\..\..\src\vstsdk24\public.sdk\source\vst2.x</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
