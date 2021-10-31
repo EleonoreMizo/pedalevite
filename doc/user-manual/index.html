@@ -40,6 +40,7 @@
 <li class="tcont"><a href="#effect-list">Effets disponibles</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
 	<li><a href="#fx-distapf">All-Pass Distortion — Distorsion</a></li>
+	<li><a href="#fx-badradio">Bad Radio — Distorsion</a></li>
 	<li><a href="#fx-bigmuffpi1">Big Muff Pi — Distorsion</a></li>
 	<li><a href="#fx-chnmerge">Channel Merge — Combinaison de canaux</a></li>
 	<li><a href="#fx-chnsplit">Channel Split — Décomposition de canaux</a></li>
@@ -1120,6 +1121,32 @@ Plus le gain est élevé, plus il y a d’harmoniques produites.</p>
 <p>Ce paramètre limite les plus hautes fréquence dans le signal de modulation,
 réduisant les tonalités dures.
 Plus le paramètre est bas, plus le timbre est adouci.</p>
+
+
+
+<h3><a id="fx-badradio"></a>Bad radio — Distorsion</h3>
+
+<p>Cet effet simule vaguement une mauvaise réception radio.</p>
+
+<p class="var">Gain</p>
+<p>Gain de la distorsion, en dB.</p>
+
+<p class="var">Noisiness</p>
+<p>Indique le niveau de bruit introduit dans la distorsion.</p>
+
+<p class="var">Hiss</p>
+<p>Niveau de bruit additionnel, en dB.</p>
+
+<p class="var">Noise bandwidth</p>
+<p>Fréquence de coupure en Hz pour le filtre passe-bas du bruit.</p>
+
+<p class="var">Low-cut frequency</p>
+<p>Fréquence de coupure en Hz du filtre coupe-bas (passe-haut) en sortie de
+la distorsion.</p>
+
+<p class="var">High-cut frequency</p>
+<p>Fréquence de coupure en Hz du filtre coupe-haut (passe-bas) en sortie de
+la distorsion.</p>
 
 
 
@@ -3752,6 +3779,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r46, 2021-10-31</b></p>
+<ul>
+<li>Ajout de l’effets Bad Radio.</li>
+</ul>
 
 <p><b>r45, 2021-05-26</b></p>
 <ul>

@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/FactoryTpl.h"
 #include "mfx/pi/adsr/EnvAdsr.h"
 #include "mfx/pi/adsr/EnvAdsrDesc.h"
+#include "mfx/pi/badrad/BadRadio.h"
+#include "mfx/pi/badrad/BadRadioDesc.h"
 #include "mfx/pi/bmp1/BigMuff1.h"
 #include "mfx/pi/bmp1/BigMuff1Desc.h"
 #include "mfx/pi/click/Click.h"
@@ -231,6 +233,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::unique_ptr <mfx::p
 		add <scrush::SpectralCrusherDesc, scrush::SpectralCrusher  > (fl);
 		add <sfreeze::SpectralFreezeDesc, sfreeze::SpectralFreeze  > (fl);
 		add <vfreeze::VelvetFreezeDesc  , vfreeze::VelvetFreeze    > (fl);
+		add <badrad::BadRadioDesc       , badrad::BadRadio         > (fl);
 
 		fact_list.swap (fl);
 	}

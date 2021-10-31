@@ -940,6 +940,11 @@ commonsrc = \
         ../../src/mfx/pi/adsr/EnvAdsrDesc.cpp \
         ../../src/mfx/pi/adsr/EnvAdsrDesc.h \
         ../../src/mfx/pi/adsr/Param.h \
+        ../../src/mfx/pi/badrad/BadRadio.cpp \
+        ../../src/mfx/pi/badrad/BadRadio.h \
+        ../../src/mfx/pi/badrad/BadRadioDesc.cpp \
+        ../../src/mfx/pi/badrad/BadRadioDesc.h \
+        ../../src/mfx/pi/badrad/Param.h \
         ../../src/mfx/pi/bmp1/BigMuff1.cpp \
         ../../src/mfx/pi/bmp1/BigMuff1.h \
         ../../src/mfx/pi/bmp1/BigMuff1Desc.cpp \

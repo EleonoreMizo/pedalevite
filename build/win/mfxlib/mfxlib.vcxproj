@@ -1335,6 +1335,9 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\PluginInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Tag.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\badrad\BadRadio.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\badrad\BadRadioDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\badrad\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\BigMuff1.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Ovrspl.h" />
@@ -2030,6 +2033,8 @@
     <ClCompile Include="..\..\..\src\mfx\piapi\Tag.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\badrad\BadRadio.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\badrad\BadRadioDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqShift.cpp" />

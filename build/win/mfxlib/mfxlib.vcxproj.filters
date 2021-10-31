@@ -472,6 +472,9 @@
     <Filter Include="mfx\dsp\grn">
       <UniqueIdentifier>{beaa2c69-b40b-4fe8-8989-d1a0b437d4c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\badrad">
+      <UniqueIdentifier>{51c3b308-403e-4373-b2f7-f3acedc0951b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5379,6 +5382,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\TplMid.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\badrad\Param.h">
+      <Filter>mfx\pi\badrad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\badrad\BadRadio.h">
+      <Filter>mfx\pi\badrad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\badrad\BadRadioDesc.h">
+      <Filter>mfx\pi\badrad</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6823,6 +6835,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplMid.cpp">
       <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\badrad\BadRadio.cpp">
+      <Filter>mfx\pi\badrad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\badrad\BadRadioDesc.cpp">
+      <Filter>mfx\pi\badrad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

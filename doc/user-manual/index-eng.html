@@ -40,6 +40,7 @@
 <li class="tcont"><a href="#effect-list">Available effects</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
 	<li><a href="#fx-distapf">All-Pass Distortion</a></li>
+	<li><a href="#fx-badradio">Bad Radio — Distortion</a></li>
 	<li><a href="#fx-bigmuffpi1">Big Muff Pi — Distortion</a></li>
 	<li><a href="#fx-chnmerge">Channel Merge</a></li>
 	<li><a href="#fx-chnsplit">Channel Split</a></li>
@@ -1016,6 +1017,32 @@ The more gain, the more harmonic are produced.</p>
 <p>This parameter limits the highest frequencies in the modulation signal,
 reducing harsh tones.
 The lower the rate, the softer the tones.</p>
+
+
+
+<h3><a id="fx-badradio"></a>Bad radio — Distortion</h3>
+
+<p>This effects emulate a bad radio reception.</p>
+
+<p class="var">Gain</p>
+<p>Distortion gain, in dB.</p>
+
+<p class="var">Noisiness</p>
+<p>Indicates how noisy the distortion sounds.</p>
+
+<p class="var">Hiss</p>
+<p>Level in dB of additional noise</p>
+
+<p class="var">Noise bandwidth</p>
+<p>Cutoff frequency in Hz for the noise low-pass filter.</p>
+
+<p class="var">Low-cut frequency</p>
+<p>Cutoff frequency in Hz for the distortion output low-cut (high-pass)
+filter.</p>
+
+<p class="var">High-cut frequency</p>
+<p>Cutoff frequency in Hz for the distortion output high-cut (low-pass)
+filter.</p>
 
 
 
@@ -3505,6 +3532,11 @@ This precision can be changed with <span class="key">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r46, 2021-10-31</b></p>
+<ul>
+<li>Ajout Bad Radio effect.</li>
+</ul>
 
 <p><b>r45, 2021-05-26</b></p>
 <ul>
