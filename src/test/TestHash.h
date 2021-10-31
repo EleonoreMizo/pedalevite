@@ -46,6 +46,9 @@ protected:
 
 private:
 
+	template <typename DT, typename F>
+	static void    test_speed (F fnc, const char *name_0);
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

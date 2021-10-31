@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include "test/TimerAccurate.h"
 
 #include <cassert>
+#include <climits>
 #include <cstdio>
 
 
@@ -69,43 +70,62 @@ int	TestHash::perform_test ()
 	}
 
 	// Speed test
-	constexpr double  sample_freq = 44100;
-	constexpr int     len         = 100'000'000;
-	TimerAccurate  tim;
-
+	if (ret_val == 0)
 	{
-		tim.start ();
-		uint32_t       p32 = 0;
-		for (uint32_t k = 0; k < len; ++k)
-		{
-			p32 += fstb::Hash::hash (k);
-		}
-		tim.stop ();
-	
-		const double   spl_per_s = tim.get_best_rate (len) + double (p32 >> 24) * 1e-300;
-		const double   mega_sps  = spl_per_s / 1e6;
-		const double   rt_mul    = spl_per_s / sample_freq;
-		printf ("u32 speed: %12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
-	}
-
-	{
-		tim.start ();
-		uint64_t       p64 = 0;
-		for (uint64_t k = 0; k < len; ++k)
-		{
-			p64 += fstb::Hash::hash (k);
-		}
-		tim.stop ();
-	
-		const double   spl_per_s = tim.get_best_rate (len) + double (p64 >> 56) * 1e-300;
-		const double   mega_sps  = spl_per_s / 1e6;
-		const double   rt_mul    = spl_per_s / sample_freq;
-		printf ("u64 speed: %12.3f Mspl/s (x%.3f real-time).\n", mega_sps, rt_mul);
+		test_speed <uint32_t> (
+			[] (uint32_t x) { return fstb::Hash::hash (x); },
+			"hash    u32"
+		);
+		test_speed <uint64_t> (
+			[] (uint64_t x) { return fstb::Hash::hash (x); },
+			"hash    u64"
+		);
+		test_speed <uint64_t> (
+			[] (uint64_t x) { return fstb::Hash::rrmxmx (x); },
+			"rrmxmx  u64"
+		);
+		test_speed <uint64_t> (
+			[] (uint64_t x) { return fstb::Hash::nasam (x); },
+			"nasam   u64"
+		);
+		test_speed <uint64_t> (
+			[] (uint64_t x) { return fstb::Hash::pelican (x); },
+			"pelican u64"
+		);
 	}
 
 	printf ("Done.\n\n");
 
 	return ret_val;
+}
+
+
+
+template <typename DT, typename F>
+void	TestHash::test_speed (F fnc, const char *name_0)
+{
+	constexpr double  sample_freq = 44100;
+	constexpr int     len         = 1'000'000'000;
+	constexpr int     shift       = (sizeof (DT) - 1) * CHAR_BIT;
+	TimerAccurate  tim;
+
+	tim.reset ();
+	tim.start ();
+	DT             p {};
+	for (DT k = 0; k < len; ++k)
+	{
+		p ^= fnc (k);
+	}
+	tim.stop ();
+
+	const double   spl_per_s =
+		tim.get_best_rate (len) + double (p >> shift) * 1e-300;
+	const double   mega_sps  = spl_per_s / 1e6;
+	const double   rt_mul    = spl_per_s / sample_freq;
+	printf (
+		"%s speed: %12.3f Mspl/s (x%.3f real-time).\n",
+		name_0, mega_sps, rt_mul
+	);
 }
 
 
