@@ -5376,6 +5376,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsNoisifier.h">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplMid.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6817,6 +6820,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\SplitterSimd.cpp">
       <Filter>mfx\pi\nzbl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\param\TplMid.cpp">
+      <Filter>mfx\pi\param</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

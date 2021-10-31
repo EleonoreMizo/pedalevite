@@ -1394,6 +1394,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSat.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplMid.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\pidet2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.h" />
@@ -2120,6 +2121,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplEnumEvol.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplInt.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\param\TplMid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplPan.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\peq\BandParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Cst_mfx_pi_phase1.cpp" />
