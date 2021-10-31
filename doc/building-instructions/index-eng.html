@@ -1212,21 +1212,22 @@ gpio -v</pre>
 This step is optional, but Clang allows a significant speed-up (about
 +25&#8239;%) of the Pédale Vite application, relative to the default GCC
 compiler.
-Here, we’re going to install Clang 12.0.0, the latest version at the time of
+Here, we’re going to install Clang 13.0.0, the latest version at the time of
 writing, but more recent versions may exist.
-If so, you can replace the <code>12.0.0</code> in the following lines with the
-newer version identifiers.
-Anyway you could also keep Clang 12.0.0 which does perfectly the job.</p>
+If so, you can replace the <code>13.0.0</code> in the first of the following
+lines with the newer version identifiers.
+Anyway you could also keep Clang 13.0.0 which does perfectly the job.</p>
 <p>Note that Clang requires about 3&#8239;GB on the drive.
 Make sure you’re not going to run short on space.</p>
-<pre class="term">cd ~
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
-tar -xvf clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
-rm clang+llvm-12.0.0-armv7a-linux-gnueabihf.tar.xz
-mv clang+llvm-12.0.0-armv7a-linux-gnueabihf clang_12.0.0
-sudo mv clang_12.0.0 /usr/local
-echo 'export PATH=/usr/local/clang_12.0.0/bin:$PATH' >> .bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/clang_12.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
+<pre class="term">clangversion="13.0.0"
+cd ~
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-$clangversion/clang+llvm-$clangversion-armv7a-linux-gnueabihf.tar.xz
+tar -xvf clang+llvm-$clangversion-armv7a-linux-gnueabihf.tar.xz
+rm clang+llvm-$clangversion-armv7a-linux-gnueabihf.tar.xz
+mv clang+llvm-$clangversion-armv7a-linux-gnueabihf clang_$clangversion
+sudo mv clang_$clangversion /usr/local
+echo 'export PATH=/usr/local/clang_'$clangversion'/bin:$PATH' >> .bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/clang_'$clangversion'/lib:$LD_LIBRARY_PATH' >> .bashrc
 . .bashrc
 clang++ --version</pre>
 <p>The part beginning with <code>wget</code> and ending with <code>.xz</code>
@@ -1235,7 +1236,7 @@ Theoretically, everything should work well, however I encountered some
 issues when running executable files using the bundled libc++, which was not
 found.
 The following lines will fix the problem&#8239;:</p>
-<pre class="term">echo '/usr/local/clang_12.0.0/lib/' > ./clang.conf
+<pre class="term">echo '/usr/local/clang_'$clangversion'/lib/' > ./clang.conf
 sudo mv ./clang.conf /etc/ld.so.conf.d/
 sudo ldconfig</pre>
 
