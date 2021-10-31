@@ -488,7 +488,7 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 
 	const int      nbr_pulses     = nbr_cycles * nbr_phases;
 	const int      max_duty_cycle = _nbr_samples - nbr_pulses;
-	const float    duty_per_spl   = float (nbr_phases) / max_duty_cycle;
+	const auto     duty_per_spl   = float (nbr_phases) / float (max_duty_cycle);
 
 	int            pulse_val   = 0;
 	int            phase_cur   = 0;
@@ -580,7 +580,7 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 		::digitalWrite (pin, 0);
 	}
 
-	return duty / nbr_cycles;
+	return duty / float (nbr_cycles);
 }
 
 

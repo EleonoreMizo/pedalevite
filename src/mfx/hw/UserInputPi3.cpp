@@ -263,7 +263,7 @@ void	UserInputPi3::do_set_msg_recipient (ui::UserInputType type, int index, MsgQ
 				if (state.is_set ())
 				{
 					const float    val_flt  =
-						state._cur_val * (1.0f / ((1 << _res_adc) - 1));
+						float (state._cur_val) * (1.0f / ((1 << _res_adc) - 1));
 					const std::chrono::nanoseconds   cur_time (read_clock_ns ());
 					enqueue_val (
 						cur_time,
@@ -454,7 +454,7 @@ void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, std::chrono::nano
 	const int      inc = re.set_new_state (f0, f1) * dir;
 	if (inc != 0)
 	{
-		enqueue_val (cur_time, ui::UserInputType_ROTENC, index, inc);
+		enqueue_val (cur_time, ui::UserInputType_ROTENC, index, float (inc));
 	}
 }
 
@@ -493,7 +493,7 @@ void	UserInputPi3::handle_pot (int index, int val, std::chrono::nanoseconds cur_
 
 	if (new_flag)
 	{
-		const float    val_flt = val * (1.0f / ((1 << _res_adc) - 1));
+		const float    val_flt = float (val) * (1.0f / ((1 << _res_adc) - 1));
 		enqueue_val (cur_time, ui::UserInputType_POT, index, val_flt);
 	}
 }

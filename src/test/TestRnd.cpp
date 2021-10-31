@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestRndXoroshiro128p.cpp
+        TestRnd.cpp
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -38,7 +38,7 @@ http://www.wtfpl.net/ for more details.
 
 
 
-int	TestRndXoroshiro128p::perform_test ()
+int	TestRnd::perform_test ()
 {
 	int            ret_val = 0;
 

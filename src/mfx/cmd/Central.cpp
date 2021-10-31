@@ -710,11 +710,14 @@ void	Central::set_tempo (float bpm)
 
 	conc::LockFreeCell <WaMsg> * cell_ptr =
 		_msg_pool.take_cell (true);
-	cell_ptr->_val._sender              = WaMsg::Sender_CMD;
-	cell_ptr->_val._type                = WaMsg::Type_TEMPO;
-	cell_ptr->_val._content._tempo._bpm = bpm;
+	if (cell_ptr != nullptr)
+	{
+		cell_ptr->_val._sender              = WaMsg::Sender_CMD;
+		cell_ptr->_val._type                = WaMsg::Type_TEMPO;
+		cell_ptr->_val._content._tempo._bpm = bpm;
 
-	_queue_cmd_to_audio.enqueue (*cell_ptr);
+		_queue_cmd_to_audio.enqueue (*cell_ptr);
+	}
 }
 
 

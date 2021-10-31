@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestRndXoroshiro128p.h
+        TestRnd.h
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (TestRndXoroshiro128p_HEADER_INCLUDED)
-#define TestRndXoroshiro128p_HEADER_INCLUDED
+#if ! defined (TestRnd_HEADER_INCLUDED)
+#define TestRnd_HEADER_INCLUDED
 
 
 
@@ -25,7 +25,7 @@ http://www.wtfpl.net/ for more details.
 
 
 
-class TestRndXoroshiro128p
+class TestRnd
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -52,26 +52,24 @@ private:
 
 private:
 
-	               TestRndXoroshiro128p ()                               = delete;
-	               TestRndXoroshiro128p (const TestRndXoroshiro128p &other) = delete;
-	               TestRndXoroshiro128p (TestRndXoroshiro128p &&other)      = delete;
-	               ~TestRndXoroshiro128p ()                              = delete;
-	TestRndXoroshiro128p &
-	               operator = (const TestRndXoroshiro128p &other)        = delete;
-	TestRndXoroshiro128p &
-	               operator = (TestRndXoroshiro128p &&other)             = delete;
-	bool           operator == (const TestRndXoroshiro128p &other) const = delete;
-	bool           operator != (const TestRndXoroshiro128p &other) const = delete;
+	               TestRnd ()                               = delete;
+	               TestRnd (const TestRnd &other)           = delete;
+	               TestRnd (TestRnd &&other)                = delete;
+	               ~TestRnd ()                              = delete;
+	TestRnd &      operator = (const TestRnd &other)        = delete;
+	TestRnd &      operator = (TestRnd &&other)             = delete;
+	bool           operator == (const TestRnd &other) const = delete;
+	bool           operator != (const TestRnd &other) const = delete;
 
-}; // class TestRndXoroshiro128p
+}; // class TestRnd
 
 
 
-//#include "test/TestRndXoroshiro128p.hpp"
+//#include "test/TestRnd.hpp"
 
 
 
-#endif   // TestRndXoroshiro128p_HEADER_INCLUDED
+#endif   // TestRnd_HEADER_INCLUDED
 
 
 

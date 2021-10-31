@@ -106,7 +106,7 @@ void	NodeBase::invert_zone (uint8_t *buf_ptr, int w, int h, int stride)
 	{
 		for (int x = 0; x < w; ++x)
 		{
-			buf_ptr [x] = ~buf_ptr [x];
+			buf_ptr [x] = uint8_t (~buf_ptr [x]);
 		}
 
 		buf_ptr += stride;

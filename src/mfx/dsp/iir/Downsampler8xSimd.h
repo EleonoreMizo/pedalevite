@@ -106,7 +106,7 @@ private:
 	>::type;
 #else
 	template <int NC>
-	using Dwnspl = hiir::Downsampler2xFpu <NC>
+	using Dwnspl = hiir::Downsampler2xFpu <NC>;
 #endif
 
 	using Dwnspl84 = Dwnspl <NC84>;

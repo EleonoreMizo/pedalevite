@@ -877,7 +877,7 @@ void	SplitMultibandSimdGen::create_group_spec (int group_idx)
 			if (split_idx >= 0)
 			{
 				Splitter &     split = _split_arr [split_idx];
-				gain_prev = 1.f / (1 << split._gain_l2);
+				gain_prev = 1.f / float (1 << split._gain_l2);
 				spec._gain_arr [chn_idx] = gain_prev;
 				split._coord._group_idx = group_idx;
 				split._coord._lane      = chn_idx;

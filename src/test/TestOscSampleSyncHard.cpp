@@ -147,9 +147,9 @@ int	TestOscSampleSyncHard::perform_test ()
 		{
 			perform_test_internal (
 				osc, result_m, dest_len, block_len,
-				0, 1.0f / (1 << ratio_l2), // Sync pos
-				+0x92345, +0x92345,        // Master pitch
-				slave_pitch, slave_pitch   // Slave pitch
+				0, 1.0f / float (1 << ratio_l2), // Sync pos
+				+0x92345, +0x92345,              // Master pitch
+				slave_pitch, slave_pitch         // Slave pitch
 			);
 		}
 	}

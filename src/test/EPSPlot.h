@@ -1,9 +1,9 @@
 #ifndef EPSPLOT_H
 #define EPSPLOT_H
 
-#include <stdio.h>
 #include	<vector>
 #include	<cassert>
+#include <cstdio>
 
 // by Olli Niemitalo, http://www.student.oulu.fi/~oniemita/DSP/INDEX.HTM
 // Use freely. August 2001
@@ -52,7 +52,8 @@ private:
 	// Print a float number into .EPS
 	void printFloat(float number) {
 		if (stream) {
-			if (number == (int)number) fprintf(stream, "%d", (int)number);
+			const auto n_i = int (number);
+			if (number == float (n_i)) fprintf(stream, "%d", n_i);
 			else fprintf(stream, "%.3f", number);
 		}
 	}
@@ -60,7 +61,8 @@ private:
 	// Print a float number and a space into .EPS
 	void printFloatAndSpace(float number) {
 		if (stream) {
-			if (number == (int)number) fprintf(stream, "%d ", (int)number);
+			const auto n_i = int (number);
+			if (number == float (n_i)) fprintf(stream, "%d ", n_i);
 			else fprintf(stream, "%.3f ", number);
 		}
 	}

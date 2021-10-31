@@ -264,8 +264,7 @@ int	SerRText::do_read (std::string &s)
 				{
 					set_error (_spos, "Wrong hex sequence");
 				}
-				esc_c <<= 4;
-				esc_c  += static_cast <char> (d);
+				esc_c = static_cast <char> ((esc_c << 4) + d);
 				-- esc_len;
 				if (esc_len <= 0 && ! _err_flag)
 				{
