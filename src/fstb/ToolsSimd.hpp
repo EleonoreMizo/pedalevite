@@ -2310,9 +2310,10 @@ std::tuple <ToolsSimd::VectS32, ToolsSimd::VectS32>	ToolsSimd::swap_cond (VectS3
 		_mm_xor_si128 (rhs, inv)
 	);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
+	const auto     cond_u = vreinterpretq_u32_s32 (cond);
 	return std::make_tuple (
-		vbslq_s32 (cond, rhs, lhs),
-		vbslq_s32 (cond, lhs, rhs)
+		vbslq_s32 (cond_u, rhs, lhs),
+		vbslq_s32 (cond_u, lhs, rhs)
 	);
 #endif // fstb_ARCHI
 }
