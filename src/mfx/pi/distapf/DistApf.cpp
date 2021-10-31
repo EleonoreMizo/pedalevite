@@ -352,11 +352,9 @@ void	DistApf::update_param (bool force_flag)
 
 void	DistApf::update_freq ()
 {
-	float          fs     = _sample_freq;
 	float          fs_inv = _inv_fs;
 	if (_ovrspl_flag)
 	{
-		fs     *=               _ovrspl_ratio;
 		fs_inv *= 1.0f / float (_ovrspl_ratio);
 	}
 
