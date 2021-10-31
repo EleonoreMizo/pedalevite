@@ -160,37 +160,17 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
-	_typ_sptr->set_font (*_fnt_ptr);
-	_inb_sptr->set_font (*_fnt_ptr);
-	_ina_sptr->set_font (*_fnt_ptr);
-	_del_sptr->set_font (*_fnt_ptr);
-	_rtn_sptr->set_font (*_fnt_ptr);
-	_prs_sptr->set_font (*_fnt_ptr);
-	_rst_sptr->set_font (*_fnt_ptr);
-	_chn_sptr->set_font (*_fnt_ptr);
-	_frs_sptr->set_font (*_fnt_ptr);
-	_lbl_sptr->set_font (*_fnt_ptr);
-
-	_typ_sptr->set_coord (Vec2d (0, h_m * 0));
-	_inb_sptr->set_coord (Vec2d (0, h_m * 1));
-	_ina_sptr->set_coord (Vec2d (0, h_m * 2));
-	_del_sptr->set_coord (Vec2d (0, h_m * 3));
-	_rtn_sptr->set_coord (Vec2d (0, h_m * 4));
-	_prs_sptr->set_coord (Vec2d (0, h_m * 5));
-	_rst_sptr->set_coord (Vec2d (0, h_m * 6));
-	_chn_sptr->set_coord (Vec2d (0, h_m * 7));
-	_frs_sptr->set_coord (Vec2d (0, h_m * 8));
-	_lbl_sptr->set_coord (Vec2d (0, h_m * 9));
-
-	_typ_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_inb_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_del_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_rtn_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_prs_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_rst_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_chn_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_frs_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_lbl_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	int            y     = 0;
+	for (auto &sptr : {
+		_typ_sptr, _inb_sptr, _ina_sptr, _del_sptr, _rtn_sptr,
+		_prs_sptr, _rst_sptr, _chn_sptr, _frs_sptr, _lbl_sptr
+	})
+	{
+		sptr->set_font (*_fnt_ptr);
+		sptr->set_coord (Vec2d (0, y));
+		sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+		y += h_m;
+	}
 
 	_page_ptr->push_back (_menu_sptr);
 
