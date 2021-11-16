@@ -920,22 +920,20 @@ ToolsSimd::VectF32	Approx::tanh_urs (ToolsSimd::VectF32 x) noexcept
 template <typename T>
 T	Approx::tanh_2dat (T x) noexcept
 {
-	constexpr T    n0      = T (4.351839500e+06);
-	constexpr T    n1      = T (5.605646250e+05);
-	constexpr T    n2      = T (1.263485352e+04);
-	constexpr T    n3      = T (4.751771164e+01);
-	constexpr T    d0      = n0;
-	constexpr T    d1      = T (2.011170000e+06);
-	constexpr T    d2      = T (1.027901563e+05);
-	constexpr T    d3      = T (1.009453430e+03);
-	constexpr T    max_val = T (7.7539052963256836);
+	constexpr auto n0      = T (4.351839500e+06);
+	constexpr auto n1      = T (5.605646250e+05);
+	constexpr auto n2      = T (1.263485352e+04);
+	constexpr auto n3      = T (4.751771164e+01);
+	constexpr auto d0      = n0;
+	constexpr auto d1      = T (2.011170000e+06);
+	constexpr auto d2      = T (1.027901563e+05);
+	constexpr auto d3      = T (1.009453430e+03);
+	constexpr auto max_val = T (7.7539052963256836);
 
-	const T        s   = x;
-	x = std::min (std::abs (x), max_val);
-	const T        x2  = x * x;
-	const T        xs  = (s < 0) ? -x : x;
-	const T        num = (((     n3  * x2 + n2) * x2 + n1) * x2 + n0) * xs;
-	const T        den = (((x2 + d3) * x2 + d2) * x2 + d1) * x2 + d0;
+	x = limit (x, -max_val, max_val);
+	const auto     x2  = x * x;
+	const auto     num = (((     n3  * x2 + n2) * x2 + n1) * x2 + n0) * x;
+	const auto     den = (((x2 + d3) * x2 + d2) * x2 + d1) * x2 + d0;
 
 	return num / den;
 }
