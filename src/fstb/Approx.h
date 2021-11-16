@@ -144,12 +144,19 @@ public:
 	               tanh_mystran (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
 	static inline T
+	               tanh_urs (T x) noexcept;
+	static inline ToolsSimd::VectF32
+	               tanh_urs (ToolsSimd::VectF32 x) noexcept;
+	template <typename T>
+	static inline T
 	               tanh_2dat (T x) noexcept;
 	static inline ToolsSimd::VectF32
 	               tanh_2dat (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
 	static inline T
 	               tanh_andy (T x) noexcept;
+	static inline ToolsSimd::VectF32
+	               tanh_andy (ToolsSimd::VectF32 x) noexcept;
 
 	template <int P = 1>
 	static inline float
@@ -192,6 +199,13 @@ private:
 	               restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp) noexcept;
 	static inline ToolsSimd::VectF32
 	               restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p) noexcept;
+
+	template <typename T>
+	static inline T
+	               tanh_final_rsqrt (T x) noexcept;
+	static inline ToolsSimd::VectF32
+	               tanh_final_rsqrt (ToolsSimd::VectF32 x) noexcept;
+
 
 	template <typename T>
 	static fstb_FORCEINLINE constexpr std::array <T, 2>

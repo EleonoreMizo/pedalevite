@@ -859,41 +859,64 @@ ToolsSimd::VectF32	Approx::atan2_7th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x
 template <typename T>
 T	Approx::tanh_mystran (T x) noexcept
 {
-	constexpr T    p   = T (0.183);
-
-	// x <- x + 0.183 * x^3
-	T              x2 = x * x;
-	x += x * x2 * p;
-
-	// x <- x / sqrt (1 + x^2)
-	x2 = x * x;
-	x /= T (sqrt (T (1) + x2));
-
-	return x;
-}
-
-ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x) noexcept
-{
-	const auto     p   = fstb::ToolsSimd::set1_f32 (0.183f);
-	const auto     one = fstb::ToolsSimd::set1_f32 (1.0f);
+	constexpr auto p  = T (0.183);
 
 	// x <- x + 0.183 * x^3
 	auto           x2 = x * x;
 	x += x * x2 * p;
 
-	// x <- x / sqrt (1 + x^2)
-	x2 = x * x;
-	x *= fstb::ToolsSimd::rsqrt_approx2 (one + x2);
+	return tanh_final_rsqrt (x);
+}
 
-	return x;
+ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x) noexcept
+{
+	const auto     p  = fstb::ToolsSimd::set1_f32 (0.183f);
+
+	// x <- x + 0.183 * x^3
+	auto           x2 = x * x;
+	x += x * x2 * p;
+
+	return tanh_final_rsqrt (x);
+}
+
+
+
+// Formula by Urs Heckmann
+// https://www.desmos.com/calculator/s86jxqzqgo
+// Max error: 1.87e-5
+template <typename T>
+T	Approx::tanh_urs (T x) noexcept
+{
+	constexpr auto c1 = T (0.999972863);
+	constexpr auto c3 = T (0.1667961930);
+	constexpr auto c5 = T (0.8205501647e-2);
+	constexpr auto c7 = T (0.2344393379e-3);
+
+	const auto     x2 = x * x;
+	x *= ((c7 * x2 + c5) * x2 + c3) * x2 + c1;
+
+	return tanh_final_rsqrt (x);
+}
+
+ToolsSimd::VectF32	Approx::tanh_urs (ToolsSimd::VectF32 x) noexcept
+{
+	const auto     c1 = fstb::ToolsSimd::set1_f32 (0.999972863f);
+	const auto     c3 = fstb::ToolsSimd::set1_f32 (0.1667961930f);
+	const auto     c5 = fstb::ToolsSimd::set1_f32 (0.8205501647e-2f);
+	const auto     c7 = fstb::ToolsSimd::set1_f32 (0.2344393379e-3f);
+
+	const auto     x2 = x * x;
+	x *= ((c7 * x2 + c5) * x2 + c3) * x2 + c1;
+
+	return tanh_final_rsqrt (x);
 }
 
 
 
 // Formula by 2DaT
 // https://www.kvraudio.com/forum/viewtopic.php?p=7503081#p7503081
-// Max error: 3.14e-6
-// https://www.desmos.com/calculator/sjxol8khaz
+// Max error: 3.14e-7 (measured: 5.45e-7)
+// https://www.desmos.com/calculator/s86jxqzqgo
 template <typename T>
 T	Approx::tanh_2dat (T x) noexcept
 {
@@ -961,17 +984,36 @@ T	Approx::tanh_andy (T x) noexcept
 {
 	x = fstb::limit (x, T (-4), T (+4));
 
-	constexpr T    n3  = T (0.0812081221471);
-	constexpr T    n1  = T (1);
-	constexpr T    d4  = T (0.00624523306500);
-	constexpr T    d2  = T (0.412523749044);
-	constexpr T    d0  = T (1);
+	constexpr auto n1  = T (1);
+	constexpr auto n3  = T (0.0812081221471);
+	constexpr auto d0  = n1;
+	constexpr auto d2  = T (0.412523749044);
+	constexpr auto d4  = T (0.00624523306500);
 
-	const T        x2  = x * x;
-	const T        num = (n3 * x2 + n1) * x;
-	const T        den = (d4 * x2 + d2) * x2 + d0;
+	const auto     x2  = x * x;
+	const auto     num = (n3 * x2 + n1) * x;
+	const auto     den = (d4 * x2 + d2) * x2 + d0;
 
 	return num / den;
+}
+
+ToolsSimd::VectF32	Approx::tanh_andy (ToolsSimd::VectF32 x) noexcept
+{
+	const auto     n1      = fstb::ToolsSimd::set1_f32 (1);
+	const auto     n3      = fstb::ToolsSimd::set1_f32 (0.0812081221471f);
+	const auto     d0      = n1;
+	const auto     d2      = fstb::ToolsSimd::set1_f32 (0.412523749044f);
+	const auto     d4      = fstb::ToolsSimd::set1_f32 (0.00624523306500f);
+	const auto     min_val = fstb::ToolsSimd::set1_f32 (-4);
+	const auto     max_val = fstb::ToolsSimd::set1_f32 (+4);
+
+	x = fstb::ToolsSimd::max_f32 (x, min_val);
+	x = fstb::ToolsSimd::min_f32 (x, max_val);
+	const auto     x2  = x * x;
+	const auto     num = (n3 * x2 + n1) * x;
+	const auto     den = (d4 * x2 + d2) * x2 + d0;
+
+	return fstb::ToolsSimd::div_approx2 (num, den);
 }
 
 
@@ -1164,6 +1206,25 @@ ToolsSimd::VectF32	Approx::restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x,
 	);
 
 	return x;
+}
+
+
+
+// x / sqrt (1 + x^2)
+template <typename T>
+T	Approx::tanh_final_rsqrt (T x) noexcept
+{
+	const auto     x2 = x * x;
+
+	return x / T (sqrt (T (1) + x2));
+}
+
+ToolsSimd::VectF32	Approx::tanh_final_rsqrt (ToolsSimd::VectF32 x) noexcept
+{
+	const auto     one = fstb::ToolsSimd::set1_f32 (1.0f);
+	const auto     x2  = x * x;
+
+	return x * fstb::ToolsSimd::rsqrt_approx2 (x2 + one);
 }
 
 

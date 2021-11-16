@@ -27,6 +27,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <string>
+
 
 
 class TestApprox
@@ -57,7 +59,7 @@ private:
 		static_assert (ILL2 <= 3, "ILL2 must be in [0 ; 3]");
 	public:
 		template <typename OP, typename S>
-		static void    test_op1 (const OP &op, const char name_0 [], S min_val, S max_val);
+		static void    test_op1 (const OP &op, const std::string &name, S min_val, S max_val);
 	};
 
 	template <typename T, bool REL_FLAG>
@@ -65,11 +67,19 @@ private:
 	{
 	public:
 		template <typename OPTST, typename OPREF, typename S>
-		static void    test_op1 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val, S max_val);
+		static void    test_op1 (const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val, S max_val);
 
 		template <typename OPTST, typename OPREF, typename S>
-		static void    test_op2 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val1, S max_val1, S min_val2, S max_val2);
+		static void    test_op2 (const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val1, S max_val1, S min_val2, S max_val2);
 	};
+
+	template <bool REL_FLAG, typename OPREF, typename OPTSTS, typename OPTSTV>
+	static void    test_op1_all_flt (const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val);
+	template <bool REL_FLAG, typename OPREF, typename OPTSTS>
+	static void    test_op1_all_flt_s (const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val);
+	template <bool REL_FLAG, typename OPREF, typename OPTSTV>
+	static void    test_op1_all_flt_v (const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, float min_val, float max_val);
+
 
 
 

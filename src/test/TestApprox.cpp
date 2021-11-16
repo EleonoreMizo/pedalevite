@@ -50,329 +50,105 @@ int	TestApprox::perform_test ()
 	const float    pi_f = float (fstb::PI);
 	typedef fstb::ToolsSimd::VectF32 VectF32;
 
-	TestFncLogic <float, false>::test_op1 (
+	// sin
+
+	test_op1_all_flt <false> (
 		[] (double x) { return sin (x); },
 		[] (float x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (float)", -pi_f, pi_f
-	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (float)", -pi_f, pi_f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (float)", -pi_f, pi_f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (float)", -pi_f, pi_f
+		[] (VectF32 x) { return fstb::Approx::sin_nick (x); },
+		"sin_nick", -pi_f, pi_f
 	);
 
-	TestFncLogic <VectF32, false>::test_op1 (
-		[] (double x) { return sin (x); },
-		[] (VectF32 x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (VectF32)", -pi_f, pi_f
-	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (VectF32)", -pi_f, pi_f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (VectF32)", -pi_f, pi_f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick (VectF32)", -pi_f, pi_f
-	);
-
-	TestFncLogic <float, false>::test_op1 (
+	test_op1_all_flt <false> (
 		[] (double x) { return sin (x * fstb::PI * 0.5f); },
 		[] (float x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (float)", -1.f, 1.f
+		[] (VectF32 x) { return fstb::Approx::sin_rbj_halfpi (x); },
+		"sin_rbj_halfpi", -1.f, 1.f
 	);
 
-	TestFncLogic <VectF32, false>::test_op1 (
-		[] (double x) { return sin (x * fstb::PI * 0.5f); },
-		[] (VectF32 x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi (VectF32)", -1.f, 1.f
-	);
+	// log2
 
-	TestFncLogic <float, false>::test_op1 (
+	test_op1_all_flt_s <false> (
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2 (x); },
-		"log2 (float)", 1e-3f, 1e3f
+		"log2", 1e-3f, 1e3f
 	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::log2 (x); },
-		"log2 (float)", 1e-3f, 1e3f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::log2 (x); },
-		"log2 (float)", 1e-3f, 1e3f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::log2 (x); },
-		"log2 (float)", 1e-3f, 1e3f
-	);
-
-	TestFncLogic <VectF32, false>::test_op1 (
+	test_op1_all_flt_v <false> (
 		[] (double x) { return log2 (x); },
 		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx (x); },
-		"log2_approx (VectF32)", 1e-3f, 1e3f
+		"log2_approx", 1e-3f, 1e3f
 	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx (x); },
-		"log2_approx (VectF32)", 1e-3f, 1e3f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx (x); },
-		"log2_approx (VectF32)", 1e-3f, 1e3f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx (x); },
-		"log2_approx (VectF32)", 1e-3f, 1e3f
-	);
-
-	TestFncLogic <VectF32, false>::test_op1 (
+	test_op1_all_flt_v <false> (
 		[] (double x) { return log2 (x); },
 		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx2 (x); },
-		"log2_approx2 (VectF32)", 1e-3f, 1e3f
-	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx2 (x); },
-		"log2_approx2 (VectF32)", 1e-3f, 1e3f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx2 (x); },
-		"log2_approx2 (VectF32)", 1e-3f, 1e3f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::log2_approx2 (x); },
-		"log2_approx2 (VectF32)", 1e-3f, 1e3f
+		"log2_approx2", 1e-3f, 1e3f
 	);
 
-	TestFncLogic <float, true>::test_op1 (
+	// exp2
+
+	test_op1_all_flt_s <true> (
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2 (x); },
-		"exp2 (float)", -20.f, 20.f
+		"exp2", -20.f, 20.f
 	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::exp2 (x); },
-		"exp2 (float)", -20.f, 20.f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::exp2 (x); },
-		"exp2 (float)", -20.f, 20.f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::exp2 (x); },
-		"exp2 (float)", -20.f, 20.f
-	);
-
-	TestFncLogic <VectF32, true>::test_op1 (
+	test_op1_all_flt_v <true> (
 		[] (double x) { return exp2 (x); },
 		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx (x); },
-		"exp2_approx (VectF32)", -20.f, 20.f
+		"exp2_approx", -20.f, 20.f
 	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx (x); },
-		"exp2_approx (VectF32)", -20.f, 20.f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx (x); },
-		"exp2_approx (VectF32)", -20.f, 20.f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx (x); },
-		"exp2_approx (VectF32)", -20.f, 20.f
-	);
-
-	TestFncLogic <VectF32, true>::test_op1 (
+	test_op1_all_flt_v <true> (
 		[] (double x) { return exp2 (x); },
 		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx2 (x); },
-		"exp2_approx2 (VectF32)", -20.f, 20.f
-	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx2 (x); },
-		"exp2_approx2 (VectF32)", -20.f, 20.f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx2 (x); },
-		"exp2_approx2 (VectF32)", -20.f, 20.f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx2 (x); },
-		"exp2_approx2 (VectF32)", -20.f, 20.f
+		"exp2_approx2", -20.f, 20.f
 	);
 
-	TestFncLogic <float, false>::test_op1 (
+	// tan
+
+	test_op1_all_flt <false> (
 		[] (double x) { return tan (x); },
 		[] (float x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (float)", -1.f, 1.f
+		[] (VectF32 x) { return fstb::Approx::tan_taylor5 (x); },
+		"tan_taylor5", -1.f, 1.f
 	);
 
-	TestFncLogic <VectF32, false>::test_op1 (
-		[] (double x) { return tan (x); },
-		[] (VectF32 x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5 (VectF32)", -1.f, 1.f
-	);
-
-	TestFncLogic <float, false>::test_op1 (
+	test_op1_all_flt <false> (
 		[] (double x) { return tan (x); },
 		[] (float x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (float)", -1.f, 1.f
+		[] (VectF32 x) { return fstb::Approx::tan_mystran (x); },
+		"tan_mystran", -1.f, 1.f
 	);
 
-	TestFncLogic <VectF32, false>::test_op1 (
-		[] (double x) { return tan (x); },
-		[] (VectF32 x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran (VectF32)", -1.f, 1.f
-	);
+	// tanh
 
-	TestFncLogic <float, false>::test_op1 (
+	test_op1_all_flt <false> (
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (float)", -1.f, 1.f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (float)", -1.f, 1.f
+		[] (VectF32 x) { return fstb::Approx::tanh_mystran (x); },
+		"tanh_mystran", -5.f, 5.f
 	);
 
-	TestFncLogic <VectF32, false>::test_op1 (
+	test_op1_all_flt <false> (
 		[] (double x) { return tanh (x); },
-		[] (VectF32 x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (VectF32)", -1.f, 1.f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran (VectF32)", -1.f, 1.f
+		[] (float x) { return fstb::Approx::tanh_2dat (x); },
+		[] (VectF32 x) { return fstb::Approx::tanh_2dat (x); },
+		"tanh_2dat", -10.f, 10.f
 	);
 
-	TestFncLogic <float, false>::test_op1 (
+	test_op1_all_flt <false> (
 		[] (double x) { return tanh (x); },
-		[] (float x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (float)", -10.f, 10.f
-	);
-	TestFncSpeed <float, 0>::test_op1 (
-		[] (float x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (float)", -10.f, 10.f
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		[] (float x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (float)", -10.f, 10.f
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		[] (float x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (float)", -10.f, 10.f
+		[] (float x) { return fstb::Approx::tanh_andy (x); },
+		[] (VectF32 x) { return fstb::Approx::tanh_andy (x); },
+		"tanh_andy", -5.f, 5.f
 	);
 
-	TestFncLogic <VectF32, false>::test_op1 (
+	test_op1_all_flt <false> (
 		[] (double x) { return tanh (x); },
-		[] (VectF32 x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (VectF32)", -10.f, 10.f
+		[] (float x) { return fstb::Approx::tanh_urs (x); },
+		[] (VectF32 x) { return fstb::Approx::tanh_urs (x); },
+		"tanh_urs", -10.f, 10.f
 	);
-	TestFncSpeed <VectF32, 0>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (VectF32)", -10.f, 10.f
-	);
-	TestFncSpeed <VectF32, 1>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (VectF32)", -10.f, 10.f
-	);
-	TestFncSpeed <VectF32, 2>::test_op1 (
-		[] (VectF32 x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat (VectF32)", -10.f, 10.f
-	);
+
+	// pow
 
 	TestFncLogic <double, true>::test_op2 (
 		[] (double x, double y) { return pow (x, y); },
@@ -415,7 +191,7 @@ inline float conv_t_to_s (fstb::ToolsSimd::VectF32 x)
 
 template <typename T, int ILL2>
 template <typename OP, typename S>
-void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const char name_0 [], S min_val, S max_val)
+void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::string &name, S min_val, S max_val)
 {
 	const int      nbr_blocks = 10000;
 	const int      block_len_s = 64;
@@ -434,7 +210,7 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const char name
 		reinterpret_cast <S *> (&src_arr [0]), block_len_s, min_val, max_val
 	);
 
-	printf ("Speed test %s, interleave %d... ", name_0, interleave);
+	printf ("Speed test %s, interleave %d... ", name.c_str (), interleave);
 	fflush (stdout);
 	TimerAccurate  tim;
 	S              dummy_val = S (0);
@@ -484,9 +260,9 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const char name
 // OPREF is always scalar with double as input and output types.
 template <typename T, bool REL_FLAG>
 template <typename OPTST, typename OPREF, typename S>
-void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val, S max_val)
+void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val, S max_val)
 {
-	printf ("Logic test %s... ", name_0);
+	printf ("Logic test %s... ", name.c_str ());
 	fflush (stdout);
 
 	const int      nbr_spl = 234567;
@@ -530,9 +306,9 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, cons
 
 template <typename T, bool REL_FLAG>
 template <typename OPTST, typename OPREF, typename S>
-void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val1, S max_val1, S min_val2, S max_val2)
+void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val1, S max_val1, S min_val2, S max_val2)
 {
-	printf ("Logic test %s... ", name_0);
+	printf ("Logic test %s... ", name.c_str ());
 	fflush (stdout);
 
 	const int      nbr_spl = 2345;
@@ -582,6 +358,57 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, cons
 	{
 		printf ("Err max: %.3g, avg: %.3g\n", err_max      , err_avg      );
 	}
+}
+
+
+
+template <bool REL_FLAG, typename OPREF, typename OPTSTS, typename OPTSTV>
+void	TestApprox::test_op1_all_flt (const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val)
+{
+	test_op1_all_flt_s <REL_FLAG> (op_ref, op_s, name, min_val, max_val);
+	test_op1_all_flt_v <REL_FLAG> (op_ref, op_v, name, min_val, max_val);
+}
+
+
+
+template <bool REL_FLAG, typename OPREF, typename OPTSTS>
+void	TestApprox::test_op1_all_flt_s (const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val)
+{
+	const auto     name_s = name + " (float)";
+	TestFncLogic <float, REL_FLAG>::test_op1 (
+		op_ref, op_s, name_s, min_val, max_val
+	);
+	TestFncSpeed <float, 0>::test_op1 (
+		op_s, name_s, min_val, max_val
+	);
+	TestFncSpeed <float, 1>::test_op1 (
+		op_s, name_s, min_val, max_val
+	);
+	TestFncSpeed <float, 2>::test_op1 (
+		op_s, name_s, min_val, max_val
+	);
+}
+
+
+
+template <bool REL_FLAG, typename OPREF, typename OPTSTV>
+void	TestApprox::test_op1_all_flt_v (const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, float min_val, float max_val)
+{
+	typedef fstb::ToolsSimd::VectF32 VectF32;
+
+	const auto     name_v = name + " (VectF32)";
+	TestFncLogic <VectF32, REL_FLAG>::test_op1 (
+		op_ref, op_v, name_v, min_val, max_val
+	);
+	TestFncSpeed <VectF32, 0>::test_op1 (
+		op_v, name_v, min_val, max_val
+	);
+	TestFncSpeed <VectF32, 1>::test_op1 (
+		op_v, name_v, min_val, max_val
+	);
+	TestFncSpeed <VectF32, 2>::test_op1 (
+		op_v, name_v, min_val, max_val
+	);
 }
 
 
