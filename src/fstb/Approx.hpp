@@ -858,9 +858,9 @@ T	Approx::tanh_mystran (T x) noexcept
 
 	// x <- x + 0.183 * x^3
 	auto           x2 = x * x;
-	x += x * x2 * p;
+	const auto     s  = x + x * x2 * p;
 
-	return tanh_from_sinh (x);
+	return tanh_from_sinh (s);
 }
 
 ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x) noexcept
@@ -869,41 +869,41 @@ ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x) noexcept
 
 	// x <- x + 0.183 * x^3
 	auto           x2 = x * x;
-	x += x * x2 * p;
+	const auto     s  = x + x * x2 * p;
 
-	return tanh_from_sinh (x);
+	return tanh_from_sinh (s);
 }
 
 
 
-// Formula by Urs Heckmann
+// Formula by Urs Heckmann, modified by Andrew Simper
 // https://www.desmos.com/calculator/s86jxqzqgo
-// Max error: 1.87e-5
+// Max error: 1.33e-5
+// Coefficients for 9th-order alternative:
+// (1), 0.166658916965, 8.34772973761e-3, 1.92238891072e-4, 3.54691185595e-6
 template <typename T>
 T	Approx::tanh_urs (T x) noexcept
 {
-	constexpr auto c1 = T (0.999972863);
-	constexpr auto c3 = T (0.1667961930);
-	constexpr auto c5 = T (0.8205501647e-2);
-	constexpr auto c7 = T (0.2344393379e-3);
+	constexpr auto c3 = T (0.166769829136);
+	constexpr auto c5 = T (8.18221837248e-3);
+	constexpr auto c7 = T (2.43140159662e-4);
 
 	const auto     x2 = x * x;
-	x *= ((c7 * x2 + c5) * x2 + c3) * x2 + c1;
+	const auto     s  = ((c7 * x2 + c5) * x2 + c3) * x2 * x + x;
 
-	return tanh_from_sinh (x);
+	return tanh_from_sinh (s);
 }
 
 ToolsSimd::VectF32	Approx::tanh_urs (ToolsSimd::VectF32 x) noexcept
 {
-	const auto     c1 = fstb::ToolsSimd::set1_f32 (0.999972863f);
-	const auto     c3 = fstb::ToolsSimd::set1_f32 (0.1667961930f);
-	const auto     c5 = fstb::ToolsSimd::set1_f32 (0.8205501647e-2f);
-	const auto     c7 = fstb::ToolsSimd::set1_f32 (0.2344393379e-3f);
+	const auto     c3 = ToolsSimd::set1_f32 (0.166769829136f);
+	const auto     c5 = ToolsSimd::set1_f32 (8.18221837248e-3f);
+	const auto     c7 = ToolsSimd::set1_f32 (2.43140159662e-4f);
 
 	const auto     x2 = x * x;
-	x *= ((c7 * x2 + c5) * x2 + c3) * x2 + c1;
+	const auto     s  = ((c7 * x2 + c5) * x2 + c3) * x2 * x + x;
 
-	return tanh_from_sinh (x);
+	return tanh_from_sinh (s);
 }
 
 
