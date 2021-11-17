@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "fstb/fnc.h"
+#include "fstb/Poly.h"
 
 #if defined (_MSC_VER)
 	#include <intrin.h>
@@ -124,7 +125,13 @@ constexpr T	Approx::sin_rbj_halfpi (T x) noexcept
 	constexpr T    e  = T ( 1.5707963268);
 	const T        x2 = x * x;
 
+#if 1
+	return Poly::horner (x2, e, d, c, b, a) * x;
+#elif 0
+	return Poly::estrin (x2, e, d, c, b, a) * x;
+#else
 	return ((((a * x2 + b) * x2 + c) * x2 + d) * x2 + e) * x;
+#endif
 
 	// Other coefficients found by Olli Niemitalo
 	// Constaints: f(0) = 0, f(1) = 1, f'(1) = 0, odd-symmetry
@@ -150,7 +157,13 @@ ToolsSimd::VectF32	Approx::sin_rbj_halfpi (ToolsSimd::VectF32 x) noexcept
 	const auto    e  = ToolsSimd::set1_f32 ( 1.5707963268f);
 	const auto    x2 = x * x;
 
+#if 1
+	return Poly::horner (x2, e, d, c, b, a) * x;
+#elif 0
+	return Poly::estrin (x2, e, d, c, b, a) * x;
+#else
 	return ((((a * x2 + b) * x2 + c) * x2 + d) * x2 + e) * x;
+#endif
 }
 
 
