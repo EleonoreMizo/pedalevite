@@ -219,6 +219,8 @@ commonsrc = \
         ../../src/fstb/fnc_fstb.cpp \
         ../../src/fstb/Hash.h \
         ../../src/fstb/Hash.hpp \
+        ../../src/fstb/Poly.h \
+        ../../src/fstb/Poly.hpp \
         ../../src/fstb/RndPcgXshRr6432.h \
         ../../src/fstb/RndPcgXshRr6432.hpp \
         ../../src/fstb/RndXoroshiro128p.h \

@@ -609,6 +609,7 @@ void	ToolsSimd::msu (VectF32 &s, VectF32 a, VectF32 b) noexcept
 
 
 
+// Returns x * a + b
 ToolsSimd::VectF32	ToolsSimd::fmadd (VectF32 x, VectF32 a, VectF32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -631,6 +632,7 @@ ToolsSimd::VectF32	ToolsSimd::fmadd (VectF32 x, VectF32 a, VectF32 b) noexcept
 
 
 
+// Returns x * a - b
 ToolsSimd::VectF32	ToolsSimd::fmsub (VectF32 x, VectF32 a, VectF32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)

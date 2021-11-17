@@ -500,6 +500,8 @@
     <ClInclude Include="..\..\..\src\fstb\msg\MsgRet.hpp" />
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.h" />
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\Poly.h" />
+    <ClInclude Include="..\..\..\src\fstb\Poly.hpp" />
     <ClInclude Include="..\..\..\src\fstb\RndPcgXshRr6432.h" />
     <ClInclude Include="..\..\..\src\fstb\RndPcgXshRr6432.hpp" />
     <ClInclude Include="..\..\..\src\fstb\RndXoroshiro128p.h" />
