@@ -34,9 +34,15 @@ namespace fstb
 
 
 template <class T>
+constexpr T	Poly::horner (T x, T c0, T c1) noexcept
+{
+	return fma (c1, x, c0);
+}
+
+template <class T>
 constexpr T	Poly::horner (T x, T c0, T c1, T c2) noexcept
 {
-	return fma (fma (c2, x, c1), x, c0);
+	return horner (x, c0, fma (c2, x, c1));
 }
 
 template <class T>
@@ -59,6 +65,8 @@ constexpr T	Poly::horner (T x, T c0, T c1, T c2, T c3, T c4, T c5) noexcept
 
 
 
+// Estrin evaluation is slightly less precise than Horner.
+// Speed improvement starts with 6 coefficients (5 on ARM).
 template <class T>
 constexpr T	Poly::estrin (T x, T c0, T c1, T c2, T c3) noexcept
 {

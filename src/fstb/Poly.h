@@ -44,6 +44,9 @@ public:
 
 	template <class T>
 	fstb_FORCEINLINE static constexpr T
+	               horner (T x, T c0, T c1) noexcept;
+	template <class T>
+	fstb_FORCEINLINE static constexpr T
 	               horner (T x, T c0, T c1, T c2) noexcept;
 	template <class T>
 	fstb_FORCEINLINE static constexpr T
