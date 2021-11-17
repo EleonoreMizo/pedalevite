@@ -148,12 +148,12 @@ public:
 	static inline ToolsSimd::VectF32
 	               tanh_urs (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
-	static inline T
+	static inline constexpr T
 	               tanh_2dat (T x) noexcept;
 	static inline ToolsSimd::VectF32
 	               tanh_2dat (ToolsSimd::VectF32 x) noexcept;
 	template <typename T>
-	static inline T
+	static inline constexpr T
 	               tanh_andy (T x) noexcept;
 	static inline ToolsSimd::VectF32
 	               tanh_andy (ToolsSimd::VectF32 x) noexcept;
@@ -202,9 +202,9 @@ private:
 
 	template <typename T>
 	static inline T
-	               tanh_final_rsqrt (T x) noexcept;
+	               tanh_from_sinh (T x) noexcept;
 	static inline ToolsSimd::VectF32
-	               tanh_final_rsqrt (ToolsSimd::VectF32 x) noexcept;
+	               tanh_from_sinh (ToolsSimd::VectF32 x) noexcept;
 
 
 	template <typename T>
