@@ -193,12 +193,13 @@ template <typename T, int ILL2>
 template <typename OP, typename S>
 void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::string &name, S min_val, S max_val)
 {
-	const int      nbr_blocks = 10000;
-	const int      block_len_s = 64;
-	const int      s_per_t = sizeof (T) / sizeof (S);
+	constexpr int  nbr_blocks  = 1000;
+	constexpr int  nbr_tests   = 100;
+	constexpr int  block_len_s = 64;
+	constexpr int  s_per_t     = sizeof (T) / sizeof (S);
 	static_assert ((block_len_s % s_per_t) == 0, "");
-	const int      block_len  = block_len_s / s_per_t;
-	const int      interleave = 1 << ILL2;
+	constexpr int  block_len   = block_len_s / s_per_t;
+	constexpr int  interleave  = 1 << ILL2;
 	static_assert ((block_len % interleave) == 0, "");
 
 	typedef std::vector <T, fstb::AllocAlign <T, 64> > Buffer;
@@ -216,38 +217,41 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::stri
 	S              dummy_val = S (0);
 
 	tim.start ();
-	for (int blk_cnt = 0; blk_cnt < nbr_blocks; ++blk_cnt)
+	for (int test_cnt = 0; test_cnt < nbr_tests; ++test_cnt)
 	{
-		for (int pos = 0; pos < block_len; pos += interleave)
+		for (int blk_cnt = 0; blk_cnt < nbr_blocks; ++blk_cnt)
 		{
+			for (int pos = 0; pos < block_len; pos += interleave)
+			{
 #if defined (_MSC_VER) && (fstb_WORD_SIZE == 64)
-			// VS2017 in 64-bit mode breaks on a C4789 error...
-			T              a [8];
+				// VS2017 in 64-bit mode breaks on a C4789 error...
+				T              a [8];
 #else
-			T              a [interleave];
+				T              a [interleave];
 #endif
 
-			if (true    ) { a [0] = src_arr [pos    ]; }
-			if (ILL2 > 0) { a [1] = src_arr [pos + 1]; }
-			if (ILL2 > 1) { a [2] = src_arr [pos + 2]; }
-			if (ILL2 > 1) { a [3] = src_arr [pos + 3]; }
-			if (ILL2 > 2) { a [4] = src_arr [pos + 4]; }
-			if (ILL2 > 2) { a [5] = src_arr [pos + 5]; }
-			if (ILL2 > 2) { a [6] = src_arr [pos + 6]; }
-			if (ILL2 > 2) { a [7] = src_arr [pos + 7]; }
+				if (true    ) { a [0] = src_arr [pos    ]; }
+				if (ILL2 > 0) { a [1] = src_arr [pos + 1]; }
+				if (ILL2 > 1) { a [2] = src_arr [pos + 2]; }
+				if (ILL2 > 1) { a [3] = src_arr [pos + 3]; }
+				if (ILL2 > 2) { a [4] = src_arr [pos + 4]; }
+				if (ILL2 > 2) { a [5] = src_arr [pos + 5]; }
+				if (ILL2 > 2) { a [6] = src_arr [pos + 6]; }
+				if (ILL2 > 2) { a [7] = src_arr [pos + 7]; }
 
-			if (true    ) { dst_arr [pos    ] = op (a [0]); }
-			if (ILL2 > 0) { dst_arr [pos + 1] = op (a [1]); }
-			if (ILL2 > 1) { dst_arr [pos + 2] = op (a [2]); }
-			if (ILL2 > 1) { dst_arr [pos + 3] = op (a [3]); }
-			if (ILL2 > 2) { dst_arr [pos + 4] = op (a [4]); }
-			if (ILL2 > 2) { dst_arr [pos + 5] = op (a [5]); }
-			if (ILL2 > 2) { dst_arr [pos + 6] = op (a [6]); }
-			if (ILL2 > 2) { dst_arr [pos + 7] = op (a [7]); }
+				if (true    ) { dst_arr [pos    ] = op (a [0]); }
+				if (ILL2 > 0) { dst_arr [pos + 1] = op (a [1]); }
+				if (ILL2 > 1) { dst_arr [pos + 2] = op (a [2]); }
+				if (ILL2 > 1) { dst_arr [pos + 3] = op (a [3]); }
+				if (ILL2 > 2) { dst_arr [pos + 4] = op (a [4]); }
+				if (ILL2 > 2) { dst_arr [pos + 5] = op (a [5]); }
+				if (ILL2 > 2) { dst_arr [pos + 6] = op (a [6]); }
+				if (ILL2 > 2) { dst_arr [pos + 7] = op (a [7]); }
+			}
+			dummy_val += conv_t_to_s <S> (src_arr [block_len - 1]);
 		}
-		dummy_val += conv_t_to_s <S> (src_arr [block_len - 1]);
+		tim.stop_lap ();
 	}
-	tim.stop ();
 
 	double	      spl_per_s = tim.get_best_rate (block_len_s * nbr_blocks);
 	spl_per_s += fstb::limit (double (dummy_val), -1e-300, 1e-300);
