@@ -365,8 +365,9 @@ ln (amp (t)) * d / t = ln (f)
 f = exp (ln (amp (t)) * d / t)
 */
 	const float    lvl_l2   = -10;   // float (log2 (1e-3));
-	const float    fdbk_abs =
-		fstb::Approx::exp2 (lvl_l2 / (_comb_freq * _decay_time));
+	const float    fdbk_l2  =
+		std::max (lvl_l2 / (_comb_freq * _decay_time), -10.f);
+	const float    fdbk_abs = fstb::Approx::exp2 (fdbk_l2);
 	_feedback = (_neg_flag) ? -fdbk_abs : fdbk_abs;
 
 	// Input gain
