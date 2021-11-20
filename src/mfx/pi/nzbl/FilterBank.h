@@ -57,7 +57,7 @@ public:
 	static const int  _nbr_split = _nbr_bands - 1;
 
 	void           reset (double sample_freq, int max_buf_len, double &latency);
-	void           set_threshold (int band_idx, float thr);
+	void           set_level (int band_idx, float thr);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 

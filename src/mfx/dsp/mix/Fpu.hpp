@@ -69,6 +69,13 @@ void	Fpu::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT
 	}
 }
 
+template <typename OPS, typename OPV>
+void	Fpu::vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OPS op, OPV op_v) noexcept
+{
+	fstb::unused (op_v);
+	vec_op_1_1 (dst_ptr, src_ptr, nbr_spl, op);
+}
+
 
 
 template <typename OP>
@@ -105,6 +112,13 @@ void	Fpu::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT
 	{
 		dst_ptr [k] = op (lhs_ptr [k], rhs_ptr [k]);
 	}
+}
+
+template <typename OPS, typename OPV>
+void	Fpu::vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OPS op, OPV op_v) noexcept
+{
+	fstb::unused (op_v);
+	vec_op_2_1 (dst_ptr, lhs_ptr, rhs_ptr, nbr_spl, op);
 }
 
 

@@ -225,9 +225,15 @@ public:
 	template <typename OP>
 	static inline void
 	               vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OP op) noexcept;
+	template <typename OPS, typename OPV>
+	static inline void
+	               vec_op_1_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, int nbr_spl, OPS op, OPV op_v) noexcept;
 	template <typename OP>
 	static inline void
 	               vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OP op) noexcept;
+	template <typename OPS, typename OPV>
+	static inline void
+	               vec_op_2_1 (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT lhs_ptr, const float * fstb_RESTRICT rhs_ptr, int nbr_spl, OPS op, OPV op_v) noexcept;
 
 
 

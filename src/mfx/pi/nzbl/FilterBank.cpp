@@ -88,7 +88,7 @@ void	FilterBank::reset (double sample_freq, int max_buf_len, double &latency)
 
 
 // thr is a linear value
-void	FilterBank::set_threshold (int band_idx, float thr)
+void	FilterBank::set_level (int band_idx, float thr)
 {
 	assert (band_idx >= 0);
 	assert (band_idx < _nbr_bands);

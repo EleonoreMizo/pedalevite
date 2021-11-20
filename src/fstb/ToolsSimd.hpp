@@ -1386,10 +1386,10 @@ std::tuple <ToolsSimd::VectF32, ToolsSimd::VectF32>	ToolsSimd::swap_cond (VectF3
 #if ! defined (fstb_HAS_SIMD)
 	Combo          cc;
 	cc._vf32 = cond;
-	if (cc._s32 [0] != 0) { std::swap (lhs [0], rhs [0]); }
-	if (cc._s32 [1] != 0) { std::swap (lhs [1], rhs [1]); }
-	if (cc._s32 [2] != 0) { std::swap (lhs [2], rhs [2]); }
-	if (cc._s32 [3] != 0) { std::swap (lhs [3], rhs [3]); }
+	if (cc._s32 [0] != 0) { std::swap (lhs._ [0], rhs._ [0]); }
+	if (cc._s32 [1] != 0) { std::swap (lhs._ [1], rhs._ [1]); }
+	if (cc._s32 [2] != 0) { std::swap (lhs._ [2], rhs._ [2]); }
+	if (cc._s32 [3] != 0) { std::swap (lhs._ [3], rhs._ [3]); }
 	return std::make_tuple (lhs, rhs);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     inv = _mm_and_ps (_mm_xor_ps (lhs, rhs), cond);
@@ -2300,10 +2300,10 @@ ToolsSimd::VectS32	ToolsSimd::select (VectS32 cond, VectS32 v_t, VectS32 v_f) no
 std::tuple <ToolsSimd::VectS32, ToolsSimd::VectS32>	ToolsSimd::swap_cond (VectS32 cond, VectS32 lhs, VectS32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	if (cond._ [0] != 0) { std::swap (lhs [0], rhs [0]); }
-	if (cond._ [1] != 0) { std::swap (lhs [1], rhs [1]); }
-	if (cond._ [2] != 0) { std::swap (lhs [2], rhs [2]); }
-	if (cond._ [3] != 0) { std::swap (lhs [3], rhs [3]); }
+	if (cond._ [0] != 0) { std::swap (lhs._ [0], rhs._ [0]); }
+	if (cond._ [1] != 0) { std::swap (lhs._ [1], rhs._ [1]); }
+	if (cond._ [2] != 0) { std::swap (lhs._ [2], rhs._ [2]); }
+	if (cond._ [3] != 0) { std::swap (lhs._ [3], rhs._ [3]); }
 	return std::make_tuple (lhs, rhs);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     inv = _mm_and_si128 (_mm_xor_si128 (lhs, rhs), cond);

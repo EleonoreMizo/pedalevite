@@ -223,6 +223,14 @@ namespace fstb
 
 #endif // fstb_ARCHI
 
+// Undefine for testing
+//#undef fstb_HAS_SIMD
+
+#if ! defined (fstb_SIMD128_ALIGN)
+	// Keeps the alignment defined in any case.
+	#define fstb_SIMD128_ALIGN (16)
+#endif
+
 
 
 // Convenient helper to declare unused function parameters
