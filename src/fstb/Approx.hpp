@@ -294,25 +294,24 @@ std::array <ToolsSimd::VectF32, 2>	Approx::cos_sin_nick_2pi (ToolsSimd::VectF32 
 
 
 
+// C1 continuity
 float	Approx::log2 (float val) noexcept
 {
-	assert (val > 0);
+	return log2_base (val, log2_poly2 <float>);
+}
 
-	Combo32        combo { val };
-	int            x     = combo._i;
-	const int      log_2 = ((x >> 23) & 255) - 128;
-	x        &= ~(255 << 23);
-	x        +=   127 << 23;
-	combo._i  = x;
-	val       = combo._f;
+// C1 continuity
+// Max error: 1.8e-4
+float	Approx::log2_5th (float val) noexcept
+{
+	return log2_base (val, log2_poly5 <float>);
+}
 
-	const float		k = 0.5f;
-	const float		a = (k - 1  ) / (k + 1);
-	const float		b = (4 - 2*k) / (k + 1);	// 1 - 3*a
-	const float		c = 2*a;
-	val = Poly::horner (val, c, b, a);
-
-	return (val + float (log_2));
+// C1 continuity
+// Max error: 5.6e-6
+float	Approx::log2_7th (float val) noexcept
+{
+	return log2_base (val, log2_poly7 <float>);
 }
 
 
@@ -341,29 +340,26 @@ float	Approx::log2_crude (float val) noexcept
 
 
 
+// C1 continuity
 float	Approx::exp2 (float val) noexcept
 {
-	// Truncated val for integer power of 2
-	const int      tx = floor_int (val);
+	return exp2_base (val, exp2_poly2 <float>);
+}
 
-	// Float remainder of power of 2
-	val -= static_cast <float> (tx);
+// C1 continuity
+// max error on [0; 1]: 2.44e-7.
+// Measured on [-20; +20]: 8.15e-7
+float	Approx::exp2_5th (float val) noexcept
+{
+	return exp2_base (val, exp2_poly5 <float>);
+}
 
-	// Quadratic approximation of 2^x in [0 ; 1]
-	const float    a = 1.0f / 3.0f;
-	const float    b = 2.0f / 3.0f;
-	const float    c = 1.0f;
-	val = Poly::horner (val, c, b, a);
-
-	Combo32        combo { val };
-
-	// Add integer power of 2 to exponent
-	combo._i += tx << 23;
-	val       = combo._f;
-
-	assert (val >= 0);
-
-	return (val);
+// C1 continuity
+// max error on [0; 1]: 1.64e-7.
+// Measured on [-20; +20]: 7.91e-7
+float	Approx::exp2_7th (float val) noexcept
+{
+	return exp2_base (val, exp2_poly7 <float>);
 }
 
 
@@ -385,61 +381,6 @@ float	Approx::exp2_crude (float val) noexcept
 	xv._i = ((((xv._i < 0x43808000) ? 0 : xv._i) << 8) & 0x7FFFFF00);
 
 	return xv._f;
-}
-
-
-
-/*
-Possible coefficients (found by Andrew Simper):
-5th order, max error 2.44e-7:
-	1.000000000000000
-	0.69315168779795
-	0.2401596780318
-	0.055817593635
-	0.008992164746
-	0.001878875789
-7th order, max error 1.64e-7:
-	1.000000000000000
-	0.693147180559945
-	0.2402265069591007
-	0.0555044941070
-	0.009615262656
-	0.001341316600
-	0.000143623130
-	0.000021615988
-https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
-*/
-float	Approx::exp2_5th (float val) noexcept
-{
-	// Truncated val for integer power of 2
-	const int      tx = floor_int (val);
-
-	// Float remainder of power of 2
-	val -= static_cast <float> (tx);
-
-	// Quadratic approximation of 2^x in [0 ; 1]
-	const float    c0 = 1;
-	const float    c1 = 0.69315168779795f;
-	const float    c2 = 0.2401596780318f;
-	const float    c3 = 0.055817593635f;
-	const float    c4 = 0.008992164746f;
-	const float    c5 = 0.001878875789f;
-	val = Poly::horner (val, c0, c1, c2, c3, c4, c5);
-
-	union
-	{
-		int32_t        _i;
-		float          _f;
-	}              combo;
-	combo._f = val;
-
-	// Add integer power of 2 to exponent
-	combo._i += tx << 23;
-	val       = combo._f;
-
-	assert (val >= 0);
-
-	return (val);
 }
 
 
@@ -878,9 +819,9 @@ ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x) noexcept
 template <typename T>
 T	Approx::tanh_urs (T x) noexcept
 {
-	constexpr auto c3 = T (0.166769829136);
-	constexpr auto c5 = T (8.18221837248e-3);
-	constexpr auto c7 = T (2.43140159662e-4);
+	constexpr auto c3 = T (0.166769511323);
+	constexpr auto c5 = T (8.18265554763e-3);
+	constexpr auto c7 = T (2.43041131705e-4);
 
 	const auto     x2 = x * x;
 	const auto     s  = Poly::horner (x2, c3, c5, c7) * x2 * x + x;
@@ -890,9 +831,9 @@ T	Approx::tanh_urs (T x) noexcept
 
 ToolsSimd::VectF32	Approx::tanh_urs (ToolsSimd::VectF32 x) noexcept
 {
-	const auto     c3 = ToolsSimd::set1_f32 (0.166769829136f);
-	const auto     c5 = ToolsSimd::set1_f32 (8.18221837248e-3f);
-	const auto     c7 = ToolsSimd::set1_f32 (2.43140159662e-4f);
+	const auto     c3 = ToolsSimd::set1_f32 (0.166769511323f);
+	const auto     c5 = ToolsSimd::set1_f32 (8.18265554763e-3f);
+	const auto     c7 = ToolsSimd::set1_f32 (2.43041131705e-4f);
 
 	const auto     x2 = x * x;
 	const auto     s  = Poly::horner (x2, c3, c5, c7) * x2 * x + x;
@@ -1176,6 +1117,158 @@ ToolsSimd::VectF32	Approx::restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x,
 	x = ToolsSimd::select (ToolsSimd::cmp_gt_f32 (x, hp ), p  - x, x);
 
 	return x;
+}
+
+
+
+template <typename P>
+float	Approx::log2_base (float val, P poly) noexcept
+{
+	assert (val > 0);
+
+	Combo32        combo { val };
+	int            x     = combo._i;
+	const int      log_2 = ((x >> 23) & 255) - 127;
+	x        &= ~(255 << 23);
+	x        +=   127 << 23;
+	combo._i  = x;
+	val       = combo._f;
+
+	// Approximation of 1 + log2 (x) in [1 ; 2] -> [0 ; 1]
+	val       = poly (val);
+
+	return val + float (log_2);
+}
+
+
+
+template <typename T>
+constexpr T	Approx::log2_poly2 (T x) noexcept
+{
+	constexpr auto k = T (0.5);
+	constexpr auto a = (k - 1  ) / (k + 1);
+	constexpr auto b = (4 - 2*k) / (k + 1);	// 1 - 3*a
+	constexpr auto c = 2*a - 1;
+
+	return Poly::horner (x, c, b, a);
+}
+
+/*
+n=50
+FindFit[Table[
+  Log[x]/Log[2], {x, 1, 2, 1/n}], {c0 + c1 (1 + (x - 1)/n) + 
+   c2 (1 + (x - 1)/n)^2 + c3 (1 + (x - 1)/n)^3 + 
+   c4 (1 + (x - 1)/n)^4 + 
+   c5 (1 + (x - 1)/n)^5, {c0 + c1 + c2 + c3 + c4 + c5 == 0, 
+   c0 + 2 c1 + 4 c2 + 8 c3 + 16 c4 + 32 c5 == 1, 
+   c1 + 2 c2 + 3 c3 + 4 c4 + 5 c5 == 
+    2 (c1 + 4 c2 + 12 c3 + 24 c4 + 80 c5)}}, {c0, c1, c2, c3, c4, c5},
+  x]
+*/
+template <typename T>
+constexpr T	Approx::log2_poly5 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (-2.4395118595618),
+		T ( 3.80998968934317),
+		T (-1.75998771172059),
+		T ( 0.40029024875655),
+		T (-0.000133317241258202),
+		T (-0.0106470495760765)
+	);
+}
+
+/*
+n=20
+FindFit[Table[
+  Log[x]/Log[2], {x, 1, 2, 1/n}], {c0 + c1 (1 + (x - 1)/n) + 
+   c2 (1 + (x - 1)/n)^2 + c3 (1 + (x - 1)/n)^3 + 
+   c4 (1 + (x - 1)/n)^4 + c5 (1 + (x - 1)/n)^5 + 
+   c6 (1 + (x - 1)/n)^6 + 
+   c7 (1 + (x - 1)/n)^7, {c0 + c1 + c2 + c3 + c4 + c5 + c6 + c7 == 0, 
+   c0 + 2 c1 + 4 c2 + 8 c3 + 16 c4 + 32 c5 + 64 c6 + 128 c7 == 1, 
+   c1 + 2 c2 + 3 c3 + 4 c4 + 5 c5 + 6 c6 + 7 c7 == 
+    2 (c1 + 4 c2 + 12 c3 + 24 c4 + 80 c5 + 192 c6 + 448 c7)}}, {c0, 
+  c1, c2, c3, c4, c5, c6, c7}, x]
+*/
+template <typename T>
+constexpr T	Approx::log2_poly7 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (-2.88240401363533),
+		T ( 5.33677339735672),
+		T (-3.72166286493998),
+		T ( 1.42721785195822),
+		T (-8.62639500355707e-6),
+		T (-0.237597672916119),
+		T ( 0.0884727724765693),
+		T (-0.0107908439050664)
+	);
+}
+
+
+
+template <typename P>
+float	Approx::exp2_base (float val, P poly) noexcept
+{
+	// Truncated val for integer power of 2
+	const int      tx = floor_int (val);
+
+	// Float remainder of power of 2
+	val -= static_cast <float> (tx);
+
+	// Approximation of 2^x in [0 ; 1]
+	val = poly (val);
+
+	Combo32        combo { val };
+
+	// Add integer power of 2 to exponent
+	combo._i += tx << 23;
+	val       = combo._f;
+
+	assert (val >= 0);
+
+	return val;
+}
+
+
+
+// Quadratic approximation of 2^x in [0 ; 1]
+template <typename T>
+constexpr T	Approx::exp2_poly2 (T x) noexcept
+{
+	return Poly::horner (x, T (1), T (2.0 / 3.0), T (1.0 / 3.0));
+}
+
+// Coefficients found by Andrew Simper
+// https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
+template <typename T>
+constexpr T	Approx::exp2_poly5 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (1               ),
+		T (0.69315168779795),
+		T (0.2401596780318 ),
+		T (0.055817593635  ),
+		T (0.008992164746  ),
+		T (0.001878875789  )
+	);
+}
+
+// Coefficients found by Andrew Simper
+template <typename T>
+constexpr T	Approx::exp2_poly7 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (1                 ),
+		T (0.693147180559945 ),
+		T (0.2402265069591007),
+		T (0.0555044941070   ),
+		T (0.009615262656    ),
+		T (0.001341316600    ),
+		T (0.000143623130    ),
+		T (0.000021615988    )
+	);
 }
 
 

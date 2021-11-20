@@ -83,13 +83,19 @@ public:
 	static inline float
 	               log2 (float val) noexcept;
 	static inline float
+	               log2_5th (float val) noexcept;
+	static inline float
+	               log2_7th (float val) noexcept;
+	static inline float
 	               log2_crude (float val) noexcept;
 	static inline float
 	               exp2 (float val) noexcept;
 	static inline float
-	               exp2_crude (float val) noexcept;
-	static inline float
 	               exp2_5th (float val) noexcept;
+	static inline float
+	               exp2_7th (float val) noexcept;
+	static inline float
+	               exp2_crude (float val) noexcept;
 	template <int A, typename T>
 	static inline T
 	               exp_m (T val) noexcept;
@@ -200,12 +206,37 @@ private:
 	static inline ToolsSimd::VectF32
 	               restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p) noexcept;
 
+	template <typename P>
+	static fstb_FORCEINLINE float
+	               log2_base (float val, P poly) noexcept;
 	template <typename T>
-	static inline T
-	               tanh_from_sinh (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tanh_from_sinh (ToolsSimd::VectF32 x) noexcept;
+	static constexpr fstb_FORCEINLINE T
+	               log2_poly2 (T x) noexcept;
+	template <typename T>
+	static constexpr fstb_FORCEINLINE T
+	               log2_poly5 (T x) noexcept;
+	template <typename T>
+	static constexpr fstb_FORCEINLINE T
+	               log2_poly7 (T x) noexcept;
 
+	template <typename P>
+	static fstb_FORCEINLINE float
+	               exp2_base (float val, P poly) noexcept;
+	template <typename T>
+	static constexpr fstb_FORCEINLINE T
+	               exp2_poly2 (T x) noexcept;
+	template <typename T>
+	static constexpr fstb_FORCEINLINE T
+	               exp2_poly5 (T x) noexcept;
+	template <typename T>
+	static constexpr fstb_FORCEINLINE T
+	               exp2_poly7 (T x) noexcept;
+
+	template <typename T>
+	static fstb_FORCEINLINE T
+	               tanh_from_sinh (T x) noexcept;
+	static fstb_FORCEINLINE ToolsSimd::VectF32
+	               tanh_from_sinh (ToolsSimd::VectF32 x) noexcept;
 
 	template <typename T>
 	static fstb_FORCEINLINE constexpr std::array <T, 2>

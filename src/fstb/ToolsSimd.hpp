@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "fstb/Poly.h"
 
 #include <algorithm>
 #include <utility>
@@ -1030,65 +1031,48 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx2 (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v) noexcept
+template <typename P>
+ToolsSimd::VectF32	ToolsSimd::log2_base (VectF32 x, P poly) noexcept
 {
-	const int32_t  log2_sub = 128;
-	const float		coef_a   = -1.f / 3;
-	const float		coef_b   =  2.f;
-	const float		coef_c   = -2.f / 3;
+	const int32_t  log2_sub = 127;
 
 #if ! defined (fstb_HAS_SIMD)
 
 	assert (
-	      v._ [0] > 0
-		&& v._ [1] > 0
-		&& v._ [2] > 0
-		&& v._ [3] > 0
+	      x._ [0] > 0
+		&& x._ [1] > 0
+		&& x._ [2] > 0
+		&& x._ [3] > 0
 	);
 	Combo          c;
-	c._vf32 = v;
-	int            x0 = c._s32 [0];
-	int            x1 = c._s32 [1];
-	int            x2 = c._s32 [2];
-	int            x3 = c._s32 [3];
-	const int32_t  log_2_0 = ((x0 >> 23) & 255) - log2_sub;
-	const int32_t  log_2_1 = ((x1 >> 23) & 255) - log2_sub;
-	const int32_t  log_2_2 = ((x2 >> 23) & 255) - log2_sub;
-	const int32_t  log_2_3 = ((x3 >> 23) & 255) - log2_sub;
-	x0       &= ~(255 << 23);
-	x1       &= ~(255 << 23);
-	x2       &= ~(255 << 23);
-	x3       &= ~(255 << 23);
-	x0       +=   127 << 23;
-	x1       +=   127 << 23;
-	x2       +=   127 << 23;
-	x3       +=   127 << 23;
-	c._s32 [0] = x0;
-	c._s32 [1] = x1;
-	c._s32 [2] = x2;
-	c._s32 [3] = x3;
-	float          val0 = c._f32 [0];
-	float          val1 = c._f32 [1];
-	float          val2 = c._f32 [2];
-	float          val3 = c._f32 [3];
-	val0 = (coef_a * val0 + coef_b) * val0 + coef_c;
-	val1 = (coef_a * val1 + coef_b) * val1 + coef_c;
-	val2 = (coef_a * val2 + coef_b) * val2 + coef_c;
-	val3 = (coef_a * val3 + coef_b) * val3 + coef_c;
-
-	return VectF32 { {
-		val0 + log_2_0,
-		val1 + log_2_1,
-		val2 + log_2_2,
-		val3 + log_2_3,
-	} };
+	c._vf32 = x;
+	const int      x0 = c._s32 [0];
+	const int      x1 = c._s32 [1];
+	const int      x2 = c._s32 [2];
+	const int      x3 = c._s32 [3];
+	const VectF32  log2_int {
+		float (((x0 >> 23) & 255) - log2_sub),
+		float (((x1 >> 23) & 255) - log2_sub),
+		float (((x2 >> 23) & 255) - log2_sub),
+		float (((x3 >> 23) & 255) - log2_sub)
+	};
+	c._s32 [0] = (x0 & ~(255 << 23)) + (127 << 23);
+	c._s32 [1] = (x1 & ~(255 << 23)) + (127 << 23);
+	c._s32 [2] = (x2 & ~(255 << 23)) + (127 << 23);
+	c._s32 [3] = (x3 & ~(255 << 23)) + (127 << 23);
+	VectF32        part {
+		c._f32 [0],
+		c._f32 [1],
+		c._f32 [2],
+		c._f32 [3]
+	};
 
 #else // fstb_HAS_SIMD
 
 #if fstb_ARCHI == fstb_ARCHI_X86
 
-	// Extracts the exponent (actually log2_int = exponent - 1)
-	__m128i        xi = _mm_castps_si128 (v);
+	// Extracts the exponent
+	__m128i        xi = _mm_castps_si128 (x);
 	xi = _mm_srli_epi32 (xi, 23);
 	const __m128i  l2_sub = _mm_set1_epi32 (log2_sub);
 	xi = _mm_sub_epi32 (xi, l2_sub);
@@ -1096,7 +1080,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v) noexcept
 
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 
-	int32x4_t      xi = vreinterpretq_s32_f32 (v);
+	int32x4_t      xi = vreinterpretq_s32_f32 (x);
 	xi = vshrq_n_s32 (xi, 23);
 	const int32x4_t   l2_sub = vdupq_n_s32 (log2_sub);
 	xi -= l2_sub;
@@ -1106,28 +1090,33 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v) noexcept
 
 	// Extracts the multiplicative part in [1 ; 2[
 	const auto     mask_mantissa = set1_f32 (1.17549421e-38f); // Binary: (1 << 23) - 1
-	auto           part          = and_f32 (v, mask_mantissa);
+	auto           part          = and_f32 (x, mask_mantissa);
 	const auto     bias          = set1_f32 (1.0f);            // Binary: 127 << 23
 	part = or_f32 (part, bias);
 
-	// Computes the polynomial [1 ; 2[ -> [1 ; 2[
-	// y = -1/3*x^2 + 2*x - 2/3
-	// Ensures the C1 continuity over the whole range.
-	// Its exact inverse is:
-	// x = 3 - sqrt (7 - 3*y)
-	const auto     a = set1_f32 (coef_a);
-	const auto     b = set1_f32 (coef_b);
-	const auto     c = set1_f32 (coef_c);
-	auto           poly = a;
-	poly = fmadd (poly, part, b);
-	poly = fmadd (poly, part, c);
+#endif // fstb_HAS_SIMD
+
+	// Computes the log2(x) polynomial approximation [1 ; 2[ -> [0 ; 1[
+	part = poly (part);
 
 	// Sums the components
-	const auto     total = log2_int + poly;
+	const auto     total = log2_int + part;
 
 	return total;
+}
 
-#endif // fstb_HAS_SIMD
+
+
+ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v) noexcept
+{
+	return log2_base (v, [] (VectF32 x) {
+		return Poly::horner (
+			x,
+			set1_f32 (-5.f / 3),
+			set1_f32 ( 2.f    ),
+			set1_f32 (-1.f / 3)
+		);
+	});
 }
 
 
@@ -1204,27 +1193,24 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v) noexcept
+template <typename P>
+ToolsSimd::VectF32	ToolsSimd::exp2_base (VectF32 x, P poly) noexcept
 {
-	const float    coef_a   =  1.f / 3;
-	const float    coef_b   =  2.f / 3;
-	const float    coef_c   =  1.f;
-
 #if ! defined (fstb_HAS_SIMD)
 
-	const int32_t  tx0 = floor_int (v._ [0]);
-	const int32_t  tx1 = floor_int (v._ [1]);
-	const int32_t  tx2 = floor_int (v._ [2]);
-	const int32_t  tx3 = floor_int (v._ [3]);
-	const float    v0 = v._ [0] - static_cast <float> (tx0);
-	const float    v1 = v._ [1] - static_cast <float> (tx1);
-	const float    v2 = v._ [2] - static_cast <float> (tx2);
-	const float    v3 = v._ [3] - static_cast <float> (tx3);
-	Combo          combo;
-	combo._f32 [0] = (coef_a * v0 + coef_b) * v0 + coef_c;
-	combo._f32 [1] = (coef_a * v1 + coef_b) * v1 + coef_c;
-	combo._f32 [2] = (coef_a * v2 + coef_b) * v2 + coef_c;
-	combo._f32 [3] = (coef_a * v3 + coef_b) * v3 + coef_c;
+	const int32_t  tx0 = floor_int (x._ [0]);
+	const int32_t  tx1 = floor_int (x._ [1]);
+	const int32_t  tx2 = floor_int (x._ [2]);
+	const int32_t  tx3 = floor_int (x._ [3]);
+	const VectF32  frac {
+		x._ [0] - static_cast <float> (tx0),
+		x._ [1] - static_cast <float> (tx1),
+		x._ [2] - static_cast <float> (tx2),
+		x._ [3] - static_cast <float> (tx3)
+	};
+
+	Combo          combo { poly (frac) };
+
 	combo._s32 [0] += tx0 << 23;
 	combo._s32 [1] += tx1 << 23;
 	combo._s32 [2] += tx2 << 23;
@@ -1242,41 +1228,46 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v) noexcept
 	// Separates the integer and fractional parts
 #if fstb_ARCHI == fstb_ARCHI_X86
 	const auto     round_toward_m_i = set1_f32 (-0.5f);
-	auto           xi        = _mm_cvtps_epi32 (v + round_toward_m_i);
+	auto           xi        = _mm_cvtps_epi32 (x + round_toward_m_i);
 	const auto     val_floor = _mm_cvtepi32_ps (xi);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const int      round_ofs = 256;
-	int32x4_t      xi = vcvtq_s32_f32 (v + set1_f32 (round_ofs));
+	int32x4_t      xi = vcvtq_s32_f32 (x + set1_f32 (round_ofs));
 	xi -= vdupq_n_s32 (round_ofs);
 	const auto     val_floor = vcvtq_f32_s32 (xi);
 #endif // fstb_ARCHI
 
-	const auto     frac = v - val_floor;
+	auto           frac = x - val_floor;
 
-	// Computes the polynomial [0 ; 1] -> [1 ; 2]
-	// y = 1/3*x^2 + 2/3*x + 1
-	// Ensures the C1 continuity over the whole range.
-	// Its exact inverse is:
-	// x = sqrt (3*y - 2) - 1
-	const auto     a    = set1_f32 (coef_a);
-	const auto     b    = set1_f32 (coef_b);
-	const auto     c    = set1_f32 (coef_c);
-	auto           poly = a;
-	poly = fmadd (poly, frac, b);
-	poly = fmadd (poly, frac, c);
+	// Computes the polynomial approximation of 2^x [0 ; 1] -> [1 ; 2]
+	frac = poly (frac);
 
 	// Integer part
 #if fstb_ARCHI == fstb_ARCHI_X86
 	xi  = _mm_slli_epi32 (xi, 23);
-	xi += _mm_castps_si128 (poly);
+	xi += _mm_castps_si128 (frac);
 	return _mm_castsi128_ps (xi);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	xi  = vshlq_n_s32 (xi, 23);
-	xi += vreinterpretq_s32_f32 (poly);
+	xi += vreinterpretq_s32_f32 (frac);
 	return vreinterpretq_f32_s32 (xi);
 #endif // fstb_ARCHI
 
 #endif // fstb_HAS_SIMD
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v) noexcept
+{
+	return exp2_base (v, [] (VectF32 x) {
+		return Poly::horner (
+			x,
+			set1_f32 (1.f    ),
+			set1_f32 (2.f / 3),
+			set1_f32 (1.f / 3)
+		);
+	});
 }
 
 

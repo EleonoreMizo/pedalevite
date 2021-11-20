@@ -227,10 +227,16 @@ public:
 	               rsqrt_approx (VectF32 v) noexcept;
 	static inline VectF32
 	               rsqrt_approx2 (VectF32 v) noexcept;
+	template <typename P>
+	static fstb_FORCEINLINE VectF32
+	               log2_base (VectF32 x, P poly) noexcept;
 	static inline VectF32
 	               log2_approx (VectF32 v) noexcept;
 	static inline VectF32
 	               log2_approx2 (VectF32 v) noexcept;
+	template <typename P>
+	static fstb_FORCEINLINE VectF32
+	               exp2_base (VectF32 x, P poly) noexcept;
 	static inline VectF32
 	               exp2_approx (VectF32 v) noexcept;
 	static inline VectF32

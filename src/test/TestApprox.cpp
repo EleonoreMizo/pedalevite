@@ -70,6 +70,11 @@ int	TestApprox::perform_test ()
 
 	test_op1_all_flt_s <false> (
 		[] (double x) { return log2 (x); },
+		[] (float x) { return fstb::Approx::log2_crude (x); },
+		"log2_crude", 1e-3f, 1e3f
+	);
+	test_op1_all_flt_s <false> (
+		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2 (x); },
 		"log2", 1e-3f, 1e3f
 	);
@@ -84,8 +89,25 @@ int	TestApprox::perform_test ()
 		"log2_approx2", 1e-3f, 1e3f
 	);
 
+	test_op1_all_flt_s <false> (
+		[] (double x) { return log2 (x); },
+		[] (float x) { return fstb::Approx::log2_5th (x); },
+		"log2_5th", 1e-3f, 1e3f
+	);
+
+	test_op1_all_flt_s <false> (
+		[] (double x) { return log2 (x); },
+		[] (float x) { return fstb::Approx::log2_7th (x); },
+		"log2_7th", 1e-3f, 1e3f
+	);
+
 	// exp2
 
+	test_op1_all_flt_s <true> (
+		[] (double x) { return exp2 (x); },
+		[] (float x) { return fstb::Approx::exp2_crude (x); },
+		"exp2_crude", -20.f, 20.f
+	);
 	test_op1_all_flt_s <true> (
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2 (x); },
@@ -100,6 +122,18 @@ int	TestApprox::perform_test ()
 		[] (double x) { return exp2 (x); },
 		[] (VectF32 x) { return fstb::ToolsSimd::exp2_approx2 (x); },
 		"exp2_approx2", -20.f, 20.f
+	);
+
+	test_op1_all_flt_s <true> (
+		[] (double x) { return exp2 (x); },
+		[] (float x) { return fstb::Approx::exp2_5th (x); },
+		"exp2_5th", -20.f, 20.f
+	);
+
+	test_op1_all_flt_s <true> (
+		[] (double x) { return exp2 (x); },
+		[] (float x) { return fstb::Approx::exp2_7th (x); },
+		"exp2_7th", -20.f, 20.f
 	);
 
 	// tan
@@ -296,14 +330,11 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, cons
 	}
 
 	const double   err_avg = err_tot / double (nbr_spl);
-	if (REL_FLAG)
-	{
-		printf ("Err max: %.3f%%, avg: %.3f%%\n", err_max * 100, err_avg * 100);
-	}
-	else
-	{
-		printf ("Err max: %.3g, avg: %.3g\n", err_max      , err_avg      );
-	}
+	printf (
+		"Err max%s: %.3g, avg: %.3g\n",
+		(REL_FLAG) ? " (relative)" : "",
+		err_max, err_avg
+	);
 }
 
 
@@ -354,14 +385,11 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, cons
 
 	const double   ns2     = double (nbr_spl) * double (nbr_spl);
 	const double   err_avg = err_tot / ns2;
-	if (REL_FLAG)
-	{
-		printf ("Err max: %.3f%%, avg: %.3f%%\n", err_max * 100, err_avg * 100);
-	}
-	else
-	{
-		printf ("Err max: %.3g, avg: %.3g\n", err_max      , err_avg      );
-	}
+	printf (
+		"Err max%s: %.3g, avg: %.3g\n",
+		(REL_FLAG) ? " (relative)" : "",
+		err_max, err_avg
+	);
 }
 
 
