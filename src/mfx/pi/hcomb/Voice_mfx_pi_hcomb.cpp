@@ -30,6 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/Approx.h"
 #include "fstb/DataAlign.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cmath>
 
@@ -305,7 +307,7 @@ void	Voice::process_block (float * const dst_ptr_arr [_max_nbr_chn], const float
 		    || _comb_freq != _comb_freq_old)
 		{
 			comb.process_block_vff (
-				dst_ptr_arr [0],
+				dst_ptr_arr [chn],
 				_tmp_buf_ptr,
 				nbr_spl,
 				_comb_freq,
@@ -315,7 +317,7 @@ void	Voice::process_block (float * const dst_ptr_arr [_max_nbr_chn], const float
 		else
 		{
 			comb.process_block (
-				dst_ptr_arr [0],
+				dst_ptr_arr [chn],
 				_tmp_buf_ptr,
 				nbr_spl
 			);
