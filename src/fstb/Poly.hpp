@@ -63,6 +63,18 @@ constexpr T	Poly::horner (T x, T c0, T c1, T c2, T c3, T c4, T c5) noexcept
 	return horner (x, c0, c1, c2, c3, fma (c5, x, c4));
 }
 
+template <class T>
+constexpr T	Poly::horner (T x, T c0, T c1, T c2, T c3, T c4, T c5, T c6) noexcept
+{
+	return horner (x, c0, c1, c2, c3, c4, fma (c6, x, c5));
+}
+
+template <class T>
+constexpr T	Poly::horner (T x, T c0, T c1, T c2, T c3, T c4, T c5, T c6, T c7) noexcept
+{
+	return horner (x, c0, c1, c2, c3, c4, c5, fma (c7, x, c6));
+}
+
 
 
 // Estrin evaluation is slightly less precise than Horner.
