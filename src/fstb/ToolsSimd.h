@@ -86,9 +86,9 @@ public:
 	typedef uint32x4_t     VectU32;
 	typedef int32x4_t      VectS32;
 	typedef float32x4_t    VectF32;
-#else
+#else // fstb_ARCHI
 	#error
-#endif
+#endif // fstb_ARCHI
 
 	union Combo
 	{
@@ -294,6 +294,8 @@ public:
 	               movemask_f32 (VectF32 x) noexcept;
 	static inline VectF32
 	               cast_f32 (VectS32 x) noexcept;
+	static inline VectS32
+	               cast_s32 (VectF32 x) noexcept;
 
 	static inline VectF32
 	               butterfly_f32_w64 (VectF32 x) noexcept;
@@ -340,6 +342,9 @@ public:
 	               min_s32 (VectS32 lhs, VectS32 rhs) noexcept;
 	static inline VectS32
 	               max_s32 (VectS32 lhs, VectS32 rhs) noexcept;
+	template <int N>
+	static inline VectS32
+	               srli_s32 (VectS32 lhs) noexcept;
 
 	template <int SHIFT>
 	class Shift
