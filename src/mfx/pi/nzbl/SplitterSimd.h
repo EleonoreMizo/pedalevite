@@ -5,6 +5,7 @@
 #pragma once
 
 #include "fstb/Vf32.h"
+#include <cstddef>
 
 namespace mfx {
 namespace pi {

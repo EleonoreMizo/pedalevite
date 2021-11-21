@@ -1639,11 +1639,11 @@ std::string	SplitMultibandSimdGen::generate_include ()
 	return
 "#pragma once\n"
 "\n"
+"#include \"fstb/Vf32.h\"\n";
 "#include <algorithm>\n"
 "#include <iterator>\n"
-#if 1
-"#include \"fstb/Vf32.h\"\n\n";
-#else
+"#include <cstddef>\n\n";
+#if 0
 // Stand-alone x86/SSE2 version.
 // Mainly for checking the result with Complier Explorer.
 "#include <cstdint>\n"

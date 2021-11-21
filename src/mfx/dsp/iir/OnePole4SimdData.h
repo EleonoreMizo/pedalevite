@@ -23,6 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 
 
 namespace mfx
@@ -45,13 +47,13 @@ public:
 
 	typedef float VectFloat4 [4];
 
-	alignas (16) VectFloat4
+	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _z_eq_b [2];   // Direct coefficients, order z^(-n)
-	alignas (16) VectFloat4
+	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _z_eq_a [2];   // Recursive coefficients, order z^(-n). Content of index 0 is actually ignored.
-	alignas (16) VectFloat4
+	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _mem_x;        // Buffer for input memory
-	alignas (16) VectFloat4
+	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _mem_y;        // Buffer for output memory
 
 

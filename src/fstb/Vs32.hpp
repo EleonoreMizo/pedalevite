@@ -121,7 +121,7 @@ Vs32 &   Vs32::operator <<= (int imm) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_slli_epi32 (_x, imm);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	_x = vshlq_n_s32 (_x, imm);
+	_x <<= imm;
 #endif // fstb_ARCHI
 	return *this;
 }
@@ -140,7 +140,7 @@ Vs32 &   Vs32::operator >>= (int imm) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_srai_epi32 (_x, imm);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	_x = vshrq_n_s32 (_x, imm);
+	_x >>= imm;
 #endif // fstb_ARCHI
 	return *this;
 }

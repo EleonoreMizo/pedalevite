@@ -160,7 +160,7 @@ private:
 	void				process_block_serial_immediate_pre (const float in_ptr []) noexcept;
 	void				process_block_2x2_immediate_pre (const float in_ptr []) noexcept;
 
-	alignas (fstb_SIMD128_ALIGN) OnePole4SimdData
+	OnePole4SimdData
 	               _data;
 
 

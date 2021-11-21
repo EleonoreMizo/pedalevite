@@ -311,7 +311,13 @@ public:
 	               max_s32 (Vs32 lhs, Vs32 rhs) noexcept;
 	template <int N>
 	static inline Vs32
+	               srai_s32 (Vs32 lhs) noexcept;
+	template <int N>
+	static inline Vs32
 	               srli_s32 (Vs32 lhs) noexcept;
+	template <int N>
+	static inline Vs32
+	               slli_s32 (Vs32 lhs) noexcept;
 
 	template <int SHIFT>
 	class Shift

@@ -121,7 +121,7 @@ Vu32 &   Vu32::operator <<= (int imm) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_slli_epi32 (_x, imm);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	_x = vshlq_n_u32 (_x, imm);
+	_x <<= imm;
 #endif // fstb_ARCHI
 	return *this;
 }
@@ -140,7 +140,7 @@ Vu32 &   Vu32::operator >>= (int imm) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_srli_epi32 (_x, imm);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	_x = vshrq_n_u32 (_x, imm);
+	_x >>= imm;
 #endif // fstb_ARCHI
 	return *this;
 }
