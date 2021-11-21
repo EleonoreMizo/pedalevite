@@ -1913,6 +1913,101 @@ int	test_conv_int_fast ()
 
 
 
+#if fstb_ARCHI == fstb_ARCHI_X86
+
+#define RES __restrict
+
+void multiply1 (std::complex <float> * RES dst_ptr, const std::complex <float> * RES lhs_ptr, const std::complex <float> * RES rhs_ptr, int n)
+{
+    for (int k = 0; k < n; ++k)
+    {
+        dst_ptr [k] = lhs_ptr [k] * rhs_ptr [k];
+    }
+}
+
+void multiply3 (std::complex <float> * RES dst_ptr, const std::complex <float> * RES lhs_ptr, const std::complex <float> * RES rhs_ptr, int n)
+{
+    for (int k = 0; k < n; ++k)
+    {
+        dst_ptr [k] = {
+              lhs_ptr [k].real () * rhs_ptr [k].real ()
+            - lhs_ptr [k].imag () * rhs_ptr [k].imag (),
+              lhs_ptr [k].real () * rhs_ptr [k].imag ()
+            + lhs_ptr [k].imag () * rhs_ptr [k].real ()
+		  };
+    }
+}
+
+fstb_FORCEINLINE void vecop (float * RES df_ptr, const float * RES lf_ptr, const float * RES rf_ptr)
+{
+    constexpr int deint0 = (0<<0)|(2<<2)|(0<<4)|(2<<6);
+    constexpr int deint1 = (1<<0)|(3<<2)|(1<<4)|(3<<6);
+    const auto l0 = _mm_loadu_ps (lf_ptr    );
+    const auto l1 = _mm_loadu_ps (lf_ptr + 4);
+    const auto r0 = _mm_loadu_ps (rf_ptr    );
+    const auto r1 = _mm_loadu_ps (rf_ptr + 4);
+    const auto lr = _mm_shuffle_ps (l0, l1, deint0);
+    const auto li = _mm_shuffle_ps (l0, l1, deint1);
+    const auto rr = _mm_shuffle_ps (r0, r1, deint0);
+    const auto ri = _mm_shuffle_ps (r0, r1, deint1);
+    const auto dr = _mm_sub_ps (_mm_mul_ps (lr, rr), _mm_mul_ps (li, ri));
+    const auto di = _mm_add_ps (_mm_mul_ps (lr, ri), _mm_mul_ps (li, rr));
+    const auto d0 = _mm_unpacklo_ps (dr, di);
+    const auto d1 = _mm_unpackhi_ps (dr, di);
+    _mm_storeu_ps (df_ptr    , d0);
+    _mm_storeu_ps (df_ptr + 4, d1);
+}
+
+void multiply2 (std::complex <float> * RES dst_ptr, const std::complex <float> * RES lhs_ptr, const std::complex <float> * RES rhs_ptr, int n)
+{
+    constexpr int blk = 4;
+    constexpr int bsh = 2;
+    const int nx = n & ~((blk << bsh) - 1);
+    float * RES df_ptr = reinterpret_cast <float *> (dst_ptr);
+    const float * RES lf_ptr = reinterpret_cast <const float *> (lhs_ptr);
+    const float * RES rf_ptr = reinterpret_cast <const float *> (rhs_ptr);
+    for (int k = 0; k < nx; k += blk << bsh)
+    {
+        for (int b = 0; b < 1 << bsh; ++b)
+        {
+            const int    ofs = k * 2 + b * blk * 2;
+            vecop (df_ptr + ofs, lf_ptr + ofs, rf_ptr + ofs);
+        }
+    }
+    multiply1 (dst_ptr + nx, lhs_ptr + nx, rhs_ptr + nx, n - nx);
+}
+
+void test_mult_cplx_vect ()
+{
+	constexpr int  sz = 256;
+	std::vector <std::complex <float> > l (sz);
+	std::vector <std::complex <float> > r (sz);
+	std::vector <std::complex <float> > d (sz);
+
+	BufferFiller::gen_rnd_non_zero (reinterpret_cast <float *> (l.data ()), sz * 2);
+	BufferFiller::gen_rnd_non_zero (reinterpret_cast <float *> (r.data ()), sz * 2);
+
+	constexpr int  nbr_tst = 65536 * 64;
+
+	TimerAccurate  tim;
+	tim.reset ();
+
+	tim.start ();
+	for (int t = 0; t < nbr_tst; ++t)
+	{
+		multiply2 (d.data (), l.data (), r.data (), sz);
+	}
+	tim.stop ();
+
+	const double   spl_per_s = tim.get_best_rate (sz * nbr_tst) + d.back ().real () * 1e-300;
+	const double   mega_sps  = spl_per_s / 1e6;
+	printf ("Speed: %12.3f Mop/s.\n", mega_sps);
+}
+
+#endif // fstb_ARCHI_X86
+
+
+
 int main (int argc, char *argv [])
 {
 	fstb::unused (argc, argv);
@@ -1923,7 +2018,7 @@ int main (int argc, char *argv [])
 
 #define main_TEST_SPEED 0
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestOnsetNinos2::perform_test ();
 #endif
 
@@ -2103,7 +2198,7 @@ int main (int argc, char *argv [])
 	#endif
 #endif
 
-#if main_TEST_SPEED
+#if 1 || main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
 #endif
 
@@ -2153,6 +2248,12 @@ int main (int argc, char *argv [])
 
 #if 0
 	if (ret_val == 0) ret_val = TestInterpFtor::perform_test ();
+#endif
+
+#if 0
+	#if fstb_ARCHI == fstb_ARCHI_X86
+		if (ret_val == 0) test_mult_cplx_vect ();
+	#endif
 #endif
 
 #if 0
