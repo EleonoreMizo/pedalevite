@@ -82,26 +82,43 @@ public:
 
 	static inline float
 	               log2 (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               log2 (ToolsSimd::VectF32 val) noexcept;
 	static inline float
 	               log2_5th (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               log2_5th (ToolsSimd::VectF32 val) noexcept;
 	static inline float
 	               log2_7th (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               log2_7th (ToolsSimd::VectF32 val) noexcept;
 	static inline float
 	               log2_crude (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               log2_crude (ToolsSimd::VectF32 val) noexcept;
+
 	static inline float
 	               exp2 (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               exp2 (ToolsSimd::VectF32 val) noexcept;
 	static inline float
 	               exp2_5th (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               exp2_5th (ToolsSimd::VectF32 val) noexcept;
 	static inline float
 	               exp2_7th (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               exp2_7th (ToolsSimd::VectF32 val) noexcept;
 	static inline float
 	               exp2_crude (float val) noexcept;
+	static inline ToolsSimd::VectF32
+	               exp2_crude (ToolsSimd::VectF32 val) noexcept;
 	template <int A, typename T>
 	static inline T
 	               exp_m (T val) noexcept;
 
 	static inline double
-	               pow (double a, double b) noexcept;
+	               pow_crude (double a, double b) noexcept;
 
 	static inline uint32_t
 	               fast_partial_exp2_int_16_to_int_32 (int val) noexcept;

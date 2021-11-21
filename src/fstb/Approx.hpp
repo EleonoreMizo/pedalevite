@@ -300,6 +300,15 @@ float	Approx::log2 (float val) noexcept
 	return log2_base (val, log2_poly2 <float>);
 }
 
+#if 0
+ToolsSimd::VectF32	Approx::log2 (ToolsSimd::VectF32 val) noexcept
+{
+	return ToolsSimd::log2_base (val, log2_poly2 <ToolsSimd::VectF32>);
+}
+#endif
+
+
+
 // C1 continuity
 // Max error: 1.8e-4
 float	Approx::log2_5th (float val) noexcept
@@ -307,12 +316,28 @@ float	Approx::log2_5th (float val) noexcept
 	return log2_base (val, log2_poly5 <float>);
 }
 
+#if 0
+ToolsSimd::VectF32	Approx::log2_5th (ToolsSimd::VectF32 val) noexcept
+{
+	return ToolsSimd::log2_base (val, log2_poly5 <ToolsSimd::VectF32>);
+}
+#endif
+
+
+
 // C1 continuity
 // Max error: 5.6e-6
 float	Approx::log2_7th (float val) noexcept
 {
 	return log2_base (val, log2_poly7 <float>);
 }
+
+#if 0
+ToolsSimd::VectF32	Approx::log2_7th (ToolsSimd::VectF32 val) noexcept
+{
+	return ToolsSimd::log2_base (val, log2_poly7 <ToolsSimd::VectF32>);
+}
+#endif
 
 
 
@@ -338,6 +363,19 @@ float	Approx::log2_crude (float val) noexcept
 	return lv._f - 382.95695f;
 }
 
+ToolsSimd::VectF32	Approx::log2_crude (ToolsSimd::VectF32 val) noexcept
+{
+	assert (ToolsSimd::and_h (ToolsSimd::cmp_gt_f32 (val, ToolsSimd::set_f32_zero ())));
+
+	const auto     c0 = ToolsSimd::set1_s32 (0x43800000);
+	auto           i  = ToolsSimd::cast_s32 (val);
+	i   = ToolsSimd::or_s32 (i >> 8, c0);
+	const auto     d  = ToolsSimd::set1_f32 (382.95695f);
+	val = ToolsSimd::cast_f32 (i) - d;
+
+	return val;
+}
+
 
 
 // C1 continuity
@@ -345,6 +383,15 @@ float	Approx::exp2 (float val) noexcept
 {
 	return exp2_base (val, exp2_poly2 <float>);
 }
+
+#if 0
+ToolsSimd::VectF32	Approx::exp2 (ToolsSimd::VectF32 val) noexcept
+{
+	return ToolsSimd::exp2_base (val, exp2_poly2 <ToolsSimd::VectF32>);
+}
+#endif
+
+
 
 // C1 continuity
 // max error on [0; 1]: 2.44e-7.
@@ -354,6 +401,15 @@ float	Approx::exp2_5th (float val) noexcept
 	return exp2_base (val, exp2_poly5 <float>);
 }
 
+#if 0
+ToolsSimd::VectF32	Approx::exp2_5th (ToolsSimd::VectF32 val) noexcept
+{
+	return ToolsSimd::exp2_base (val, exp2_poly5 <ToolsSimd::VectF32>);
+}
+#endif
+
+
+
 // C1 continuity
 // max error on [0; 1]: 1.64e-7.
 // Measured on [-20; +20]: 7.91e-7
@@ -361,6 +417,13 @@ float	Approx::exp2_7th (float val) noexcept
 {
 	return exp2_base (val, exp2_poly7 <float>);
 }
+
+#if 0
+ToolsSimd::VectF32	Approx::exp2_7th (ToolsSimd::VectF32 val) noexcept
+{
+	return ToolsSimd::exp2_base (val, exp2_poly7 <ToolsSimd::VectF32>);
+}
+#endif
 
 
 
@@ -381,6 +444,27 @@ float	Approx::exp2_crude (float val) noexcept
 	xv._i = ((((xv._i < 0x43808000) ? 0 : xv._i) << 8) & 0x7FFFFF00);
 
 	return xv._f;
+}
+
+ToolsSimd::VectF32	Approx::exp2_crude (ToolsSimd::VectF32 val) noexcept
+{
+	const auto     c8 = ToolsSimd::set1_s32 (0x43808000);
+	const auto     d  = ToolsSimd::set1_f32 (382.95695f);
+	const auto     m  = ToolsSimd::set1_s32 (0x7FFFFF00);
+
+	auto           i  = ToolsSimd::cast_s32 (val + d);
+
+	/*** To do: this could be optimised with better ToolsSimd primitives ***/
+	const auto     tg = ToolsSimd::cmp_gt_s32 (i, c8);
+	const auto     te = ToolsSimd::cmp_eq_s32 (i, c8);
+	const auto     t  = ToolsSimd::or_s32 (tg, te);
+	i = fstb::ToolsSimd::and_s32 (i, t);
+
+	i <<= 8;
+	i = fstb::ToolsSimd::and_s32 (i, m);
+	val = ToolsSimd::cast_f32 (i);
+
+	return val;
 }
 
 
@@ -405,7 +489,7 @@ T	Approx::exp_m (T val) noexcept
 // Crude approximation, a > 0
 // Errors vary mostly with the absolute value of b
 // Source: Aleksey Voxengo
-double	Approx::pow (double a, double b) noexcept
+double	Approx::pow_crude (double a, double b) noexcept
 {
 	assert (a > 0);
 
@@ -1145,12 +1229,7 @@ float	Approx::log2_base (float val, P poly) noexcept
 template <typename T>
 T	Approx::log2_poly2 (T x) noexcept
 {
-	constexpr auto k = T (0.5);
-	constexpr auto a = (k - 1  ) / (k + 1);
-	constexpr auto b = (4 - 2*k) / (k + 1);	// 1 - 3*a
-	constexpr auto c = 2*a - 1;
-
-	return Poly::horner (x, c, b, a);
+	return Poly::horner (x, T (-5.f / 3), T (2.f), T (-1.f / 3));
 }
 
 /*
