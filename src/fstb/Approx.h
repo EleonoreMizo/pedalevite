@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 #include <array>
 
@@ -47,72 +47,72 @@ class Approx
 
 public:
 
-	static inline ToolsSimd::VectF32
-	               sin_rbj (ToolsSimd::VectF32 x) noexcept;
-	static inline ToolsSimd::VectF32
-	               cos_rbj (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               sin_rbj (Vf32 x) noexcept;
+	static inline Vf32
+	               cos_rbj (Vf32 x) noexcept;
 	static inline void
-	               cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x) noexcept;
+	               cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept;
 	template <typename T>
 	static inline constexpr T
 	               sin_rbj_halfpi (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               sin_rbj_halfpi (ToolsSimd::VectF32 x) noexcept;
-	static inline ToolsSimd::VectF32
-	               sin_rbj_pi (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               sin_rbj_halfpi (Vf32 x) noexcept;
+	static inline Vf32
+	               sin_rbj_pi (Vf32 x) noexcept;
 	static inline void
 	               sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept;
 
 	template <typename T>
 	static inline T
 	               sin_nick (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               sin_nick (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               sin_nick (Vf32 x) noexcept;
 	template <typename T>
 	static inline T
 	               sin_nick_2pi (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               sin_nick_2pi (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               sin_nick_2pi (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline std::array <T, 2>
 	               cos_sin_nick_2pi (T x) noexcept;
-	static inline std::array <ToolsSimd::VectF32, 2>
-	               cos_sin_nick_2pi (ToolsSimd::VectF32 x) noexcept;
+	static inline std::array <Vf32, 2>
+	               cos_sin_nick_2pi (Vf32 x) noexcept;
 
 	static inline float
 	               log2 (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               log2 (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               log2 (Vf32 val) noexcept;
 	static inline float
 	               log2_5th (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               log2_5th (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               log2_5th (Vf32 val) noexcept;
 	static inline float
 	               log2_7th (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               log2_7th (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               log2_7th (Vf32 val) noexcept;
 	static inline float
 	               log2_crude (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               log2_crude (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               log2_crude (Vf32 val) noexcept;
 
 	static inline float
 	               exp2 (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               exp2 (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               exp2 (Vf32 val) noexcept;
 	static inline float
 	               exp2_5th (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               exp2_5th (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               exp2_5th (Vf32 val) noexcept;
 	static inline float
 	               exp2_7th (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               exp2_7th (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               exp2_7th (Vf32 val) noexcept;
 	static inline float
 	               exp2_crude (float val) noexcept;
-	static inline ToolsSimd::VectF32
-	               exp2_crude (ToolsSimd::VectF32 val) noexcept;
+	static inline Vf32
+	               exp2_crude (Vf32 val) noexcept;
 	template <int A, typename T>
 	static inline T
 	               exp_m (T val) noexcept;
@@ -128,58 +128,58 @@ public:
 	template <typename T>
 	static inline constexpr T
 	               tan_taylor5 (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tan_taylor5 (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tan_taylor5 (Vf32 x) noexcept;
 	template <typename T>
 	static inline T
 	               tan_mystran (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tan_mystran (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tan_mystran (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline constexpr T
 	               tan_pade33 (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tan_pade33 (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tan_pade33 (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline constexpr T
 	               tan_pade55 (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tan_pade55 (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tan_pade55 (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline constexpr T
 	               atan2_3th (T y, T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               atan2_3th (Vf32 y, Vf32 x) noexcept;
 
 	template <typename T>
 	static inline constexpr T
 	               atan2_7th (T y, T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               atan2_7th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               atan2_7th (Vf32 y, Vf32 x) noexcept;
 
 	template <typename T>
 	static inline T
 	               tanh_mystran (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tanh_mystran (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tanh_mystran (Vf32 x) noexcept;
 	template <typename T>
 	static inline T
 	               tanh_urs (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tanh_urs (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tanh_urs (Vf32 x) noexcept;
 	template <typename T>
 	static inline constexpr T
 	               tanh_2dat (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tanh_2dat (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tanh_2dat (Vf32 x) noexcept;
 	template <typename T>
 	static inline constexpr T
 	               tanh_andy (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               tanh_andy (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               tanh_andy (Vf32 x) noexcept;
 
 	template <int P = 1>
 	static inline float
@@ -191,14 +191,14 @@ public:
 	template <typename T>
 	static inline T
 	               wright_omega_3 (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               wright_omega_3 (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               wright_omega_3 (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline T
 	               wright_omega_4 (T x) noexcept;
-	static inline ToolsSimd::VectF32
-	               wright_omega_4 (ToolsSimd::VectF32 x) noexcept;
+	static inline Vf32
+	               wright_omega_4 (Vf32 x) noexcept;
 
 
 
@@ -218,10 +218,10 @@ private:
 		int32_t        _i;
 	};
 
-	static inline ToolsSimd::VectF32
-	               restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp) noexcept;
-	static inline ToolsSimd::VectF32
-	               restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p) noexcept;
+	static inline Vf32
+	               restrict_angle_to_mpi_pi (Vf32 x, const Vf32 &pm, const Vf32 &p, const Vf32 &tp) noexcept;
+	static inline Vf32
+	               restrict_sin_angle_to_mhpi_hpi (Vf32 x, const Vf32 &hpm, const Vf32 &hp, const Vf32 &pm, const Vf32 &p) noexcept;
 
 	template <typename P>
 	static fstb_FORCEINLINE float
@@ -252,14 +252,14 @@ private:
 	template <typename T>
 	static fstb_FORCEINLINE T
 	               tanh_from_sinh (T x) noexcept;
-	static fstb_FORCEINLINE ToolsSimd::VectF32
-	               tanh_from_sinh (ToolsSimd::VectF32 x) noexcept;
+	static fstb_FORCEINLINE Vf32
+	               tanh_from_sinh (Vf32 x) noexcept;
 
 	template <typename T>
 	static fstb_FORCEINLINE constexpr std::array <T, 2>
 	               atan2_beg (T y, T x) noexcept;
-	static fstb_FORCEINLINE std::array <ToolsSimd::VectF32, 2>
-	               atan2_beg (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept;
+	static fstb_FORCEINLINE std::array <Vf32, 2>
+	               atan2_beg (Vf32 y, Vf32 x) noexcept;
 
 
 

@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 #include <utility>
 
 #include <cassert>
@@ -217,7 +219,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 
 
 #define mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_LOAD( fltn) \
-	fstb::ToolsSimd::VectF32   state##fltn; \
+	fstb::Vf32     state##fltn; \
 	if (fltn - 1 < ORD) \
 	{ \
 		state##fltn = V128Par::load_f32 (_state [fltn - 1]); \
@@ -375,7 +377,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::copy_vect_data (const EnvFollowerAHR
 
 
 template <class VP, int ORD>
-void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl) noexcept
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::Vf32 &hold_state, int nbr_spl) noexcept
 {
 	assert (nbr_spl > 0);
 
@@ -394,7 +396,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::ToolsSimd::Ve
 
 
 template <class VP, int ORD>
-bool	EnvFollowerAHR1LrSimdHelper <VP, ORD>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept
+bool	EnvFollowerAHR1LrSimdHelper <VP, ORD>::test_ge_0 (const fstb::Vf32 &in) noexcept
 {
 	return (
 		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0

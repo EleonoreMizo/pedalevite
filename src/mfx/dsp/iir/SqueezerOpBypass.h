@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -48,10 +48,9 @@ class SqueezerOpBypass
 public:
 
 	void           config (float /*reso*/, float /*p1*/) noexcept {}
-	void           config (fstb::ToolsSimd::VectF32 /*reso*/, fstb::ToolsSimd::VectF32 /*p1*/) noexcept {}
+	void           config (fstb::Vf32 /*reso*/, fstb::Vf32 /*p1*/) noexcept {}
 	float          process_sample (float x) noexcept { return x; }
-	fstb::ToolsSimd::VectF32
-	               process_sample (fstb::ToolsSimd::VectF32 x) noexcept { return x; }
+	fstb::Vf32     process_sample (fstb::Vf32 x) noexcept { return x; }
 
 
 

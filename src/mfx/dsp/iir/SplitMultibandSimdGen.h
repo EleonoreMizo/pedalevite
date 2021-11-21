@@ -320,6 +320,8 @@ private:
 	               get_autogen_header ();
 	static std::string
 	               generate_include ();
+	static std::string
+	               generate_inline ();
 	static Result  generate_code (const ClassSpec &spec_list, const std::string &class_scope);
 	static std::string
 	               add_arr_elt (const std::string &var_name, int &k);

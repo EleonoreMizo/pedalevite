@@ -23,6 +23,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/ToolsSimd.h"
 
 #include <utility>
 
@@ -42,8 +43,8 @@ namespace iir
 class OnePole4Simd_LoaderSingle
 {
 public:
-	typedef	float	DataType;
-	static fstb_FORCEINLINE fstb::ToolsSimd::VectF32	load (const DataType *ptr) noexcept
+	typedef float DataType;
+	static fstb_FORCEINLINE fstb::Vf32 load (const DataType *ptr) noexcept
 	{
 		return fstb::ToolsSimd::set1_f32 (*ptr);
 	}
@@ -53,8 +54,8 @@ template <class VS>
 class OnePole4Simd_LoaderMulti
 {
 public:
-	typedef	fstb::ToolsSimd::VectF32	DataType;
-	static fstb_FORCEINLINE fstb::ToolsSimd::VectF32	load (const DataType *ptr) noexcept
+	typedef fstb::Vf32 DataType;
+	static fstb_FORCEINLINE fstb::Vf32 load (const DataType *ptr) noexcept
 	{
 		return VS::load_f32 (ptr);
 	}
@@ -62,7 +63,7 @@ public:
 
 // LD: Loader class. Must have:
 //		typename LD::DataType;
-//		static fstb::ToolsSimd::VectF32 LD::load (const DataType *ptr);
+//		static fstb::Vf32 LD::load (const DataType *ptr);
 template <class VD, class VS, class VP, class LD = OnePole4Simd_LoaderMulti <VS> >
 class OnePole4Simd_StepOn
 {
@@ -74,20 +75,20 @@ public:
 	typedef OnePole4Simd <VD, VS, VP> OnePole4S;
 
 	static fstb_FORCEINLINE void
-	               step_z_eq (OnePole4SimdData &data, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	               step_z_eq (OnePole4SimdData &data, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 
 	static fstb_FORCEINLINE void
-	               store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1) noexcept;
+	               store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1) noexcept;
 	static fstb_FORCEINLINE void
-	               step_z_eq_store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	               step_z_eq_store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 	static fstb_FORCEINLINE void
-	               step_z_eq (fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	               step_z_eq (fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 };
 
 
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (OnePole4SimdData &data, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (OnePole4SimdData &data, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	auto           b0 = V128Par::load_f32 (data._z_eq_b [0]);
 	auto           b1 = V128Par::load_f32 (data._z_eq_b [1]);
@@ -99,7 +100,7 @@ void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (OnePole4SimdData &data, co
 
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOn <VD, VS, VP, LD>::store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1) noexcept
+void	OnePole4Simd_StepOn <VD, VS, VP, LD>::store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1) noexcept
 {
 	V128Par::store_f32 (data._z_eq_b [0], b0);
 	V128Par::store_f32 (data._z_eq_b [1], b1);
@@ -109,7 +110,7 @@ void	OnePole4Simd_StepOn <VD, VS, VP, LD>::store_result (OnePole4SimdData &data,
 
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq_store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq_store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	step_z_eq (b0, b1, a1, b_inc, a_inc);
 	store_result (data, b0, b1, a1);
@@ -118,7 +119,7 @@ void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq_store_result (OnePole4SimdD
 
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	const auto     b0_inc = V128Par::load_f32 (&b_inc [0]);
 	const auto     b1_inc = V128Par::load_f32 (&b_inc [1]);
@@ -145,39 +146,39 @@ public:
 	typedef	LD		Loader;
 
 	static fstb_FORCEINLINE void
-	               step_z_eq (OnePole4SimdData &data, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	               step_z_eq (OnePole4SimdData &data, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 
 	static fstb_FORCEINLINE void
-	               store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1) noexcept;
+	               store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1) noexcept;
 	static fstb_FORCEINLINE void
-	               step_z_eq_store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	               step_z_eq_store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 	static fstb_FORCEINLINE void
-	               step_z_eq (fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	               step_z_eq (fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 };
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOff <VD, VS, VP, LD>::step_z_eq (OnePole4SimdData &data, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_StepOff <VD, VS, VP, LD>::step_z_eq (OnePole4SimdData &data, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	fstb::unused (data, b_inc, a_inc);
 	// Nothing
 }
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOff <VD, VS, VP, LD>::store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1) noexcept
+void	OnePole4Simd_StepOff <VD, VS, VP, LD>::store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1) noexcept
 {
 	fstb::unused (data, b0, b1, a1);
 	// Nothing
 }
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOff <VD, VS, VP, LD>::step_z_eq_store_result (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_StepOff <VD, VS, VP, LD>::step_z_eq_store_result (OnePole4SimdData &data, fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	fstb::unused (data, b0, b1, a1, b_inc, a_inc);
 	// Nothing
 }
 
 template <class VD, class VS, class VP, class LD>
-void	OnePole4Simd_StepOff <VD, VS, VP, LD>::step_z_eq (fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &a1, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_StepOff <VD, VS, VP, LD>::step_z_eq (fstb::Vf32 &b0, fstb::Vf32 &b1, fstb::Vf32 &a1, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	fstb::unused (b0, b1, a1, b_inc, a_inc);
 	// Nothing
@@ -200,23 +201,23 @@ public:
 	typedef typename STP::Loader        Loader;
 	typedef typename Loader::DataType   LoadedDataType;
 
-	static void		process_block_parallel (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 out_ptr [], const LoadedDataType in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
-	static fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_parallel (OnePole4SimdData &data, const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	static void		process_block_parallel (OnePole4SimdData &data, fstb::Vf32 out_ptr [], const LoadedDataType in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
+	static fstb_FORCEINLINE fstb::Vf32
+						process_sample_parallel (OnePole4SimdData &data, const fstb::Vf32 &x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 
-	static void		process_block_serial_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	static void		process_block_serial_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 	static fstb_FORCEINLINE float
-						process_sample_serial_latency (OnePole4SimdData &data, float x_s, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
-	static void		process_block_serial_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+						process_sample_serial_latency (OnePole4SimdData &data, float x_s, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
+	static void		process_block_serial_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 
-	static void		process_block_2x2_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
-	static fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_2x2_latency (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	static void		process_block_2x2_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
+	static fstb_FORCEINLINE fstb::Vf32
+						process_sample_2x2_latency (OnePole4SimdData &data, fstb::Vf32 x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 
-	static void		process_block_2x2_immediate (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
-	static fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_2x2_immediate (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
-	static void		process_block_2x2_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept;
+	static void		process_block_2x2_immediate (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
+	static fstb_FORCEINLINE fstb::Vf32
+						process_sample_2x2_immediate (OnePole4SimdData &data, fstb::Vf32 x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
+	static void		process_block_2x2_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept;
 
 	static fstb_FORCEINLINE float
 						process_sample_single_stage (OnePole4SimdData &data, float x_s, int stage) noexcept;
@@ -225,7 +226,7 @@ public:
 
 
 template <class STP>
-void	OnePole4Simd_Proc <STP>::process_block_parallel (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 out_ptr [], const LoadedDataType in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_Proc <STP>::process_block_parallel (OnePole4SimdData &data, fstb::Vf32 out_ptr [], const LoadedDataType in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	int            half_nbr_spl = nbr_spl >> 1;
 	int            index        = 0;
@@ -277,7 +278,7 @@ void	OnePole4Simd_Proc <STP>::process_block_parallel (OnePole4SimdData &data, fs
 
 
 template <class STP>
-fstb::ToolsSimd::VectF32	OnePole4Simd_Proc <STP>::process_sample_parallel (OnePole4SimdData &data, const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+fstb::Vf32	OnePole4Simd_Proc <STP>::process_sample_parallel (OnePole4SimdData &data, const fstb::Vf32 &x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	auto           b0 = V128Par::load_f32 (data._z_eq_b [0]);
 	auto           b1 = V128Par::load_f32 (data._z_eq_b [1]);
@@ -299,7 +300,7 @@ fstb::ToolsSimd::VectF32	OnePole4Simd_Proc <STP>::process_sample_parallel (OnePo
 
 
 template <class STP>
-void	OnePole4Simd_Proc <STP>::process_block_serial_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_Proc <STP>::process_block_serial_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	int            half_nbr_spl = nbr_spl >> 1;
 	int            index        = 0;
@@ -355,7 +356,7 @@ void	OnePole4Simd_Proc <STP>::process_block_serial_latency (OnePole4SimdData &da
 
 
 template <class STP>
-float	OnePole4Simd_Proc <STP>::process_sample_serial_latency (OnePole4SimdData &data, float x_s, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+float	OnePole4Simd_Proc <STP>::process_sample_serial_latency (OnePole4SimdData &data, float x_s, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	auto           b0 = V128Par::load_f32 (data._z_eq_b [0]);
 	auto           b1 = V128Par::load_f32 (data._z_eq_b [1]);
@@ -396,7 +397,7 @@ sample of the block. out_ptr points on sample N-4.
 */
 
 template <class STP>
-void	OnePole4Simd_Proc <STP>::process_block_serial_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_Proc <STP>::process_block_serial_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	out_ptr [0] = data._mem_y [3];
 	STP::step_z_eq (data, b_inc, a_inc);
@@ -420,7 +421,7 @@ void	OnePole4Simd_Proc <STP>::process_block_serial_immediate_post (OnePole4SimdD
 
 
 template <class STP>
-void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data, float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	int             half_nbr_spl = nbr_spl >> 1;
 	int             index        = 0;
@@ -483,7 +484,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 
 
 template <class STP>
-fstb::ToolsSimd::VectF32	OnePole4Simd_Proc <STP>::process_sample_2x2_latency (OnePole4SimdData &data, fstb::ToolsSimd::VectF32 x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+fstb::Vf32	OnePole4Simd_Proc <STP>::process_sample_2x2_latency (OnePole4SimdData &data, fstb::Vf32 x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	auto           b0 = V128Par::load_f32 (data._z_eq_b [0]);
 	auto           b1 = V128Par::load_f32 (data._z_eq_b [1]);
@@ -509,7 +510,7 @@ fstb::ToolsSimd::VectF32	OnePole4Simd_Proc <STP>::process_sample_2x2_latency (On
 
 
 template <class STP>
-void	OnePole4Simd_Proc <STP>::process_block_2x2_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd_Proc <STP>::process_block_2x2_immediate_post (OnePole4SimdData &data, float out_ptr [], const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	float          x_s;
 
@@ -741,7 +742,7 @@ void	OnePole4Simd <VD, VS, VP>::get_state_one (int elt, float &mem_x, float &mem
 
 // Can work in-place
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::Vf32 out_ptr [], const fstb::Vf32 in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -758,7 +759,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32
 
 // Can work in-place
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::Vf32 out_ptr [], const fstb::Vf32 in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -773,7 +774,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32
 
 // Input samples are broadcasted over the 4 filters
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::Vf32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (in_ptr != nullptr);
@@ -790,7 +791,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32
 
 // Input samples are broadcasted over the 4 filters
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::Vf32 out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (in_ptr != nullptr);
@@ -804,7 +805,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32
 
 
 template <class VD, class VS, class VP>
-fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_parallel (const fstb::ToolsSimd::VectF32 &x) noexcept
+fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_parallel (const fstb::Vf32 &x) noexcept
 {
 	typedef	OnePole4Simd_Proc <OnePole4Simd_StepOff <VD, VS, VP> >	Proc;
 
@@ -814,7 +815,7 @@ fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_parallel (con
 
 
 template <class VD, class VS, class VP>
-fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_parallel (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_parallel (const fstb::Vf32 &x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));
@@ -845,7 +846,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_serial_latency (float out_ptr [], 
 
 // Can work in-place
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -906,7 +907,7 @@ float	OnePole4Simd <VD, VS, VP>::process_sample_serial_latency (float x_s) noexc
 
 
 template <class VD, class VS, class VP>
-float	OnePole4Simd <VD, VS, VP>::process_sample_serial_latency (float x_s, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+float	OnePole4Simd <VD, VS, VP>::process_sample_serial_latency (float x_s, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));
@@ -961,7 +962,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_serial_immediate (float out_ptr []
 
 // Can work in-place
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));
@@ -1018,7 +1019,7 @@ float	OnePole4Simd <VD, VS, VP>::process_sample_serial_immediate (float x_s) noe
 
 
 template <class VD, class VS, class VP>
-float	OnePole4Simd <VD, VS, VP>::process_sample_serial_immediate (float x_s, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+float	OnePole4Simd <VD, VS, VP>::process_sample_serial_immediate (float x_s, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));
@@ -1053,7 +1054,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_2x2_latency (float out_ptr [], con
 // Input and output are stereo interlaced data
 // Can work in-place
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr != nullptr);
@@ -1109,7 +1110,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS, class VP>
-fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_latency (const fstb::ToolsSimd::VectF32 &x) noexcept
+fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_latency (const fstb::Vf32 &x) noexcept
 {
 	typedef	OnePole4Simd_Proc <OnePole4Simd_StepOff <VD, VS, VP> >	Proc;
 
@@ -1119,7 +1120,7 @@ fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_latency (
 
 
 template <class VD, class VS, class VP>
-fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_latency (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_latency (const fstb::Vf32 &x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));
@@ -1176,7 +1177,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], c
 
 // Can work in-place
 template <class VD, class VS, class VP>
-void	OnePole4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+void	OnePole4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));
@@ -1222,7 +1223,7 @@ void	OnePole4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], c
 
 
 template <class VD, class VS, class VP>
-fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::ToolsSimd::VectF32 &x) noexcept
+fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::Vf32 &x) noexcept
 {
 	float          x_0 = fstb::ToolsSimd::Shift <0>::extract (x);
 	float          x_1 = fstb::ToolsSimd::Shift <1>::extract (x);
@@ -1240,7 +1241,7 @@ fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate
 
 
 template <class VD, class VS, class VP>
-fstb::ToolsSimd::VectF32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [2], const fstb::ToolsSimd::VectF32 a_inc [2]) noexcept
+fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::Vf32 &x, const fstb::Vf32 b_inc [2], const fstb::Vf32 a_inc [2]) noexcept
 {
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));

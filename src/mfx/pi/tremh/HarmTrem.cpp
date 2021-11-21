@@ -316,7 +316,7 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 	const auto     three  = fstb::ToolsSimd::set1_f32 (3);
 	v_to_b = fstb::ToolsSimd::max_f32 (v_to_b, zero);
 	v_to_b = one + v_to_b * v_to_b * (v_to_b * two - three);
-	fstb::ToolsSimd::VectF32   v_to_t;
+	fstb::Vf32     v_to_t;
 	fstb::ToolsSimd::spread_2f32 (v_to_b, v_to_t, v_to_b);
 
 	v_lo *= v_to_b;
@@ -489,7 +489,7 @@ void	HarmTrem::update_filter_freq ()
 
 
 
-void	HarmTrem::mix_buf (float dst_ptr [], int buf, int nbr_spl, fstb::ToolsSimd::VectF32 v_gain, bool r_flag, bool copy_flag) const
+void	HarmTrem::mix_buf (float dst_ptr [], int buf, int nbr_spl, fstb::Vf32 v_gain, bool r_flag, bool copy_flag) const
 {
 	float          gain_beg;
 	float          gain_end;

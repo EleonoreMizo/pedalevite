@@ -58,7 +58,7 @@ std::array <T, 2>	XFadeEqPowC2::compute_gain (T x) noexcept
 
 
 
-std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowC2::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept
+std::array <fstb::Vf32, 2>	XFadeEqPowC2::compute_gain (fstb::Vf32 x) noexcept
 {
 	using TS = fstb::ToolsSimd;
 
@@ -75,7 +75,7 @@ std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowC2::compute_gain (fstb::Tools
 	const auto     fi  = x2  * mul;
 	const auto     fo  = xi2 * mul;
 
-	return std::array <TS::VectF32, 2> { fo, fi };
+	return std::array <fstb::Vf32, 2> { fo, fi };
 }
 
 

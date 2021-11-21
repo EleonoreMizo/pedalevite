@@ -136,7 +136,7 @@ private:
 	);
 
 	typedef std::array <float, _max_buf_size> Buffer;
-	typedef std::array <TS::VectF32, _max_buf_size> BufferSimd;
+	typedef std::array <fstb::Vf32, _max_buf_size> BufferSimd;
 
 	class Band
 	{

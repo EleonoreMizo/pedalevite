@@ -232,6 +232,12 @@ commonsrc = \
         ../../src/fstb/ToolsSimd.cpp \
         ../../src/fstb/ToolsSimd.h \
         ../../src/fstb/ToolsSimd.hpp \
+        ../../src/fstb/Vf32.h \
+        ../../src/fstb/Vf32.hpp \
+        ../../src/fstb/Vs32.h \
+        ../../src/fstb/Vs32.hpp \
+        ../../src/fstb/Vu32.h \
+        ../../src/fstb/Vu32.hpp \
         ../../src/hiir/def.h \
         ../../src/hiir/Downsampler2xF64Fpu.h \
         ../../src/hiir/Downsampler2xFpu.h \

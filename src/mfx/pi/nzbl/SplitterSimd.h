@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 namespace mfx {
 namespace pi {
@@ -33,29 +33,29 @@ private:
 	class Filter3
 	{
 	public:
-		inline fstb::ToolsSimd::VectF32 process_sample (fstb::ToolsSimd::VectF32 x) noexcept;
+		inline fstb::Vf32 process_sample (fstb::Vf32 x) noexcept;
 		void set_apf_1p (int idx, int lane, float b0) noexcept;
 		void set_apf_2p (int idx, int lane, float b0, float b1) noexcept;
 		void clear_buffers () noexcept;
 	private:
-		fstb::ToolsSimd::VectF32 _ap1 [2] {};
-		fstb::ToolsSimd::VectF32 _ap2 [6] [2] {};
-		fstb::ToolsSimd::VectF32 _z1 [12] {};
-		fstb::ToolsSimd::VectF32 _z2 [10] {};
+		fstb::Vf32 _ap1 [2] {};
+		fstb::Vf32 _ap2 [6] [2] {};
+		fstb::Vf32 _z1 [12] {};
+		fstb::Vf32 _z2 [10] {};
 	};
 
 	class Filter0
 	{
 	public:
-		inline fstb::ToolsSimd::VectF32 process_sample (fstb::ToolsSimd::VectF32 x) noexcept;
+		inline fstb::Vf32 process_sample (fstb::Vf32 x) noexcept;
 		void set_apf_1p (int idx, int lane, float b0) noexcept;
 		void set_apf_2p (int idx, int lane, float b0, float b1) noexcept;
 		void clear_buffers () noexcept;
 	private:
-		fstb::ToolsSimd::VectF32 _ap1 [1] {};
-		fstb::ToolsSimd::VectF32 _ap2 [1] [2] {};
-		fstb::ToolsSimd::VectF32 _z1 [3] {};
-		fstb::ToolsSimd::VectF32 _z2 [2] {};
+		fstb::Vf32 _ap1 [1] {};
+		fstb::Vf32 _ap2 [1] [2] {};
+		fstb::Vf32 _z1 [3] {};
+		fstb::Vf32 _z2 [2] {};
 	};
 
 	using Filter4 = Filter0;

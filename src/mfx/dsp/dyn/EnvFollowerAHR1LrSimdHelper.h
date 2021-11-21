@@ -20,8 +20,8 @@ Template parameters:
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
 	static bool VP::check_ptr (const void *ptr) noexcept;
-	static fstb::ToolsSimd::VectF32 VP::load_f32 (const void *ptr) noexcept;
-	static void VP::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val) noexcept;
+	static fstb::Vf32 VP::load_f32 (const void *ptr) noexcept;
+	static void VP::store_f32 (void *ptr, const fstb::Vf32 val) noexcept;
 
 - ORD: filter order. >= 1
 
@@ -50,7 +50,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -117,9 +117,9 @@ private:
 	fstb_FORCEINLINE void
 	               copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept;
 	fstb_FORCEINLINE void
-	               check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl) noexcept;
+	               check_and_reset (fstb::Vf32 &hold_state, int nbr_spl) noexcept;
 	fstb_FORCEINLINE static bool
-	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept;
+	               test_ge_0 (const fstb::Vf32 &in) noexcept;
 
 	alignas (16) VectFloat4
 	               _state [ORD];

@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 
 
 namespace fstb
@@ -150,9 +152,9 @@ constexpr T	Poly::fma (T x, T a, T b) noexcept
 	return x * a + b;
 }
 
-ToolsSimd::VectF32	Poly::fma (TS::VectF32 x, TS::VectF32 a, TS::VectF32 b) noexcept
+Vf32	Poly::fma (Vf32 x, Vf32 a, Vf32 b) noexcept
 {
-	return TS::fmadd (x, a, b);
+	return ToolsSimd::fmadd (x, a, b);
 }
 
 }  // namespace fstb

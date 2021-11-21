@@ -148,15 +148,15 @@ void	Eq::update_filter ()
 
 	const auto     zero = fstb::ToolsSimd::set1_f32 (0);
 	const auto     one  = fstb::ToolsSimd::set1_f32 (1);
-	const fstb::ToolsSimd::VectF32   s_eq_b [2] =
+	const fstb::Vf32     s_eq_b [2] =
 	{
 		fstb::ToolsSimd::set_2f32 (1, 0),
 		fstb::ToolsSimd::set_2f32 (0, 1)
 	};
-	const fstb::ToolsSimd::VectF32   s_eq_a [2] = { one, one };
+	const fstb::Vf32     s_eq_a [2] = { one, one };
 
-	fstb::ToolsSimd::VectF32   z_eq_b [2];
-	fstb::ToolsSimd::VectF32   z_eq_a [2];
+	fstb::Vf32     z_eq_b [2];
+	fstb::Vf32     z_eq_a [2];
 	dsp::iir::TransSZBilin::map_s_to_z_one_pole_approx (
 		z_eq_b, z_eq_a, s_eq_b, s_eq_a, kv
 	);
@@ -192,11 +192,11 @@ void	Eq::update_filter ()
 
 #else
 
-	fstb::ToolsSimd::VectF32   x0z_l;
-	fstb::ToolsSimd::VectF32   x0z_h;
+	fstb::Vf32     x0z_l;
+	fstb::Vf32     x0z_h;
 	fstb::ToolsSimd::deinterleave_f32 (x0z_l, x0z_h, b0z, a0z);
-	fstb::ToolsSimd::VectF32   x1z_l;
-	fstb::ToolsSimd::VectF32   x1z_h;
+	fstb::Vf32     x1z_l;
+	fstb::Vf32     x1z_h;
 	fstb::ToolsSimd::deinterleave_f32 (x1z_l, x1z_h, b1z, a1z);
 	const auto     x0z = x0z_l * x0z_h;
 	const auto     x1z = x0z_l * x1z_h + x1z_l * x0z_h;

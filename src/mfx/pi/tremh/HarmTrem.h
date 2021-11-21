@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
+#include "fstb/Vf32.h"
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/pi/tremh/HarmTremDesc.h"
@@ -93,7 +94,7 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag);
 	void           update_filter_freq ();
-	void           mix_buf (float dst_ptr [], int buf, int nbr_spl, fstb::ToolsSimd::VectF32 v_gain, bool r_flag, bool copy_flag) const;
+	void           mix_buf (float dst_ptr [], int buf, int nbr_spl, fstb::Vf32 v_gain, bool r_flag, bool copy_flag) const;
 
 	piapi::HostInterface &
 	               _host;

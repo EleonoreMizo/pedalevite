@@ -626,8 +626,8 @@ void	Dist3Proc::compute_bias (Channel &chn, const float src_ptr [], int nbr_spl)
 	);
 
 	// bias final = env * bias_d * gain + bias_s
-	fstb::ToolsSimd::VectF32   bs_cur;
-	fstb::ToolsSimd::VectF32   bs_step;
+	fstb::Vf32     bs_cur;
+	fstb::Vf32     bs_step;
 	fstb::ToolsSimd::start_lerp (
 		bs_cur, bs_step, _bias_s.get_beg (), _bias_s.get_end (), nbr_spl
 	);
@@ -644,8 +644,8 @@ void	Dist3Proc::compute_bias (Channel &chn, const float src_ptr [], int nbr_spl)
 		bd_beg *= class_a_scale;
 		bd_end *= class_a_scale;
 	}
-	fstb::ToolsSimd::VectF32   bd_cur;
-	fstb::ToolsSimd::VectF32   bd_step;
+	fstb::Vf32     bd_cur;
+	fstb::Vf32     bd_step;
 	fstb::ToolsSimd::start_lerp (bd_cur, bd_step, bd_beg, bd_end, nbr_spl);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{

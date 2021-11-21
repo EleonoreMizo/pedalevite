@@ -22,9 +22,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/Approx.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
-#include "fstb/Approx.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/shape/Poly3L1Bias.h"
 
 #include <algorithm>
@@ -349,7 +350,7 @@ void	SqueezerSimd <BR, LFOP>::update_internal_variables_fast (float &r, float &g
 
 
 template <bool BR, class LFOP>
-fstb::ToolsSimd::VectF32	SqueezerSimd <BR, LFOP>::shape_feedback (fstb::ToolsSimd::VectF32 x) noexcept
+fstb::Vf32	SqueezerSimd <BR, LFOP>::shape_feedback (fstb::Vf32 x) noexcept
 {
 	const auto     c1   = fstb::ToolsSimd::set1_f32 ( 1);
 	const auto     cm1  = fstb::ToolsSimd::set1_f32 (-1);

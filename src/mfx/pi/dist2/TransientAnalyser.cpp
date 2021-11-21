@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/pi/dist2/TransientAnalyser.h"
@@ -232,7 +233,7 @@ void	TransientAnalyser::prefilter_block (const float * const src_ptr_arr [], int
 
 
 
-void	TransientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
+void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
 {
 	if (nbr_chn == 1)
 	{
@@ -282,7 +283,7 @@ void	TransientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr [],
 
 
 
-void	TransientAnalyser::spread_and_store (fstb::ToolsSimd::VectF32 dst_ptr [], fstb::ToolsSimd::VectF32 x)
+void	TransientAnalyser::spread_and_store (fstb::Vf32 dst_ptr [], fstb::Vf32 x)
 {
 	fstb::ToolsSimd::store_f32 (
 		dst_ptr + 0, fstb::ToolsSimd::Shift <0>::spread (x)

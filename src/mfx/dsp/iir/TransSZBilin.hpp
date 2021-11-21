@@ -378,7 +378,7 @@ float	TransSZBilin::compute_k_approx (float f) noexcept
 
 
 
-fstb::ToolsSimd::VectF32	TransSZBilin::compute_k_approx (fstb::ToolsSimd::VectF32 f) noexcept
+fstb::Vf32	TransSZBilin::compute_k_approx (fstb::Vf32 f) noexcept
 {
 	const float    pi2    = float (fstb::PI * fstb::PI);
 	const auto     c0     = fstb::ToolsSimd::set1_f32 (float (1 / fstb::PI));

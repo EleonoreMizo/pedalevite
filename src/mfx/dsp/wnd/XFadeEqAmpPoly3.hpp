@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 #include <cassert>
 
 
@@ -52,7 +54,7 @@ std::array <T, 2>	XFadeEqAmpPoly3::compute_gain (T x) noexcept
 
 
 
-std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqAmpPoly3::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept
+std::array <fstb::Vf32, 2>	XFadeEqAmpPoly3::compute_gain (fstb::Vf32 x) noexcept
 {
 	using TS = fstb::ToolsSimd;
 
@@ -63,7 +65,7 @@ std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqAmpPoly3::compute_gain (fstb::To
 	const auto     one = TS::set1_f32 (1);
 	const auto     y   = (x * x) * (c3 - (x + x));
 
-	return std::array <TS::VectF32, 2> { one - y, y };
+	return std::array <fstb::Vf32, 2> { one - y, y };
 }
 
 

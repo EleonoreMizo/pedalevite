@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 #include <cassert>
 
 
@@ -62,7 +64,7 @@ std::array <T, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (T x) noexcept
 
 
 template <bool OFLAG>
-std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept
+std::array <fstb::Vf32, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (fstb::Vf32 x) noexcept
 {
 	using TS = fstb::ToolsSimd;
 
@@ -80,7 +82,7 @@ std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (
 	const auto     fi  = c * c;
 	const auto     fo  = d * d;
 
-	return std::array <TS::VectF32, 2> { fo, fi };
+	return std::array <fstb::Vf32, 2> { fo, fi };
 }
 
 

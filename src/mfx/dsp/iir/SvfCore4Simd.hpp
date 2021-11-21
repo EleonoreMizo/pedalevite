@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 
 
 namespace mfx
@@ -225,7 +227,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::clear_buffers_one (int unit) noexcept
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (const fstb::ToolsSimd::VectF32 &x) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (const fstb::Vf32 &x) noexcept
 {
 	const auto     g0    = V128Par::load_f32 (_data._g0   );
 	const auto     g1    = V128Par::load_f32 (_data._g1   );
@@ -237,7 +239,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (cons
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept
 {
 	const auto     v0m   = V128Par::load_f32 (_data._v0m  );
 	const auto     v1m   = V128Par::load_f32 (_data._v1m  );
@@ -249,13 +251,13 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (cons
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m, const fstb::ToolsSimd::VectF32 &v2m) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2, const fstb::Vf32 &v0m, const fstb::Vf32 &v1m, const fstb::Vf32 &v2m) noexcept
 {
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 
-	fstb::ToolsSimd::VectF32   v1;
-	fstb::ToolsSimd::VectF32   v2;
+	fstb::Vf32      v1;
+	fstb::Vf32      v2;
 	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 
 	V128Par::store_f32 (_data._ic1eq, ic1eq);
@@ -267,7 +269,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par (cons
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_inc (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	auto           g0    = V128Par::load_f32 (_data._g0   );
 	auto           g1    = V128Par::load_f32 (_data._g1   );
@@ -278,8 +280,8 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_inc (
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 
-	fstb::ToolsSimd::VectF32   v1;
-	fstb::ToolsSimd::VectF32   v2;
+	fstb::Vf32      v1;
+	fstb::Vf32      v2;
 	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	const auto     y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 	increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
@@ -301,7 +303,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_inc (
 // Multi-mode output. Returns v1 (band) as first and v2 (low) as second.
 // Mixer is not taken into account
 template <class VD, class VS, class VP, class MX>
-std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x) noexcept
+std::array <fstb::Vf32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::Vf32 &x) noexcept
 {
 	auto           g0    = V128Par::load_f32 (_data._g0   );
 	auto           g1    = V128Par::load_f32 (_data._g1   );
@@ -313,23 +315,23 @@ std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_
 
 
 template <class VD, class VS, class VP, class MX>
-std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept
+std::array <fstb::Vf32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept
 {
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
-	fstb::ToolsSimd::VectF32   v1;
-	fstb::ToolsSimd::VectF32   v2;
+	fstb::Vf32      v1;
+	fstb::Vf32      v2;
 	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	V128Par::store_f32 (_data._ic1eq, ic1eq);
 	V128Par::store_f32 (_data._ic2eq, ic2eq);
 
-	return std::array <fstb::ToolsSimd::VectF32, 2> {{ v1, v2 }};
+	return std::array <fstb::Vf32, 2> {{ v1, v2 }};
 }
 
 
 
 template <class VD, class VS, class VP, class MX>
-std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i) noexcept
+std::array <fstb::Vf32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm_inc (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i) noexcept
 {
 	auto           g0    = V128Par::load_f32 (_data._g0   );
 	auto           g1    = V128Par::load_f32 (_data._g1   );
@@ -346,7 +348,7 @@ std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -367,8 +369,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 	do
 	{
 		const auto     x = V128Src::load (src_ptr + pos);
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		const auto     y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		V128Dst::store_f32 (dst_ptr + pos, y);
@@ -384,7 +386,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr []) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr []) noexcept
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -408,8 +410,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 		const auto     g1 = V128Src::load_f32 (g1_ptr  + pos);
 		const auto     g2 = V128Src::load_f32 (g2_ptr  + pos);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		const auto     y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		V128Dst::store_f32 (dst_ptr + pos, y);
@@ -425,7 +427,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr []) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr [], const fstb::Vf32 v0m_ptr [], const fstb::Vf32 v1m_ptr [], const fstb::Vf32 v2m_ptr []) noexcept
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -448,8 +450,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 		const auto     g1 = V128Src::load_f32 (g1_ptr  + pos);
 		const auto     g2 = V128Src::load_f32 (g2_ptr  + pos);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 
 		const auto     v0m = V128Src::load_f32 (v0m_ptr + pos);
@@ -470,7 +472,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -492,8 +494,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 	{
 		const auto     x  = V128Src::load_f32 (src_ptr + pos);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		const auto     y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
@@ -526,7 +528,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 // Only the two lower words are taken into account.
 // As result, the two upper words may contain garbage and must be discarded.
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (const fstb::ToolsSimd::VectF32 &x) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (const fstb::Vf32 &x) noexcept
 {
 	const auto     g0    = V128Par::load_f32 (_data._g0   );
 	const auto     g1    = V128Par::load_f32 (_data._g1   );
@@ -538,7 +540,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept
 {
 	const auto     v0m   = V128Par::load_f32 (_data._v0m);
 	const auto     v1m   = V128Par::load_f32 (_data._v1m);
@@ -550,7 +552,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m, const fstb::ToolsSimd::VectF32 &v2m) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2, const fstb::Vf32 &v0m, const fstb::Vf32 &v1m, const fstb::Vf32 &v2m) noexcept
 {
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
@@ -558,8 +560,8 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (
 
 	const auto     xx = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
 
-	fstb::ToolsSimd::VectF32   v1;
-	fstb::ToolsSimd::VectF32   v2;
+	fstb::Vf32      v1;
+	fstb::Vf32      v2;
 	iterate_parallel (xx, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	y = Mixer::mix (xx, v1, v2, v0m, v1m, v2m);
 
@@ -575,7 +577,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat_inc (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	auto           g0    = V128Par::load_f32 (_data._g0   );
 	auto           g1    = V128Par::load_f32 (_data._g1   );
@@ -589,8 +591,8 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat_i
 
 	const auto     xx = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
 
-	fstb::ToolsSimd::VectF32   v1;
-	fstb::ToolsSimd::VectF32   v2;
+	fstb::Vf32      v1;
+	fstb::Vf32      v2;
 	iterate_parallel (xx, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	y = Mixer::mix (xx, v1, v2, v0m, v1m, v2m);
 	increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
@@ -638,8 +640,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 		auto           x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
 		x = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 
@@ -657,7 +659,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr []) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr []) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -685,8 +687,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 		const auto     g1 = V128Src::load_f32 (g1_ptr + pos);
 		const auto     g2 = V128Src::load_f32 (g2_ptr + pos);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 
@@ -704,7 +706,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr []) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr [], const fstb::Vf32 v0m_ptr [], const fstb::Vf32 v1m_ptr [], const fstb::Vf32 v2m_ptr []) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -730,8 +732,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 		const auto     g1  = V128Src::load_f32 (g1_ptr  + pos);
 		const auto     g2  = V128Src::load_f32 (g2_ptr  + pos);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 
 		const auto     v0m = V128Src::load_f32 (v0m_ptr + pos);
@@ -754,7 +756,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -778,8 +780,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 		auto           x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
 		x = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
@@ -812,7 +814,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (const fstb::ToolsSimd::VectF32 &x) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (const fstb::Vf32 &x) noexcept
 {
 	float          x_0 = fstb::ToolsSimd::Shift <0>::extract (x);
 	float          x_1 = fstb::ToolsSimd::Shift <1>::extract (x);
@@ -828,7 +830,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (
 
 
 template <class VD, class VS, class VP, class MX>
-fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	const auto     y = process_sample_2x2_imm (x);
 	increment (_data, g0i, g1i, g2i, v0mi, v1mi, v2mi);
@@ -874,7 +876,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -938,7 +940,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s) noexcept
 
 
 template <class VD, class VS, class VP, class MX>
-float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept
+float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept
 {
 	const auto     v0m   = V128Par::load (_data._v0m);
 	const auto     v1m   = V128Par::load (_data._v1m);
@@ -950,7 +952,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fs
 
 
 template <class VD, class VS, class VP, class MX>
-float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m, const fstb::ToolsSimd::VectF32 &v2m) noexcept
+float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2, const fstb::Vf32 &v0m, const fstb::Vf32 &v1m, const fstb::Vf32 &v2m) noexcept
 {
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
@@ -958,8 +960,8 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fs
 
 	const auto     x     = fstb::ToolsSimd::Shift <0>::insert (y, x_s);
 
-	fstb::ToolsSimd::VectF32   v1;
-	fstb::ToolsSimd::VectF32   v2;
+	fstb::Vf32      v1;
+	fstb::Vf32      v2;
 	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 	y = fstb::ToolsSimd::Shift <1>::rotate (y);
@@ -976,7 +978,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fs
 
 
 template <class VD, class VS, class VP, class MX>
-float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	auto           g0    = V128Par::load_f32 (_data._g0   );
 	auto           g1    = V128Par::load_f32 (_data._g1   );
@@ -990,8 +992,8 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, cons
 
 	const auto     x     = fstb::ToolsSimd::Shift <0>::insert (y, x_s);
 
-	fstb::ToolsSimd::VectF32   v1;
-	fstb::ToolsSimd::VectF32   v2;
+	fstb::Vf32      v1;
+	fstb::Vf32      v2;
 	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 	y = fstb::ToolsSimd::Shift <1>::rotate (y);
@@ -1038,8 +1040,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	{
 		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		y = fstb::ToolsSimd::Shift <1>::rotate (y);
@@ -1057,7 +1059,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr []) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr []) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1083,8 +1085,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 		const auto     g1 = V128Src::load (g1_ptr + pos);
 		const auto     g2 = V128Src::load (g2_ptr + pos);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		y = fstb::ToolsSimd::Shift <1>::rotate (y);
@@ -1102,7 +1104,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr []) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr [], const fstb::Vf32 v0m_ptr [], const fstb::Vf32 v1m_ptr [], const fstb::Vf32 v2m_ptr []) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1127,8 +1129,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 		const auto     g1  = V128Src::load_f32 (g1_ptr  + pos);
 		const auto     g2  = V128Src::load_f32 (g2_ptr  + pos);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 
 		const auto     v0m = V128Src::load_f32 (v0m_ptr + pos);
@@ -1151,7 +1153,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1174,8 +1176,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	{
 		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
 
-		fstb::ToolsSimd::VectF32   v1;
-		fstb::ToolsSimd::VectF32   v2;
+		fstb::Vf32      v1;
+		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		y = fstb::ToolsSimd::Shift <1>::rotate (y);
@@ -1221,7 +1223,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_imm (float x_s) noexcept
 
 
 template <class VD, class VS, class VP, class MX>
-float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_imm (float x_s, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_imm (float x_s, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	const float    y = process_sample_ser_imm (x_s);
 	increment (_data, g0i, g1i, g2i, v0mi, v1mi, v2mi);
@@ -1265,7 +1267,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1395,7 +1397,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm_post (float dst_ptr []
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm_post (float dst_ptr [], const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm_post (float dst_ptr [], const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	assert (dst_ptr != 0);
 
@@ -1435,7 +1437,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm_post (float dst_ptr []
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm_post (float dst_ptr [], const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm_post (float dst_ptr [], const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	assert (dst_ptr != 0);
 
@@ -1472,7 +1474,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_single_stage (SvfCore4SimdDa
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::iterate_parallel (const fstb::ToolsSimd::VectF32 &v0, fstb::ToolsSimd::VectF32 &v1, fstb::ToolsSimd::VectF32 &v2, fstb::ToolsSimd::VectF32 &ic1eq, fstb::ToolsSimd::VectF32 &ic2eq, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::iterate_parallel (const fstb::Vf32 &v0, fstb::Vf32 &v1, fstb::Vf32 &v2, fstb::Vf32 &ic1eq, fstb::Vf32 &ic2eq, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept
 {
 	const auto     t0 = v0 - ic2eq;
 	const auto     t1 = g0 * t0 + g1 * ic1eq;
@@ -1486,7 +1488,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::iterate_parallel (const fstb::ToolsSimd::Vec
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::increment (SvfCore4SimdData &data, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::increment (SvfCore4SimdData &data, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	auto           g0    = V128Par::load_f32 (data._g0 );
 	auto           g1    = V128Par::load_f32 (data._g1 );
@@ -1508,7 +1510,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::increment (SvfCore4SimdData &data, const fst
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 &v0m, fstb::ToolsSimd::VectF32 &v1m, fstb::ToolsSimd::VectF32 &v2m, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::increment (fstb::Vf32 &g0, fstb::Vf32 &g1, fstb::Vf32 &g2, fstb::Vf32 &v0m, fstb::Vf32 &v1m, fstb::Vf32 &v2m, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept
 {
 	increment (g0, g1, g2, g0i, g1i, g2i);
 	Mixer::inc (v0m, v1m, v2m, v0mi, v1mi, v2mi);
@@ -1517,7 +1519,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::increment (fstb::ToolsSimd::VectF32 &g0, fst
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i) noexcept
+void	SvfCore4Simd <VD, VS, VP, MX>::increment (fstb::Vf32 &g0, fstb::Vf32 &g1, fstb::Vf32 &g2, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i) noexcept
 {
 	g0 += g0i;
 	g1 += g1i;

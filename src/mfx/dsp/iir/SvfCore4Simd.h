@@ -13,13 +13,13 @@ Template parameters:
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
 	static bool VD::check_ptr (const void *ptr) noexcept;
-	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr) noexcept;
-	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val) noexcept;
+	static fstb::Vf32 VD::load_f32 (const void *ptr) noexcept;
+	static void VD::store_f32 (void *ptr, const fstb::Vf32 val) noexcept;
 
 - VS: same as VD, but for reading only (source access)
 	Requires:
 	static bool VS::check_ptr (const void *ptr) noexcept;
-	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr) noexcept;
+	static fstb::Vf32 VS::load_f32 (const void *ptr) noexcept;
 
 - VP: same as VD, but for parametering and internal data.
 	Requires: same as VD.
@@ -27,15 +27,15 @@ Template parameters:
 - MX: output mixer, creating the final output from the input (v0) and the raw
 	outputs (v1 and v2).
 	Requires:
-	static fstb::ToolsSimd::VectF32 MX::mix (const fstb::ToolsSimd::VectF32 &v0,
-		const fstb::ToolsSimd::VectF32 &v1, const fstb::ToolsSimd::VectF32 &v2,
-		const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m,
-		const fstb::ToolsSimd::VectF32 &v2m) noexcept;
+	static fstb::Vf32 MX::mix (const fstb::Vf32 &v0,
+		const fstb::Vf32 &v1, const fstb::Vf32 &v2,
+		const fstb::Vf32 &v0m, const fstb::Vf32 &v1m,
+		const fstb::Vf32 &v2m) noexcept;
 	static float MX::mix (float v0, float v1, float v2,
 		float v0m, float v1m, float v2m) noexcept;
-	static void MX::inc (fstb::ToolsSimd::VectF32 &v0m, fstb::ToolsSimd::VectF32 &v1m,
-		fstb::ToolsSimd::VectF32 &v2m, const fstb::ToolsSimd::VectF32 &v0mi,
-		const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	static void MX::inc (fstb::Vf32 &v0m, fstb::Vf32 &v1m,
+		fstb::Vf32 &v2m, const fstb::Vf32 &v0mi,
+		const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 Implements:
 
@@ -100,7 +100,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 #include "mfx/dsp/iir/SvfCore4SimdData.h"
 #include "mfx/dsp/iir/SvfMixerDefault.h"
 
@@ -157,74 +157,74 @@ public:
 	void           clear_buffers_one (int unit) noexcept;
 
 	// Parallel
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_par (const fstb::ToolsSimd::VectF32 &x) noexcept;
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_par (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept;
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_par (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m, const fstb::ToolsSimd::VectF32 &v2m) noexcept;
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_par_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_par (const fstb::Vf32 &x) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_par (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_par (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2, const fstb::Vf32 &v0m, const fstb::Vf32 &v1m, const fstb::Vf32 &v2m) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_par_inc (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
-	fstb_FORCEINLINE std::array <fstb::ToolsSimd::VectF32, 2>
-	               process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x) noexcept;
-	fstb_FORCEINLINE std::array <fstb::ToolsSimd::VectF32, 2>
-	               process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept;
-	fstb_FORCEINLINE std::array <fstb::ToolsSimd::VectF32, 2>
-	               process_sample_par_mm_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i) noexcept;
+	fstb_FORCEINLINE std::array <fstb::Vf32, 2>
+	               process_sample_par_mm (const fstb::Vf32 &x) noexcept;
+	fstb_FORCEINLINE std::array <fstb::Vf32, 2>
+	               process_sample_par_mm (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept;
+	fstb_FORCEINLINE std::array <fstb::Vf32, 2>
+	               process_sample_par_mm_inc (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i) noexcept;
 
-	void           process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl) noexcept;
-	void           process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr []) noexcept;
-	void           process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr []) noexcept;
-	void           process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	void           process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl) noexcept;
+	void           process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr []) noexcept;
+	void           process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr [], const fstb::Vf32 v0m_ptr [], const fstb::Vf32 v1m_ptr [], const fstb::Vf32 v2m_ptr []) noexcept;
+	void           process_block_par (fstb::Vf32 dst_ptr [], const fstb::Vf32 src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	// 2x2 with latency
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_2x2_lat (const fstb::ToolsSimd::VectF32 &x) noexcept;
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_2x2_lat (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept;
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_2x2_lat (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m, const fstb::ToolsSimd::VectF32 &v2m) noexcept;
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_2x2_lat_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_2x2_lat (const fstb::Vf32 &x) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_2x2_lat (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_2x2_lat (const fstb::Vf32 &x, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2, const fstb::Vf32 &v0m, const fstb::Vf32 &v1m, const fstb::Vf32 &v2m) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_2x2_lat_inc (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	void           process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
-	void           process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr []) noexcept;
-	void           process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr []) noexcept;
-	void           process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	void           process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr []) noexcept;
+	void           process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr [], const fstb::Vf32 v0m_ptr [], const fstb::Vf32 v1m_ptr [], const fstb::Vf32 v2m_ptr []) noexcept;
+	void           process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	// 2x2, immediate
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_2x2_imm (const fstb::ToolsSimd::VectF32 &x) noexcept;
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample_2x2_imm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_2x2_imm (const fstb::Vf32 &x) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample_2x2_imm (const fstb::Vf32 &x, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	void           process_block_2x2_imm (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
-	void           process_block_2x2_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	void           process_block_2x2_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	// Serial with latency
 	fstb_FORCEINLINE float
 	               process_sample_ser_lat (float x_s) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_ser_lat (float x_s, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept;
+	               process_sample_ser_lat (float x_s, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_ser_lat (float x_s, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m, const fstb::ToolsSimd::VectF32 &v2m) noexcept;
+	               process_sample_ser_lat (float x_s, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2, const fstb::Vf32 &v0m, const fstb::Vf32 &v1m, const fstb::Vf32 &v2m) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_ser_lat_inc (float x_s, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	               process_sample_ser_lat_inc (float x_s, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	void           process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
-	void           process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr []) noexcept;
-	void           process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr []) noexcept;
-	void           process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	void           process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr []) noexcept;
+	void           process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 g0_ptr [], const fstb::Vf32 g1_ptr [], const fstb::Vf32 g2_ptr [], const fstb::Vf32 v0m_ptr [], const fstb::Vf32 v1m_ptr [], const fstb::Vf32 v2m_ptr []) noexcept;
+	void           process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	// Serial, immediate
 	fstb_FORCEINLINE float
 	               process_sample_ser_imm (float x_s) noexcept;
 	fstb_FORCEINLINE float
-	               process_sample_ser_imm (float x_s, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	               process_sample_ser_imm (float x_s, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	void           process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept;
-	void           process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	void           process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 
 
@@ -246,22 +246,22 @@ private:
 	fstb_FORCEINLINE void
 	               process_block_ser_imm_post (float dst_ptr []) noexcept;
 	fstb_FORCEINLINE void
-	               process_block_ser_imm_post (float dst_ptr [], const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	               process_block_ser_imm_post (float dst_ptr [], const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 	fstb_FORCEINLINE void
 	               process_block_2x2_imm_post (float dst_ptr []) noexcept;
 	fstb_FORCEINLINE void
-	               process_block_2x2_imm_post (float dst_ptr [], const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	               process_block_2x2_imm_post (float dst_ptr [], const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 
 	static fstb_FORCEINLINE float
 	               process_sample_single_stage (SvfCore4SimdData &data, float x_s, int stage, int stage_y) noexcept;
 	static fstb_FORCEINLINE void
-	               iterate_parallel (const fstb::ToolsSimd::VectF32 &v0, fstb::ToolsSimd::VectF32 &v1, fstb::ToolsSimd::VectF32 &v2, fstb::ToolsSimd::VectF32 &ic1eq, fstb::ToolsSimd::VectF32 &ic2eq, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2) noexcept;
+	               iterate_parallel (const fstb::Vf32 &v0, fstb::Vf32 &v1, fstb::Vf32 &v2, fstb::Vf32 &ic1eq, fstb::Vf32 &ic2eq, const fstb::Vf32 &g0, const fstb::Vf32 &g1, const fstb::Vf32 &g2) noexcept;
 	static fstb_FORCEINLINE void
-	               increment (SvfCore4SimdData &data, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	               increment (SvfCore4SimdData &data, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 	static fstb_FORCEINLINE void
-	               increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 &v0m, fstb::ToolsSimd::VectF32 &v1m, fstb::ToolsSimd::VectF32 &v2m, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi) noexcept;
+	               increment (fstb::Vf32 &g0, fstb::Vf32 &g1, fstb::Vf32 &g2, fstb::Vf32 &v0m, fstb::Vf32 &v1m, fstb::Vf32 &v2m, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i, const fstb::Vf32 &v0mi, const fstb::Vf32 &v1mi, const fstb::Vf32 &v2mi) noexcept;
 	static fstb_FORCEINLINE void
-	               increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i) noexcept;
+	               increment (fstb::Vf32 &g0, fstb::Vf32 &g1, fstb::Vf32 &g2, const fstb::Vf32 &g0i, const fstb::Vf32 &g1i, const fstb::Vf32 &g2i) noexcept;
 
 	SvfCore4SimdData
 	               _data;

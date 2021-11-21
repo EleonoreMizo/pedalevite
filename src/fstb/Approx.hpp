@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "fstb/Poly.h"
+#include "fstb/ToolsSimd.h"
 
 #if defined (_MSC_VER)
 	#include <intrin.h>
@@ -48,7 +49,7 @@ namespace fstb
 // x in [-pi/2 ; pi/2]
 // Max error: 2.411e-8
 // Scaled formula
-ToolsSimd::VectF32	Approx::sin_rbj (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::sin_rbj (Vf32 x) noexcept
 {
 	const auto    a  = ToolsSimd::set1_f32 ( 2.628441118718695e-06f);
 	const auto    b  = ToolsSimd::set1_f32 (-1.982061326014539e-04f);
@@ -65,7 +66,7 @@ ToolsSimd::VectF32	Approx::sin_rbj (ToolsSimd::VectF32 x) noexcept
 // x in [-pi ; pi]
 // Max error: 2.411e-8
 // Scaled formula
-ToolsSimd::VectF32	Approx::cos_rbj (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::cos_rbj (Vf32 x) noexcept
 {
 	x = ToolsSimd::abs (x);
 
@@ -81,7 +82,7 @@ ToolsSimd::VectF32	Approx::cos_rbj (ToolsSimd::VectF32 x) noexcept
 // f2 (x) ~ cos (x)
 // x in [-3*pi ; 3*pi]
 // Scaled formula
-void	Approx::cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x) noexcept
+void	Approx::cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept
 {
 	const auto     hp  = ToolsSimd::set1_f32 (float ( 0.5 * PI));
 	const auto     hpm = ToolsSimd::set1_f32 (float (-0.5 * PI));
@@ -142,7 +143,7 @@ constexpr T	Approx::sin_rbj_halfpi (T x) noexcept
 
 
 
-ToolsSimd::VectF32	Approx::sin_rbj_halfpi (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::sin_rbj_halfpi (Vf32 x) noexcept
 {
 	const auto    a  = ToolsSimd::set1_f32 ( 0.0001530302f);
 	const auto    b  = ToolsSimd::set1_f32 (-0.0046768800f);
@@ -159,7 +160,7 @@ ToolsSimd::VectF32	Approx::sin_rbj_halfpi (ToolsSimd::VectF32 x) noexcept
 // f(x) ~ sin (x * pi)
 // x in [-0.5 ; 1]
 // Max error: 2.411e-8
-ToolsSimd::VectF32	Approx::sin_rbj_pi (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::sin_rbj_pi (Vf32 x) noexcept
 {
 	const auto     one   = ToolsSimd::set1_f32 (1);
 	const auto     two_x = one - ToolsSimd::abs (one - x - x);
@@ -203,7 +204,7 @@ T	Approx::sin_nick (T x) noexcept
 	return z;
 }
 
-ToolsSimd::VectF32	Approx::sin_nick (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::sin_nick (Vf32 x) noexcept
 {
 	const auto     b = ToolsSimd::set1_f32 (float ( 4 /  PI));
 	const auto     c = ToolsSimd::set1_f32 (float (-4 / (PI * PI)));
@@ -236,7 +237,7 @@ T	Approx::sin_nick_2pi (T x) noexcept
 	return z;
 }
 
-ToolsSimd::VectF32	Approx::sin_nick_2pi (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::sin_nick_2pi (Vf32 x) noexcept
 {
 	const auto     b = ToolsSimd::set1_f32 (  8);
 	const auto     c = ToolsSimd::set1_f32 (-16);
@@ -272,7 +273,7 @@ std::array <T, 2>	Approx::cos_sin_nick_2pi (T x) noexcept
 	return std::array <T, 2> { zc, zs };
 }
 
-std::array <ToolsSimd::VectF32, 2>	Approx::cos_sin_nick_2pi (ToolsSimd::VectF32 x) noexcept
+std::array <Vf32, 2>	Approx::cos_sin_nick_2pi (Vf32 x) noexcept
 {
 	// cos (x) = sin (x + pi/2)
 	const auto     c_025  = ToolsSimd::set1_f32 (0.25f);
@@ -289,7 +290,7 @@ std::array <ToolsSimd::VectF32, 2>	Approx::cos_sin_nick_2pi (ToolsSimd::VectF32 
 	const auto     zc = d * (yc * ToolsSimd::abs (yc) - yc) + yc;
 	const auto     zs = d * (ys * ToolsSimd::abs (ys) - ys) + ys;
 
-	return std::array <ToolsSimd::VectF32, 2> { zc, zs };
+	return std::array <Vf32, 2> { zc, zs };
 }
 
 
@@ -301,9 +302,9 @@ float	Approx::log2 (float val) noexcept
 }
 
 #if 0
-ToolsSimd::VectF32	Approx::log2 (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::log2 (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, log2_poly2 <ToolsSimd::VectF32>);
+	return ToolsSimd::log2_base (val, log2_poly2 <Vf32>);
 }
 #endif
 
@@ -317,9 +318,9 @@ float	Approx::log2_5th (float val) noexcept
 }
 
 #if 0
-ToolsSimd::VectF32	Approx::log2_5th (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::log2_5th (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, log2_poly5 <ToolsSimd::VectF32>);
+	return ToolsSimd::log2_base (val, log2_poly5 <Vf32>);
 }
 #endif
 
@@ -333,9 +334,9 @@ float	Approx::log2_7th (float val) noexcept
 }
 
 #if 0
-ToolsSimd::VectF32	Approx::log2_7th (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::log2_7th (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, log2_poly7 <ToolsSimd::VectF32>);
+	return ToolsSimd::log2_base (val, log2_poly7 <Vf32>);
 }
 #endif
 
@@ -363,7 +364,7 @@ float	Approx::log2_crude (float val) noexcept
 	return lv._f - 382.95695f;
 }
 
-ToolsSimd::VectF32	Approx::log2_crude (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::log2_crude (Vf32 val) noexcept
 {
 	assert (ToolsSimd::and_h (ToolsSimd::cmp_gt_f32 (val, ToolsSimd::set_f32_zero ())));
 
@@ -385,9 +386,9 @@ float	Approx::exp2 (float val) noexcept
 }
 
 #if 0
-ToolsSimd::VectF32	Approx::exp2 (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::exp2 (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, exp2_poly2 <ToolsSimd::VectF32>);
+	return ToolsSimd::exp2_base (val, exp2_poly2 <Vf32>);
 }
 #endif
 
@@ -402,9 +403,9 @@ float	Approx::exp2_5th (float val) noexcept
 }
 
 #if 0
-ToolsSimd::VectF32	Approx::exp2_5th (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::exp2_5th (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, exp2_poly5 <ToolsSimd::VectF32>);
+	return ToolsSimd::exp2_base (val, exp2_poly5 <Vf32>);
 }
 #endif
 
@@ -419,9 +420,9 @@ float	Approx::exp2_7th (float val) noexcept
 }
 
 #if 0
-ToolsSimd::VectF32	Approx::exp2_7th (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::exp2_7th (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, exp2_poly7 <ToolsSimd::VectF32>);
+	return ToolsSimd::exp2_base (val, exp2_poly7 <Vf32>);
 }
 #endif
 
@@ -446,7 +447,7 @@ float	Approx::exp2_crude (float val) noexcept
 	return xv._f;
 }
 
-ToolsSimd::VectF32	Approx::exp2_crude (ToolsSimd::VectF32 val) noexcept
+Vf32	Approx::exp2_crude (Vf32 val) noexcept
 {
 	const auto     c8 = ToolsSimd::set1_s32 (0x43808000);
 	const auto     d  = ToolsSimd::set1_f32 (382.95695f);
@@ -629,7 +630,7 @@ constexpr T	Approx::tan_taylor5 (T x) noexcept
 	return (c_5 * x_2 + c_3) * x_2 * x + x;
 }
 
-ToolsSimd::VectF32	Approx::tan_taylor5 (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tan_taylor5 (Vf32 x) noexcept
 {
 	const auto     x_2 = x * x;
 	const auto     c_3 = ToolsSimd::set1_f32 (1.0f / 3 );
@@ -660,7 +661,7 @@ T	Approx::tan_mystran (T x) noexcept
 	return s / c;
 }
 
-ToolsSimd::VectF32	Approx::tan_mystran (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tan_mystran (Vf32 x) noexcept
 {
 	const auto     c1 = ToolsSimd::set1_f32 ( 1         );
 	const auto     c3 = ToolsSimd::set1_f32 (-1.f / 6   );
@@ -689,7 +690,7 @@ constexpr T	Approx::tan_pade33 (T x) noexcept
 	return x * num / den;
 }
 
-ToolsSimd::VectF32	Approx::tan_pade33 (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tan_pade33 (Vf32 x) noexcept
 {
 	const auto     n0  = ToolsSimd::set1_f32 ( 1.00111f);
 	const auto     n2  = ToolsSimd::set1_f32 (-0.075021f);
@@ -732,7 +733,7 @@ constexpr T	Approx::tan_pade55 (T x) noexcept
 	return x * num / den;
 }
 
-ToolsSimd::VectF32	Approx::tan_pade55 (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tan_pade55 (Vf32 x) noexcept
 {
 	const auto     c0  = ToolsSimd::set1_f32 ( 945.f);
 	const auto     n2  = ToolsSimd::set1_f32 (-105.f);
@@ -797,7 +798,7 @@ constexpr T	Approx::atan2_3th (T y, T x) noexcept
 	return a;
 }
 
-ToolsSimd::VectF32	Approx::atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::atan2_3th (Vf32 y, Vf32 x) noexcept
 {
 	using TS = ToolsSimd;
 
@@ -840,7 +841,7 @@ constexpr T	Approx::atan2_7th (T y, T x) noexcept
 	return a;
 }
 
-ToolsSimd::VectF32	Approx::atan2_7th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::atan2_7th (Vf32 y, Vf32 x) noexcept
 {
 	using TS = ToolsSimd;
 
@@ -882,7 +883,7 @@ T	Approx::tanh_mystran (T x) noexcept
 	return tanh_from_sinh (s);
 }
 
-ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tanh_mystran (Vf32 x) noexcept
 {
 	const auto     p  = ToolsSimd::set1_f32 (0.183f);
 
@@ -913,7 +914,7 @@ T	Approx::tanh_urs (T x) noexcept
 	return tanh_from_sinh (s);
 }
 
-ToolsSimd::VectF32	Approx::tanh_urs (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tanh_urs (Vf32 x) noexcept
 {
 	const auto     c3 = ToolsSimd::set1_f32 (0.166769511323f);
 	const auto     c5 = ToolsSimd::set1_f32 (8.18265554763e-3f);
@@ -952,7 +953,7 @@ constexpr T	Approx::tanh_2dat (T x) noexcept
 	return num / den;
 }
 
-ToolsSimd::VectF32	Approx::tanh_2dat (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tanh_2dat (Vf32 x) noexcept
 {
 	const auto     n0      = ToolsSimd::set1_f32 (4.351839500e+06f);
 	const auto     n1      = ToolsSimd::set1_f32 (5.605646250e+05f);
@@ -1001,7 +1002,7 @@ constexpr T	Approx::tanh_andy (T x) noexcept
 	return num / den;
 }
 
-ToolsSimd::VectF32	Approx::tanh_andy (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tanh_andy (Vf32 x) noexcept
 {
 	const auto     n3      = ToolsSimd::set1_f32 (0.0812081221471f);
 	const auto     d0      = ToolsSimd::set1_f32 (1);
@@ -1121,7 +1122,7 @@ T	Approx::wright_omega_3 (T x) noexcept
 	return y;
 }
 
-ToolsSimd::VectF32	Approx::wright_omega_3 (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::wright_omega_3 (Vf32 x) noexcept
 {
 	const auto     a   = ToolsSimd::set1_f32 (-1.314293149877800e-3f);
 	const auto     b   = ToolsSimd::set1_f32 ( 4.775931364975583e-2f);
@@ -1158,7 +1159,7 @@ T	Approx::wright_omega_4 (T x) noexcept
 	return y;
 }
 
-ToolsSimd::VectF32	Approx::wright_omega_4 (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::wright_omega_4 (Vf32 x) noexcept
 {
 	const auto     one     = ToolsSimd::set1_f32 (1);
 	const auto     l2e     = ToolsSimd::set1_f32 (float (LOG2_E));
@@ -1183,7 +1184,7 @@ ToolsSimd::VectF32	Approx::wright_omega_4 (ToolsSimd::VectF32 x) noexcept
 
 // [-3*pi ; 3*pi] -> [-pi ; pi]
 // p = pi, pm = -pi, tp = 2*pi
-ToolsSimd::VectF32	Approx::restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp) noexcept
+Vf32	Approx::restrict_angle_to_mpi_pi (Vf32 x, const Vf32 &pm, const Vf32 &p, const Vf32 &tp) noexcept
 {
 	x = ToolsSimd::select (ToolsSimd::cmp_lt_f32 (x, pm), x + tp, x);
 	x = ToolsSimd::select (ToolsSimd::cmp_gt_f32 (x, p ), x - tp, x);
@@ -1195,7 +1196,7 @@ ToolsSimd::VectF32	Approx::restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const
 
 // [-pi ; pi] -> [-pi/2 ; pi/2]
 // hpm = -pi/2, hp = pi/2, pm = -pi, p = pi
-ToolsSimd::VectF32	Approx::restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p) noexcept
+Vf32	Approx::restrict_sin_angle_to_mhpi_hpi (Vf32 x, const Vf32 &hpm, const Vf32 &hp, const Vf32 &pm, const Vf32 &p) noexcept
 {
 	x = ToolsSimd::select (ToolsSimd::cmp_lt_f32 (x, hpm), pm - x, x);
 	x = ToolsSimd::select (ToolsSimd::cmp_gt_f32 (x, hp ), p  - x, x);
@@ -1360,7 +1361,7 @@ T	Approx::tanh_from_sinh (T x) noexcept
 	return x / T (sqrt (T (1) + x * x));
 }
 
-ToolsSimd::VectF32	Approx::tanh_from_sinh (ToolsSimd::VectF32 x) noexcept
+Vf32	Approx::tanh_from_sinh (Vf32 x) noexcept
 {
 	const auto     one = ToolsSimd::set1_f32 (1.0f);
 
@@ -1393,7 +1394,7 @@ constexpr std::array <T, 2>	Approx::atan2_beg (T y, T x) noexcept
 	return std::array <T, 2> { r, c0 };
 }
 
-std::array <ToolsSimd::VectF32, 2>	Approx::atan2_beg (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x) noexcept
+std::array <Vf32, 2>	Approx::atan2_beg (Vf32 y, Vf32 x) noexcept
 {
 	using TS = ToolsSimd;
 
@@ -1411,7 +1412,7 @@ std::array <ToolsSimd::VectF32, 2>	Approx::atan2_beg (ToolsSimd::VectF32 y, Tool
 	const auto     rden = TS::select (xlt0, yamx, xpya);
 	const auto     r    = TS::div_approx2 (rnum, rden);
 
-	return std::array <ToolsSimd::VectF32, 2> { r, c0 };
+	return std::array <Vf32, 2> { r, c0 };
 }
 
 

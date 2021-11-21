@@ -43,12 +43,12 @@ namespace fstb
 
 
 template <typename MEM>
-ToolsSimd::VectF32	ToolsSimd::load_f32 (const MEM *ptr) noexcept
+Vf32	ToolsSimd::load_f32 (const MEM *ptr) noexcept
 {
 	assert (is_ptr_align_nz (ptr, 16));
 
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const VectF32 *> (ptr);
+	return *reinterpret_cast <const Vf32 *> (ptr);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_load_ps (reinterpret_cast <const float *> (ptr));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -59,12 +59,12 @@ ToolsSimd::VectF32	ToolsSimd::load_f32 (const MEM *ptr) noexcept
 
 
 template <typename MEM>
-ToolsSimd::VectS32	ToolsSimd::load_s32 (const MEM *ptr) noexcept
+Vs32	ToolsSimd::load_s32 (const MEM *ptr) noexcept
 {
 	assert (is_ptr_align_nz (ptr, 16));
 
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const VectS32 *> (ptr);
+	return *reinterpret_cast <const Vs32 *> (ptr);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_load_si128 (reinterpret_cast <const __m128i *> (ptr));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -75,12 +75,12 @@ ToolsSimd::VectS32	ToolsSimd::load_s32 (const MEM *ptr) noexcept
 
 
 template <typename MEM>
-void	ToolsSimd::store_f32 (MEM *ptr, VectF32 v) noexcept
+void	ToolsSimd::store_f32 (MEM *ptr, Vf32 v) noexcept
 {
 	assert (is_ptr_align_nz (ptr, 16));
 
 #if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <VectF32 *> (ptr) = v;
+	*reinterpret_cast <Vf32 *> (ptr) = v;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_store_ps (reinterpret_cast <float *> (ptr), v);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -91,12 +91,12 @@ void	ToolsSimd::store_f32 (MEM *ptr, VectF32 v) noexcept
 
 
 template <typename MEM>
-void	ToolsSimd::store_s32 (MEM *ptr, VectS32 v) noexcept
+void	ToolsSimd::store_s32 (MEM *ptr, Vs32 v) noexcept
 {
 	assert (is_ptr_align_nz (ptr, 16));
 
 #if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <VectS32 *> (ptr) = v;
+	*reinterpret_cast <Vs32 *> (ptr) = v;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_store_si128 (reinterpret_cast <__m128i *> (ptr), v);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -108,7 +108,7 @@ void	ToolsSimd::store_s32 (MEM *ptr, VectS32 v) noexcept
 
 // n = number of scalars to store (from the LSB)
 template <typename MEM>
-void	ToolsSimd::store_f32_part (MEM *ptr, VectF32 v, int n) noexcept
+void	ToolsSimd::store_f32_part (MEM *ptr, Vf32 v, int n) noexcept
 {
 	assert (n > 0);
 
@@ -125,12 +125,12 @@ void	ToolsSimd::store_f32_part (MEM *ptr, VectF32 v, int n) noexcept
 
 
 template <typename MEM>
-ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const MEM *ptr) noexcept
+Vf32	ToolsSimd::loadu_f32 (const MEM *ptr) noexcept
 {
 	assert (ptr != nullptr);
 
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const VectF32 *> (ptr);
+	return *reinterpret_cast <const Vf32 *> (ptr);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_loadu_ps (reinterpret_cast <const float *> (ptr));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -143,12 +143,12 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const MEM *ptr) noexcept
 
 
 template <typename MEM>
-ToolsSimd::VectS32	ToolsSimd::loadu_s32 (const MEM *ptr) noexcept
+Vs32	ToolsSimd::loadu_s32 (const MEM *ptr) noexcept
 {
 	assert (ptr != nullptr);
 
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const VectS32 *> (ptr);
+	return *reinterpret_cast <const Vs32 *> (ptr);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_loadu_si128 (reinterpret_cast <const __m128i *> (ptr));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -161,7 +161,7 @@ ToolsSimd::VectS32	ToolsSimd::loadu_s32 (const MEM *ptr) noexcept
 
 
 template <typename MEM>
-ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const MEM *ptr, int n) noexcept
+Vf32	ToolsSimd::loadu_f32_part (const MEM *ptr, int n) noexcept
 {
 	assert (n > 0);
 
@@ -176,12 +176,12 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const MEM *ptr, int n) noexcept
 
 
 template <typename MEM>
-void	ToolsSimd::storeu_f32 (MEM *ptr, VectF32 v) noexcept
+void	ToolsSimd::storeu_f32 (MEM *ptr, Vf32 v) noexcept
 {
 	assert (ptr != nullptr);
 
 #if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <VectF32 *> (ptr) = v;
+	*reinterpret_cast <Vf32 *> (ptr) = v;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_storeu_ps (reinterpret_cast <float *> (ptr), v);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -192,12 +192,12 @@ void	ToolsSimd::storeu_f32 (MEM *ptr, VectF32 v) noexcept
 
 
 template <typename MEM>
-void	ToolsSimd::storeu_s32 (MEM *ptr, VectS32 v) noexcept
+void	ToolsSimd::storeu_s32 (MEM *ptr, Vs32 v) noexcept
 {
 	assert (ptr != nullptr);
 
 #if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <VectS32 *> (ptr) = v;
+	*reinterpret_cast <Vs32 *> (ptr) = v;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_storeu_si128 (reinterpret_cast <__m128i *> (ptr), v);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -209,7 +209,7 @@ void	ToolsSimd::storeu_s32 (MEM *ptr, VectS32 v) noexcept
 
 // n = number of scalars to store (from the LSB)
 template <typename MEM>
-void	ToolsSimd::storeu_f32_part (MEM *ptr, VectF32 v, int n) noexcept
+void	ToolsSimd::storeu_f32_part (MEM *ptr, Vf32 v, int n) noexcept
 {
 	assert (n > 0);
 
@@ -227,7 +227,7 @@ void	ToolsSimd::storeu_f32_part (MEM *ptr, VectF32 v, int n) noexcept
 
 // n = number of scalars to store (from the LSB)
 template <typename MEM>
-void	ToolsSimd::storeu_s32_part (MEM *ptr, VectS32 v, int n) noexcept
+void	ToolsSimd::storeu_s32_part (MEM *ptr, Vs32 v, int n) noexcept
 {
 	assert (n > 0);
 
@@ -245,13 +245,13 @@ void	ToolsSimd::storeu_s32_part (MEM *ptr, VectS32 v, int n) noexcept
 
 // Returns: ptr [0] | ptr [1] | ? | ?
 template <typename MEM>
-ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const MEM *ptr) noexcept
+Vf32	ToolsSimd::loadu_2f32 (const MEM *ptr) noexcept
 {
 	assert (ptr != nullptr);
 
 #if ! defined (fstb_HAS_SIMD)
 	auto           p = reinterpret_cast <const float *> (ptr);
-	return VectF32 { { p [0], p [1] } };
+	return Vf32 { { p [0], p [1] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     x_0 = _mm_load_ss (reinterpret_cast <const float *> (ptr)    );
 	const auto     x_1 = _mm_load_ss (reinterpret_cast <const float *> (ptr) + 1);
@@ -270,7 +270,7 @@ ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const MEM *ptr) noexcept
 // ptr [0] = v0
 // ptr [1] = v1
 template <typename MEM>
-void	ToolsSimd::storeu_2f32 (MEM *ptr, VectF32 v) noexcept
+void	ToolsSimd::storeu_2f32 (MEM *ptr, Vf32 v) noexcept
 {
 	assert (ptr != nullptr);
 
@@ -294,7 +294,7 @@ void	ToolsSimd::storeu_2f32 (MEM *ptr, VectF32 v) noexcept
 
 // *ptr = v0
 template <typename MEM>
-void	ToolsSimd::storeu_1f32 (MEM *ptr, VectF32 v) noexcept
+void	ToolsSimd::storeu_1f32 (MEM *ptr, Vf32 v) noexcept
 {
 	assert (ptr != nullptr);
 
@@ -309,10 +309,10 @@ void	ToolsSimd::storeu_1f32 (MEM *ptr, VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::set_f32_zero () noexcept
+Vf32	ToolsSimd::set_f32_zero () noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { 0, 0, 0, 0 } };
+	return Vf32 { { 0, 0, 0, 0 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_setzero_ps ();
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -322,10 +322,10 @@ ToolsSimd::VectF32	ToolsSimd::set_f32_zero () noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::set_s32_zero () noexcept
+Vs32	ToolsSimd::set_s32_zero () noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { { 0, 0, 0, 0 } };
+	return Vs32 { { 0, 0, 0, 0 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_setzero_si128 ();
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -336,10 +336,10 @@ ToolsSimd::VectS32	ToolsSimd::set_s32_zero () noexcept
 
 
 // Returns a0 | a0 | a0 | a0
-ToolsSimd::VectF32	ToolsSimd::set1_f32 (float a) noexcept
+Vf32	ToolsSimd::set1_f32 (float a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { a, a, a, a } };
+	return Vf32 { { a, a, a, a } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set1_ps (a);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -350,10 +350,10 @@ ToolsSimd::VectF32	ToolsSimd::set1_f32 (float a) noexcept
 
 
 // Returns a0 | a0 | a0 | a0
-ToolsSimd::VectS32	ToolsSimd::set1_s32 (int32_t a) noexcept
+Vs32	ToolsSimd::set1_s32 (int32_t a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { { a, a, a, a } };
+	return Vs32 { { a, a, a, a } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set1_epi32 (a);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -364,10 +364,10 @@ ToolsSimd::VectS32	ToolsSimd::set1_s32 (int32_t a) noexcept
 
 
 // Returns a0 | a1 | a2 | a3
-ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3) noexcept
+Vf32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { a0, a1, a2, a3 } };
+	return Vf32 { { a0, a1, a2, a3 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set_ps (a3, a2, a1, a0);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -396,10 +396,10 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3) n
 
 
 // Returns a0 | a1 | a2 | a3
-ToolsSimd::VectS32	ToolsSimd::set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept
+Vs32	ToolsSimd::set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { { a0, a1, a2, a3 } };
+	return Vs32 { { a0, a1, a2, a3 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set_epi32 (a3, a2, a1, a0);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -418,10 +418,10 @@ ToolsSimd::VectS32	ToolsSimd::set_s32 (int32_t a0, int32_t a1, int32_t a2, int32
 
 
 // Returns a0 | a1 | ? | ?
-ToolsSimd::VectF32	ToolsSimd::set_2f32 (float a0, float a1) noexcept
+Vf32	ToolsSimd::set_2f32 (float a0, float a1) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { a0, a1 } };
+	return Vf32 { { a0, a1 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_unpacklo_ps (_mm_set_ss (a0), _mm_set_ss (a1));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -432,10 +432,10 @@ ToolsSimd::VectF32	ToolsSimd::set_2f32 (float a0, float a1) noexcept
 
 
 // Returns a02 | a13 | a02 | a13
-ToolsSimd::VectF32	ToolsSimd::set_2f32_fill (float a02, float a13) noexcept
+Vf32	ToolsSimd::set_2f32_fill (float a02, float a13) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { a02, a13, a02, a13 } };
+	return Vf32 { { a02, a13, a02, a13 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_unpacklo_ps (_mm_set1_ps (a02), _mm_set1_ps (a13));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -447,10 +447,10 @@ ToolsSimd::VectF32	ToolsSimd::set_2f32_fill (float a02, float a13) noexcept
 
 
 // Returns a01 | a01 | a23 | a23
-ToolsSimd::VectF32	ToolsSimd::set_2f32_dbl (float a01, float a23) noexcept
+Vf32	ToolsSimd::set_2f32_dbl (float a01, float a23) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { a01, a01, a23, a23 } };
+	return Vf32 { { a01, a01, a23, a23 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (_mm_set_ss (a01), _mm_set_ss (a23), 0x00);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -460,10 +460,10 @@ ToolsSimd::VectF32	ToolsSimd::set_2f32_dbl (float a01, float a23) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::swap_2f32 (VectF32 v) noexcept
+Vf32	ToolsSimd::swap_2f32 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { v._ [2], v._ [3], v._ [0], v._ [1] } };
+	return Vf32 { { v._ [2], v._ [3], v._ [0], v._ [1] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (v, v, (2<<0) + (3<<2) + (0<<4) + (1<<6));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -475,7 +475,7 @@ ToolsSimd::VectF32	ToolsSimd::swap_2f32 (VectF32 v) noexcept
 
 
 
-void	ToolsSimd::extract_2f32 (float &a0, float &a1, VectF32 v) noexcept
+void	ToolsSimd::extract_2f32 (float &a0, float &a1, Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	a0 = v._ [0];
@@ -493,7 +493,7 @@ void	ToolsSimd::extract_2f32 (float &a0, float &a1, VectF32 v) noexcept
 
 // ra = v0 | v1 | v0 | v1
 // rb = v2 | v3 | v2 | v3
-void	ToolsSimd::spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v) noexcept
+void	ToolsSimd::spread_2f32 (Vf32 &ra, Vf32 &rb, Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	ra._ [0] = v._ [0];
@@ -517,7 +517,7 @@ void	ToolsSimd::spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::reverse_f32 (VectF32 x) noexcept
+Vf32	ToolsSimd::reverse_f32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	std::swap (x._ [0], x._ [3]);
@@ -532,7 +532,7 @@ ToolsSimd::VectF32	ToolsSimd::reverse_f32 (VectF32 x) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::reverse_s32 (VectS32 x) noexcept
+Vs32	ToolsSimd::reverse_s32 (Vs32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	std::swap (x._ [0], x._ [3]);
@@ -547,7 +547,7 @@ ToolsSimd::VectS32	ToolsSimd::reverse_s32 (VectS32 x) noexcept
 
 
 
-void	ToolsSimd::explode (float &a0, float &a1, float &a2, float &a3, VectF32 x) noexcept
+void	ToolsSimd::explode (float &a0, float &a1, float &a2, float &a3, Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	a0 = x._ [0];
@@ -570,7 +570,7 @@ void	ToolsSimd::explode (float &a0, float &a1, float &a2, float &a3, VectF32 x) 
 
 
 
-void	ToolsSimd::mac (VectF32 &s, VectF32 a, VectF32 b) noexcept
+void	ToolsSimd::mac (Vf32 &s, Vf32 a, Vf32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	s._ [0] += a._ [0] * b._ [0];
@@ -590,7 +590,7 @@ void	ToolsSimd::mac (VectF32 &s, VectF32 a, VectF32 b) noexcept
 
 
 
-void	ToolsSimd::msu (VectF32 &s, VectF32 a, VectF32 b) noexcept
+void	ToolsSimd::msu (Vf32 &s, Vf32 a, Vf32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	s._ [0] -= a._ [0] * b._ [0];
@@ -611,10 +611,10 @@ void	ToolsSimd::msu (VectF32 &s, VectF32 a, VectF32 b) noexcept
 
 
 // Returns x * a + b
-ToolsSimd::VectF32	ToolsSimd::fmadd (VectF32 x, VectF32 a, VectF32 b) noexcept
+Vf32	ToolsSimd::fmadd (Vf32 x, Vf32 a, Vf32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		x._ [0] * a._ [0] + b._ [0],
 		x._ [1] * a._ [1] + b._ [1],
 		x._ [2] * a._ [2] + b._ [2],
@@ -634,10 +634,10 @@ ToolsSimd::VectF32	ToolsSimd::fmadd (VectF32 x, VectF32 a, VectF32 b) noexcept
 
 
 // Returns x * a - b
-ToolsSimd::VectF32	ToolsSimd::fmsub (VectF32 x, VectF32 a, VectF32 b) noexcept
+Vf32	ToolsSimd::fmsub (Vf32 x, Vf32 a, Vf32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		x._ [0] * a._ [0] - b._ [0],
 		x._ [1] * a._ [1] - b._ [1],
 		x._ [2] * a._ [2] - b._ [2],
@@ -656,10 +656,10 @@ ToolsSimd::VectF32	ToolsSimd::fmsub (VectF32 x, VectF32 a, VectF32 b) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::min_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::min_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		std::min (lhs._ [0], rhs._ [0]),
 		std::min (lhs._ [1], rhs._ [1]),
 		std::min (lhs._ [2], rhs._ [2]),
@@ -674,10 +674,10 @@ ToolsSimd::VectF32	ToolsSimd::min_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::max_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::max_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		std::max (lhs._ [0], rhs._ [0]),
 		std::max (lhs._ [1], rhs._ [1]),
 		std::max (lhs._ [2], rhs._ [2]),
@@ -692,7 +692,7 @@ ToolsSimd::VectF32	ToolsSimd::max_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-float	ToolsSimd::sum_h_flt (VectF32 v) noexcept
+float	ToolsSimd::sum_h_flt (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return (v._ [0] + v._ [2]) + (v._ [1] + v._ [3]);
@@ -713,7 +713,7 @@ float	ToolsSimd::sum_h_flt (VectF32 v) noexcept
 
 
 
-float	ToolsSimd::min_h_flt (VectF32 v) noexcept
+float	ToolsSimd::min_h_flt (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return std::min (std::min (v._ [0], v._ [2]), std::min (v._ [1], v._ [3]));
@@ -728,7 +728,7 @@ float	ToolsSimd::min_h_flt (VectF32 v) noexcept
 
 
 
-float	ToolsSimd::max_h_flt (VectF32 v) noexcept
+float	ToolsSimd::max_h_flt (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return std::max (std::max (v._ [0], v._ [2]), std::max (v._ [1], v._ [3]));
@@ -744,10 +744,10 @@ float	ToolsSimd::max_h_flt (VectF32 v) noexcept
 
 
 // Assumes "to nearest" rounding mode on x86
-ToolsSimd::VectF32	ToolsSimd::round (VectF32 v) noexcept
+Vf32	ToolsSimd::round (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		roundf (v._ [0]),
 		roundf (v._ [1]),
 		roundf (v._ [2]),
@@ -768,10 +768,10 @@ ToolsSimd::VectF32	ToolsSimd::round (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::abs (VectF32 v) noexcept
+Vf32	ToolsSimd::abs (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		fabsf (v._ [0]),
 		fabsf (v._ [1]),
 		fabsf (v._ [2]),
@@ -786,10 +786,10 @@ ToolsSimd::VectF32	ToolsSimd::abs (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::signbit (VectF32 v) noexcept
+Vf32	ToolsSimd::signbit (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		copysignf (0.f, v._ [0]),
 		copysignf (0.f, v._ [1]),
 		copysignf (0.f, v._ [2]),
@@ -807,7 +807,7 @@ ToolsSimd::VectF32	ToolsSimd::signbit (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::signbit_mask_f32 () noexcept
+Vf32	ToolsSimd::signbit_mask_f32 () noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          c;
@@ -826,10 +826,10 @@ ToolsSimd::VectF32	ToolsSimd::signbit_mask_f32 () noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::rcp_approx (VectF32 v) noexcept
+Vf32	ToolsSimd::rcp_approx (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		sqrtf (v._ [0]),
 		sqrtf (v._ [1]),
 		sqrtf (v._ [2]),
@@ -848,10 +848,10 @@ ToolsSimd::VectF32	ToolsSimd::rcp_approx (VectF32 v) noexcept
 
 
 // With more accuracy
-ToolsSimd::VectF32	ToolsSimd::rcp_approx2 (VectF32 v) noexcept
+Vf32	ToolsSimd::rcp_approx2 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		1.f / v._ [0],
 		1.f / v._ [1],
 		1.f / v._ [2],
@@ -859,7 +859,7 @@ ToolsSimd::VectF32	ToolsSimd::rcp_approx2 (VectF32 v) noexcept
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	__m128         r = _mm_rcp_ps (v);
-	r = r * ToolsSimd::set1_f32 (2) - v * r;
+	r = r * _mm_set1_ps (2.f) - r * __m128 (v);
 	return r;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x4_t    r = vrecpeq_f32 (v);
@@ -871,10 +871,10 @@ ToolsSimd::VectF32	ToolsSimd::rcp_approx2 (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::div_approx (VectF32 n, VectF32 d) noexcept
+Vf32	ToolsSimd::div_approx (Vf32 n, Vf32 d) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		n._ [0] / d._ [0],
 		n._ [1] / d._ [1],
 		n._ [2] / d._ [2],
@@ -890,10 +890,10 @@ ToolsSimd::VectF32	ToolsSimd::div_approx (VectF32 n, VectF32 d) noexcept
 
 
 // With more accuracy
-ToolsSimd::VectF32	ToolsSimd::div_approx2 (VectF32 n, VectF32 d) noexcept
+Vf32	ToolsSimd::div_approx2 (Vf32 n, Vf32 d) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		n._ [0] / d._ [0],
 		n._ [1] / d._ [1],
 		n._ [2] / d._ [2],
@@ -908,10 +908,10 @@ ToolsSimd::VectF32	ToolsSimd::div_approx2 (VectF32 n, VectF32 d) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::sqrt (VectF32 v) noexcept
+Vf32	ToolsSimd::sqrt (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		sqrtf (v._ [0]),
 		sqrtf (v._ [1]),
 		sqrtf (v._ [2]),
@@ -938,10 +938,10 @@ ToolsSimd::VectF32	ToolsSimd::sqrt (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v) noexcept
+Vf32	ToolsSimd::sqrt_approx (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		sqrtf (v._ [0]),
 		sqrtf (v._ [1]),
 		sqrtf (v._ [2]),
@@ -972,7 +972,7 @@ ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::rsqrt_approx (VectF32 v) noexcept
+Vf32	ToolsSimd::rsqrt_approx (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	// Ref:
@@ -996,7 +996,7 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx (VectF32 v) noexcept
 	x1 *= 1.5008909f - xh1 * x1 * x1;
 	x2 *= 1.5008909f - xh2 * x2 * x2;
 	x3 *= 1.5008909f - xh3 * x3 * x3;
-	return VectF32 { { x0, x1, x2, x3 } };
+	return Vf32 { { x0, x1, x2, x3 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_rsqrt_ps (v);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -1008,10 +1008,10 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::rsqrt_approx2 (VectF32 v) noexcept
+Vf32	ToolsSimd::rsqrt_approx2 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		1.f / sqrtf (v._ [0]),
 		1.f / sqrtf (v._ [1]),
 		1.f / sqrtf (v._ [2]),
@@ -1019,7 +1019,7 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx2 (VectF32 v) noexcept
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	__m128         rs = _mm_rsqrt_ps (v);
-	rs = _mm_set1_ps (0.5f) * rs * (_mm_set1_ps (3) - v * rs * rs);
+	rs = _mm_set1_ps (0.5f) * rs * (_mm_set1_ps (3) - __m128 (v) * rs * rs);
 	return rs;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x4_t    rs = vrsqrteq_f32 (v);
@@ -1032,7 +1032,7 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx2 (VectF32 v) noexcept
 
 
 template <typename P>
-ToolsSimd::VectF32	ToolsSimd::log2_base (VectF32 x, P poly) noexcept
+Vf32	ToolsSimd::log2_base (Vf32 x, P poly) noexcept
 {
 	const int32_t  log2_sub = 127;
 
@@ -1050,7 +1050,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_base (VectF32 x, P poly) noexcept
 	const int      x1 = c._s32 [1];
 	const int      x2 = c._s32 [2];
 	const int      x3 = c._s32 [3];
-	const VectF32  log2_int {
+	const Vf32     log2_int {
 		float (((x0 >> 23) & 255) - log2_sub),
 		float (((x1 >> 23) & 255) - log2_sub),
 		float (((x2 >> 23) & 255) - log2_sub),
@@ -1060,7 +1060,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_base (VectF32 x, P poly) noexcept
 	c._s32 [1] = (x1 & ~(255 << 23)) + (127 << 23);
 	c._s32 [2] = (x2 & ~(255 << 23)) + (127 << 23);
 	c._s32 [3] = (x3 & ~(255 << 23)) + (127 << 23);
-	VectF32        part {
+	Vf32           part {
 		c._f32 [0],
 		c._f32 [1],
 		c._f32 [2],
@@ -1076,7 +1076,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_base (VectF32 x, P poly) noexcept
 	xi = _mm_srli_epi32 (xi, 23);
 	const __m128i  l2_sub = _mm_set1_epi32 (log2_sub);
 	xi = _mm_sub_epi32 (xi, l2_sub);
-	const auto     log2_int = _mm_cvtepi32_ps (xi);
+	const auto     log2_int = Vf32 { _mm_cvtepi32_ps (xi) };
 
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 
@@ -1084,7 +1084,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_base (VectF32 x, P poly) noexcept
 	xi = vshrq_n_s32 (xi, 23);
 	const int32x4_t   l2_sub = vdupq_n_s32 (log2_sub);
 	xi -= l2_sub;
-	const auto     log2_int = vcvtq_f32_s32 (xi);
+	const auto     log2_int = Vf32 { vcvtq_f32_s32 (xi) };
 
 #endif // fstb_ARCHI
 
@@ -1107,9 +1107,9 @@ ToolsSimd::VectF32	ToolsSimd::log2_base (VectF32 x, P poly) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v) noexcept
+Vf32	ToolsSimd::log2_approx (Vf32 v) noexcept
 {
-	return log2_base (v, [] (VectF32 x) {
+	return log2_base (v, [] (Vf32 x) {
 		return Poly::horner (
 			x,
 			set1_f32 (-5.f / 3),
@@ -1124,7 +1124,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v) noexcept
 // Formula by 2DaT
 // 12-13 ulp
 // https://www.kvraudio.com/forum/viewtopic.php?f=33&t=532048
-ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v) noexcept
+Vf32	ToolsSimd::log2_approx2 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 
@@ -1135,7 +1135,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v) noexcept
 		&& v._ [3] > 0
 	);
 	/*** To do: approximation ***/
-	return VectF32 { {
+	return Vf32 { {
 		logf (v._ [0]) * float (LOG2_E),
 		logf (v._ [1]) * float (LOG2_E),
 		logf (v._ [2]) * float (LOG2_E),
@@ -1157,11 +1157,12 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v) noexcept
 
 	__m128i        x_i           = _mm_castps_si128 (v);
 	__m128i        spl_exp       = _mm_castps_si128 (v * multi);
-	spl_exp = spl_exp - _mm_castps_si128 (one);
+	spl_exp = _mm_sub_epi32 (spl_exp, _mm_castps_si128 (one));
 	spl_exp = _mm_andnot_si128 (mantissa_mask, spl_exp);
-	const __m128   spl_mantissa  = _mm_castsi128_ps (x_i - spl_exp);
+	const auto     spl_mantissa  =
+		Vf32 { _mm_castsi128_ps (_mm_sub_epi32 (x_i, spl_exp)) };
 	spl_exp = _mm_srai_epi32 (spl_exp, 23);
-	const __m128   log2_exponent = _mm_cvtepi32_ps (spl_exp);
+	const auto     log2_exponent = Vf32 { _mm_cvtepi32_ps (spl_exp) };
 
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 
@@ -1169,9 +1170,9 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v) noexcept
 	int32x4_t      spl_exp       = vreinterpretq_s32_f32 (v * multi);
 	spl_exp = spl_exp - vreinterpretq_s32_f32 (one);
 	spl_exp = vandq_s32 (vmvnq_s32 (mantissa_mask), spl_exp);
-	const float32x4_t   spl_mantissa  = vreinterpretq_f32_s32 (x_i - spl_exp);
+	const auto     spl_mantissa  = Vf32 { vreinterpretq_f32_s32 (x_i - spl_exp) };
 	spl_exp = vshrq_n_s32 (spl_exp, 23);
-	const float32x4_t   log2_exponent = vcvtq_f32_s32 (spl_exp);
+	const auto     log2_exponent = Vf32 { vcvtq_f32_s32 (spl_exp) };
 
 #endif // fstb_ARCHI
 
@@ -1194,7 +1195,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v) noexcept
 
 
 template <typename P>
-ToolsSimd::VectF32	ToolsSimd::exp2_base (VectF32 x, P poly) noexcept
+Vf32	ToolsSimd::exp2_base (Vf32 x, P poly) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 
@@ -1202,7 +1203,7 @@ ToolsSimd::VectF32	ToolsSimd::exp2_base (VectF32 x, P poly) noexcept
 	const int32_t  tx1 = floor_int (x._ [1]);
 	const int32_t  tx2 = floor_int (x._ [2]);
 	const int32_t  tx3 = floor_int (x._ [3]);
-	const VectF32  frac {
+	const Vf32     frac {
 		x._ [0] - static_cast <float> (tx0),
 		x._ [1] - static_cast <float> (tx1),
 		x._ [2] - static_cast <float> (tx2),
@@ -1229,12 +1230,12 @@ ToolsSimd::VectF32	ToolsSimd::exp2_base (VectF32 x, P poly) noexcept
 #if fstb_ARCHI == fstb_ARCHI_X86
 	const auto     round_toward_m_i = set1_f32 (-0.5f);
 	auto           xi        = _mm_cvtps_epi32 (x + round_toward_m_i);
-	const auto     val_floor = _mm_cvtepi32_ps (xi);
+	const auto     val_floor = Vf32 { _mm_cvtepi32_ps (xi) };
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const int      round_ofs = 256;
 	int32x4_t      xi = vcvtq_s32_f32 (x + set1_f32 (round_ofs));
 	xi -= vdupq_n_s32 (round_ofs);
-	const auto     val_floor = vcvtq_f32_s32 (xi);
+	const auto     val_floor = Vf32 { vcvtq_f32_s32 (xi) };
 #endif // fstb_ARCHI
 
 	auto           frac = x - val_floor;
@@ -1244,12 +1245,12 @@ ToolsSimd::VectF32	ToolsSimd::exp2_base (VectF32 x, P poly) noexcept
 
 	// Integer part
 #if fstb_ARCHI == fstb_ARCHI_X86
-	xi  = _mm_slli_epi32 (xi, 23);
-	xi += _mm_castps_si128 (frac);
+	xi = _mm_slli_epi32 (xi, 23);
+	xi = _mm_add_epi32 (xi, _mm_castps_si128 (frac));
 	return _mm_castsi128_ps (xi);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	xi  = vshlq_n_s32 (xi, 23);
-	xi += vreinterpretq_s32_f32 (frac);
+	xi = vshlq_n_s32 (xi, 23);
+	xi = xi + vreinterpretq_s32_f32 (frac);
 	return vreinterpretq_f32_s32 (xi);
 #endif // fstb_ARCHI
 
@@ -1258,9 +1259,9 @@ ToolsSimd::VectF32	ToolsSimd::exp2_base (VectF32 x, P poly) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v) noexcept
+Vf32	ToolsSimd::exp2_approx (Vf32 v) noexcept
 {
-	return exp2_base (v, [] (VectF32 x) {
+	return exp2_base (v, [] (Vf32 x) {
 		return Poly::horner (
 			x,
 			set1_f32 (1.f    ),
@@ -1277,12 +1278,12 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v) noexcept
 // 3-4 ulp
 // https://www.kvraudio.com/forum/viewtopic.php?p=7161124#p7161124
 // https://www.kvraudio.com/forum/viewtopic.php?p=7677266#p7677266
-ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v) noexcept
+Vf32	ToolsSimd::exp2_approx2 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 
 	/*** To do: approximation ***/
-	return VectF32 { {
+	return Vf32 { {
 		expf (v._ [0] * float (LN2)),
 		expf (v._ [1] * float (LN2)),
 		expf (v._ [2] * float (LN2)),
@@ -1334,7 +1335,7 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v) noexcept
 	// directly in floating point exponent
 #if fstb_ARCHI == fstb_ARCHI_X86
 	i = _mm_slli_epi32 (i, 23);
-	return _mm_castsi128_ps (i + _mm_castps_si128 (p));
+	return _mm_castsi128_ps (_mm_add_epi32 (i, _mm_castps_si128 (p)));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	i = vshlq_n_s32 (i, 23);
 	return vreinterpretq_f32_s32 (i + vreinterpretq_s32_f32 (p));
@@ -1345,7 +1346,7 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::select (VectF32 cond, VectF32 v_t, VectF32 v_f) noexcept
+Vf32	ToolsSimd::select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	/*** To do: implement as r = v_f ^ ((v_f ^ v_t) & cond) ***/
@@ -1372,7 +1373,7 @@ ToolsSimd::VectF32	ToolsSimd::select (VectF32 cond, VectF32 v_t, VectF32 v_f) no
 
 
 
-std::tuple <ToolsSimd::VectF32, ToolsSimd::VectF32>	ToolsSimd::swap_cond (VectF32 cond, VectF32 lhs, VectF32 rhs) noexcept
+std::tuple <Vf32, Vf32>	ToolsSimd::swap_cond (Vf32 cond, Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          cc;
@@ -1399,7 +1400,7 @@ std::tuple <ToolsSimd::VectF32, ToolsSimd::VectF32>	ToolsSimd::swap_cond (VectF3
 
 
 
-ToolsSimd::VectF32	ToolsSimd::cmp_gt_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::cmp_gt_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          r;
@@ -1417,10 +1418,10 @@ ToolsSimd::VectF32	ToolsSimd::cmp_gt_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::cmp_gt_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::cmp_gt_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		(lhs._ [0] > rhs._ [0]) ? -1 : 0,
 		(lhs._ [1] > rhs._ [1]) ? -1 : 0,
 		(lhs._ [2] > rhs._ [2]) ? -1 : 0,
@@ -1435,7 +1436,7 @@ ToolsSimd::VectS32	ToolsSimd::cmp_gt_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::cmp_lt_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::cmp_lt_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          r;
@@ -1453,10 +1454,10 @@ ToolsSimd::VectF32	ToolsSimd::cmp_lt_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::cmp_lt_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::cmp_lt_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		(lhs._ [0] < rhs._ [0]) ? -1 : 0,
 		(lhs._ [1] < rhs._ [1]) ? -1 : 0,
 		(lhs._ [2] < rhs._ [2]) ? -1 : 0,
@@ -1471,7 +1472,7 @@ ToolsSimd::VectS32	ToolsSimd::cmp_lt_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::cmp_lt0_f32 (VectF32 lhs) noexcept
+Vf32	ToolsSimd::cmp_lt0_f32 (Vf32 lhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          r;
@@ -1489,10 +1490,10 @@ ToolsSimd::VectF32	ToolsSimd::cmp_lt0_f32 (VectF32 lhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::cmp_lt0_s32 (VectS32 lhs) noexcept
+Vs32	ToolsSimd::cmp_lt0_s32 (Vs32 lhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		(lhs._ [0] < 0) ? -1 : 0,
 		(lhs._ [1] < 0) ? -1 : 0,
 		(lhs._ [2] < 0) ? -1 : 0,
@@ -1507,7 +1508,7 @@ ToolsSimd::VectS32	ToolsSimd::cmp_lt0_s32 (VectS32 lhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::cmp_eq_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::cmp_eq_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          r;
@@ -1525,10 +1526,10 @@ ToolsSimd::VectF32	ToolsSimd::cmp_eq_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::cmp_eq_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::cmp_eq_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		(lhs._ [0] == rhs._ [0]) ? -1 : 0,
 		(lhs._ [1] == rhs._ [1]) ? -1 : 0,
 		(lhs._ [2] == rhs._ [2]) ? -1 : 0,
@@ -1543,7 +1544,7 @@ ToolsSimd::VectS32	ToolsSimd::cmp_eq_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::cmp_ne_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::cmp_ne_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          r;
@@ -1561,10 +1562,10 @@ ToolsSimd::VectF32	ToolsSimd::cmp_ne_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::cmp_ne_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::cmp_ne_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		(lhs._ [0] != rhs._ [0]) ? -1 : 0,
 		(lhs._ [1] != rhs._ [1]) ? -1 : 0,
 		(lhs._ [2] != rhs._ [2]) ? -1 : 0,
@@ -1580,7 +1581,7 @@ ToolsSimd::VectS32	ToolsSimd::cmp_ne_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::and_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::and_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          al;
@@ -1605,10 +1606,10 @@ ToolsSimd::VectF32	ToolsSimd::and_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::and_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::and_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		lhs._ [0] & rhs._ [0],
 		lhs._ [1] & rhs._ [1],
 		lhs._ [2] & rhs._ [2],
@@ -1623,7 +1624,7 @@ ToolsSimd::VectS32	ToolsSimd::and_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::or_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::or_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          al;
@@ -1648,10 +1649,10 @@ ToolsSimd::VectF32	ToolsSimd::or_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::or_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::or_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		lhs._ [0] | rhs._ [0],
 		lhs._ [1] | rhs._ [1],
 		lhs._ [2] | rhs._ [2],
@@ -1666,7 +1667,7 @@ ToolsSimd::VectS32	ToolsSimd::or_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::xor_f32 (VectF32 lhs, VectF32 rhs) noexcept
+Vf32	ToolsSimd::xor_f32 (Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          al;
@@ -1691,10 +1692,10 @@ ToolsSimd::VectF32	ToolsSimd::xor_f32 (VectF32 lhs, VectF32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::xor_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::xor_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		lhs._ [0] ^ rhs._ [0],
 		lhs._ [1] ^ rhs._ [1],
 		lhs._ [2] ^ rhs._ [2],
@@ -1711,7 +1712,7 @@ ToolsSimd::VectS32	ToolsSimd::xor_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 // Works only with well-formed condition results (tested bits depends on the implementation).
 // For each scalar, true = all bits set, false = all bits cleared
-bool	ToolsSimd::and_h (VectF32 cond) noexcept
+bool	ToolsSimd::and_h (Vf32 cond) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          c;
@@ -1733,7 +1734,7 @@ bool	ToolsSimd::and_h (VectF32 cond) noexcept
 
 // Works only with well-formed condition results (tested bits depends on the implementation).
 // For each scalar, true = all bits set, false = all bits cleared
-bool	ToolsSimd::or_h (VectF32 cond) noexcept
+bool	ToolsSimd::or_h (Vf32 cond) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          c;
@@ -1755,7 +1756,7 @@ bool	ToolsSimd::or_h (VectF32 cond) noexcept
 
 // Works only with well-formed condition results (tested bits depends on the implementation).
 // For each scalar, true = all bits set, false = all bits cleared
-bool	ToolsSimd::and_h (VectS32 cond) noexcept
+bool	ToolsSimd::and_h (Vs32 cond) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	const int32_t  t = (cond._ [0] & cond._ [1]) & (cond._ [2] & cond._ [3]);
@@ -1775,7 +1776,7 @@ bool	ToolsSimd::and_h (VectS32 cond) noexcept
 
 // Works only with well-formed condition results (tested bits depends on the implementation).
 // For each scalar, true = all bits set, false = all bits cleared
-bool	ToolsSimd::or_h (VectS32 cond) noexcept
+bool	ToolsSimd::or_h (Vs32 cond) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	const int32_t  t = (cond._ [0] | cond._ [1]) | (cond._ [2] | cond._ [3]);
@@ -1794,7 +1795,7 @@ bool	ToolsSimd::or_h (VectS32 cond) noexcept
 
 
 // "true" must be 1 and nothing else.
-ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3) noexcept
+Vf32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          c;
@@ -1840,7 +1841,7 @@ ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3) 
 
 
 
-int	ToolsSimd::count_bits (VectS32 x) noexcept
+int	ToolsSimd::count_bits (Vs32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	// http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
@@ -1892,7 +1893,7 @@ int	ToolsSimd::count_bits (VectS32 x) noexcept
 
 // Assumes x is a result of a comparison, with all bits the same
 // in each 32-bit element.
-unsigned int	ToolsSimd::movemask_f32 (VectF32 x) noexcept
+unsigned int	ToolsSimd::movemask_f32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          c;
@@ -1919,10 +1920,10 @@ unsigned int	ToolsSimd::movemask_f32 (VectF32 x) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::cast_f32 (VectS32 x) noexcept
+Vf32	ToolsSimd::cast_f32 (Vs32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const VectF32 *> (&x);
+	return *reinterpret_cast <const Vf32 *> (&x);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_castsi128_ps (x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -1932,10 +1933,10 @@ ToolsSimd::VectF32	ToolsSimd::cast_f32 (VectS32 x) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::cast_s32 (VectF32 x) noexcept
+Vs32	ToolsSimd::cast_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const VectS32 *> (&x);
+	return *reinterpret_cast <const Vs32 *> (&x);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_castps_si128 (x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -1946,10 +1947,10 @@ ToolsSimd::VectS32	ToolsSimd::cast_s32 (VectF32 x) noexcept
 
 
 // a, b, c, d -> a+c, b+d, a-c, b-d
-ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w64 (VectF32 x) noexcept
+Vf32	ToolsSimd::butterfly_f32_w64 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return ToolsSimd::VectF32 { {
+	return Vf32 { {
 		x._ [0] + x._ [2],
 		x._ [1] + x._ [3],
 		x._ [0] - x._ [2],
@@ -1972,10 +1973,10 @@ ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w64 (VectF32 x) noexcept
 
 
 // a, b, c, d -> a+b, a-b, c+d, c-d
-ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w32 (VectF32 x) noexcept
+Vf32	ToolsSimd::butterfly_f32_w32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return ToolsSimd::VectF32 { {
+	return Vf32 { {
 		x._ [0] + x._ [1],
 		x._ [0] + x._ [1],
 		x._ [2] - x._ [3],
@@ -1998,10 +1999,10 @@ ToolsSimd::VectF32	ToolsSimd::butterfly_f32_w32 (VectF32 x) noexcept
 
 
 // p0[0 1] p1[0 1]
-ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1) noexcept
+Vf32	ToolsSimd::interleave_2f32_lo (Vf32 p0, Vf32 p1) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { p0._ [0], p0._ [1], p1._ [0], p1._ [1] } };
+	return Vf32 { { p0._ [0], p0._ [1], p1._ [0], p1._ [1] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (p0, p1, (0<<0) + (1<<2) + (0<<4) + (1<<6));
 	// return _mm_movelh_ps (p0, p1);
@@ -2015,10 +2016,10 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1) noexce
 
 
 // p0[2 3] p1[2 3]
-ToolsSimd::VectF32	ToolsSimd::interleave_2f32_hi (VectF32 p0, VectF32 p1) noexcept
+Vf32	ToolsSimd::interleave_2f32_hi (Vf32 p0, Vf32 p1) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { p0._ [2], p0._ [3], p1._ [2], p1._ [3] } };
+	return Vf32 { { p0._ [2], p0._ [3], p1._ [2], p1._ [3] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (p0, p1, (2<<0) + (3<<2) + (2<<4) + (3<<6));
 	// return _mm_movehl_ps (p1, p0);
@@ -2031,7 +2032,7 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_hi (VectF32 p0, VectF32 p1) noexce
 
 
 
-void	ToolsSimd::interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1) noexcept
+void	ToolsSimd::interleave_f32 (Vf32 &i0, Vf32 &i1, Vf32 p0, Vf32 p1) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	i0._ [0] = p0._ [0];
@@ -2054,7 +2055,7 @@ void	ToolsSimd::interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1
 
 
 
-void	ToolsSimd::deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 i1) noexcept
+void	ToolsSimd::deinterleave_f32 (Vf32 &p0, Vf32 &p1, Vf32 i0, Vf32 i1) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	p0._ [0] = i0._ [0];
@@ -2077,10 +2078,10 @@ void	ToolsSimd::deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 
 
 
 
-ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_lo (VectF32 i0, VectF32 i1) noexcept
+Vf32	ToolsSimd::deinterleave_f32_lo (Vf32 i0, Vf32 i1) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { i0._ [0], i0._ [2], i1._ [0], i1._ [2] } };
+	return Vf32 { { i0._ [0], i0._ [2], i1._ [0], i1._ [2] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (i0, i1, (0<<0) | (2<<2) | (0<<4) | (2<<6));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -2090,10 +2091,10 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_lo (VectF32 i0, VectF32 i1) noexc
 
 
 
-ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_hi (VectF32 i0, VectF32 i1) noexcept
+Vf32	ToolsSimd::deinterleave_f32_hi (Vf32 i0, Vf32 i1) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { i0._ [1], i0._ [3], i1._ [1], i1._ [3] } };
+	return Vf32 { { i0._ [1], i0._ [3], i1._ [1], i1._ [3] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (i0, i1, (1<<0) | (3<<2) | (1<<4) | (3<<6));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -2106,13 +2107,13 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_hi (VectF32 i0, VectF32 i1) noexc
 // Sources:
 // https://github.com/Maratyszcza/NNPACK/blob/master/src/neon/transpose.h
 // https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_MM_TRANSPOSE4_PS&expand=5915,5949
-void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3) noexcept
+void	ToolsSimd::transpose_f32 (Vf32 &a0, Vf32 &a1, Vf32 &a2, Vf32 &a3) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	VectF32        tmp0;
-	VectF32        tmp1;
-	VectF32        tmp2;
-	VectF32        tmp3;
+	Vf32           tmp0;
+	Vf32           tmp1;
+	Vf32           tmp2;
+	Vf32           tmp3;
 	interleave_f32 (tmp0, tmp1, a0, a1);
 	interleave_f32 (tmp2, tmp3, a2, a3);
 	a0 = interleave_2f32_lo (tmp0, tmp2);
@@ -2137,7 +2138,7 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 	a3 = vcombine_f32 (vget_high_f32 (a01.val [1]), vget_high_f32 (a23.val [1]));
 #elif
 	// Generic form
-	VectF32        k0, k1, k2, k3;
+	Vf32           k0, k1, k2, k3;
 	interleave_f32 (k0, k1, a0, a2);
 	interleave_f32 (k2, k3, a1, a3);
 	interleave_f32 (a0, a1, k0, k2);
@@ -2147,10 +2148,10 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 
 
 
-ToolsSimd::VectF32	ToolsSimd::monofy_2f32_lo (VectF32 v) noexcept
+Vf32	ToolsSimd::monofy_2f32_lo (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { v._ [0], v._ [0], v._ [2], v._ [2] } };
+	return Vf32 { { v._ [0], v._ [0], v._ [2], v._ [2] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (v, v, 0xA0);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -2160,10 +2161,10 @@ ToolsSimd::VectF32	ToolsSimd::monofy_2f32_lo (VectF32 v) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::monofy_2f32_hi (VectF32 v) noexcept
+Vf32	ToolsSimd::monofy_2f32_hi (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { { v._ [1], v._ [1], v._ [3], v._ [3] } };
+	return Vf32 { { v._ [1], v._ [1], v._ [3], v._ [3] } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (v, v, 0xF5);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -2174,10 +2175,10 @@ ToolsSimd::VectF32	ToolsSimd::monofy_2f32_hi (VectF32 v) noexcept
 
 
 // Rounding method is unspecified (towards 0 on ARM, depends on MXCSR on x86)
-ToolsSimd::VectS32	ToolsSimd::conv_f32_to_s32 (VectF32 x) noexcept
+Vs32	ToolsSimd::conv_f32_to_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		conv_int_fast (x._ [0]),
 		conv_int_fast (x._ [1]),
 		conv_int_fast (x._ [2]),
@@ -2194,10 +2195,10 @@ ToolsSimd::VectS32	ToolsSimd::conv_f32_to_s32 (VectF32 x) noexcept
 
 // Not exact on the rounding boundaries
 // Assumes rounding mode is to-nearest on x86
-ToolsSimd::VectS32	ToolsSimd::round_f32_to_s32 (VectF32 x) noexcept
+Vs32	ToolsSimd::round_f32_to_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		round_int (x._ [0]),
 		round_int (x._ [1]),
 		round_int (x._ [2]),
@@ -2220,10 +2221,10 @@ ToolsSimd::VectS32	ToolsSimd::round_f32_to_s32 (VectF32 x) noexcept
 
 // Not exact on the rounding boundaries
 // Assumes rounding mode is to-nearest on x86
-ToolsSimd::VectS32	ToolsSimd::floor_f32_to_s32 (VectF32 x) noexcept
+Vs32	ToolsSimd::floor_f32_to_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		floor_int (x._ [0]),
 		floor_int (x._ [1]),
 		floor_int (x._ [2]),
@@ -2245,10 +2246,10 @@ ToolsSimd::VectS32	ToolsSimd::floor_f32_to_s32 (VectF32 x) noexcept
 
 
 
-ToolsSimd::VectF32	ToolsSimd::conv_s32_to_f32 (VectS32 x) noexcept
+Vf32	ToolsSimd::conv_s32_to_f32 (Vs32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		float (x._ [0]),
 		float (x._ [1]),
 		float (x._ [2]),
@@ -2263,7 +2264,7 @@ ToolsSimd::VectF32	ToolsSimd::conv_s32_to_f32 (VectS32 x) noexcept
 
 
 
-void	ToolsSimd::start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, float val_end, int size) noexcept
+void	ToolsSimd::start_lerp (Vf32 &val_cur, Vf32 &step, float val_beg, float val_end, int size) noexcept
 {
 	assert (size > 0);
 
@@ -2280,11 +2281,11 @@ void	ToolsSimd::start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, floa
 
 
 
-ToolsSimd::VectS32	ToolsSimd::select (VectS32 cond, VectS32 v_t, VectS32 v_f) noexcept
+Vs32	ToolsSimd::select (Vs32 cond, Vs32 v_t, Vs32 v_f) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	/*** To do: implement as r = v_f ^ ((v_f ^ v_t) & cond) ***/
-	return VectS32 { {
+	return Vs32 { {
 		(cond._ [0] & v_t._ [0]) | (~cond._ [0] & v_f._ [0]),
 		(cond._ [1] & v_t._ [1]) | (~cond._ [1] & v_f._ [1]),
 		(cond._ [2] & v_t._ [2]) | (~cond._ [2] & v_f._ [2]),
@@ -2301,7 +2302,7 @@ ToolsSimd::VectS32	ToolsSimd::select (VectS32 cond, VectS32 v_t, VectS32 v_f) no
 
 
 
-std::tuple <ToolsSimd::VectS32, ToolsSimd::VectS32>	ToolsSimd::swap_cond (VectS32 cond, VectS32 lhs, VectS32 rhs) noexcept
+std::tuple <Vs32, Vs32>	ToolsSimd::swap_cond (Vs32 cond, Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	if (cond._ [0] != 0) { std::swap (lhs._ [0], rhs._ [0]); }
@@ -2326,10 +2327,10 @@ std::tuple <ToolsSimd::VectS32, ToolsSimd::VectS32>	ToolsSimd::swap_cond (VectS3
 
 
 
-ToolsSimd::VectS32	ToolsSimd::min_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::min_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		std::min (lhs._ [0], rhs._ [0]),
 		std::min (lhs._ [1], rhs._ [1]),
 		std::min (lhs._ [2], rhs._ [2]),
@@ -2345,10 +2346,10 @@ ToolsSimd::VectS32	ToolsSimd::min_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 
-ToolsSimd::VectS32	ToolsSimd::max_s32 (VectS32 lhs, VectS32 rhs) noexcept
+Vs32	ToolsSimd::max_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		std::max (lhs._ [0], rhs._ [0]),
 		std::max (lhs._ [1], rhs._ [1]),
 		std::max (lhs._ [2], rhs._ [2]),
@@ -2365,12 +2366,12 @@ ToolsSimd::VectS32	ToolsSimd::max_s32 (VectS32 lhs, VectS32 rhs) noexcept
 
 
 template <int N>
-ToolsSimd::VectS32	ToolsSimd::srli_s32 (VectS32 lhs) noexcept
+Vs32	ToolsSimd::srli_s32 (Vs32 lhs) noexcept
 {
 	static_assert (N >= 0, "");
 	static_assert (N <= 32, "");
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		int32_t (uint32_t (lhs._ [0]) >> N),
 		int32_t (uint32_t (lhs._ [1]) >> N),
 		int32_t (uint32_t (lhs._ [2]) >> N),
@@ -2387,10 +2388,10 @@ ToolsSimd::VectS32	ToolsSimd::srli_s32 (VectS32 lhs) noexcept
 
 // Positive = to the left, rotates towards the higher indexes
 template <int SHIFT>
-ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a) noexcept
+Vf32	ToolsSimd::Shift <SHIFT>::rotate (Vf32 a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectF32 { {
+	return Vf32 { {
 		a._ [(0 - SHIFT) & 3],
 		a._ [(1 - SHIFT) & 3],
 		a._ [(2 - SHIFT) & 3],
@@ -2420,7 +2421,7 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a) noexcept
 
 
 template <int SHIFT>
-float	ToolsSimd::Shift <SHIFT>::extract (VectF32 a) noexcept
+float	ToolsSimd::Shift <SHIFT>::extract (Vf32 a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return a._ [SHIFT & 3];
@@ -2441,7 +2442,7 @@ float	ToolsSimd::Shift <SHIFT>::extract (VectF32 a) noexcept
 
 
 template <int SHIFT>
-ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::insert (VectF32 a, float val) noexcept
+Vf32	ToolsSimd::Shift <SHIFT>::insert (Vf32 a, float val) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	a._ [SHIFT & 3] = val;
@@ -2459,7 +2460,7 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::insert (VectF32 a, float val) noexc
 
 
 template <int SHIFT>
-ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::spread (VectF32 a) noexcept
+Vf32	ToolsSimd::Shift <SHIFT>::spread (Vf32 a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return set1_f32 (extract (a));
@@ -2475,7 +2476,7 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::spread (VectF32 a) noexcept
 // Extracts the vector at the position SHIFT from the double-width vector {a b}
 // Concatenates a [SHIFT...3] with b [0...3-SHIFT]
 template <int SHIFT>
-ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::compose (VectF32 a, VectF32 b) noexcept
+Vf32	ToolsSimd::Shift <SHIFT>::compose (Vf32 a, Vf32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	switch (SHIFT & 3)
@@ -2519,10 +2520,10 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::compose (VectF32 a, VectF32 b) noex
 
 // Positive = left
 template <int SHIFT>
-ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::rotate (VectS32 a) noexcept
+Vs32	ToolsSimd::Shift <SHIFT>::rotate (Vs32 a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return VectS32 { {
+	return Vs32 { {
 		a._ [(0 - SHIFT) & 3],
 		a._ [(1 - SHIFT) & 3],
 		a._ [(2 - SHIFT) & 3],
@@ -2551,7 +2552,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::rotate (VectS32 a) noexcept
 
 
 template <int SHIFT>
-int32_t	ToolsSimd::Shift <SHIFT>::extract (VectS32 a) noexcept
+int32_t	ToolsSimd::Shift <SHIFT>::extract (Vs32 a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return a._ [SHIFT & 3];
@@ -2572,7 +2573,7 @@ int32_t	ToolsSimd::Shift <SHIFT>::extract (VectS32 a) noexcept
 
 
 template <int SHIFT>
-ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::insert (VectS32 a, int32_t val) noexcept
+Vs32	ToolsSimd::Shift <SHIFT>::insert (Vs32 a, int32_t val) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	a._ [SHIFT & 3] = val;
@@ -2593,7 +2594,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::insert (VectS32 a, int32_t val) noe
 
 
 template <int SHIFT>
-ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::spread (VectS32 a) noexcept
+Vs32	ToolsSimd::Shift <SHIFT>::spread (Vs32 a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return set1_s32 (extract (a));
@@ -2609,7 +2610,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::spread (VectS32 a) noexcept
 // Extracts the vector at the position SHIFT from the double-width vector {a b}
 // Concatenates a [SHIFT...3] with b [0...3-SHIFT]
 template <int SHIFT>
-ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::compose (VectS32 a, VectS32 b) noexcept
+Vs32	ToolsSimd::Shift <SHIFT>::compose (Vs32 a, Vs32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	switch (SHIFT & 3)
@@ -2666,7 +2667,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::compose (VectS32 a, VectS32 b) noex
 
 
 template <typename MEM>
-void	ToolsSimd::store_f32_part_n13 (MEM *ptr, VectF32 v, int n) noexcept
+void	ToolsSimd::store_f32_part_n13 (MEM *ptr, Vf32 v, int n) noexcept
 {
 	assert (n > 0);
 	assert (n < 4);
@@ -2706,7 +2707,7 @@ void	ToolsSimd::store_f32_part_n13 (MEM *ptr, VectF32 v, int n) noexcept
 
 
 template <typename MEM>
-void	ToolsSimd::store_s32_part_n13 (MEM *ptr, VectS32 v, int n) noexcept
+void	ToolsSimd::store_s32_part_n13 (MEM *ptr, Vs32 v, int n) noexcept
 {
 	assert (n > 0);
 	assert (n < 4);
@@ -2746,13 +2747,13 @@ void	ToolsSimd::store_s32_part_n13 (MEM *ptr, VectS32 v, int n) noexcept
 
 
 template <typename MEM>
-ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n) noexcept
+Vf32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n) noexcept
 {
 	assert (n > 0);
 	assert (n < 4);
 
 	const float *  f_ptr = reinterpret_cast <const float *> (ptr);
-	VectF32        v;
+	Vf32           v;
 #if ! defined (fstb_HAS_SIMD)
 	v._ [0] = f_ptr [0];
 	for (int i = 1; i < n; ++i)
@@ -2802,314 +2803,6 @@ ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n) noexcept
 
 }  // namespace fstb
 
-
-
-#if ! defined (fstb_HAS_SIMD) || (fstb_COMPILER == fstb_COMPILER_MSVC)
-
-fstb_ToolsSimd_OPNS_BEG
-
-
-
-fstb_ToolsSimd_OPNS (VectF32) &	operator += (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	lhs._ [0] += rhs._ [0];
-	lhs._ [1] += rhs._ [1];
-	lhs._ [2] += rhs._ [2];
-	lhs._ [3] += rhs._ [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	lhs = _mm_add_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	lhs = vaddq_f32 (lhs, rhs);
-#endif // fstb_ARCHI
-	return lhs;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectF32) &	operator -= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	lhs._ [0] -= rhs._ [0];
-	lhs._ [1] -= rhs._ [1];
-	lhs._ [2] -= rhs._ [2];
-	lhs._ [3] -= rhs._ [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	lhs = _mm_sub_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	lhs = vsubq_f32 (lhs, rhs);
-#endif // fstb_ARCHI
-	return lhs;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectF32) &	operator *= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	lhs._ [0] *= rhs._ [0];
-	lhs._ [1] *= rhs._ [1];
-	lhs._ [2] *= rhs._ [2];
-	lhs._ [3] *= rhs._ [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	lhs = _mm_mul_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	lhs = vmulq_f32 (lhs, rhs);
-#endif // fstb_ARCHI
-	return lhs;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectF32) operator + (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectF32) { {
-		lhs._ [0] + rhs._ [0],
-		lhs._ [1] + rhs._ [1],
-		lhs._ [2] + rhs._ [2],
-		lhs._ [3] + rhs._ [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_add_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vaddq_f32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectF32) operator - (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectF32) { {
-		lhs._ [0] - rhs._ [0],
-		lhs._ [1] - rhs._ [1],
-		lhs._ [2] - rhs._ [2],
-		lhs._ [3] - rhs._ [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_sub_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vsubq_f32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectF32) operator * (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectF32) { {
-		lhs._ [0] * rhs._ [0],
-		lhs._ [1] * rhs._ [1],
-		lhs._ [2] * rhs._ [2],
-		lhs._ [3] * rhs._ [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_mul_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vmulq_f32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) &	operator += (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	lhs._ [0] += rhs._ [0];
-	lhs._ [1] += rhs._ [1];
-	lhs._ [2] += rhs._ [2];
-	lhs._ [3] += rhs._ [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	lhs = _mm_add_epi32 (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	lhs = vaddq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-	return lhs;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) &	operator -= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	lhs._ [0] -= rhs._ [0];
-	lhs._ [1] -= rhs._ [1];
-	lhs._ [2] -= rhs._ [2];
-	lhs._ [3] -= rhs._ [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	lhs = _mm_sub_epi32 (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	lhs = vsubq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-	return lhs;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) &	operator *= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	lhs._ [0] *= rhs._ [0];
-	lhs._ [1] *= rhs._ [1];
-	lhs._ [2] *= rhs._ [2];
-	lhs._ [3] *= rhs._ [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	// mullo_epi32
-	// Code of this function shamelessly borrowed from tp7
-	// https://github.com/tp7/masktools/blob/16bit/masktools/common/simd.h
-	const __m128i  lhs13  = _mm_shuffle_epi32 (lhs, 0xF5);       // (-,a3,-,a1)
-	const __m128i  rhs13  = _mm_shuffle_epi32 (rhs, 0xF5);       // (-,b3,-,b1)
-	const __m128i  prod02 = _mm_mul_epu32 (lhs, rhs);            // (-,a2*b2,-,a0*b0)
-	const __m128i  prod13 = _mm_mul_epu32 (lhs13, rhs13);        // (-,a3*b3,-,a1*b1)
-	const __m128i  prod01 = _mm_unpacklo_epi32 (prod02, prod13); // (-,-,a1*b1,a0*b0)
-	const __m128i  prod23 = _mm_unpackhi_epi32 (prod02, prod13); // (-,-,a3*b3,a2*b2)
-	lhs                   = _mm_unpacklo_epi64 (prod01 ,prod23); // (ab3,ab2,ab1,ab0)
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	lhs = vmulq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-	return lhs;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) & operator >>= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar) noexcept
-{
-	assert (scalar >= 0);
-#if ! defined (fstb_HAS_SIMD)
-	x._ [0] >>= scalar;
-	x._ [1] >>= scalar;
-	x._ [2] >>= scalar;
-	x._ [3] >>= scalar;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	x = _mm_srai_epi32 (x, scalar);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	x = vshrq_n_s32 (x, scalar);
-#endif // fstb_ARCHI
-	return x;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) & operator <<= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar) noexcept
-{
-	assert (scalar >= 0);
-#if ! defined (fstb_HAS_SIMD)
-	x._ [0] <<= scalar;
-	x._ [1] <<= scalar;
-	x._ [2] <<= scalar;
-	x._ [3] <<= scalar;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	x = _mm_slli_epi32 (x, scalar);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	x = vshlq_n_s32 (x, scalar);
-#endif // fstb_ARCHI
-	return x;
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) operator + (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectS32) { {
-		lhs._ [0] + rhs._ [0],
-		lhs._ [1] + rhs._ [1],
-		lhs._ [2] + rhs._ [2],
-		lhs._ [3] + rhs._ [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_add_epi32 (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vaddq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) operator - (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectS32) { {
-		lhs._ [0] - rhs._ [0],
-		lhs._ [1] - rhs._ [1],
-		lhs._ [2] - rhs._ [2],
-		lhs._ [3] - rhs._ [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_sub_epi32 (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vsubq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) operator * (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectS32) { {
-		lhs._ [0] * rhs._ [0],
-		lhs._ [1] * rhs._ [1],
-		lhs._ [2] * rhs._ [2],
-		lhs._ [3] * rhs._ [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return lhs *= rhs;
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vmulq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) operator >> (fstb_ToolsSimd_OPNS (VectS32) x, int scalar) noexcept
-{
-	assert (scalar >= 0);
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectS32) { {
-		x._ [0] >> scalar,
-		x._ [1] >> scalar,
-		x._ [2] >> scalar,
-		x._ [3] >> scalar
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_srai_epi32 (x, scalar);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vshrq_n_s32 (x, scalar);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS (VectS32) operator << (fstb_ToolsSimd_OPNS (VectS32) x, int scalar) noexcept
-{
-	assert (scalar >= 0);
-#if ! defined (fstb_HAS_SIMD)
-	return fstb_ToolsSimd_OPNS (VectS32) { {
-		x._ [0] << scalar,
-		x._ [1] << scalar,
-		x._ [2] << scalar,
-		x._ [3] << scalar
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_slli_epi32 (x, scalar);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vshlq_n_s32 (x, scalar);
-#endif // fstb_ARCHI
-}
-
-
-
-fstb_ToolsSimd_OPNS_END
-
-#endif // Operators
-
-#undef fstb_ToolsSimd_OPNS_BEG
-#undef fstb_ToolsSimd_OPNS
-#undef fstb_ToolsSimd_OPNS_END
 
 
 #endif   // fstb_ToolsSimd_CODEHEADER_INCLUDED

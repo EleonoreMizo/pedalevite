@@ -31,7 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/DataAlign.h"
 #include "fstb/AllocAlign.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 #include "mfx/dsp/iir/OnePole.h"
 
@@ -90,8 +90,8 @@ private:
 	typedef std::array <float *, _max_nbr_chn> BufRefArray;
 
 	typedef std::vector <
-		fstb::ToolsSimd::VectF32,
-		fstb::AllocAlign <fstb::ToolsSimd::VectF32, 16>
+		fstb::Vf32,
+		fstb::AllocAlign <fstb::Vf32, 16>
 	> Buffer4;
 
 	typedef dsp::dyn::EnvFollowerAHR4SimdHelper <
@@ -104,9 +104,9 @@ private:
 	float          compute_coef (float t) const;
 	void           prefilter_block (const float * const src_ptr_arr [], int nbr_chn, int nbr_spl);
 
-	static void    perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl);
+	static void    perpare_mono_input (fstb::Vf32 buf_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl);
 	static inline void
-	               spread_and_store (fstb::ToolsSimd::VectF32 dst_ptr [], fstb::ToolsSimd::VectF32 x);
+	               spread_and_store (fstb::Vf32 dst_ptr [], fstb::Vf32 x);
 
 	EnvHelper      _env_helper;         // 0 = fast env, 1 = slow env
 	Buffer4        _buf;

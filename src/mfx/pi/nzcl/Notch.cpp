@@ -198,7 +198,7 @@ Not sure if the benefit is interesting, especially for small buffers.
 			// Simple linear interpolation on the gain
 			// Division can be avoided just by reading a table, block_len is
 			// integer and bounded by _dspl_rate.
-			fstb::ToolsSimd::VectF32   step;
+			fstb::Vf32     step;
 			fstb::ToolsSimd::start_lerp (gt, step, gt_beg, gt_end, block_len);
 			for (int pos = 0; pos < block_len; pos += 4)
 			{

@@ -9,13 +9,13 @@ Template parameters:
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
 	static bool VD::check_ptr (const void *ptr) noexcept;
-	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr) noexcept;
-	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val) noexcept;
+	static fstb::Vf32 VD::load_f32 (const void *ptr) noexcept;
+	static void VD::store_f32 (void *ptr, const fstb::Vf32 val) noexcept;
 
 - VS: same as VD, but for reading only (source access)
 	Requires:
 	static bool VS::check_ptr (const void *ptr) noexcept;
-	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr) noexcept;
+	static fstb::Vf32 VS::load_f32 (const void *ptr) noexcept;
 
 --- Legal stuff ---
 

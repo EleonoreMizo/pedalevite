@@ -24,7 +24,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 #include <array>
 
@@ -71,8 +71,8 @@ public:
 	               compute_gain_l2 (float env_2l2);
 
 	template <bool store_flag>
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               compute_gain (const fstb::ToolsSimd::VectF32 env_2l2);
+	fstb_FORCEINLINE fstb::Vf32
+	               compute_gain (const fstb::Vf32 env_2l2);
 
 	inline void    clear_buffers ();
 

@@ -230,7 +230,7 @@ __m128	ToolsSse2::load_ps_partial (const void *ptr, int len)
 	assert (len >= 0);
 	assert (len < 4);
 
-	VectF32        tmp_arr = { 0 };
+	Vf32           tmp_arr = { 0 };
 	while (len > 0)
 	{
 		-- len;
@@ -336,7 +336,7 @@ void	ToolsSse2::store_ps_partial (void *ptr, __m128 val, int len)
 	assert (len >= 0);
 	assert (len < 4);
 
-	VectF32        tmp_arr;
+	Vf32           tmp_arr;
 	_mm_store_ps (tmp_arr, val);
 	while (len > 0)
 	{

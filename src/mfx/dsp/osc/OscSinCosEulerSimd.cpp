@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/DataAlign.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/osc/OscSinCosEulerSimd.h"
 
 #include <cassert>
@@ -102,14 +103,14 @@ void	OscSinCosEulerSimd::step () noexcept
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosEulerSimd::get_cos () const noexcept
+fstb::Vf32	OscSinCosEulerSimd::get_cos () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_pos_cos);
 }
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosEulerSimd::get_sin () const noexcept
+fstb::Vf32	OscSinCosEulerSimd::get_sin () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_pos_sin);
 }

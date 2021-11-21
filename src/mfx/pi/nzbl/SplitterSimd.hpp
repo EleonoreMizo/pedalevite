@@ -2,6 +2,8 @@
 
 // Code automatically generated.
 
+#include "fstb/ToolsSimd.h"
+
 #include <algorithm>
 #include <iterator>
 
@@ -9,13 +11,13 @@ namespace mfx {
 namespace pi {
 namespace nzbl {
 
-fstb::ToolsSimd::VectF32	SplitterSimd::Filter3::process_sample (fstb::ToolsSimd::VectF32 x) noexcept
+fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 {
 	// Stage 0
 	auto x1z = _z1 [0];
 	auto x2z = _z2 [0];
-	fstb::ToolsSimd::VectF32 mask;
-	fstb::ToolsSimd::VectF32 x_save;
+	fstb::Vf32 mask;
+	fstb::Vf32 x_save;
 	{
 		const auto gain = fstb::ToolsSimd::set1_f32 (0.125000f);
 		x *= gain;
@@ -141,12 +143,12 @@ fstb::ToolsSimd::VectF32	SplitterSimd::Filter3::process_sample (fstb::ToolsSimd:
 	return x;
 }
 
-fstb::ToolsSimd::VectF32	SplitterSimd::Filter0::process_sample (fstb::ToolsSimd::VectF32 x) noexcept
+fstb::Vf32	SplitterSimd::Filter0::process_sample (fstb::Vf32 x) noexcept
 {
 	auto x1z = _z1 [0];
 	auto x2z = _z2 [0];
-	fstb::ToolsSimd::VectF32 mask;
-	fstb::ToolsSimd::VectF32 x_save;
+	fstb::Vf32 mask;
+	fstb::Vf32 x_save;
 	{
 		const auto b0  = _ap2 [0] [0];
 		const auto b1  = _ap2 [0] [1];

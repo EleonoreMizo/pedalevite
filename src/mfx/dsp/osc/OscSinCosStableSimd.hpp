@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 #include <cassert>
 #include <cmath>
 
@@ -96,14 +98,14 @@ void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_cos () const noexcept
+fstb::Vf32	OscSinCosStableSimd::get_cos () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_pos_cos);
 }
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_sin () const noexcept
+fstb::Vf32	OscSinCosStableSimd::get_sin () const noexcept
 {
 	return fstb::ToolsSimd::load_f32 (&_pos_sin);
 }
@@ -118,7 +120,7 @@ fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_sin () const noexcept
 
 
 
-void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta) noexcept
+void	OscSinCosStableSimd::step (fstb::Vf32 &pos_cos, fstb::Vf32 &pos_sin, fstb::Vf32 alpha, fstb::Vf32 beta) noexcept
 {
 	const auto     tmp = pos_cos - alpha * pos_sin;
 	pos_sin += beta * tmp;
@@ -127,7 +129,7 @@ void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSi
 
 
 
-void	OscSinCosStableSimd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad) noexcept
+void	OscSinCosStableSimd::compute_step (fstb::Vf32 &alpha, fstb::Vf32 &beta, float angle_rad) noexcept
 {
    const double   a = tan (angle_rad * 0.5f);
    alpha = fstb::ToolsSimd::set1_f32 (float (a));

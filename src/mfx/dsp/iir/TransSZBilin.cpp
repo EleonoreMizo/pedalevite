@@ -277,7 +277,7 @@ void	TransSZBilin::map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const 
 
 
 
-void	TransSZBilin::map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 z_eq_a [3], const fstb::ToolsSimd::VectF32 s_eq_b [3], const fstb::ToolsSimd::VectF32 s_eq_a [3], fstb::ToolsSimd::VectF32 k) noexcept
+void	TransSZBilin::map_s_to_z_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 z_eq_a [3], const fstb::Vf32 s_eq_b [3], const fstb::Vf32 s_eq_a [3], fstb::Vf32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -381,7 +381,7 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2
 
 
 
-void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 z_eq_a [2], const fstb::ToolsSimd::VectF32 s_eq_b [2], const fstb::ToolsSimd::VectF32 s_eq_a [2], fstb::ToolsSimd::VectF32 k) noexcept
+void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::Vf32 z_eq_b [2], fstb::Vf32 z_eq_a [2], const fstb::Vf32 s_eq_b [2], const fstb::Vf32 s_eq_a [2], fstb::Vf32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 	assert (z_eq_a != nullptr);
@@ -423,7 +423,7 @@ void	TransSZBilin::map_s_to_z_ap1_approx (float z_eq_b [2], float k) noexcept
 
 
 
-void	TransSZBilin::map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 k) noexcept
+void	TransSZBilin::map_s_to_z_ap1_approx (fstb::Vf32 z_eq_b [2], fstb::Vf32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 
@@ -455,7 +455,7 @@ float	TransSZBilin::map_s_to_z_ap1_approx_b0 (float k) noexcept
 
 
 
-fstb::ToolsSimd::VectF32	TransSZBilin::map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd::VectF32 k) noexcept
+fstb::Vf32	TransSZBilin::map_s_to_z_ap1_approx_b0 (fstb::Vf32 k) noexcept
 {
 	const auto     one = fstb::ToolsSimd::set1_f32 (1);
 	const auto     a1z = one - k;
@@ -504,7 +504,7 @@ void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float
 
 
 
-void	TransSZBilin::map_s_to_z_ap2_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 s_eq_b1, fstb::ToolsSimd::VectF32 k) noexcept
+void	TransSZBilin::map_s_to_z_ap2_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 s_eq_b1, fstb::Vf32 k) noexcept
 {
 	assert (z_eq_b != nullptr);
 

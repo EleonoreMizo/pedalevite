@@ -507,7 +507,7 @@ bool	Biquad4SimdMorph <VD, VS, VP>::is_ramping () const noexcept
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::Vf32 out_ptr [], const fstb::Vf32 in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -520,8 +520,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::Vec
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
+				reinterpret_cast <const fstb::Vf32 *> (_step_b),
+				reinterpret_cast <const fstb::Vf32 *> (_step_a)
 			);
 		}
 		else
@@ -542,7 +542,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::Vec
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::Vf32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept
 {
 	int            pos = 0;
 	do
@@ -555,8 +555,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::Vec
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
+				reinterpret_cast <const fstb::Vf32 *> (_step_b),
+				reinterpret_cast <const fstb::Vf32 *> (_step_a)
 			);
 		}
 		else
@@ -590,8 +590,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr 
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
+				reinterpret_cast <const fstb::Vf32 *> (_step_b),
+				reinterpret_cast <const fstb::Vf32 *> (_step_a)
 			);
 		}
 		else
@@ -625,8 +625,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_pt
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
+				reinterpret_cast <const fstb::Vf32 *> (_step_b),
+				reinterpret_cast <const fstb::Vf32 *> (_step_a)
 			);
 		}
 		else
@@ -660,8 +660,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [],
 				out_ptr + pos * 2,
 				in_ptr + pos * 2,
 				work_len,
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
+				reinterpret_cast <const fstb::Vf32 *> (_step_b),
+				reinterpret_cast <const fstb::Vf32 *> (_step_a)
 			);
 		}
 		else
@@ -695,8 +695,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [
 				out_ptr + pos * 2,
 				in_ptr + pos * 2,
 				work_len,
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
-				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
+				reinterpret_cast <const fstb::Vf32 *> (_step_b),
+				reinterpret_cast <const fstb::Vf32 *> (_step_a)
 			);
 		}
 		else

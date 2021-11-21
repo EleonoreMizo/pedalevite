@@ -710,8 +710,8 @@ void	DPvabI2sDma::process_block (int buf_idx) noexcept
 		auto           x1_flt = fstb::ToolsSimd::conv_s32_to_f32 (x1_int);
 		x0_flt *= sc_i_v;
 		x1_flt *= sc_i_v;
-		fstb::ToolsSimd::VectF32   xl_flt;
-		fstb::ToolsSimd::VectF32   xr_flt;
+		fstb::Vf32     xl_flt;
+		fstb::Vf32     xr_flt;
 		fstb::ToolsSimd::deinterleave_f32 (xl_flt, xr_flt, x0_flt, x1_flt);
 		fstb::ToolsSimd::store_f32 (
 			buf_flt_i_ptr +                 pos, xl_flt
@@ -753,8 +753,8 @@ void	DPvabI2sDma::process_block (int buf_idx) noexcept
 		xr_flt  = fstb::ToolsSimd::min_f32 (xr_flt, maxf_v);
 		xl_flt *= sc_o_v;
 		xr_flt *= sc_o_v;
-		fstb::ToolsSimd::VectF32   x0_flt;
-		fstb::ToolsSimd::VectF32   x1_flt;
+		fstb::Vf32     x0_flt;
+		fstb::Vf32     x1_flt;
 		fstb::ToolsSimd::interleave_f32 (x0_flt, x1_flt, xl_flt, xr_flt);
 		const auto  x0_int = fstb::ToolsSimd::conv_f32_to_s32 (x0_flt);
 		const auto  x1_int = fstb::ToolsSimd::conv_f32_to_s32 (x1_flt);

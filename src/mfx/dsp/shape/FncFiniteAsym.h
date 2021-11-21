@@ -39,7 +39,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 #include <array>
 
@@ -75,8 +75,8 @@ public:
 	               operator = (FncFiniteAsym <BL, BU, GF, RES> &&other) = default;
 
 	inline float   operator () (float x) const noexcept;
-	inline fstb::ToolsSimd::VectF32
-	               operator () (fstb::ToolsSimd::VectF32 x) const noexcept;
+	inline fstb::Vf32
+	               operator () (fstb::Vf32 x) const noexcept;
 
 
 

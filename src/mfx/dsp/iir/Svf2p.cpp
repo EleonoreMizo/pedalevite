@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/Approx.h"
 #include "fstb/def.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/iir/Svf2p.h"
 
 #include <cassert>
@@ -137,7 +138,7 @@ void	Svf2p::conv_poles (float &g0, float &g1, float &g2, double f0_fs, float k) 
 
 
 
-void	Svf2p::approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 &s2, fstb::ToolsSimd::VectF32 f0_fs) noexcept
+void	Svf2p::approx_s1s2 (fstb::Vf32 &s1, fstb::Vf32 &s2, fstb::Vf32 f0_fs) noexcept
 {
 	f0_fs += f0_fs;
 	s1 = fstb::Approx::sin_rbj_halfpi (f0_fs);
@@ -146,10 +147,10 @@ void	Svf2p::approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 
 
 
 
-void	Svf2p::conv_poles (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 f0_fs, fstb::ToolsSimd::VectF32 k) noexcept
+void	Svf2p::conv_poles (fstb::Vf32 &g0, fstb::Vf32 &g1, fstb::Vf32 &g2, fstb::Vf32 f0_fs, fstb::Vf32 k) noexcept
 {
-	fstb::ToolsSimd::VectF32   s1;
-	fstb::ToolsSimd::VectF32   s2;
+	fstb::Vf32     s1;
+	fstb::Vf32     s2;
 	approx_s1s2 (s1, s2, f0_fs);
 	const auto     two       = fstb::ToolsSimd::set1_f32 (2);
 	const auto     minus_two = fstb::ToolsSimd::set1_f32 (-2);

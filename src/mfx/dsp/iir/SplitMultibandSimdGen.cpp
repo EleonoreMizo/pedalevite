@@ -1114,7 +1114,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_main () const
 	r._code  = add_namespaces (r._code);
 
 	r._decl  = get_autogen_header () + generate_include () + r._decl;
-	r._cinl  = get_autogen_header () + r._cinl;
+	r._cinl  = get_autogen_header () + generate_inline ()  + r._cinl;
 	r._code  = get_autogen_header () + r._code;
 
 	return r;
@@ -1642,7 +1642,7 @@ std::string	SplitMultibandSimdGen::generate_include ()
 "#include <algorithm>\n"
 "#include <iterator>\n"
 #if 1
-"#include \"fstb/ToolsSimd.h\"\n\n";
+"#include \"fstb/Vf32.h\"\n\n";
 #else
 // Stand-alone x86/SSE2 version.
 // Mainly for checking the result with Complier Explorer.
@@ -1654,37 +1654,37 @@ std::string	SplitMultibandSimdGen::generate_include ()
 "class ToolsSimd\n"
 "{\n"
 "public:\n"
-"\ttypedef __m128i VectS32;\n"
-"\ttypedef __m128  VectF32;\n"
-"\tstatic VectF32 set_f32_zero () noexcept { return _mm_setzero_ps (); }\n"
-"\tstatic VectF32 set1_f32 (float a) noexcept { return _mm_set1_ps (a); }\n"
-"\tstatic VectF32 set_f32 (float a0, float a1, float a2, float a3) noexcept { return _mm_set_ps (a3, a2, a1, a0); }\n"
-"\tstatic VectS32 set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept { return _mm_set_epi32 (a3, a2, a1, a0); }\n"
-"\tstatic VectF32 cast_f32 (VectS32 x) noexcept { return _mm_castsi128_ps (x); }\n"
-"\tstatic VectF32 select (VectF32 cond, VectF32 v_t, VectF32 v_f) noexcept\n"
+"\ttypedef __m128i Vs32;\n"
+"\ttypedef __m128  Vf32;\n"
+"\tstatic Vf32 set_f32_zero () noexcept { return _mm_setzero_ps (); }\n"
+"\tstatic Vf32 set1_f32 (float a) noexcept { return _mm_set1_ps (a); }\n"
+"\tstatic Vf32 set_f32 (float a0, float a1, float a2, float a3) noexcept { return _mm_set_ps (a3, a2, a1, a0); }\n"
+"\tstatic Vs32 set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept { return _mm_set_epi32 (a3, a2, a1, a0); }\n"
+"\tstatic Vf32 cast_f32 (Vs32 x) noexcept { return _mm_castsi128_ps (x); }\n"
+"\tstatic Vf32 select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept\n"
 "\t{\n"
 "\t\tconst auto     cond_1 = _mm_and_ps (cond, v_t);\n"
 "\t\tconst auto     cond_0 = _mm_andnot_ps (cond, v_f);\n"
 "\t\treturn _mm_or_ps (cond_0, cond_1);\n"
 "\t}\n"
-"\tstatic VectF32 and_f32 (VectF32 lhs, VectF32 rhs) noexcept { return _mm_and_ps (lhs, rhs); }\n"
-"\tstatic VectF32 or_f32 (VectF32 lhs, VectF32 rhs) noexcept { return _mm_or_ps (lhs, rhs); }\n"
-"\tstatic VectF32 butterfly_f32_w64 (VectF32 x) noexcept\n"
+"\tstatic Vf32 and_f32 (Vf32 lhs, Vf32 rhs) noexcept { return _mm_and_ps (lhs, rhs); }\n"
+"\tstatic Vf32 or_f32 (Vf32 lhs, Vf32 rhs) noexcept { return _mm_or_ps (lhs, rhs); }\n"
+"\tstatic Vf32 butterfly_f32_w64 (Vf32 x) noexcept\n"
 "\t{\n"
 "\t\tconst auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 0, 1 << 31, 1 << 31));\n"
 "\t\tconst auto x0   = _mm_shuffle_ps (x, x, (2<<0) + (3<<2) + (0<<4) + (1<<6)); // c, d, a, b\n"
 "\t\tconst auto x1   = _mm_xor_ps (x, sign); // a, b, -c, -d\n"
 "\t\treturn _mm_add_ps (x0, x1);\n"
 "\t}\n"
-"\tstatic VectF32 deinterleave_f32_lo (VectF32 i0, VectF32 i1) noexcept\n"
+"\tstatic Vf32 deinterleave_f32_lo (Vf32 i0, Vf32 i1) noexcept\n"
 "\t{\n"
 "\t\treturn _mm_shuffle_ps (i0, i1, (0<<0) | (2<<2) | (0<<4) | (2<<6));\n"
 "\t}\n"
-"\tstatic VectF32 deinterleave_f32_hi (VectF32 i0, VectF32 i1) noexcept\n"
+"\tstatic Vf32 deinterleave_f32_hi (Vf32 i0, Vf32 i1) noexcept\n"
 "\t{\n"
 "\t\treturn _mm_shuffle_ps (i0, i1, (1<<0) | (3<<2) | (1<<4) | (3<<6));\n"
 "\t}\n"
-"\tstatic void explode (float &a0, float &a1, float &a2, float &a3, VectF32 x) noexcept\n"
+"\tstatic void explode (float &a0, float &a1, float &a2, float &a3, Vf32 x) noexcept\n"
 "\t{\n"
 "\t\tconst auto     tmp = _mm_movehl_ps (x, x);\n"
 "\t\ta0 = _mm_cvtss_f32 (x);\n"
@@ -1695,7 +1695,7 @@ std::string	SplitMultibandSimdGen::generate_include ()
 "\ttemplate <int SHIFT> class Shift\n"
 "\t{\n"
 "\tpublic:\n"
-"\t\tstatic float extract (VectF32 a) noexcept\n"
+"\t\tstatic float extract (Vf32 a) noexcept\n"
 "\t\t{\n"
 "\t\t\tswitch (SHIFT & 3)\n"
 "\t\t\t{\n"
@@ -1711,36 +1711,43 @@ std::string	SplitMultibandSimdGen::generate_include ()
 "}\n"
 "\n"
 "#if defined (_MSC_VER)\n"
-"fstb::ToolsSimd::VectF32 &\toperator += (fstb::ToolsSimd::VectF32 &lhs, const fstb::ToolsSimd::VectF32 &rhs) noexcept\n"
+"fstb::Vf32 &\toperator += (fstb::Vf32 &lhs, const fstb::Vf32 &rhs) noexcept\n"
 "{\n"
 "\tlhs = _mm_add_ps (lhs, rhs);\n"
 "\treturn lhs;\n"
 "}\n"
-"fstb::ToolsSimd::VectF32 &\toperator -= (fstb::ToolsSimd::VectF32 &lhs, const fstb::ToolsSimd::VectF32 &rhs) noexcept\n"
+"fstb::Vf32 &\toperator -= (fstb::Vf32 &lhs, const fstb::Vf32 &rhs) noexcept\n"
 "{\n"
 "\tlhs = _mm_sub_ps (lhs, rhs);\n"
 "\treturn lhs;\n"
 "}\n"
-"fstb::ToolsSimd::VectF32 &\toperator *= (fstb::ToolsSimd::VectF32 &lhs, const fstb::ToolsSimd::VectF32 &rhs) noexcept\n"
+"fstb::Vf32 &\toperator *= (fstb::Vf32 &lhs, const fstb::Vf32 &rhs) noexcept\n"
 "{\n"
 "\tlhs = _mm_mul_ps (lhs, rhs);\n"
 "\treturn lhs;\n"
 "}\n"
-"fstb::ToolsSimd::VectF32\toperator + (fstb::ToolsSimd::VectF32 lhs, const fstb::ToolsSimd::VectF32 &rhs) noexcept\n"
+"fstb::Vf32\toperator + (fstb::Vf32 lhs, const fstb::Vf32 &rhs) noexcept\n"
 "{\n"
 "\treturn _mm_add_ps (lhs, rhs);\n"
 "}\n"
-"fstb::ToolsSimd::VectF32\toperator - (fstb::ToolsSimd::VectF32 lhs, const fstb::ToolsSimd::VectF32 &rhs) noexcept\n"
+"fstb::Vf32\toperator - (fstb::Vf32 lhs, const fstb::Vf32 &rhs) noexcept\n"
 "{\n"
 "\treturn _mm_sub_ps (lhs, rhs);\n"
 "}\n"
-"fstb::ToolsSimd::VectF32\toperator * (fstb::ToolsSimd::VectF32 lhs, const fstb::ToolsSimd::VectF32 &rhs) noexcept\n"
+"fstb::Vf32\toperator * (fstb::Vf32 lhs, const fstb::Vf32 &rhs) noexcept\n"
 "{\n"
 "\treturn _mm_mul_ps (lhs, rhs);\n"
 "}\n"
 "#endif\n"
 "\n";
 #endif
+}
+
+
+
+std::string	SplitMultibandSimdGen::generate_inline ()
+{
+	return "#include \"fstb/ToolsSimd.h\"\n\n";
 }
 
 
@@ -1779,12 +1786,12 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 	bool           x2z_valid_flag = false;
 
 	const std::string fnc_name_arg =
-		"process_sample (fstb::ToolsSimd::VectF32 x) noexcept";
+		"process_sample (fstb::Vf32 x) noexcept";
 
-	pub_decl += "\t\tinline fstb::ToolsSimd::VectF32 " + fnc_name_arg + ";\n";
+	pub_decl += "\t\tinline fstb::Vf32 " + fnc_name_arg + ";\n";
 
 	m_code +=
-		  "fstb::ToolsSimd::VectF32\t" + class_scope + spec_list._classname
+		  "fstb::Vf32\t" + class_scope + spec_list._classname
 		+ "::" + fnc_name_arg + "\n{\n";
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -1850,8 +1857,8 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 	}
 	if ((sel_p2_flag || skip_1p_flag || bf_flag) && ! save_flag)
 	{
-		m_code += "\tfstb::ToolsSimd::VectF32 mask;\n";
-		m_code += "\tfstb::ToolsSimd::VectF32 x_save;\n";
+		m_code += "\tfstb::Vf32 mask;\n";
+		m_code += "\tfstb::Vf32 x_save;\n";
 		save_flag = true;
 	}
 
@@ -2093,7 +2100,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 	if (nbr_ap1 > 0)
 	{
 		// Variables
-		prv_decl += "\t\tfstb::ToolsSimd::VectF32 " + use_arr_elt (n_ap1, nbr_ap1) + " {};\n";
+		prv_decl += "\t\tfstb::Vf32 " + use_arr_elt (n_ap1, nbr_ap1) + " {};\n";
 
 		// Setters
 		pub_decl += "\t\tvoid set_apf_1p (int idx, int lane, float b0) noexcept;\n";
@@ -2107,7 +2114,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 	{
 		// Variables
 		const auto     n_ap2 = use_arr_elt (use_arr_elt (n_ap2_arr, nbr_ap2), 2);
-		prv_decl += "\t\tfstb::ToolsSimd::VectF32 " + n_ap2 + " {};\n";
+		prv_decl += "\t\tfstb::Vf32 " + n_ap2 + " {};\n";
 
 		// Setters
 		const auto     n_ap2_s = n_ap2_arr + " [idx]";
@@ -2125,14 +2132,14 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 		"{\n";
 	if (z1 > 0)
 	{
-		prv_decl += "\t\tfstb::ToolsSimd::VectF32 " + use_arr_elt (n_z1 , z1) + " {};\n";
+		prv_decl += "\t\tfstb::Vf32 " + use_arr_elt (n_z1 , z1) + " {};\n";
 		clbuf    +=
 			  "\tstd::fill (std::begin (" + n_z1 + "), std::end ("
 			+ n_z1 + "), fstb::ToolsSimd::set_f32_zero ());\n";
 	}
 	if (z2 > 0)
 	{
-		prv_decl += "\t\tfstb::ToolsSimd::VectF32 " + use_arr_elt (n_z2 , z2) + " {};\n";
+		prv_decl += "\t\tfstb::Vf32 " + use_arr_elt (n_z2 , z2) + " {};\n";
 		clbuf    +=
 			  "\tstd::fill (std::begin (" + n_z2 + "), std::end ("
 			+ n_z2 + "), fstb::ToolsSimd::set_f32_zero ());\n";

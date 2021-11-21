@@ -24,7 +24,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -39,8 +39,6 @@ class Poly
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	using TS = ToolsSimd;
 
 	template <class T>
 	fstb_FORCEINLINE static constexpr T
@@ -95,8 +93,8 @@ private:
 	template <class T>
 	fstb_FORCEINLINE static constexpr T
 	               fma (T x, T a, T b) noexcept;
-	fstb_FORCEINLINE static TS::VectF32
-	               fma (TS::VectF32 x, TS::VectF32 a, TS::VectF32 b) noexcept;
+	fstb_FORCEINLINE static Vf32
+	               fma (Vf32 x, Vf32 a, Vf32 b) noexcept;
 
 
 

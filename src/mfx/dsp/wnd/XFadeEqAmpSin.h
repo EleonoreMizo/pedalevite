@@ -23,7 +23,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 #include <array>
 
@@ -49,8 +49,8 @@ public:
 	static inline std::array <T, 2>
 	               compute_gain (T x) noexcept;
 
-	static inline std::array <fstb::ToolsSimd::VectF32, 2>
-	               compute_gain (fstb::ToolsSimd::VectF32 x) noexcept;
+	static inline std::array <fstb::Vf32, 2>
+	               compute_gain (fstb::Vf32 x) noexcept;
 
 
 

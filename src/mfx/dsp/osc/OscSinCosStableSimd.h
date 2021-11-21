@@ -35,7 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/DataAlign.h"
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -72,9 +72,9 @@ public:
 	template <class VD = fstb::DataAlign <false> >
 	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_spl) noexcept;
 
-	inline fstb::ToolsSimd::VectF32
+	inline fstb::Vf32
 	               get_cos () const noexcept;
-	inline fstb::ToolsSimd::VectF32
+	inline fstb::Vf32
 	               get_sin () const noexcept;
 
 	void           clear_buffers () noexcept;
@@ -93,18 +93,18 @@ protected:
 private:
 
 	fstb_FORCEINLINE void
-	               step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta) noexcept;
+	               step (fstb::Vf32 &pos_cos, fstb::Vf32 &pos_sin, fstb::Vf32 alpha, fstb::Vf32 beta) noexcept;
 
 	static inline void
-	               compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad) noexcept;
+	               compute_step (fstb::Vf32 &alpha, fstb::Vf32 &beta, float angle_rad) noexcept;
 
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _pos_cos;
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _pos_sin;
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _alpha;
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _beta;
 
 

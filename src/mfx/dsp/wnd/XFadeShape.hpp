@@ -127,8 +127,8 @@ void	XFadeShape <SHP>::make_shape ()
 #if 1
 
 		const float    ph   = 0.5f / _fade_ratio;
-		fstb::ToolsSimd::VectF32   x;
-		fstb::ToolsSimd::VectF32   step;
+		fstb::Vf32     x;
+		fstb::Vf32     step;
 		fstb::ToolsSimd::start_lerp (x, step, 0.5f - ph, 0.5f + ph, len);
 		const auto     mi   = fstb::ToolsSimd::set_f32_zero ();
 		const auto     ma   = fstb::ToolsSimd::set1_f32 (1);

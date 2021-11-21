@@ -27,7 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
+#include "fstb/Vs32.h"
 
 #include <type_traits>
 
@@ -50,14 +51,14 @@ public:
 
 	static inline bool
 		            check_ptr (const void *ptr) noexcept;
-	static inline ToolsSimd::VectF32
+	static inline Vf32
 		            load_f32 (const void *ptr) noexcept;
-	static inline ToolsSimd::VectS32
+	static inline Vs32
 		            load_s32 (const void *ptr) noexcept;
 	static inline void
-		            store_f32 (void *ptr, ToolsSimd::VectF32 v) noexcept;
+		            store_f32 (void *ptr, Vf32 v) noexcept;
 	static inline void
-		            store_s32 (void *ptr, ToolsSimd::VectS32 v) noexcept;
+		            store_s32 (void *ptr, Vs32 v) noexcept;
 
 
 

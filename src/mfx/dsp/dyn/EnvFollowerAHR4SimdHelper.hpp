@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 
 
 namespace mfx
@@ -96,7 +98,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::set_rls_coef (int env, float c
 
 // in must contain only positive values!
 template <class VD, class VS, class VP, int ORD>
-fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fstb::ToolsSimd::VectF32 &in) noexcept
+fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fstb::Vf32 &in) noexcept
 {
 	assert (test_ge_0 (in));
 
@@ -150,7 +152,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sa
 
 
 #define mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_LOAD( fltn) \
-	fstb::ToolsSimd::VectF32   state##fltn; \
+	fstb::Vf32      state##fltn; \
 	if (fltn - 1 < ORD) \
 	{ \
 		state##fltn = V128Par::load_f32 (_state [fltn - 1]); \
@@ -182,7 +184,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sa
 // Input data must contain only positive values!
 // Can work in-place.
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept
+void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::Vf32 out_ptr [], const fstb::Vf32 in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -264,7 +266,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd
 
 // Input data must contain only positive values!
 template <class VD, class VS, class VP, int ORD>
-fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept
+fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fstb::Vf32 in_ptr [], int nbr_spl) noexcept
 {
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
@@ -434,7 +436,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::clear_buffers () noexcept
 
 
 template <class VD, class VS, class VP, int ORD>
-bool	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept
+bool	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::test_ge_0 (const fstb::Vf32 &in) noexcept
 {
 	return (
 		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0

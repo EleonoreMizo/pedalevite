@@ -4,6 +4,7 @@
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
 #include "fstb/fnc.h"
+#include "fstb/Vf32.h"
 #include "hiir/Upsampler2xFpu.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/doc/SerRText.h"
@@ -773,8 +774,8 @@ int	test_transients ()
 			order
 		> EnvHelper;
 		typedef std::vector <
-			fstb::ToolsSimd::VectF32,
-			fstb::AllocAlign <fstb::ToolsSimd::VectF32, 16>
+			fstb::Vf32,
+			fstb::AllocAlign <fstb::Vf32, 16>
 		> BufAlign;
 
 		const size_t   len     = chn_arr [0].size ();

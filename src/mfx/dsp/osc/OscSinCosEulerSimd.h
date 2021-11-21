@@ -29,7 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/def.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -67,10 +68,8 @@ public:
 	void           set_step (float step) noexcept;
 
 	void           step () noexcept;
-	fstb::ToolsSimd::VectF32
-	               get_cos () const noexcept;
-	fstb::ToolsSimd::VectF32
-	               get_sin () const noexcept;
+	fstb::Vf32     get_cos () const noexcept;
+	fstb::Vf32     get_sin () const noexcept;
 	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec) noexcept;
 	void           correct () noexcept;
 	void           correct_fast () noexcept;
@@ -89,9 +88,9 @@ private:
 
 	void           resync (float c0, float s0) noexcept;
 
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _pos_cos;
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _pos_sin;
 	float          _step_cosn;
 	float          _step_sinn;

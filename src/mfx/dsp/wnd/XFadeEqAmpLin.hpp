@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 #include <cassert>
 
 
@@ -50,14 +52,14 @@ std::array <T, 2>	XFadeEqAmpLin::compute_gain (T x) noexcept
 
 
 
-std::array <fstb::ToolsSimd::VectF32, 2>	XFadeEqAmpLin::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept
+std::array <fstb::Vf32, 2>	XFadeEqAmpLin::compute_gain (fstb::Vf32 x) noexcept
 {
 	using TS = fstb::ToolsSimd;
 
 	assert (! TS::or_h (TS::cmp_lt0_f32 (x)));
 	assert (! TS::or_h (TS::cmp_gt_f32 (x, TS::set1_f32 (1))));
 
-	return std::array <TS::VectF32, 2> { TS::set1_f32 (1) - x, x };
+	return std::array <fstb::Vf32, 2> { TS::set1_f32 (1) - x, x };
 }
 
 

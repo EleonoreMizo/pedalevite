@@ -30,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/iir/Biquad4Simd.h"
 
 
@@ -90,8 +89,8 @@ public:
 	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const noexcept;
 
 	inline bool    is_ramping () const noexcept;
-	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
-	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
+	void           process_block_parallel (fstb::Vf32 out_ptr [], const fstb::Vf32 in_ptr [], int nbr_spl) noexcept;
+	void           process_block_parallel (fstb::Vf32 out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
@@ -116,23 +115,23 @@ private:
 
 	BiqSimd        _biq;
 
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _step_b [3];   // Step for the current ramp
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _step_a [3];
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _target_b [3]; // Target Z-equation for the current ramp.
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _target_a [3];
 
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _prog_b [3];   // Target Z-equation for the subsequent ramp.
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _prog_a [3];
 
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _tmp_b [3];
-	alignas (16) VectFlt4
+	alignas (fstb_SIMD128_ALIGN) VectFlt4
 	               _tmp_a [3];
 
 	int            _nbr_rem_spl = 0;     // Number of remaining samples for the current ramp. 0 = no ramping.

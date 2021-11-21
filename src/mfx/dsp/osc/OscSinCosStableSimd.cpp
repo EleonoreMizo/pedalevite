@@ -58,10 +58,10 @@ OscSinCosStableSimd::OscSinCosStableSimd () noexcept
 
 void	OscSinCosStableSimd::set_step (float angle_rad) noexcept
 {
-	fstb::ToolsSimd::VectF32   alpha;
-	fstb::ToolsSimd::VectF32   beta;
-	fstb::ToolsSimd::VectF32   alpha4;
-	fstb::ToolsSimd::VectF32   beta4;
+	fstb::Vf32     alpha;
+	fstb::Vf32     beta;
+	fstb::Vf32     alpha4;
+	fstb::Vf32     beta4;
 	compute_step (alpha , beta , angle_rad             );
 	compute_step (alpha4, beta4, angle_rad * _nbr_units);
 	fstb::ToolsSimd::store_f32 (&_alpha, alpha4);

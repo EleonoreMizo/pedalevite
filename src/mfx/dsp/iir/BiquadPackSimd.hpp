@@ -688,7 +688,7 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 			{
 				Pack4 &        pack = _pack_list [pack_index];
 				pack.process_block_parallel (
-					reinterpret_cast <fstb::ToolsSimd::VectF32 *> (&_tmp_buf [0]),
+					reinterpret_cast <fstb::Vf32 *> (&_tmp_buf [0]),
 					in_ptr_arr [0] + block_pos,
 					block_len
 				);
@@ -729,8 +729,8 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 			{
 				Pack4 &        pack = _pack_list [pack_index];
 				pack.process_block_parallel (
-					reinterpret_cast <fstb::ToolsSimd::VectF32 *> (&_tmp_buf [0]),
-					reinterpret_cast <fstb::ToolsSimd::VectF32 *> (&_tmp_buf [0]),
+					reinterpret_cast <fstb::Vf32 *> (&_tmp_buf [0]),
+					reinterpret_cast <fstb::Vf32 *> (&_tmp_buf [0]),
 					block_len
 				);
 

@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -66,13 +66,10 @@ public:
 
 	void           clear_buffers () noexcept;
 	void           process_block (const float * const data_ptr [4], int nbr_spl) noexcept;
-	void           process_sample (fstb::ToolsSimd::VectF32 x) noexcept;
-	fstb::ToolsSimd::VectF32
-	               get_peak () const noexcept;
-	fstb::ToolsSimd::VectF32
-	               get_peak_hold () const noexcept;
-	fstb::ToolsSimd::VectF32
-	               get_rms () const noexcept;
+	void           process_sample (fstb::Vf32 x) noexcept;
+	fstb::Vf32     get_peak () const noexcept;
+	fstb::Vf32     get_peak_hold () const noexcept;
+	fstb::Vf32     get_rms () const noexcept;
 	void           clear_peak () noexcept;
 
 
@@ -88,21 +85,21 @@ protected:
 private:
 
 	void           update_times () noexcept;
-	inline void    process_sample_peak (fstb::ToolsSimd::VectF32 x_a, fstb::ToolsSimd::VectF32 &peak_max, fstb::ToolsSimd::VectF32 &peak_hold, fstb::ToolsSimd::VectF32 &hold_cnt, float coef_r_flt, int step_int) const noexcept;
-	inline void    process_sample_rms (fstb::ToolsSimd::VectF32 x, fstb::ToolsSimd::VectF32 &rms_sq) const noexcept;
+	inline void    process_sample_peak (fstb::Vf32 x_a, fstb::Vf32 &peak_max, fstb::Vf32 &peak_hold, fstb::Vf32 &hold_cnt, float coef_r_flt, int step_int) const noexcept;
+	inline void    process_sample_rms (fstb::Vf32 x, fstb::Vf32 &rms_sq) const noexcept;
 
 	double         _hold_time_s;     // Hold time, in s
 	double         _attack_time_s;   // Attack time, in s
 	double         _release_time_s;  // Release time, in s
 
 	double         _sample_freq;     // Hz
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (16) fstb::Vf32
 	               _peak_max;        // Maximum peak value
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (16) fstb::Vf32
 	               _peak_hold;       // Hold value for peak
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (16) fstb::Vf32
 	               _hold_counter;    // Counter for holding time (samples). Set to the maximum at a peak, and decreased. When reaching 0, the peak is set to the instantaneous value.
-	alignas (16) fstb::ToolsSimd::VectF32
+	alignas (16) fstb::Vf32
                   _rms_sq;          // RMS value with an envelope, squared
 
 	int            _hold_time;       // Samples

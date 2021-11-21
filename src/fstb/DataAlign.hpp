@@ -22,6 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
 
 
 namespace fstb
@@ -40,25 +41,25 @@ bool	DataAlign <A>::check_ptr (const void *ptr) noexcept
 }
 
 template <bool A>
-ToolsSimd::VectF32	DataAlign <A>::load_f32 (const void *ptr) noexcept
+Vf32	DataAlign <A>::load_f32 (const void *ptr) noexcept
 {
 	return ToolsSimd::load_f32 (ptr);
 }
 
 template <bool A>
-ToolsSimd::VectS32	DataAlign <A>::load_s32 (const void *ptr) noexcept
+Vs32	DataAlign <A>::load_s32 (const void *ptr) noexcept
 {
 	return ToolsSimd::load_s32 (ptr);
 }
 
 template <bool A>
-void	DataAlign <A>::store_f32 (void *ptr, ToolsSimd::VectF32 v) noexcept
+void	DataAlign <A>::store_f32 (void *ptr, Vf32 v) noexcept
 {
 	ToolsSimd::store_f32 (ptr, v);
 }
 
 template <bool A>
-void	DataAlign <A>::store_s32 (void *ptr, ToolsSimd::VectS32 v) noexcept
+void	DataAlign <A>::store_s32 (void *ptr, Vs32 v) noexcept
 {
 	ToolsSimd::store_s32 (ptr, v);
 }
@@ -72,25 +73,25 @@ inline bool	DataAlign <false>::check_ptr (const void *ptr) noexcept
 }
 
 template <>
-inline ToolsSimd::VectF32	DataAlign <false>::load_f32 (const void *ptr) noexcept
+inline Vf32	DataAlign <false>::load_f32 (const void *ptr) noexcept
 {
 	return ToolsSimd::loadu_f32 (ptr);
 }
 
 template <>
-inline ToolsSimd::VectS32	DataAlign <false>::load_s32 (const void *ptr) noexcept
+inline Vs32	DataAlign <false>::load_s32 (const void *ptr) noexcept
 {
 	return ToolsSimd::loadu_s32 (ptr);
 }
 
 template <>
-inline void	DataAlign <false>::store_f32 (void *ptr, ToolsSimd::VectF32 v) noexcept
+inline void	DataAlign <false>::store_f32 (void *ptr, Vf32 v) noexcept
 {
 	ToolsSimd::storeu_f32 (ptr, v);
 }
 
 template <>
-inline void	DataAlign <false>::store_s32 (void *ptr, ToolsSimd::VectS32 v) noexcept
+inline void	DataAlign <false>::store_s32 (void *ptr, Vs32 v) noexcept
 {
 	ToolsSimd::storeu_s32 (ptr, v);
 }

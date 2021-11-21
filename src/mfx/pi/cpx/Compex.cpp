@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/Approx.h"
 #include "fstb/DataAlign.h"
 #include "fstb/fnc.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/pi/cpx/Compex.h"
@@ -220,13 +221,13 @@ constexpr float	Compex::AddProc <2>::process_scalar (float in)
 
 
 template <int NC>
-fstb::ToolsSimd::VectF32	Compex::AddProc <NC>::process_vect (const fstb::ToolsSimd::VectF32 &in)
+fstb::Vf32	Compex::AddProc <NC>::process_vect (const fstb::Vf32 &in)
 {
 	return (in);
 }
 
 template <>
-fstb::ToolsSimd::VectF32	Compex::AddProc <2>::process_vect (const fstb::ToolsSimd::VectF32 &in)
+fstb::Vf32	Compex::AddProc <2>::process_vect (const fstb::Vf32 &in)
 {
 	return (in * fstb::ToolsSimd::set1_f32 (0.5f));
 }
@@ -452,8 +453,7 @@ void	Compex::conv_env_to_log (int nbr_spl)
 	int            pos       = 0;
 	while (pos < block_bnd)
 	{
-		fstb::ToolsSimd::VectF32   val =
-			fstb::ToolsSimd::load_f32 (&_buf_tmp [pos]);
+		auto           val = fstb::ToolsSimd::load_f32 (&_buf_tmp [pos]);
 		val = fstb::ToolsSimd::log2_approx (val);
 		fstb::ToolsSimd::store_f32 (&_buf_tmp [pos], val);
 

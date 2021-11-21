@@ -12,13 +12,13 @@ Template parameters:
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
 	static bool VD::check_ptr (const void *ptr) noexcept;
-	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr) noexcept;
-	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val) noexcept;
+	static fstb::Vf32 VD::load_f32 (const void *ptr) noexcept;
+	static void VD::store_f32 (void *ptr, const fstb::Vf32 val) noexcept;
 
 - VS: same as VD, but for reading only (source access)
 	Requires:
 	static bool VS::check_ptr (const void *ptr) noexcept;
-	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr) noexcept;
+	static fstb::Vf32 VS::load_f32 (const void *ptr) noexcept;
 
 - VP: same as VD, but for parametering and internal data.
 	Requires: same as VD.
@@ -50,7 +50,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -87,11 +87,11 @@ public:
 	void           set_atk_coef (int env, float coef) noexcept;
 	void           set_rls_coef (int env, float coef) noexcept;
 
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               process_sample (const fstb::ToolsSimd::VectF32 &in) noexcept;
-	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
-	fstb::ToolsSimd::VectF32
-	               analyse_block (const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl) noexcept;
+	fstb_FORCEINLINE fstb::Vf32
+	               process_sample (const fstb::Vf32 &in) noexcept;
+	void           process_block (fstb::Vf32 out_ptr [], const fstb::Vf32 in_ptr [], int nbr_spl) noexcept;
+	fstb::Vf32
+	               analyse_block (const fstb::Vf32 in_ptr [], int nbr_spl) noexcept;
 	void           process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl) noexcept;
 
 	void           clear_buffers () noexcept;
@@ -111,13 +111,13 @@ private:
 	typedef	float	VectFloat4 [4];
 
 	fstb_FORCEINLINE static bool
-	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in) noexcept;
+	               test_ge_0 (const fstb::Vf32 &in) noexcept;
 
-	alignas (16) VectFloat4
+	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _state [ORD];
-	alignas (16) VectFloat4
+	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _coef_atk;
-	alignas (16) VectFloat4
+	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _coef_rls;
 
 

@@ -742,8 +742,8 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 			&puls_arr [f_idx], ns
 		);
 
-		fstb::ToolsSimd::VectF32   c1;
-		fstb::ToolsSimd::VectF32   s1;
+		fstb::Vf32     c1;
+		fstb::Vf32     s1;
 		fstb::Approx::cos_sin_rbj (c1, s1, w);
 
 		const auto     h2_nc = (b0  + b2) * c1 + b1;

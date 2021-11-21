@@ -6,7 +6,7 @@
 Substitute for Biquad4Simd when no SIMD instruction set is available and
 DATA amount is low.
 
-Functions using ToolsSimd::VectF32 types are not implemented.
+Functions using fstb::Vf32 types are not implemented.
 
 There is no latency for serial processing, so the _immediate and _latency map
 to the same functions.

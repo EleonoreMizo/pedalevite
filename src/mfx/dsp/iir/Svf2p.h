@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -96,8 +96,8 @@ public:
 	template <typename TE>
 	static void    conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const TE b [3], const TE a [3], double freq, double fs) noexcept;
 
-	static void    approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 &s2, fstb::ToolsSimd::VectF32 f0_fs) noexcept;
-	static void    conv_poles (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 f0_fs, fstb::ToolsSimd::VectF32 k) noexcept;
+	static void    approx_s1s2 (fstb::Vf32 &s1, fstb::Vf32 &s2, fstb::Vf32 f0_fs) noexcept;
+	static void    conv_poles (fstb::Vf32 &g0, fstb::Vf32 &g1, fstb::Vf32 &g2, fstb::Vf32 f0_fs, fstb::Vf32 k) noexcept;
 
 
 

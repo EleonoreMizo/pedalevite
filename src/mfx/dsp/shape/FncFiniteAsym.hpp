@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "fstb/ToolsSimd.h"
 
 
 
@@ -75,7 +76,7 @@ float	FncFiniteAsym <BL, BU, GF, RES>::operator () (float x) const noexcept
 
 
 template <int BL, int BU, class GF, int RES>
-fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::ToolsSimd::VectF32 x) const noexcept
+fstb::Vf32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::Vf32 x) const noexcept
 {
 	assert (_init_flag);
 

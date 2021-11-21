@@ -13,13 +13,13 @@ Template parameters:
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
 	static bool VD::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectS32 VD::load_s32 (const void *ptr);
-	static void VD::store_s32 (void *ptr, const fstb::ToolsSimd::VectS32 val);
+	static fstb::Vs32 VD::load_s32 (const void *ptr);
+	static void VD::store_s32 (void *ptr, const fstb::Vs32 val);
 
 - VS: same as VD, but for reading only (source access)
 	Requires:
 	static bool VS::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectS32 VS::load_s32 (const void *ptr);
+	static fstb::Vs32 VS::load_s32 (const void *ptr);
 
 --- Legal stuff ---
 

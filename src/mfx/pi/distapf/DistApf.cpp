@@ -202,8 +202,8 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 		nbr_spl_proc *= _ovrspl_ratio;
 	}
 
-	fstb::ToolsSimd::VectF32   gain_beg;
-	fstb::ToolsSimd::VectF32   gain_step;
+	fstb::Vf32       gain_beg;
+	fstb::Vf32       gain_step;
 	fstb::ToolsSimd::start_lerp (
 		gain_beg, gain_step, _gain_old, _gain_cur, nbr_spl_proc
 	);

@@ -37,7 +37,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 #include <array>
 
@@ -112,8 +112,8 @@ private:
 
 	static void    update_internal_variables (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso) noexcept;
 	static void    update_internal_variables_fast (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso) noexcept;
-	static fstb::ToolsSimd::VectF32
-	               shape_feedback (fstb::ToolsSimd::VectF32 x) noexcept;
+	static fstb::Vf32
+	               shape_feedback (fstb::Vf32 x) noexcept;
 
 	// Internal variables, SSE code. Do not change the order!
 	std::array <float, _nbr_stages>

@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/Approx.h"
 #include "fstb/fnc.h"
+#include "fstb/ToolsSimd.h"
 
 #include <cassert>
 
@@ -113,7 +114,7 @@ float	CompexGainFnc::compute_gain_l2 (float env_2l2)
 // An arbitrary negative value corresponds to zero.
 // Returns a linear gain
 template <bool store_flag>
-fstb::ToolsSimd::VectF32	CompexGainFnc::compute_gain (const fstb::ToolsSimd::VectF32 env_2l2)
+fstb::Vf32	CompexGainFnc::compute_gain (const fstb::Vf32 env_2l2)
 {
 	// Shifts volume in order to have the threshold at 0
 	const auto     half = fstb::ToolsSimd::set1_f32 (0.5f);

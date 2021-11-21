@@ -37,6 +37,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/View.h"
 
 #include <cassert>
+#include <cmath>
 
 
 

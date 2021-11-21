@@ -34,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
 #include "fstb/SingleObj.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 #include "mfx/dsp/dyn/EnvFollowerARHelper.h"
 #include "mfx/dsp/dyn/SCPower.h"
 #include "mfx/pi/cpx/CompexDesc.h"
@@ -136,8 +136,8 @@ private:
 	public:
 		static fstb_FORCEINLINE constexpr float
 		               process_scalar (float in);
-		static fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-		               process_vect (const fstb::ToolsSimd::VectF32 &in);
+		static fstb_FORCEINLINE fstb::Vf32
+		               process_vect (const fstb::Vf32 &in);
 	};
 
 	void           clear_buffers ();

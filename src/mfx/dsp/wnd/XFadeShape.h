@@ -7,7 +7,7 @@ Template parameters:
 
 - OP: operation class. Requires:
 	static std::array <float, 2> OP::compute_gain (float x) noexcept;
-	static std::array <fstb::ToolsSimd::VectF32, 2> OP::compute_gain (fstb::ToolsSimd::VectF32 x) noexcept;
+	static std::array <fstb::Vf32, 2> OP::compute_gain (fstb::Vf32 x) noexcept;
 
 --- Legal stuff ---
 

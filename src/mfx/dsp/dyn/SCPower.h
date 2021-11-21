@@ -9,7 +9,7 @@ Template parameters:
 	AP::AP();
 	AP::~AP();
 	float AP::process_scalar (float in);
-	fstb::ToolsSimd::VectF32 AP::process_vect (const fstb::ToolsSimd::VectF32 &in);
+	fstb::Vf32 AP::process_vect (const fstb::Vf32 &in);
 
 --- Legal stuff ---
 
@@ -35,7 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 
 
@@ -53,8 +53,8 @@ class SPower_Bypass
 public:
 	static inline constexpr float
 	               process_scalar (float in) noexcept { return in; }
-	static inline constexpr fstb::ToolsSimd::VectF32
-	               process_vect (fstb::ToolsSimd::VectF32 in) noexcept { return in; }
+	static inline constexpr fstb::Vf32
+	               process_vect (fstb::Vf32 in) noexcept { return in; }
 };
 
 
