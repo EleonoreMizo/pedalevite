@@ -1639,10 +1639,10 @@ std::string	SplitMultibandSimdGen::generate_include ()
 	return
 "#pragma once\n"
 "\n"
-"#include \"fstb/Vf32.h\"\n";
+"#include \"fstb/Vf32.h\"\n"
 "#include <algorithm>\n"
 "#include <iterator>\n"
-"#include <cstddef>\n\n";
+"#include <cstddef>\n\n"
 #if 0
 // Stand-alone x86/SSE2 version.
 // Mainly for checking the result with Complier Explorer.
@@ -1739,8 +1739,9 @@ std::string	SplitMultibandSimdGen::generate_include ()
 "\treturn _mm_mul_ps (lhs, rhs);\n"
 "}\n"
 "#endif\n"
-"\n";
+"\n"
 #endif
+	;
 }
 
 
