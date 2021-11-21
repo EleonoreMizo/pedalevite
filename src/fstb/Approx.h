@@ -210,26 +210,26 @@ private:
 	static fstb_FORCEINLINE float
 	               log2_base (float val, P poly) noexcept;
 	template <typename T>
-	static constexpr fstb_FORCEINLINE T
+	static fstb_FORCEINLINE T
 	               log2_poly2 (T x) noexcept;
 	template <typename T>
-	static constexpr fstb_FORCEINLINE T
+	static fstb_FORCEINLINE T
 	               log2_poly5 (T x) noexcept;
 	template <typename T>
-	static constexpr fstb_FORCEINLINE T
+	static fstb_FORCEINLINE T
 	               log2_poly7 (T x) noexcept;
 
 	template <typename P>
 	static fstb_FORCEINLINE float
 	               exp2_base (float val, P poly) noexcept;
 	template <typename T>
-	static constexpr fstb_FORCEINLINE T
+	static fstb_FORCEINLINE T
 	               exp2_poly2 (T x) noexcept;
 	template <typename T>
-	static constexpr fstb_FORCEINLINE T
+	static fstb_FORCEINLINE T
 	               exp2_poly5 (T x) noexcept;
 	template <typename T>
-	static constexpr fstb_FORCEINLINE T
+	static fstb_FORCEINLINE T
 	               exp2_poly7 (T x) noexcept;
 
 	template <typename T>

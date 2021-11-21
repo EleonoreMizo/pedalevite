@@ -1143,7 +1143,7 @@ float	Approx::log2_base (float val, P poly) noexcept
 
 
 template <typename T>
-constexpr T	Approx::log2_poly2 (T x) noexcept
+T	Approx::log2_poly2 (T x) noexcept
 {
 	constexpr auto k = T (0.5);
 	constexpr auto a = (k - 1  ) / (k + 1);
@@ -1166,7 +1166,7 @@ FindFit[Table[
   x]
 */
 template <typename T>
-constexpr T	Approx::log2_poly5 (T x) noexcept
+T	Approx::log2_poly5 (T x) noexcept
 {
 	return Poly::estrin (x,
 		T (-2.4395118595618),
@@ -1192,7 +1192,7 @@ FindFit[Table[
   c1, c2, c3, c4, c5, c6, c7}, x]
 */
 template <typename T>
-constexpr T	Approx::log2_poly7 (T x) noexcept
+T	Approx::log2_poly7 (T x) noexcept
 {
 	return Poly::estrin (x,
 		T (-2.88240401363533),
@@ -1235,7 +1235,7 @@ float	Approx::exp2_base (float val, P poly) noexcept
 
 // Quadratic approximation of 2^x in [0 ; 1]
 template <typename T>
-constexpr T	Approx::exp2_poly2 (T x) noexcept
+T	Approx::exp2_poly2 (T x) noexcept
 {
 	return Poly::horner (x, T (1), T (2.0 / 3.0), T (1.0 / 3.0));
 }
@@ -1243,7 +1243,7 @@ constexpr T	Approx::exp2_poly2 (T x) noexcept
 // Coefficients found by Andrew Simper
 // https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
 template <typename T>
-constexpr T	Approx::exp2_poly5 (T x) noexcept
+T	Approx::exp2_poly5 (T x) noexcept
 {
 	return Poly::estrin (x,
 		T (1               ),
@@ -1257,7 +1257,7 @@ constexpr T	Approx::exp2_poly5 (T x) noexcept
 
 // Coefficients found by Andrew Simper
 template <typename T>
-constexpr T	Approx::exp2_poly7 (T x) noexcept
+T	Approx::exp2_poly7 (T x) noexcept
 {
 	return Poly::estrin (x,
 		T (1                 ),
