@@ -72,10 +72,14 @@ public:
 	typedef float Scalar;
 
 	               Vf32 ()                        = default;
-   fstb_FORCEINLINE
+	fstb_FORCEINLINE
 	               Vf32 (Vf32Native a) noexcept : _x { a } {}
-   explicit fstb_FORCEINLINE
+	explicit fstb_FORCEINLINE
 	               Vf32 (Scalar a) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vf32 (double a) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vf32 (int a) noexcept;
 	               Vf32 (const Vf32 &other)       = default;
 	               Vf32 (Vf32 &&other)            = default;
 	               ~Vf32 ()                       = default;

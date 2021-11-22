@@ -49,6 +49,34 @@ Vf32::Vf32 (Scalar a) noexcept
 
 
 
+Vf32::Vf32 (double a) noexcept
+#if ! defined (fstb_HAS_SIMD)
+:	_x { Scalar (a), Scalar (a), Scalar (a), Scalar (a) }
+#elif fstb_ARCHI == fstb_ARCHI_X86
+:	_x { _mm_set1_ps (Scalar (a)) }
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+:	_x { vdupq_n_f32 (Scalar (a)) }
+#endif // fstb_ARCHI
+{
+	// Nothing
+}
+
+
+
+Vf32::Vf32 (int a) noexcept
+#if ! defined (fstb_HAS_SIMD)
+:	_x { Scalar (a), Scalar (a), Scalar (a), Scalar (a) }
+#elif fstb_ARCHI == fstb_ARCHI_X86
+:	_x { _mm_set1_ps (Scalar (a)) }
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+:	_x { vdupq_n_f32 (Scalar (a)) }
+#endif // fstb_ARCHI
+{
+	// Nothing
+}
+
+
+
 Vf32 &	Vf32::operator += (const Vf32Native &other) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
