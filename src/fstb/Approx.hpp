@@ -301,12 +301,10 @@ float	Approx::log2 (float val) noexcept
 	return log2_base (val, log2_poly2 <float>);
 }
 
-#if 0
 Vf32	Approx::log2 (Vf32 val) noexcept
 {
 	return ToolsSimd::log2_base (val, log2_poly2 <Vf32>);
 }
-#endif
 
 
 
@@ -317,12 +315,10 @@ float	Approx::log2_5th (float val) noexcept
 	return log2_base (val, log2_poly5 <float>);
 }
 
-#if 0
 Vf32	Approx::log2_5th (Vf32 val) noexcept
 {
 	return ToolsSimd::log2_base (val, log2_poly5 <Vf32>);
 }
-#endif
 
 
 
@@ -333,12 +329,10 @@ float	Approx::log2_7th (float val) noexcept
 	return log2_base (val, log2_poly7 <float>);
 }
 
-#if 0
 Vf32	Approx::log2_7th (Vf32 val) noexcept
 {
 	return ToolsSimd::log2_base (val, log2_poly7 <Vf32>);
 }
-#endif
 
 
 
@@ -385,12 +379,10 @@ float	Approx::exp2 (float val) noexcept
 	return exp2_base (val, exp2_poly2 <float>);
 }
 
-#if 0
 Vf32	Approx::exp2 (Vf32 val) noexcept
 {
 	return ToolsSimd::exp2_base (val, exp2_poly2 <Vf32>);
 }
-#endif
 
 
 
@@ -402,12 +394,10 @@ float	Approx::exp2_5th (float val) noexcept
 	return exp2_base (val, exp2_poly5 <float>);
 }
 
-#if 0
 Vf32	Approx::exp2_5th (Vf32 val) noexcept
 {
 	return ToolsSimd::exp2_base (val, exp2_poly5 <Vf32>);
 }
-#endif
 
 
 
@@ -419,12 +409,10 @@ float	Approx::exp2_7th (float val) noexcept
 	return exp2_base (val, exp2_poly7 <float>);
 }
 
-#if 0
 Vf32	Approx::exp2_7th (Vf32 val) noexcept
 {
 	return ToolsSimd::exp2_base (val, exp2_poly7 <Vf32>);
 }
-#endif
 
 
 
