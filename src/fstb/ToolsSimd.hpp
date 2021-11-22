@@ -859,7 +859,7 @@ Vf32	ToolsSimd::rcp_approx2 (Vf32 v) noexcept
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	__m128         r = _mm_rcp_ps (v);
-	r = r * _mm_set1_ps (2.f) - r * __m128 (v);
+	r = r * (_mm_set1_ps (2.f) - r * __m128 (v));
 	return r;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x4_t    r = vrecpeq_f32 (v);
