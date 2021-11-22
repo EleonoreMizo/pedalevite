@@ -233,11 +233,11 @@ void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
 
 #else // Reference implementation
 
-		comp_gain_beg = sqrt (
+		comp_gain_beg = sqrtf (
 			  std::min (vol_pre_beg_sq, lim_lvl_sq)
 			/ std::max (vol_post_beg_sq, nodiv0)
 		);
-		comp_gain_end = sqrt (
+		comp_gain_end = sqrtf (
 			  std::min (vol_pre_end_sq, lim_lvl_sq)
 			/ std::max (vol_post_end_sq, nodiv0)
 		);
