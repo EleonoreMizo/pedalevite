@@ -26,7 +26,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 
 #if ! defined (fstb_HAS_SIMD)
-	// Nothing here
+	#include <array>
 #elif (fstb_ARCHI == fstb_ARCHI_X86)
 	#include <emmintrin.h>
 #elif (fstb_ARCHI == fstb_ARCHI_ARM)
@@ -46,7 +46,7 @@ namespace fstb
 
 #if ! defined (fstb_HAS_SIMD)
 
-typedef uint32_t  Vu32Native [4];
+typedef std::array <uint32_t, 4> Vu32Native;
 
 #elif fstb_ARCHI == fstb_ARCHI_X86
 
@@ -109,7 +109,11 @@ protected:
 
 private:
 
+#if ! defined (fstb_HAS_SIMD)
+public:
+#endif
 	Vu32Native  _x;
+private:
 
 
 
