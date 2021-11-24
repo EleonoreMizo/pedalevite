@@ -341,7 +341,7 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 			tra_l2 = fstb::ToolsSimd::min_f32 (tra_l2, atk_max_l2);
 			trs_l2 = fstb::ToolsSimd::min_f32 (trs_l2, sus_max_l2);
 			const auto     mul_l2 = tra_l2 * atk_l2 + trs_l2 * sus_l2;
-			const auto     mul    = fstb::ToolsSimd::exp2_approx (mul_l2);
+			const auto     mul    = fstb::Approx::exp2 (mul_l2);
 			x *= mul;
 			fstb::ToolsSimd::store_f32 (&stio_ptr [pos], x);
 		}

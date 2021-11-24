@@ -47,25 +47,9 @@ std::array <T, 2>	XFadeEqAmpPoly3::compute_gain (T x) noexcept
 	assert (x >= T (0));
 	assert (x <= T (1));
 
-	const T        y = (x * x) * (T (3) - (x + x));
+	const auto     y = (x * x) * (T (3) - (x + x));
 
 	return std::array <T, 2> { T (1) - y, y };
-}
-
-
-
-std::array <fstb::Vf32, 2>	XFadeEqAmpPoly3::compute_gain (fstb::Vf32 x) noexcept
-{
-	using TS = fstb::ToolsSimd;
-
-	assert (! TS::or_h (TS::cmp_lt0_f32 (x)));
-	assert (! TS::or_h (TS::cmp_gt_f32 (x, TS::set1_f32 (1))));
-
-	const auto     c3  = TS::set1_f32 (3);
-	const auto     one = TS::set1_f32 (1);
-	const auto     y   = (x * x) * (c3 - (x + x));
-
-	return std::array <fstb::Vf32, 2> { one - y, y };
 }
 
 

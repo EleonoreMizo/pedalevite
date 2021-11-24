@@ -405,12 +405,12 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 		auto           b_i  = TS::loadu_f32 (&_buf_bins [img_idx]);
 
 		const auto     mag2 = b_r * b_r + b_i * b_i;
-		const auto     mgt0 = TS::cmp_gt_f32 (mag2, eps);
+		const auto     mgt0 = (mag2 > eps);
 		const auto     mult = TS::rsqrt_approx (mag2);
 		b_r *= mult;
 		b_i *= mult;
 		b_r  = TS::select (mgt0, b_r, one);
-		b_i  = TS::and_f32 (mgt0, b_i);
+		b_i &= mgt0;
 
 		TS::storeu_f32 (&slot._buf_freeze [bin_idx], b_r);
 		TS::storeu_f32 (&slot._buf_freeze [img_idx], b_i);
@@ -599,7 +599,7 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 			arg_n *= nbr_hops;
 			arg_n += phase_val_v;
 			arg_n += omega_v;
-			arg_n -= TS::round (arg_n);
+			arg_n -= arg_n.round ();
 
 			const auto     mag_gain = mag * gain_sc_v;
 			const auto     cs = fstb::Approx::cos_sin_nick_2pi (arg_n);

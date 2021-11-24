@@ -210,7 +210,7 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 				const auto     x = fstb::ToolsSimd::load_f32 (buf2_ptr + pos);
 				sum_v += x * x;
 			}
-			const float    avg = fstb::ToolsSimd::sum_h_flt (sum_v) * blen_inv;
+			const float    avg = sum_v.sum_h () * blen_inv;
 
 			const float    e2_beg = band._env.get_state_no_sqrt ();
 			const float    e2_end = band._env.analyse_block_raw_cst (avg, block_len);
@@ -219,7 +219,7 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 			const auto     e2 = fstb::ToolsSimd::set_2f32 (e2_beg, e2_end);
 			const auto     e  = fstb::ToolsSimd::sqrt_approx (e2);
 			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
-			const auto     g0 = fstb::ToolsSimd::rcp_approx (et) * lvl;
+			const auto     g0 = lvl * et.rcp_approx ();
 
 			// gain = (1 - max ((thr * g0 - 1) / (_rel_thr - 1), 0)) ^ 4
 			auto           gt = (thr * g0 - one) * mul;

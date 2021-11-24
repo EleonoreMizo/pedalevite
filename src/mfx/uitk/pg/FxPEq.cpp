@@ -667,8 +667,7 @@ std::vector <float>	FxPEq::create_freq_map (int nbr_freq, float f_beg, float f_e
 	{
 		auto          v_idx  = fstb::ToolsSimd::set1_f32 (float (f_idx));
 		v_idx += v_linstep;
-		auto          v_puls =
-			fstb::ToolsSimd::exp2_approx (v_base + v_idx * v_mul);
+		auto          v_puls = fstb::Approx::exp2 (v_base + v_idx * v_mul);
 
 		fstb::ToolsSimd::storeu_f32_part (
 			&puls_arr [f_idx], v_puls, nbr_freq - f_idx
@@ -701,7 +700,7 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 			fstb::ToolsSimd::loadu_f32_part (&lvl_arr [f_idx], ns);
 		lvl = fstb::ToolsSimd::max_f32 (lvl, secu);
 		const auto     y_flt =
-			fstb::ToolsSimd::log2_approx (lvl) * mul + ofs;
+			fstb::Approx::log2 (lvl) * mul + ofs;
 		const auto     y     = fstb::ToolsSimd::conv_f32_to_s32 (y_flt);
 		fstb::ToolsSimd::storeu_s32_part (&y_arr [f_idx], y, ns);
 	}
@@ -752,7 +751,7 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 		const auto     h2_ds = (one - a2) * s1;
 		const auto     h2_n  = h2_nc * h2_nc + h2_ns * h2_ns;
 		const auto     h2_d  = h2_dc * h2_dc + h2_ds * h2_ds;
-		const auto     h2    = h2_n * fstb::ToolsSimd::rcp_approx2 (h2_d);
+		const auto     h2    = h2_n / h2_d;
 		const auto     h_abs = fstb::ToolsSimd::sqrt (h2);
 
 		auto           l =

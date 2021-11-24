@@ -91,8 +91,8 @@ void  WsSmthMax0 <A>::process_block (float dst_ptr [], const float src_ptr [], i
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x = VS::load_f32 (src_ptr + pos);
-		const auto     cmp_p = fstb::ToolsSimd::cmp_lt_f32 (x,  a_2);
-		const auto     cmp_m = fstb::ToolsSimd::cmp_lt_f32 (x, ma_2);
+		const auto     cmp_p = (x <  a_2);
+		const auto     cmp_m = (x < ma_2);
 		auto           x1 = x + a_2;
 		x1 = x1 * x1 * a_inv_2;
 		x  = fstb::ToolsSimd::select (cmp_p, x1  , x);

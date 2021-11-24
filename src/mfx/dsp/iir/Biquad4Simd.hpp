@@ -1469,10 +1469,10 @@ bool	Biquad4Simd <VD, VS, VP>::check_stability (fstb::Vf32 a1, fstb::Vf32 a2) no
 {
 	const float    margin = 5e-6f;
 	const auto     one = fstb::ToolsSimd::set1_f32 (1 + margin);
-	const auto     c1  = fstb::ToolsSimd::cmp_lt_f32 (fstb::ToolsSimd::abs (a1), a2 + one);
-	const auto     c2  = fstb::ToolsSimd::cmp_lt_f32 (fstb::ToolsSimd::abs (a2),      one);
+	const auto     c1  = (fstb::abs (a1) < a2 + one);
+	const auto     c2  = (fstb::abs (a2) <      one);
 
-	return fstb::ToolsSimd::and_h (fstb::ToolsSimd::and_f32 (c1, c2));
+	return bool (c1 & c2);
 }
 
 

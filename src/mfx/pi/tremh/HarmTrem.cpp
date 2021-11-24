@@ -275,9 +275,8 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 	// Saturation:
 	// x = (1 - (1 - min (0.5 * s * x, 1)) ^ 2) / s
 	const auto     v_satl = fstb::ToolsSimd::max_f32 (v_sat, v_satm);
-	const auto     inv_s  = fstb::ToolsSimd::rcp_approx2 (v_satl);
 	vol = one - fstb::ToolsSimd::min_f32 (vol * v_satl * half, one);
-	vol = (one - vol * vol) * inv_s;
+	vol = (one - vol * vol) / v_satl;
 
 	// From the modulation (4 elements):
 	const auto     v_lo_m = fstb::ToolsSimd::max_f32 (v_t_lo * v_p2n2, zero);

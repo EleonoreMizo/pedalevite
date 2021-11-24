@@ -66,16 +66,14 @@ std::array <T, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (T x) noexcept
 template <bool OFLAG>
 std::array <fstb::Vf32, 2>	XFadeEqPowPoly8 <OFLAG>::compute_gain (fstb::Vf32 x) noexcept
 {
-	using TS = fstb::ToolsSimd;
+	const auto     one = fstb::Vf32 (1);
+	assert (x >= fstb::Vf32 (0));
+	assert (x <= one);
 
-	assert (! TS::or_h (TS::cmp_lt0_f32 (x)));
-	assert (! TS::or_h (TS::cmp_gt_f32 (x, TS::set1_f32 (1))));
-
-	const auto     one = TS::set1_f32 (1);
 	const auto     xi  = one - x;
 	const auto     a   = x * xi;
-	const auto     b0  = OFLAG ? one : TS::set1_f32 (0.975f);
-	const auto     b1  = TS::set1_f32 (OFLAG ? 1.4186f : 1.51f);
+	const auto     b0  = OFLAG ? one : fstb::Vf32 (0.975f);
+	const auto     b1  = fstb::Vf32 (OFLAG ? 1.4186f : 1.51f);
 	const auto     b   = a * (b0 + b1 * a);
 	const auto     c   = b + x;
 	const auto     d   = b + xi;

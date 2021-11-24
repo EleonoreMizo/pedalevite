@@ -150,9 +150,6 @@ public:
 	               reverse_s32 (Vs32 x) noexcept;
 
 	static inline void
-	               explode (float &a0, float &a1, float &a2, float &a3, Vf32 x) noexcept;
-
-	static inline void
 	               mac (Vf32 &s, Vf32 a, Vf32 b) noexcept;
 	static inline void
 	               msu (Vf32 &s, Vf32 a, Vf32 b) noexcept;
@@ -164,28 +161,8 @@ public:
 	               min_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vf32
 	               max_f32 (Vf32 lhs, Vf32 rhs) noexcept;
-	static inline float
-	               sum_h_flt (Vf32 v) noexcept;
-	static inline float
-	               min_h_flt (Vf32 v) noexcept;
-	static inline float
-	               max_h_flt (Vf32 v) noexcept;
-	static inline Vf32
-	               round (Vf32 v) noexcept;
-	static inline Vf32
-	               abs (Vf32 v) noexcept;
-	static inline Vf32
-	               signbit (Vf32 v) noexcept;
-	static inline Vf32
-	               signbit_mask_f32 () noexcept;
-	static inline Vf32
-	               rcp_approx (Vf32 v) noexcept;
-	static inline Vf32
-	               rcp_approx2 (Vf32 v) noexcept;
 	static inline Vf32
 	               div_approx (Vf32 n, Vf32 d) noexcept;
-	static inline Vf32
-	               div_approx2 (Vf32 n, Vf32 d) noexcept;
 	static inline Vf32
 	               sqrt (Vf32 v) noexcept;
 	static inline Vf32
@@ -198,14 +175,10 @@ public:
 	static fstb_FORCEINLINE Vf32
 	               log2_base (Vf32 x, P poly) noexcept;
 	static inline Vf32
-	               log2_approx (Vf32 v) noexcept;
-	static inline Vf32
 	               log2_approx2 (Vf32 v) noexcept;
 	template <typename P>
 	static fstb_FORCEINLINE Vf32
 	               exp2_base (Vf32 x, P poly) noexcept;
-	static inline Vf32
-	               exp2_approx (Vf32 v) noexcept;
 	static inline Vf32
 	               exp2_approx2 (Vf32 v) noexcept;
 
@@ -213,44 +186,24 @@ public:
 	               select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept;
 	static inline std::tuple <Vf32, Vf32>
 	               swap_cond (Vf32 cond, Vf32 lhs, Vf32 rhs) noexcept;
-	static inline Vf32
-	               cmp_gt_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vs32
 	               cmp_gt_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vf32
-	               cmp_lt_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vs32
 	               cmp_lt_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vf32
-	               cmp_lt0_f32 (Vf32 lhs) noexcept;
 	static inline Vs32
 	               cmp_lt0_s32 (Vs32 lhs) noexcept;
-	static inline Vf32
-	               cmp_eq_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vs32
 	               cmp_eq_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vf32
-	               cmp_ne_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vs32
 	               cmp_ne_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vf32
-	               and_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vs32
 	               and_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vf32
-	               or_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vs32
 	               or_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vf32
-	               xor_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vs32
 	               xor_s32 (Vs32 lhs, Vs32 rhs) noexcept;
 	static inline bool
-	               and_h (Vf32 cond) noexcept;
-	static inline bool
 	               and_h (Vs32 cond) noexcept;
-	static inline bool
-	               or_h (Vf32 cond) noexcept;
 	static inline bool
 	               or_h (Vs32 cond) noexcept;
 	static inline Vf32

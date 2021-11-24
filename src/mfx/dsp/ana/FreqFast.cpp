@@ -228,7 +228,7 @@ void	FreqFast::proc_autogain (int nbr_spl) noexcept
 		const auto     env  = fstb::ToolsSimd::load_f32 (&_buf_arr [1] [pos]);
 		const auto     env2 = env * env;
 		const auto     den  = env2 * env + a2_v;
-		const auto     gain = env2 * fstb::ToolsSimd::rcp_approx2 (den);
+		const auto     gain = env2 / den;
 		val *= gain;
 		fstb::ToolsSimd::store_f32 (&_buf_arr [2] [pos], val);
 	}
@@ -257,10 +257,10 @@ void	FreqFast::proc_peaks (int nbr_spl) noexcept
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		const auto     x        = fstb::ToolsSimd::load_f32 (&_buf_arr [2] [pos]);
-		const auto     x_gt_dzp = fstb::ToolsSimd::cmp_gt_f32 (x, dz_p);
-		const auto     x_lt_dzn = fstb::ToolsSimd::cmp_lt_f32 (x, dz_n);
-		const auto     xp       = fstb::ToolsSimd::and_f32 (x, x_gt_dzp);
-		const auto     xn       = fstb::ToolsSimd::and_f32 (x, x_lt_dzn);
+		const auto     x_gt_dzp = (x > dz_p);
+		const auto     x_lt_dzn = (x < dz_n);
+		const auto     xp       = x & x_gt_dzp;
+		const auto     xn       = x & x_lt_dzn;
 		fstb::ToolsSimd::store_f32 (&_buf_arr [0] [pos], xp);
 		fstb::ToolsSimd::store_f32 (&_buf_arr [1] [pos], xn);
 	}
@@ -292,10 +292,10 @@ void	FreqFast::proc_peaks (int nbr_spl) noexcept
 		auto           en = fstb::ToolsSimd::load_f32 (&_buf_arr [3] [pos]);
 		ep *= thr_p;
 		en *= thr_n;
-		const auto     xp_gt_ep = fstb::ToolsSimd::cmp_gt_f32 (xp, ep);
-		const auto     xn_lt_en = fstb::ToolsSimd::cmp_lt_f32 (xn, en);
-		const auto     yp       = fstb::ToolsSimd::and_f32 (one, xp_gt_ep);
-		const auto     yn       = fstb::ToolsSimd::and_f32 (one, xn_lt_en);
+		const auto     xp_gt_ep = (xp > ep);
+		const auto     xn_lt_en = (xn < en);
+		const auto     yp       = one & xp_gt_ep;
+		const auto     yn       = one & xn_lt_en;
 		fstb::ToolsSimd::store_f32 (&_buf_arr [2] [pos], yp);
 		fstb::ToolsSimd::store_f32 (&_buf_arr [3] [pos], yn);
 	}

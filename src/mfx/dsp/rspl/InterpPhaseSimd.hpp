@@ -183,7 +183,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], const Buffer &imp
 		&imp [0]
 	);
 
-	return fstb::ToolsSimd::sum_h_flt (sum_v);
+	return sum_v.sum_h (sum_v);
 }
 
 
@@ -236,7 +236,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const no
 
 #endif
 
-	return fstb::ToolsSimd::sum_h_flt (sum_v);
+	return sum_v.sum_h ();
 }
 
 

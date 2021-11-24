@@ -132,7 +132,7 @@ fstb::Vf32	CompexGainFnc::compute_gain (const fstb::Vf32 env_2l2)
 	poly += c0;
 
 	// Linear ratios
-	const auto     tst_pos  = fstb::ToolsSimd::cmp_lt0_f32 (el2);
+	const auto     tst_pos  = el2.is_lt_0 ();
 	auto           ratio_lo = fstb::ToolsSimd::set1_f32 (_ratio_lo);
 	auto           ratio_hi = fstb::ToolsSimd::set1_f32 (_ratio_hi);
 	const auto     ratio    = fstb::ToolsSimd::select (tst_pos, ratio_lo, ratio_hi);
@@ -140,8 +140,8 @@ fstb::Vf32	CompexGainFnc::compute_gain (const fstb::Vf32 env_2l2)
 
 	// Selects result
 	const auto     knee_th_abs = fstb::ToolsSimd::set1_f32 (_knee_th_abs);
-	const auto     el2_abs     = fstb::ToolsSimd::abs (el2);
-	const auto     tst_knee    = fstb::ToolsSimd::cmp_lt_f32 (el2_abs, knee_th_abs);
+	const auto     el2_abs     = fstb::abs (el2);
+	const auto     tst_knee    = (el2_abs < knee_th_abs);
 	const auto     vl2         = fstb::ToolsSimd::select (tst_knee, poly, linear);
 
 	// Computes and limits gain
@@ -175,7 +175,7 @@ fstb::Vf32	CompexGainFnc::compute_gain (const fstb::Vf32 env_2l2)
 	gain_l2 += vol_offset_post;
 
 	// Conversion to linear, multiplicative volume
-	const auto     gain = fstb::ToolsSimd::exp2_approx (gain_l2);
+	const auto     gain = fstb::Approx::exp2 (gain_l2);
 
 	return gain;
 }

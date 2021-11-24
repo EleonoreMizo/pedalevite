@@ -90,8 +90,8 @@ void  WsSmthAbs <A>::process_block (float dst_ptr [], const float src_ptr [], in
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x    = VS::load_f32 (src_ptr + pos);
-		const auto     xabs = fstb::ToolsSimd::abs (x);
-		const auto     cmp  = fstb::ToolsSimd::cmp_lt_f32 (x, a_2);
+		const auto     xabs = fstb::abs (x);
+		const auto     cmp  = (x < a_2);
 		const auto     x1   = x * x * a_inv + a_4;
 		x = fstb::ToolsSimd::select (cmp, xabs, x1);
 		VD::store_f32 (dst_ptr + pos, x);

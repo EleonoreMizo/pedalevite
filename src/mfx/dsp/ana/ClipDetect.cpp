@@ -82,14 +82,11 @@ bool	ClipDetect::process_block (const float src_ptr [], int nbr_spl) const noexc
 	{
 		const auto     x0   = fstb::ToolsSimd::loadu_f32 (src_ptr + pos    );
 		const auto     x4   = fstb::ToolsSimd::loadu_f32 (src_ptr + pos + 4);
-		const auto     inf0 = fstb::ToolsSimd::cmp_gt_f32 (x0, ma);
-		const auto     sup0 = fstb::ToolsSimd::cmp_lt_f32 (x0, mi);
-		const auto     inf4 = fstb::ToolsSimd::cmp_gt_f32 (x4, ma);
-		const auto     sup4 = fstb::ToolsSimd::cmp_lt_f32 (x4, mi);
-		const auto     msk  = fstb::ToolsSimd::or_f32 (
-			fstb::ToolsSimd::or_f32 (inf0, sup0),
-			fstb::ToolsSimd::or_f32 (inf4, sup4)
-		);
+		const auto     inf0 = (x0 > ma);
+		const auto     sup0 = (x0 < mi);
+		const auto     inf4 = (x4 > ma);
+		const auto     sup4 = (x4 < mi);
+		const auto     msk  = (inf0 | sup0) | (inf4 | sup4);
 		res_mask = fstb::ToolsSimd::movemask_f32 (msk);
 	}
 	bool           clip_flag = (res_mask != 0);

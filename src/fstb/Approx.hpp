@@ -49,12 +49,13 @@ namespace fstb
 // x in [-pi/2 ; pi/2]
 // Max error: 2.411e-8
 // Scaled formula
-Vf32	Approx::sin_rbj (Vf32 x) noexcept
+template <typename T>
+T	Approx::sin_rbj (T x) noexcept
 {
-	const auto    a  = ToolsSimd::set1_f32 ( 2.628441118718695e-06f);
-	const auto    b  = ToolsSimd::set1_f32 (-1.982061326014539e-04f);
-	const auto    c  = ToolsSimd::set1_f32 ( 0.008333224441393f);
-	const auto    d  = ToolsSimd::set1_f32 (-0.166666657479818f);
+	const auto    a  = T ( 2.628441118718695e-06);
+	const auto    b  = T (-1.982061326014539e-04);
+	const auto    c  = T ( 0.008333224441393);
+	const auto    d  = T (-0.166666657479818);
 	const auto    x2 = x * x;
 
 	return ((((a * x2 + b) * x2 + c) * x2 + d) * x2) * x + x;
@@ -66,11 +67,14 @@ Vf32	Approx::sin_rbj (Vf32 x) noexcept
 // x in [-pi ; pi]
 // Max error: 2.411e-8
 // Scaled formula
-Vf32	Approx::cos_rbj (Vf32 x) noexcept
+template <typename T>
+T	Approx::cos_rbj (T x) noexcept
 {
-	x = ToolsSimd::abs (x);
+	using std::abs;
 
-	const auto     hp  = ToolsSimd::set1_f32 (float ( 0.5 * PI));
+	x = abs (x);
+
+	const auto     hp = T (0.5 * PI);
 	x = hp - x;
 
 	return sin_rbj (x);
@@ -84,11 +88,11 @@ Vf32	Approx::cos_rbj (Vf32 x) noexcept
 // Scaled formula
 void	Approx::cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept
 {
-	const auto     hp  = ToolsSimd::set1_f32 (float ( 0.5 * PI));
-	const auto     hpm = ToolsSimd::set1_f32 (float (-0.5 * PI));
-	const auto     tp  = ToolsSimd::set1_f32 (float ( 2   * PI));
-	const auto     p   = ToolsSimd::set1_f32 (float (       PI));
-	const auto     pm  = ToolsSimd::set1_f32 (float (      -PI));
+	const auto     hp  = Vf32 ( 0.5 * PI);
+	const auto     hpm = Vf32 (-0.5 * PI);
+	const auto     tp  = Vf32 ( 2   * PI);
+	const auto     p   = Vf32 (       PI);
+	const auto     pm  = Vf32 (      -PI);
 
 	// x -> [-pi ; pi]
 	x = restrict_angle_to_mpi_pi (x, pm, p, tp);
@@ -101,7 +105,7 @@ void	Approx::cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept
 	auto           xc = x + hp;
 
 	// xc -> [-pi ; pi]
-	xc = ToolsSimd::select (ToolsSimd::cmp_gt_f32 (xc, p ), xc - tp, xc);
+	xc = ToolsSimd::select ((xc < p ), xc - tp, xc);
 
 	// xc -> [-pi/2 ; pi/2]
 	xc = restrict_sin_angle_to_mhpi_hpi (xc, hpm, hp, pm, p);
@@ -117,13 +121,13 @@ void	Approx::cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept
 // Max error: 2.411e-8
 // Original formula
 template <typename T>
-constexpr T	Approx::sin_rbj_halfpi (T x) noexcept
+T	Approx::sin_rbj_halfpi (T x) noexcept
 {
-	constexpr T    a  = T ( 0.0001530302);
-	constexpr T    b  = T (-0.0046768800);
-	constexpr T    c  = T ( 0.0796915849);
-	constexpr T    d  = T (-0.6459640619);
-	constexpr T    e  = T ( 1.5707963268);
+	const auto     a  = T ( 0.0001530302);
+	const auto     b  = T (-0.0046768800);
+	const auto     c  = T ( 0.0796915849);
+	const auto     d  = T (-0.6459640619);
+	const auto     e  = T ( 1.5707963268);
 	const T        x2 = x * x;
 
 	return Poly::horner (x2, e, d, c, b, a) * x;
@@ -143,27 +147,16 @@ constexpr T	Approx::sin_rbj_halfpi (T x) noexcept
 
 
 
-Vf32	Approx::sin_rbj_halfpi (Vf32 x) noexcept
-{
-	const auto    a  = ToolsSimd::set1_f32 ( 0.0001530302f);
-	const auto    b  = ToolsSimd::set1_f32 (-0.0046768800f);
-	const auto    c  = ToolsSimd::set1_f32 ( 0.0796915849f);
-	const auto    d  = ToolsSimd::set1_f32 (-0.6459640619f);
-	const auto    e  = ToolsSimd::set1_f32 ( 1.5707963268f);
-	const auto    x2 = x * x;
-
-	return Poly::horner (x2, e, d, c, b, a) * x;
-}
-
-
-
 // f(x) ~ sin (x * pi)
 // x in [-0.5 ; 1]
 // Max error: 2.411e-8
-Vf32	Approx::sin_rbj_pi (Vf32 x) noexcept
+template <typename T>
+T	Approx::sin_rbj_pi (T x) noexcept
 {
-	const auto     one   = ToolsSimd::set1_f32 (1);
-	const auto     two_x = one - ToolsSimd::abs (one - x - x);
+	using std::abs;
+
+	const auto     one   = T (1);
+	const auto     two_x = one - abs (one - x - x);
 
 	return sin_rbj_halfpi (two_x);
 }
@@ -194,24 +187,13 @@ T	Approx::sin_nick (T x) noexcept
 	assert (x >= T (-PI));
 	assert (x <= T (+PI));
 
-	constexpr T    b = T ( 4 /  PI);
-	constexpr T    c = T (-4 / (PI * PI));
-	constexpr T    d = T (0.224008);
+	const auto     b = T ( 4 /  PI);
+	const auto     c = T (-4 / (PI * PI));
+	const auto     d = T (0.224008);
 
-	const T        y = b * x + c * x * std::abs (x);
-	const T        z = d * (y * std::abs (y) - y) + y;
-
-	return z;
-}
-
-Vf32	Approx::sin_nick (Vf32 x) noexcept
-{
-	const auto     b = ToolsSimd::set1_f32 (float ( 4 /  PI));
-	const auto     c = ToolsSimd::set1_f32 (float (-4 / (PI * PI)));
-	const auto     d = ToolsSimd::set1_f32 (0.224008f);
-
-	const auto     y = b * x + c * x * ToolsSimd::abs (x);
-	const auto     z = d * (y * ToolsSimd::abs (y) - y) + y;
+	using std::abs;
+	const auto     y = b * x + c * x * abs (x);
+	const auto     z = d * (y * abs (y) - y) + y;
 
 	return z;
 }
@@ -227,24 +209,13 @@ T	Approx::sin_nick_2pi (T x) noexcept
 	assert (x >= T (-0.5));
 	assert (x <= T (+0.5));
 
-	constexpr T    b = T (  8);
-	constexpr T    c = T (-16);
-	constexpr T    d = T (  0.224008);
+	const auto     b = T (  8);
+	const auto     c = T (-16);
+	const auto     d = T (  0.224008);
 
-	const float    y = b * x + c * x * std::abs (x);
-	const float    z = d * (y * std::abs (y) - y) + y;
-
-	return z;
-}
-
-Vf32	Approx::sin_nick_2pi (Vf32 x) noexcept
-{
-	const auto     b = ToolsSimd::set1_f32 (  8);
-	const auto     c = ToolsSimd::set1_f32 (-16);
-	const auto     d = ToolsSimd::set1_f32 (  0.224008f);
-
-	const auto     y = b * x + c * x * ToolsSimd::abs (x);
-	const auto     z = d * (y * ToolsSimd::abs (y) - y) + y;
+	using std::abs;
+	const auto     y = b * x + c * x * abs (x);
+	const auto     z = d * (y * abs (y) - y) + y;
 
 	return z;
 }
@@ -276,19 +247,19 @@ std::array <T, 2>	Approx::cos_sin_nick_2pi (T x) noexcept
 std::array <Vf32, 2>	Approx::cos_sin_nick_2pi (Vf32 x) noexcept
 {
 	// cos (x) = sin (x + pi/2)
-	const auto     c_025  = ToolsSimd::set1_f32 (0.25f);
-	const auto     c_075  = ToolsSimd::set1_f32 (0.75f);
-	const auto     ge_025 = ToolsSimd::cmp_lt_f32 (c_025, x);
+	const auto     c_025  = Vf32 (0.25f);
+	const auto     c_075  = Vf32 (0.75f);
+	const auto     ge_025 = (c_025 < x);
 	const auto     xc     = ToolsSimd::select (ge_025, x - c_075, x + c_025);
 
-	const auto     b  = ToolsSimd::set1_f32 (  8);
-	const auto     c  = ToolsSimd::set1_f32 (-16);
-	const auto     d  = ToolsSimd::set1_f32 (  0.224008f);
+	const auto     b  = Vf32 (  8);
+	const auto     c  = Vf32 (-16);
+	const auto     d  = Vf32 (  0.224008f);
 
-	const auto     yc = b * xc + c * xc * ToolsSimd::abs (xc);
-	const auto     ys = b * x  + c * x  * ToolsSimd::abs (x );
-	const auto     zc = d * (yc * ToolsSimd::abs (yc) - yc) + yc;
-	const auto     zs = d * (ys * ToolsSimd::abs (ys) - ys) + ys;
+	const auto     yc = b * xc + c * xc * abs (xc);
+	const auto     ys = b * x  + c * x  * abs (x );
+	const auto     zc = d * (yc * abs (yc) - yc) + yc;
+	const auto     zs = d * (ys * abs (ys) - ys) + ys;
 
 	return std::array <Vf32, 2> { zc, zs };
 }
@@ -360,12 +331,12 @@ float	Approx::log2_crude (float val) noexcept
 
 Vf32	Approx::log2_crude (Vf32 val) noexcept
 {
-	assert (ToolsSimd::and_h (ToolsSimd::cmp_gt_f32 (val, ToolsSimd::set_f32_zero ())));
+	assert (val > Vf32 (0));
 
 	const auto     c0 = ToolsSimd::set1_s32 (0x43800000);
 	auto           i  = ToolsSimd::cast_s32 (val);
 	i   = ToolsSimd::or_s32 (i >> 8, c0);
-	const auto     d  = ToolsSimd::set1_f32 (382.95695f);
+	const auto     d  = Vf32 (382.95695f);
 	val = ToolsSimd::cast_f32 (i) - d;
 
 	return val;
@@ -437,9 +408,9 @@ float	Approx::exp2_crude (float val) noexcept
 
 Vf32	Approx::exp2_crude (Vf32 val) noexcept
 {
-	const auto     c8 = ToolsSimd::set1_s32 (0x43808000);
-	const auto     d  = ToolsSimd::set1_f32 (382.95695f);
-	const auto     m  = ToolsSimd::set1_s32 (0x7FFFFF00);
+	const auto     c8 = Vs32 (0x43808000);
+	const auto     d  = Vf32 (382.95695f);
+	const auto     m  = Vs32 (0x7FFFFF00);
 
 	auto           i  = ToolsSimd::cast_s32 (val + d);
 
@@ -621,8 +592,8 @@ constexpr T	Approx::tan_taylor5 (T x) noexcept
 Vf32	Approx::tan_taylor5 (Vf32 x) noexcept
 {
 	const auto     x_2 = x * x;
-	const auto     c_3 = ToolsSimd::set1_f32 (1.0f / 3 );
-	const auto     c_5 = ToolsSimd::set1_f32 (2.0f / 15);
+	const auto     c_3 = Vf32 (1.0f / 3 );
+	const auto     c_5 = Vf32 (2.0f / 15);
 
 	return (c_5 * x_2 + c_3) * x_2 * x + x;
 }
@@ -651,10 +622,10 @@ T	Approx::tan_mystran (T x) noexcept
 
 Vf32	Approx::tan_mystran (Vf32 x) noexcept
 {
-	const auto     c1 = ToolsSimd::set1_f32 ( 1         );
-	const auto     c3 = ToolsSimd::set1_f32 (-1.f / 6   );
-	const auto     c5 = ToolsSimd::set1_f32 ( 1.f / 120 );
-	const auto     c7 = ToolsSimd::set1_f32 (-1.f / 5040);
+	const auto     c1 = Vf32 ( 1         );
+	const auto     c3 = Vf32 (-1.f / 6   );
+	const auto     c5 = Vf32 ( 1.f / 120 );
+	const auto     c7 = Vf32 (-1.f / 5040);
 
 	const auto     x2 = x * x;
 	const auto     s  = Poly::horner (x2, c1, c3, c5, c7) * x;
@@ -668,7 +639,7 @@ Vf32	Approx::tan_mystran (Vf32 x) noexcept
 // https://discord.com/channels/507604115854065674/548502835608944681/872677465003274282
 // Max relative error: 0.111 % on the +/-0.965 * pi/2 range
 template <typename T>
-constexpr T	Approx::tan_pade33 (T x) noexcept
+T	Approx::tan_pade33 (T x) noexcept
 {
 //	x = limit (x, T (-1.54), T (1.54));
 	const auto     x2  = x * x;
@@ -676,20 +647,6 @@ constexpr T	Approx::tan_pade33 (T x) noexcept
 	const auto     den = T (-0.405097) * x2 + T (1);
 
 	return x * num / den;
-}
-
-Vf32	Approx::tan_pade33 (Vf32 x) noexcept
-{
-	const auto     n0  = ToolsSimd::set1_f32 ( 1.00111f);
-	const auto     n2  = ToolsSimd::set1_f32 (-0.075021f);
-	const auto     d0  = ToolsSimd::set1_f32 ( 1.f);
-	const auto     d2  = ToolsSimd::set1_f32 (-0.405097f);
-
-	const auto     x2  = x * x;
-	const auto     num = n2 * x2 + n0;
-	const auto     den = d2 * x2 + d0;
-
-	return x * num * ToolsSimd::rcp_approx2 (den);
 }
 
 
@@ -710,30 +667,18 @@ not really a problem as the precision was unnecessary high near 0.
 */
 
 template <typename T>
-constexpr T	Approx::tan_pade55 (T x) noexcept
+T	Approx::tan_pade55 (T x) noexcept
 {
-//	constexpr auto a   = T (15);
-	constexpr auto a   = T (14.999975509385927280627711005255);
-	const auto     x2  = x * x;
-	const auto     num = (    x2 - T (105)) * x2 + T (945);
-	const auto     den = (a * x2 - T (420)) * x2 + T (945);
-
-	return x * num / den;
-}
-
-Vf32	Approx::tan_pade55 (Vf32 x) noexcept
-{
-	const auto     c0  = ToolsSimd::set1_f32 ( 945.f);
-	const auto     n2  = ToolsSimd::set1_f32 (-105.f);
-	const auto     d2  = ToolsSimd::set1_f32 (-420.f);
-//	const auto     d4  = ToolsSimd::set1_f32 (  15.f);
-	const auto     d4  = ToolsSimd::set1_f32 (14.999975509385927280627711005255f);
-
+//	const auto     a   = T (15);
+	const auto     d4  = T (14.999975509385927280627711005255);
+	const auto     c0  = T (945);
+	const auto     n2  = T (-105);
+	const auto     d2  = T (-420);
 	const auto     x2  = x * x;
 	const auto     num = (     x2 + n2) * x2 + c0;
 	const auto     den = (d4 * x2 + d2) * x2 + c0;
 
-	return x * num * ToolsSimd::rcp_approx2 (den);
+	return x * num / den;
 }
 
 
@@ -793,15 +738,15 @@ Vf32	Approx::atan2_3th (Vf32 y, Vf32 x) noexcept
 	const auto     c3 = TS::set1_f32 (0.18208f);
 	const auto     c1 = TS::set1_f32 (float (PI * -0.25 - 0.18208));
 
-	const auto     ys = TS::signbit (y);
+	const auto     ys = y.signbit ();
 	const auto     b  = atan2_beg (y, x);
 	const auto     r  = b [0];
 	const auto     c0 = b [1];
 	const auto     r2 = r * r;
 	auto           a  = c3;
-	a = TS::fmadd (a, r2, c1);
-	a = TS::fmadd (a, r , c0);
-	a = TS::xor_f32 (a, ys);
+	a  = TS::fmadd (a, r2, c1);
+	a  = TS::fmadd (a, r , c0);
+	a ^= ys;
 
 	return a;
 }
@@ -840,13 +785,13 @@ Vf32	Approx::atan2_7th (Vf32 y, Vf32 x) noexcept
 		PI * -0.25 - 0.0386379 - -0.145917 - 0.0386379
 	));
 
-	const auto     ys = TS::signbit (y);
+	const auto     ys = y.signbit ();
 	const auto     b  = atan2_beg (y, x);
 	const auto     r  = b [0];
 	const auto     c0 = b [1];
 	const auto     r2 = r * r;
 	auto           a  = TS::fmadd (Poly::horner (r2, c1, c3, c5, c7), r, c0);
-	a = TS::xor_f32 (a, ys);
+	a ^= ys;
 
 	return a;
 }
@@ -862,18 +807,7 @@ Vf32	Approx::atan2_7th (Vf32 y, Vf32 x) noexcept
 template <typename T>
 T	Approx::tanh_mystran (T x) noexcept
 {
-	constexpr auto p  = T (0.183);
-
-	// x <- x + 0.183 * x^3
-	auto           x2 = x * x;
-	const auto     s  = x + x * x2 * p;
-
-	return tanh_from_sinh (s);
-}
-
-Vf32	Approx::tanh_mystran (Vf32 x) noexcept
-{
-	const auto     p  = ToolsSimd::set1_f32 (0.183f);
+	const auto     p  = T (0.183);
 
 	// x <- x + 0.183 * x^3
 	auto           x2 = x * x;
@@ -892,21 +826,9 @@ Vf32	Approx::tanh_mystran (Vf32 x) noexcept
 template <typename T>
 T	Approx::tanh_urs (T x) noexcept
 {
-	constexpr auto c3 = T (0.166769511323);
-	constexpr auto c5 = T (8.18265554763e-3);
-	constexpr auto c7 = T (2.43041131705e-4);
-
-	const auto     x2 = x * x;
-	const auto     s  = Poly::horner (x2, c3, c5, c7) * x2 * x + x;
-
-	return tanh_from_sinh (s);
-}
-
-Vf32	Approx::tanh_urs (Vf32 x) noexcept
-{
-	const auto     c3 = ToolsSimd::set1_f32 (0.166769511323f);
-	const auto     c5 = ToolsSimd::set1_f32 (8.18265554763e-3f);
-	const auto     c7 = ToolsSimd::set1_f32 (2.43041131705e-4f);
+	const auto     c3 = T (0.166769511323);
+	const auto     c5 = T (8.18265554763e-3);
+	const auto     c7 = T (2.43041131705e-4);
 
 	const auto     x2 = x * x;
 	const auto     s  = Poly::horner (x2, c3, c5, c7) * x2 * x + x;
@@ -943,25 +865,25 @@ constexpr T	Approx::tanh_2dat (T x) noexcept
 
 Vf32	Approx::tanh_2dat (Vf32 x) noexcept
 {
-	const auto     n0      = ToolsSimd::set1_f32 (4.351839500e+06f);
-	const auto     n1      = ToolsSimd::set1_f32 (5.605646250e+05f);
-	const auto     n2      = ToolsSimd::set1_f32 (1.263485352e+04f);
-	const auto     n3      = ToolsSimd::set1_f32 (4.751771164e+01f);
+	const auto     n0      = Vf32 (4.351839500e+06f);
+	const auto     n1      = Vf32 (5.605646250e+05f);
+	const auto     n2      = Vf32 (1.263485352e+04f);
+	const auto     n3      = Vf32 (4.751771164e+01f);
 	const auto     d0      = n0;
-	const auto     d1      = ToolsSimd::set1_f32 (2.011170000e+06f);
-	const auto     d2      = ToolsSimd::set1_f32 (1.027901563e+05f);
-	const auto     d3      = ToolsSimd::set1_f32 (1.009453430e+03f);
-	const auto     max_val = ToolsSimd::set1_f32 (7.7539052963256836f);
+	const auto     d1      = Vf32 (2.011170000e+06f);
+	const auto     d2      = Vf32 (1.027901563e+05f);
+	const auto     d3      = Vf32 (1.009453430e+03f);
+	const auto     max_val = Vf32 (7.7539052963256836f);
 
-	const auto     s   = ToolsSimd::signbit (x);
-	x = ToolsSimd::abs (x);
+	const auto     s   = x.signbit ();
+	x = abs (x);
 	x = ToolsSimd::min_f32 (x, max_val);
 	const auto     x2  = x * x;
-	const auto     xs  = ToolsSimd::xor_f32 (x, s);
+	const auto     xs  = x ^ s;
 	const auto     num = Poly::horner (x2, n0, n1, n2, n3     ) * xs;
 	const auto     den = Poly::horner (x2, d0, d1, d2, d3 + x2);
 
-	return ToolsSimd::div_approx2 (num, den);
+	return num / den;
 }
 
 
@@ -992,12 +914,12 @@ constexpr T	Approx::tanh_andy (T x) noexcept
 
 Vf32	Approx::tanh_andy (Vf32 x) noexcept
 {
-	const auto     n3      = ToolsSimd::set1_f32 (0.0812081221471f);
-	const auto     d0      = ToolsSimd::set1_f32 (1);
-	const auto     d2      = ToolsSimd::set1_f32 (0.412523749044f);
-	const auto     d4      = ToolsSimd::set1_f32 (0.00624523306500f);
-	const auto     min_val = ToolsSimd::set1_f32 (-4);
-	const auto     max_val = ToolsSimd::set1_f32 (+4);
+	const auto     n3      = Vf32 (0.0812081221471f);
+	const auto     d0      = Vf32 (1);
+	const auto     d2      = Vf32 (0.412523749044f);
+	const auto     d4      = Vf32 (0.00624523306500f);
+	const auto     min_val = Vf32 (-4);
+	const auto     max_val = Vf32 (+4);
 
 	x = ToolsSimd::max_f32 (x, min_val);
 	x = ToolsSimd::min_f32 (x, max_val);
@@ -1005,7 +927,7 @@ Vf32	Approx::tanh_andy (Vf32 x) noexcept
 	const auto     num = n3 * x2 * x + x;
 	const auto     den = Poly::horner (x2, d0, d2, d4);
 
-	return ToolsSimd::div_approx2 (num, den);
+	return num / den;
 }
 
 
@@ -1112,20 +1034,20 @@ T	Approx::wright_omega_3 (T x) noexcept
 
 Vf32	Approx::wright_omega_3 (Vf32 x) noexcept
 {
-	const auto     a   = ToolsSimd::set1_f32 (-1.314293149877800e-3f);
-	const auto     b   = ToolsSimd::set1_f32 ( 4.775931364975583e-2f);
-	const auto     c   = ToolsSimd::set1_f32 ( 3.631952663804445e-1f);
-	const auto     d   = ToolsSimd::set1_f32 ( 6.313183464296682e-1f);
-	const auto     x1  = ToolsSimd::set1_f32 (-3.341459552768620f);
-	const auto     x2  = ToolsSimd::set1_f32 ( 8.0f);
-	const auto     ln2 = ToolsSimd::set1_f32 (float (LN2));
+	const auto     a   = Vf32 (-1.314293149877800e-3f);
+	const auto     b   = Vf32 ( 4.775931364975583e-2f);
+	const auto     c   = Vf32 ( 3.631952663804445e-1f);
+	const auto     d   = Vf32 ( 6.313183464296682e-1f);
+	const auto     x1  = Vf32 (-3.341459552768620f);
+	const auto     x2  = Vf32 ( 8.0f);
+	const auto     ln2 = Vf32 (float (LN2));
 
 	const auto     y0  = ToolsSimd::set_f32_zero ();
 	const auto     y1  = Poly::horner (x, d, c, b, a);
-	const auto     y2  = x - (ToolsSimd::log2_approx (x)) * ln2;
+	const auto     y2  = x - (Approx::log2 (x)) * ln2;
 
-	const auto     tx1 = ToolsSimd::cmp_lt_f32 (x, x1);
-	const auto     tx2 = ToolsSimd::cmp_lt_f32 (x, x2);
+	const auto     tx1 = (x < x1);
+	const auto     tx2 = (x < x2);
 	auto           y   = y0;
 	y = ToolsSimd::select (tx1, y, y1);
 	y = ToolsSimd::select (tx2, y, y2);
@@ -1141,21 +1063,8 @@ T	Approx::wright_omega_4 (T x) noexcept
 {
 	T              y = wright_omega_3 (x);
 	y -=
-		  (y - Approx::exp2 (float (x - y) * float (LOG2_E)))
+		  (y - Approx::exp2 ((x - y) * T (LOG2_E)))
 		/ (y + T (1));
-
-	return y;
-}
-
-Vf32	Approx::wright_omega_4 (Vf32 x) noexcept
-{
-	const auto     one     = ToolsSimd::set1_f32 (1);
-	const auto     l2e     = ToolsSimd::set1_f32 (float (LOG2_E));
-
-	auto           y       = wright_omega_3 (x);
-	const auto     num     = y - ToolsSimd::exp2_approx ((x - y) * l2e);
-	const auto     den_inv = ToolsSimd::rcp_approx2 (y + one);
-	y -= num * den_inv;
 
 	return y;
 }
@@ -1174,8 +1083,8 @@ Vf32	Approx::wright_omega_4 (Vf32 x) noexcept
 // p = pi, pm = -pi, tp = 2*pi
 Vf32	Approx::restrict_angle_to_mpi_pi (Vf32 x, const Vf32 &pm, const Vf32 &p, const Vf32 &tp) noexcept
 {
-	x = ToolsSimd::select (ToolsSimd::cmp_lt_f32 (x, pm), x + tp, x);
-	x = ToolsSimd::select (ToolsSimd::cmp_gt_f32 (x, p ), x - tp, x);
+	x = ToolsSimd::select ((x < pm), x + tp, x);
+	x = ToolsSimd::select ((x > p ), x - tp, x);
 
 	return x;
 }
@@ -1186,8 +1095,8 @@ Vf32	Approx::restrict_angle_to_mpi_pi (Vf32 x, const Vf32 &pm, const Vf32 &p, co
 // hpm = -pi/2, hp = pi/2, pm = -pi, p = pi
 Vf32	Approx::restrict_sin_angle_to_mhpi_hpi (Vf32 x, const Vf32 &hpm, const Vf32 &hp, const Vf32 &pm, const Vf32 &p) noexcept
 {
-	x = ToolsSimd::select (ToolsSimd::cmp_lt_f32 (x, hpm), pm - x, x);
-	x = ToolsSimd::select (ToolsSimd::cmp_gt_f32 (x, hp ), p  - x, x);
+	x = ToolsSimd::select ((x < hpm), pm - x, x);
+	x = ToolsSimd::select ((x > hp ), p  - x, x);
 
 	return x;
 }
@@ -1351,9 +1260,7 @@ T	Approx::tanh_from_sinh (T x) noexcept
 
 Vf32	Approx::tanh_from_sinh (Vf32 x) noexcept
 {
-	const auto     one = ToolsSimd::set1_f32 (1.0f);
-
-	return x * ToolsSimd::rsqrt_approx2 (x * x + one);
+	return x * ToolsSimd::rsqrt_approx2 (x * x + Vf32 (1));
 }
 
 
@@ -1390,15 +1297,15 @@ std::array <Vf32, 2>	Approx::atan2_beg (Vf32 y, Vf32 x) noexcept
 	const auto     c0n  = TS::set1_f32 (float (PI * 0.75));
 	const auto     eps  = TS::set1_f32 (1e-10f);
 
-	const auto     ya   = TS::abs (y) + eps;
-	const auto     xlt0 = TS::cmp_lt0_f32 (x);
+	const auto     ya   = abs (y) + eps;
+	const auto     xlt0 = x.is_lt_0 ();
 	const auto     xpya = x + ya;
 	const auto     xmya = x - ya;
 	const auto     yamx = ya - x;
 	const auto     c0   = TS::select (xlt0, c0n, c0p);
 	const auto     rnum = TS::select (xlt0, xpya, xmya);
 	const auto     rden = TS::select (xlt0, yamx, xpya);
-	const auto     r    = TS::div_approx2 (rnum, rden);
+	const auto     r    = rnum / rden;
 
 	return std::array <Vf32, 2> { r, c0 };
 }

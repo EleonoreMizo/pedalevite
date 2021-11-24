@@ -88,6 +88,8 @@ public:
 
 	fstb_FORCEINLINE
 	               operator Vf32Native () const noexcept { return _x; }
+	fstb_FORCEINLINE explicit
+	               operator bool () const noexcept;
 
 	fstb_FORCEINLINE Vf32 &
 	               operator += (const Vf32Native &other) noexcept;
@@ -95,6 +97,44 @@ public:
 	               operator -= (const Vf32Native &other) noexcept;
 	fstb_FORCEINLINE Vf32 &
 	               operator *= (const Vf32Native &other) noexcept;
+	fstb_FORCEINLINE Vf32 &
+	               operator /= (const Vf32Native &other) noexcept;
+
+	fstb_FORCEINLINE Vf32 &
+	               operator &= (const Vf32Native &other) noexcept;
+	fstb_FORCEINLINE Vf32 &
+	               operator |= (const Vf32Native &other) noexcept;
+	fstb_FORCEINLINE Vf32 &
+	               operator ^= (const Vf32Native &other) noexcept;
+
+	fstb_FORCEINLINE Vf32
+	               round () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               rcp_approx () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               rcp_approx2 () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               signbit () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               is_lt_0 () const noexcept;
+
+	fstb_FORCEINLINE void
+	               explode (float &a0, float &a1, float &a2, float &a3) const noexcept;
+
+	fstb_FORCEINLINE float
+	               sum_h () const noexcept;
+	fstb_FORCEINLINE float
+	               min_h () const noexcept;
+	fstb_FORCEINLINE float
+	               max_h () const noexcept;
+
+	fstb_FORCEINLINE bool
+	               and_h () const noexcept;
+	fstb_FORCEINLINE bool
+	               or_h () const noexcept;
+
+	static fstb_FORCEINLINE Vf32Native
+	               signbit_mask () noexcept;
 
 
 
@@ -110,6 +150,12 @@ private:
 
 #if ! defined (fstb_HAS_SIMD)
 public:
+	union Combo
+	{
+		Vf32Native     _vf32;
+		int32_t        _s32 [4];
+		uint32_t       _u32 [4];
+	};
 #endif
 	Vf32Native  _x;
 private:
@@ -119,9 +165,6 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	bool           operator == (const Vf32 &other) const = delete;
-	bool           operator != (const Vf32 &other) const = delete;
 
 }; // class Vf32
 
@@ -134,8 +177,20 @@ private:
 fstb_FORCEINLINE Vf32 operator + (Vf32 lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 operator - (Vf32 lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 operator * (Vf32 lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator / (Vf32 lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator & (Vf32 lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator | (Vf32 lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator ^ (Vf32 lhs, const Vf32 &rhs) noexcept;
 
+fstb_FORCEINLINE Vf32 operator == (const Vf32 &lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator != (const Vf32 &lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator <  (const Vf32 &lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator <= (const Vf32 &lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator >  (const Vf32 &lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 operator >= (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 
+fstb_FORCEINLINE Vf32 abs (const Vf32 &v) noexcept;
+fstb_FORCEINLINE Vf32 round (const Vf32 &v) noexcept;
 
 }  // namespace fstb
 

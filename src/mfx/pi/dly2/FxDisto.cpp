@@ -215,8 +215,7 @@ void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
 		const auto     nodiv0_v    = fstb::ToolsSimd::set1_f32 (nodiv0);
 		vol_post_sq = fstb::ToolsSimd::max_f32 (vol_post_sq, nodiv0_v);
 		auto           comp_gain   = fstb::ToolsSimd::sqrt (
-			  fstb::ToolsSimd::min_f32 (vol_pre_sq, lls_v)
-			* fstb::ToolsSimd::rcp_approx2 (vol_post_sq)
+			  fstb::ToolsSimd::min_f32 (vol_pre_sq, lls_v) / vol_post_sq
 		);
 
 #	if 0 // Not needed anymore because of the _env_post update
@@ -355,9 +354,9 @@ void	FxDisto::process_foldback (float data_ptr [], int nbr_spl)
 		);
 		fstb::ToolsSimd::mac (x, u, v_c6_1);
 		x -= v_ofs1;
-		x  = fstb::ToolsSimd::abs (x);
+		x  = fstb::abs (x);
 		x -= v_ofs2;
-		x  = fstb::ToolsSimd::abs (x);
+		x  = fstb::abs (x);
 		x -= v_ofs1;
 
 		fstb::ToolsSimd::mac (x, v_a * x, x * x);

@@ -454,7 +454,7 @@ void	Compex::conv_env_to_log (int nbr_spl)
 	while (pos < block_bnd)
 	{
 		auto           val = fstb::ToolsSimd::load_f32 (&_buf_tmp [pos]);
-		val = fstb::ToolsSimd::log2_approx (val);
+		val = fstb::Approx::log2 (val);
 		fstb::ToolsSimd::store_f32 (&_buf_tmp [pos], val);
 
 		pos += 4;

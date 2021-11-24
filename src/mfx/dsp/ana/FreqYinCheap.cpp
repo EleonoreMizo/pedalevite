@@ -246,7 +246,7 @@ void	FreqYinCheap::analyse_sample () noexcept
 			fstb::ToolsSimd::mac (sum_v, dif1, dif1);
 		}
 
-		sum = fstb::ToolsSimd::sum_h_flt (sum_v);
+		sum = sum_v.sum_h ();
 
 #else
 

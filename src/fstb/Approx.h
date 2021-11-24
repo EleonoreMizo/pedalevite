@@ -47,32 +47,29 @@ class Approx
 
 public:
 
-	static inline Vf32
-	               sin_rbj (Vf32 x) noexcept;
-	static inline Vf32
-	               cos_rbj (Vf32 x) noexcept;
+	template <typename T>
+	static inline T
+	               sin_rbj (T x) noexcept;
+	template <typename T>
+	static inline T
+	               cos_rbj (T x) noexcept;
 	static inline void
 	               cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept;
 	template <typename T>
-	static inline constexpr T
+	static inline T
 	               sin_rbj_halfpi (T x) noexcept;
-	static inline Vf32
-	               sin_rbj_halfpi (Vf32 x) noexcept;
-	static inline Vf32
-	               sin_rbj_pi (Vf32 x) noexcept;
+	template <typename T>
+	static inline T
+	               sin_rbj_pi (T x) noexcept;
 	static inline void
 	               sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept;
 
 	template <typename T>
 	static inline T
 	               sin_nick (T x) noexcept;
-	static inline Vf32
-	               sin_nick (Vf32 x) noexcept;
 	template <typename T>
 	static inline T
 	               sin_nick_2pi (T x) noexcept;
-	static inline Vf32
-	               sin_nick_2pi (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline std::array <T, 2>
@@ -137,16 +134,12 @@ public:
 	               tan_mystran (Vf32 x) noexcept;
 
 	template <typename T>
-	static inline constexpr T
+	static inline T
 	               tan_pade33 (T x) noexcept;
-	static inline Vf32
-	               tan_pade33 (Vf32 x) noexcept;
 
 	template <typename T>
-	static inline constexpr T
+	static inline T
 	               tan_pade55 (T x) noexcept;
-	static inline Vf32
-	               tan_pade55 (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline constexpr T
@@ -163,13 +156,9 @@ public:
 	template <typename T>
 	static inline T
 	               tanh_mystran (T x) noexcept;
-	static inline Vf32
-	               tanh_mystran (Vf32 x) noexcept;
 	template <typename T>
 	static inline T
 	               tanh_urs (T x) noexcept;
-	static inline Vf32
-	               tanh_urs (Vf32 x) noexcept;
 	template <typename T>
 	static inline constexpr T
 	               tanh_2dat (T x) noexcept;
@@ -197,8 +186,6 @@ public:
 	template <typename T>
 	static inline T
 	               wright_omega_4 (T x) noexcept;
-	static inline Vf32
-	               wright_omega_4 (Vf32 x) noexcept;
 
 
 

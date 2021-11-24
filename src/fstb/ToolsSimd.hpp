@@ -547,29 +547,6 @@ Vs32	ToolsSimd::reverse_s32 (Vs32 x) noexcept
 
 
 
-void	ToolsSimd::explode (float &a0, float &a1, float &a2, float &a3, Vf32 x) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	a0 = x._x [0];
-	a1 = x._x [1];
-	a2 = x._x [2];
-	a3 = x._x [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto     tmp = _mm_movehl_ps (x, x);
-	a0 = _mm_cvtss_f32 (x);
-	a2 = _mm_cvtss_f32 (tmp);
-	a1 = _mm_cvtss_f32 (_mm_shuffle_ps (x, x, (1<<0)));
-	a3 = _mm_cvtss_f32 (_mm_shuffle_ps (tmp, tmp, (1<<0)));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	a0 = vgetq_lane_f32 (x, 0);
-	a1 = vgetq_lane_f32 (x, 1);
-	a2 = vgetq_lane_f32 (x, 2);
-	a3 = vgetq_lane_f32 (x, 3);
-#endif // fstb_ARCHI
-}
-
-
-
 void	ToolsSimd::mac (Vf32 &s, Vf32 a, Vf32 b) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -692,185 +669,6 @@ Vf32	ToolsSimd::max_f32 (Vf32 lhs, Vf32 rhs) noexcept
 
 
 
-float	ToolsSimd::sum_h_flt (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return (v._x [0] + v._x [2]) + (v._x [1] + v._x [3]);
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	// s = v3,v2,v1,v0
-	const auto s = _mm_shuffle_ps (v, v, (3 << 0) | (2 << 2) | (1 << 4) | (0 << 6));
-	v = _mm_add_ps (v, s); // v0+v3,v1+v2,v2+v1,v3+v0
-	return _mm_cvtss_f32 (_mm_add_ss (v, _mm_movehl_ps (s, v)));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	#if fstb_WORD_SIZE == 64
-		return vaddvq_f32 (v);
-	#else
-		float32x2_t    v2 = vadd_f32 (vget_high_f32 (v), vget_low_f32 (v));
-		return vget_lane_f32 (vpadd_f32 (v2, v2), 0);
-	#endif
-#endif // fstb_ARCHI
-}
-
-
-
-float	ToolsSimd::min_h_flt (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return std::min (std::min (v._x [0], v._x [2]), std::min (v._x [1], v._x [3]));
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	v = _mm_min_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
-	return _mm_cvtss_f32 (_mm_min_ss (v, _mm_shuffle_ps (v, v, 1)));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	float32x2_t    v2 = vmin_f32 (vget_high_f32 (v), vget_low_f32 (v));
-	return vget_lane_f32 (vpmin_f32 (v2, v2), 0);
-#endif // fstb_ARCHI
-}
-
-
-
-float	ToolsSimd::max_h_flt (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return std::max (std::max (v._x [0], v._x [2]), std::max (v._x [1], v._x [3]));
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	v = _mm_max_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
-	return _mm_cvtss_f32 (_mm_max_ss (v, _mm_shuffle_ps (v, v, 1)));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	float32x2_t    v2 = vmax_f32 (vget_high_f32 (v), vget_low_f32 (v));
-	return vget_lane_f32 (vpmax_f32 (v2, v2), 0);
-#endif // fstb_ARCHI
-}
-
-
-
-// Assumes "to nearest" rounding mode on x86
-Vf32	ToolsSimd::round (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		roundf (v._x [0]),
-		roundf (v._x [1]),
-		roundf (v._x [2]),
-		roundf (v._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_cvtepi32_ps (_mm_cvtps_epi32 (v));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const auto     zero = vdupq_n_f32 ( 0.0f);
-	const auto     m    = vdupq_n_f32 (-0.5f);
-	const auto     p    = vdupq_n_f32 (+0.5f);
-	const auto     gt0  = vcgtq_f32 (v, zero);
-	const auto     u    = vbslq_f32 (gt0, p, m);
-	v = vaddq_f32 (v, u);
-	return v;
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::abs (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		fabsf (v._x [0]),
-		fabsf (v._x [1]),
-		fabsf (v._x [2]),
-		fabsf (v._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_andnot_ps (signbit_mask_f32 (), v);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vabsq_f32 (v);
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::signbit (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		copysignf (0.f, v._x [0]),
-		copysignf (0.f, v._x [1]),
-		copysignf (0.f, v._x [2]),
-		copysignf (0.f, v._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_and_ps (signbit_mask_f32 (), v);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vandq_u32 (
-		vreinterpretq_u32_f32 (v),
-		vdupq_n_u32 (0x80000000U)
-	));
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::signbit_mask_f32 () noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          c;
-	c._u32 [0] = 0x80000000U;
-	c._u32 [1] = 0x80000000U;
-	c._u32 [2] = 0x80000000U;
-	c._u32 [3] = 0x80000000U;
-	return c._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-//	return _mm_set1_ps (-0.f);
-	return _mm_castsi128_ps (_mm_set1_epi32 (0x80000000));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vdupq_n_u32 (0x80000000U)); 
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::rcp_approx (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		sqrtf (v._x [0]),
-		sqrtf (v._x [1]),
-		sqrtf (v._x [2]),
-		sqrtf (v._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_rcp_ps (v);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	float32x4_t    r = vrecpeq_f32 (v);
-	r = vmulq_f32 (vrecpsq_f32 (v, r), r);
-//	r = vmulq_f32 (vrecpsq_f32 (v, r), r); // Only one step needed?
-	return r;
-#endif // fstb_ARCHI
-}
-
-
-
-// With more accuracy
-Vf32	ToolsSimd::rcp_approx2 (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		1.f / v._x [0],
-		1.f / v._x [1],
-		1.f / v._x [2],
-		1.f / v._x [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	__m128         r = _mm_rcp_ps (v);
-	r = r * (_mm_set1_ps (2.f) - r * __m128 (v));
-	return r;
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	float32x4_t    r = vrecpeq_f32 (v);
-	r = vmulq_f32 (vrecpsq_f32 (v, r), r);
-	r = vmulq_f32 (vrecpsq_f32 (v, r), r);
-	return r;
-#endif // fstb_ARCHI
-}
-
-
-
 Vf32	ToolsSimd::div_approx (Vf32 n, Vf32 d) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -883,26 +681,7 @@ Vf32	ToolsSimd::div_approx (Vf32 n, Vf32 d) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_div_ps (n, d);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	return n * rcp_approx (d);
-#endif // fstb_ARCHI
-}
-
-
-
-// With more accuracy
-Vf32	ToolsSimd::div_approx2 (Vf32 n, Vf32 d) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		n._x [0] / d._x [0],
-		n._x [1] / d._x [1],
-		n._x [2] / d._x [2],
-		n._x [3] / d._x [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_div_ps (n, d);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return n * rcp_approx2 (d);
+	return n * d.rcp_approx ();
 #endif // fstb_ARCHI
 }
 
@@ -1089,10 +868,10 @@ Vf32	ToolsSimd::log2_base (Vf32 x, P poly) noexcept
 #endif // fstb_ARCHI
 
 	// Extracts the multiplicative part in [1 ; 2[
-	const auto     mask_mantissa = set1_f32 (1.17549421e-38f); // Binary: (1 << 23) - 1
-	auto           part          = and_f32 (x, mask_mantissa);
-	const auto     bias          = set1_f32 (1.0f);            // Binary: 127 << 23
-	part = or_f32 (part, bias);
+	const auto     mask_mantissa = Vf32 (1.17549421e-38f); // Binary: (1 << 23) - 1
+	auto           part          = x & mask_mantissa;
+	const auto     bias          = Vf32 (1.0f);            // Binary: 127 << 23
+	part |= bias;
 
 #endif // fstb_HAS_SIMD
 
@@ -1103,20 +882,6 @@ Vf32	ToolsSimd::log2_base (Vf32 x, P poly) noexcept
 	const auto     total = log2_int + part;
 
 	return total;
-}
-
-
-
-Vf32	ToolsSimd::log2_approx (Vf32 v) noexcept
-{
-	return log2_base (v, [] (Vf32 x) {
-		return Poly::horner (
-			x,
-			set1_f32 (-5.f / 3),
-			set1_f32 ( 2.f    ),
-			set1_f32 (-1.f / 3)
-		);
-	});
 }
 
 
@@ -1184,7 +949,7 @@ Vf32	ToolsSimd::log2_approx2 (Vf32 v) noexcept
 	den = fmadd (den, spl_mantissa, d1);
 	den = fmadd (den, spl_mantissa, d0);
 
-	auto           res = div_approx2 (num, den);
+	auto           res = num / den;
 	res += log2_exponent;
 
 	return res;
@@ -1255,20 +1020,6 @@ Vf32	ToolsSimd::exp2_base (Vf32 x, P poly) noexcept
 #endif // fstb_ARCHI
 
 #endif // fstb_HAS_SIMD
-}
-
-
-
-Vf32	ToolsSimd::exp2_approx (Vf32 v) noexcept
-{
-	return exp2_base (v, [] (Vf32 x) {
-		return Poly::horner (
-			x,
-			set1_f32 (1.f    ),
-			set1_f32 (2.f / 3),
-			set1_f32 (1.f / 3)
-		);
-	});
 }
 
 
@@ -1400,24 +1151,6 @@ std::tuple <Vf32, Vf32>	ToolsSimd::swap_cond (Vf32 cond, Vf32 lhs, Vf32 rhs) noe
 
 
 
-Vf32	ToolsSimd::cmp_gt_f32 (Vf32 lhs, Vf32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          r;
-	r._s32 [0] = (lhs._x [0] > rhs._x [0]) ? -1 : 0;
-	r._s32 [1] = (lhs._x [1] > rhs._x [1]) ? -1 : 0;
-	r._s32 [2] = (lhs._x [2] > rhs._x [2]) ? -1 : 0;
-	r._s32 [3] = (lhs._x [3] > rhs._x [3]) ? -1 : 0;
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_cmpgt_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vcgtq_f32 (lhs, rhs));
-#endif // fstb_ARCHI
-}
-
-
-
 Vs32	ToolsSimd::cmp_gt_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -1431,24 +1164,6 @@ Vs32	ToolsSimd::cmp_gt_s32 (Vs32 lhs, Vs32 rhs) noexcept
 	return _mm_cmpgt_epi32 (lhs, rhs);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_s32_u32 (vcgtq_s32 (lhs, rhs));
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::cmp_lt_f32 (Vf32 lhs, Vf32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          r;
-	r._s32 [0] = (lhs._x [0] < rhs._x [0]) ? -1 : 0;
-	r._s32 [1] = (lhs._x [1] < rhs._x [1]) ? -1 : 0;
-	r._s32 [2] = (lhs._x [2] < rhs._x [2]) ? -1 : 0;
-	r._s32 [3] = (lhs._x [3] < rhs._x [3]) ? -1 : 0;
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_cmplt_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vcltq_f32 (lhs, rhs));
 #endif // fstb_ARCHI
 }
 
@@ -1472,24 +1187,6 @@ Vs32	ToolsSimd::cmp_lt_s32 (Vs32 lhs, Vs32 rhs) noexcept
 
 
 
-Vf32	ToolsSimd::cmp_lt0_f32 (Vf32 lhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          r;
-	r._s32 [0] = (lhs._x [0] < 0) ? -1 : 0;
-	r._s32 [1] = (lhs._x [1] < 0) ? -1 : 0;
-	r._s32 [2] = (lhs._x [2] < 0) ? -1 : 0;
-	r._s32 [3] = (lhs._x [3] < 0) ? -1 : 0;
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_castsi128_ps (_mm_srai_epi32 (_mm_castps_si128 (lhs), 31));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_s32 (vshrq_n_s32 (vreinterpretq_s32_f32 (lhs), 31));
-#endif // fstb_ARCHI
-}
-
-
-
 Vs32	ToolsSimd::cmp_lt0_s32 (Vs32 lhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -1508,24 +1205,6 @@ Vs32	ToolsSimd::cmp_lt0_s32 (Vs32 lhs) noexcept
 
 
 
-Vf32	ToolsSimd::cmp_eq_f32 (Vf32 lhs, Vf32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          r;
-	r._s32 [0] = (lhs._x [0] == rhs._x [0]) ? -1 : 0;
-	r._s32 [1] = (lhs._x [1] == rhs._x [1]) ? -1 : 0;
-	r._s32 [2] = (lhs._x [2] == rhs._x [2]) ? -1 : 0;
-	r._s32 [3] = (lhs._x [3] == rhs._x [3]) ? -1 : 0;
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_cmpeq_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vceqq_f32 (lhs, rhs));
-#endif // fstb_ARCHI
-}
-
-
-
 Vs32	ToolsSimd::cmp_eq_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -1539,24 +1218,6 @@ Vs32	ToolsSimd::cmp_eq_s32 (Vs32 lhs, Vs32 rhs) noexcept
 	return _mm_cmpeq_epi32 (lhs, rhs);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_s32_u32 (vceqq_s32 (lhs, rhs));
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::cmp_ne_f32 (Vf32 lhs, Vf32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          r;
-	r._s32 [0] = (lhs._x [0] != rhs._x [0]) ? -1 : 0;
-	r._s32 [1] = (lhs._x [1] != rhs._x [1]) ? -1 : 0;
-	r._s32 [2] = (lhs._x [2] != rhs._x [2]) ? -1 : 0;
-	r._s32 [3] = (lhs._x [3] != rhs._x [3]) ? -1 : 0;
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_cmpneq_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vmvnq_u32 (vceqq_f32 (lhs, rhs)));
 #endif // fstb_ARCHI
 }
 
@@ -1581,31 +1242,6 @@ Vs32	ToolsSimd::cmp_ne_s32 (Vs32 lhs, Vs32 rhs) noexcept
 
 
 
-Vf32	ToolsSimd::and_f32 (Vf32 lhs, Vf32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          al;
-	Combo          ar;
-	Combo          r;
-	al._vf32   = lhs;
-	ar._vf32   = rhs;
-	r._s32 [0] = al._s32 [0] & ar._s32 [0];
-	r._s32 [1] = al._s32 [1] & ar._s32 [1];
-	r._s32 [2] = al._s32 [2] & ar._s32 [2];
-	r._s32 [3] = al._s32 [3] & ar._s32 [3];
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_and_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vandq_u32 (
-		vreinterpretq_u32_f32 (lhs),
-		vreinterpretq_u32_f32 (rhs)
-	));
-#endif // fstb_ARCHI
-}
-
-
-
 Vs32	ToolsSimd::and_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -1619,31 +1255,6 @@ Vs32	ToolsSimd::and_s32 (Vs32 lhs, Vs32 rhs) noexcept
 	return _mm_and_si128 (lhs, rhs);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vandq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::or_f32 (Vf32 lhs, Vf32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          al;
-	Combo          ar;
-	Combo          r;
-	al._vf32   = lhs;
-	ar._vf32   = rhs;
-	r._s32 [0] = al._s32 [0] | ar._s32 [0];
-	r._s32 [1] = al._s32 [1] | ar._s32 [1];
-	r._s32 [2] = al._s32 [2] | ar._s32 [2];
-	r._s32 [3] = al._s32 [3] | ar._s32 [3];
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_or_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (vorrq_u32 (
-		vreinterpretq_u32_f32 (lhs),
-		vreinterpretq_u32_f32 (rhs)
-	));
 #endif // fstb_ARCHI
 }
 
@@ -1667,31 +1278,6 @@ Vs32	ToolsSimd::or_s32 (Vs32 lhs, Vs32 rhs) noexcept
 
 
 
-Vf32	ToolsSimd::xor_f32 (Vf32 lhs, Vf32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          al;
-	Combo          ar;
-	Combo          r;
-	al._vf32   = lhs;
-	ar._vf32   = rhs;
-	r._s32 [0] = al._s32 [0] ^ ar._s32 [0];
-	r._s32 [1] = al._s32 [1] ^ ar._s32 [1];
-	r._s32 [2] = al._s32 [2] ^ ar._s32 [2];
-	r._s32 [3] = al._s32 [3] ^ ar._s32 [3];
-	return r._vf32;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_xor_ps (lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u32 (veorq_u32 (
-		vreinterpretq_u32_f32 (lhs),
-		vreinterpretq_u32_f32 (rhs)
-	));
-#endif // fstb_ARCHI
-}
-
-
-
 Vs32	ToolsSimd::xor_s32 (Vs32 lhs, Vs32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -1705,50 +1291,6 @@ Vs32	ToolsSimd::xor_s32 (Vs32 lhs, Vs32 rhs) noexcept
 	return _mm_xor_si128 (lhs, rhs);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return veorq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-// Works only with well-formed condition results (tested bits depends on the implementation).
-// For each scalar, true = all bits set, false = all bits cleared
-bool	ToolsSimd::and_h (Vf32 cond) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          c;
-	c._vf32 = cond;
-	const int32_t  t = (c._s32 [0] & c._s32 [1]) & (c._s32 [2] & c._s32 [3]);
-	return (t == -1);
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return (_mm_movemask_ps (cond) == 15);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const uint32x2_t  tmp = vreinterpret_u32_u16 (
-		vqmovn_u32 (vreinterpretq_u32_f32 (cond))
-	);
-	return (   vget_lane_u32 (tmp, 0) == 0xFFFFFFFFU
-	        && vget_lane_u32 (tmp, 1) == 0xFFFFFFFFU);
-#endif // fstb_ARCHI
-}
-
-
-
-// Works only with well-formed condition results (tested bits depends on the implementation).
-// For each scalar, true = all bits set, false = all bits cleared
-bool	ToolsSimd::or_h (Vf32 cond) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	Combo          c;
-	c._vf32 = cond;
-	const int32_t  t = (c._s32 [0] | c._s32 [1]) | (c._s32 [2] | c._s32 [3]);
-	return (t != 0);
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return (_mm_movemask_ps (cond) != 0);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const uint32x2_t  tmp = vreinterpret_u32_u16 (
-		vqmovn_u32 (vreinterpretq_u32_f32 (cond))
-	);
-	return (   vget_lane_u32 (tmp, 0) != 0
-	        || vget_lane_u32 (tmp, 1) != 0);
 #endif // fstb_ARCHI
 }
 

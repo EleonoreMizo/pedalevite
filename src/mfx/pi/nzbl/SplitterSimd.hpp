@@ -200,19 +200,17 @@ void	SplitterSimd::process_sample (float x) noexcept
 	const auto v1o = _filter_1.process_sample (v1i);
 	const auto v2i = fstb::ToolsSimd::deinterleave_f32_hi (v0o, v0o);
 	const auto v2o = _filter_2.process_sample (v2i);
-	fstb::ToolsSimd::explode (
+	v1o.explode (
 		*(_out_ptr_arr [0]),
 		*(_out_ptr_arr [2]),
 		*(_out_ptr_arr [1]),
-		*(_out_ptr_arr [3]),
-		v1o
+		*(_out_ptr_arr [3])
 	);
-	fstb::ToolsSimd::explode (
+	v2o.explode (
 		*(_out_ptr_arr [4]),
 		*(_out_ptr_arr [6]),
 		*(_out_ptr_arr [5]),
-		*(_out_ptr_arr [7]),
-		v2o
+		*(_out_ptr_arr [7])
 	);
 }
 

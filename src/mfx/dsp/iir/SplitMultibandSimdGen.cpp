@@ -1486,7 +1486,10 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 		const auto     band_idx_arr { get_band_out (grp_cnt) };
 		if (! band_idx_arr.empty ())
 		{
-			out += "\tfstb::ToolsSimd::explode (\n";
+			fstb::snprintf4all (txt_0, sizeof (txt_0),
+				"\tv%do.explode (\n", grp_cnt
+			);
+			out += txt_0;
 			for (int lane = 0; lane < _simd_w; ++lane)
 			{
 				const int      band_idx = band_idx_arr [lane];
@@ -1505,10 +1508,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 				}
 				out += txt_0;
 			}
-			fstb::snprintf4all (txt_0, sizeof (txt_0),
-				"\t\tv%do\n\t);\n", grp_cnt
-			);
-			out += txt_0;
+			out += "\t);\n";
 		}
 	}
 	if (trash_flag)
@@ -1642,106 +1642,7 @@ std::string	SplitMultibandSimdGen::generate_include ()
 "#include \"fstb/Vf32.h\"\n"
 "#include <algorithm>\n"
 "#include <iterator>\n"
-"#include <cstddef>\n\n"
-#if 0
-// Stand-alone x86/SSE2 version.
-// Mainly for checking the result with Complier Explorer.
-"#include <cstdint>\n"
-"#include <emmintrin.h>\n"
-"\n"
-"namespace fstb\n"
-"{\n"
-"class ToolsSimd\n"
-"{\n"
-"public:\n"
-"\ttypedef __m128i Vs32;\n"
-"\ttypedef __m128  Vf32;\n"
-"\tstatic Vf32 set_f32_zero () noexcept { return _mm_setzero_ps (); }\n"
-"\tstatic Vf32 set1_f32 (float a) noexcept { return _mm_set1_ps (a); }\n"
-"\tstatic Vf32 set_f32 (float a0, float a1, float a2, float a3) noexcept { return _mm_set_ps (a3, a2, a1, a0); }\n"
-"\tstatic Vs32 set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept { return _mm_set_epi32 (a3, a2, a1, a0); }\n"
-"\tstatic Vf32 cast_f32 (Vs32 x) noexcept { return _mm_castsi128_ps (x); }\n"
-"\tstatic Vf32 select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept\n"
-"\t{\n"
-"\t\tconst auto     cond_1 = _mm_and_ps (cond, v_t);\n"
-"\t\tconst auto     cond_0 = _mm_andnot_ps (cond, v_f);\n"
-"\t\treturn _mm_or_ps (cond_0, cond_1);\n"
-"\t}\n"
-"\tstatic Vf32 and_f32 (Vf32 lhs, Vf32 rhs) noexcept { return _mm_and_ps (lhs, rhs); }\n"
-"\tstatic Vf32 or_f32 (Vf32 lhs, Vf32 rhs) noexcept { return _mm_or_ps (lhs, rhs); }\n"
-"\tstatic Vf32 butterfly_f32_w64 (Vf32 x) noexcept\n"
-"\t{\n"
-"\t\tconst auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 0, 1 << 31, 1 << 31));\n"
-"\t\tconst auto x0   = _mm_shuffle_ps (x, x, (2<<0) + (3<<2) + (0<<4) + (1<<6)); // c, d, a, b\n"
-"\t\tconst auto x1   = _mm_xor_ps (x, sign); // a, b, -c, -d\n"
-"\t\treturn _mm_add_ps (x0, x1);\n"
-"\t}\n"
-"\tstatic Vf32 deinterleave_f32_lo (Vf32 i0, Vf32 i1) noexcept\n"
-"\t{\n"
-"\t\treturn _mm_shuffle_ps (i0, i1, (0<<0) | (2<<2) | (0<<4) | (2<<6));\n"
-"\t}\n"
-"\tstatic Vf32 deinterleave_f32_hi (Vf32 i0, Vf32 i1) noexcept\n"
-"\t{\n"
-"\t\treturn _mm_shuffle_ps (i0, i1, (1<<0) | (3<<2) | (1<<4) | (3<<6));\n"
-"\t}\n"
-"\tstatic void explode (float &a0, float &a1, float &a2, float &a3, Vf32 x) noexcept\n"
-"\t{\n"
-"\t\tconst auto     tmp = _mm_movehl_ps (x, x);\n"
-"\t\ta0 = _mm_cvtss_f32 (x);\n"
-"\t\ta2 = _mm_cvtss_f32 (tmp);\n"
-"\t\ta1 = _mm_cvtss_f32 (_mm_shuffle_ps (x, x, (1<<0)));\n"
-"\t\ta3 = _mm_cvtss_f32 (_mm_shuffle_ps (tmp, tmp, (1<<0)));\n"
-"\t}\n"
-"\ttemplate <int SHIFT> class Shift\n"
-"\t{\n"
-"\tpublic:\n"
-"\t\tstatic float extract (Vf32 a) noexcept\n"
-"\t\t{\n"
-"\t\t\tswitch (SHIFT & 3)\n"
-"\t\t\t{\n"
-"\t\t\tcase 1:  a = _mm_shuffle_ps (a, a, 1); break;\n"
-"\t\t\tcase 2:  a = _mm_shuffle_ps (a, a, 2); break;\n"
-"\t\t\tcase 3:  a = _mm_shuffle_ps (a, a, 3); break;\n"
-"\t\t\tdefault: /* Nothing */                 break;\n"
-"\t\t\t}\n"
-"\t\t\treturn _mm_cvtss_f32 (a);\n"
-"\t\t}\n"
-"\t};\n"
-"};\n"
-"}\n"
-"\n"
-"#if defined (_MSC_VER)\n"
-"fstb::Vf32 &\toperator += (fstb::Vf32 &lhs, const fstb::Vf32 &rhs) noexcept\n"
-"{\n"
-"\tlhs = _mm_add_ps (lhs, rhs);\n"
-"\treturn lhs;\n"
-"}\n"
-"fstb::Vf32 &\toperator -= (fstb::Vf32 &lhs, const fstb::Vf32 &rhs) noexcept\n"
-"{\n"
-"\tlhs = _mm_sub_ps (lhs, rhs);\n"
-"\treturn lhs;\n"
-"}\n"
-"fstb::Vf32 &\toperator *= (fstb::Vf32 &lhs, const fstb::Vf32 &rhs) noexcept\n"
-"{\n"
-"\tlhs = _mm_mul_ps (lhs, rhs);\n"
-"\treturn lhs;\n"
-"}\n"
-"fstb::Vf32\toperator + (fstb::Vf32 lhs, const fstb::Vf32 &rhs) noexcept\n"
-"{\n"
-"\treturn _mm_add_ps (lhs, rhs);\n"
-"}\n"
-"fstb::Vf32\toperator - (fstb::Vf32 lhs, const fstb::Vf32 &rhs) noexcept\n"
-"{\n"
-"\treturn _mm_sub_ps (lhs, rhs);\n"
-"}\n"
-"fstb::Vf32\toperator * (fstb::Vf32 lhs, const fstb::Vf32 &rhs) noexcept\n"
-"{\n"
-"\treturn _mm_mul_ps (lhs, rhs);\n"
-"}\n"
-"#endif\n"
-"\n"
-#endif
-	;
+"#include <cstddef>\n\n";
 }
 
 
@@ -1920,13 +1821,11 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 					if (nbr_save_p2 == 1)
 					{
 						m_code +=
-							  "\tx_save = fstb::ToolsSimd::and_f32 (mask, x_save);\n";
+							  "\tx_save &= mask;\n";
 					}
 					m_code += "\tmask   = " + e_mask + ";\n";
 					m_code +=
-						"\tx_save = fstb::ToolsSimd::or_f32 (\n"
-						"\t\tx_save, fstb::ToolsSimd::and_f32 (mask, x)\n"
-						"\t);\n";
+						"\tx_save |= (mask & x);\n";
 				}
 
 				mask_save_tot |= mask_save_p2 [nbr_save_p2];
@@ -1986,9 +1885,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 				const std::string e_mask = build_mask (~mask_save_tot);
 				m_code += "\tmask   = " + e_mask + ";\n";
 				m_code +=
-					"\tx = fstb::ToolsSimd::or_f32 (\n"
-					"\t\tx_save, fstb::ToolsSimd::and_f32 (mask, x)\n"
-					"\t);\n";
+					"\tx = x_save | (mask & x);\n";
 			}
 		}
 	}

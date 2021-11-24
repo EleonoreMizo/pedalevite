@@ -618,7 +618,7 @@ void	Dist3Proc::compute_bias (Channel &chn, const float src_ptr [], int nbr_spl)
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           val = fstb::ToolsSimd::load_f32 (&src_ptr [pos]);
-		val = fstb::ToolsSimd::abs (val);
+		val = fstb::abs (val);
 		fstb::ToolsSimd::store_f32 (&_buf_bias [pos], val);
 	}
 	chn._lpf_bias.process_block (
@@ -699,11 +699,11 @@ void	Dist3Proc::process_dist (Channel &chn, int nbr_spl)
 		> (buf_arr [0], buf_arr [0], nbr_spl);
 
 		// Negates buf 0: -max0 (bias - x)
-		const auto  sign_mask = fstb::ToolsSimd::signbit_mask_f32 ();
+		const auto  sign_mask = fstb::Vf32::signbit_mask ();
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto        x = fstb::ToolsSimd::load_f32 (buf_arr [0] + pos);
-			x = fstb::ToolsSimd::xor_f32 (x, sign_mask);
+			x ^= sign_mask;
 			fstb::ToolsSimd::store_f32 (buf_arr [0] + pos, x);
 		}
 

@@ -52,18 +52,6 @@ std::array <T, 2>	XFadeEqAmpLin::compute_gain (T x) noexcept
 
 
 
-std::array <fstb::Vf32, 2>	XFadeEqAmpLin::compute_gain (fstb::Vf32 x) noexcept
-{
-	using TS = fstb::ToolsSimd;
-
-	assert (! TS::or_h (TS::cmp_lt0_f32 (x)));
-	assert (! TS::or_h (TS::cmp_gt_f32 (x, TS::set1_f32 (1))));
-
-	return std::array <fstb::Vf32, 2> { TS::set1_f32 (1) - x, x };
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

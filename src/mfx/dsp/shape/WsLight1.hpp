@@ -82,7 +82,7 @@ void  WsLight1::process_block (float dst_ptr [], const float src_ptr [], int nbr
 		mnt_int >>= 23 - 15; // 0:15
 		mnt_int *= mnt_int;  // 0:30
 		mnt_int >>= 30 - 23; // 0:23
-		assert (! fstb::ToolsSimd::or_h (fstb::ToolsSimd::cmp_lt_s32 (mnt_int, fstb::ToolsSimd::set_s32_zero ())));
+		assert (! fstb::ToolsSimd::or_h (fstb::ToolsSimd::cmp_lt0_s32 (mnt_int)));
 
 		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
 		x_int = fstb::ToolsSimd::or_s32 (x_int, mnt_int);

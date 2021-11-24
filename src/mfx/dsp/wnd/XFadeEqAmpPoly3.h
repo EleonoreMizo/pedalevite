@@ -23,8 +23,6 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/Vf32.h"
-
 #include <array>
 
 
@@ -48,9 +46,6 @@ public:
 	template <typename T>
 	static inline std::array <T, 2>
 	               compute_gain (T x) noexcept;
-
-	static inline std::array <fstb::Vf32, 2>
-	               compute_gain (fstb::Vf32 x) noexcept;
 
 
 

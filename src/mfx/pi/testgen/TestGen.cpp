@@ -518,7 +518,7 @@ uint32_t	TestGen::compute_phase_step (int pos)
 
 
 
-constexpr float	TestGen::compute_cos (uint32_t phase)
+float	TestGen::compute_cos (uint32_t phase)
 {
 	// The RBJ sine approximation gives about -150 dB of THD, enough for
 	// this job.

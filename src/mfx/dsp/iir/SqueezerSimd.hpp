@@ -358,7 +358,7 @@ fstb::Vf32	SqueezerSimd <BR, LFOP>::shape_feedback (fstb::Vf32 x) noexcept
 	const auto     xc   =
 		fstb::ToolsSimd::max_f32 (fstb::ToolsSimd::min_f32 (x, c1), cm1);
 	const auto     xn  = xc - x;
-	const auto     xna = fstb::ToolsSimd::abs (xn);
+	const auto     xna = fstb::abs (xn);
 	fstb::ToolsSimd::mac (x, xna, xn * fold);
 
 	return x;

@@ -101,7 +101,7 @@ fstb::Vf32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fst
 
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls
-		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta);
+		const auto     delta_lt_0 = delta.is_lt_0 ();
 		const auto     coef       =
 			fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
 
@@ -125,7 +125,7 @@ fstb::Vf32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fst
 	if (flt < ORD) \
 	{ \
 		const auto     delta      = state##flt - state##fltn; \
-		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta); \
+		const auto     delta_lt_0 = delta.is_lt_0 (); \
 		const auto     coef       = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
 		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
 	}

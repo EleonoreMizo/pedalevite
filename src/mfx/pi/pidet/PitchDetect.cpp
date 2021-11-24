@@ -210,7 +210,7 @@ void	PitchDetect::do_process_block (piapi::ProcInfo &proc)
 				auto           s2 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  8);
 				auto           s3 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos + 12);
 				auto           s  = (s0 + s1) + (s2 + s3);
-				_buffer [pos_sub] = fstb::ToolsSimd::sum_h_flt (s);
+				_buffer [pos_sub] = s.sum_h ();
 				pos += 16;
 				++ pos_sub;
 			}
@@ -223,7 +223,7 @@ void	PitchDetect::do_process_block (piapi::ProcInfo &proc)
 				auto           s0 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos     );
 				auto           s1 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  4);
 				auto           s  = s0 + s1;
-				_buffer [pos_sub] = fstb::ToolsSimd::sum_h_flt (s);
+				_buffer [pos_sub] = s.sum_h ();
 				pos += 8;
 				++ pos_sub;
 			}

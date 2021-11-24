@@ -63,8 +63,8 @@ std::array <fstb::Vf32, 2>	XFadeEqAmpSin::compute_gain (fstb::Vf32 x) noexcept
 {
 	using TS = fstb::ToolsSimd;
 
-	assert (! TS::or_h (TS::cmp_lt0_f32 (x)));
-	assert (! TS::or_h (TS::cmp_gt_f32 (x, TS::set1_f32 (1))));
+	assert (x >= fstb::Vf32 (0));
+	assert (x <= fstb::Vf32 (1));
 
 	constexpr float   c0 = 0.224008f;
 	const T        one  = TS::set1_f32 (1);

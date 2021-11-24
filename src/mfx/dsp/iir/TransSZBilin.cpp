@@ -227,9 +227,8 @@ void	TransSZBilin::map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const 
 	auto           x1z  = x0s_minus_x2kk + x0s_minus_x2kk;
 
 	// On a0z only. Requires accuracy
-	const auto     mult = fstb::ToolsSimd::Shift <0>::spread (
-		fstb::ToolsSimd::rcp_approx2 (x0z)
-	);
+	const auto     mult =
+		fstb::ToolsSimd::Shift <0>::spread (x0z.rcp_approx2 ());
 
 	x0z *= mult;
 	x1z *= mult;
@@ -310,7 +309,7 @@ void	TransSZBilin::map_s_to_z_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 z_eq_a [
 	const auto     a0s_minus_a2kk = a0s - a2kk;
 	const auto     a1z  = a0s_minus_a2kk + a0s_minus_a2kk;
 
-	const auto     mult = fstb::ToolsSimd::rcp_approx2 (a0z);   // Requires accuracy
+	const auto     mult = a0z.rcp_approx2 ();   // Requires accuracy
 
 	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0z * mult);
 	fstb::ToolsSimd::store_f32 (&z_eq_b [1], b1z * mult);
@@ -343,9 +342,8 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2
 	auto           x0z = x0s + x1k;
 
 	// On a0z only. Requires accuracy
-	const auto     mult = fstb::ToolsSimd::Shift <0>::spread (
-		fstb::ToolsSimd::rcp_approx2 (x0z)
-	);
+	const auto     mult =
+		fstb::ToolsSimd::Shift <0>::spread (x0z.rcp_approx2 ());
 
 	x0z *= mult;
 	x1z *= mult;
@@ -402,7 +400,7 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::Vf32 z_eq_b [2], fstb::Vf32
 	const auto     a1z = a0s - a1k;
 	const auto     a0z = a0s + a1k;
 
-	const auto     mult = fstb::ToolsSimd::rcp_approx2 (a0z);
+	const auto     mult = a0z.rcp_approx2 ();
 
 	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0z * mult);
 	fstb::ToolsSimd::store_f32 (&z_eq_b [1], b1z * mult);
@@ -442,12 +440,11 @@ float	TransSZBilin::map_s_to_z_ap1_approx_b0 (float k) noexcept
 	assert (! fstb::is_null (a0z));
 
 #if defined (fstb_HAS_SIMD)
-	const auto     mult =
-		fstb::ToolsSimd::rcp_approx2 (fstb::ToolsSimd::set1_f32 (a0z));
-	const float    m1 = fstb::ToolsSimd::Shift <0>::extract (mult);
-	const float    b0 = a1z * m1;
+	const auto     mult = fstb::Vf32 (a0z).rcp_approx2 ();
+	const float    m1   = fstb::ToolsSimd::Shift <0>::extract (mult);
+	const float    b0   = a1z * m1;
 #else
-	const float    b0 = a1z / a0z;
+	const float    b0   = a1z / a0z;
 #endif
 
 	return b0;
@@ -462,11 +459,8 @@ fstb::Vf32	TransSZBilin::map_s_to_z_ap1_approx_b0 (fstb::Vf32 k) noexcept
 	const auto     a0z = one + k;
 
 	// IIR coefficients
-	assert (fstb::ToolsSimd::and_h (
-		fstb::ToolsSimd::cmp_ne_f32 (a0z, fstb::ToolsSimd::set_f32_zero ())
-	));
-	const auto     mult = fstb::ToolsSimd::rcp_approx2 (a0z);
-	const auto     b0   = a1z * mult;
+	assert (a0z != fstb::Vf32 (0));
+	const auto     b0  = a1z / a0z;
 	
 	return b0;
 }
@@ -488,8 +482,7 @@ void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float
 	// IIR coefficients
 	assert (! fstb::is_null (a0z));
 #if defined (fstb_HAS_SIMD)
-	const auto     mult =
-		fstb::ToolsSimd::rcp_approx2 (fstb::ToolsSimd::set1_f32 (a0z));
+	const auto     mult = fstb::Vf32 (a0z).rcp_approx2 ();
 	const auto     axz  = fstb::ToolsSimd::set_2f32 (a2z, a1z);
 	const auto     z_eq = axz * mult;
 	z_eq_b [0] = fstb::ToolsSimd::Shift <0>::extract (z_eq);
@@ -519,10 +512,8 @@ void	TransSZBilin::map_s_to_z_ap2_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 s_eq
 	const auto     a1z = a1zh + a1zh;
 
 	// IIR coefficients
-	assert (fstb::ToolsSimd::and_h (
-		fstb::ToolsSimd::cmp_ne_f32 (a0z, fstb::ToolsSimd::set_f32_zero ())
-	));
-	const auto     mult = fstb::ToolsSimd::rcp_approx2 (a0z);
+	assert (a0z != fstb::Vf32 (0));
+	const auto     mult = a0z.rcp_approx2 ();
 	const auto     b0   = a2z * mult;
 	const auto     b1   = a1z * mult;
 	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0 );

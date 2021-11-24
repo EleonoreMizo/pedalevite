@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/Approx.h"
 #include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
@@ -163,18 +164,16 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 		// Computes the ratio for the attack
 		eaf += eps;    // Prevents dividing by zero and makes a unity ratio
 		eas += eps;    // when everything tends toward zero.
-		auto           eas_inv = fstb::ToolsSimd::rcp_approx2 (eas);
-		auto           ea_ratio = eaf * eas_inv;
-		auto           ea_r_l2 = fstb::ToolsSimd::log2_approx (ea_ratio);
+		const auto     ea_ratio = eaf / eas;
+		auto           ea_r_l2  = fstb::Approx::log2 (ea_ratio);
 		ea_r_l2 = fstb::ToolsSimd::max_f32 (ea_r_l2, zero);
 		fstb::ToolsSimd::store_f32 (atk_ptr + pos, ea_r_l2);
 
 		// Ratio for the sustain
 		esf += eps;
 		ess += eps;
-		auto           esf_inv = fstb::ToolsSimd::rcp_approx2 (esf);
-		auto           es_ratio = ess * esf_inv;
-		auto           es_r_l2 = fstb::ToolsSimd::log2_approx (es_ratio);
+		const auto     es_ratio = ess / esf;
+		auto           es_r_l2  = fstb::Approx::log2 (es_ratio);
 		es_r_l2 = fstb::ToolsSimd::max_f32 (es_r_l2, zero);
 		fstb::ToolsSimd::store_f32 (sus_ptr + pos, es_r_l2);
 	}
@@ -241,7 +240,7 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-			x = fstb::ToolsSimd::abs (x);
+			x = fstb::abs (x);
 			spread_and_store (buf_ptr + pos, x);
 		}
 	}
@@ -255,8 +254,8 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 		{
 			auto           x0 = fstb::ToolsSimd::load_f32 (src0_ptr + pos);
 			auto           x1 = fstb::ToolsSimd::load_f32 (src1_ptr + pos);
-			x0 = fstb::ToolsSimd::abs (x0);
-			x1 = fstb::ToolsSimd::abs (x1);
+			x0 = fstb::abs (x0);
+			x1 = fstb::abs (x1);
 			const auto     x = (x0 + x1) * gain;
 			spread_and_store (buf_ptr + pos, x);
 		}
@@ -272,7 +271,7 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 			{
 				const float *  src_ptr = src_ptr_arr [chn];
 				auto           xn = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-				xn = fstb::ToolsSimd::abs (xn);
+				xn = fstb::abs (xn);
 				x += xn;
 			}
 			x *= gain;

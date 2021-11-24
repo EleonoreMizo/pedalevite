@@ -150,7 +150,7 @@ void	OscSinCosEulerSimd::correct () noexcept
 	auto           c  = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	auto           s  = fstb::ToolsSimd::load_f32 (&_pos_sin);
 	const auto     n  = fstb::ToolsSimd::sqrt (c * c + s * s);
-	const auto     ni = fstb::ToolsSimd::rcp_approx2 (n);
+	const auto     ni = n.rcp_approx2 ();
 	c *= ni;
 	s *= ni;
 	fstb::ToolsSimd::store_f32 (&_pos_cos, c);

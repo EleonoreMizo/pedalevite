@@ -178,9 +178,9 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 	auto           reset_mask = V128Par::load_f32 (_reset_mask);
 
 	auto           delta      = x - state;
-	auto           delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
+	auto           delta_gt_0 = (delta > zero);
 
-	hold_state = fstb::ToolsSimd::or_f32 (delta_gt_0, hold_state);
+	hold_state |= delta_gt_0;
 
 	// delta >  0 (attack)       ---> coef = _coef_atk
 	// delta <= 0 (release/hold) ---> coef = _coef_rls
@@ -205,7 +205,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls
-		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta);
+		const auto     delta_lt_0 = delta.is_lt_0 ();
 		coef = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (x - state)
@@ -213,7 +213,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 		V128Par::store_f32 (_state [flt], state);
 	}
 
-	return fstb::ToolsSimd::max_h_flt (state);
+	return state.max_h ();
 }
 
 
@@ -228,14 +228,14 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 	if (flt < ORD) \
 	{ \
 		delta = state##flt - state##fltn; \
-		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta); \
+		const auto     delta_lt_0 = delta.is_lt_0 (); \
 		coef  = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
 		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_RESULT( ord) \
 	if (ord == ORD) \
 	{ \
-		out_ptr [pos] = fstb::ToolsSimd::max_h_flt (state##ord); \
+		out_ptr [pos] = state##ord.max_h (); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_SAVE( fltn) \
 	if (fltn - 1 < ORD) \
@@ -286,8 +286,8 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 
 			// delta >  0 (attack)       ---> coef = _coef_atk
 			// delta <= 0 (release/hold) ---> coef = _coef_rls or 0
-			auto           delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
-			hold_state = fstb::ToolsSimd::or_f32 (delta_gt_0, hold_state);
+			auto           delta_gt_0 = (delta > zero);
+			hold_state |= delta_gt_0;
 			auto           coef       =
 				fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r_cur);
 
@@ -387,8 +387,8 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::Vf32 &hold_st
 		_hold_counter = 0;
 
 		auto           mask = V128Par::load_f32 (_reset_mask);
-		hold_state = fstb::ToolsSimd::and_f32 (hold_state, mask);
-		mask       = fstb::ToolsSimd::Shift <1>::rotate (mask);
+		hold_state &= mask;
+		mask        = fstb::ToolsSimd::Shift <1>::rotate (mask);
 		V128Par::store_f32 (_reset_mask, mask);
 	}
 }

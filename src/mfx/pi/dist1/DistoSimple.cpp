@@ -230,7 +230,7 @@ void	DistoSimple::do_process_block (piapi::ProcInfo &proc)
 		{
 			auto           val =
 				fstb::ToolsSimd::load_f32 (&chn._buf [pos]);
-			val = fstb::ToolsSimd::abs (val);
+			val = fstb::abs (val);
 			fstb::ToolsSimd::store_f32 (&chn._buf_env [pos], val);
 		}
 #else // Reference implementation
@@ -389,7 +389,7 @@ void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int n
 		const auto     x9  = x8 * x;
 		const auto     x_n = x + x2 * v_c_2;
 		const auto     x_p = x - x9 * v_c_9;
-		const auto     t_0 = fstb::ToolsSimd::cmp_lt0_f32 (x);
+		const auto     t_0 = x.is_lt_0 ();
 		x  = fstb::ToolsSimd::select (t_0, x_n, x_p);
 
 		x -= v_bias;

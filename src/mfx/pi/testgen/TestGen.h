@@ -105,7 +105,7 @@ private:
 	void           dup_mono_out (piapi::ProcInfo &proc);
 	uint32_t       compute_phase_step (int pos);
 
-	static inline constexpr float
+	static inline float
 	               compute_cos (uint32_t phase);
 
 	piapi::HostInterface &

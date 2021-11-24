@@ -146,14 +146,8 @@ void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int
 		fstb::ToolsSimd::transpose_f32 (v0, v1, v2, v3);
 
 		auto           vm = fstb::ToolsSimd::max_f32 (
-			fstb::ToolsSimd::max_f32 (
-				fstb::ToolsSimd::abs (v0),
-				fstb::ToolsSimd::abs (v1)
-			),
-			fstb::ToolsSimd::max_f32 (
-				fstb::ToolsSimd::abs (v2),
-				fstb::ToolsSimd::abs (v3)
-			)
+			fstb::ToolsSimd::max_f32 (fstb::abs (v0), fstb::abs (v1)),
+			fstb::ToolsSimd::max_f32 (fstb::abs (v2), fstb::abs (v3))
 		);
 		process_sample_peak (vm, peak_max, peak_hold, hold_cnt, _coef_r4x, 4);
 
@@ -171,20 +165,20 @@ void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int
 		fstb::ToolsSimd::transpose_f32 (v0, v1, v2, v3);
 
 		process_sample_peak (
-			fstb::ToolsSimd::abs (v0), peak_max, peak_hold, hold_cnt, _coef_r, 1
+			fstb::abs (v0), peak_max, peak_hold, hold_cnt, _coef_r, 1
 		);
 		process_sample_rms (v0, rms_sq);
 		if (n3 > 1)
 		{
 			process_sample_peak (
-				fstb::ToolsSimd::abs (v1), peak_max, peak_hold, hold_cnt, _coef_r, 1
+				fstb::abs (v1), peak_max, peak_hold, hold_cnt, _coef_r, 1
 			);
 			process_sample_rms (v1, rms_sq);
 		}
 		if (n3 > 2)
 		{
 			process_sample_peak (
-				fstb::ToolsSimd::abs (v2), peak_max, peak_hold, hold_cnt, _coef_r, 1
+				fstb::abs (v2), peak_max, peak_hold, hold_cnt, _coef_r, 1
 			);
 			process_sample_rms (v2, rms_sq);
 		}
@@ -205,7 +199,7 @@ void	MeterRmsPeakHold4Simd::process_sample (fstb::Vf32 x) noexcept
 	auto           hold_cnt  = fstb::ToolsSimd::load_f32 (&_hold_counter);
 	auto           rms_sq    = fstb::ToolsSimd::load_f32 (&_rms_sq);
 
-	const auto     x_a       = fstb::ToolsSimd::abs (x);
+	const auto     x_a       = fstb::abs (x);
 	process_sample_peak (x_a, peak_max, peak_hold, hold_cnt, _coef_r, 1);
 	process_sample_rms (x, rms_sq);
 
@@ -285,9 +279,9 @@ void	MeterRmsPeakHold4Simd::process_sample_peak (fstb::Vf32 x_a, fstb::Vf32 &pea
 	// Peak
 	peak_max  = fstb::ToolsSimd::max_f32 (x_a, peak_max);
 
-	const auto     xa_gt_ph = fstb::ToolsSimd::cmp_gt_f32 (x_a, peak_hold);
-	const auto     hc_gt_0  = fstb::ToolsSimd::cmp_gt_f32 (hold_cnt, zero);
-	const auto     ph_cond  = fstb::ToolsSimd::or_f32 (xa_gt_ph, hc_gt_0);
+	const auto     xa_gt_ph = (x_a > peak_hold);
+	const auto     hc_gt_0  = (hold_cnt > zero);
+	const auto     ph_cond  = xa_gt_ph | hc_gt_0;
 
 	const auto     hcm1     = fstb::ToolsSimd::select (hc_gt_0, hold_cnt - step, hold_cnt);
 	hold_cnt  = fstb::ToolsSimd::select (xa_gt_ph, hold_time, hcm1);
@@ -307,7 +301,7 @@ void	MeterRmsPeakHold4Simd::process_sample_rms (fstb::Vf32 x, fstb::Vf32 &rms_sq
 	// RMS
 	const auto     x_2      = x * x;
 	const auto     delta    = x_2 - _rms_sq;
-	const auto     del_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta);
+	const auto     del_lt_0 = delta.is_lt_0 ();
 	const auto     coef     = fstb::ToolsSimd::select (del_lt_0, coef_r2, coef_a2);
 	fstb::ToolsSimd::mac (rms_sq, delta, coef);
 }

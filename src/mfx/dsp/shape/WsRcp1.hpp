@@ -63,8 +63,8 @@ void	WsRcp1::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	{
 		auto           x = VS::load_f32 (src_ptr + pos);
 
-		const auto     d = fstb::ToolsSimd::abs (x) + one;
-		const auto     r = fstb::ToolsSimd::rcp_approx (d);
+		const auto     d = fstb::abs (x) + one;
+		const auto     r = d.rcp_approx ();
 		x *= r;
 
 		VD::store_f32 (dst_ptr + pos, x);

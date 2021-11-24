@@ -91,7 +91,7 @@ void  WsAsym1::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 		const auto     x9  = x8 * x;
 		const auto     x_n = x + x2 * c_2;
 		const auto     x_p = x - x9 * c_9;
-		const auto     t_0 = fstb::ToolsSimd::cmp_lt0_f32 (x);
+		const auto     t_0 = x.is_lt_0 ();
 		x = fstb::ToolsSimd::select (t_0, x_n, x_p);
 
 		x -= bias;
