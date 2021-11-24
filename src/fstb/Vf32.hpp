@@ -151,7 +151,7 @@ Vf32 &	Vf32::operator /= (const Vf32Native &other) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_div_ps (_x, other);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	_x = _x * Vf32 { other }.rcp_approx2 ();
+	_x = _x * (Vf32 { other }.rcp_approx2 ())._x;
 #endif // fstb_ARCHI
 	return *this;
 }
