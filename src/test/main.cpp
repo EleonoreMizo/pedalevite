@@ -826,7 +826,7 @@ int	test_transients ()
 			float          a = chn_arr [0] [pos];
 			a = hpf.process_sample (a);
 
-			auto           x = fstb::ToolsSimd::set1_f32 (fabsf (a));
+			auto           x = fstb::Vf32 (fabsf (a));
 			x = env.process_sample (x);
 			for (int chn = 0; chn < 4; ++chn)
 			{
