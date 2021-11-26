@@ -152,8 +152,8 @@ void	Svf2p::conv_poles (fstb::Vf32 &g0, fstb::Vf32 &g1, fstb::Vf32 &g2, fstb::Vf
 	fstb::Vf32     s1;
 	fstb::Vf32     s2;
 	approx_s1s2 (s1, s2, f0_fs);
-	const auto     two       = fstb::ToolsSimd::set1_f32 (2);
-	const auto     minus_two = fstb::ToolsSimd::set1_f32 (-2);
+	const auto     two       = fstb::Vf32 (+2);
+	const auto     minus_two = fstb::Vf32 (-2);
 	const auto     nrm = (two + k * s2).rcp_approx2 ();
 	const auto     s12 = s1 * s1;
 	g0  =                        s2  * nrm;

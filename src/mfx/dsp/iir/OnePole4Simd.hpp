@@ -46,7 +46,7 @@ public:
 	typedef float DataType;
 	static fstb_FORCEINLINE fstb::Vf32 load (const DataType *ptr) noexcept
 	{
-		return fstb::ToolsSimd::set1_f32 (*ptr);
+		return fstb::Vf32 (*ptr);
 	}
 };
 
@@ -608,10 +608,10 @@ OnePole4Simd <VD, VS, VP> &	OnePole4Simd <VD, VS, VP>::operator = (OnePole4Simd 
 template <class VD, class VS, class VP>
 void	OnePole4Simd <VD, VS, VP>::neutralise () noexcept
 {
-	V128Par::store_f32 (_data._z_eq_b [0], fstb::ToolsSimd::set1_f32 (1));
-	V128Par::store_f32 (_data._z_eq_b [1], fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_data._z_eq_b [0], fstb::Vf32 (1));
+	V128Par::store_f32 (_data._z_eq_b [1], fstb::Vf32::zero ());
 
-	V128Par::store_f32 (_data._z_eq_a [1], fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_data._z_eq_a [1], fstb::Vf32::zero ());
 }
 
 
@@ -651,10 +651,10 @@ void	OnePole4Simd <VD, VS, VP>::set_z_eq_same (const float b [2], const float a 
 	assert (b != nullptr);
 	assert (a != nullptr);
 
-	V128Par::store_f32 (_data._z_eq_b [0], fstb::ToolsSimd::set1_f32 (b [0]));
-	V128Par::store_f32 (_data._z_eq_b [1], fstb::ToolsSimd::set1_f32 (b [1]));
+	V128Par::store_f32 (_data._z_eq_b [0], fstb::Vf32 (b [0]));
+	V128Par::store_f32 (_data._z_eq_b [1], fstb::Vf32 (b [1]));
 
-	V128Par::store_f32 (_data._z_eq_a [1], fstb::ToolsSimd::set1_f32 (a [1]));
+	V128Par::store_f32 (_data._z_eq_a [1], fstb::Vf32 (a [1]));
 }
 
 
@@ -1233,7 +1233,7 @@ fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::
 	x_0 = process_sample_single_stage_noswap (2, x_0);
 	x_1 = process_sample_single_stage_noswap (3, x_1);
 
-	const auto     y = fstb::ToolsSimd::set_2f32 (x_0, x_1);
+	const auto     y = fstb::Vf32::set_pair (x_0, x_1);
 
 	return y;
 }
@@ -1258,8 +1258,8 @@ fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::
 template <class VD, class VS, class VP>
 void	OnePole4Simd <VD, VS, VP>::clear_buffers () noexcept
 {
-	V128Par::store_f32 (_data._mem_x, fstb::ToolsSimd::set_f32_zero ());
-	V128Par::store_f32 (_data._mem_y, fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_data._mem_x, fstb::Vf32::zero ());
+	V128Par::store_f32 (_data._mem_y, fstb::Vf32::zero ());
 }
 
 

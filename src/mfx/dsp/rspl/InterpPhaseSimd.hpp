@@ -63,8 +63,8 @@ inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::Vf3
 	auto           tmp    = fstb::ToolsSimd::load_f32 (&imp_ptr [offset]);
 	const auto     dif    = fstb::ToolsSimd::load_f32 (&dif_ptr [offset]);
 	const auto     val    = fstb::ToolsSimd::loadu_f32 (&data_ptr [offset]);
-	fstb::ToolsSimd::mac (tmp, dif, q_v);
-	fstb::ToolsSimd::mac (sum_v, val, tmp);
+	tmp.mac (dif, q_v);
+	sum_v.mac (val, tmp);
 
 	InterpPhaseSimd_Util <REM - 1>::sum_rec (
 		nbr_blocks,
@@ -98,7 +98,7 @@ inline void	InterpPhaseSimd_Util <REM>::lerp_imp (float lerp_ptr [], const fstb:
 	const int      offset = (REM - 1) * 4;
 	auto           tmp    = fstb::ToolsSimd::load_f32 (&imp_ptr [offset]);
 	const auto     dif    = fstb::ToolsSimd::load_f32 (&dif_ptr [offset]);
-	fstb::ToolsSimd::mac (tmp, dif, q_v);
+	tmp.mac (dif, q_v);
 	fstb::ToolsSimd::store_f32 (&lerp_ptr [offset], tmp);
 }
 
@@ -118,7 +118,7 @@ inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::Vf3
 	const auto     val    = fstb::ToolsSimd::loadu_f32 (&data_ptr [offset]);
 	const auto     pulse  = fstb::ToolsSimd::loadu_f32 (&lerp_ptr [offset]);
 
-	fstb::ToolsSimd::mac (sum_v, val, pulse);
+	sum_v.mac (val, pulse);
 
 	InterpPhaseSimd_Util <REM - 1>::sum_rec (
 		nbr_blocks,
@@ -159,7 +159,7 @@ void	InterpPhaseSimd <PL>::precompute_impulse (Buffer &imp, float q) const noexc
 	assert (q >= 0);
 	assert (q <= 1);
 
-	const auto     q_v = fstb::ToolsSimd::set1_f32 (q);
+	const auto     q_v = fstb::Vf32 (q);
 	InterpPhaseSimd_Util <PHASE_LEN_V128>::lerp_imp (&imp [0], q_v, &_imp [0], &_dif [0]);
 }
 
@@ -196,7 +196,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const no
 	assert (q >= 0);
 	assert (q <= 1);
 
-	const auto     q_v = fstb::ToolsSimd::set1_f32 (q);
+	const auto     q_v = fstb::Vf32 (q);
 	fstb::Vf32     sum_v;
 
 #if 1
@@ -205,7 +205,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const no
 	auto           tmp = fstb::ToolsSimd::load_f32 (&_imp [0]);
 	const auto     dif = fstb::ToolsSimd::load_f32 (&_dif [0]);
 	const auto     val = fstb::ToolsSimd::loadu_f32 (&data_ptr [0]);
-	fstb::ToolsSimd::mac (tmp, dif, q_v);
+	tmp.mac (dif, q_v);
 	sum_v = val * tmp;
 
 	// Other vectors
@@ -221,15 +221,15 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const no
 #else
 
 	// Naive implementation (slow)
-	sum_v = fstb::ToolsSimd::set_f32_zero ();
+	sum_v = fstb::Vf32::zero ();
 	int				k = 0;
 	do
 	{
 		auto           imp = fstb::ToolsSimd::load_f32 (&_imp [k]);
 		const __m128	dif = fstb::ToolsSimd::load_f32 (&_dif [k]);
 		const __m128	val = fstb::ToolsSimd::loadu_f32 (&data_ptr [k]);
-		fstb::ToolsSimd::mac (tmp, dif, q_v);
-		fstb::ToolsSimd::mac (sum_v, val, tmp);
+		tmp.mac (dif, q_v);
+		sum_v.mac (val, tmp);
 		k += 4;
 	}
 	while (k < ARRAY_LEN);

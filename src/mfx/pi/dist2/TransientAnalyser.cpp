@@ -149,8 +149,8 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 	_env_helper.process_block (&_buf [0], &_buf [0], nbr_spl);
 
 	// Ratio
-	const auto     eps  = fstb::ToolsSimd::set1_f32 (_eps_sq);
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     eps  = fstb::Vf32 (_eps_sq);
+	const auto     zero = fstb::Vf32::zero ();
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		// Collects the envelopes into vectors
@@ -166,7 +166,7 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 		eas += eps;    // when everything tends toward zero.
 		const auto     ea_ratio = eaf / eas;
 		auto           ea_r_l2  = fstb::Approx::log2 (ea_ratio);
-		ea_r_l2 = fstb::ToolsSimd::max_f32 (ea_r_l2, zero);
+		ea_r_l2 = fstb::max (ea_r_l2, zero);
 		fstb::ToolsSimd::store_f32 (atk_ptr + pos, ea_r_l2);
 
 		// Ratio for the sustain
@@ -174,7 +174,7 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 		ess += eps;
 		const auto     es_ratio = ess / esf;
 		auto           es_r_l2  = fstb::Approx::log2 (es_ratio);
-		es_r_l2 = fstb::ToolsSimd::max_f32 (es_r_l2, zero);
+		es_r_l2 = fstb::max (es_r_l2, zero);
 		fstb::ToolsSimd::store_f32 (sus_ptr + pos, es_r_l2);
 	}
 }
@@ -249,7 +249,7 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 	{
 		const float *  src0_ptr = src_ptr_arr [0];
 		const float *  src1_ptr = src_ptr_arr [1];
-		const auto     gain = fstb::ToolsSimd::set1_f32 (0.5f);
+		const auto     gain = fstb::Vf32 (0.5f);
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x0 = fstb::ToolsSimd::load_f32 (src0_ptr + pos);
@@ -263,10 +263,10 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 
 	else
 	{
-		const auto     gain = fstb::ToolsSimd::set1_f32 (1.0f / float (nbr_chn));
+		const auto     gain = fstb::Vf32 (1.0f / float (nbr_chn));
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			auto           x = fstb::ToolsSimd::set_f32_zero ();
+			auto           x = fstb::Vf32::zero ();
 			for (int chn = 0; chn < nbr_chn; ++chn)
 			{
 				const float *  src_ptr = src_ptr_arr [chn];

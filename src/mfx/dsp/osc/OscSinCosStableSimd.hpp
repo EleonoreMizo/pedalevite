@@ -131,12 +131,12 @@ void	OscSinCosStableSimd::step (fstb::Vf32 &pos_cos, fstb::Vf32 &pos_sin, fstb::
 
 void	OscSinCosStableSimd::compute_step (fstb::Vf32 &alpha, fstb::Vf32 &beta, float angle_rad) noexcept
 {
-   const double   a = tan (angle_rad * 0.5f);
-   alpha = fstb::ToolsSimd::set1_f32 (float (a));
+   const auto     a = tan (angle_rad * 0.5f);
+   alpha = fstb::Vf32 (a);
 
-// const double   b = sin (angle_rad);
-	const double   b = 2 * a / (1 + a * a);
-   beta  = fstb::ToolsSimd::set1_f32 (float (b));
+// const auto     b = sin (angle_rad);
+	const auto     b = 2 * a / (1 + a * a);
+   beta  = fstb::Vf32 (b);
 }
 
 

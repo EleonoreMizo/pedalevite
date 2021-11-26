@@ -46,7 +46,7 @@ public:
 	typedef	float	DataType;
 	static fstb_FORCEINLINE fstb::Vf32	load (const DataType *ptr) noexcept
 	{
-		return fstb::ToolsSimd::set1_f32 (*ptr);
+		return fstb::Vf32 (*ptr);
 	}
 };
 
@@ -741,12 +741,12 @@ Biquad4Simd <VD, VS, VP> &	Biquad4Simd <VD, VS, VP>::operator = (Biquad4Simd <VD
 template <class VD, class VS, class VP>
 void	Biquad4Simd <VD, VS, VP>::neutralise () noexcept
 {
-	V128Par::store_f32 (_data._z_eq_b [0], fstb::ToolsSimd::set1_f32 (1));
-	V128Par::store_f32 (_data._z_eq_b [1], fstb::ToolsSimd::set_f32_zero ());
-	V128Par::store_f32 (_data._z_eq_b [2], fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_data._z_eq_b [0], fstb::Vf32 (1));
+	V128Par::store_f32 (_data._z_eq_b [1], fstb::Vf32::zero ());
+	V128Par::store_f32 (_data._z_eq_b [2], fstb::Vf32::zero ());
 
-	V128Par::store_f32 (_data._z_eq_a [1], fstb::ToolsSimd::set_f32_zero ());
-	V128Par::store_f32 (_data._z_eq_a [2], fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_data._z_eq_a [1], fstb::Vf32::zero ());
+	V128Par::store_f32 (_data._z_eq_a [2], fstb::Vf32::zero ());
 }
 
 
@@ -793,12 +793,12 @@ void	Biquad4Simd <VD, VS, VP>::set_z_eq_same (const float b [3], const float a [
 	assert (a != nullptr);
 	assert (check_stability (a [1], a [2]));
 
-	V128Par::store_f32 (_data._z_eq_b [0], fstb::ToolsSimd::set1_f32 (b [0]));
-	V128Par::store_f32 (_data._z_eq_b [1], fstb::ToolsSimd::set1_f32 (b [1]));
-	V128Par::store_f32 (_data._z_eq_b [2], fstb::ToolsSimd::set1_f32 (b [2]));
+	V128Par::store_f32 (_data._z_eq_b [0], fstb::Vf32 (b [0]));
+	V128Par::store_f32 (_data._z_eq_b [1], fstb::Vf32 (b [1]));
+	V128Par::store_f32 (_data._z_eq_b [2], fstb::Vf32 (b [2]));
 
-	V128Par::store_f32 (_data._z_eq_a [1], fstb::ToolsSimd::set1_f32 (a [1]));
-	V128Par::store_f32 (_data._z_eq_a [2], fstb::ToolsSimd::set1_f32 (a [2]));
+	V128Par::store_f32 (_data._z_eq_a [1], fstb::Vf32 (a [1]));
+	V128Par::store_f32 (_data._z_eq_a [2], fstb::Vf32 (a [2]));
 }
 
 
@@ -1404,7 +1404,7 @@ fstb::Vf32	Biquad4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::V
 
 	_data._mem_pos = alt_pos;
 
-	const auto     y = fstb::ToolsSimd::set_2f32 (x_0, x_1);
+	const auto     y = fstb::Vf32::set_pair (x_0, x_1);
 
 	return y;
 }
@@ -1429,10 +1429,10 @@ fstb::Vf32	Biquad4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::V
 template <class VD, class VS, class VP>
 void	Biquad4Simd <VD, VS, VP>::clear_buffers () noexcept
 {
-	V128Par::store_f32 (_data._mem_x [0], fstb::ToolsSimd::set_f32_zero ());
-	V128Par::store_f32 (_data._mem_x [1], fstb::ToolsSimd::set_f32_zero ());
-	V128Par::store_f32 (_data._mem_y [0], fstb::ToolsSimd::set_f32_zero ());
-	V128Par::store_f32 (_data._mem_y [1], fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_data._mem_x [0], fstb::Vf32::zero ());
+	V128Par::store_f32 (_data._mem_x [1], fstb::Vf32::zero ());
+	V128Par::store_f32 (_data._mem_y [0], fstb::Vf32::zero ());
+	V128Par::store_f32 (_data._mem_y [1], fstb::Vf32::zero ());
 	_data._mem_pos = 0;
 }
 
@@ -1468,9 +1468,9 @@ template <class VD, class VS, class VP>
 bool	Biquad4Simd <VD, VS, VP>::check_stability (fstb::Vf32 a1, fstb::Vf32 a2) noexcept
 {
 	const float    margin = 5e-6f;
-	const auto     one = fstb::ToolsSimd::set1_f32 (1 + margin);
-	const auto     c1  = (fstb::abs (a1) < a2 + one);
-	const auto     c2  = (fstb::abs (a2) <      one);
+	const auto     one    = fstb::Vf32 (1 + margin);
+	const auto     c1     = (fstb::abs (a1) < a2 + one);
+	const auto     c2     = (fstb::abs (a2) <      one);
 
 	return bool (c1 & c2);
 }

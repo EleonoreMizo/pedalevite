@@ -396,8 +396,8 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 #if defined (fstb_HAS_SIMD)
 
 	using TS = fstb::ToolsSimd;
-	const auto     eps = TS::set1_f32 (1e-9f);
-	const auto     one = TS::set1_f32 (1.f);
+	const auto     eps = fstb::Vf32 (1e-9f);
+	const auto     one = fstb::Vf32 (1.f);
 	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
 		const int      img_idx = bin_idx + _nbr_bins;
@@ -453,7 +453,7 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 #if defined (fstb_HAS_SIMD)
 
 	using TS = fstb::ToolsSimd;
-	const auto     angle_norm_v = TS::set1_f32 (angle_norm);
+	const auto     angle_norm_v = fstb::Vf32 (angle_norm);
 	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
 		const int      img_idx = bin_idx + _nbr_bins;
@@ -579,15 +579,16 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 #if defined (fstb_HAS_SIMD)
 
 		using TS = fstb::ToolsSimd;
-		const auto     gain_sc_v   = TS::set1_f32 (gain_sc);
+		const auto     gain_sc_v   = fstb::Vf32 (gain_sc);
 		const int      sign        = ((_bin_beg & 1) * 2 - 1);
 		const auto     phase_val_v =
-			TS::set1_f32 (slot._phase_acc) * TS::set_2f32_fill (sign, -sign);
-		const auto     nbr_hops    = TS::set1_f32 (float (slot._nbr_hops));
-		auto           omega_v     = TS::set1_f32 (0.5f) * TS::set_f32 (
+			  fstb::Vf32 (slot._phase_acc)
+			* fstb::Vf32::set_pair_fill (sign, -sign);
+		const auto     nbr_hops    = fstb::Vf32 (float (slot._nbr_hops));
+		auto           omega_v     = fstb::Vf32 (0.5f) * fstb::Vf32 (
 			_bin_beg, _bin_beg + 1, _bin_beg + 2, _bin_beg + 3
 		);
-		const auto     omega_step  = TS::set1_f32 (0.5f * _simd_w);
+		const auto     omega_step  = fstb::Vf32 (0.5f * _simd_w);
 		for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 		{
 			const int      img_idx = bin_idx + _nbr_bins;

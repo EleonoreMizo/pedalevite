@@ -674,8 +674,8 @@ void	WorldAudio::store_send (int nbr_spl)
 
 			// Clipping set to +24 dBFS
 			constexpr float   vmax = 16.f;
-			const auto     mi = fstb::ToolsSimd::set1_f32 (-vmax);
-			const auto     ma = fstb::ToolsSimd::set1_f32 (+vmax);
+			const auto     mi = fstb::Vf32 (-vmax);
+			const auto     ma = fstb::Vf32 (+vmax);
 
 			assert (side_src._nbr_chn_tot == side_dst._nbr_chn_tot);
 			for (int buf_cnt = 0; buf_cnt < side_dst._nbr_chn_tot; ++buf_cnt)
@@ -690,8 +690,7 @@ void	WorldAudio::store_send (int nbr_spl)
 				for (int pos = 0; pos < nbr_spl; pos += 4)
 				{
 					auto           x = fstb::ToolsSimd::load_f32 (buf_src_ptr + pos);
-					x = fstb::ToolsSimd::min_f32 (x, ma);
-					x = fstb::ToolsSimd::max_f32 (x, mi);
+					x = fstb::limit (x, mi, ma);
 					fstb::ToolsSimd::store_f32 (buf_dst_ptr + pos, x);
 				}
 			}

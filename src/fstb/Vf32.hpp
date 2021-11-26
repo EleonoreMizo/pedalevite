@@ -38,6 +38,7 @@ namespace fstb
 
 
 
+// Initialises with a | a | a | a
 Vf32::Vf32 (Scalar a) noexcept
 #if ! defined (fstb_HAS_SIMD)
 :	_x { a, a, a, a }
@@ -52,6 +53,7 @@ Vf32::Vf32 (Scalar a) noexcept
 
 
 
+// Initialises with a | a | a | a
 Vf32::Vf32 (double a) noexcept
 #if ! defined (fstb_HAS_SIMD)
 :	_x { Scalar (a), Scalar (a), Scalar (a), Scalar (a) }
@@ -66,6 +68,7 @@ Vf32::Vf32 (double a) noexcept
 
 
 
+// Initialises with a | a | a | a
 Vf32::Vf32 (int a) noexcept
 #if ! defined (fstb_HAS_SIMD)
 :	_x { Scalar (a), Scalar (a), Scalar (a), Scalar (a) }
@@ -73,6 +76,21 @@ Vf32::Vf32 (int a) noexcept
 :	_x { _mm_set1_ps (Scalar (a)) }
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 :	_x { vdupq_n_f32 (Scalar (a)) }
+#endif // fstb_ARCHI
+{
+	// Nothing
+}
+
+
+
+// Initialises with a0 | a1 | a2 | a3
+Vf32::Vf32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept
+#if ! defined (fstb_HAS_SIMD)
+:	_x { a0, a1, a2, a3 }
+#elif fstb_ARCHI == fstb_ARCHI_X86
+:	_x { _mm_set_ps (a3, a2, a1, a0) }
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+:	_x { a0, a1, a2, a3 }
 #endif // fstb_ARCHI
 {
 	// Nothing
@@ -236,6 +254,63 @@ Vf32 &	Vf32::operator ^= (const Vf32Native &other) noexcept
 
 
 
+// *this += a * b
+Vf32 &	Vf32::mac (Vf32 a, Vf32 b) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	_x [0] += a._x [0] * b._x [0];
+	_x [1] += a._x [1] * b._x [1];
+	_x [2] += a._x [2] * b._x [2];
+	_x [3] += a._x [3] * b._x [3];
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	_x = _mm_add_ps (_x, _mm_mul_ps (a, b));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_FEATURE_FMA)
+	_x = vfmaq_f32 (_x, a, b);
+	#else
+	_x = vmlaq_f32 (_x, a, b);
+	#endif
+#endif // fstb_ARCHI
+	return *this;
+}
+
+
+
+// *this -= a * b
+Vf32 &	Vf32::msu (Vf32 a, Vf32 b) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	_x [0] -= a._x [0] * b._x [0];
+	_x [1] -= a._x [1] * b._x [1];
+	_x [2] -= a._x [2] * b._x [2];
+	_x [3] -= a._x [3] * b._x [3];
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	_x = _mm_sub_ps (_x, _mm_mul_ps (a, b));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_FEATURE_FMA)
+	_x = vfmsq_f32 (_x, a, b);
+	#else
+	_x = vmlsq_f32 (_x, a, b);
+	#endif
+#endif // fstb_ARCHI
+	return *this;
+}
+
+
+
+Vf32	Vf32::reverse () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { { _x [3], _x [2], _x [1], _x [0]	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_shuffle_ps (_x, _x, (3<<0) + (2<<2) + (1<<4) + (0<<6));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vrev64q_f32 (vcombine_f32 (vget_high_f32 (_x), vget_low_f32 (_x)));
+#endif // fstb_ARCHI
+}
+
+
+
 // Assumes "to nearest" rounding mode on x86
 Vf32	Vf32::round () const noexcept
 {
@@ -338,24 +413,67 @@ Vf32   Vf32::is_lt_0 () const noexcept
 
 
 
-void	Vf32::explode (float &a0, float &a1, float &a2, float &a3) const noexcept
+std::tuple <float, float, float, float>	Vf32::explode () const noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	a0 = _x [0];
-	a1 = _x [1];
-	a2 = _x [2];
-	a3 = _x [3];
+	return std::make_tuple (_x [0], _x [1], _x [2], _x [3]);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     tmp = _mm_movehl_ps (_x, _x);
-	a0 = _mm_cvtss_f32 (_x);
-	a2 = _mm_cvtss_f32 (tmp);
-	a1 = _mm_cvtss_f32 (_mm_shuffle_ps (_x, _x, (1<<0)));
-	a3 = _mm_cvtss_f32 (_mm_shuffle_ps (tmp, tmp, (1<<0)));
+	return std::make_tuple (
+		_mm_cvtss_f32 (_x),
+		_mm_cvtss_f32 (_mm_shuffle_ps (_x, _x, (1<<0))),
+		_mm_cvtss_f32 (tmp),
+		_mm_cvtss_f32 (_mm_shuffle_ps (tmp, tmp, (1<<0)))
+	);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	a0 = vgetq_lane_f32 (_x, 0);
-	a1 = vgetq_lane_f32 (_x, 1);
-	a2 = vgetq_lane_f32 (_x, 2);
-	a3 = vgetq_lane_f32 (_x, 3);
+	return std::make_tuple (
+		vgetq_lane_f32 (_x, 0),
+		vgetq_lane_f32 (_x, 1),
+		vgetq_lane_f32 (_x, 2),
+		vgetq_lane_f32 (_x, 3)
+	);
+#endif // fstb_ARCHI
+}
+
+
+
+std::tuple <float, float>	Vf32::extract_pair () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return std::make_tuple (_x [0], _x [1]);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return std::make_tuple (
+		_mm_cvtss_f32 (_x),
+		_mm_cvtss_f32 (_mm_shuffle_ps (_x, _x, 1))
+	);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return std::make_tuple (vgetq_lane_f32 (_x, 0), vgetq_lane_f32 (_x, 1));
+#endif // fstb_ARCHI
+}
+
+
+
+// <0> = v0 | v1 | v0 | v1
+// <1> = v2 | v3 | v2 | v3
+std::tuple <Vf32, Vf32>	Vf32::spread_pair () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return std::make_tuple (
+		Vf32 { _x [0], _x [1], _x [0], _x [1] },
+		Vf32 { _x [2], _x [3], _x [2], _x [3] }
+	);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return std::make_tuple (
+		Vf32 { _mm_shuffle_ps (_x, _x, (0<<0) + (1<<2) + (0<<4) + (1<<6)) },
+		Vf32 { _mm_shuffle_ps (_x, _x, (2<<0) + (3<<2) + (2<<4) + (3<<6)) }
+	);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const float32x2_t v01 = vget_low_f32 (_x);
+	const float32x2_t v23 = vget_high_f32 (_x);
+	return std::make_tuple (
+		Vf32 { vcombine_f32 (v01, v01) },
+		Vf32 { vcombine_f32 (v23, v23) }
+	);
 #endif // fstb_ARCHI
 }
 
@@ -455,7 +573,141 @@ bool   Vf32::or_h () const noexcept
 
 
 
-Vf32Native   Vf32::signbit_mask () noexcept
+// Moves the boolean content of each 4 scalar into the lower 4 bits of the
+// return value.
+// Assumes the object is a result of a comparison, with all bits the same
+// in each 32-bit element.
+unsigned int	Vf32::movemask () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	Combo          c;
+	c._vf32 = _x;
+	return
+		   (c._u32 [0] >> 31)
+		| ((c._u32 [0] >> 30) & 2)
+		| ((c._u32 [0] >> 29) & 4)
+		| ((c._u32 [0] >> 28) & 8);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return static_cast <unsigned int> (_mm_movemask_ps (_x));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	uint64x2_t     tmp1 =
+		vreinterpretq_u64_f32 (_x);   // ddd...ddd ccc...ccc bbb...bbb aaa...aaa
+	tmp1 = vshrq_n_u64 (tmp1, 31);   // 000...00d ddd...ddc 000...00b bbb...bba
+	uint64x1_t     tmp2 = vsli_n_u64 (
+		vget_high_u64 (tmp1),
+		vget_low_u64 (tmp1),
+		2
+	);
+	return vget_lane_u32 (vreinterpret_u32_u64 (tmp2), 0) & 0xF;
+#endif // fstb_ARCHI
+}
+
+
+
+Vf32	Vf32::zero () noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vf32 { { 0, 0, 0, 0 } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_setzero_ps ();
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vdupq_n_f32 (0);
+#endif // fstb_ARCHI
+}
+
+
+
+// Returns a0 | a1 | ? | ?
+Vf32	Vf32::set_pair (float a0, float a1) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vf32 { { a0, a1 } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_unpacklo_ps (_mm_set_ss (a0), _mm_set_ss (a1));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vsetq_lane_f32 (a1, vdupq_n_f32 (a0), 1);
+#endif // fstb_ARCHI
+}
+
+
+
+// Returns a02 | a13 | a02 | a13
+Vf32	Vf32::set_pair_fill (float a02, float a13) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vf32 { { a02, a13, a02, a13 } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_unpacklo_ps (_mm_set1_ps (a02), _mm_set1_ps (a13));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const float32x2_t v01 = vset_lane_f32 (a13, vdup_n_f32 (a02), 1);
+	return vcombine_f32 (v01, v01);
+#endif // fstb_ARCHI
+}
+
+
+
+// Returns a01 | a01 | a23 | a23
+Vf32	Vf32::set_pair_dbl (float a01, float a23) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vf32 { { a01, a01, a23, a23 } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_shuffle_ps (_mm_set_ss (a01), _mm_set_ss (a23), 0x00);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vcombine_f32 (vdup_n_f32 (a01), vdup_n_f32 (a23));
+#endif // fstb_ARCHI
+}
+
+
+
+// "true" must be 1 and nothing else.
+Vf32	Vf32::set_mask (bool m0, bool m1, bool m2, bool m3) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	Combo          c;
+	c._s32 [0] = -int32_t (m0);
+	c._s32 [1] = -int32_t (m1);
+	c._s32 [2] = -int32_t (m2);
+	c._s32 [3] = -int32_t (m3);
+	return c._vf32;
+#elif 1 // Fast version
+# if fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_castsi128_ps (_mm_sub_epi32 (
+		_mm_setzero_si128 (),
+		_mm_set_epi32 (m3, m2, m1, m0)
+	));
+# elif fstb_ARCHI == fstb_ARCHI_ARM
+	float32x2_t    v01 = vdup_n_f32 (m0);
+	float32x2_t    v23 = vdup_n_f32 (m2);
+	v01 = vset_lane_f32 (m1, v01, 1);
+	v23 = vset_lane_f32 (m3, v23, 1);
+	return vreinterpretq_f32_s32 (vnegq_s32 (vreinterpretq_s32_f32 (
+		vcombine_f32 (v01, v23)
+	)));
+# endif // fstb_ARCHI
+#else // Safer but slower version
+# if fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_castsi128_ps (_mm_sub_epi32 (
+		_mm_set_epi32 (!m3, !m2, !m1, !m0),
+		_mm_set1_epi32 (1)
+	));
+# elif fstb_ARCHI == fstb_ARCHI_ARM
+	float32x2_t    v01 = vdup_n_f32 (!m0);
+	float32x2_t    v23 = vdup_n_f32 (!m2);
+	v01 = vset_lane_f32 (!m1, v01, 1);
+	v23 = vset_lane_f32 (!m3, v23, 1);
+	const auto     one  = vdupq_n_s32 (1);
+	return vreinterpretq_f32_s32 (vsubq_s32 (
+		vreinterpretq_s32_f32 (vcombine_f32 (v01, v23)),
+		one
+	));
+# endif // fstb_ARCHI
+#endif // Versions
+}
+
+
+
+Vf32Native	Vf32::signbit_mask () noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	Combo          c;
@@ -659,6 +911,49 @@ Vf32 abs (const Vf32 &v) noexcept
 Vf32 round (const Vf32 &v) noexcept
 {
 	return v.round ();
+}
+
+
+
+Vf32 min (const Vf32 &lhs, const Vf32 &rhs) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vf32 { {
+		std::min (lhs._x [0], rhs._x [0]),
+		std::min (lhs._x [1], rhs._x [1]),
+		std::min (lhs._x [2], rhs._x [2]),
+		std::min (lhs._x [3], rhs._x [3])
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_min_ps (lhs, rhs);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vminq_f32 (lhs, rhs);
+#endif // fstb_ARCHI
+}
+
+
+
+Vf32 max (const Vf32 &lhs, const Vf32 &rhs) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vf32 { {
+		std::max (lhs._x [0], rhs._x [0]),
+		std::max (lhs._x [1], rhs._x [1]),
+		std::max (lhs._x [2], rhs._x [2]),
+		std::max (lhs._x [3], rhs._x [3])
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_max_ps (lhs, rhs);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vmaxq_f32 (lhs, rhs);
+#endif // fstb_ARCHI
+}
+
+
+
+Vf32 limit (const Vf32 &v, const Vf32 &mi, const Vf32 &ma) noexcept
+{
+	return min (max (v, mi), ma);
 }
 
 

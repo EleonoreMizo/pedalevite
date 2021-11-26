@@ -185,15 +185,15 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Audio processing
 
-	const auto     mapa    = fstb::ToolsSimd::set1_f32 (_map_a);
-	const auto     mapb    = fstb::ToolsSimd::set1_f32 (_map_b);
-	const auto     fmin    = fstb::ToolsSimd::set1_f32 (-0.5f);
-	const auto     fmax    = fstb::ToolsSimd::set1_f32 (+0.5f);
-	const auto     c7      = fstb::ToolsSimd::set1_f32 (0.0884f);
-	const auto     c5      = fstb::ToolsSimd::set1_f32 (0.1210f);
-	const auto     c3      = fstb::ToolsSimd::set1_f32 (0.3345f);
-	const auto     limn    = fstb::ToolsSimd::set1_f32 (-0.999f);
-	const auto     limp    = fstb::ToolsSimd::set1_f32 (+0.999f);
+	const auto     mapa    = fstb::Vf32 (_map_a);
+	const auto     mapb    = fstb::Vf32 (_map_b);
+	const auto     fmin    = fstb::Vf32 (-0.5f);
+	const auto     fmax    = fstb::Vf32 (+0.5f);
+	const auto     c7      = fstb::Vf32 ( 0.0884f);
+	const auto     c5      = fstb::Vf32 ( 0.1210f);
+	const auto     c3      = fstb::Vf32 ( 0.3345f);
+	const auto     limn    = fstb::Vf32 (-0.999f);
+	const auto     limp    = fstb::Vf32 (+0.999f);
 	float * const  tmp_ptr = _buf_tmp.data ();
 
 	int            nbr_spl_proc = nbr_spl;
@@ -231,8 +231,7 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 		{
 			auto           f = fstb::ToolsSimd::load_f32 (src_ptr + pos);
 			f *= gain;
-			f  = fstb::ToolsSimd::min_f32 (f, fmax);
-			f  = fstb::ToolsSimd::max_f32 (f, fmin);
+			f  = fstb::limit (f, fmin, fmax);
 			fstb::ToolsSimd::store_f32 (tmp_ptr + pos, f);
 			gain += gain_step;
 		}
@@ -258,15 +257,9 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 			f += mapb;
 			const auto     f2 = f * f;
 			const auto     f3 = f * f2;
-			auto           b0 = c7;
-			b0 *= f2;
-			b0 += c5;
-			b0 *= f2;
-			b0 += c3;
-			b0 *= f3;
-			b0 += f;
-			b0 = fstb::ToolsSimd::min_f32 (b0, limp);
-			b0 = fstb::ToolsSimd::max_f32 (b0, limn);
+			auto           b0 = fstb::Poly::horner (f2, c3, c5, c7);
+			b0 = fstb::ToolsSimd::fmadd (f, b0, f3);
+			b0 = fstb::limit (b0, limn, limp);
 			fstb::ToolsSimd::store_f32 (tmp_ptr + pos, b0);
 		}
 
@@ -283,7 +276,7 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 			f += _map_b;
 			const float    f2 = f * f;
 			float          b0 =
-				((0.0884f * f2 + 0.121f) * f2 + 0.3345f) * f2 * f + f;
+				stb::Poly::horner (f2, 0.3345f, 0.121f, 0.0884f) * f2 * f + f;
 			b0 = fstb::limit (b0, -0.999f, +0.999f);
 
 #endif // SIMD/Ref code

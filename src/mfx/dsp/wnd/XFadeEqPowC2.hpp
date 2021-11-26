@@ -60,18 +60,16 @@ std::array <T, 2>	XFadeEqPowC2::compute_gain (T x) noexcept
 
 std::array <fstb::Vf32, 2>	XFadeEqPowC2::compute_gain (fstb::Vf32 x) noexcept
 {
-	using TS = fstb::ToolsSimd;
-
 	assert (x >= fstb::Vf32 (0));
 	assert (x <= fstb::Vf32 (1));
 
-	const auto     one = TS::set1_f32 (1);
+	const auto     one = fstb::Vf32 (1);
 	const auto     xi  = one - x;
 	const auto     x2  = x   * x;
 	const auto     xi2 = xi  * xi;
 	const auto     x4  = x2  * x2;
 	const auto     xi4 = xi2 * xi2;
-	const auto     mul = TS::rsqrt_approx (xi4 + x4);
+	const auto     mul = fstb::ToolsSimd::rsqrt_approx (xi4 + x4);
 	const auto     fi  = x2  * mul;
 	const auto     fo  = xi2 * mul;
 

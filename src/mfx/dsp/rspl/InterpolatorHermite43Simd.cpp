@@ -81,7 +81,7 @@ void	InterpolatorHermite43Simd::do_start (int nbr_chn) noexcept
 
 int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) noexcept
 {
-	const auto     half = fstb::ToolsSimd::set1_f32 (0.5);
+	const auto     half = fstb::Vf32 (0.5);
 
 	typedef float Buffer [4];
 	alignas (fstb_SIMD128_ALIGN) Buffer q_arr;

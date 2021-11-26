@@ -255,32 +255,32 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 	// Computes the resulting volume
 	// Vector content: Beg+ End+ Beg- End-
 	//             or: Beg  End   x    x
-	const auto     v_amt  = fstb::ToolsSimd::set_2f32_fill (amt_beg , amt_end );
-	const auto     v_bias = fstb::ToolsSimd::set_2f32_fill (bias_beg, bias_end);
-	const auto     v_sat  = fstb::ToolsSimd::set_2f32_fill (sat_beg , sat_end );
-	const auto     v_tone = fstb::ToolsSimd::set_2f32_fill (tone_beg, tone_end);
-	const auto     v_ster = fstb::ToolsSimd::set_2f32_fill (ster_beg, ster_end);
-	const auto     v_t_lo = fstb::ToolsSimd::set_2f32_fill (lo_beg, lo_end);
-	const auto     v_t_hi = fstb::ToolsSimd::set_2f32_fill (hi_beg, hi_end);
-	const auto     v_lfo  = fstb::ToolsSimd::set_f32 (lfo_beg , lfo_end, -lfo_beg , -lfo_end);
-	const auto     one    = fstb::ToolsSimd::set1_f32 (1);
-	const auto     half   = fstb::ToolsSimd::set1_f32 (0.5f);
-	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
-	const auto     v_satm = fstb::ToolsSimd::set1_f32 (1e-4f);
-	const auto     v_p2n2 = fstb::ToolsSimd::set_2f32_dbl (1, -1);
+	const auto     v_amt  = fstb::Vf32::set_pair_fill (amt_beg , amt_end );
+	const auto     v_bias = fstb::Vf32::set_pair_fill (bias_beg, bias_end);
+	const auto     v_sat  = fstb::Vf32::set_pair_fill (sat_beg , sat_end );
+	const auto     v_tone = fstb::Vf32::set_pair_fill (tone_beg, tone_end);
+	const auto     v_ster = fstb::Vf32::set_pair_fill (ster_beg, ster_end);
+	const auto     v_t_lo = fstb::Vf32::set_pair_fill (lo_beg, lo_end);
+	const auto     v_t_hi = fstb::Vf32::set_pair_fill (hi_beg, hi_end);
+	const auto     v_lfo  = fstb::Vf32 (lfo_beg , lfo_end, -lfo_beg , -lfo_end);
+	const auto     one    = fstb::Vf32 (1);
+	const auto     half   = fstb::Vf32 (0.5f);
+	const auto     zero   = fstb::Vf32::zero ();
+	const auto     v_satm = fstb::Vf32 (1e-4f);
+	const auto     v_p2n2 = fstb::Vf32::set_pair_dbl (1, -1);
 
 	auto           vol    = one + v_amt * (v_lfo + v_bias);
-	vol = fstb::ToolsSimd::max_f32 (vol, zero);
+	vol = fstb::max (vol, zero);
 
 	// Saturation:
 	// x = (1 - (1 - min (0.5 * s * x, 1)) ^ 2) / s
-	const auto     v_satl = fstb::ToolsSimd::max_f32 (v_sat, v_satm);
-	vol = one - fstb::ToolsSimd::min_f32 (vol * v_satl * half, one);
+	const auto     v_satl = fstb::max (v_sat, v_satm);
+	vol = one - fstb::min (vol * v_satl * half, one);
 	vol = (one - vol * vol) / v_satl;
 
 	// From the modulation (4 elements):
-	const auto     v_lo_m = fstb::ToolsSimd::max_f32 (v_t_lo * v_p2n2, zero);
-	const auto     v_hi_m = fstb::ToolsSimd::max_f32 (v_t_hi * v_p2n2, zero);
+	const auto     v_lo_m = fstb::max (v_t_lo * v_p2n2, zero);
+	const auto     v_hi_m = fstb::max (v_t_hi * v_p2n2, zero);
 
 	// From the original signal (2 elements, duplicated):
 	const auto     v_lo_m2 = fstb::ToolsSimd::Shift <2>::rotate (v_lo_m);
@@ -311,12 +311,12 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 
 	// Bass/treble level from the tone setting
 	auto           v_to_b = v_tone * v_p2n2;
-	const auto     two    = fstb::ToolsSimd::set1_f32 (2);
-	const auto     three  = fstb::ToolsSimd::set1_f32 (3);
-	v_to_b = fstb::ToolsSimd::max_f32 (v_to_b, zero);
+	const auto     two    = fstb::Vf32 (2);
+	const auto     three  = fstb::Vf32 (3);
+	v_to_b = fstb::max (v_to_b, zero);
 	v_to_b = one + v_to_b * v_to_b * (v_to_b * two - three);
 	fstb::Vf32     v_to_t;
-	fstb::ToolsSimd::spread_2f32 (v_to_b, v_to_t, v_to_b);
+	std::tie (v_to_b, v_to_t) = v_to_b.spread_pair ();
 
 	v_lo *= v_to_b;
 	v_hi *= v_to_t;

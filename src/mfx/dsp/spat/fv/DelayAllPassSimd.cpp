@@ -89,7 +89,7 @@ void	DelayAllPassSimd::process_block (float dst_ptr [], const float src_ptr [], 
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	const auto     fdbk = fstb::ToolsSimd::set1_f32 (_fdbk);
+	const auto     fdbk = fstb::Vf32 (_fdbk);
 
 	int            pos = 0;
 	do

@@ -74,11 +74,11 @@ SvfCore4Simd <VD, VS, VP, MX> &	SvfCore4Simd <VD, VS, VP, MX>::operator = (const
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::neutralise () noexcept
 {
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     zero = fstb::Vf32::zero ();
 	V128Par::store_f32 (_data._g0 , zero);
 	V128Par::store_f32 (_data._g1 , zero);
 	V128Par::store_f32 (_data._g2 , zero);
-	V128Par::store_f32 (_data._v0m, fstb::ToolsSimd::set1_f32 (1));
+	V128Par::store_f32 (_data._v0m, fstb::Vf32 (1));
 	V128Par::store_f32 (_data._v1m, zero);
 	V128Par::store_f32 (_data._v2m, zero);
 }
@@ -197,7 +197,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::copy_z_eq (const SvfCore4Simd <VD, VS, VP, M
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::clear_buffers () noexcept
 {
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     zero = fstb::Vf32::zero ();
 	V128Par::store_f32 (_data._ic1eq, zero);
 	V128Par::store_f32 (_data._ic2eq, zero);
 	V128Par::store_f32 (_data._y    , zero);
@@ -824,7 +824,7 @@ fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (const fstb::Vf
 	x_0 = process_sample_single_stage (_data, x_0, 2, 2);
 	x_1 = process_sample_single_stage (_data, x_1, 3, 3);
 
-	return fstb::ToolsSimd::set_2f32 (x_0, x_1);
+	return fstb::Vf32::set_pair (x_0, x_1);
 }
 
 

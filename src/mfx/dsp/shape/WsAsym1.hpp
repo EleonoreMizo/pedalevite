@@ -70,20 +70,18 @@ void  WsAsym1::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f);
-	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f);
-	const auto     c_9  = fstb::ToolsSimd::set1_f32 (1.f / 9);
-	const auto     c_2  = fstb::ToolsSimd::set1_f32 (1.f / 2);
-	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f);
+	const auto     mi   = fstb::Vf32 (-1.0f);
+	const auto     ma   = fstb::Vf32 ( 1.0f);
+	const auto     c_9  = fstb::Vf32 ( 1.0f / 9);
+	const auto     c_2  = fstb::Vf32 ( 1.0f / 2);
+	const auto     bias = fstb::Vf32 ( 0.2f);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x = VS::load_f32 (src_ptr + pos);
 
 		x += bias;
-
-		x = fstb::ToolsSimd::min_f32 (x, ma);
-		x = fstb::ToolsSimd::max_f32 (x, mi);
+		x = fstb::limit (x, mi, ma);
 
 		const auto     x2  = x  * x;
 		const auto     x4  = x2 * x2;

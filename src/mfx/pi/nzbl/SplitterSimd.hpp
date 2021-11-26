@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <tuple>
 
 namespace mfx {
 namespace pi {
@@ -19,7 +20,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 	fstb::Vf32 mask;
 	fstb::Vf32 x_save;
 	{
-		const auto gain = fstb::ToolsSimd::set1_f32 (0.125000f);
+		const auto gain = fstb::Vf32 (0.125000f);
 		x *= gain;
 	}
 	{
@@ -194,24 +195,24 @@ void	SplitterSimd::offset_band_ptr (ptrdiff_t offset) noexcept
 
 void	SplitterSimd::process_sample (float x) noexcept
 {
-	const auto v0i = fstb::ToolsSimd::set1_f32 (x);
+	const auto v0i = fstb::Vf32 (x);
 	const auto v0o = _filter_0.process_sample (v0i);
 	const auto v1i = fstb::ToolsSimd::deinterleave_f32_lo (v0o, v0o);
 	const auto v1o = _filter_1.process_sample (v1i);
 	const auto v2i = fstb::ToolsSimd::deinterleave_f32_hi (v0o, v0o);
 	const auto v2o = _filter_2.process_sample (v2i);
-	v1o.explode (
+	std::tie (
 		*(_out_ptr_arr [0]),
 		*(_out_ptr_arr [2]),
 		*(_out_ptr_arr [1]),
 		*(_out_ptr_arr [3])
-	);
-	v2o.explode (
+	) = v1o.explode ();
+	std::tie (
 		*(_out_ptr_arr [4]),
 		*(_out_ptr_arr [6]),
 		*(_out_ptr_arr [5]),
 		*(_out_ptr_arr [7])
-	);
+	) = v2o.explode ();
 }
 
 } // namespace nzbl

@@ -186,22 +186,22 @@ void	Tremolo::do_process_block (piapi::ProcInfo &proc)
 	const float    lfo_end = get_lfo_val (float (_lfo_pos));
 
 	// Computes the resulting volume
-	const auto     v_amt  = fstb::ToolsSimd::set_2f32 (amt_beg , amt_end );
-	const auto     v_bias = fstb::ToolsSimd::set_2f32 (bias_beg, bias_end);
-	const auto     v_sat  = fstb::ToolsSimd::set_2f32 (sat_beg , sat_end );
-	const auto     v_lfo  = fstb::ToolsSimd::set_2f32 (lfo_beg , lfo_end );
-	const auto     one    = fstb::ToolsSimd::set1_f32 (1);
-	const auto     half   = fstb::ToolsSimd::set1_f32 (0.5f);
-	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
-	const auto     v_satm = fstb::ToolsSimd::set1_f32 (1e-4f);
+	const auto     v_amt  = fstb::Vf32::set_pair (amt_beg , amt_end );
+	const auto     v_bias = fstb::Vf32::set_pair (bias_beg, bias_end);
+	const auto     v_sat  = fstb::Vf32::set_pair (sat_beg , sat_end );
+	const auto     v_lfo  = fstb::Vf32::set_pair (lfo_beg , lfo_end );
+	const auto     one    = fstb::Vf32 (1);
+	const auto     half   = fstb::Vf32 (0.5f);
+	const auto     zero   = fstb::Vf32::zero ();
+	const auto     v_satm = fstb::Vf32 (1e-4f);
 
 	auto           vol    = one + v_amt * (v_lfo + v_bias);
-	vol = fstb::ToolsSimd::max_f32 (vol, zero);
+	vol = fstb::max (vol, zero);
 
 	// Saturation:
 	// x = (1 - (1 - min (0.5 * s * x, 1)) ^ 2) / s
-	const auto     v_satl = fstb::ToolsSimd::max_f32 (v_sat, v_satm);
-	vol = one - fstb::ToolsSimd::min_f32 (vol * v_satl * half, one);
+	const auto     v_satl = fstb::max (v_sat, v_satm);
+	vol = one - fstb::min (vol * v_satl * half, one);
 	vol = (one - vol * vol) / v_satl;
 
 	const float    vol_beg = fstb::ToolsSimd::Shift <0>::extract (vol);

@@ -207,15 +207,15 @@ void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
 
 #if defined (fstb_HAS_SIMD)
 
-		const auto     lls_v = fstb::ToolsSimd::set1_f32 (lim_lvl_sq);
+		const auto     lls_v = fstb::Vf32 (lim_lvl_sq);
 		const auto     vol_pre_sq  =
-			fstb::ToolsSimd::set_2f32 (vol_pre_beg_sq, vol_pre_end_sq);
+			fstb::Vf32::set_pair (vol_pre_beg_sq, vol_pre_end_sq);
 		auto           vol_post_sq =
-			fstb::ToolsSimd::set_2f32 (vol_post_beg_sq, vol_post_end_sq);
-		const auto     nodiv0_v    = fstb::ToolsSimd::set1_f32 (nodiv0);
-		vol_post_sq = fstb::ToolsSimd::max_f32 (vol_post_sq, nodiv0_v);
+			fstb::Vf32::set_pair (vol_post_beg_sq, vol_post_end_sq);
+		const auto     nodiv0_v    = fstb::Vf32 (nodiv0);
+		vol_post_sq = fstb::max (vol_post_sq, nodiv0_v);
 		auto           comp_gain   = fstb::ToolsSimd::sqrt (
-			  fstb::ToolsSimd::min_f32 (vol_pre_sq, lls_v) / vol_post_sq
+			fstb::min (vol_pre_sq, lls_v) / vol_post_sq
 		);
 
 #	if 0 // Not needed anymore because of the _env_post update
@@ -223,8 +223,8 @@ void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
 		// is turned on and the post-envelope is empty) both post- and pre-
 		// volumes are very low, causing a sharp transient if the post-
 		// volume is significantly lower.
-		const auto     max_gain    = fstb::ToolsSimd::set1_f32 (_gain_max_comp);
-		comp_gain = fstb::ToolsSimd::min_f32 (comp_gain, max_gain);
+		const auto     max_gain    = fstb::Vf32 (_gain_max_comp);
+		comp_gain = fstb::min (comp_gain, max_gain);
 #	endif
 
 		comp_gain_beg = fstb::ToolsSimd::Shift <0>::extract (comp_gain);
@@ -288,17 +288,16 @@ void	FxDisto::process_softclip (float data_ptr [], int nbr_spl)
 	const float    ma = +1.5f;
 
 #if 1
-	const auto     v_a  = fstb::ToolsSimd::set1_f32 (a);
-	const auto     v_mi = fstb::ToolsSimd::set1_f32 (mi);
-	const auto     v_ma = fstb::ToolsSimd::set1_f32 (ma);
+	const auto     v_a  = fstb::Vf32 (a);
+	const auto     v_mi = fstb::Vf32 (mi);
+	const auto     v_ma = fstb::Vf32 (ma);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
-		x = fstb::ToolsSimd::min_f32 (x, v_ma);
-		x = fstb::ToolsSimd::max_f32 (x, v_mi);
+		x = fstb::limit (x, v_mi, v_ma);
 
-		fstb::ToolsSimd::mac (x, v_a * x, x * x);
+		x.mac (v_a * x, x * x);
 		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
 	}
 
@@ -335,31 +334,30 @@ void	FxDisto::process_foldback (float data_ptr [], int nbr_spl)
 
 #if 1
 
-	const auto     v_a    = fstb::ToolsSimd::set1_f32 (a   );
-	const auto     v_mi   = fstb::ToolsSimd::set1_f32 (mi  );
-	const auto     v_ma   = fstb::ToolsSimd::set1_f32 (ma  );
-	const auto     v_c1_6 = fstb::ToolsSimd::set1_f32 (c1_6);
-	const auto     v_c6_1 = fstb::ToolsSimd::set1_f32 (c6_1);
-	const auto     v_ofs1 = fstb::ToolsSimd::set1_f32 (ofs1);
-	const auto     v_ofs2 = fstb::ToolsSimd::set1_f32 (ofs2);
+	const auto     v_a    = fstb::Vf32 (a   );
+	const auto     v_mi   = fstb::Vf32 (mi  );
+	const auto     v_ma   = fstb::Vf32 (ma  );
+	const auto     v_c1_6 = fstb::Vf32 (c1_6);
+	const auto     v_c6_1 = fstb::Vf32 (c6_1);
+	const auto     v_ofs1 = fstb::Vf32 (ofs1);
+	const auto     v_ofs2 = fstb::Vf32 (ofs2);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
-		x = fstb::ToolsSimd::min_f32 (x, v_ma);
-		x = fstb::ToolsSimd::max_f32 (x, v_mi);
+		x = fstb::limit (x, v_mi, v_ma);
 
 		const auto     u  = fstb::ToolsSimd::conv_s32_to_f32 (
 			fstb::ToolsSimd::round_f32_to_s32 (x * v_c1_6)
 		);
-		fstb::ToolsSimd::mac (x, u, v_c6_1);
+		x.mac (u, v_c6_1);
 		x -= v_ofs1;
 		x  = fstb::abs (x);
 		x -= v_ofs2;
 		x  = fstb::abs (x);
 		x -= v_ofs1;
 
-		fstb::ToolsSimd::mac (x, v_a * x, x * x);
+		x.mac (v_a * x, x * x);
 		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
 	}
 

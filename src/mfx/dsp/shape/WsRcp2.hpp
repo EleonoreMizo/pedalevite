@@ -66,15 +66,15 @@ void	WsRcp2::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto        t   = fstb::ToolsSimd::set1_f32 (0.5f);
-	const auto        two = fstb::ToolsSimd::set1_f32 (2);
+	const auto        t   = fstb::Vf32 (0.5f);
+	const auto        two = fstb::Vf32 (2);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x = VS::load_f32 (src_ptr + pos);
 
 		const auto     a = fstb::abs (x);
-		const auto     m = fstb::ToolsSimd::max_f32 (a, t);
+		const auto     m = fstb::max (a, t);
 		const auto     f = t * m.rcp_approx ();
 		const auto     g = f * (two - f);
 		x *= g;

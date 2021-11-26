@@ -76,8 +76,8 @@ void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nb
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	const auto     lvl4    = fstb::ToolsSimd::set1_f32 (_lvl);
-	const auto     lvl4_sq = fstb::ToolsSimd::set1_f32 (_lvl_sq);
+	const auto     lvl4    = fstb::Vf32 (_lvl);
+	const auto     lvl4_sq = fstb::Vf32 (_lvl_sq);
 
 	int            block_pos = 0;
 	do

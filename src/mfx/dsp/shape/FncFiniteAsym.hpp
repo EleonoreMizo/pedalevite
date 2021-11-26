@@ -80,15 +80,14 @@ fstb::Vf32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::Vf32 x) const noe
 {
 	assert (_init_flag);
 
-	const auto     bl   = fstb::ToolsSimd::set1_f32 (float (BL));
-	const auto     bu   = fstb::ToolsSimd::set1_f32 (float (BU));
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
-	x = fstb::ToolsSimd::max_f32 (x, bl);
-	x = fstb::ToolsSimd::min_f32 (x, bu);
+	const auto     bl   = fstb::Vf32 (float (BL));
+	const auto     bu   = fstb::Vf32 (float (BU));
+	const auto     zero = fstb::Vf32::zero ();
+	x = fstb::limit (x, bl, bu);
 	auto           xo   = x - bl;
 	if (RES > 1)
 	{
-		xo *= fstb::ToolsSimd::set1_f32 (float (RES));
+		xo *= fstb::Vf32 (float (RES));
 	}
 	auto           pos  = fstb::ToolsSimd::floor_f32_to_s32 (xo);
 

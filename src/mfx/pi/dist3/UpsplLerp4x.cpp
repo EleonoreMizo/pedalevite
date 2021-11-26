@@ -58,12 +58,12 @@ void	UpsplLerp4x::process_block (float dst_ptr [], const float src_ptr [], int n
 	assert (fstb::DataAlign <true>::check_ptr (src_ptr));
 	assert (nbr_spl > 0);
 
-	auto           old   = fstb::ToolsSimd::set1_f32 (_val_old);
-	const auto     c1234 = fstb::ToolsSimd::set_f32 (0.25f, 0.5f, 0.75f, 1.0f);
+	auto           old   = fstb::Vf32 (_val_old);
+	const auto     c1234 = fstb::Vf32 (0.25f, 0.5f, 0.75f, 1.0f);
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		const auto     cur = fstb::ToolsSimd::set1_f32 (src_ptr [pos]);
-		fstb::ToolsSimd::mac (old, cur - old, c1234);
+		const auto     cur = fstb::Vf32 (src_ptr [pos]);
+		old.mac (cur - old, c1234);
 		fstb::ToolsSimd::store_f32 (dst_ptr + pos * 4, old);
 		old = cur;
 	}

@@ -382,18 +382,18 @@ void	DelayLineBbd::finish_processing (float * const out_ptr_arr [2], const float
 		float          env_end  = duck_ptr [_block_len - 1];
 
 #if defined (fstb_HAS_SIMD)
-		auto           env      = fstb::ToolsSimd::set_2f32 (env_beg, env_end);
+		auto           env      = fstb::Vf32::set_pair (env_beg, env_end);
 		env  = fstb::ToolsSimd::sqrt_approx (env);
-		env *= fstb::ToolsSimd::set1_f32 (_duck_sens_inv);
+		env *= fstb::Vf32 (_duck_sens_inv);
 		const auto     amt      =
-			fstb::ToolsSimd::set_2f32 (duck_amt_beg, duck_amt_end);
-		auto           dvol     = fstb::ToolsSimd::max_f32 (
-			fstb::ToolsSimd::set1_f32 (1) - amt * env,
-			fstb::ToolsSimd::set_f32_zero ()
+			fstb::Vf32::set_pair (duck_amt_beg, duck_amt_end);
+		const auto     dvol     = fstb::max (
+			fstb::Vf32 (1) - amt * env,
+			fstb::Vf32::zero ()
 		);
-		auto           vol      = fstb::ToolsSimd::set_2f32 (vol_beg, vol_end);
+		auto           vol      = fstb::Vf32::set_pair (vol_beg, vol_end);
 		vol *= dvol;
-		fstb::ToolsSimd::extract_2f32 (vol_beg, vol_end, vol);
+		std::tie (vol_beg, vol_end) = vol.extract_pair ();
 
 #else // Reference implementation
 		env_beg = sqrtf (env_beg) * _duck_sens_inv;

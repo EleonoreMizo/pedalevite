@@ -209,13 +209,13 @@ void	Compex::do_process_block (piapi::ProcInfo &proc)
 template <int NC>
 constexpr float	Compex::AddProc <NC>::process_scalar (float in)
 {
-	return (in);
+	return in;
 }
 
 template <>
 constexpr float	Compex::AddProc <2>::process_scalar (float in)
 {
-	return (in * 0.5f);
+	return in * 0.5f;
 }
 
 
@@ -223,13 +223,13 @@ constexpr float	Compex::AddProc <2>::process_scalar (float in)
 template <int NC>
 fstb::Vf32	Compex::AddProc <NC>::process_vect (const fstb::Vf32 &in)
 {
-	return (in);
+	return in;
 }
 
 template <>
 fstb::Vf32	Compex::AddProc <2>::process_vect (const fstb::Vf32 &in)
 {
-	return (in * fstb::ToolsSimd::set1_f32 (0.5f));
+	return in * fstb::Vf32 (0.5f);
 }
 
 

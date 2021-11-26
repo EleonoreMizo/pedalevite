@@ -221,7 +221,7 @@ void	FreqFast::proc_autogain (int nbr_spl) noexcept
 	const float    a2 = _lvl_gate * _lvl_gate * _lvl_gate * 0.5f;
 
 #if 1
-	const auto     a2_v = fstb::ToolsSimd::set1_f32 (a2);
+	const auto     a2_v = fstb::Vf32 (a2);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           val  = fstb::ToolsSimd::load_f32 (&_buf_arr [0] [pos]);
@@ -252,8 +252,8 @@ void	FreqFast::proc_peaks (int nbr_spl) noexcept
 
 	// Separates positive and negative peaks
 #if 1
-	const auto     dz_p = fstb::ToolsSimd::set1_f32 (+_deadzone);
-	const auto     dz_n = fstb::ToolsSimd::set1_f32 (-_deadzone);
+	const auto     dz_p = fstb::Vf32 (+_deadzone);
+	const auto     dz_n = fstb::Vf32 (-_deadzone);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		const auto     x        = fstb::ToolsSimd::load_f32 (&_buf_arr [2] [pos]);
@@ -281,9 +281,9 @@ void	FreqFast::proc_peaks (int nbr_spl) noexcept
 
 	// Peak detection
 #if 1
-	const auto     thr_p = fstb::ToolsSimd::set1_f32 (+_peak_thr);
-	const auto     thr_n = fstb::ToolsSimd::set1_f32 (-_peak_thr);
-	const auto     one   = fstb::ToolsSimd::set1_f32 (1.0f);
+	const auto     thr_p = fstb::Vf32 (+_peak_thr);
+	const auto     thr_n = fstb::Vf32 (-_peak_thr);
+	const auto     one   = fstb::Vf32 (1.0f);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		const auto     xp = fstb::ToolsSimd::load_f32 (&_buf_arr [0] [pos]);

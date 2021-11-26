@@ -22,8 +22,6 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
-
 #include <cassert>
 #include <cmath>
 
@@ -49,33 +47,17 @@ std::array <T, 2>	XFadeEqAmpSin::compute_gain (T x) noexcept
 	assert (x >= T (0));
 	assert (x <= T (1));
 
+	using std::abs;
+	using fstb::abs;
+
 	constexpr double  c0 = 0.224008;
-	const T        xb = x + x - T (1);
-	const T        y  = (T (1) - T (0.5) * std::abs (xb)) * xb;
-	const T        z  = (T (2 * c0) * std::abs (y) + T (1 - c0)) * y + T (0.5);
+	const auto     half = T (0.5);
+	const auto     one  = T (1);
+	const T        xb   = x + x - one;
+	const T        y    = (one - half * abs (xb)) * xb;
+	const T        z    = (T (2 * c0) * abs (y) + T (1 - c0)) * y + half;
 
 	return std::array <T, 2> { T (1) - z, z };
-}
-
-
-
-std::array <fstb::Vf32, 2>	XFadeEqAmpSin::compute_gain (fstb::Vf32 x) noexcept
-{
-	using TS = fstb::ToolsSimd;
-
-	assert (x >= fstb::Vf32 (0));
-	assert (x <= fstb::Vf32 (1));
-
-	constexpr float   c0 = 0.224008f;
-	const T        one  = TS::set1_f32 (1);
-	const T        half = TS::set1_f32 (0.5f);
-	const T        c2   = TS::set1_f32 (2 * c0);
-	const T        c1   = TS::set1_f32 (1 - c0);
-	const T        xb   = x + x - one;
-	const T        y    = (one - half * TS::abs_f32 (xb)) * xb;
-	const T        z    = (c2 * std::abs (y) + c1) * y + half;
-
-	return std::array <fstb::Vf32, 2> { one - z, z };
 }
 
 

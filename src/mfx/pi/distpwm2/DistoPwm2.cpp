@@ -387,7 +387,7 @@ void	DistoPwm2::do_process_block (piapi::ProcInfo &proc)
 
 		// Fix gain calculation
 		const auto     lvl_sq   =
-			fstb::ToolsSimd::set_2f32 (lvl_pre_sq, lvl_post_sq);
+			fstb::Vf32::set_pair (lvl_pre_sq, lvl_post_sq);
 		const auto     lvl      = fstb::ToolsSimd::sqrt (lvl_sq);
 		const float    lvl_pre  = fstb::ToolsSimd::Shift <0>::extract (lvl);
 		const float    lvl_post = fstb::ToolsSimd::Shift <1>::extract (lvl);

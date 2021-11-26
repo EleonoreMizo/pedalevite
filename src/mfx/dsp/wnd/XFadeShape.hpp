@@ -130,13 +130,11 @@ void	XFadeShape <SHP>::make_shape ()
 		fstb::Vf32     x;
 		fstb::Vf32     step;
 		fstb::ToolsSimd::start_lerp (x, step, 0.5f - ph, 0.5f + ph, len);
-		const auto     mi   = fstb::ToolsSimd::set_f32_zero ();
-		const auto     ma   = fstb::ToolsSimd::set1_f32 (1);
+		const auto     mi   = fstb::Vf32::zero ();
+		const auto     ma   = fstb::Vf32 (1);
 		for (int pos = 0; pos < len; pos += 4)
 		{
-			auto           xx = x;
-			xx = fstb::ToolsSimd::min_f32 (xx, ma);
-			xx = fstb::ToolsSimd::max_f32 (xx, mi);
+			auto           xx = fstb::limit (x, mi, ma);
 			auto           v  = SHP::compute_gain (xx) [1];
 			fstb::ToolsSimd::store_f32 (&_shape [pos], v);
 

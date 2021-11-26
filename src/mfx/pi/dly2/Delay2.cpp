@@ -771,11 +771,11 @@ void	Delay2::square_block (float dst_ptr [], const float * const src_ptr_arr [],
 void	Delay2::min_block (float dst_ptr [], int nbr_spl, float val_max)
 {
 #if 1
-	const auto     vm = fstb::ToolsSimd::set1_f32 (val_max);
+	const auto     vm = fstb::Vf32 (val_max);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto        x = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
-		x = fstb::ToolsSimd::min_f32 (x, vm);
+		x = fstb::min (x, vm);
 		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 	}
 

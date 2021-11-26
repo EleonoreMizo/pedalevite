@@ -21,8 +21,8 @@ void	SplitterSimd::Filter3::set_apf_2p (int idx, int lane, float b0, float b1) n
 
 void	SplitterSimd::Filter3::clear_buffers () noexcept
 {
-	std::fill (std::begin (_z1), std::end (_z1), fstb::ToolsSimd::set_f32_zero ());
-	std::fill (std::begin (_z2), std::end (_z2), fstb::ToolsSimd::set_f32_zero ());
+	std::fill (std::begin (_z1), std::end (_z1), fstb::Vf32::zero ());
+	std::fill (std::begin (_z2), std::end (_z2), fstb::Vf32::zero ());
 }
 
 void	SplitterSimd::Filter0::set_apf_1p (int idx, int lane, float b0) noexcept
@@ -38,8 +38,8 @@ void	SplitterSimd::Filter0::set_apf_2p (int idx, int lane, float b0, float b1) n
 
 void	SplitterSimd::Filter0::clear_buffers () noexcept
 {
-	std::fill (std::begin (_z1), std::end (_z1), fstb::ToolsSimd::set_f32_zero ());
-	std::fill (std::begin (_z2), std::end (_z2), fstb::ToolsSimd::set_f32_zero ());
+	std::fill (std::begin (_z1), std::end (_z1), fstb::Vf32::zero ());
+	std::fill (std::begin (_z2), std::end (_z2), fstb::Vf32::zero ());
 }
 
 void	SplitterSimd::set_splitter_coef (int split_idx, const float a0_arr [2], const float a1_arr [3]) noexcept

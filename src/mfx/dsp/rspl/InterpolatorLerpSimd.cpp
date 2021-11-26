@@ -187,7 +187,7 @@ int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const
 				const auto     in_1 = fstb::ToolsSimd::load_f32 (in_1_arr);
 				const auto     dif  = in_1 - in_0;
 				auto           out  = in_0;
-				fstb::ToolsSimd::mac (out, dif, q);
+				out.mac (dif, q);
 
 				fstb::ToolsSimd::storeu_f32 (dest_ptr + pos_dest, out);
 

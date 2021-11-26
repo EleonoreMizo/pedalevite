@@ -81,12 +81,9 @@ void  WsSmthAbs <A>::process_block (float dst_ptr [], const float src_ptr [], in
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     a_2   =
-		fstb::ToolsSimd::set1_f32 (0.5f  * float (A::num) / float (A::den));
-	const auto     a_4   =
-		fstb::ToolsSimd::set1_f32 (0.25f * float (A::num) / float (A::den));
-	const auto     a_inv =
-		fstb::ToolsSimd::set1_f32 (float (A::den) / float (A::num));
+	const auto     a_2   = fstb::Vf32 (0.5f  * float (A::num) / float (A::den));
+	const auto     a_4   = fstb::Vf32 (0.25f * float (A::num) / float (A::den));
+	const auto     a_inv = fstb::Vf32 (        float (A::den) / float (A::num));
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x    = VS::load_f32 (src_ptr + pos);

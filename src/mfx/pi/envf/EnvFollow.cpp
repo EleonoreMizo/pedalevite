@@ -343,8 +343,7 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 	else
 	{
 		float *        tmp_ptr = &_buf_env [0];
-		const auto     v       =
-			fstb::ToolsSimd::set1_f32 (1.f / float (nbr_chn_src));
+		const auto     v       = fstb::Vf32 (1.f / float (nbr_chn_src));
 		for (int chn_index = 0; chn_index < nbr_chn_src; ++chn_index)
 		{
 			const float *  src_ptr = proc._src_arr [chn_index];
@@ -367,7 +366,7 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 					{
 						auto           x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
 						auto           y = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
-						fstb::ToolsSimd::mac (y, x, x);
+						y.mac (x, x);
 						y *= v;
 						fstb::ToolsSimd::store_f32 (dst_ptr + pos, y);
 					}
@@ -378,7 +377,7 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 					{
 						auto           x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
 						auto           y = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
-						fstb::ToolsSimd::mac (y, x, x);
+						y.mac (x, x);
 						fstb::ToolsSimd::store_f32 (dst_ptr + pos, y);
 					}
 				}
@@ -392,12 +391,12 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 void	EnvFollow::clip_block (int nbr_spl)
 {
 	const auto     lvl_sq  = _clip_src_lvl * _clip_src_lvl;
-	const auto     c       = fstb::ToolsSimd::set1_f32 (lvl_sq);
+	const auto     c       = fstb::Vf32 (lvl_sq);
 	float *        spl_ptr = &_buf_src [0];
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x = fstb::ToolsSimd::load_f32 (spl_ptr + pos);
-		x = fstb::ToolsSimd::min_f32 (x, c);
+		x = fstb::min (x, c);
 		fstb::ToolsSimd::store_f32 (spl_ptr + pos, x);
 	}
 }

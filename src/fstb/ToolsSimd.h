@@ -119,48 +119,22 @@ public:
 	static inline void
 	               storeu_1f32 (MEM *ptr, Vf32 v) noexcept;
 
-	static inline Vf32
-	               set_f32_zero () noexcept;
 	static inline Vs32
 	               set_s32_zero () noexcept;
-	static inline Vf32
-	               set1_f32 (float a) noexcept;
 	static inline Vs32
 	               set1_s32 (int32_t a) noexcept;
-	static inline Vf32
-	               set_f32 (float a0, float a1, float a2, float a3) noexcept;
 	static inline Vs32
 	               set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept;
 	static inline Vf32
-	               set_2f32 (float a0, float a1) noexcept;
-	static inline Vf32
-	               set_2f32_fill (float a02, float a13) noexcept;
-	static inline Vf32
-	               set_2f32_dbl (float a01, float a23) noexcept;
-	static inline Vf32
 	               swap_2f32 (Vf32 v) noexcept;
-	static inline void
-	               extract_2f32 (float &a0, float &a1, Vf32 v) noexcept;
-	static inline void
-	               spread_2f32 (Vf32 &ra, Vf32 &rb, Vf32 v) noexcept;
 
-	static inline Vf32
-	               reverse_f32 (Vf32 x) noexcept;
 	static inline Vs32
 	               reverse_s32 (Vs32 x) noexcept;
 
-	static inline void
-	               mac (Vf32 &s, Vf32 a, Vf32 b) noexcept;
-	static inline void
-	               msu (Vf32 &s, Vf32 a, Vf32 b) noexcept;
 	static inline Vf32
 	               fmadd (Vf32 x, Vf32 a, Vf32 b) noexcept;
 	static inline Vf32
 	               fmsub (Vf32 x, Vf32 a, Vf32 b) noexcept;
-	static inline Vf32
-	               min_f32 (Vf32 lhs, Vf32 rhs) noexcept;
-	static inline Vf32
-	               max_f32 (Vf32 lhs, Vf32 rhs) noexcept;
 	static inline Vf32
 	               div_approx (Vf32 n, Vf32 d) noexcept;
 	static inline Vf32
@@ -206,12 +180,8 @@ public:
 	               and_h (Vs32 cond) noexcept;
 	static inline bool
 	               or_h (Vs32 cond) noexcept;
-	static inline Vf32
-	               set_mask_f32 (bool m0, bool m1, bool m2, bool m3) noexcept;
 	static inline int
 	               count_bits (Vs32 x) noexcept;
-	static inline unsigned int
-	               movemask_f32 (Vf32 x) noexcept;
 	static inline Vf32
 	               cast_f32 (Vs32 x) noexcept;
 	static inline Vs32

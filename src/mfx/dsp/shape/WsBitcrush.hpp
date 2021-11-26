@@ -81,11 +81,11 @@ void  WsBitcrush <S, L>::process_block (float dst_ptr [], const float src_ptr []
 	assert ((nbr_spl & 3) == 0);
 
 	const auto     scale     =
-		fstb::ToolsSimd::set1_f32 (float (Scale::num) / float (Scale::den));
+		fstb::Vf32 (float (Scale::num) / float (Scale::den));
 	const auto     scale_inv =
-		fstb::ToolsSimd::set1_f32 (float (Scale::den) / float (Scale::num));
-	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
-	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
+		fstb::Vf32 (float (Scale::den) / float (Scale::num));
+	const auto     m1 = fstb::Vf32 (-1);
+	const auto     p1 = fstb::Vf32 (+1);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
@@ -93,8 +93,7 @@ void  WsBitcrush <S, L>::process_block (float dst_ptr [], const float src_ptr []
 
 		if (L)
 		{
-			x  = fstb::ToolsSimd::max_f32 (x, m1);
-			x  = fstb::ToolsSimd::min_f32 (x, p1);
+			x  = fstb::limit (x, m1, p1);
 		}
 		x *= scale;
 		x  = fstb::ToolsSimd::conv_s32_to_f32 (

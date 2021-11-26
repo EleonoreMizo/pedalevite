@@ -189,11 +189,11 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 	{
 		float *        buf_ptr = &band._buf [0];
 
-		const auto     lvl  = fstb::ToolsSimd::set1_f32 (band._lvl);
-		const auto     thr  = fstb::ToolsSimd::set1_f32 (_rel_thr);
-		const auto     mul  = fstb::ToolsSimd::set1_f32 (1.0f / (_rel_thr - 1));
-		const auto     one  = fstb::ToolsSimd::set1_f32 (1);
-		const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+		const auto     lvl  = fstb::Vf32 (band._lvl);
+		const auto     thr  = fstb::Vf32 (_rel_thr);
+		const auto     mul  = fstb::Vf32 (1.0f / (_rel_thr - 1));
+		const auto     one  = fstb::Vf32 (1);
+		const auto     zero = fstb::Vf32::zero ();
 
 		int            block_pos = 0;
 		do
@@ -204,7 +204,7 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 			const float    blen_inv  = 1.f / float (block_len);
 
 			// Downsamples input^2 by averaging
-			auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();
+			auto           sum_v     = fstb::Vf32::zero ();
 			for (int pos = 0; pos < block_len; pos += 4)
 			{
 				const auto     x = fstb::ToolsSimd::load_f32 (buf2_ptr + pos);
@@ -216,14 +216,14 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 			const float    e2_end = band._env.analyse_block_raw_cst (avg, block_len);
 
 			// g0 = lvl / max (env, lvl)
-			const auto     e2 = fstb::ToolsSimd::set_2f32 (e2_beg, e2_end);
+			const auto     e2 = fstb::Vf32::set_pair (e2_beg, e2_end);
 			const auto     e  = fstb::ToolsSimd::sqrt_approx (e2);
-			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
+			const auto     et = fstb::max (e, lvl);
 			const auto     g0 = lvl * et.rcp_approx ();
 
 			// gain = (1 - max ((thr * g0 - 1) / (_rel_thr - 1), 0)) ^ 4
 			auto           gt = (thr * g0 - one) * mul;
-			gt = one - fstb::ToolsSimd::max_f32 (gt, zero);
+			gt = one - fstb::max (gt, zero);
 			gt = gt * gt;
 			gt = gt * gt;
 

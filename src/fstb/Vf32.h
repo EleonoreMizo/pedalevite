@@ -35,6 +35,8 @@ http://www.wtfpl.net/ for more details.
 	#error
 #endif
 
+#include <tuple>
+
 #include <cstdint>
 
 
@@ -80,6 +82,8 @@ public:
 	               Vf32 (double a) noexcept;
 	explicit fstb_FORCEINLINE
 	               Vf32 (int a) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vf32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept;
 	               Vf32 (const Vf32 &other)       = default;
 	               Vf32 (Vf32 &&other)            = default;
 	               ~Vf32 ()                       = default;
@@ -107,6 +111,13 @@ public:
 	fstb_FORCEINLINE Vf32 &
 	               operator ^= (const Vf32Native &other) noexcept;
 
+	fstb_FORCEINLINE Vf32 &
+	               mac (Vf32 a, Vf32 b) noexcept;
+	fstb_FORCEINLINE Vf32 &
+	               msu (Vf32 a, Vf32 b) noexcept;
+
+	fstb_FORCEINLINE Vf32
+	               reverse () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               round () const noexcept;
 	fstb_FORCEINLINE Vf32
@@ -118,8 +129,12 @@ public:
 	fstb_FORCEINLINE Vf32
 	               is_lt_0 () const noexcept;
 
-	fstb_FORCEINLINE void
-	               explode (float &a0, float &a1, float &a2, float &a3) const noexcept;
+	fstb_FORCEINLINE std::tuple <float, float, float, float>
+	               explode () const noexcept;
+	fstb_FORCEINLINE std::tuple <float, float>
+	               extract_pair () const noexcept;
+	fstb_FORCEINLINE std::tuple <Vf32, Vf32>
+	               spread_pair () const noexcept;
 
 	fstb_FORCEINLINE float
 	               sum_h () const noexcept;
@@ -132,7 +147,19 @@ public:
 	               and_h () const noexcept;
 	fstb_FORCEINLINE bool
 	               or_h () const noexcept;
+	fstb_FORCEINLINE unsigned int
+	               movemask () const noexcept;
 
+	static fstb_FORCEINLINE Vf32
+	               zero () noexcept;
+	static fstb_FORCEINLINE Vf32
+	               set_pair (float a0, float a1) noexcept;
+	static fstb_FORCEINLINE Vf32
+	               set_pair_fill (float a02, float a13) noexcept;
+	static fstb_FORCEINLINE Vf32
+	               set_pair_dbl (float a01, float a23) noexcept;
+	static fstb_FORCEINLINE Vf32
+	               set_mask (bool m0, bool m1, bool m2, bool m3) noexcept;
 	static fstb_FORCEINLINE Vf32Native
 	               signbit_mask () noexcept;
 
@@ -191,6 +218,9 @@ fstb_FORCEINLINE Vf32 operator >= (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 
 fstb_FORCEINLINE Vf32 abs (const Vf32 &v) noexcept;
 fstb_FORCEINLINE Vf32 round (const Vf32 &v) noexcept;
+fstb_FORCEINLINE Vf32 min (const Vf32 &lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 max (const Vf32 &lhs, const Vf32 &rhs) noexcept;
+fstb_FORCEINLINE Vf32 limit (const Vf32 &v, const Vf32 &mi, const Vf32 &ma) noexcept;
 
 }  // namespace fstb
 

@@ -47,8 +47,8 @@ EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::EnvFollowerAHR4SimdHelper () noexce
 ,	_hold_time ()
 ,	_hold_counter ()*/
 {
-	const auto     one  = fstb::ToolsSimd::set1_f32 (1);
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     one  = fstb::Vf32 (1);
+	const auto     zero = fstb::Vf32::zero ();
 	V128Par::store_f32 (_coef_atk , one );
 	V128Par::store_f32 (_hold_time, zero);
 	V128Par::store_f32 (_coef_rls , one );
@@ -102,8 +102,8 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fs
 {
 	assert (test_ge_0 (in));
 
-	const auto     zero       = fstb::ToolsSimd::set_f32_zero ();
-	const auto     one        = fstb::ToolsSimd::set1_f32 (1);
+	const auto     zero       = fstb::Vf32::zero ();
+	const auto     one        = fstb::Vf32 (1);
 	const auto     coef_a     = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r     = V128Par::load_f32 (_coef_rls);
 
@@ -122,9 +122,9 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fs
 		fstb::ToolsSimd::select (delta_lt_0, coef_r_cur, coef_a);
 
 	// state += coef * (in - state)
-	fstb::ToolsSimd::mac (state, delta, coef);
+	state.mac (delta, coef);
 
-	const auto     hcm1 = fstb::ToolsSimd::max_f32 (hold_c - one, zero);
+	const auto     hcm1 = fstb::max (hold_c - one, zero);
 	hold_c = fstb::ToolsSimd::select (delta_lt_0, hcm1, hold_t);
 
 	V128Par::store_f32 (_state [0], state);
@@ -142,7 +142,7 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fs
 		coef       = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (in - state)
-		fstb::ToolsSimd::mac (state, delta, coef);
+		state.mac (delta, coef);
 		V128Par::store_f32 (_state [flt], state);
 	}
 
@@ -163,7 +163,7 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fs
 		delta      = state##flt - state##fltn; \
 		delta_lt_0 = delta.is_lt_0 (); \
 		coef       = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
-		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
+		state##fltn.mac (delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_RESULT( ord) \
 	if (ord == ORD) \
@@ -190,8 +190,8 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::Vf32 out_
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
-	const auto     one    = fstb::ToolsSimd::set1_f32 (1);
+	const auto     zero   = fstb::Vf32::zero ();
+	const auto     one    = fstb::Vf32 (1);
 	const auto     coef_a = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r = V128Par::load_f32 (_coef_rls);
 	const auto     hold_t = V128Par::load_f32 (_hold_time);
@@ -224,9 +224,9 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::Vf32 out_
 			fstb::ToolsSimd::select (delta_lt_0, coef_r_cur, coef_a);
 
 		// state += coef * (in - state)
-		fstb::ToolsSimd::mac (state1, delta, coef);
+		state1.mac (delta, coef);
 
-		const auto     hcm1 = fstb::ToolsSimd::max_f32 (hold_c - one, zero);
+		const auto     hcm1 = fstb::max (hold_c - one, zero);
 		hold_c = fstb::ToolsSimd::select (delta_lt_0, hcm1, hold_t);
 
 		mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_PROC (1, 2)
@@ -271,8 +271,8 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fst
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
-	const auto     one    = fstb::ToolsSimd::set1_f32 (1);
+	const auto     zero   = fstb::Vf32::zero ();
+	const auto     one    = fstb::Vf32 (1);
 	const auto     coef_a = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r = V128Par::load_f32 (_coef_rls);
 	const auto     hold_t = V128Par::load_f32 (_hold_time);
@@ -305,9 +305,9 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fst
 			fstb::ToolsSimd::select (delta_lt_0, coef_r_cur, coef_a);
 
 		// state += coef * (in - state)
-		fstb::ToolsSimd::mac (state1, delta, coef);
+		state1.mac (delta, coef);
 
-		const auto     hcm1 = fstb::ToolsSimd::max_f32 (hold_c - one, zero);
+		const auto     hcm1 = fstb::max (hold_c - one, zero);
 		hold_c = fstb::ToolsSimd::select (delta_lt_0, hcm1, hold_t);
 
 		mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_PROC (1, 2)
@@ -420,9 +420,9 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::clear_buffers () noexcept
 {
 	for (int flt = 0; flt < ORD; ++flt)
 	{
-		V128Par::store_f32 (_state [flt], fstb::ToolsSimd::set_f32_zero ());
+		V128Par::store_f32 (_state [flt], fstb::Vf32::zero ());
 	}
-	V128Par::store_f32 (_hold_counter, fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_hold_counter, fstb::Vf32::zero ());
 }
 
 

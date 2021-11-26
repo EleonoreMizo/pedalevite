@@ -209,7 +209,7 @@ static inline T conv_s_to_t (S x) { return static_cast <T> (x); }
 template <>
 inline fstb::Vf32 conv_s_to_t (float x)
 {
-	return fstb::ToolsSimd::set1_f32 (x);
+	return fstb::Vf32 (x);
 }
 
 

@@ -227,7 +227,7 @@ void	FreqYinCheap::analyse_sample () noexcept
 
 #if defined (mfx_dsp_ana_USE_SIMD)
 
-		auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();
+		auto           sum_v     = fstb::Vf32::zero ();
 		const int      p1_beg    = _buf_pos;
 		const int      p2_beg    = _buf_pos + _delta;
 		const int      p1_buf    = p1_beg & 3;
@@ -243,7 +243,7 @@ void	FreqYinCheap::analyse_sample () noexcept
 			const auto    v2 = fstb::ToolsSimd::load_f32 (
 				&buf_2_ptr [(p2_beg_v + i) & _buf_mask]);
 			const auto    dif1 = v1 - v2;
-			fstb::ToolsSimd::mac (sum_v, dif1, dif1);
+			sum_v.mac (dif1, dif1);
 		}
 
 		sum = sum_v.sum_h ();

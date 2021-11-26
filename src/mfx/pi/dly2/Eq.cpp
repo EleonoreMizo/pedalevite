@@ -142,16 +142,16 @@ void	Eq::update_filter ()
 
 #else
 
-	const auto     fv   = fstb::ToolsSimd::set_2f32 (_freq_lo, _freq_hi);
-	const auto     ifs  = fstb::ToolsSimd::set1_f32 (_inv_fs);
+	const auto     fv   = fstb::Vf32::set_pair (_freq_lo, _freq_hi);
+	const auto     ifs  = fstb::Vf32 (_inv_fs);
 	const auto     kv   = dsp::iir::TransSZBilin::compute_k_approx (fv * ifs);
 
-	const auto     zero = fstb::ToolsSimd::set1_f32 (0);
-	const auto     one  = fstb::ToolsSimd::set1_f32 (1);
+	const auto     zero = fstb::Vf32::zero ();
+	const auto     one  = fstb::Vf32 (1);
 	const fstb::Vf32     s_eq_b [2] =
 	{
-		fstb::ToolsSimd::set_2f32 (1, 0),
-		fstb::ToolsSimd::set_2f32 (0, 1)
+		fstb::Vf32::set_pair (1, 0),
+		fstb::Vf32::set_pair (0, 1)
 	};
 	const fstb::Vf32     s_eq_a [2] = { one, one };
 

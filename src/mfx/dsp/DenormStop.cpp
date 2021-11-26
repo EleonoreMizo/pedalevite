@@ -113,7 +113,7 @@ void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames) noexcept
 		const float    antid = gen_new_rnd_val ();
 #if defined (mfx_dsp_DenormStop_USE_SIMD)
 		auto           vb = fstb::ToolsSimd::loadu_f32 (buf_ptr);
-		vb += fstb::ToolsSimd::set1_f32 (antid);
+		vb += fstb::Vf32 (antid);
 		fstb::ToolsSimd::storeu_f32 (buf_ptr, vb);
 #else
 		buf_ptr [0] += antid;
@@ -130,8 +130,8 @@ void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames) noexcept
 #if defined (mfx_dsp_DenormStop_USE_SIMD)
 		auto           vb = fstb::ToolsSimd::loadu_f32 (buf_ptr          );
 		auto           vm = fstb::ToolsSimd::loadu_f32 (buf_ptr + mid_pos);
-		vb += fstb::ToolsSimd::set1_f32 (a);
-		vm += fstb::ToolsSimd::set1_f32 (b);
+		vb += fstb::Vf32 (a);
+		vm += fstb::Vf32 (b);
 		fstb::ToolsSimd::storeu_f32 (buf_ptr          , vb);
 		fstb::ToolsSimd::storeu_f32 (buf_ptr + mid_pos, vm);
 #else

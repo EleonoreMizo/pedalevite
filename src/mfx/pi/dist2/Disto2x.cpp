@@ -326,10 +326,10 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		//       + clip (log2 (tr_sus)) * log2 (sus)
 		//      )
 #if 1
-		const auto     atk_l2     = fstb::ToolsSimd::set1_f32 (_gmod_atk_l2);
-		const auto     sus_l2     = fstb::ToolsSimd::set1_f32 (_gmod_sus_l2);
-		const auto     atk_max_l2 = fstb::ToolsSimd::set1_f32 (_gmod_atk_max_l2);
-		const auto     sus_max_l2 = fstb::ToolsSimd::set1_f32 (_gmod_sus_max_l2);
+		const auto     atk_l2     = fstb::Vf32 (_gmod_atk_l2);
+		const auto     sus_l2     = fstb::Vf32 (_gmod_sus_l2);
+		const auto     atk_max_l2 = fstb::Vf32 (_gmod_atk_max_l2);
+		const auto     sus_max_l2 = fstb::Vf32 (_gmod_sus_max_l2);
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x =
@@ -338,8 +338,8 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 				fstb::ToolsSimd::load_f32 (&_buf_trans_atk [pos]);
 			auto           trs_l2 =
 				fstb::ToolsSimd::load_f32 (&_buf_trans_sus [pos]);
-			tra_l2 = fstb::ToolsSimd::min_f32 (tra_l2, atk_max_l2);
-			trs_l2 = fstb::ToolsSimd::min_f32 (trs_l2, sus_max_l2);
+			tra_l2 = fstb::min (tra_l2, atk_max_l2);
+			trs_l2 = fstb::min (trs_l2, sus_max_l2);
 			const auto     mul_l2 = tra_l2 * atk_l2 + trs_l2 * sus_l2;
 			const auto     mul    = fstb::Approx::exp2 (mul_l2);
 			x *= mul;
@@ -409,7 +409,7 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		// Fix gain calculation
 #if 1
 		const auto     lvl_sq   =
-			fstb::ToolsSimd::set_2f32 (lvl_pre_sq, lvl_post_sq);
+			fstb::Vf32::set_pair (lvl_pre_sq, lvl_post_sq);
 		const auto     lvl      = fstb::ToolsSimd::sqrt (lvl_sq);
 		const float    lvl_pre  = fstb::ToolsSimd::Shift <0>::extract (lvl);
 		const float    lvl_post = fstb::ToolsSimd::Shift <1>::extract (lvl);

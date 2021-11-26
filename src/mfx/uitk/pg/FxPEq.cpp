@@ -660,12 +660,12 @@ std::vector <float>	FxPEq::create_freq_map (int nbr_freq, float f_beg, float f_e
 	const float    fs        = float (_model_ptr->get_sample_freq ());
 	const float    base      = float (log2 (double (2 * fstb::PI) * f_beg / fs));
 	const float    mul       = float (log2 (f_end / f_beg) / nbr_freq);
-	const auto     v_base    = fstb::ToolsSimd::set1_f32 (base);
-	const auto     v_mul     = fstb::ToolsSimd::set1_f32 (mul);
-	const auto     v_linstep = fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
+	const auto     v_base    = fstb::Vf32 (base);
+	const auto     v_mul     = fstb::Vf32 (mul);
+	const auto     v_linstep = fstb::Vf32 (0, 1, 2, 3);
 	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
 	{
-		auto          v_idx  = fstb::ToolsSimd::set1_f32 (float (f_idx));
+		auto          v_idx  = fstb::Vf32 (float (f_idx));
 		v_idx += v_linstep;
 		auto          v_puls = fstb::Approx::exp2 (v_base + v_idx * v_mul);
 
@@ -687,20 +687,19 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 
 	const float    range = float (_range_db_arr [_range_db_idx]);
 	const float    hh    = float (pix_h) * 0.5f;
-	const auto     mul   = fstb::ToolsSimd::set1_f32 (float (
+	const auto     mul   = fstb::Vf32 (float (
 		-20 * fstb::LOG10_2 * hh / range
 	));
-	const auto     ofs   = fstb::ToolsSimd::set1_f32 (hh);
-	const auto     secu  = fstb::ToolsSimd::set1_f32 (1e-15f);
+	const auto     ofs   = fstb::Vf32 (hh);
+	const auto     secu  = fstb::Vf32 (1e-15f);
 	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
 	{
 		const int      ns    = nbr_freq - f_idx;
 
 		auto           lvl   =
 			fstb::ToolsSimd::loadu_f32_part (&lvl_arr [f_idx], ns);
-		lvl = fstb::ToolsSimd::max_f32 (lvl, secu);
-		const auto     y_flt =
-			fstb::Approx::log2 (lvl) * mul + ofs;
+		lvl = fstb::max (lvl, secu);
+		const auto     y_flt = fstb::Approx::log2 (lvl) * mul + ofs;
 		const auto     y     = fstb::ToolsSimd::conv_f32_to_s32 (y_flt);
 		fstb::ToolsSimd::storeu_s32_part (&y_arr [f_idx], y, ns);
 	}
@@ -726,12 +725,12 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 	const int      nbr_freq = int (puls_arr.size ());
 	assert (int (lvl_arr.size ()) == nbr_freq);
 
-	const auto     one  = fstb::ToolsSimd::set1_f32 (1);
-	const auto     b0   = fstb::ToolsSimd::set1_f32 (biq._b [0]);
-	const auto     b1   = fstb::ToolsSimd::set1_f32 (biq._b [1]);
-	const auto     b2   = fstb::ToolsSimd::set1_f32 (biq._b [2]);
-	const auto     a1   = fstb::ToolsSimd::set1_f32 (biq._a [1]);
-	const auto     a2   = fstb::ToolsSimd::set1_f32 (biq._a [2]);
+	const auto     one  = fstb::Vf32 (1);
+	const auto     b0   = fstb::Vf32 (biq._b [0]);
+	const auto     b1   = fstb::Vf32 (biq._b [1]);
+	const auto     b2   = fstb::Vf32 (biq._b [2]);
+	const auto     a1   = fstb::Vf32 (biq._a [1]);
+	const auto     a2   = fstb::Vf32 (biq._a [2]);
 
 	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
 	{

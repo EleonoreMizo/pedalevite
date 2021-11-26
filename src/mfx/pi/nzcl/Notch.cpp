@@ -140,11 +140,11 @@ void	Notch::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl
 	{
 		_bpf.process_block (_buf_bpf_ptr, src_ptr, nbr_spl);
 
-		const auto     lvl   = fstb::ToolsSimd::set1_f32 (_lvl);
-		const auto     thr   = fstb::ToolsSimd::set1_f32 (_rel_thr);
-		const auto     mul   = fstb::ToolsSimd::set1_f32 (1.0f / (_rel_thr - 1));
-		const auto     one   = fstb::ToolsSimd::set1_f32 (1);
-		const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
+		const auto     lvl   = fstb::Vf32 (_lvl);
+		const auto     thr   = fstb::Vf32 (_rel_thr);
+		const auto     mul   = fstb::Vf32 (1.0f / (_rel_thr - 1));
+		const auto     one   = fstb::Vf32 (1);
+		const auto     zero  = fstb::Vf32::zero ();
 
 /*
 Optimisation: downsample src^2 with an average filter, here at x32.
@@ -171,7 +171,7 @@ Not sure if the benefit is interesting, especially for small buffers.
 			const float    blen_inv  = 1.0f / float (block_len);
 
 			// Downsamples input^2 by averaging
-			auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();
+			auto           sum_v     = fstb::Vf32::zero ();
 			for (int pos = 0; pos < block_len; pos += 4)
 			{
 				const auto     x = fstb::ToolsSimd::load_f32 (bpf_ptr + pos);
@@ -183,14 +183,14 @@ Not sure if the benefit is interesting, especially for small buffers.
 			const float    e2_end = _env.analyse_block_raw_cst (avg, block_len);
 
 			// g0 = lvl / max (env, lvl)
-			const auto     e2 = fstb::ToolsSimd::set_2f32 (e2_beg, e2_end);
+			const auto     e2 = fstb::Vf32::set_pair (e2_beg, e2_end);
 			const auto     e  = fstb::ToolsSimd::sqrt_approx (e2);
-			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
+			const auto     et = fstb::max (e, lvl);
 			const auto     g0 = lvl * et.rcp_approx ();
 
 			// gain = max ((thr * g0 - 1) / (_rel_thr - 1), 0)
 			auto           gt = (thr * g0 - one) * mul;
-			gt = fstb::ToolsSimd::max_f32 (gt, zero);
+			gt = fstb::max (gt, zero);
 
 			const float    gt_beg = fstb::ToolsSimd::Shift <0>::extract (gt);
 			const float    gt_end = fstb::ToolsSimd::Shift <1>::extract (gt);

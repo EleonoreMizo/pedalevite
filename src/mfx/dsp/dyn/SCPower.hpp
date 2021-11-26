@@ -92,7 +92,7 @@ void	SCPower <AP>::prepare_env_input_1chn (float out_ptr [], const float * const
 	static const float   not_zero_flt = 1e-30f;  // -600 dB
 
 	float *        dest_ptr = out_ptr - pos_beg;
-	const auto     not_zero = fstb::ToolsSimd::set1_f32 (not_zero_flt);
+	const auto     not_zero = fstb::Vf32 (not_zero_flt);
 
 	// Processes blocks
 	const int      nbr_spl       = pos_end - pos_beg;
@@ -111,10 +111,10 @@ void	SCPower <AP>::prepare_env_input_1chn (float out_ptr [], const float * const
 		auto           x_1 = fstb::ToolsSimd::loadu_f32 (src_ptr +  4);
 		auto           x_2 = fstb::ToolsSimd::loadu_f32 (src_ptr +  8);
 		auto           x_3 = fstb::ToolsSimd::loadu_f32 (src_ptr + 12);
-		fstb::ToolsSimd::mac (s_0, x_0, x_0);
-		fstb::ToolsSimd::mac (s_1, x_1, x_1);
-		fstb::ToolsSimd::mac (s_2, x_2, x_2);
-		fstb::ToolsSimd::mac (s_3, x_3, x_3);
+		s_0.mac (x_0, x_0);
+		s_1.mac (x_1, x_1);
+		s_2.mac (x_2, x_2);
+		s_3.mac (x_3, x_3);
 
 		float *        b_ptr = dest_ptr + pos;
 
@@ -150,7 +150,7 @@ void	SCPower <AP>::prepare_env_input_2chn (float out_ptr [], const float * const
 	static const float   not_zero_flt = 1e-30f;  // -600 dB
 
 	float *        dest_ptr = out_ptr - pos_beg;
-	const auto     not_zero = fstb::ToolsSimd::set1_f32 (not_zero_flt);
+	const auto     not_zero = fstb::Vf32 (not_zero_flt);
 
 	// Processes blocks
 	const int      nbr_spl       = pos_end - pos_beg;
@@ -170,18 +170,18 @@ void	SCPower <AP>::prepare_env_input_2chn (float out_ptr [], const float * const
 		auto           x_1 = fstb::ToolsSimd::loadu_f32 (src0_ptr +  4);
 		auto           x_2 = fstb::ToolsSimd::loadu_f32 (src0_ptr +  8);
 		auto           x_3 = fstb::ToolsSimd::loadu_f32 (src0_ptr + 12);
-		fstb::ToolsSimd::mac (s_0, x_0, x_0);
-		fstb::ToolsSimd::mac (s_1, x_1, x_1);
-		fstb::ToolsSimd::mac (s_2, x_2, x_2);
-		fstb::ToolsSimd::mac (s_3, x_3, x_3);
+		s_0.mac (x_0, x_0);
+		s_1.mac (x_1, x_1);
+		s_2.mac (x_2, x_2);
+		s_3.mac (x_3, x_3);
 		x_0 = fstb::ToolsSimd::loadu_f32 (src1_ptr     );
 		x_1 = fstb::ToolsSimd::loadu_f32 (src1_ptr +  4);
 		x_2 = fstb::ToolsSimd::loadu_f32 (src1_ptr +  8);
 		x_3 = fstb::ToolsSimd::loadu_f32 (src1_ptr + 12);
-		fstb::ToolsSimd::mac (s_0, x_0, x_0);
-		fstb::ToolsSimd::mac (s_1, x_1, x_1);
-		fstb::ToolsSimd::mac (s_2, x_2, x_2);
-		fstb::ToolsSimd::mac (s_3, x_3, x_3);
+		s_0.mac (x_0, x_0);
+		s_1.mac (x_1, x_1);
+		s_2.mac (x_2, x_2);
+		s_3.mac (x_3, x_3);
 
 		float *        b_ptr = dest_ptr + pos;
 
@@ -220,7 +220,7 @@ void	SCPower <AP>::prepare_env_input_nchn (float out_ptr [], const float * const
 	static const float   not_zero_flt = 1e-30f;  // -600 dB
 
 	float *        dest_ptr = out_ptr - pos_beg;
-	const auto     not_zero = fstb::ToolsSimd::set1_f32 (not_zero_flt);
+	const auto     not_zero = fstb::Vf32 (not_zero_flt);
 
 	// Processes blocks
 	const int      nbr_spl       = pos_end - pos_beg;
@@ -242,10 +242,10 @@ void	SCPower <AP>::prepare_env_input_nchn (float out_ptr [], const float * const
 			auto           x_1 = fstb::ToolsSimd::loadu_f32 (src_ptr +  4);
 			auto           x_2 = fstb::ToolsSimd::loadu_f32 (src_ptr +  8);
 			auto           x_3 = fstb::ToolsSimd::loadu_f32 (src_ptr + 12);
-			fstb::ToolsSimd::mac (s_0, x_0, x_0);
-			fstb::ToolsSimd::mac (s_1, x_1, x_1);
-			fstb::ToolsSimd::mac (s_2, x_2, x_2);
-			fstb::ToolsSimd::mac (s_3, x_3, x_3);
+			s_0.mac (x_0, x_0);
+			s_1.mac (x_1, x_1);
+			s_2.mac (x_2, x_2);
+			s_3.mac (x_3, x_3);
 
 			++ chn_index;
 		}

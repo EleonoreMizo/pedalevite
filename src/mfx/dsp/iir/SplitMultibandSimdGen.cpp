@@ -1376,7 +1376,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 	r._decl  = "\tinline void    " + fncarg + ";\n";
 
 	r._cinl  = "void\t" + _classname + "::" + fncarg + "\n{\n";
-	r._cinl += "\tconst auto v0i = fstb::ToolsSimd::set1_f32 (x);\n";
+	r._cinl += "\tconst auto v0i = fstb::Vf32 (x);\n";
 
 	const int      nbr_groups = int (_simd_group_arr.size ());
 
@@ -1416,9 +1416,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 				else
 				{
 					fstb::snprintf4all (txt_0, sizeof (txt_0),
-						"fstb::ToolsSimd::set1_f32 (\n"
-						"\t\tfstb::ToolsSimd::Shift <%d>::extract (v%do)\n"
-						"\t);\n",
+						"fstb::Vf32 (fstb::ToolsSimd::Shift <%d>::extract (v%do));\n",
 						coord_arr [0]._lane_idx,
 						coord_arr [0]._group_idx
 					);
@@ -1451,7 +1449,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 				else
 				{
 					fstb::snprintf4all (txt_0, sizeof (txt_0),
-						"fstb::ToolsSimd::set_2f32_fill (\n"
+						"fstb::Vf32::set_pair_fill (\n"
 						"\t\tfstb::ToolsSimd::Shift <%d>::extract (v%do),\n"
 						"\t\tfstb::ToolsSimd::Shift <%d>::extract (v%do)\n"
 						"\t);\n",
@@ -1480,45 +1478,32 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 
 	// Stores band outputs
 	std::string    out;
-	bool           trash_flag = false;
 	for (int grp_cnt = 0; grp_cnt < nbr_groups; ++grp_cnt)
 	{
 		const auto     band_idx_arr { get_band_out (grp_cnt) };
 		if (! band_idx_arr.empty ())
 		{
-			fstb::snprintf4all (txt_0, sizeof (txt_0),
-				"\tv%do.explode (\n", grp_cnt
-			);
-			out += txt_0;
+			out += "\tstd::tie (\n";
 			for (int lane = 0; lane < _simd_w; ++lane)
 			{
 				const int      band_idx = band_idx_arr [lane];
 				if (band_idx < 0)
 				{
-					fstb::snprintf4all (txt_0, sizeof (txt_0),
-						"\t\ttrash [%d],\n", lane
-					);
-					trash_flag = true;
+					out += "\t\tstd::ignore,\n";
 				}
 				else
 				{
 					fstb::snprintf4all (txt_0, sizeof (txt_0),
 						"\t\t*(_out_ptr_arr [%d]),\n", band_idx
 					);
+					out += txt_0;
 				}
-				out += txt_0;
 			}
-			out += "\t);\n";
+			fstb::snprintf4all (txt_0, sizeof (txt_0),
+				"\t) = v%do.explode ();\n", grp_cnt
+			);
+			out += txt_0;
 		}
-	}
-	if (trash_flag)
-	{
-		fstb::snprintf4all (txt_0, sizeof (txt_0),
-			"\talignas (%d) std::array <float, %d> trash;\n",
-			_simd_w * sizeof (float),
-			_simd_w
-		);
-		r._cinl += txt_0;
 	}
 	r._cinl += out;
 
@@ -1640,8 +1625,6 @@ std::string	SplitMultibandSimdGen::generate_include ()
 "#pragma once\n"
 "\n"
 "#include \"fstb/Vf32.h\"\n"
-"#include <algorithm>\n"
-"#include <iterator>\n"
 "#include <cstddef>\n\n";
 }
 
@@ -1649,7 +1632,11 @@ std::string	SplitMultibandSimdGen::generate_include ()
 
 std::string	SplitMultibandSimdGen::generate_inline ()
 {
-	return "#include \"fstb/ToolsSimd.h\"\n\n";
+	return
+"#include \"fstb/ToolsSimd.h\"\n"
+"#include <algorithm>\n"
+"#include <iterator>\n"
+"#include <tuple>\n\n";
 }
 
 
@@ -1770,21 +1757,21 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 		if (same_gain_flag)
 		{
 			fstb::snprintf4all (txt_0, sizeof (txt_0),
-				"set1_f32 (%#gf);\n", spec._gain_arr [0]
+				"%#gf", spec._gain_arr [0]
 			);
 		}
 		else
 		{
 			fstb::snprintf4all (txt_0, sizeof (txt_0),
-				"set_f32 (%#gf, %#gf, %#gf, %#gf);\n",
+				"%#gf, %#gf, %#gf, %#gf",
 				spec._gain_arr [0], spec._gain_arr [1],
 				spec._gain_arr [0], spec._gain_arr [1]
 			);
 		}
 		m_code += "\t{\n";
-		m_code += "\t\tconst auto gain = fstb::ToolsSimd::";
+		m_code += "\t\tconst auto gain = fstb::Vf32 (";
 		m_code += txt_0;
-		m_code += "\t\tx *= gain;\n";
+		m_code += ");\n\t\tx *= gain;\n";
 		m_code += "\t}\n";
 	}
 
@@ -2033,14 +2020,14 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 		prv_decl += "\t\tfstb::Vf32 " + use_arr_elt (n_z1 , z1) + " {};\n";
 		clbuf    +=
 			  "\tstd::fill (std::begin (" + n_z1 + "), std::end ("
-			+ n_z1 + "), fstb::ToolsSimd::set_f32_zero ());\n";
+			+ n_z1 + "), fstb::Vf32::zero ());\n";
 	}
 	if (z2 > 0)
 	{
 		prv_decl += "\t\tfstb::Vf32 " + use_arr_elt (n_z2 , z2) + " {};\n";
 		clbuf    +=
 			  "\tstd::fill (std::begin (" + n_z2 + "), std::end ("
-			+ n_z2 + "), fstb::ToolsSimd::set_f32_zero ());\n";
+			+ n_z2 + "), fstb::Vf32::zero ());\n";
 	}
 	clbuf += "}\n\n";
 	pub_code += clbuf;

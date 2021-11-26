@@ -904,22 +904,18 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 	check_mod_counters (mds);
 
 	// Now converts everything to integer in one pass with bound checking
-	const auto     dly_min_v = fstb::ToolsSimd::set1_f32 (dly_mod_fix_min);
-	const auto     dly_max_v = fstb::ToolsSimd::set1_f32 (dly_mod_fix_max);
+	const auto     dly_min_v = fstb::Vf32 (dly_mod_fix_min);
+	const auto     dly_max_v = fstb::Vf32 (dly_mod_fix_max);
 	for (int pos = 0; pos < nbr_spl; pos += 16)
 	{
 		auto           x0f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos     ]);
 		auto           x4f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  4]);
 		auto           x8f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  8]);
 		auto           xcf = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos + 12]);
-		x0f = fstb::ToolsSimd::min_f32 (x0f, dly_max_v);
-		x4f = fstb::ToolsSimd::min_f32 (x4f, dly_max_v);
-		x8f = fstb::ToolsSimd::min_f32 (x8f, dly_max_v);
-		xcf = fstb::ToolsSimd::min_f32 (xcf, dly_max_v);
-		x0f = fstb::ToolsSimd::max_f32 (x0f, dly_min_v);
-		x4f = fstb::ToolsSimd::max_f32 (x4f, dly_min_v);
-		x8f = fstb::ToolsSimd::max_f32 (x8f, dly_min_v);
-		xcf = fstb::ToolsSimd::max_f32 (xcf, dly_min_v);
+		x0f = fstb::limit (x0f, dly_min_v, dly_max_v);
+		x4f = fstb::limit (x4f, dly_min_v, dly_max_v);
+		x8f = fstb::limit (x8f, dly_min_v, dly_max_v);
+		xcf = fstb::limit (xcf, dly_min_v, dly_max_v);
 		const auto     x0i = fstb::ToolsSimd::conv_f32_to_s32 (x0f);
 		const auto     x4i = fstb::ToolsSimd::conv_f32_to_s32 (x4f);
 		const auto     x8i = fstb::ToolsSimd::conv_f32_to_s32 (x8f);

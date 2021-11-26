@@ -41,6 +41,114 @@ namespace fstb
 
 
 
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+// For some reasons, Clang complains if the following functions are not
+// defined before they are called.
+
+
+
+template <typename T>
+constexpr T	Approx::log2_poly2 (T x) noexcept
+{
+	return Poly::horner (x, T (-5.f / 3), T (2.f), T (-1.f / 3));
+}
+
+/*
+n=50
+FindFit[Table[
+  Log[x]/Log[2], {x, 1, 2, 1/n}], {c0 + c1 (1 + (x - 1)/n) + 
+   c2 (1 + (x - 1)/n)^2 + c3 (1 + (x - 1)/n)^3 + 
+   c4 (1 + (x - 1)/n)^4 + 
+   c5 (1 + (x - 1)/n)^5, {c0 + c1 + c2 + c3 + c4 + c5 == 0, 
+   c0 + 2 c1 + 4 c2 + 8 c3 + 16 c4 + 32 c5 == 1, 
+   c1 + 2 c2 + 3 c3 + 4 c4 + 5 c5 == 
+    2 (c1 + 4 c2 + 12 c3 + 24 c4 + 80 c5)}}, {c0, c1, c2, c3, c4, c5},
+  x]
+*/
+template <typename T>
+constexpr T	Approx::log2_poly5 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (-2.4395118595618),
+		T ( 3.80998968934317),
+		T (-1.75998771172059),
+		T ( 0.40029024875655),
+		T (-0.000133317241258202),
+		T (-0.0106470495760765)
+	);
+}
+
+/*
+n=20
+FindFit[Table[
+  Log[x]/Log[2], {x, 1, 2, 1/n}], {c0 + c1 (1 + (x - 1)/n) + 
+   c2 (1 + (x - 1)/n)^2 + c3 (1 + (x - 1)/n)^3 + 
+   c4 (1 + (x - 1)/n)^4 + c5 (1 + (x - 1)/n)^5 + 
+   c6 (1 + (x - 1)/n)^6 + 
+   c7 (1 + (x - 1)/n)^7, {c0 + c1 + c2 + c3 + c4 + c5 + c6 + c7 == 0, 
+   c0 + 2 c1 + 4 c2 + 8 c3 + 16 c4 + 32 c5 + 64 c6 + 128 c7 == 1, 
+   c1 + 2 c2 + 3 c3 + 4 c4 + 5 c5 + 6 c6 + 7 c7 == 
+    2 (c1 + 4 c2 + 12 c3 + 24 c4 + 80 c5 + 192 c6 + 448 c7)}}, {c0, 
+  c1, c2, c3, c4, c5, c6, c7}, x]
+*/
+template <typename T>
+constexpr T	Approx::log2_poly7 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (-2.88240401363533),
+		T ( 5.33677339735672),
+		T (-3.72166286493998),
+		T ( 1.42721785195822),
+		T (-8.62639500355707e-6),
+		T (-0.237597672916119),
+		T ( 0.0884727724765693),
+		T (-0.0107908439050664)
+	);
+}
+
+
+
+// Quadratic approximation of 2^x in [0 ; 1]
+template <typename T>
+constexpr T	Approx::exp2_poly2 (T x) noexcept
+{
+	return Poly::horner (x, T (1), T (2.0 / 3.0), T (1.0 / 3.0));
+}
+
+// Coefficients found by Andrew Simper
+// https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
+template <typename T>
+constexpr T	Approx::exp2_poly5 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (1               ),
+		T (0.69315168779795),
+		T (0.2401596780318 ),
+		T (0.055817593635  ),
+		T (0.008992164746  ),
+		T (0.001878875789  )
+	);
+}
+
+// Coefficients found by Andrew Simper
+template <typename T>
+constexpr T	Approx::exp2_poly7 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (1                 ),
+		T (0.693147180559945 ),
+		T (0.2402265069591007),
+		T (0.0555044941070   ),
+		T (0.009615262656    ),
+		T (0.001341316600    ),
+		T (0.000143623130    ),
+		T (0.000021615988    )
+	);
+}
+
+
+
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -50,7 +158,7 @@ namespace fstb
 // Max error: 2.411e-8
 // Scaled formula
 template <typename T>
-T	Approx::sin_rbj (T x) noexcept
+constexpr T	Approx::sin_rbj (T x) noexcept
 {
 	const auto    a  = T ( 2.628441118718695e-06);
 	const auto    b  = T (-1.982061326014539e-04);
@@ -121,7 +229,7 @@ void	Approx::cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept
 // Max error: 2.411e-8
 // Original formula
 template <typename T>
-T	Approx::sin_rbj_halfpi (T x) noexcept
+constexpr T	Approx::sin_rbj_halfpi (T x) noexcept
 {
 	const auto     a  = T ( 0.0001530302);
 	const auto     b  = T (-0.0046768800);
@@ -151,7 +259,7 @@ T	Approx::sin_rbj_halfpi (T x) noexcept
 // x in [-0.5 ; 1]
 // Max error: 2.411e-8
 template <typename T>
-T	Approx::sin_rbj_pi (T x) noexcept
+constexpr T	Approx::sin_rbj_pi (T x) noexcept
 {
 	using std::abs;
 
@@ -169,7 +277,7 @@ T	Approx::sin_rbj_pi (T x) noexcept
 // Max error: 2.411e-8
 void	Approx::sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept
 {
-	const auto     xv = ToolsSimd::set_2f32 (x, 1 - fabsf (1 - 2*x));
+	const auto     xv = Vf32::set_pair (x, 1 - fabsf (1 - 2*x));
 	const auto     yv = sin_rbj_halfpi (xv);
 	sx  = ToolsSimd::Shift <0>::extract (yv);
 	s2x = ToolsSimd::Shift <1>::extract (yv);
@@ -274,7 +382,7 @@ float	Approx::log2 (float val) noexcept
 
 Vf32	Approx::log2 (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, log2_poly2 <Vf32>);
+	return ToolsSimd::log2_base (val, Approx::log2_poly2 <Vf32>);
 }
 
 
@@ -288,7 +396,7 @@ float	Approx::log2_5th (float val) noexcept
 
 Vf32	Approx::log2_5th (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, log2_poly5 <Vf32>);
+	return ToolsSimd::log2_base (val, Approx::log2_poly5 <Vf32>);
 }
 
 
@@ -302,7 +410,7 @@ float	Approx::log2_7th (float val) noexcept
 
 Vf32	Approx::log2_7th (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, log2_poly7 <Vf32>);
+	return ToolsSimd::log2_base (val, Approx::log2_poly7 <Vf32>);
 }
 
 
@@ -352,7 +460,7 @@ float	Approx::exp2 (float val) noexcept
 
 Vf32	Approx::exp2 (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, exp2_poly2 <Vf32>);
+	return ToolsSimd::exp2_base (val, Approx::exp2_poly2 <Vf32>);
 }
 
 
@@ -367,7 +475,7 @@ float	Approx::exp2_5th (float val) noexcept
 
 Vf32	Approx::exp2_5th (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, exp2_poly5 <Vf32>);
+	return ToolsSimd::exp2_base (val, Approx::exp2_poly5 <Vf32>);
 }
 
 
@@ -382,7 +490,7 @@ float	Approx::exp2_7th (float val) noexcept
 
 Vf32	Approx::exp2_7th (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, exp2_poly7 <Vf32>);
+	return ToolsSimd::exp2_base (val, Approx::exp2_poly7 <Vf32>);
 }
 
 
@@ -433,7 +541,7 @@ Vf32	Approx::exp2_crude (Vf32 val) noexcept
 // A is the approximation accuracy (the bigger, the larger the valid range)
 // A = 10 is a good start
 template <int A, typename T>
-T	Approx::exp_m (T val) noexcept
+constexpr T	Approx::exp_m (T val) noexcept
 {
 	static_assert (A > 0, "A must be strictly positive");
 	static_assert (A <= 16, "A is too large, precision will suffer.");
@@ -582,18 +690,9 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val) noexcept
 template <typename T>
 constexpr T	Approx::tan_taylor5 (T x) noexcept
 {
-	const T        x_2 = x * x;
-	constexpr T    c_3 = T (1) / T (3);
-	constexpr T    c_5 = T (2) / T (15);
-
-	return (c_5 * x_2 + c_3) * x_2 * x + x;
-}
-
-Vf32	Approx::tan_taylor5 (Vf32 x) noexcept
-{
 	const auto     x_2 = x * x;
-	const auto     c_3 = Vf32 (1.0f / 3 );
-	const auto     c_5 = Vf32 (2.0f / 15);
+	const auto     c_3 = T (1.0 / 3);
+	const auto     c_5 = T (2.0 / 15);
 
 	return (c_5 * x_2 + c_3) * x_2 * x + x;
 }
@@ -639,7 +738,7 @@ Vf32	Approx::tan_mystran (Vf32 x) noexcept
 // https://discord.com/channels/507604115854065674/548502835608944681/872677465003274282
 // Max relative error: 0.111 % on the +/-0.965 * pi/2 range
 template <typename T>
-T	Approx::tan_pade33 (T x) noexcept
+constexpr T	Approx::tan_pade33 (T x) noexcept
 {
 //	x = limit (x, T (-1.54), T (1.54));
 	const auto     x2  = x * x;
@@ -667,7 +766,7 @@ not really a problem as the precision was unnecessary high near 0.
 */
 
 template <typename T>
-T	Approx::tan_pade55 (T x) noexcept
+constexpr T	Approx::tan_pade55 (T x) noexcept
 {
 //	const auto     a   = T (15);
 	const auto     d4  = T (14.999975509385927280627711005255);
@@ -735,8 +834,8 @@ Vf32	Approx::atan2_3th (Vf32 y, Vf32 x) noexcept
 {
 	using TS = ToolsSimd;
 
-	const auto     c3 = TS::set1_f32 (0.18208f);
-	const auto     c1 = TS::set1_f32 (float (PI * -0.25 - 0.18208));
+	const auto     c3 = Vf32 (0.18208f);
+	const auto     c1 = Vf32 (PI * -0.25 - 0.18208);
 
 	const auto     ys = y.signbit ();
 	const auto     b  = atan2_beg (y, x);
@@ -778,12 +877,10 @@ Vf32	Approx::atan2_7th (Vf32 y, Vf32 x) noexcept
 {
 	using TS = ToolsSimd;
 
-	const auto     c7 = TS::set1_f32 ( 0.0386379f);
-	const auto     c5 = TS::set1_f32 (-0.145917f);
-	const auto     c3 = TS::set1_f32 ( 0.0386379f);
-	const auto     c1 = TS::set1_f32 (float (
-		PI * -0.25 - 0.0386379 - -0.145917 - 0.0386379
-	));
+	const auto     c7 = Vf32 ( 0.0386379f);
+	const auto     c5 = Vf32 (-0.145917f);
+	const auto     c3 = Vf32 ( 0.0386379f);
+	const auto     c1 = Vf32 (PI * -0.25 - 0.0386379 - -0.145917 - 0.0386379);
 
 	const auto     ys = y.signbit ();
 	const auto     b  = atan2_beg (y, x);
@@ -877,7 +974,7 @@ Vf32	Approx::tanh_2dat (Vf32 x) noexcept
 
 	const auto     s   = x.signbit ();
 	x = abs (x);
-	x = ToolsSimd::min_f32 (x, max_val);
+	x = min (x, max_val);
 	const auto     x2  = x * x;
 	const auto     xs  = x ^ s;
 	const auto     num = Poly::horner (x2, n0, n1, n2, n3     ) * xs;
@@ -900,29 +997,11 @@ constexpr T	Approx::tanh_andy (T x) noexcept
 {
 	x = limit (x, T (-4), T (+4));
 
-	constexpr auto n3  = T (0.0812081221471);
-	constexpr auto d0  = T (1);
-	constexpr auto d2  = T (0.412523749044);
-	constexpr auto d4  = T (0.00624523306500);
+	const auto     n3  = T (0.0812081221471);
+	const auto     d0  = T (1);
+	const auto     d2  = T (0.412523749044);
+	const auto     d4  = T (0.00624523306500);
 
-	const auto     x2  = x * x;
-	const auto     num = n3 * x2 * x + x;
-	const auto     den = Poly::horner (x2, d0, d2, d4);
-
-	return num / den;
-}
-
-Vf32	Approx::tanh_andy (Vf32 x) noexcept
-{
-	const auto     n3      = Vf32 (0.0812081221471f);
-	const auto     d0      = Vf32 (1);
-	const auto     d2      = Vf32 (0.412523749044f);
-	const auto     d4      = Vf32 (0.00624523306500f);
-	const auto     min_val = Vf32 (-4);
-	const auto     max_val = Vf32 (+4);
-
-	x = ToolsSimd::max_f32 (x, min_val);
-	x = ToolsSimd::min_f32 (x, max_val);
 	const auto     x2  = x * x;
 	const auto     num = n3 * x2 * x + x;
 	const auto     den = Poly::horner (x2, d0, d2, d4);
@@ -1042,7 +1121,7 @@ Vf32	Approx::wright_omega_3 (Vf32 x) noexcept
 	const auto     x2  = Vf32 ( 8.0f);
 	const auto     ln2 = Vf32 (float (LN2));
 
-	const auto     y0  = ToolsSimd::set_f32_zero ();
+	const auto     y0  = Vf32::zero ();
 	const auto     y1  = Poly::horner (x, d, c, b, a);
 	const auto     y2  = x - (Approx::log2 (x)) * ln2;
 
@@ -1124,67 +1203,6 @@ float	Approx::log2_base (float val, P poly) noexcept
 
 
 
-template <typename T>
-T	Approx::log2_poly2 (T x) noexcept
-{
-	return Poly::horner (x, T (-5.f / 3), T (2.f), T (-1.f / 3));
-}
-
-/*
-n=50
-FindFit[Table[
-  Log[x]/Log[2], {x, 1, 2, 1/n}], {c0 + c1 (1 + (x - 1)/n) + 
-   c2 (1 + (x - 1)/n)^2 + c3 (1 + (x - 1)/n)^3 + 
-   c4 (1 + (x - 1)/n)^4 + 
-   c5 (1 + (x - 1)/n)^5, {c0 + c1 + c2 + c3 + c4 + c5 == 0, 
-   c0 + 2 c1 + 4 c2 + 8 c3 + 16 c4 + 32 c5 == 1, 
-   c1 + 2 c2 + 3 c3 + 4 c4 + 5 c5 == 
-    2 (c1 + 4 c2 + 12 c3 + 24 c4 + 80 c5)}}, {c0, c1, c2, c3, c4, c5},
-  x]
-*/
-template <typename T>
-T	Approx::log2_poly5 (T x) noexcept
-{
-	return Poly::estrin (x,
-		T (-2.4395118595618),
-		T ( 3.80998968934317),
-		T (-1.75998771172059),
-		T ( 0.40029024875655),
-		T (-0.000133317241258202),
-		T (-0.0106470495760765)
-	);
-}
-
-/*
-n=20
-FindFit[Table[
-  Log[x]/Log[2], {x, 1, 2, 1/n}], {c0 + c1 (1 + (x - 1)/n) + 
-   c2 (1 + (x - 1)/n)^2 + c3 (1 + (x - 1)/n)^3 + 
-   c4 (1 + (x - 1)/n)^4 + c5 (1 + (x - 1)/n)^5 + 
-   c6 (1 + (x - 1)/n)^6 + 
-   c7 (1 + (x - 1)/n)^7, {c0 + c1 + c2 + c3 + c4 + c5 + c6 + c7 == 0, 
-   c0 + 2 c1 + 4 c2 + 8 c3 + 16 c4 + 32 c5 + 64 c6 + 128 c7 == 1, 
-   c1 + 2 c2 + 3 c3 + 4 c4 + 5 c5 + 6 c6 + 7 c7 == 
-    2 (c1 + 4 c2 + 12 c3 + 24 c4 + 80 c5 + 192 c6 + 448 c7)}}, {c0, 
-  c1, c2, c3, c4, c5, c6, c7}, x]
-*/
-template <typename T>
-T	Approx::log2_poly7 (T x) noexcept
-{
-	return Poly::estrin (x,
-		T (-2.88240401363533),
-		T ( 5.33677339735672),
-		T (-3.72166286493998),
-		T ( 1.42721785195822),
-		T (-8.62639500355707e-6),
-		T (-0.237597672916119),
-		T ( 0.0884727724765693),
-		T (-0.0107908439050664)
-	);
-}
-
-
-
 template <typename P>
 float	Approx::exp2_base (float val, P poly) noexcept
 {
@@ -1206,46 +1224,6 @@ float	Approx::exp2_base (float val, P poly) noexcept
 	assert (val >= 0);
 
 	return val;
-}
-
-
-
-// Quadratic approximation of 2^x in [0 ; 1]
-template <typename T>
-T	Approx::exp2_poly2 (T x) noexcept
-{
-	return Poly::horner (x, T (1), T (2.0 / 3.0), T (1.0 / 3.0));
-}
-
-// Coefficients found by Andrew Simper
-// https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
-template <typename T>
-T	Approx::exp2_poly5 (T x) noexcept
-{
-	return Poly::estrin (x,
-		T (1               ),
-		T (0.69315168779795),
-		T (0.2401596780318 ),
-		T (0.055817593635  ),
-		T (0.008992164746  ),
-		T (0.001878875789  )
-	);
-}
-
-// Coefficients found by Andrew Simper
-template <typename T>
-T	Approx::exp2_poly7 (T x) noexcept
-{
-	return Poly::estrin (x,
-		T (1                 ),
-		T (0.693147180559945 ),
-		T (0.2402265069591007),
-		T (0.0555044941070   ),
-		T (0.009615262656    ),
-		T (0.001341316600    ),
-		T (0.000143623130    ),
-		T (0.000021615988    )
-	);
 }
 
 
@@ -1293,9 +1271,9 @@ std::array <Vf32, 2>	Approx::atan2_beg (Vf32 y, Vf32 x) noexcept
 {
 	using TS = ToolsSimd;
 
-	const auto     c0p  = TS::set1_f32 (float (PI * 0.25));
-	const auto     c0n  = TS::set1_f32 (float (PI * 0.75));
-	const auto     eps  = TS::set1_f32 (1e-10f);
+	const auto     c0p  = Vf32 (PI * 0.25);
+	const auto     c0n  = Vf32 (PI * 0.75);
+	const auto     eps  = Vf32 (1e-10f);
 
 	const auto     ya   = abs (y) + eps;
 	const auto     xlt0 = x.is_lt_0 ();

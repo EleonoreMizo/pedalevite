@@ -57,7 +57,7 @@ void	WsRcp1::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto        one = fstb::ToolsSimd::set1_f32 (1.0f);
+	const auto        one = fstb::Vf32 (1.0f);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{

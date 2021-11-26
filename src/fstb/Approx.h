@@ -48,7 +48,7 @@ class Approx
 public:
 
 	template <typename T>
-	static inline T
+	static inline constexpr T
 	               sin_rbj (T x) noexcept;
 	template <typename T>
 	static inline T
@@ -56,10 +56,10 @@ public:
 	static inline void
 	               cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept;
 	template <typename T>
-	static inline T
+	static inline constexpr T
 	               sin_rbj_halfpi (T x) noexcept;
 	template <typename T>
-	static inline T
+	static inline constexpr T
 	               sin_rbj_pi (T x) noexcept;
 	static inline void
 	               sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept;
@@ -111,7 +111,7 @@ public:
 	static inline Vf32
 	               exp2_crude (Vf32 val) noexcept;
 	template <int A, typename T>
-	static inline T
+	static inline constexpr T
 	               exp_m (T val) noexcept;
 
 	static inline double
@@ -125,8 +125,7 @@ public:
 	template <typename T>
 	static inline constexpr T
 	               tan_taylor5 (T x) noexcept;
-	static inline Vf32
-	               tan_taylor5 (Vf32 x) noexcept;
+
 	template <typename T>
 	static inline T
 	               tan_mystran (T x) noexcept;
@@ -134,11 +133,11 @@ public:
 	               tan_mystran (Vf32 x) noexcept;
 
 	template <typename T>
-	static inline T
+	static inline constexpr T
 	               tan_pade33 (T x) noexcept;
 
 	template <typename T>
-	static inline T
+	static inline constexpr T
 	               tan_pade55 (T x) noexcept;
 
 	template <typename T>
@@ -167,8 +166,6 @@ public:
 	template <typename T>
 	static inline constexpr T
 	               tanh_andy (T x) noexcept;
-	static inline Vf32
-	               tanh_andy (Vf32 x) noexcept;
 
 	template <int P = 1>
 	static inline float
@@ -214,26 +211,26 @@ private:
 	static fstb_FORCEINLINE float
 	               log2_base (float val, P poly) noexcept;
 	template <typename T>
-	static fstb_FORCEINLINE T
+	static fstb_FORCEINLINE constexpr T
 	               log2_poly2 (T x) noexcept;
 	template <typename T>
-	static fstb_FORCEINLINE T
+	static fstb_FORCEINLINE constexpr T
 	               log2_poly5 (T x) noexcept;
 	template <typename T>
-	static fstb_FORCEINLINE T
+	static fstb_FORCEINLINE constexpr T
 	               log2_poly7 (T x) noexcept;
 
 	template <typename P>
 	static fstb_FORCEINLINE float
 	               exp2_base (float val, P poly) noexcept;
 	template <typename T>
-	static fstb_FORCEINLINE T
+	static fstb_FORCEINLINE constexpr T
 	               exp2_poly2 (T x) noexcept;
 	template <typename T>
-	static fstb_FORCEINLINE T
+	static fstb_FORCEINLINE constexpr T
 	               exp2_poly5 (T x) noexcept;
 	template <typename T>
-	static fstb_FORCEINLINE T
+	static fstb_FORCEINLINE constexpr T
 	               exp2_poly7 (T x) noexcept;
 
 	template <typename T>

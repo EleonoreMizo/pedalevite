@@ -47,7 +47,7 @@ EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::EnvFollowerAR4SimdHelper () noexcept
 ,	_coef_atk ()
 ,	_coef_rls ()*/
 {
-	const auto     one = fstb::ToolsSimd::set1_f32 (1);
+	const auto     one = fstb::Vf32 (1);
 	V128Par::store_f32 (_coef_atk, one);
 	V128Par::store_f32 (_coef_rls, one);
 
@@ -106,7 +106,7 @@ fstb::Vf32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fst
 			fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (in - state)
-		fstb::ToolsSimd::mac (state, delta, coef);
+		state.mac (delta, coef);
 		V128Par::store_f32 (_state [flt], state);
 	}
 
@@ -127,7 +127,7 @@ fstb::Vf32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fst
 		const auto     delta      = state##flt - state##fltn; \
 		const auto     delta_lt_0 = delta.is_lt_0 (); \
 		const auto     coef       = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
-		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
+		state##fltn.mac (delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT( ord) \
 	if (ord == ORD) \
@@ -320,7 +320,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::clear_buffers () noexcept
 {
 	for (int flt = 0; flt < ORD; ++flt)
 	{
-		V128Par::store_f32 (_state [flt], fstb::ToolsSimd::set_f32_zero ());
+		V128Par::store_f32 (_state [flt], fstb::Vf32::zero ());
 	}
 }
 

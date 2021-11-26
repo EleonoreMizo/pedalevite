@@ -66,16 +66,13 @@ void	WsHardclip::process_block (float dst_ptr [], const float src_ptr [], int nb
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
-	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
+	const auto     m1 = fstb::Vf32 (-1);
+	const auto     p1 = fstb::Vf32 (+1);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x = VS::load_f32 (src_ptr + pos);
-
-		x = fstb::ToolsSimd::max_f32 (x, m1);
-		x = fstb::ToolsSimd::min_f32 (x, p1);
-
+		x = fstb::limit (x, m1, p1);
 		VD::store_f32 (dst_ptr + pos, x);
 	}
 }

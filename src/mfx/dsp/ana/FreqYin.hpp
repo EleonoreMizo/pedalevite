@@ -240,8 +240,8 @@ void	FreqYin <PP>::update_difference_functions () noexcept
 	const int      buf_pos_r_m_1 = _buf_pos_w - _win_len - 1; // May be negative
 	int            p_ref_o = buf_pos_r_m_1;
 	int            p_ref_i = buf_pos_r_m_1 + _win_len;
-	const auto     v_ref_o = TS::set1_f32 (_buffer [p_ref_o & _buf_mask]);
-	const auto     v_ref_i = TS::set1_f32 (_buffer [p_ref_i & _buf_mask]);
+	const auto     v_ref_o = fstb::Vf32 (_buffer [p_ref_o & _buf_mask]);
+	const auto     v_ref_i = fstb::Vf32 (_buffer [p_ref_i & _buf_mask]);
 
 	// Because we're going backward, we have to offset the reading position.
 	// We'll have to reverse the vectors after reading.
@@ -263,8 +263,8 @@ void	FreqYin <PP>::update_difference_functions () noexcept
 		const int      p_tst_i = p_ref_i - delta;
 		auto           v_tst_o = TS::loadu_f32 (&_buffer [p_tst_o & _buf_mask]);
 		auto           v_tst_i = TS::loadu_f32 (&_buffer [p_tst_i & _buf_mask]);
-		v_tst_o = TS::reverse_f32 (v_tst_o);
-		v_tst_i = TS::reverse_f32 (v_tst_i);
+		v_tst_o = v_tst_o.reverse ();
+		v_tst_i = v_tst_i.reverse ();
 		const auto     dif1_i  = v_ref_i - v_tst_i;
 		const auto     dif1_o  = v_ref_o - v_tst_o;
 		const auto     dif2_i  = dif1_i * dif1_i;
@@ -318,15 +318,15 @@ void	FreqYin <PP>::update_difference_functions_block (int nbr_spl) noexcept
 		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
 		auto           sum_u   = TS::load_f32 (d_info._sum_u.data ());
 		auto           sum_d   = TS::load_f32 (d_info._sum_d.data ());
-		sum_u = TS::reverse_f32 (sum_u);
-		sum_d = TS::reverse_f32 (sum_d);
+		sum_u = sum_u.reverse ();
+		sum_d = sum_d.reverse ();
 
 		const int      p_tst_o_base = p_ref_o - delta;
 		const int      p_tst_i_base = p_ref_i - delta;
 		for (int pos = 0; pos < nbr_spl; ++pos)
 		{
-			const auto     v_ref_o = TS::set1_f32 (v_ref_o_arr [pos]);
-			const auto     v_ref_i = TS::set1_f32 (v_ref_i_arr [pos]);
+			const auto     v_ref_o = fstb::Vf32 (v_ref_o_arr [pos]);
+			const auto     v_ref_i = fstb::Vf32 (v_ref_i_arr [pos]);
 			const int      p_tst_o = p_tst_o_base + pos;
 			const int      p_tst_i = p_tst_i_base + pos;
 			const auto     v_tst_o = TS::loadu_f32 (&_buffer [p_tst_o & _buf_mask]);
@@ -339,8 +339,8 @@ void	FreqYin <PP>::update_difference_functions_block (int nbr_spl) noexcept
 			sum_d -= dif2_o;
 		}
 
-		sum_u = TS::reverse_f32 (sum_u);
-		sum_d = TS::reverse_f32 (sum_d);
+		sum_u = sum_u.reverse ();
+		sum_d = sum_d.reverse ();
 		TS::store_f32 (d_info._sum_u.data (), sum_u);
 		TS::store_f32 (d_info._sum_d.data (), sum_d);
 	}
@@ -362,7 +362,7 @@ void	FreqYin <PP>::check_sum_position () noexcept
 			Delta &        d_info = _delta_arr [delta >> _vec_size_l2];
 			const auto     sum_u  = TS::load_f32 (d_info._sum_u.data ());
 			TS::store_f32 (d_info._sum_d.data (), sum_u);
-			TS::store_f32 (d_info._sum_u.data (), TS::set_f32_zero ());
+			TS::store_f32 (d_info._sum_u.data (), fstb::Vf32::zero ());
 		}
 		_sum_pos = 0;
 	}

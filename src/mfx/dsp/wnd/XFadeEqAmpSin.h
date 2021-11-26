@@ -49,9 +49,6 @@ public:
 	static inline std::array <T, 2>
 	               compute_gain (T x) noexcept;
 
-	static inline std::array <fstb::Vf32, 2>
-	               compute_gain (fstb::Vf32 x) noexcept;
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

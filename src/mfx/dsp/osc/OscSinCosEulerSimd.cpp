@@ -53,8 +53,8 @@ OscSinCosEulerSimd::OscSinCosEulerSimd () noexcept
 ,	_step_cos1 (1)
 ,	_step_sin1 (0)
 {
-	fstb::ToolsSimd::store_f32 (&_pos_cos , fstb::ToolsSimd::set1_f32 (1));
-	fstb::ToolsSimd::store_f32 (&_pos_sin , fstb::ToolsSimd::set_f32_zero ());
+	fstb::ToolsSimd::store_f32 (&_pos_cos , fstb::Vf32 (1));
+	fstb::ToolsSimd::store_f32 (&_pos_sin , fstb::Vf32::zero ());
 }
 
 
@@ -93,8 +93,8 @@ void	OscSinCosEulerSimd::step () noexcept
 {
 	const auto     c_old = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	const auto     s_old = fstb::ToolsSimd::load_f32 (&_pos_sin);
-	const auto     c_stp = fstb::ToolsSimd::set1_f32 (_step_cosn);
-	const auto     s_stp = fstb::ToolsSimd::set1_f32 (_step_sinn);
+	const auto     c_stp = fstb::Vf32 (_step_cosn);
+	const auto     s_stp = fstb::Vf32 (_step_sinn);
 	const auto     c_new = c_old * c_stp - s_old * s_stp;
 	const auto     s_new = c_old * s_stp + s_old * c_stp;
 	fstb::ToolsSimd::store_f32 (&_pos_cos, c_new);
@@ -125,8 +125,8 @@ void	OscSinCosEulerSimd::process_block (float cos_ptr [], float sin_ptr [], int 
 
 	auto           c_cur = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	auto           s_cur = fstb::ToolsSimd::load_f32 (&_pos_sin);
-	const auto     c_stp = fstb::ToolsSimd::set1_f32 (_step_cosn);
-	const auto     s_stp = fstb::ToolsSimd::set1_f32 (_step_sinn);
+	const auto     c_stp = fstb::Vf32 (_step_cosn);
+	const auto     s_stp = fstb::Vf32 (_step_sinn);
 
 	const int      nbs_spl = nbr_vec * _nbr_units;
 	for (int pos = 0; pos < nbs_spl; pos += _nbr_units)
@@ -166,8 +166,8 @@ void	OscSinCosEulerSimd::correct_fast () noexcept
 	auto           c  = fstb::ToolsSimd::load_f32 (&_pos_cos);
 	auto           s  = fstb::ToolsSimd::load_f32 (&_pos_sin);
 	const auto     r2 = c * c + s * s;
-	const auto     a3 = fstb::ToolsSimd::set1_f32 (3.f);
-	const auto     ah = fstb::ToolsSimd::set1_f32 (0.5f);
+	const auto     a3 = fstb::Vf32 (3.f);
+	const auto     ah = fstb::Vf32 (0.5f);
 	const auto     ni = (a3 - r2) * ah;
 	c *= ni;
 	s *= ni;
@@ -183,8 +183,8 @@ void	OscSinCosEulerSimd::correct_fast () noexcept
 
 void	OscSinCosEulerSimd::resync (float c0, float s0) noexcept
 {
-	auto           c = fstb::ToolsSimd::set1_f32 (c0);
-	auto           s = fstb::ToolsSimd::set1_f32 (s0);
+	auto           c = fstb::Vf32 (c0);
+	auto           s = fstb::Vf32 (s0);
 
 	for (int k = 1; k < _nbr_units; ++k)
 	{

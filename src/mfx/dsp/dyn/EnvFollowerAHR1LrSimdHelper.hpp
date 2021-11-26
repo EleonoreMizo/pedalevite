@@ -167,11 +167,11 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 {
 	assert (in >= 0);
 
-	auto           x          = fstb::ToolsSimd::set1_f32 (in);
+	auto           x      = fstb::Vf32 (in);
 
-	const auto     zero       = fstb::ToolsSimd::set_f32_zero ();
-	const auto     coef_a = fstb::ToolsSimd::set1_f32 (_coef_atk);
-	const auto     coef_r = fstb::ToolsSimd::set1_f32 (_coef_rls);
+	const auto     zero   = fstb::Vf32::zero ();
+	const auto     coef_a = fstb::Vf32 (_coef_atk);
+	const auto     coef_r = fstb::Vf32 (_coef_rls);
 
 	auto           state      = V128Par::load_f32 (_state [0]);
 	auto           hold_state = V128Par::load_f32 (_hold_state);
@@ -190,7 +190,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 		fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r_cur);
 
 	// state += coef * (x - state)
-	fstb::ToolsSimd::mac (state, delta, coef);
+	state.mac (delta, coef);
 
 	V128Par::store_f32 (_state [0], state);
 
@@ -209,7 +209,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 		coef = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (x - state)
-		fstb::ToolsSimd::mac (state, delta, coef);
+		state.mac (delta, coef);
 		V128Par::store_f32 (_state [flt], state);
 	}
 
@@ -230,7 +230,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 		delta = state##flt - state##fltn; \
 		const auto     delta_lt_0 = delta.is_lt_0 (); \
 		coef  = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
-		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
+		state##fltn.mac (delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_RESULT( ord) \
 	if (ord == ORD) \
@@ -252,9 +252,9 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
-	const auto     coef_a = fstb::ToolsSimd::set1_f32 (_coef_atk);
-	const auto     coef_r = fstb::ToolsSimd::set1_f32 (_coef_rls);
+	const auto     zero   = fstb::Vf32::zero ();
+	const auto     coef_a = fstb::Vf32 (_coef_atk);
+	const auto     coef_r = fstb::Vf32 (_coef_rls);
 
 	mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_LOAD (1)
 	mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_LOAD (2)
@@ -276,7 +276,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 
 		do
 		{
-			const auto     state0 = fstb::ToolsSimd::set1_f32 (in_ptr [pos]);
+			const auto     state0 = fstb::Vf32 (in_ptr [pos]);
 			assert (test_ge_0 (state0));
 
 			const auto     coef_r_cur =
@@ -292,7 +292,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 				fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r_cur);
 
 			// state += coef * (in - state)
-			fstb::ToolsSimd::mac (state1, delta, coef);
+			state1.mac (delta, coef);
 
 			mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_PROC (1, 2)
 			mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_PROC (2, 3)
@@ -343,12 +343,12 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::clear_buffers () noexcept
 {
 	for (int flt = 0; flt < ORD; ++flt)
 	{
-		V128Par::store_f32 (_state [flt], fstb::ToolsSimd::set_f32_zero ());
+		V128Par::store_f32 (_state [flt], fstb::Vf32::zero ());
 	}
-	V128Par::store_f32 (_hold_state, fstb::ToolsSimd::set_f32_zero ());
+	V128Par::store_f32 (_hold_state, fstb::Vf32::zero ());
 	V128Par::store_f32 (
 		_reset_mask,
-		fstb::ToolsSimd::set_mask_f32 (false, true, true, true)
+		fstb::Vf32::set_mask (false, true, true, true)
 	);
 	_hold_counter = 0;
 }

@@ -64,7 +64,7 @@ fstb_FORCEINLINE void	DelayAllPass_mac_vec (T * fstb_RESTRICT dst_ptr, const T *
 template <>
 fstb_FORCEINLINE void	DelayAllPass_mac_vec (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_1_ptr, const float * fstb_RESTRICT src_2_ptr, float coef, int nbr_spl) noexcept
 {
-	const auto        c = fstb::ToolsSimd::set1_f32 (coef);
+	const auto        c = fstb::Vf32 (coef);
 
 	const int         len_m16 = nbr_spl & ~15;
 	for (int pos = 0; pos < len_m16; pos += 16)
@@ -77,10 +77,10 @@ fstb_FORCEINLINE void	DelayAllPass_mac_vec (float * fstb_RESTRICT dst_ptr, const
 		const auto        b1 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos +  4);
 		const auto        b2 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos +  8);
 		const auto        b3 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos + 12);
-		fstb::ToolsSimd::mac (x0, b0, c);
-		fstb::ToolsSimd::mac (x1, b1, c);
-		fstb::ToolsSimd::mac (x2, b2, c);
-		fstb::ToolsSimd::mac (x3, b3, c);
+		x0.mac (b0, c);
+		x1.mac (b1, c);
+		x2.mac (b2, c);
+		x3.mac (b3, c);
 		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos     , x0);
 		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos +  4, x1);
 		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos +  8, x2);

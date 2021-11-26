@@ -91,10 +91,10 @@ static fstb_FORCEINLINE void	DelayFrac_interpolate_block (T * fstb_RESTRICT dst_
 template <>
 inline void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len) noexcept
 {
-	const auto     i0 = fstb::ToolsSimd::set1_f32 (phase_ptr [0]);
-	const auto     i1 = fstb::ToolsSimd::set1_f32 (phase_ptr [1]);
-	const auto     i2 = fstb::ToolsSimd::set1_f32 (phase_ptr [2]);
-	const auto     i3 = fstb::ToolsSimd::set1_f32 (phase_ptr [3]);
+	const auto     i0 = fstb::Vf32 (phase_ptr [0]);
+	const auto     i1 = fstb::Vf32 (phase_ptr [1]);
+	const auto     i2 = fstb::Vf32 (phase_ptr [2]);
+	const auto     i3 = fstb::Vf32 (phase_ptr [3]);
 
 #if fstb_ARCHI == fstb_ARCHI_ARM
 

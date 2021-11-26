@@ -352,14 +352,13 @@ void	SqueezerSimd <BR, LFOP>::update_internal_variables_fast (float &r, float &g
 template <bool BR, class LFOP>
 fstb::Vf32	SqueezerSimd <BR, LFOP>::shape_feedback (fstb::Vf32 x) noexcept
 {
-	const auto     c1   = fstb::ToolsSimd::set1_f32 ( 1);
-	const auto     cm1  = fstb::ToolsSimd::set1_f32 (-1);
-	const auto     fold = fstb::ToolsSimd::set1_f32 ( 0.5f);
-	const auto     xc   =
-		fstb::ToolsSimd::max_f32 (fstb::ToolsSimd::min_f32 (x, c1), cm1);
+	const auto     c1   = fstb::Vf32 ( 1);
+	const auto     cm1  = fstb::Vf32 (-1);
+	const auto     fold = fstb::Vf32 ( 0.5f);
+	const auto     xc   = fstb::limit (x, cm1, c1);
 	const auto     xn  = xc - x;
 	const auto     xna = fstb::abs (xn);
-	fstb::ToolsSimd::mac (x, xna, xn * fold);
+	x.mac (xna, xn * fold);
 
 	return x;
 }

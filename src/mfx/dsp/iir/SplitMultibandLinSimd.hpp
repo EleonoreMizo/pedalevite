@@ -446,7 +446,7 @@ void	SplitMultibandLinSimd <O>::process_sample (float x) noexcept
 		auto &         pack = _flt_pack_arr [pack_idx];
 
 		// Reads and interleaves the bands
-		auto           y = TS::set_f32 (
+		auto           y = fstb::Vf32 (
 			*(pack._buf_s_ptr_arr [0]),
 			*(pack._buf_s_ptr_arr [1]),
 			*(pack._buf_s_ptr_arr [2]),

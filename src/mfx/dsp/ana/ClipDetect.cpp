@@ -76,8 +76,8 @@ bool	ClipDetect::process_block (const float src_ptr [], int nbr_spl) const noexc
 	int            res_mask = 0;
 	const int      ns8 = nbr_spl & ~7;
 
-	const auto     mi = fstb::ToolsSimd::set1_f32 (_val_min);
-	const auto     ma = fstb::ToolsSimd::set1_f32 (_val_max);
+	const auto     mi = fstb::Vf32 (_val_min);
+	const auto     ma = fstb::Vf32 (_val_max);
 	for (int pos = 0; pos < ns8 && res_mask == 0; pos += 8)
 	{
 		const auto     x0   = fstb::ToolsSimd::loadu_f32 (src_ptr + pos    );
@@ -87,7 +87,7 @@ bool	ClipDetect::process_block (const float src_ptr [], int nbr_spl) const noexc
 		const auto     inf4 = (x4 > ma);
 		const auto     sup4 = (x4 < mi);
 		const auto     msk  = (inf0 | sup0) | (inf4 | sup4);
-		res_mask = fstb::ToolsSimd::movemask_f32 (msk);
+		res_mask = msk.movemask ();
 	}
 	bool           clip_flag = (res_mask != 0);
 

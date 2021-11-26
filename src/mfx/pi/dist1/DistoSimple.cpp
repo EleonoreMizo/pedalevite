@@ -368,20 +368,18 @@ void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int n
 
 #if 1
 
-	const auto     v_mi   = fstb::ToolsSimd::set1_f32 (mi);
-	const auto     v_ma   = fstb::ToolsSimd::set1_f32 (ma);
-	const auto     v_c_9  = fstb::ToolsSimd::set1_f32 (_m_9);
-	const auto     v_c_2  = fstb::ToolsSimd::set1_f32 (_m_2);
-	const auto     v_bias = fstb::ToolsSimd::set1_f32 (bias);
+	const auto     v_mi   = fstb::Vf32 (mi);
+	const auto     v_ma   = fstb::Vf32 (ma);
+	const auto     v_c_9  = fstb::Vf32 (_m_9);
+	const auto     v_c_2  = fstb::Vf32 (_m_2);
+	const auto     v_bias = fstb::Vf32 (bias);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
 
 		x += v_bias;
-
-		x  = fstb::ToolsSimd::min_f32 (x, v_ma);
-		x  = fstb::ToolsSimd::max_f32 (x, v_mi);
+		x  = fstb::limit (x, v_mi, v_ma);
 
 		const auto     x2  = x  * x;
 		const auto     x4  = x2 * x2;
