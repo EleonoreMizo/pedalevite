@@ -441,7 +441,7 @@ Vf32	Approx::log2_crude (Vf32 val) noexcept
 {
 	assert (val > Vf32 (0));
 
-	const auto     c0 = ToolsSimd::set1_s32 (0x43800000);
+	const auto     c0 = Vs32 (0x43800000);
 	auto           i  = ToolsSimd::cast_s32 (val);
 	i   = ToolsSimd::or_s32 (i >> 8, c0);
 	const auto     d  = Vf32 (382.95695f);

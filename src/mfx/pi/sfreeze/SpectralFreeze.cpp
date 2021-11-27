@@ -578,7 +578,6 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 
 #if defined (fstb_HAS_SIMD)
 
-		using TS = fstb::ToolsSimd;
 		const auto     gain_sc_v   = fstb::Vf32 (gain_sc);
 		const int      sign        = ((_bin_beg & 1) * 2 - 1);
 		const auto     phase_val_v =

@@ -35,6 +35,7 @@ namespace fstb
 
 
 
+// Returns a0 | a0 | a0 | a0
 Vs32::Vs32 (Scalar a) noexcept
 #if ! defined (fstb_HAS_SIMD)
 :	_x { a, a, a, a }
@@ -42,6 +43,21 @@ Vs32::Vs32 (Scalar a) noexcept
 :	_x { _mm_set1_epi32 (a) }
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 :	_x { vdupq_n_s32 (a) }
+#endif // fstb_ARCHI
+{
+	// Nothing
+}
+
+
+
+// Returns a0 | a1 | a2 | a3
+Vs32::Vs32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept
+#if ! defined (fstb_HAS_SIMD)
+:	_x { a0, a1, a2, a3 }
+#elif fstb_ARCHI == fstb_ARCHI_X86
+:	_x { _mm_set_epi32 (a3, a2, a1, a0) }
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+:	_x { a0, a1, a2, a3 }
 #endif // fstb_ARCHI
 {
 	// Nothing
@@ -143,6 +159,19 @@ Vs32 &   Vs32::operator >>= (int imm) noexcept
 	_x >>= imm;
 #endif // fstb_ARCHI
 	return *this;
+}
+
+
+
+Vs32	Vs32::zero () noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vs32 { { 0, 0, 0, 0 } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_setzero_si128 ();
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vdupq_n_s32 (0);
+#endif // fstb_ARCHI
 }
 
 

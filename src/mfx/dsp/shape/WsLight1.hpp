@@ -71,8 +71,8 @@ void  WsLight1::process_block (float dst_ptr [], const float src_ptr [], int nbr
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     mnt_mask = fstb::ToolsSimd::set1_s32 (_m_mask);
-	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (_m_invm);
+	const auto     mnt_mask = fstb::Vs32 (_m_mask);
+	const auto     mnt_invm = fstb::Vs32 (_m_invm);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);

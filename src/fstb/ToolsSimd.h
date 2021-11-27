@@ -87,12 +87,6 @@ public:
 	static inline void
 	               storeu_s32_part (MEM *ptr, Vs32 v, int n) noexcept;
 
-	static inline Vs32
-	               set_s32_zero () noexcept;
-	static inline Vs32
-	               set1_s32 (int32_t a) noexcept;
-	static inline Vs32
-	               set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept;
 	static inline Vf32
 	               swap_2f32 (Vf32 v) noexcept;
 

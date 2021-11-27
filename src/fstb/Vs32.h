@@ -76,6 +76,8 @@ public:
 	               Vs32 (Vs32Native a) noexcept : _x { a } {}
    explicit fstb_FORCEINLINE
 	               Vs32 (Scalar a) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vs32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept;
 	               Vs32 (const Vs32 &other)       = default;
 	               Vs32 (Vs32 &&other)            = default;
 	               ~Vs32 ()                       = default;
@@ -96,6 +98,9 @@ public:
 	               operator <<= (int imm) noexcept;
 	fstb_FORCEINLINE Vs32 &
 	               operator >>= (int imm) noexcept;
+
+	static fstb_FORCEINLINE Vs32
+	               zero () noexcept;
 
 
 

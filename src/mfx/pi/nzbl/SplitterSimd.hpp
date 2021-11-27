@@ -3,6 +3,7 @@
 // Code automatically generated.
 
 #include "fstb/ToolsSimd.h"
+#include "fstb/Vs32.h"
 
 #include <algorithm>
 #include <iterator>
@@ -46,7 +47,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 		x1z = y1z;
 	}
 	_z1 [2] = x;
-	mask = fstb::ToolsSimd::cast_f32 (fstb::ToolsSimd::set_s32 (-1, -1, 0, 0));
+	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
 	x    = fstb::ToolsSimd::select (mask, x_save, x);
 	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
 
@@ -119,7 +120,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 		x1z = y1z;
 	}
 	_z1 [9] = x;
-	mask = fstb::ToolsSimd::cast_f32 (fstb::ToolsSimd::set_s32 (-1, -1, 0, 0));
+	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
 	x    = fstb::ToolsSimd::select (mask, x_save, x);
 	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
 
@@ -173,7 +174,7 @@ fstb::Vf32	SplitterSimd::Filter0::process_sample (fstb::Vf32 x) noexcept
 		x1z = y1z;
 	}
 	_z1 [2] = x;
-	mask = fstb::ToolsSimd::cast_f32 (fstb::ToolsSimd::set_s32 (-1, -1, 0, 0));
+	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
 	x    = fstb::ToolsSimd::select (mask, x_save, x);
 	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
 

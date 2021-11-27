@@ -72,10 +72,10 @@ void	WsSqrt::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (_e_mask);
-	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (_e_lsb);
-	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (_e_add);
-	const auto     sign_fix = fstb::ToolsSimd::set1_s32 (_s_fix);
+	const auto     exp_mask = fstb::Vs32 (_e_mask);
+	const auto     exp_lsb  = fstb::Vs32 (_e_lsb);
+	const auto     exp_add  = fstb::Vs32 (_e_add);
+	const auto     sign_fix = fstb::Vs32 (_s_fix);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);

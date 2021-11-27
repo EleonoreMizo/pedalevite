@@ -1634,6 +1634,7 @@ std::string	SplitMultibandSimdGen::generate_inline ()
 {
 	return
 "#include \"fstb/ToolsSimd.h\"\n"
+"#include \"fstb/Vf32.h\"\n"
 "#include <algorithm>\n"
 "#include <iterator>\n"
 "#include <tuple>\n\n";
@@ -2089,7 +2090,7 @@ std::string	SplitMultibandSimdGen::build_mask (int m)
 {
 	char           txt_0 [1023+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0),
-		"fstb::ToolsSimd::cast_f32 (fstb::ToolsSimd::set_s32 (%d, %d, %d, %d))",
+		"fstb::ToolsSimd::cast_f32 (fstb::Vs32 (%d, %d, %d, %d))",
 		-((m >> 0) & 1),
 		-((m >> 1) & 1),
 		-((m >> 2) & 1),

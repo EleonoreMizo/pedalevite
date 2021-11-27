@@ -126,55 +126,6 @@ void	ToolsSimd::storeu_s32_part (MEM *ptr, Vs32 v, int n) noexcept
 
 
 
-Vs32	ToolsSimd::set_s32_zero () noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vs32 { { 0, 0, 0, 0 } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_setzero_si128 ();
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vdupq_n_s32 (0);
-#endif // fstb_ARCHI
-}
-
-
-
-// Returns a0 | a0 | a0 | a0
-Vs32	ToolsSimd::set1_s32 (int32_t a) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vs32 { { a, a, a, a } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_set1_epi32 (a);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vdupq_n_s32 (a);
-#endif // fstb_ARCHI
-}
-
-
-
-// Returns a0 | a1 | a2 | a3
-Vs32	ToolsSimd::set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vs32 { { a0, a1, a2, a3 } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_set_epi32 (a3, a2, a1, a0);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
- #if 1
-	return int32x4_t { a0, a1, a2, a3 };
- #else
-	int32x2_t      v01 = vdup_n_s32 (a0);
-	int32x2_t      v23 = vdup_n_s32 (a2);
-	v01 = vset_lane_s32 (a1, v01, 1);
-	v23 = vset_lane_s32 (a3, v23, 1);
-	return vcombine_s32 (v01, v23);
- #endif
-#endif // fstb_ARCHI
-}
-
-
-
 Vf32	ToolsSimd::swap_2f32 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -498,7 +449,7 @@ Vf32	ToolsSimd::log2_approx2 (Vf32 v) noexcept
 	const auto     d2    = Vf32 (6.316540241e+00f);
 	const auto     one   = Vf32 (1.0f);
 	const auto     multi = Vf32 (1.41421356237f);
-	const auto     mantissa_mask = set1_s32 ((1 << 23) - 1);
+	const auto     mantissa_mask = Vs32 ((1 << 23) - 1);
 
 #if fstb_ARCHI == fstb_ARCHI_X86
 
@@ -651,7 +602,7 @@ Vf32	ToolsSimd::exp2_approx2 (Vf32 v) noexcept
 	const int      round_ofs = 256;
 	const auto     r = Vf32 (round_ofs + 0.5f);
 	auto           i = vcvtq_s32_f32 (v + r);
-	i -= set1_s32 (round_ofs);
+	i -= Vs32 (round_ofs);
 	v -= vcvtq_f32_s32 (i);
 #endif // fstb_ARCHI
 
@@ -1687,7 +1638,7 @@ template <int SHIFT>
 Vs32	ToolsSimd::Shift <SHIFT>::spread (Vs32 a) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return set1_s32 (extract (a));
+	return Vs32 (extract (a));
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_epi32 (a, 0x55 * (SHIFT & 3));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
