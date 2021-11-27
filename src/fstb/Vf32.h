@@ -219,6 +219,10 @@ public:
 		int32_t        _s32 [4];
 		uint32_t       _u32 [4];
 	};
+	static_assert (
+		sizeof (Combo) == sizeof (Vf32Native),
+		"Wrong size for the wrapping combo structure"
+	);
 #endif
 	Vf32Native  _x;
 private:
@@ -230,6 +234,11 @@ private:
 private:
 
 }; // class Vf32
+
+static_assert (
+	sizeof (Vf32) == sizeof (Vf32Native),
+	"Wrong size for the wrapping structure"
+);
 
 
 

@@ -911,7 +911,7 @@ Vf32	Vf32::loadu_part (const MEM *ptr, int n) noexcept
 		return loadu (ptr);
 	}
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	v = vmovq_n_f32 (f_ptr [0]);
+	auto           v = vmovq_n_f32 (f_ptr [0]);
 	if (n >= 2)
 	{
 		v = vld1q_lane_f32 (f_ptr + 1, v, 1);
@@ -993,13 +993,13 @@ void	Vf32::storeu_part_n13 (MEM *ptr, int n) const noexcept
 
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 
-	vst1q_lane_f32 (f_ptr + 0, v, 0);
+	vst1q_lane_f32 (f_ptr + 0, _x, 0);
 	if (n >= 2)
 	{
-		vst1q_lane_f32 (f_ptr + 1, v, 1);
+		vst1q_lane_f32 (f_ptr + 1, _x, 1);
 		if (n >= 3)
 		{
-			vst1q_lane_f32 (f_ptr + 2, v, 2);
+			vst1q_lane_f32 (f_ptr + 2, _x, 2);
 		}
 	}
 
