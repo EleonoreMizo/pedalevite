@@ -203,7 +203,7 @@ float	SqueezerSimd <BR, LFOP>::process_sample (float x) noexcept
 	_y [3 - 1] = _lofi_op.process_sample (_y [3 - 1]);
 
 	// Non-linear stuffs (parallelisable)
-	const auto     ytmp   = fstb::ToolsSimd::loadu_f32 (&_y [0]);
+	const auto     ytmp   = fstb::Vf32::loadu (&_y [0]);
 	const auto     shaped = shape_feedback (ytmp);
 
 	// 4 poles

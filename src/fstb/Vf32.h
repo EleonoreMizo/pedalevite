@@ -90,6 +90,25 @@ public:
 	Vf32 &         operator = (const Vf32 &other) = default;
 	Vf32 &         operator = (Vf32 &&other)      = default;
 
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               store (MEM *ptr) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               store_part (MEM *ptr, int n) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu (MEM *ptr) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu_part (MEM *ptr, int n) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu_pair (MEM *ptr) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu_scalar (MEM *ptr) const noexcept;
+
 	fstb_FORCEINLINE
 	               operator Vf32Native () const noexcept { return _x; }
 	fstb_FORCEINLINE explicit
@@ -163,6 +182,19 @@ public:
 	static fstb_FORCEINLINE Vf32Native
 	               signbit_mask () noexcept;
 
+	template <typename MEM>
+	static fstb_FORCEINLINE Vf32
+	               load (const MEM *ptr) noexcept;
+	template <typename MEM>
+	static fstb_FORCEINLINE Vf32
+	               loadu (const MEM *ptr) noexcept;
+	template <typename MEM>
+	static fstb_FORCEINLINE Vf32
+	               loadu_part (const MEM *ptr, int n) noexcept;
+	template <typename MEM>
+	static fstb_FORCEINLINE Vf32
+	               loadu_pair (const MEM *ptr) noexcept;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -174,6 +206,10 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu_part_n13 (MEM *ptr, int n) const noexcept;
 
 #if ! defined (fstb_HAS_SIMD)
 public:

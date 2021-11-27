@@ -23,7 +23,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/DataAlign.h"
-#include "fstb/ToolsSimd.h"
 
 
 
@@ -107,10 +106,10 @@ void	SCPower <AP>::prepare_env_input_1chn (float out_ptr [], const float * const
 
 		const float *  src_ptr = chn_ptr_arr [0] + pos;
 
-		auto           x_0 = fstb::ToolsSimd::loadu_f32 (src_ptr     );
-		auto           x_1 = fstb::ToolsSimd::loadu_f32 (src_ptr +  4);
-		auto           x_2 = fstb::ToolsSimd::loadu_f32 (src_ptr +  8);
-		auto           x_3 = fstb::ToolsSimd::loadu_f32 (src_ptr + 12);
+		auto           x_0 = fstb::Vf32::loadu (src_ptr     );
+		auto           x_1 = fstb::Vf32::loadu (src_ptr +  4);
+		auto           x_2 = fstb::Vf32::loadu (src_ptr +  8);
+		auto           x_3 = fstb::Vf32::loadu (src_ptr + 12);
 		s_0.mac (x_0, x_0);
 		s_1.mac (x_1, x_1);
 		s_2.mac (x_2, x_2);
@@ -123,10 +122,10 @@ void	SCPower <AP>::prepare_env_input_1chn (float out_ptr [], const float * const
 		s_2 = _add_proc.process_vect (s_2);
 		s_3 = _add_proc.process_vect (s_3);
 
-		fstb::ToolsSimd::store_f32 (b_ptr     , s_0);
-		fstb::ToolsSimd::store_f32 (b_ptr +  4, s_1);
-		fstb::ToolsSimd::store_f32 (b_ptr +  8, s_2);
-		fstb::ToolsSimd::store_f32 (b_ptr + 12, s_3);
+		s_0.store (b_ptr     );
+		s_1.store (b_ptr +  4);
+		s_2.store (b_ptr +  8);
+		s_3.store (b_ptr + 12);
 
 		pos += 16;
 	}
@@ -166,18 +165,18 @@ void	SCPower <AP>::prepare_env_input_2chn (float out_ptr [], const float * const
 		const float *  src0_ptr = chn_ptr_arr [0] + pos;
 		const float *  src1_ptr = chn_ptr_arr [1] + pos;
 
-		auto           x_0 = fstb::ToolsSimd::loadu_f32 (src0_ptr     );
-		auto           x_1 = fstb::ToolsSimd::loadu_f32 (src0_ptr +  4);
-		auto           x_2 = fstb::ToolsSimd::loadu_f32 (src0_ptr +  8);
-		auto           x_3 = fstb::ToolsSimd::loadu_f32 (src0_ptr + 12);
+		auto           x_0 = fstb::Vf32::loadu (src0_ptr     );
+		auto           x_1 = fstb::Vf32::loadu (src0_ptr +  4);
+		auto           x_2 = fstb::Vf32::loadu (src0_ptr +  8);
+		auto           x_3 = fstb::Vf32::loadu (src0_ptr + 12);
 		s_0.mac (x_0, x_0);
 		s_1.mac (x_1, x_1);
 		s_2.mac (x_2, x_2);
 		s_3.mac (x_3, x_3);
-		x_0 = fstb::ToolsSimd::loadu_f32 (src1_ptr     );
-		x_1 = fstb::ToolsSimd::loadu_f32 (src1_ptr +  4);
-		x_2 = fstb::ToolsSimd::loadu_f32 (src1_ptr +  8);
-		x_3 = fstb::ToolsSimd::loadu_f32 (src1_ptr + 12);
+		x_0 = fstb::Vf32::loadu (src1_ptr     );
+		x_1 = fstb::Vf32::loadu (src1_ptr +  4);
+		x_2 = fstb::Vf32::loadu (src1_ptr +  8);
+		x_3 = fstb::Vf32::loadu (src1_ptr + 12);
 		s_0.mac (x_0, x_0);
 		s_1.mac (x_1, x_1);
 		s_2.mac (x_2, x_2);
@@ -190,10 +189,10 @@ void	SCPower <AP>::prepare_env_input_2chn (float out_ptr [], const float * const
 		s_2 = _add_proc.process_vect (s_2);
 		s_3 = _add_proc.process_vect (s_3);
 
-		fstb::ToolsSimd::store_f32 (b_ptr     , s_0);
-		fstb::ToolsSimd::store_f32 (b_ptr +  4, s_1);
-		fstb::ToolsSimd::store_f32 (b_ptr +  8, s_2);
-		fstb::ToolsSimd::store_f32 (b_ptr + 12, s_3);
+		s_0.store (b_ptr     );
+		s_1.store (b_ptr +  4);
+		s_2.store (b_ptr +  8);
+		s_3.store (b_ptr + 12);
 
 		pos += 16;
 	}
@@ -238,10 +237,10 @@ void	SCPower <AP>::prepare_env_input_nchn (float out_ptr [], const float * const
 		{
 			const float *  src_ptr = chn_ptr_arr [chn_index] + pos;
 
-			auto           x_0 = fstb::ToolsSimd::loadu_f32 (src_ptr     );
-			auto           x_1 = fstb::ToolsSimd::loadu_f32 (src_ptr +  4);
-			auto           x_2 = fstb::ToolsSimd::loadu_f32 (src_ptr +  8);
-			auto           x_3 = fstb::ToolsSimd::loadu_f32 (src_ptr + 12);
+			auto           x_0 = fstb::Vf32::loadu (src_ptr     );
+			auto           x_1 = fstb::Vf32::loadu (src_ptr +  4);
+			auto           x_2 = fstb::Vf32::loadu (src_ptr +  8);
+			auto           x_3 = fstb::Vf32::loadu (src_ptr + 12);
 			s_0.mac (x_0, x_0);
 			s_1.mac (x_1, x_1);
 			s_2.mac (x_2, x_2);
@@ -258,10 +257,10 @@ void	SCPower <AP>::prepare_env_input_nchn (float out_ptr [], const float * const
 		s_2 = _add_proc.process_vect (s_2);
 		s_3 = _add_proc.process_vect (s_3);
 
-		fstb::ToolsSimd::store_f32 (b_ptr     , s_0);
-		fstb::ToolsSimd::store_f32 (b_ptr +  4, s_1);
-		fstb::ToolsSimd::store_f32 (b_ptr +  8, s_2);
-		fstb::ToolsSimd::store_f32 (b_ptr + 12, s_3);
+		s_0.store (b_ptr     );
+		s_1.store (b_ptr +  4);
+		s_2.store (b_ptr +  8);
+		s_3.store (b_ptr + 12);
 
 		pos += 16;
 	}

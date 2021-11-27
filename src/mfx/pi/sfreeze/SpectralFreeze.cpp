@@ -401,8 +401,8 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
 		const int      img_idx = bin_idx + _nbr_bins;
-		auto           b_r  = TS::loadu_f32 (&_buf_bins [bin_idx]);
-		auto           b_i  = TS::loadu_f32 (&_buf_bins [img_idx]);
+		auto           b_r  = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
+		auto           b_i  = fstb::Vf32::loadu (&_buf_bins [img_idx]);
 
 		const auto     mag2 = b_r * b_r + b_i * b_i;
 		const auto     mgt0 = (mag2 > eps);
@@ -412,8 +412,8 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 		b_r  = TS::select (mgt0, b_r, one);
 		b_i &= mgt0;
 
-		TS::storeu_f32 (&slot._buf_freeze [bin_idx], b_r);
-		TS::storeu_f32 (&slot._buf_freeze [img_idx], b_i);
+		b_r.storeu (&slot._buf_freeze [bin_idx]);
+		b_i.storeu (&slot._buf_freeze [img_idx]);
 	}
 
 #endif // fstb_HAS_SIMD
@@ -457,10 +457,10 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
 		const int      img_idx = bin_idx + _nbr_bins;
-		auto           b1r = TS::loadu_f32 (&_buf_bins [bin_idx]);
-		auto           b1i = TS::loadu_f32 (&_buf_bins [img_idx]);
-		const auto     b0r = TS::loadu_f32 (&slot._buf_freeze [bin_idx]);
-		const auto     b0i = TS::loadu_f32 (&slot._buf_freeze [img_idx]);
+		auto           b1r = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
+		auto           b1i = fstb::Vf32::loadu (&_buf_bins [img_idx]);
+		const auto     b0r = fstb::Vf32::loadu (&slot._buf_freeze [bin_idx]);
+		const auto     b0i = fstb::Vf32::loadu (&slot._buf_freeze [img_idx]);
 
 		const auto     dr    = b1r * b0r + b1i * b0i;
 		const auto     di    = b1i * b0r - b1r * b0i;
@@ -469,8 +469,8 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 		const auto     mag2  = b1r * b1r + b1i * b1i;
 		const auto     mag   = TS::sqrt_approx (mag2);
 
-		TS::storeu_f32 (&slot._buf_freeze [bin_idx], mag  );
-		TS::storeu_f32 (&slot._buf_freeze [img_idx], arg_n);
+		mag  .storeu (&slot._buf_freeze [bin_idx]);
+		arg_n.storeu (&slot._buf_freeze [img_idx]);
 	}
 
 #endif // fstb_HAS_SIMD
@@ -592,10 +592,10 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 		for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 		{
 			const int      img_idx = bin_idx + _nbr_bins;
-			const auto     mag   = TS::loadu_f32 (&slot._buf_freeze [bin_idx]);
-			auto           arg_n = TS::loadu_f32 (&slot._buf_freeze [img_idx]);
-			auto           sum_r = TS::loadu_f32 (&_buf_bins [bin_idx]);
-			auto           sum_i = TS::loadu_f32 (&_buf_bins [img_idx]);
+			const auto     mag   = fstb::Vf32::loadu (&slot._buf_freeze [bin_idx]);
+			auto           arg_n = fstb::Vf32::loadu (&slot._buf_freeze [img_idx]);
+			auto           sum_r = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
+			auto           sum_i = fstb::Vf32::loadu (&_buf_bins [img_idx]);
 
 			arg_n *= nbr_hops;
 			arg_n += phase_val_v;
@@ -609,8 +609,8 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 
 			sum_r += br;
 			sum_i += bi;
-			TS::storeu_f32 (&_buf_bins [bin_idx], sum_r);
-			TS::storeu_f32 (&_buf_bins [img_idx], sum_i);
+			sum_r.storeu (&_buf_bins [bin_idx]);
+			sum_i.storeu (&_buf_bins [img_idx]);
 
 			// Next
 			omega_v += omega_step;

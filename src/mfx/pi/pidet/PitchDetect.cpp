@@ -205,10 +205,10 @@ void	PitchDetect::do_process_block (piapi::ProcInfo &proc)
 		{
 			while (pos_sub < end_sub)
 			{
-				auto           s0 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos     );
-				auto           s1 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  4);
-				auto           s2 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  8);
-				auto           s3 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos + 12);
+				auto           s0 = fstb::Vf32::loadu (spl_ptr + pos     );
+				auto           s1 = fstb::Vf32::loadu (spl_ptr + pos +  4);
+				auto           s2 = fstb::Vf32::loadu (spl_ptr + pos +  8);
+				auto           s3 = fstb::Vf32::loadu (spl_ptr + pos + 12);
 				auto           s  = (s0 + s1) + (s2 + s3);
 				_buffer [pos_sub] = s.sum_h ();
 				pos += 16;
@@ -220,8 +220,8 @@ void	PitchDetect::do_process_block (piapi::ProcInfo &proc)
 			assert (_sub_spl == 8);
 			while (pos_sub < end_sub)
 			{
-				auto           s0 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos     );
-				auto           s1 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  4);
+				auto           s0 = fstb::Vf32::loadu (spl_ptr + pos     );
+				auto           s1 = fstb::Vf32::loadu (spl_ptr + pos +  4);
 				auto           s  = s0 + s1;
 				_buffer [pos_sub] = s.sum_h ();
 				pos += 8;

@@ -774,9 +774,9 @@ void	Delay2::min_block (float dst_ptr [], int nbr_spl, float val_max)
 	const auto     vm = fstb::Vf32 (val_max);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto        x = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
+		auto        x = fstb::Vf32::load (dst_ptr + pos);
 		x = fstb::min (x, vm);
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+		x.store (dst_ptr + pos);
 	}
 
 #else // Reference implementation

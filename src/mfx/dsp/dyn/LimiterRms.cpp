@@ -93,13 +93,13 @@ void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nb
 		const int      m4 = work_len & ~3;
 		for (int pos = 0; pos < m4; pos += 4)
 		{
-			const auto     vol_sq = fstb::ToolsSimd::load_f32 (buf_ptr + pos);
-			auto           x      = fstb::ToolsSimd::loadu_f32 (src_loc_ptr + pos);
+			const auto     vol_sq = fstb::Vf32::load (buf_ptr + pos);
+			auto           x      = fstb::Vf32::loadu (src_loc_ptr + pos);
 			const auto     vol_gt_lvl = (vol_sq > lvl4_sq);
 			const auto     mult   = fstb::ToolsSimd::rsqrt_approx (vol_sq);
 			const auto     xlim   = x * lvl4 * mult;
 			x = fstb::ToolsSimd::select (vol_gt_lvl, xlim, x);
-			fstb::ToolsSimd::storeu_f32 (dst_loc_ptr + pos, x);
+			x.storeu (dst_loc_ptr + pos);
 		}
 		for (int pos = m4; pos < work_len; ++pos)
 		{

@@ -69,22 +69,22 @@ fstb_FORCEINLINE void	DelayAllPass_mac_vec (float * fstb_RESTRICT dst_ptr, const
 	const int         len_m16 = nbr_spl & ~15;
 	for (int pos = 0; pos < len_m16; pos += 16)
 	{
-		auto              x0 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos     );
-		auto              x1 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos +  4);
-		auto              x2 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos +  8);
-		auto              x3 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos + 12);
-		const auto        b0 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos     );
-		const auto        b1 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos +  4);
-		const auto        b2 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos +  8);
-		const auto        b3 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos + 12);
+		auto              x0 = fstb::Vf32::loadu (src_1_ptr + pos     );
+		auto              x1 = fstb::Vf32::loadu (src_1_ptr + pos +  4);
+		auto              x2 = fstb::Vf32::loadu (src_1_ptr + pos +  8);
+		auto              x3 = fstb::Vf32::loadu (src_1_ptr + pos + 12);
+		const auto        b0 = fstb::Vf32::loadu (src_2_ptr + pos     );
+		const auto        b1 = fstb::Vf32::loadu (src_2_ptr + pos +  4);
+		const auto        b2 = fstb::Vf32::loadu (src_2_ptr + pos +  8);
+		const auto        b3 = fstb::Vf32::loadu (src_2_ptr + pos + 12);
 		x0.mac (b0, c);
 		x1.mac (b1, c);
 		x2.mac (b2, c);
 		x3.mac (b3, c);
-		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos     , x0);
-		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos +  4, x1);
-		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos +  8, x2);
-		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos + 12, x3);
+		x0.storeu (dst_ptr + pos     );
+		x1.storeu (dst_ptr + pos +  4);
+		x2.storeu (dst_ptr + pos +  8);
+		x3.storeu (dst_ptr + pos + 12);
 	}
 
 	const int      rem = nbr_spl - len_m16;

@@ -409,18 +409,18 @@ void	Compex::process_block_part (float * const out_ptr_arr [], const float * con
 
 	// Special case for the first group of sample: we store the gain change.
 	{
-		const auto     x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
+		const auto     x = fstb::Vf32::load (tmp_ptr + pos);
 		const auto     y = _gain_fnc.compute_gain <true> (x);
-		fstb::ToolsSimd::store_f32 (tmp_ptr + pos, y);
+		y.store (tmp_ptr + pos);
 
 		pos += 4;
 	}
 	// Next groups of samples
 	while (pos < pos_block_end)
 	{
-		const auto     x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
+		const auto     x = fstb::Vf32::load (tmp_ptr + pos);
 		const auto     y = _gain_fnc.compute_gain <false> (x);
-		fstb::ToolsSimd::store_f32 (tmp_ptr + pos, y);
+		y.store (tmp_ptr + pos);
 
 		pos += 4;
 	}
@@ -453,9 +453,9 @@ void	Compex::conv_env_to_log (int nbr_spl)
 	int            pos       = 0;
 	while (pos < block_bnd)
 	{
-		auto           val = fstb::ToolsSimd::load_f32 (&_buf_tmp [pos]);
+		auto           val = fstb::Vf32::load (&_buf_tmp [pos]);
 		val = fstb::Approx::log2 (val);
-		fstb::ToolsSimd::store_f32 (&_buf_tmp [pos], val);
+		val.store (&_buf_tmp [pos]);
 
 		pos += 4;
 	}

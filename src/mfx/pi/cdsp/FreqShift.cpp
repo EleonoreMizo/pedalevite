@@ -141,12 +141,12 @@ void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const
 #if 1
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			const auto     co  = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_COS] [pos]);
-			const auto     si  = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_SIN] [pos]);
-			const auto     x   = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_PHC] [pos]);
-			const auto     y   = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_PHS] [pos]);
+			const auto     co  = fstb::Vf32::load (&_buf_arr [Buf_COS] [pos]);
+			const auto     si  = fstb::Vf32::load (&_buf_arr [Buf_SIN] [pos]);
+			const auto     x   = fstb::Vf32::load (&_buf_arr [Buf_PHC] [pos]);
+			const auto     y   = fstb::Vf32::load (&_buf_arr [Buf_PHS] [pos]);
 			const auto     val = co * x + si * y;
-			fstb::ToolsSimd::store_f32 (dst_ptr + pos, val);
+			val.store (dst_ptr + pos);
 		}
 
 #else // Reference implementation

@@ -689,9 +689,9 @@ void	WorldAudio::store_send (int nbr_spl)
 				// to insane levels.
 				for (int pos = 0; pos < nbr_spl; pos += 4)
 				{
-					auto           x = fstb::ToolsSimd::load_f32 (buf_src_ptr + pos);
+					auto           x = fstb::Vf32::load (buf_src_ptr + pos);
 					x = fstb::limit (x, mi, ma);
-					fstb::ToolsSimd::store_f32 (buf_dst_ptr + pos, x);
+					x.store (buf_dst_ptr + pos);
 				}
 			}
 		}

@@ -44,7 +44,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vf32.h"
 
 #include <array>
 #include <vector>
@@ -92,8 +92,6 @@ protected:
 
 private:
 
-	using TS = fstb::ToolsSimd;
-
 	static constexpr int _vec_size_l2  = 2;
 	static constexpr int _vec_size     = 1 << _vec_size_l2;
 	static constexpr int _vec_mask     = _vec_size - 1;
@@ -102,11 +100,11 @@ private:
 	class Delta
 	{
 	public:
-		typedef std::array <float, _vec_size> VF32;
+		typedef std::array <float, _vec_size> VectFlt32;
 		// Difference function = _sum_u + _sum_d
-		alignas (16) VF32 _sum_u {{ 0, 0, 0, 0 }};
-		alignas (16) VF32 _sum_d {{ 0, 0, 0, 0 }};
-		alignas (16) VF32 _cmndf {{ 0, 0, 0, 0 }};
+		alignas (16) VectFlt32 _sum_u {{ 0, 0, 0, 0 }};
+		alignas (16) VectFlt32 _sum_d {{ 0, 0, 0, 0 }};
+		alignas (16) VectFlt32 _cmndf {{ 0, 0, 0, 0 }};
 	};
 	typedef std::vector <Delta, fstb::AllocAlign <Delta, 16> > DeltaArray;
 

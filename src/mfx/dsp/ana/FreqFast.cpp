@@ -224,13 +224,13 @@ void	FreqFast::proc_autogain (int nbr_spl) noexcept
 	const auto     a2_v = fstb::Vf32 (a2);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           val  = fstb::ToolsSimd::load_f32 (&_buf_arr [0] [pos]);
-		const auto     env  = fstb::ToolsSimd::load_f32 (&_buf_arr [1] [pos]);
+		auto           val  = fstb::Vf32::load (&_buf_arr [0] [pos]);
+		const auto     env  = fstb::Vf32::load (&_buf_arr [1] [pos]);
 		const auto     env2 = env * env;
 		const auto     den  = env2 * env + a2_v;
 		const auto     gain = env2 / den;
 		val *= gain;
-		fstb::ToolsSimd::store_f32 (&_buf_arr [2] [pos], val);
+		val.store (&_buf_arr [2] [pos]);
 	}
 #else
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -256,13 +256,13 @@ void	FreqFast::proc_peaks (int nbr_spl) noexcept
 	const auto     dz_n = fstb::Vf32 (-_deadzone);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		const auto     x        = fstb::ToolsSimd::load_f32 (&_buf_arr [2] [pos]);
+		const auto     x        = fstb::Vf32::load (&_buf_arr [2] [pos]);
 		const auto     x_gt_dzp = (x > dz_p);
 		const auto     x_lt_dzn = (x < dz_n);
 		const auto     xp       = x & x_gt_dzp;
 		const auto     xn       = x & x_lt_dzn;
-		fstb::ToolsSimd::store_f32 (&_buf_arr [0] [pos], xp);
-		fstb::ToolsSimd::store_f32 (&_buf_arr [1] [pos], xn);
+		xp.store (&_buf_arr [0] [pos]);
+		xn.store (&_buf_arr [1] [pos]);
 	}
 #else
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -286,18 +286,18 @@ void	FreqFast::proc_peaks (int nbr_spl) noexcept
 	const auto     one   = fstb::Vf32 (1.0f);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		const auto     xp = fstb::ToolsSimd::load_f32 (&_buf_arr [0] [pos]);
-		const auto     xn = fstb::ToolsSimd::load_f32 (&_buf_arr [1] [pos]);
-		auto           ep = fstb::ToolsSimd::load_f32 (&_buf_arr [2] [pos]);
-		auto           en = fstb::ToolsSimd::load_f32 (&_buf_arr [3] [pos]);
+		const auto     xp = fstb::Vf32::load (&_buf_arr [0] [pos]);
+		const auto     xn = fstb::Vf32::load (&_buf_arr [1] [pos]);
+		auto           ep = fstb::Vf32::load (&_buf_arr [2] [pos]);
+		auto           en = fstb::Vf32::load (&_buf_arr [3] [pos]);
 		ep *= thr_p;
 		en *= thr_n;
 		const auto     xp_gt_ep = (xp > ep);
 		const auto     xn_lt_en = (xn < en);
 		const auto     yp       = one & xp_gt_ep;
 		const auto     yn       = one & xn_lt_en;
-		fstb::ToolsSimd::store_f32 (&_buf_arr [2] [pos], yp);
-		fstb::ToolsSimd::store_f32 (&_buf_arr [3] [pos], yn);
+		yp.store (&_buf_arr [2] [pos]);
+		yn.store (&_buf_arr [3] [pos]);
 	}
 #else
 	for (int pos = 0; pos < nbr_spl; ++pos)

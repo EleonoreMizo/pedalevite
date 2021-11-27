@@ -113,10 +113,10 @@ void	MeterRmsPeakHold4Simd::set_release_time_s (double t) noexcept
 
 void	MeterRmsPeakHold4Simd::clear_buffers () noexcept
 {
-	fstb::ToolsSimd::store_f32 (&_peak_max    , fstb::Vf32 (0));
-	fstb::ToolsSimd::store_f32 (&_peak_hold   , fstb::Vf32 (0));
-	fstb::ToolsSimd::store_f32 (&_hold_counter, fstb::Vf32 (0));
-	fstb::ToolsSimd::store_f32 (&_rms_sq      , fstb::Vf32 (0));
+	fstb::Vf32::zero ().store (&_peak_max    );
+	fstb::Vf32::zero ().store (&_peak_hold   );
+	fstb::Vf32::zero ().store (&_hold_counter);
+	fstb::Vf32::zero ().store (&_rms_sq      );
 }
 
 
@@ -130,19 +130,19 @@ void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr [3]));
 	assert (nbr_spl > 0);
 
-	auto           peak_max  = fstb::ToolsSimd::load_f32 (&_peak_max);
-	auto           peak_hold = fstb::ToolsSimd::load_f32 (&_peak_hold);
-	auto           hold_cnt  = fstb::ToolsSimd::load_f32 (&_hold_counter);
-	auto           rms_sq    = fstb::ToolsSimd::load_f32 (&_rms_sq);
+	auto           peak_max  = fstb::Vf32::load (&_peak_max);
+	auto           peak_hold = fstb::Vf32::load (&_peak_hold);
+	auto           hold_cnt  = fstb::Vf32::load (&_hold_counter);
+	auto           rms_sq    = fstb::Vf32::load (&_rms_sq);
 
 	const int      n4 = nbr_spl & -4;
 	const int      n3 = nbr_spl &  3;
 	for (int pos = 0; pos < n4; pos += 4)
 	{
-		auto           v0 = fstb::ToolsSimd::loadu_f32 (data_ptr [0] + pos);
-		auto           v1 = fstb::ToolsSimd::loadu_f32 (data_ptr [1] + pos);
-		auto           v2 = fstb::ToolsSimd::loadu_f32 (data_ptr [2] + pos);
-		auto           v3 = fstb::ToolsSimd::loadu_f32 (data_ptr [3] + pos);
+		auto           v0 = fstb::Vf32::loadu (data_ptr [0] + pos);
+		auto           v1 = fstb::Vf32::loadu (data_ptr [1] + pos);
+		auto           v2 = fstb::Vf32::loadu (data_ptr [2] + pos);
+		auto           v3 = fstb::Vf32::loadu (data_ptr [3] + pos);
 		fstb::ToolsSimd::transpose_f32 (v0, v1, v2, v3);
 
 		auto           vm = fstb::max (
@@ -158,10 +158,10 @@ void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int
 	}
 	if (n3 > 0)
 	{
-		auto           v0 = fstb::ToolsSimd::loadu_f32 (data_ptr [0] + n4);
-		auto           v1 = fstb::ToolsSimd::loadu_f32 (data_ptr [1] + n4);
-		auto           v2 = fstb::ToolsSimd::loadu_f32 (data_ptr [2] + n4);
-		auto           v3 = fstb::ToolsSimd::loadu_f32 (data_ptr [3] + n4);
+		auto           v0 = fstb::Vf32::loadu (data_ptr [0] + n4);
+		auto           v1 = fstb::Vf32::loadu (data_ptr [1] + n4);
+		auto           v2 = fstb::Vf32::loadu (data_ptr [2] + n4);
+		auto           v3 = fstb::Vf32::loadu (data_ptr [3] + n4);
 		fstb::ToolsSimd::transpose_f32 (v0, v1, v2, v3);
 
 		process_sample_peak (
@@ -184,50 +184,50 @@ void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int
 		}
 	}
 
-	fstb::ToolsSimd::store_f32 (&_peak_max    , peak_max );
-	fstb::ToolsSimd::store_f32 (&_peak_hold   , peak_hold);
-	fstb::ToolsSimd::store_f32 (&_hold_counter, hold_cnt );
-	fstb::ToolsSimd::store_f32 (&_rms_sq      , rms_sq   );
+	peak_max .store (&_peak_max    );
+	peak_hold.store (&_peak_hold   );
+	hold_cnt .store (&_hold_counter);
+	rms_sq   .store (&_rms_sq      );
 }
 
 
 
 void	MeterRmsPeakHold4Simd::process_sample (fstb::Vf32 x) noexcept
 {
-	auto           peak_max  = fstb::ToolsSimd::load_f32 (&_peak_max);
-	auto           peak_hold = fstb::ToolsSimd::load_f32 (&_peak_hold);
-	auto           hold_cnt  = fstb::ToolsSimd::load_f32 (&_hold_counter);
-	auto           rms_sq    = fstb::ToolsSimd::load_f32 (&_rms_sq);
+	auto           peak_max  = fstb::Vf32::load (&_peak_max);
+	auto           peak_hold = fstb::Vf32::load (&_peak_hold);
+	auto           hold_cnt  = fstb::Vf32::load (&_hold_counter);
+	auto           rms_sq    = fstb::Vf32::load (&_rms_sq);
 
 	const auto     x_a       = fstb::abs (x);
 	process_sample_peak (x_a, peak_max, peak_hold, hold_cnt, _coef_r, 1);
 	process_sample_rms (x, rms_sq);
 
-	fstb::ToolsSimd::store_f32 (&_peak_max    , peak_max );
-	fstb::ToolsSimd::store_f32 (&_peak_hold   , peak_hold);
-	fstb::ToolsSimd::store_f32 (&_hold_counter, hold_cnt );
-	fstb::ToolsSimd::store_f32 (&_rms_sq      , rms_sq   );
+	peak_max .store (&_peak_max    );
+	peak_hold.store (&_peak_hold   );
+	hold_cnt .store (&_hold_counter);
+	rms_sq   .store (&_rms_sq      );
 }
 
 
 
 fstb::Vf32	MeterRmsPeakHold4Simd::get_peak () const noexcept
 {
-	return fstb::ToolsSimd::load_f32 (&_peak_max);
+	return fstb::Vf32::load (&_peak_max);
 }
 
 
 
 fstb::Vf32	MeterRmsPeakHold4Simd::get_peak_hold () const noexcept
 {
-	return fstb::ToolsSimd::load_f32 (&_peak_hold);
+	return fstb::Vf32::load (&_peak_hold);
 }
 
 
 
 fstb::Vf32	MeterRmsPeakHold4Simd::get_rms () const noexcept
 {
-	const auto     rms_sq = fstb::ToolsSimd::load_f32 (&_rms_sq);
+	const auto     rms_sq = fstb::Vf32::load (&_rms_sq);
 
 	return fstb::ToolsSimd::sqrt_approx (rms_sq);
 }
@@ -236,7 +236,7 @@ fstb::Vf32	MeterRmsPeakHold4Simd::get_rms () const noexcept
 
 void	MeterRmsPeakHold4Simd::clear_peak () noexcept
 {
-	fstb::ToolsSimd::store_f32 (&_peak_max, fstb::Vf32::zero ());
+	 fstb::Vf32::zero ().store (&_peak_max);
 }
 
 

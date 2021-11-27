@@ -617,9 +617,9 @@ void	Dist3Proc::compute_bias (Channel &chn, const float src_ptr [], int nbr_spl)
 	// Crude envelope extraction
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           val = fstb::ToolsSimd::load_f32 (&src_ptr [pos]);
+		auto           val = fstb::Vf32::load (&src_ptr [pos]);
 		val = fstb::abs (val);
-		fstb::ToolsSimd::store_f32 (&_buf_bias [pos], val);
+		val.store (&_buf_bias [pos]);
 	}
 	chn._lpf_bias.process_block (
 		_buf_bias.data (), _buf_bias.data (), nbr_spl
@@ -649,12 +649,12 @@ void	Dist3Proc::compute_bias (Channel &chn, const float src_ptr [], int nbr_spl)
 	fstb::ToolsSimd::start_lerp (bd_cur, bd_step, bd_beg, bd_end, nbr_spl);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           val = fstb::ToolsSimd::load_f32 (&_buf_bias [pos]);
+		auto           val = fstb::Vf32::load (&_buf_bias [pos]);
 		val *= bd_cur;
 		val += bs_cur;
 		bs_cur += bs_step;
 		bd_cur += bd_step;
-		fstb::ToolsSimd::store_f32 (&_buf_bias [pos], val);
+		val.store (&_buf_bias [pos]);
 	}
 }
 
@@ -702,9 +702,9 @@ void	Dist3Proc::process_dist (Channel &chn, int nbr_spl)
 		const auto  sign_mask = fstb::Vf32::signbit_mask ();
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			auto        x = fstb::ToolsSimd::load_f32 (buf_arr [0] + pos);
+			auto        x = fstb::Vf32::load (buf_arr [0] + pos);
 			x ^= sign_mask;
-			fstb::ToolsSimd::store_f32 (buf_arr [0] + pos, x);
+			x.store (buf_arr [0] + pos);
 		}
 
 		// dist() functions

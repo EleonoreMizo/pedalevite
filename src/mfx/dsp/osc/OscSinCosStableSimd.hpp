@@ -49,10 +49,10 @@ void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int
 	assert (VD::check_ptr (sin_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     alpha   = fstb::ToolsSimd::load_f32 (&_alpha);
-	const auto     beta    = fstb::ToolsSimd::load_f32 (&_beta );
-	auto           pos_cos = fstb::ToolsSimd::load_f32 (&_pos_cos);
-	auto           pos_sin = fstb::ToolsSimd::load_f32 (&_pos_sin);
+	const auto     alpha   = fstb::Vf32::load (&_alpha);
+	const auto     beta    = fstb::Vf32::load (&_beta );
+	auto           pos_cos = fstb::Vf32::load (&_pos_cos);
+	auto           pos_sin = fstb::Vf32::load (&_pos_sin);
 
 	const int      n4      = nbr_spl & ~(_nbr_units - 1);
 	for (int pos = 0; pos < n4; pos += _nbr_units)
@@ -65,8 +65,8 @@ void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int
 	const int      rem_len = nbr_spl - n4;
 	if (rem_len > 0)
 	{
-		fstb::ToolsSimd::storeu_f32_part (cos_ptr + n4, pos_cos, rem_len);
-		fstb::ToolsSimd::storeu_f32_part (sin_ptr + n4, pos_sin, rem_len);
+		pos_cos.storeu_part (cos_ptr + n4, rem_len);
+		pos_sin.storeu_part (sin_ptr + n4, rem_len);
 
 		const auto     prv_cos = pos_cos;
 		const auto     prv_sin = pos_sin;
@@ -92,22 +92,22 @@ void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int
 		}
 	}
 
-	fstb::ToolsSimd::store_f32 (&_pos_cos, pos_cos);
-	fstb::ToolsSimd::store_f32 (&_pos_sin, pos_sin);
+	pos_cos.store (&_pos_cos);
+	pos_sin.store (&_pos_sin);
 }
 
 
 
 fstb::Vf32	OscSinCosStableSimd::get_cos () const noexcept
 {
-	return fstb::ToolsSimd::load_f32 (&_pos_cos);
+	return fstb::Vf32::load (&_pos_cos);
 }
 
 
 
 fstb::Vf32	OscSinCosStableSimd::get_sin () const noexcept
 {
-	return fstb::ToolsSimd::load_f32 (&_pos_sin);
+	return fstb::Vf32::load (&_pos_sin);
 }
 
 

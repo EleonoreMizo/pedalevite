@@ -195,6 +195,9 @@ namespace fstb
 #if fstb_ARCHI == fstb_ARCHI_ARM
 
 	#if defined (__ARM_NEON_FP)
+		#if fstb_ENDIAN == fstb_ENDIAN_BIG
+			#error ARM SIMD is supported only on little endian architectures
+		#endif
 		#define fstb_HAS_SIMD      (1)
 		#if (fstb_WORD_SIZE == 64)
 			#define fstb_SIMD128_ALIGN (16)

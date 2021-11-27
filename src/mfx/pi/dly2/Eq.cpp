@@ -161,10 +161,10 @@ void	Eq::update_filter ()
 		z_eq_b, z_eq_a, s_eq_b, s_eq_a, kv
 	);
 
-	const auto     b0z   = fstb::ToolsSimd::load_f32 (&z_eq_b [0]);
-	const auto     b1z   = fstb::ToolsSimd::load_f32 (&z_eq_b [1]);
-	const auto     a0z   = fstb::ToolsSimd::load_f32 (&z_eq_a [0]);
-	const auto     a1z   = fstb::ToolsSimd::load_f32 (&z_eq_a [1]);
+	const auto     b0z   = fstb::Vf32::load (&z_eq_b [0]);
+	const auto     b1z   = fstb::Vf32::load (&z_eq_b [1]);
+	const auto     a0z   = fstb::Vf32::load (&z_eq_a [0]);
+	const auto     a1z   = fstb::Vf32::load (&z_eq_a [1]);
 
 #if 0
 

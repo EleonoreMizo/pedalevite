@@ -294,11 +294,11 @@ void	FxDisto::process_softclip (float data_ptr [], int nbr_spl)
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
+		auto           x  = fstb::Vf32::load (data_ptr + pos);
 		x = fstb::limit (x, v_mi, v_ma);
 
 		x.mac (v_a * x, x * x);
-		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
+		x.store (data_ptr + pos);
 	}
 
 #else // Reference implementation
@@ -344,7 +344,7 @@ void	FxDisto::process_foldback (float data_ptr [], int nbr_spl)
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
+		auto           x  = fstb::Vf32::load (data_ptr + pos);
 		x = fstb::limit (x, v_mi, v_ma);
 
 		const auto     u  = fstb::ToolsSimd::conv_s32_to_f32 (
@@ -358,7 +358,7 @@ void	FxDisto::process_foldback (float data_ptr [], int nbr_spl)
 		x -= v_ofs1;
 
 		x.mac (v_a * x, x * x);
-		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
+		x.store (data_ptr + pos);
 	}
 
 #else // Reference implementation

@@ -64,7 +64,7 @@ void	UpsplLerp4x::process_block (float dst_ptr [], const float src_ptr [], int n
 	{
 		const auto     cur = fstb::Vf32 (src_ptr [pos]);
 		old.mac (cur - old, c1234);
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos * 4, old);
+		old.store (dst_ptr + pos * 4);
 		old = cur;
 	}
 	_val_old = fstb::ToolsSimd::Shift <0>::extract (old);

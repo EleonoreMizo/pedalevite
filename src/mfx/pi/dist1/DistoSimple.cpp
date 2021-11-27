@@ -228,10 +228,9 @@ void	DistoSimple::do_process_block (piapi::ProcInfo &proc)
 #if 1
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			auto           val =
-				fstb::ToolsSimd::load_f32 (&chn._buf [pos]);
+			auto           val = fstb::Vf32::load (&chn._buf [pos]);
 			val = fstb::abs (val);
-			fstb::ToolsSimd::store_f32 (&chn._buf_env [pos], val);
+			val.store (&chn._buf_env [pos]);
 		}
 #else // Reference implementation
 		for (int pos = 0; pos < nbr_spl; ++pos)
@@ -376,7 +375,7 @@ void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int n
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+		auto           x = fstb::Vf32::load (src_ptr + pos);
 
 		x += v_bias;
 		x  = fstb::limit (x, v_mi, v_ma);
@@ -392,7 +391,7 @@ void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int n
 
 		x -= v_bias;
 
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+		x.store (dst_ptr + pos);
 	}
 
 #else // Reference implementation

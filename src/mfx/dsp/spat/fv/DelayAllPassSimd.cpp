@@ -105,12 +105,12 @@ void	DelayAllPassSimd::process_block (float dst_ptr [], const float src_ptr [], 
 
 		for (int p2 = 0; p2 < n_4; p2 += 4)
 		{
-			const auto    buf = fstb::ToolsSimd::loadu_f32 (r_ptr   + p2);
-			const auto    src = fstb::ToolsSimd::loadu_f32 (src_ptr + p2);
+			const auto    buf = fstb::Vf32::loadu (r_ptr   + p2);
+			const auto    src = fstb::Vf32::loadu (src_ptr + p2);
 			const auto    dst = buf - src;
 			const auto    dly = src + buf * fdbk;
-			fstb::ToolsSimd::storeu_f32 (dst_ptr + p2, dst);
-			fstb::ToolsSimd::storeu_f32 (w_ptr   + p2, dly);
+			dst.storeu (dst_ptr + p2);
+			dly.storeu (w_ptr   + p2);
 		}
 
 		for (int p2 = n_4; p2 < work_len; ++p2)

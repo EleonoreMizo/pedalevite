@@ -239,9 +239,9 @@ void	DistoStage::process_block (float * const dst_ptr_arr [], const float * cons
 #if 1
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			auto           val = fstb::ToolsSimd::load_f32 (&_buf_x1 [pos]);
+			auto           val = fstb::Vf32::load (&_buf_x1 [pos]);
 			val = fstb::abs (val);
-			fstb::ToolsSimd::store_f32 (&dst_ptr [pos], val);
+			val.store (&dst_ptr [pos]);
 		}
 #else // Reference implementation
 		for (int pos = 0; pos < nbr_spl; ++pos)

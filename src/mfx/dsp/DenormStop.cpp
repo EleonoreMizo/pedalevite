@@ -30,7 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #if defined (mfx_dsp_DenormStop_USE_SIMD)
-	#include "fstb/ToolsSimd.h"
+	#include "fstb/Vf32.h"
 #endif
 #include "mfx/dsp/DenormStop.h"
 
@@ -112,9 +112,9 @@ void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames) noexcept
 	{
 		const float    antid = gen_new_rnd_val ();
 #if defined (mfx_dsp_DenormStop_USE_SIMD)
-		auto           vb = fstb::ToolsSimd::loadu_f32 (buf_ptr);
+		auto           vb = fstb::Vf32::loadu (buf_ptr);
 		vb += fstb::Vf32 (antid);
-		fstb::ToolsSimd::storeu_f32 (buf_ptr, vb);
+		vb.storeu (buf_ptr);
 #else
 		buf_ptr [0] += antid;
 		buf_ptr [1] += antid;
@@ -128,12 +128,12 @@ void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames) noexcept
 		const float    a = +7 * fstb::ANTI_DENORMAL_F32;
 		const float    b = -3 * fstb::ANTI_DENORMAL_F32;
 #if defined (mfx_dsp_DenormStop_USE_SIMD)
-		auto           vb = fstb::ToolsSimd::loadu_f32 (buf_ptr          );
-		auto           vm = fstb::ToolsSimd::loadu_f32 (buf_ptr + mid_pos);
+		auto           vb = fstb::Vf32::loadu (buf_ptr          );
+		auto           vm = fstb::Vf32::loadu (buf_ptr + mid_pos);
 		vb += fstb::Vf32 (a);
 		vm += fstb::Vf32 (b);
-		fstb::ToolsSimd::storeu_f32 (buf_ptr          , vb);
-		fstb::ToolsSimd::storeu_f32 (buf_ptr + mid_pos, vm);
+		vb.storeu (buf_ptr          );
+		vm.storeu (buf_ptr + mid_pos);
 #else
 		buf_ptr [          0] += a;
 		buf_ptr [          1] += a;

@@ -285,9 +285,9 @@ void	TransSZBilin::map_s_to_z_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 z_eq_a [
 
 	const auto     kk   = k * k;
 
-	const auto     b0s  = fstb::ToolsSimd::load_f32 (&s_eq_b [0]);
-	const auto     b1s  = fstb::ToolsSimd::load_f32 (&s_eq_b [1]);
-	const auto     b2s  = fstb::ToolsSimd::load_f32 (&s_eq_b [2]);
+	const auto     b0s  = fstb::Vf32::load (&s_eq_b [0]);
+	const auto     b1s  = fstb::Vf32::load (&s_eq_b [1]);
+	const auto     b2s  = fstb::Vf32::load (&s_eq_b [2]);
 
 	const auto     b1k  = b1s * k;
 	const auto     b2kk = b2s * kk;
@@ -297,9 +297,9 @@ void	TransSZBilin::map_s_to_z_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 z_eq_a [
 	const auto     b0s_minus_b2kk = b0s - b2kk;
 	const auto     b1z  = b0s_minus_b2kk + b0s_minus_b2kk;
 
-	const auto     a0s  = fstb::ToolsSimd::load_f32 (&s_eq_a [0]);
-	const auto     a1s  = fstb::ToolsSimd::load_f32 (&s_eq_a [1]);
-	const auto     a2s  = fstb::ToolsSimd::load_f32 (&s_eq_a [2]);
+	const auto     a0s  = fstb::Vf32::load (&s_eq_a [0]);
+	const auto     a1s  = fstb::Vf32::load (&s_eq_a [1]);
+	const auto     a2s  = fstb::Vf32::load (&s_eq_a [2]);
 
 	const auto     a1k  = a1s * k;
 	const auto     a2kk = a2s * kk;
@@ -311,13 +311,13 @@ void	TransSZBilin::map_s_to_z_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 z_eq_a [
 
 	const auto     mult = a0z.rcp_approx2 ();   // Requires accuracy
 
-	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0z * mult);
-	fstb::ToolsSimd::store_f32 (&z_eq_b [1], b1z * mult);
-	fstb::ToolsSimd::store_f32 (&z_eq_b [2], b2z * mult);
+	(b0z * mult).store (&z_eq_b [0]);
+	(b1z * mult).store (&z_eq_b [1]);
+	(b2z * mult).store (&z_eq_b [2]);
 
-	fstb::ToolsSimd::store_f32 (&z_eq_a [0], fstb::Vf32 (1));
-	fstb::ToolsSimd::store_f32 (&z_eq_a [1], a1z * mult);
-	fstb::ToolsSimd::store_f32 (&z_eq_a [2], a2z * mult);
+	fstb::Vf32 (1).store (&z_eq_a [0]);
+	(a1z * mult  ).store (&z_eq_a [1]);
+	(a2z * mult  ).store (&z_eq_a [2]);
 }
 
 
@@ -386,15 +386,15 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::Vf32 z_eq_b [2], fstb::Vf32
 	assert (s_eq_b != nullptr);
 	assert (s_eq_a != nullptr);
 
-	const auto     b0s  = fstb::ToolsSimd::load_f32 (&s_eq_b [0]);
-	const auto     b1s  = fstb::ToolsSimd::load_f32 (&s_eq_b [1]);
+	const auto     b0s  = fstb::Vf32::load (&s_eq_b [0]);
+	const auto     b1s  = fstb::Vf32::load (&s_eq_b [1]);
 
 	const auto     b1k = b1s * k;
 	const auto     b1z = b0s - b1k;
 	const auto     b0z = b0s + b1k;
 
-	const auto     a0s  = fstb::ToolsSimd::load_f32 (&s_eq_a [0]);
-	const auto     a1s  = fstb::ToolsSimd::load_f32 (&s_eq_a [1]);
+	const auto     a0s  = fstb::Vf32::load (&s_eq_a [0]);
+	const auto     a1s  = fstb::Vf32::load (&s_eq_a [1]);
 
 	const auto     a1k = a1s * k;
 	const auto     a1z = a0s - a1k;
@@ -402,11 +402,11 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::Vf32 z_eq_b [2], fstb::Vf32
 
 	const auto     mult = a0z.rcp_approx2 ();
 
-	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0z * mult);
-	fstb::ToolsSimd::store_f32 (&z_eq_b [1], b1z * mult);
+	(b0z * mult).store (&z_eq_b [0]);
+	(b1z * mult).store (&z_eq_b [1]);
 
-	fstb::ToolsSimd::store_f32 (&z_eq_a [0], fstb::Vf32 (1));
-	fstb::ToolsSimd::store_f32 (&z_eq_a [1], a1z * mult);
+	fstb::Vf32 (1).store (&z_eq_a [0]);
+	(a1z * mult  ).store (&z_eq_a [1]);
 }
 
 
@@ -425,8 +425,8 @@ void	TransSZBilin::map_s_to_z_ap1_approx (fstb::Vf32 z_eq_b [2], fstb::Vf32 k) n
 {
 	assert (z_eq_b != nullptr);
 
-	fstb::ToolsSimd::store_f32 (&z_eq_b [0], map_s_to_z_ap1_approx_b0 (k));
-	fstb::ToolsSimd::store_f32 (&z_eq_b [1], fstb::Vf32 (1));
+	map_s_to_z_ap1_approx_b0 (k).store (&z_eq_b [0]);
+	fstb::Vf32 (1).store (&z_eq_b [1]);
 }
 
 
@@ -516,9 +516,9 @@ void	TransSZBilin::map_s_to_z_ap2_approx (fstb::Vf32 z_eq_b [3], fstb::Vf32 s_eq
 	const auto     mult = a0z.rcp_approx2 ();
 	const auto     b0   = a2z * mult;
 	const auto     b1   = a1z * mult;
-	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0 );
-	fstb::ToolsSimd::store_f32 (&z_eq_b [1], b1 );
-	fstb::ToolsSimd::store_f32 (&z_eq_b [2], one);
+	b0 .store (&z_eq_b [0]);
+	b1 .store (&z_eq_b [1]);
+	one.store (&z_eq_b [2]);
 }
 
 

@@ -257,12 +257,12 @@ void	FreqYin <PP>::update_difference_functions () noexcept
 #endif // fstb_ARCHI
 	{
 		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
-		auto           sum_u   = TS::load_f32 (d_info._sum_u.data ());
-		auto           sum_d   = TS::load_f32 (d_info._sum_d.data ());
+		auto           sum_u   = fstb::Vf32::load (d_info._sum_u.data ());
+		auto           sum_d   = fstb::Vf32::load (d_info._sum_d.data ());
 		const int      p_tst_o = p_ref_o - delta;
 		const int      p_tst_i = p_ref_i - delta;
-		auto           v_tst_o = TS::loadu_f32 (&_buffer [p_tst_o & _buf_mask]);
-		auto           v_tst_i = TS::loadu_f32 (&_buffer [p_tst_i & _buf_mask]);
+		auto           v_tst_o = fstb::Vf32::loadu (&_buffer [p_tst_o & _buf_mask]);
+		auto           v_tst_i = fstb::Vf32::loadu (&_buffer [p_tst_i & _buf_mask]);
 		v_tst_o = v_tst_o.reverse ();
 		v_tst_i = v_tst_i.reverse ();
 		const auto     dif1_i  = v_ref_i - v_tst_i;
@@ -273,8 +273,8 @@ void	FreqYin <PP>::update_difference_functions () noexcept
 		sum_u += dif2_i;
 		sum_d -= dif2_o;
 
-		TS::store_f32 (d_info._sum_u.data (), sum_u);
-		TS::store_f32 (d_info._sum_d.data (), sum_d);
+		sum_u.store (d_info._sum_u.data ());
+		sum_d.store (d_info._sum_d.data ());
 	}
 
 	++ _sum_pos;
@@ -316,8 +316,8 @@ void	FreqYin <PP>::update_difference_functions_block (int nbr_spl) noexcept
 #endif // fstb_ARCHI
 	{
 		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
-		auto           sum_u   = TS::load_f32 (d_info._sum_u.data ());
-		auto           sum_d   = TS::load_f32 (d_info._sum_d.data ());
+		auto           sum_u   = fstb::Vf32::load (d_info._sum_u.data ());
+		auto           sum_d   = fstb::Vf32::load (d_info._sum_d.data ());
 		sum_u = sum_u.reverse ();
 		sum_d = sum_d.reverse ();
 
@@ -329,8 +329,8 @@ void	FreqYin <PP>::update_difference_functions_block (int nbr_spl) noexcept
 			const auto     v_ref_i = fstb::Vf32 (v_ref_i_arr [pos]);
 			const int      p_tst_o = p_tst_o_base + pos;
 			const int      p_tst_i = p_tst_i_base + pos;
-			const auto     v_tst_o = TS::loadu_f32 (&_buffer [p_tst_o & _buf_mask]);
-			const auto     v_tst_i = TS::loadu_f32 (&_buffer [p_tst_i & _buf_mask]);
+			const auto     v_tst_o = fstb::Vf32::loadu (&_buffer [p_tst_o & _buf_mask]);
+			const auto     v_tst_i = fstb::Vf32::loadu (&_buffer [p_tst_i & _buf_mask]);
 			const auto     dif1_i  = v_ref_i - v_tst_i;
 			const auto     dif1_o  = v_ref_o - v_tst_o;
 			const auto     dif2_i  = dif1_i * dif1_i;
@@ -341,8 +341,8 @@ void	FreqYin <PP>::update_difference_functions_block (int nbr_spl) noexcept
 
 		sum_u = sum_u.reverse ();
 		sum_d = sum_d.reverse ();
-		TS::store_f32 (d_info._sum_u.data (), sum_u);
-		TS::store_f32 (d_info._sum_d.data (), sum_d);
+		sum_u.store (d_info._sum_u.data ());
+		sum_d.store (d_info._sum_d.data ());
 	}
 
 	_sum_pos += nbr_spl;
@@ -360,9 +360,9 @@ void	FreqYin <PP>::check_sum_position () noexcept
 		for (int delta = 0; delta <= _win_len; delta += _vec_size)
 		{
 			Delta &        d_info = _delta_arr [delta >> _vec_size_l2];
-			const auto     sum_u  = TS::load_f32 (d_info._sum_u.data ());
-			TS::store_f32 (d_info._sum_d.data (), sum_u);
-			TS::store_f32 (d_info._sum_u.data (), fstb::Vf32::zero ());
+			const auto     sum_u  = fstb::Vf32::load (d_info._sum_u.data ());
+			sum_u.store (d_info._sum_d.data ());
+			fstb::Vf32::zero ().store (d_info._sum_u.data ());
 		}
 		_sum_pos = 0;
 	}

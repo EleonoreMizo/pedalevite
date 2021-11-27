@@ -174,7 +174,7 @@ Not sure if the benefit is interesting, especially for small buffers.
 			auto           sum_v     = fstb::Vf32::zero ();
 			for (int pos = 0; pos < block_len; pos += 4)
 			{
-				const auto     x = fstb::ToolsSimd::load_f32 (bpf_ptr + pos);
+				const auto     x = fstb::Vf32::load (bpf_ptr + pos);
 				sum_v += x * x;
 			}
 			const float    avg = sum_v.sum_h () * blen_inv;
@@ -202,10 +202,10 @@ Not sure if the benefit is interesting, especially for small buffers.
 			fstb::ToolsSimd::start_lerp (gt, step, gt_beg, gt_end, block_len);
 			for (int pos = 0; pos < block_len; pos += 4)
 			{
-				const auto     s  = fstb::ToolsSimd::load_f32 (sr2_ptr + pos);
-				const auto     b  = fstb::ToolsSimd::load_f32 (bpf_ptr + pos);
+				const auto     s  = fstb::Vf32::load (sr2_ptr + pos);
+				const auto     b  = fstb::Vf32::load (bpf_ptr + pos);
 				const auto     y  = s - b * gt;
-				fstb::ToolsSimd::store_f32 (ds2_ptr + pos, y);
+				y.store (ds2_ptr + pos);
 				gt += step;
 			}
 

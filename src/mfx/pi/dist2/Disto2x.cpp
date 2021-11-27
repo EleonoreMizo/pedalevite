@@ -332,18 +332,15 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		const auto     sus_max_l2 = fstb::Vf32 (_gmod_sus_max_l2);
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			auto           x =
-				fstb::ToolsSimd::load_f32 (&stio_ptr [pos]);
-			auto           tra_l2 =
-				fstb::ToolsSimd::load_f32 (&_buf_trans_atk [pos]);
-			auto           trs_l2 =
-				fstb::ToolsSimd::load_f32 (&_buf_trans_sus [pos]);
+			auto           x      = fstb::Vf32::load (&stio_ptr [pos]);
+			auto           tra_l2 = fstb::Vf32::load (&_buf_trans_atk [pos]);
+			auto           trs_l2 = fstb::Vf32::load (&_buf_trans_sus [pos]);
 			tra_l2 = fstb::min (tra_l2, atk_max_l2);
 			trs_l2 = fstb::min (trs_l2, sus_max_l2);
 			const auto     mul_l2 = tra_l2 * atk_l2 + trs_l2 * sus_l2;
 			const auto     mul    = fstb::Approx::exp2 (mul_l2);
 			x *= mul;
-			fstb::ToolsSimd::store_f32 (&stio_ptr [pos], x);
+			x.store (&stio_ptr [pos]);
 		}
 #else // Reference implementation
 		for (int pos = 0; pos < nbr_spl; ++pos)

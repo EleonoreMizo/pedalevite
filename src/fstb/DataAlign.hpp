@@ -43,7 +43,7 @@ bool	DataAlign <A>::check_ptr (const void *ptr) noexcept
 template <bool A>
 Vf32	DataAlign <A>::load_f32 (const void *ptr) noexcept
 {
-	return ToolsSimd::load_f32 (ptr);
+	return Vf32::load (ptr);
 }
 
 template <bool A>
@@ -55,7 +55,7 @@ Vs32	DataAlign <A>::load_s32 (const void *ptr) noexcept
 template <bool A>
 void	DataAlign <A>::store_f32 (void *ptr, Vf32 v) noexcept
 {
-	ToolsSimd::store_f32 (ptr, v);
+	v.store (ptr);
 }
 
 template <bool A>
@@ -75,7 +75,7 @@ inline bool	DataAlign <false>::check_ptr (const void *ptr) noexcept
 template <>
 inline Vf32	DataAlign <false>::load_f32 (const void *ptr) noexcept
 {
-	return ToolsSimd::loadu_f32 (ptr);
+	return Vf32::loadu (ptr);
 }
 
 template <>
@@ -87,7 +87,7 @@ inline Vs32	DataAlign <false>::load_s32 (const void *ptr) noexcept
 template <>
 inline void	DataAlign <false>::store_f32 (void *ptr, Vf32 v) noexcept
 {
-	ToolsSimd::storeu_f32 (ptr, v);
+	v.storeu (ptr);
 }
 
 template <>

@@ -184,11 +184,11 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFl
 	assert (b != nullptr);
 	assert (a != nullptr);
 
-	const auto     b0 = fstb::ToolsSimd::loadu_f32 (b [0]);
-	const auto     b1 = fstb::ToolsSimd::loadu_f32 (b [1]);
-	const auto     b2 = fstb::ToolsSimd::loadu_f32 (b [2]);
-	const auto     a1 = fstb::ToolsSimd::loadu_f32 (a [1]);
-	const auto     a2 = fstb::ToolsSimd::loadu_f32 (a [2]);
+	const auto     b0 = fstb::Vf32::loadu (b [0]);
+	const auto     b1 = fstb::Vf32::loadu (b [1]);
+	const auto     b2 = fstb::Vf32::loadu (b [2]);
+	const auto     a1 = fstb::Vf32::loadu (a [1]);
+	const auto     a2 = fstb::Vf32::loadu (a [2]);
 
 	// Immediate change
 	if (! ramp_flag)
@@ -213,11 +213,11 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFl
 
 			const float    step_flt = 1.0f / float (_ramp_len);
 			const auto     step_mul = fstb::Vf32 (step_flt);
-			const auto     dif_b0   = b0 - fstb::ToolsSimd::load_f32 (_tmp_b [0]);
-			const auto     dif_b1   = b1 - fstb::ToolsSimd::load_f32 (_tmp_b [1]);
-			const auto     dif_b2   = b2 - fstb::ToolsSimd::load_f32 (_tmp_b [2]);
-			const auto     dif_a1   = a1 - fstb::ToolsSimd::load_f32 (_tmp_a [1]);
-			const auto     dif_a2   = a2 - fstb::ToolsSimd::load_f32 (_tmp_a [2]);
+			const auto     dif_b0   = b0 - fstb::Vf32::load (_tmp_b [0]);
+			const auto     dif_b1   = b1 - fstb::Vf32::load (_tmp_b [1]);
+			const auto     dif_b2   = b2 - fstb::Vf32::load (_tmp_b [2]);
+			const auto     dif_a1   = a1 - fstb::Vf32::load (_tmp_a [1]);
+			const auto     dif_a2   = a2 - fstb::Vf32::load (_tmp_a [2]);
 			const auto     step_b0  = dif_b0 * step_mul;
 			const auto     step_b1  = dif_b1 * step_mul;
 			const auto     step_b2  = dif_b2 * step_mul;

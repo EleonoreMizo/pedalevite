@@ -353,9 +353,9 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 			{
 				for (int pos = 0; pos < nbr_spl; pos += 4)
 				{
-					auto           x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
+					auto           x = fstb::Vf32::load (tmp_ptr + pos);
 					x *= x;
-					fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+					x.store (dst_ptr + pos);
 				}
 			}
 			if (chn_index > 0)
@@ -364,21 +364,21 @@ void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 				{
 					for (int pos = 0; pos < nbr_spl; pos += 4)
 					{
-						auto           x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
-						auto           y = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
+						auto           x = fstb::Vf32::load (tmp_ptr + pos);
+						auto           y = fstb::Vf32::load (dst_ptr + pos);
 						y.mac (x, x);
 						y *= v;
-						fstb::ToolsSimd::store_f32 (dst_ptr + pos, y);
+						y.store (dst_ptr + pos);
 					}
 				}
 				else
 				{
 					for (int pos = 0; pos < nbr_spl; pos += 4)
 					{
-						auto           x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
-						auto           y = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
+						auto           x = fstb::Vf32::load (tmp_ptr + pos);
+						auto           y = fstb::Vf32::load (dst_ptr + pos);
 						y.mac (x, x);
-						fstb::ToolsSimd::store_f32 (dst_ptr + pos, y);
+						y.store (dst_ptr + pos);
 					}
 				}
 			}
@@ -395,9 +395,9 @@ void	EnvFollow::clip_block (int nbr_spl)
 	float *        spl_ptr = &_buf_src [0];
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           x = fstb::ToolsSimd::load_f32 (spl_ptr + pos);
+		auto           x = fstb::Vf32::load (spl_ptr + pos);
 		x = fstb::min (x, c);
-		fstb::ToolsSimd::store_f32 (spl_ptr + pos, x);
+		x.store (spl_ptr + pos);
 	}
 }
 

@@ -226,9 +226,9 @@ void	Squeezer::do_process_block (piapi::ProcInfo &proc)
 			const auto     mi = fstb::Vf32 (-2);
 			for (int p = 0; p < work_len; p += 4)
 			{
-				auto           x = fstb::ToolsSimd::load_f32 (&_buf [p]);
+				auto           x = fstb::Vf32::load (&_buf [p]);
 				x = fstb::limit (x, mi, ma);
-				fstb::ToolsSimd::store_f32 (&_buf [p], x);
+				x.store (&_buf [p]);
 			}
 
 			// Upsampling

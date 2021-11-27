@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/ana/FreqYinCheap.h"
 #if defined (mfx_dsp_ana_USE_SIMD)
-#include "fstb/ToolsSimd.h"
+# include "fstb/Vf32.h"
 #endif
 
 #include <algorithm>
@@ -238,10 +238,10 @@ void	FreqYinCheap::analyse_sample () noexcept
 		const float *  buf_2_ptr = &_buf_arr [p2_buf] [0];
 		for (int i = 0; i < _win_len; i += 4)
 		{
-			const auto    v1 = fstb::ToolsSimd::load_f32 (
-				&buf_1_ptr [(p1_beg_v + i) & _buf_mask]);
-			const auto    v2 = fstb::ToolsSimd::load_f32 (
-				&buf_2_ptr [(p2_beg_v + i) & _buf_mask]);
+			const auto    v1 =
+				fstb::Vf32::load (&buf_1_ptr [(p1_beg_v + i) & _buf_mask]);
+			const auto    v2 =
+				fstb::Vf32::load (&buf_2_ptr [(p2_beg_v + i) & _buf_mask]);
 			const auto    dif1 = v1 - v2;
 			sum_v.mac (dif1, dif1);
 		}

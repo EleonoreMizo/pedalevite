@@ -520,12 +520,8 @@ void	DPvabI2s::proc_loop ()
 			fstb::Vf32     xl_flt;
 			fstb::Vf32     xr_flt;
 			fstb::ToolsSimd::deinterleave_f32 (xl_flt, xr_flt, x0_flt, x1_flt);
-			fstb::ToolsSimd::store_f32 (
-				buf_flt_i_ptr +                 pos, xl_flt
-			);
-			fstb::ToolsSimd::store_f32 (
-				buf_flt_i_ptr + _block_size_a + pos, xr_flt
-			);
+			xl_flt.store (buf_flt_i_ptr +                 pos);
+			xr_flt.store (buf_flt_i_ptr + _block_size_a + pos);
 		}
 #else // mfx_adrv_DPvabI2s_USE_SIMD
 		for (int pos = 0; pos < _block_size; ++pos)
@@ -547,9 +543,9 @@ void	DPvabI2s::proc_loop ()
 		for (int pos = 0; pos < _block_size; pos += 4)
 		{
 			auto           xl_flt =
-				fstb::ToolsSimd::load_f32 (buf_flt_o_ptr +                 pos);
+				fstb::Vf32::load (buf_flt_o_ptr +                 pos);
 			auto           xr_flt =
-				fstb::ToolsSimd::load_f32 (buf_flt_o_ptr + _block_size_a + pos);
+				fstb::Vf32::load (buf_flt_o_ptr + _block_size_a + pos);
 			xl_flt  = fstb::limit (xl_flt, minf_v, maxf_v);
 			xr_flt  = fstb::limit (xr_flt, minf_v, maxf_v);
 			xl_flt *= sc_o_v;

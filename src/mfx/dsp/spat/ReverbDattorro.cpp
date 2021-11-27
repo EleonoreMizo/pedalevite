@@ -908,10 +908,10 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 	const auto     dly_max_v = fstb::Vf32 (dly_mod_fix_max);
 	for (int pos = 0; pos < nbr_spl; pos += 16)
 	{
-		auto           x0f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos     ]);
-		auto           x4f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  4]);
-		auto           x8f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  8]);
-		auto           xcf = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos + 12]);
+		auto           x0f = fstb::Vf32::load (&dly_fix_flt [pos     ]);
+		auto           x4f = fstb::Vf32::load (&dly_fix_flt [pos +  4]);
+		auto           x8f = fstb::Vf32::load (&dly_fix_flt [pos +  8]);
+		auto           xcf = fstb::Vf32::load (&dly_fix_flt [pos + 12]);
 		x0f = fstb::limit (x0f, dly_min_v, dly_max_v);
 		x4f = fstb::limit (x4f, dly_min_v, dly_max_v);
 		x8f = fstb::limit (x8f, dly_min_v, dly_max_v);

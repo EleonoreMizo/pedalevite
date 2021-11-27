@@ -711,14 +711,14 @@ void	PhasedVoice::process_block_dist_mono (float dst_ptr [], int nbr_spl)
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		auto           x = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
+		auto           x = fstb::Vf32::load (dst_ptr + pos);
 
 		x = fstb::limit (x, mi, ma);
 		const auto     t_0 = x.is_lt_0 ();
 		const auto     c   = fstb::ToolsSimd::select (t_0, c_n, c_p);
 		x.mac (c, x * x);
 
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+		x.store (dst_ptr + pos);
 	}
 }
 

@@ -229,10 +229,10 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 		auto           gain = gain_beg;
 		for (int pos = 0; pos < nbr_spl_proc; pos += 4)
 		{
-			auto           f = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+			auto           f = fstb::Vf32::load (src_ptr + pos);
 			f *= gain;
 			f  = fstb::limit (f, fmin, fmax);
-			fstb::ToolsSimd::store_f32 (tmp_ptr + pos, f);
+			f.store (tmp_ptr + pos);
 			gain += gain_step;
 		}
 
@@ -252,7 +252,7 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 		// Modulator: all-pass filter coefficient modulation
 		for (int pos = 0; pos < nbr_spl_proc; pos += 4)
 		{
-			auto           f = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
+			auto           f = fstb::Vf32::load (tmp_ptr + pos);
 			f *= mapa;
 			f += mapb;
 			const auto     f2 = f * f;
@@ -260,7 +260,7 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 			auto           b0 = fstb::Poly::horner (f2, c3, c5, c7);
 			b0 = fstb::ToolsSimd::fmadd (f, b0, f3);
 			b0 = fstb::limit (b0, limn, limp);
-			fstb::ToolsSimd::store_f32 (tmp_ptr + pos, b0);
+			b0.store (tmp_ptr + pos);
 		}
 
 		for (int pos = 0; pos < nbr_spl_proc; ++pos)

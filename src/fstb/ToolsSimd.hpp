@@ -43,22 +43,6 @@ namespace fstb
 
 
 template <typename MEM>
-Vf32	ToolsSimd::load_f32 (const MEM *ptr) noexcept
-{
-	assert (is_ptr_align_nz (ptr, 16));
-
-#if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const Vf32 *> (ptr);
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_load_ps (reinterpret_cast <const float *> (ptr));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vld1q_f32 (reinterpret_cast <const float32_t *> (ptr));
-#endif // fstb_ARCHI
-}
-
-
-
-template <typename MEM>
 Vs32	ToolsSimd::load_s32 (const MEM *ptr) noexcept
 {
 	assert (is_ptr_align_nz (ptr, 16));
@@ -75,22 +59,6 @@ Vs32	ToolsSimd::load_s32 (const MEM *ptr) noexcept
 
 
 template <typename MEM>
-void	ToolsSimd::store_f32 (MEM *ptr, Vf32 v) noexcept
-{
-	assert (is_ptr_align_nz (ptr, 16));
-
-#if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <Vf32 *> (ptr) = v;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	_mm_store_ps (reinterpret_cast <float *> (ptr), v);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	vst1q_f32 (reinterpret_cast <float32_t *> (ptr), v);
-#endif // fstb_ARCHI
-}
-
-
-
-template <typename MEM>
 void	ToolsSimd::store_s32 (MEM *ptr, Vs32 v) noexcept
 {
 	assert (is_ptr_align_nz (ptr, 16));
@@ -101,42 +69,6 @@ void	ToolsSimd::store_s32 (MEM *ptr, Vs32 v) noexcept
 	_mm_store_si128 (reinterpret_cast <__m128i *> (ptr), v);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1q_s32 (reinterpret_cast <int32_t *> (ptr), v);
-#endif // fstb_ARCHI
-}
-
-
-
-// n = number of scalars to store (from the LSB)
-template <typename MEM>
-void	ToolsSimd::store_f32_part (MEM *ptr, Vf32 v, int n) noexcept
-{
-	assert (n > 0);
-
-	if (n >= 4)
-	{
-		store_f32 (ptr, v);
-	}
-	else
-	{
-		store_f32_part_n13 (ptr, v, n);
-	}
-}
-
-
-
-template <typename MEM>
-Vf32	ToolsSimd::loadu_f32 (const MEM *ptr) noexcept
-{
-	assert (ptr != nullptr);
-
-#if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const Vf32 *> (ptr);
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_loadu_ps (reinterpret_cast <const float *> (ptr));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vreinterpretq_f32_u8 (
-		vld1q_u8 (reinterpret_cast <const uint8_t *> (ptr))
-	);
 #endif // fstb_ARCHI
 }
 
@@ -161,37 +93,6 @@ Vs32	ToolsSimd::loadu_s32 (const MEM *ptr) noexcept
 
 
 template <typename MEM>
-Vf32	ToolsSimd::loadu_f32_part (const MEM *ptr, int n) noexcept
-{
-	assert (n > 0);
-
-	if (n >= 4)
-	{
-		return loadu_f32 (ptr);
-	}
-
-	return load_f32_part_n13 (ptr, n);
-}
-
-
-
-template <typename MEM>
-void	ToolsSimd::storeu_f32 (MEM *ptr, Vf32 v) noexcept
-{
-	assert (ptr != nullptr);
-
-#if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <Vf32 *> (ptr) = v;
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	_mm_storeu_ps (reinterpret_cast <float *> (ptr), v);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_f32 (v));
-#endif // fstb_ARCHI
-}
-
-
-
-template <typename MEM>
 void	ToolsSimd::storeu_s32 (MEM *ptr, Vs32 v) noexcept
 {
 	assert (ptr != nullptr);
@@ -203,24 +104,6 @@ void	ToolsSimd::storeu_s32 (MEM *ptr, Vs32 v) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_s32 (v));
 #endif // fstb_ARCHI
-}
-
-
-
-// n = number of scalars to store (from the LSB)
-template <typename MEM>
-void	ToolsSimd::storeu_f32_part (MEM *ptr, Vf32 v, int n) noexcept
-{
-	assert (n > 0);
-
-	if (n >= 4)
-	{
-		storeu_f32 (ptr, v);
-	}
-	else
-	{
-		store_f32_part_n13 (ptr, v, n);
-	}
 }
 
 
@@ -239,72 +122,6 @@ void	ToolsSimd::storeu_s32_part (MEM *ptr, Vs32 v, int n) noexcept
 	{
 		store_s32_part_n13 (ptr, v, n);
 	}
-}
-
-
-
-// Returns: ptr [0] | ptr [1] | ? | ?
-template <typename MEM>
-Vf32	ToolsSimd::loadu_2f32 (const MEM *ptr) noexcept
-{
-	assert (ptr != nullptr);
-
-#if ! defined (fstb_HAS_SIMD)
-	auto           p = reinterpret_cast <const float *> (ptr);
-	return Vf32 { { p [0], p [1] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto     x_0 = _mm_load_ss (reinterpret_cast <const float *> (ptr)    );
-	const auto     x_1 = _mm_load_ss (reinterpret_cast <const float *> (ptr) + 1);
-	const auto     x   = _mm_unpacklo_ps (x_0, x_1);
-	return x;
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const float32x2_t x = vreinterpret_f32_u8 (
-		vld1_u8 (reinterpret_cast <const uint8_t *> (ptr))
-	);
-	return vcombine_f32 (x, x);
-#endif // fstb_ARCHI
-}
-
-
-
-// ptr [0] = v0
-// ptr [1] = v1
-template <typename MEM>
-void	ToolsSimd::storeu_2f32 (MEM *ptr, Vf32 v) noexcept
-{
-	assert (ptr != nullptr);
-
-#if ! defined (fstb_HAS_SIMD)
-	auto           p = reinterpret_cast <float *> (ptr);
-	p [0] = v._x [0];
-	p [1] = v._x [1];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	_mm_store_ss (reinterpret_cast <float *> (ptr)    , v );
-	const auto     v1 = _mm_shuffle_ps (v, v, 1 << 0);
-	_mm_store_ss (reinterpret_cast <float *> (ptr) + 1, v1);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	vst1_u8 (
-		reinterpret_cast <uint8_t *> (ptr),
-		vreinterpret_u8_f32 (vget_low_f32 (v))
-	);
-#endif // fstb_ARCHI
-}
-
-
-
-// *ptr = v0
-template <typename MEM>
-void	ToolsSimd::storeu_1f32 (MEM *ptr, Vf32 v) noexcept
-{
-	assert (ptr != nullptr);
-
-#if ! defined (fstb_HAS_SIMD)
-	reinterpret_cast <float *> (ptr) [0] = v._x [0];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	_mm_store_ss (reinterpret_cast <float *> (ptr), v);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	vst1q_lane_f32 (reinterpret_cast <float32_t *> (ptr), v, 0);
-#endif // fstb_ARCHI
 }
 
 
@@ -1940,46 +1757,6 @@ Vs32	ToolsSimd::Shift <SHIFT>::compose (Vs32 a, Vs32 b) noexcept
 
 
 template <typename MEM>
-void	ToolsSimd::store_f32_part_n13 (MEM *ptr, Vf32 v, int n) noexcept
-{
-	assert (n > 0);
-	assert (n < 4);
-
-	float *        f_ptr = reinterpret_cast <float *> (ptr);
-
-#if ! defined (fstb_HAS_SIMD)
-
-	for (int i = 0; i < n; ++i)
-	{
-		f_ptr [i] = v._x [i];
-	}
-
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-
-	vst1q_lane_f32 (f_ptr + 0, v, 0);
-	if (n >= 2)
-	{
-		vst1q_lane_f32 (f_ptr + 1, v, 1);
-		if (n >= 3)
-		{
-			vst1q_lane_f32 (f_ptr + 2, v, 2);
-		}
-	}
-
-#else
-
-	for (int i = 0; i < n; ++i)
-	{
-		f_ptr [i] = Shift < 0>::extract (v);
-		v         = Shift <-1>::rotate (v);
-	}
-
-#endif
-}
-
-
-
-template <typename MEM>
 void	ToolsSimd::store_s32_part_n13 (MEM *ptr, Vs32 v, int n) noexcept
 {
 	assert (n > 0);
@@ -2015,61 +1792,6 @@ void	ToolsSimd::store_s32_part_n13 (MEM *ptr, Vs32 v, int n) noexcept
 	}
 
 #endif
-}
-
-
-
-template <typename MEM>
-Vf32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n) noexcept
-{
-	assert (n > 0);
-	assert (n < 4);
-
-	const float *  f_ptr = reinterpret_cast <const float *> (ptr);
-	Vf32           v;
-#if ! defined (fstb_HAS_SIMD)
-	v._x [0] = f_ptr [0];
-	for (int i = 1; i < n; ++i)
-	{
-		v._x [i] = f_ptr [i];
-	}
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	switch (n)
-	{
-	case 1:
-		v = _mm_load_ss (f_ptr);
-		break;
-	case 2:
-		v = _mm_load_ss (f_ptr + 1);
-		v = Shift <1>::rotate (v);
-		v = Shift <0>::insert (v, f_ptr [0]);
-		break;
-	case 3:
-		v = _mm_load_ss (f_ptr + 2);
-		v = Shift <1>::rotate (v);
-		v = Shift <0>::insert (v, f_ptr [1]);
-		v = Shift <1>::rotate (v);
-		v = Shift <0>::insert (v, f_ptr [0]);
-		break;
-	default:
-		assert (false);
-		// Keeps the compiler happy with (un)initialisation
-		v = Vf32 (f_ptr [0]);
-		break;
-	}
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	v = vmovq_n_f32 (f_ptr [0]);
-	if (n >= 2)
-	{
-		v = vld1q_lane_f32 (f_ptr + 1, v, 1);
-		if (n >= 3)
-		{
-			v = vld1q_lane_f32 (f_ptr + 2, v, 2);
-		}
-	}
-#endif // fstb_ARCHI
-
-	return v;
 }
 
 

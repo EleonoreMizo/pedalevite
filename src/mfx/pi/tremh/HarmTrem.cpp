@@ -339,10 +339,10 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 			// Treble part
 			for (int pos = 0; pos < nbr_spl; pos += 4)
 			{
-				const auto     s = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-				const auto     l = fstb::ToolsSimd::load_f32 (&_buf_arr [0] [pos]);
+				const auto     s = fstb::Vf32::load (src_ptr + pos);
+				const auto     l = fstb::Vf32::load (&_buf_arr [0] [pos]);
 				const auto     h = s - l;
-				fstb::ToolsSimd::store_f32 (&_buf_arr [1] [pos], h);
+				h.store (&_buf_arr [1] [pos]);
 			}
 		}
 

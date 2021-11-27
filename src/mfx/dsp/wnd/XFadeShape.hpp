@@ -136,7 +136,7 @@ void	XFadeShape <SHP>::make_shape ()
 		{
 			auto           xx = fstb::limit (x, mi, ma);
 			auto           v  = SHP::compute_gain (xx) [1];
-			fstb::ToolsSimd::store_f32 (&_shape [pos], v);
+			v.store (&_shape [pos]);
 
 			x += step;
 		}

@@ -155,10 +155,10 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 	{
 		// Collects the envelopes into vectors
 		// Name: {e}nvelope - {a}ttack/{s}ustain - {s}low/{f}ast
-		auto           eaf = fstb::ToolsSimd::load_f32 (&_buf [pos    ]);
-		auto           eas = fstb::ToolsSimd::load_f32 (&_buf [pos + 1]);
-		auto           esf = fstb::ToolsSimd::load_f32 (&_buf [pos + 2]);
-		auto           ess = fstb::ToolsSimd::load_f32 (&_buf [pos + 3]);
+		auto           eaf = fstb::Vf32::load (&_buf [pos    ]);
+		auto           eas = fstb::Vf32::load (&_buf [pos + 1]);
+		auto           esf = fstb::Vf32::load (&_buf [pos + 2]);
+		auto           ess = fstb::Vf32::load (&_buf [pos + 3]);
 		fstb::ToolsSimd::transpose_f32 (eaf, eas, esf, ess);
 
 		// Computes the ratio for the attack
@@ -167,7 +167,7 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 		const auto     ea_ratio = eaf / eas;
 		auto           ea_r_l2  = fstb::Approx::log2 (ea_ratio);
 		ea_r_l2 = fstb::max (ea_r_l2, zero);
-		fstb::ToolsSimd::store_f32 (atk_ptr + pos, ea_r_l2);
+		ea_r_l2.store (atk_ptr + pos);
 
 		// Ratio for the sustain
 		esf += eps;
@@ -175,7 +175,7 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 		const auto     es_ratio = ess / esf;
 		auto           es_r_l2  = fstb::Approx::log2 (es_ratio);
 		es_r_l2 = fstb::max (es_r_l2, zero);
-		fstb::ToolsSimd::store_f32 (sus_ptr + pos, es_r_l2);
+		es_r_l2.store (sus_ptr + pos);
 	}
 }
 
@@ -239,7 +239,7 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 		const float *  src_ptr = src_ptr_arr [0];
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+			auto           x = fstb::Vf32::load (src_ptr + pos);
 			x = fstb::abs (x);
 			spread_and_store (buf_ptr + pos, x);
 		}
@@ -252,8 +252,8 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 		const auto     gain = fstb::Vf32 (0.5f);
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
-			auto           x0 = fstb::ToolsSimd::load_f32 (src0_ptr + pos);
-			auto           x1 = fstb::ToolsSimd::load_f32 (src1_ptr + pos);
+			auto           x0 = fstb::Vf32::load (src0_ptr + pos);
+			auto           x1 = fstb::Vf32::load (src1_ptr + pos);
 			x0 = fstb::abs (x0);
 			x1 = fstb::abs (x1);
 			const auto     x = (x0 + x1) * gain;
@@ -270,7 +270,7 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 			for (int chn = 0; chn < nbr_chn; ++chn)
 			{
 				const float *  src_ptr = src_ptr_arr [chn];
-				auto           xn = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+				auto           xn = fstb::Vf32::load (src_ptr + pos);
 				xn = fstb::abs (xn);
 				x += xn;
 			}
@@ -284,18 +284,10 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 
 void	TransientAnalyser::spread_and_store (fstb::Vf32 dst_ptr [], fstb::Vf32 x)
 {
-	fstb::ToolsSimd::store_f32 (
-		dst_ptr + 0, fstb::ToolsSimd::Shift <0>::spread (x)
-	);
-	fstb::ToolsSimd::store_f32 (
-		dst_ptr + 1, fstb::ToolsSimd::Shift <1>::spread (x)
-	);
-	fstb::ToolsSimd::store_f32 (
-		dst_ptr + 2, fstb::ToolsSimd::Shift <2>::spread (x)
-	);
-	fstb::ToolsSimd::store_f32 (
-		dst_ptr + 3, fstb::ToolsSimd::Shift <3>::spread (x)
-	);
+	fstb::ToolsSimd::Shift <0>::spread (x).store (dst_ptr + 0);
+	fstb::ToolsSimd::Shift <1>::spread (x).store (dst_ptr + 1);
+	fstb::ToolsSimd::Shift <2>::spread (x).store (dst_ptr + 2);
+	fstb::ToolsSimd::Shift <3>::spread (x).store (dst_ptr + 3);
 }
 
 

@@ -176,7 +176,7 @@ int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], 
 
 		else
 		{
-			const auto     q = fstb::ToolsSimd::load_f32 (q_arr);
+			const auto     q = fstb::Vf32::load (q_arr);
 
 			int            chn_cnt = 0;
 			do
@@ -185,20 +185,16 @@ int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], 
 				float *        dest_ptr = dest_ptr_arr [chn_cnt];
 
 				pos_src_int = pos_src_arr [0];
-				auto           in_0 =
-					fstb::ToolsSimd::loadu_f32 (src_ptr + pos_src_int);
+				auto           in_0 = fstb::Vf32::loadu (src_ptr + pos_src_int);
 
 				pos_src_int = pos_src_arr [1];
-				auto           in_1 =
-					fstb::ToolsSimd::loadu_f32 (src_ptr + pos_src_int);
+				auto           in_1 = fstb::Vf32::loadu (src_ptr + pos_src_int);
 
 				pos_src_int = pos_src_arr [2];
-				auto           in_2 =
-					fstb::ToolsSimd::loadu_f32 (src_ptr + pos_src_int);
+				auto           in_2 = fstb::Vf32::loadu (src_ptr + pos_src_int);
 
 				pos_src_int = pos_src_arr [3];
-				auto           in_3 =
-					fstb::ToolsSimd::loadu_f32 (src_ptr + pos_src_int);
+				auto           in_3 = fstb::Vf32::loadu (src_ptr + pos_src_int);
 
 				// Transposes [in_0 ... in_3]
 				fstb::ToolsSimd::transpose_f32 (in_0, in_1, in_2, in_3);
@@ -212,7 +208,7 @@ int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], 
 
 				const auto     out = (((a * q) - b_neg) * q + c) * q + in_1;
 
-				fstb::ToolsSimd::storeu_f32 (dest_ptr + pos_dest, out);
+				out.storeu (dest_ptr + pos_dest);
 
 				++ chn_cnt;
 			}

@@ -159,7 +159,7 @@ int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const
 
 		else
 		{
-			const auto     q       = fstb::ToolsSimd::load_f32 (q_arr);
+			const auto     q       = fstb::Vf32::load (q_arr);
 
 			int            chn_cnt = 0;
 			do
@@ -183,13 +183,13 @@ int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const
 				in_0_arr [3] = src_ptr [pos_src_int    ];
 				in_1_arr [3] = src_ptr [pos_src_int + 1];
 
-				const auto     in_0 = fstb::ToolsSimd::load_f32 (in_0_arr);
-				const auto     in_1 = fstb::ToolsSimd::load_f32 (in_1_arr);
+				const auto     in_0 = fstb::Vf32::load (in_0_arr);
+				const auto     in_1 = fstb::Vf32::load (in_1_arr);
 				const auto     dif  = in_1 - in_0;
 				auto           out  = in_0;
 				out.mac (dif, q);
 
-				fstb::ToolsSimd::storeu_f32 (dest_ptr + pos_dest, out);
+				out.storeu (dest_ptr + pos_dest);
 
 				++ chn_cnt;
 			}

@@ -72,52 +72,20 @@ public:
 	static void    disable_denorm () noexcept;
 
 	template <typename MEM>
-	static inline Vf32
-	               load_f32 (const MEM *ptr) noexcept;
-	template <typename MEM>
 	static inline Vs32
 	               load_s32 (const MEM *ptr) noexcept;
 	template <typename MEM>
 	static inline void
-	               store_f32 (MEM *ptr, Vf32 v) noexcept;
-	template <typename MEM>
-	static inline void
 	               store_s32 (MEM *ptr, Vs32 v) noexcept;
-	template <typename MEM>
-	static inline void
-	               store_f32_part (MEM *ptr, Vf32 v, int n) noexcept;
-	template <typename MEM>
-	static inline Vf32
-	               loadu_f32 (const MEM *ptr) noexcept;
 	template <typename MEM>
 	static inline Vs32
 	               loadu_s32 (const MEM *ptr) noexcept;
-	template <typename MEM>
-	static inline Vf32
-	               loadu_f32_part (const MEM *ptr, int n) noexcept;
-	template <typename MEM>
-	static inline void
-	               storeu_f32 (MEM *ptr, Vf32 v) noexcept;
 	template <typename MEM>
 	static inline void
 	               storeu_s32 (MEM *ptr, Vs32 v) noexcept;
 	template <typename MEM>
 	static inline void
-	               storeu_f32_part (MEM *ptr, Vf32 v, int n) noexcept;
-	template <typename MEM>
-	static inline void
 	               storeu_s32_part (MEM *ptr, Vs32 v, int n) noexcept;
-
-	template <typename MEM>
-	static inline Vf32
-	               loadu_2f32 (const MEM *ptr) noexcept;
-	template <typename MEM>
-	static inline void
-	               storeu_2f32 (MEM *ptr, Vf32 v) noexcept;
-
-	template <typename MEM>
-	static inline void
-	               storeu_1f32 (MEM *ptr, Vf32 v) noexcept;
 
 	static inline Vs32
 	               set_s32_zero () noexcept;
@@ -293,13 +261,7 @@ private:
 
 	template <typename MEM>
 	static inline void
-	               store_f32_part_n13 (MEM *ptr, Vf32 v, int n) noexcept;
-	template <typename MEM>
-	static inline void
 	               store_s32_part_n13 (MEM *ptr, Vs32 v, int n) noexcept;
-	template <typename MEM>
-	static inline Vf32
-	               load_f32_part_n13 (const MEM *ptr, int n) noexcept;
 
 
 

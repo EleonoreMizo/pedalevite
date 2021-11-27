@@ -80,8 +80,8 @@ bool	ClipDetect::process_block (const float src_ptr [], int nbr_spl) const noexc
 	const auto     ma = fstb::Vf32 (_val_max);
 	for (int pos = 0; pos < ns8 && res_mask == 0; pos += 8)
 	{
-		const auto     x0   = fstb::ToolsSimd::loadu_f32 (src_ptr + pos    );
-		const auto     x4   = fstb::ToolsSimd::loadu_f32 (src_ptr + pos + 4);
+		const auto     x0   = fstb::Vf32::loadu (src_ptr + pos    );
+		const auto     x4   = fstb::Vf32::loadu (src_ptr + pos + 4);
 		const auto     inf0 = (x0 > ma);
 		const auto     sup0 = (x0 < mi);
 		const auto     inf4 = (x4 > ma);

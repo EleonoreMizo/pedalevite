@@ -323,14 +323,14 @@ void	OnePole4Simd_Proc <STP>::process_block_serial_latency (OnePole4SimdData &da
 				fstb::ToolsSimd::Shift <0>::insert (tmp, src_0) };
 			const auto     y2  = b0 * x  + b1 * x1 - a1 * y1;
 			const auto     x2  = x;
-			fstb::ToolsSimd::storeu_1f32 (&out_ptr [index + 0], tmp);
+			tmp.storeu_scalar (&out_ptr [index + 0]);
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
 			tmp = fstb::ToolsSimd::Shift <1>::rotate (y2);
 			x   = fstb::ToolsSimd::Shift <0>::insert (tmp, src_1);
 			y1  = b0 * x  + b1 * x2 - a1 * y2;
 			x1  = x;
-			fstb::ToolsSimd::storeu_1f32 (&out_ptr [index + 1], tmp);
+			tmp.storeu_scalar (&out_ptr [index + 1]);
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
 			index += 2;
@@ -437,10 +437,10 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 		do
 		{
 #if 0
-			const auto     src_0 = fstb::ToolsSimd::loadu_2f32 (&in_ptr [index + 0]);
-			const auto     src_1 = fstb::ToolsSimd::loadu_2f32 (&in_ptr [index + 2]);
+			const auto     src_0 = fstb::Vf32::loadu_pair (&in_ptr [index + 0]);
+			const auto     src_1 = fstb::Vf32::loadu_pair (&in_ptr [index + 2]);
 #else
-			const auto     src_0 = fstb::ToolsSimd::loadu_f32 (&in_ptr [index]);
+			const auto     src_0 = fstb::Vf32::loadu (&in_ptr [index]);
 			const auto     src_1 = fstb::ToolsSimd::swap_2f32 (src_0);
 #endif
 
@@ -449,7 +449,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 			const auto     y2 = b0 * x + b1 * x1 - a1 * y1;
 			const auto     x2 = x;
 			auto           y { fstb::ToolsSimd::Shift <2>::rotate (y2) };
-			fstb::ToolsSimd::storeu_2f32 (&out_ptr [index + 0], y);
+			y.storeu_pair (&out_ptr [index + 0]);
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
 			x  = src_1;
@@ -457,7 +457,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 			y1 = b0 * x + b1 * x2 - a1 * y2;
 			x1 = x;
 			y  = fstb::ToolsSimd::Shift <2>::rotate (y1);
-			fstb::ToolsSimd::storeu_2f32 (&out_ptr [index + 2], y);
+			y.storeu_pair (&out_ptr [index + 2]);
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
 			index += 4;
@@ -475,9 +475,9 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 	// If number of samples was odd, there is one more to process.
 	if ((nbr_spl & 1) > 0)
 	{
-		const auto     x = fstb::ToolsSimd::loadu_2f32 (&in_ptr [index]);
+		const auto     x = fstb::Vf32::loadu_pair (&in_ptr [index]);
 		const auto     y = process_sample_2x2_latency (data, x, b_inc, a_inc);
-		fstb::ToolsSimd::storeu_2f32 (&out_ptr [index], y);
+		y.storeu_pair (&out_ptr [index]);
 	}
 }
 
@@ -1146,9 +1146,9 @@ void	OnePole4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], c
 		int            pos = 0;
 		do
 		{
-			const auto     x = fstb::ToolsSimd::loadu_2f32 (in_ptr + pos * 2);
+			const auto     x = fstb::Vf32::loadu_pair (in_ptr + pos * 2);
 			const auto     y = process_sample_2x2_immediate (x);
-			fstb::ToolsSimd::storeu_2f32 (out_ptr + pos * 2, y);
+			y.storeu_pair (out_ptr + pos * 2);
 			++ pos;
 		}
 		while (pos < nbr_spl);
@@ -1191,9 +1191,9 @@ void	OnePole4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], c
 		int            pos = 0;
 		do
 		{
-			const auto     x = fstb::ToolsSimd::loadu_2f32 (in_ptr + pos * 2);
+			const auto     x = fstb::Vf32::loadu_pair (in_ptr + pos * 2);
 			const auto     y = process_sample_2x2_immediate (x, b_inc, a_inc);
-			fstb::ToolsSimd::storeu_2f32 (out_ptr + pos * 2, y);
+			y.storeu_pair (out_ptr + pos * 2);
 			++ pos;
 		}
 		while (pos < nbr_spl);
