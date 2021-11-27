@@ -179,16 +179,13 @@ Vf32 &	Vf32::operator /= (const Vf32Native &other) noexcept
 Vf32 &	Vf32::operator &= (const Vf32Native &other) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          al;
-	Combo          ar;
-	Combo          r;
-	al._vf32   = _x;
-	ar._vf32   = other;
+	Combo          al { _x };
+	Combo          ar { other };
 	al._s32 [0] &= ar._s32 [0];
 	al._s32 [1] &= ar._s32 [1];
 	al._s32 [2] &= ar._s32 [2];
 	al._s32 [3] &= ar._s32 [3];
-	_x = al._s32;
+	_x = al._vf32;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_and_ps (_x, other);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -205,16 +202,13 @@ Vf32 &	Vf32::operator &= (const Vf32Native &other) noexcept
 Vf32 &	Vf32::operator |= (const Vf32Native &other) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          al;
-	Combo          ar;
-	Combo          r;
-	al._vf32   = _x;
-	ar._vf32   = other;
+	Combo          al { _x };
+	Combo          ar { other };
 	al._s32 [0] |= ar._s32 [0];
 	al._s32 [1] |= ar._s32 [1];
 	al._s32 [2] |= ar._s32 [2];
 	al._s32 [3] |= ar._s32 [3];
-	_x = al._s32;
+	_x = al._vf32;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_or_ps (_x, other);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -231,16 +225,13 @@ Vf32 &	Vf32::operator |= (const Vf32Native &other) noexcept
 Vf32 &	Vf32::operator ^= (const Vf32Native &other) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          al;
-	Combo          ar;
-	Combo          r;
-	al._vf32   = _x;
-	ar._vf32   = other;
+	Combo          al { _x };
+	Combo          ar { other };
 	al._s32 [0] ^= ar._s32 [0];
 	al._s32 [1] ^= ar._s32 [1];
 	al._s32 [2] ^= ar._s32 [2];
 	al._s32 [3] ^= ar._s32 [3];
-	_x = al._s32;
+	_x = al._vf32;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_xor_ps (_x, other);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -339,10 +330,10 @@ Vf32	Vf32::rcp_approx () const noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return { {
-		1.f / v._x [0],
-		1.f / v._x [1],
-		1.f / v._x [2],
-		1.f / v._x [3]
+		1.f / _x [0],
+		1.f / _x [1],
+		1.f / _x [2],
+		1.f / _x [3]
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_rcp_ps (_x);
@@ -381,7 +372,7 @@ Vf32	Vf32::signbit () const noexcept
 		copysignf (0.f, _x [0]),
 		copysignf (0.f, _x [1]),
 		copysignf (0.f, _x [2]),
-		copysignf (0.f, ._x [3])
+		copysignf (0.f, _x [3])
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_and_ps (signbit_mask (), _x);
@@ -785,7 +776,7 @@ Vf32 operator ^ (Vf32 lhs, const Vf32 &rhs) noexcept
 Vf32	operator == (const Vf32 &lhs, const Vf32 &rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          r;
+	Vf32::Combo    r;
 	r._s32 [0] = (lhs._x [0] == rhs._x [0]) ? -1 : 0;
 	r._s32 [1] = (lhs._x [1] == rhs._x [1]) ? -1 : 0;
 	r._s32 [2] = (lhs._x [2] == rhs._x [2]) ? -1 : 0;
@@ -803,7 +794,7 @@ Vf32	operator == (const Vf32 &lhs, const Vf32 &rhs) noexcept
 Vf32	operator != (const Vf32 &lhs, const Vf32 &rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          r;
+	Vf32::Combo    r;
 	r._s32 [0] = (lhs._x [0] != rhs._x [0]) ? -1 : 0;
 	r._s32 [1] = (lhs._x [1] != rhs._x [1]) ? -1 : 0;
 	r._s32 [2] = (lhs._x [2] != rhs._x [2]) ? -1 : 0;
@@ -821,7 +812,7 @@ Vf32	operator != (const Vf32 &lhs, const Vf32 &rhs) noexcept
 Vf32	operator <  (const Vf32 &lhs, const Vf32 &rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          r;
+	Vf32::Combo    r;
 	r._s32 [0] = (lhs._x [0] < rhs._x [0]) ? -1 : 0;
 	r._s32 [1] = (lhs._x [1] < rhs._x [1]) ? -1 : 0;
 	r._s32 [2] = (lhs._x [2] < rhs._x [2]) ? -1 : 0;
@@ -839,7 +830,7 @@ Vf32	operator <  (const Vf32 &lhs, const Vf32 &rhs) noexcept
 Vf32	operator <= (const Vf32 &lhs, const Vf32 &rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          r;
+	Vf32::Combo    r;
 	r._s32 [0] = (lhs._x [0] <= rhs._x [0]) ? -1 : 0;
 	r._s32 [1] = (lhs._x [1] <= rhs._x [1]) ? -1 : 0;
 	r._s32 [2] = (lhs._x [2] <= rhs._x [2]) ? -1 : 0;
@@ -857,7 +848,7 @@ Vf32	operator <= (const Vf32 &lhs, const Vf32 &rhs) noexcept
 Vf32	operator >  (const Vf32 &lhs, const Vf32 &rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          r;
+	Vf32::Combo    r;
 	r._s32 [0] = (lhs._x [0] > rhs._x [0]) ? -1 : 0;
 	r._s32 [1] = (lhs._x [1] > rhs._x [1]) ? -1 : 0;
 	r._s32 [2] = (lhs._x [2] > rhs._x [2]) ? -1 : 0;
@@ -875,7 +866,7 @@ Vf32	operator >  (const Vf32 &lhs, const Vf32 &rhs) noexcept
 Vf32	operator >= (const Vf32 &lhs, const Vf32 &rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	Combo          r;
+	Vf32::Combo    r;
 	r._s32 [0] = (lhs._x [0] >= rhs._x [0]) ? -1 : 0;
 	r._s32 [1] = (lhs._x [1] >= rhs._x [1]) ? -1 : 0;
 	r._s32 [2] = (lhs._x [2] >= rhs._x [2]) ? -1 : 0;
