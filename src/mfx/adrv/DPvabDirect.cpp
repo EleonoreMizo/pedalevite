@@ -884,10 +884,8 @@ void	DPvabDirect::proc_loop ()
 #if defined (mfx_adrv_DPvabDirect_USE_SIMD)
 		for (int pos = 0; pos < _block_size; pos += 4)
 		{
-			const auto     x0_int =
-				fstb::ToolsSimd::load_s32 (buf_int_i_ptr + pos * 2    );
-			const auto     x1_int =
-				fstb::ToolsSimd::load_s32 (buf_int_i_ptr + pos * 2 + 4);
+			const auto     x0_int = fstb::Vs32::load (buf_int_i_ptr + pos * 2    );
+			const auto     x1_int = fstb::Vs32::load (buf_int_i_ptr + pos * 2 + 4);
 			auto           x0_flt = fstb::ToolsSimd::conv_s32_to_f32 (x0_int);
 			auto           x1_flt = fstb::ToolsSimd::conv_s32_to_f32 (x1_int);
 			x0_flt *= sc_i_v;
@@ -930,8 +928,8 @@ void	DPvabDirect::proc_loop ()
 			fstb::ToolsSimd::interleave_f32 (x0_flt, x1_flt, xl_flt, xr_flt);
 			const auto  x0_int = fstb::ToolsSimd::conv_f32_to_s32 (x0_flt);
 			const auto  x1_int = fstb::ToolsSimd::conv_f32_to_s32 (x1_flt);
-			fstb::ToolsSimd::store_s32 (buf_int_o_ptr + pos * 2    , x0_int);
-			fstb::ToolsSimd::store_s32 (buf_int_o_ptr + pos * 2 + 4, x1_int);
+			x0_int.store (buf_int_o_ptr + pos * 2    );
+			x1_int.store (buf_int_o_ptr + pos * 2 + 4);
 		}
 #else // mfx_adrv_DPvabDirect_USE_SIMD
 		for (int pos = 0; pos < _block_size; ++pos)

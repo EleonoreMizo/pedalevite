@@ -920,10 +920,10 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 		const auto     x4i = fstb::ToolsSimd::conv_f32_to_s32 (x4f);
 		const auto     x8i = fstb::ToolsSimd::conv_f32_to_s32 (x8f);
 		const auto     xci = fstb::ToolsSimd::conv_f32_to_s32 (xcf);
-		fstb::ToolsSimd::store_s32 (dly_ptr + pos     , x0i);
-		fstb::ToolsSimd::store_s32 (dly_ptr + pos +  4, x4i);
-		fstb::ToolsSimd::store_s32 (dly_ptr + pos +  8, x8i);
-		fstb::ToolsSimd::store_s32 (dly_ptr + pos + 12, xci);
+		x0i.store (dly_ptr + pos     );
+		x4i.store (dly_ptr + pos +  4);
+		x8i.store (dly_ptr + pos +  8);
+		xci.store (dly_ptr + pos + 12);
 	}
 }
 

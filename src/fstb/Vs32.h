@@ -84,6 +84,16 @@ public:
 	Vs32 &         operator = (const Vs32 &other) = default;
 	Vs32 &         operator = (Vs32 &&other)      = default;
 
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               store (MEM *ptr) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu (MEM *ptr) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu_part (MEM *ptr, int n) const noexcept;
+
 	fstb_FORCEINLINE
 	               operator Vs32Native () const noexcept { return _x; }
 
@@ -101,6 +111,13 @@ public:
 
 	static fstb_FORCEINLINE Vs32
 	               zero () noexcept;
+
+	template <typename MEM>
+	static fstb_FORCEINLINE Vs32
+	               load (const MEM *ptr) noexcept;
+	template <typename MEM>
+	static fstb_FORCEINLINE Vs32
+	               loadu (const MEM *ptr) noexcept;
 
 
 

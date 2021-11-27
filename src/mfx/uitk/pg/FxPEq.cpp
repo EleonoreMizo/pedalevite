@@ -698,7 +698,7 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 		lvl = fstb::max (lvl, secu);
 		const auto     y_flt = fstb::Approx::log2 (lvl) * mul + ofs;
 		const auto     y     = fstb::ToolsSimd::conv_f32_to_s32 (y_flt);
-		fstb::ToolsSimd::storeu_s32_part (&y_arr [f_idx], y, ns);
+		y.storeu_part (&y_arr [f_idx], ns);
 	}
 
 	return y_arr;

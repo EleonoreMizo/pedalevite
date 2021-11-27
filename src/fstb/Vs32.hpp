@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
+
 #include <cassert>
 
 
@@ -61,6 +63,88 @@ Vs32::Vs32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept
 #endif // fstb_ARCHI
 {
 	// Nothing
+}
+
+
+
+template <typename MEM>
+void	Vs32::store (MEM *ptr) const noexcept
+{
+	assert (is_ptr_align_nz (ptr, 16));
+
+#if ! defined (fstb_HAS_SIMD)
+	*reinterpret_cast <Vs32Native *> (ptr) = _x;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	_mm_store_si128 (reinterpret_cast <__m128i *> (ptr), _x);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	vst1q_s32 (reinterpret_cast <int32_t *> (ptr), _x);
+#endif // fstb_ARCHI
+}
+
+
+
+template <typename MEM>
+void	Vs32::storeu (MEM *ptr) const noexcept
+{
+	assert (ptr != nullptr);
+
+#if ! defined (fstb_HAS_SIMD)
+	*reinterpret_cast <Vs32Native *> (ptr) = _x;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	_mm_storeu_si128 (reinterpret_cast <__m128i *> (ptr), _x);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_s32 (_x));
+#endif // fstb_ARCHI
+}
+
+
+
+// n = number of scalars to store (from the LSB)
+template <typename MEM>
+void	Vs32::storeu_part (MEM *ptr, int n) const noexcept
+{
+	assert (n > 0);
+
+	if (n >= 4)
+	{
+		storeu (ptr);
+		return;
+	}
+
+	int32_t *      f_ptr = reinterpret_cast <int32_t *> (ptr);
+
+#if ! defined (fstb_HAS_SIMD)
+
+	for (int i = 0; i < n; ++i)
+	{
+		f_ptr [i] = _x [i];
+	}
+
+#elif fstb_ARCHI == fstb_ARCHI_X86
+
+	f_ptr [0] = _mm_cvtsi128_si32 (_x);
+	if (n >= 2)
+	{
+		f_ptr [1] = _mm_cvtsi128_si32 (_mm_shuffle_epi32 (_x, 1 << 0));
+		if (n >= 3)
+		{
+			f_ptr [1] = _mm_cvtsi128_si32 (_mm_shuffle_epi32 (_x, 2 << 0));
+		}
+	}
+
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+
+	vst1q_lane_s32 (f_ptr + 0, _x, 0);
+	if (n >= 2)
+	{
+		vst1q_lane_s32 (f_ptr + 1, _x, 1);
+		if (n >= 3)
+		{
+			vst1q_lane_s32 (f_ptr + 2, _x, 2);
+		}
+	}
+
+#endif
 }
 
 
@@ -171,6 +255,40 @@ Vs32	Vs32::zero () noexcept
 	return _mm_setzero_si128 ();
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_s32 (0);
+#endif // fstb_ARCHI
+}
+
+
+
+template <typename MEM>
+Vs32	Vs32::load (const MEM *ptr) noexcept
+{
+	assert (is_ptr_align_nz (ptr, 16));
+
+#if ! defined (fstb_HAS_SIMD)
+	return *reinterpret_cast <const Vs32 *> (ptr);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_load_si128 (reinterpret_cast <const __m128i *> (ptr));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vld1q_s32 (reinterpret_cast <const int32_t *> (ptr));
+#endif // fstb_ARCHI
+}
+
+
+
+template <typename MEM>
+Vs32	Vs32::loadu (const MEM *ptr) noexcept
+{
+	assert (ptr != nullptr);
+
+#if ! defined (fstb_HAS_SIMD)
+	return *reinterpret_cast <const Vs32 *> (ptr);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_loadu_si128 (reinterpret_cast <const __m128i *> (ptr));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vreinterpretq_s32_u8 (
+		vld1q_u8 (reinterpret_cast <const uint8_t *> (ptr))
+	);
 #endif // fstb_ARCHI
 }
 

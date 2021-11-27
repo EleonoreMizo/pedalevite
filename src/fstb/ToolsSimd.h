@@ -71,22 +71,6 @@ public:
 
 	static void    disable_denorm () noexcept;
 
-	template <typename MEM>
-	static inline Vs32
-	               load_s32 (const MEM *ptr) noexcept;
-	template <typename MEM>
-	static inline void
-	               store_s32 (MEM *ptr, Vs32 v) noexcept;
-	template <typename MEM>
-	static inline Vs32
-	               loadu_s32 (const MEM *ptr) noexcept;
-	template <typename MEM>
-	static inline void
-	               storeu_s32 (MEM *ptr, Vs32 v) noexcept;
-	template <typename MEM>
-	static inline void
-	               storeu_s32_part (MEM *ptr, Vs32 v, int n) noexcept;
-
 	static inline Vf32
 	               swap_2f32 (Vf32 v) noexcept;
 
@@ -252,10 +236,6 @@ private:
 	static constexpr int16_t _sign16 = INT16_MIN;
 	static constexpr int32_t _sign32 = INT32_MIN;
 	static constexpr int64_t _sign64 = INT64_MIN;
-
-	template <typename MEM>
-	static inline void
-	               store_s32_part_n13 (MEM *ptr, Vs32 v, int n) noexcept;
 
 
 

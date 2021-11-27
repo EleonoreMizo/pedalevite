@@ -22,7 +22,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
 
 
 namespace fstb
@@ -49,7 +48,7 @@ Vf32	DataAlign <A>::load_f32 (const void *ptr) noexcept
 template <bool A>
 Vs32	DataAlign <A>::load_s32 (const void *ptr) noexcept
 {
-	return ToolsSimd::load_s32 (ptr);
+	return Vs32::load (ptr);
 }
 
 template <bool A>
@@ -61,7 +60,7 @@ void	DataAlign <A>::store_f32 (void *ptr, Vf32 v) noexcept
 template <bool A>
 void	DataAlign <A>::store_s32 (void *ptr, Vs32 v) noexcept
 {
-	ToolsSimd::store_s32 (ptr, v);
+	v.store (ptr);
 }
 
 
@@ -81,7 +80,7 @@ inline Vf32	DataAlign <false>::load_f32 (const void *ptr) noexcept
 template <>
 inline Vs32	DataAlign <false>::load_s32 (const void *ptr) noexcept
 {
-	return ToolsSimd::loadu_s32 (ptr);
+	return Vs32::loadu (ptr);
 }
 
 template <>
@@ -93,7 +92,7 @@ inline void	DataAlign <false>::store_f32 (void *ptr, Vf32 v) noexcept
 template <>
 inline void	DataAlign <false>::store_s32 (void *ptr, Vs32 v) noexcept
 {
-	ToolsSimd::storeu_s32 (ptr, v);
+	v.storeu (ptr);
 }
 
 
