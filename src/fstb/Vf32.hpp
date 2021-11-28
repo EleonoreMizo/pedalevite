@@ -106,7 +106,7 @@ void	Vf32::store (MEM *ptr) const noexcept
 	assert (is_ptr_align_nz (ptr, 16));
 
 #if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <Vf32 *> (ptr) = _x;
+	*reinterpret_cast <Vf32Native *> (ptr) = _x;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_store_ps (reinterpret_cast <float *> (ptr), _x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -140,7 +140,7 @@ void	Vf32::storeu (MEM *ptr) const noexcept
 	assert (ptr != nullptr);
 
 #if ! defined (fstb_HAS_SIMD)
-	*reinterpret_cast <Vf32 *> (ptr) = _x;
+	*reinterpret_cast <Vf32Native *> (ptr) = _x;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_storeu_ps (reinterpret_cast <float *> (ptr), _x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
