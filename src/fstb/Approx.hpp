@@ -213,7 +213,7 @@ void	Approx::cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept
 	auto           xc = x + hp;
 
 	// xc -> [-pi ; pi]
-	xc = ToolsSimd::select ((xc < p ), xc - tp, xc);
+	xc = select ((xc < p ), xc - tp, xc);
 
 	// xc -> [-pi/2 ; pi/2]
 	xc = restrict_sin_angle_to_mhpi_hpi (xc, hpm, hp, pm, p);
@@ -358,7 +358,7 @@ std::array <Vf32, 2>	Approx::cos_sin_nick_2pi (Vf32 x) noexcept
 	const auto     c_025  = Vf32 (0.25f);
 	const auto     c_075  = Vf32 (0.75f);
 	const auto     ge_025 = (c_025 < x);
-	const auto     xc     = ToolsSimd::select (ge_025, x - c_075, x + c_025);
+	const auto     xc     = select (ge_025, x - c_075, x + c_025);
 
 	const auto     b  = Vf32 (  8);
 	const auto     c  = Vf32 (-16);
@@ -1124,8 +1124,8 @@ Vf32	Approx::wright_omega_3 (Vf32 x) noexcept
 	const auto     tx1 = (x < x1);
 	const auto     tx2 = (x < x2);
 	auto           y   = y0;
-	y = ToolsSimd::select (tx1, y, y1);
-	y = ToolsSimd::select (tx2, y, y2);
+	y = select (tx1, y, y1);
+	y = select (tx2, y, y2);
 
 	return y;
 }
@@ -1158,8 +1158,8 @@ T	Approx::wright_omega_4 (T x) noexcept
 // p = pi, pm = -pi, tp = 2*pi
 Vf32	Approx::restrict_angle_to_mpi_pi (Vf32 x, const Vf32 &pm, const Vf32 &p, const Vf32 &tp) noexcept
 {
-	x = ToolsSimd::select ((x < pm), x + tp, x);
-	x = ToolsSimd::select ((x > p ), x - tp, x);
+	x = select ((x < pm), x + tp, x);
+	x = select ((x > p ), x - tp, x);
 
 	return x;
 }
@@ -1170,8 +1170,8 @@ Vf32	Approx::restrict_angle_to_mpi_pi (Vf32 x, const Vf32 &pm, const Vf32 &p, co
 // hpm = -pi/2, hp = pi/2, pm = -pi, p = pi
 Vf32	Approx::restrict_sin_angle_to_mhpi_hpi (Vf32 x, const Vf32 &hpm, const Vf32 &hp, const Vf32 &pm, const Vf32 &p) noexcept
 {
-	x = ToolsSimd::select ((x < hpm), pm - x, x);
-	x = ToolsSimd::select ((x > hp ), p  - x, x);
+	x = select ((x < hpm), pm - x, x);
+	x = select ((x > hp ), p  - x, x);
 
 	return x;
 }
@@ -1265,8 +1265,6 @@ constexpr std::array <T, 2>	Approx::atan2_beg (T y, T x) noexcept
 
 std::array <Vf32, 2>	Approx::atan2_beg (Vf32 y, Vf32 x) noexcept
 {
-	using TS = ToolsSimd;
-
 	const auto     c0p  = Vf32 (PI * 0.25);
 	const auto     c0n  = Vf32 (PI * 0.75);
 	const auto     eps  = Vf32 (1e-10f);
@@ -1276,9 +1274,9 @@ std::array <Vf32, 2>	Approx::atan2_beg (Vf32 y, Vf32 x) noexcept
 	const auto     xpya = x + ya;
 	const auto     xmya = x - ya;
 	const auto     yamx = ya - x;
-	const auto     c0   = TS::select (xlt0, c0n, c0p);
-	const auto     rnum = TS::select (xlt0, xpya, xmya);
-	const auto     rden = TS::select (xlt0, yamx, xpya);
+	const auto     c0   = select (xlt0, c0n, c0p);
+	const auto     rnum = select (xlt0, xpya, xmya);
+	const auto     rden = select (xlt0, yamx, xpya);
 	const auto     r    = rnum / rden;
 
 	return std::array <Vf32, 2> { r, c0 };

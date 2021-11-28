@@ -118,14 +118,13 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fs
 	// delta <= 0 (release/hold) ---> coef = _coef_rls
 	const auto     hc_lt_0    = hold_c.is_lt_0 ();
 	const auto     coef_r_cur = coef_r & hc_lt_0;
-	auto           coef       =
-		fstb::ToolsSimd::select (delta_lt_0, coef_r_cur, coef_a);
+	auto           coef       = fstb::select (delta_lt_0, coef_r_cur, coef_a);
 
 	// state += coef * (in - state)
 	state.mac (delta, coef);
 
 	const auto     hcm1 = fstb::max (hold_c - one, zero);
-	hold_c = fstb::ToolsSimd::select (delta_lt_0, hcm1, hold_t);
+	hold_c = fstb::select (delta_lt_0, hcm1, hold_t);
 
 	V128Par::store_f32 (_state [0], state);
 	V128Par::store_f32 (_hold_counter, hold_c);
@@ -139,7 +138,7 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fs
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls
 		delta_lt_0 = delta.is_lt_0 ();
-		coef       = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
+		coef       = fstb::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (in - state)
 		state.mac (delta, coef);
@@ -162,7 +161,7 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fs
 	{ \
 		delta      = state##flt - state##fltn; \
 		delta_lt_0 = delta.is_lt_0 (); \
-		coef       = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
+		coef       = fstb::select (delta_lt_0, coef_r, coef_a); \
 		state##fltn.mac (delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_RESULT( ord) \
@@ -220,14 +219,13 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::Vf32 out_
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls or 0
 		auto           delta_lt_0 = delta.is_lt_0 ();
-		auto           coef       =
-			fstb::ToolsSimd::select (delta_lt_0, coef_r_cur, coef_a);
+		auto           coef       = fstb::select (delta_lt_0, coef_r_cur, coef_a);
 
 		// state += coef * (in - state)
 		state1.mac (delta, coef);
 
 		const auto     hcm1 = fstb::max (hold_c - one, zero);
-		hold_c = fstb::ToolsSimd::select (delta_lt_0, hcm1, hold_t);
+		hold_c = fstb::select (delta_lt_0, hcm1, hold_t);
 
 		mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_PROC (1, 2)
 		mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_PROC (2, 3)
@@ -301,14 +299,13 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fst
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls or 0
 		auto           delta_lt_0 = delta.is_lt_0 ();
-		auto           coef       =
-			fstb::ToolsSimd::select (delta_lt_0, coef_r_cur, coef_a);
+		auto           coef       = fstb::select (delta_lt_0, coef_r_cur, coef_a);
 
 		// state += coef * (in - state)
 		state1.mac (delta, coef);
 
 		const auto     hcm1 = fstb::max (hold_c - one, zero);
-		hold_c = fstb::ToolsSimd::select (delta_lt_0, hcm1, hold_t);
+		hold_c = fstb::select (delta_lt_0, hcm1, hold_t);
 
 		mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_PROC (1, 2)
 		mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_PROC (2, 3)

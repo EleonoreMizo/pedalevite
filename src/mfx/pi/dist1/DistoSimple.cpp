@@ -25,7 +25,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/ToolsSimd.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
@@ -387,7 +386,7 @@ void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int n
 		const auto     x_n = x + x2 * v_c_2;
 		const auto     x_p = x - x9 * v_c_9;
 		const auto     t_0 = x.is_lt_0 ();
-		x  = fstb::ToolsSimd::select (t_0, x_n, x_p);
+		x  = fstb::select (t_0, x_n, x_p);
 
 		x -= v_bias;
 

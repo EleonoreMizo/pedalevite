@@ -409,7 +409,7 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 		const auto     mult = TS::rsqrt_approx (mag2);
 		b_r *= mult;
 		b_i *= mult;
-		b_r  = TS::select (mgt0, b_r, one);
+		b_r  = fstb::select (mgt0, b_r, one);
 		b_i &= mgt0;
 
 		b_r.storeu (&slot._buf_freeze [bin_idx]);

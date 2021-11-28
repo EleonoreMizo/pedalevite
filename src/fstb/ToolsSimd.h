@@ -103,12 +103,6 @@ public:
 	               exp2_approx2 (Vf32 v) noexcept;
 
 	static inline Vf32
-	               select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept;
-	static inline std::tuple <Vf32, Vf32>
-	               swap_cond (Vf32 cond, Vf32 lhs, Vf32 rhs) noexcept;
-	static inline int
-	               count_bits (Vs32 x) noexcept;
-	static inline Vf32
 	               cast_f32 (Vs32 x) noexcept;
 	static inline Vs32
 	               cast_s32 (Vf32 x) noexcept;
@@ -150,10 +144,6 @@ public:
 	static inline void
 	               start_lerp (Vf32 &val_cur, Vf32 &step, float val_beg, float val_end, int size) noexcept;
 
-	static inline Vs32
-	               select (Vs32 cond, Vs32 v_t, Vs32 v_f) noexcept;
-	static inline std::tuple <Vs32, Vs32>
-	               swap_cond (Vs32 cond, Vs32 lhs, Vs32 rhs) noexcept;
 	template <int N>
 	static inline Vs32
 	               srai_s32 (Vs32 lhs) noexcept;

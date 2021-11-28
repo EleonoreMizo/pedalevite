@@ -98,7 +98,7 @@ void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nb
 			const auto     vol_gt_lvl = (vol_sq > lvl4_sq);
 			const auto     mult   = fstb::ToolsSimd::rsqrt_approx (vol_sq);
 			const auto     xlim   = x * lvl4 * mult;
-			x = fstb::ToolsSimd::select (vol_gt_lvl, xlim, x);
+			x = fstb::select (vol_gt_lvl, xlim, x);
 			x.storeu (dst_loc_ptr + pos);
 		}
 		for (int pos = m4; pos < work_len; ++pos)

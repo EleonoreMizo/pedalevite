@@ -487,6 +487,57 @@ unsigned int	Vs32::movemask () const noexcept
 
 
 
+int	Vs32::count_bits () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	// http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+	uint32_t       v0 = _x [0] - ((_x [0] >> 1) & 0x55555555);
+	uint32_t       v1 = _x [1] - ((_x [1] >> 1) & 0x55555555);
+	uint32_t       v2 = _x [2] - ((_x [2] >> 1) & 0x55555555);
+	uint32_t       v3 = _x [3] - ((_x [3] >> 1) & 0x55555555);
+	v0 = (v0 & 0x33333333) + ((v0 >> 2) & 0x33333333);
+	v1 = (v1 & 0x33333333) + ((v1 >> 2) & 0x33333333);
+	v2 = (v2 & 0x33333333) + ((v2 >> 2) & 0x33333333);
+	v3 = (v3 & 0x33333333) + ((v3 >> 2) & 0x33333333);
+	const int      c0 = (((v0 + (v0 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	const int      c1 = (((v1 + (v1 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	const int      c2 = (((v2 + (v2 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	const int      c3 = (((v3 + (v3 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	return (c0 + c2) + (c1 + c3);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	// https://stackoverflow.com/questions/17354971/fast-counting-the-number-of-set-bits-in-m128i-register
+	static const __m128i  popcount_mask1 = _mm_set1_epi8 (0x77);
+	static const __m128i  popcount_mask2 = _mm_set1_epi8 (0x0F);
+	// Count bits in each 4-bit field.
+	auto           x = _x;
+	auto           n = _mm_srli_epi64 (x, 1);
+	n = _mm_and_si128 (popcount_mask1, n);
+	x = _mm_sub_epi8 (x, n);
+	n = _mm_srli_epi64 (n, 1);
+	n = _mm_and_si128 (popcount_mask1, n);
+	x = _mm_sub_epi8 (x, n);
+	n = _mm_srli_epi64 (n, 1);
+	n = _mm_and_si128 (popcount_mask1, n);
+	n = _mm_sub_epi8 (x, n);
+	n = _mm_add_epi8 (n, _mm_srli_epi16 (n, 4));
+	n = _mm_and_si128 (popcount_mask2, n);
+	// Counts the number of bits in the low and high 64-bit parts
+	n = _mm_sad_epu8 (n, _mm_setzero_si128 ());
+	// Counts the number of bits in the whole 128-bit register
+	n = _mm_add_epi32 (n, _mm_unpackhi_epi64 (n, n));
+	return _mm_cvtsi128_si32 (n);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const uint8x16_t  cnt_8  = vcntq_u8 (vreinterpretq_u8_s32 (_x));
+	const uint16x8_t  cnt_16 = vpaddlq_u8 (cnt_8);
+	const uint32x4_t  cnt_32 = vpaddlq_u16 (cnt_16);
+	const uint64x2_t  cnt_64 = vpaddlq_u32 (cnt_32);
+	const int32x4_t   cnt_s  = vreinterpretq_s32_u64 (cnt_64);
+	return vgetq_lane_s32 (cnt_s, 0) + vgetq_lane_s32 (cnt_s, 2);
+#endif // fstb_ARCHI
+}
+
+
+
 Vs32	Vs32::zero () noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -542,7 +593,7 @@ Vs32	Vs32::loadu (const MEM *ptr) noexcept
 
 
 
-/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+/*\\\ GLOBAL OPERATORS AND FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
@@ -784,6 +835,52 @@ Vs32 max (const Vs32 &lhs, const Vs32 &rhs) noexcept
 Vs32 limit (const Vs32 &v, const Vs32 &mi, const Vs32 &ma) noexcept
 {
 	return min (max (v, mi), ma);
+}
+
+
+
+Vs32 select (const Vs32 &cond, const Vs32 &v_t, const Vs32 &v_f) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	/*** To do: implement as r = v_f ^ ((v_f ^ v_t) & cond) ***/
+	return Vs32 { {
+		(cond._x [0] & v_t._x [0]) | (~cond._x [0] & v_f._x [0]),
+		(cond._x [1] & v_t._x [1]) | (~cond._x [1] & v_f._x [1]),
+		(cond._x [2] & v_t._x [2]) | (~cond._x [2] & v_f._x [2]),
+		(cond._x [3] & v_t._x [3]) | (~cond._x [3] & v_f._x [3])
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto     cond_1 = _mm_and_si128 (cond, v_t);
+	const auto     cond_0 = _mm_andnot_si128 (cond, v_f);
+	return _mm_or_si128 (cond_0, cond_1);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vbslq_s32 (vreinterpretq_u32_s32 (cond), v_t, v_f);
+#endif // fstb_ARCHI
+}
+
+
+
+std::tuple <Vs32, Vs32> swap_if (const Vs32 &cond, Vs32 lhs, Vs32 rhs) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	if (cond._x [0] != 0) { std::swap (lhs._x [0], rhs._x [0]); }
+	if (cond._x [1] != 0) { std::swap (lhs._x [1], rhs._x [1]); }
+	if (cond._x [2] != 0) { std::swap (lhs._x [2], rhs._x [2]); }
+	if (cond._x [3] != 0) { std::swap (lhs._x [3], rhs._x [3]); }
+	return std::make_tuple (lhs, rhs);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto     inv = _mm_and_si128 (_mm_xor_si128 (lhs, rhs), cond);
+	return std::make_tuple (
+		_mm_xor_si128 (lhs, inv),
+		_mm_xor_si128 (rhs, inv)
+	);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const auto     cond_u = vreinterpretq_u32_s32 (cond);
+	return std::make_tuple (
+		vbslq_s32 (cond_u, rhs, lhs),
+		vbslq_s32 (cond_u, lhs, rhs)
+	);
+#endif // fstb_ARCHI
 }
 
 

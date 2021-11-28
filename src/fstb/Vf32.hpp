@@ -1026,7 +1026,7 @@ void	Vf32::storeu_part_n13 (MEM *ptr, int n) const noexcept
 
 
 
-/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+/*\\\ GLOBAL OPERATORS AND FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
@@ -1246,6 +1246,56 @@ Vf32 max (const Vf32 &lhs, const Vf32 &rhs) noexcept
 Vf32 limit (const Vf32 &v, const Vf32 &mi, const Vf32 &ma) noexcept
 {
 	return min (max (v, mi), ma);
+}
+
+
+
+Vf32 select (const Vf32 &cond, const Vf32 &v_t, const Vf32 &v_f) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	/*** To do: implement as r = v_f ^ ((v_f ^ v_t) & cond) ***/
+	const Combo    cc { cond };
+	Combo          ct { v_t };
+	Combo          cf { v_f };
+	Combo          r;
+	r._s32 [0] = (ct._s32 [0] & cc._s32 [0]) | (cf._s32 [0] & ~cc._s32 [0]);
+	r._s32 [1] = (ct._s32 [1] & cc._s32 [1]) | (cf._s32 [1] & ~cc._s32 [1]);
+	r._s32 [2] = (ct._s32 [2] & cc._s32 [2]) | (cf._s32 [2] & ~cc._s32 [2]);
+	r._s32 [3] = (ct._s32 [3] & cc._s32 [3]) | (cf._s32 [3] & ~cc._s32 [3]);
+	return r._vf32;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto     cond_1 = _mm_and_ps (   cond, v_t);
+	const auto     cond_0 = _mm_andnot_ps (cond, v_f);
+	return _mm_or_ps (cond_0, cond_1);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vbslq_f32 (vreinterpretq_u32_f32 (cond), v_t, v_f);
+#endif // fstb_ARCHI
+}
+
+
+
+std::tuple <Vf32, Vf32> swap_if (const Vf32 &cond, Vf32 lhs, Vf32 rhs) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	const Combo    cc { cond };
+	if (cc._s32 [0] != 0) { std::swap (lhs._x [0], rhs._x [0]); }
+	if (cc._s32 [1] != 0) { std::swap (lhs._x [1], rhs._x [1]); }
+	if (cc._s32 [2] != 0) { std::swap (lhs._x [2], rhs._x [2]); }
+	if (cc._s32 [3] != 0) { std::swap (lhs._x [3], rhs._x [3]); }
+	return std::make_tuple (lhs, rhs);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto     inv = _mm_and_ps (_mm_xor_ps (lhs, rhs), cond);
+	return std::make_tuple (
+		_mm_xor_ps (lhs, inv),
+		_mm_xor_ps (rhs, inv)
+	);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const auto     cu32 = vreinterpretq_u32_f32 (cond);
+	return std::make_tuple (
+		vbslq_f32 (cu32, rhs, lhs),
+		vbslq_f32 (cu32, lhs, rhs)
+	);
+#endif // fstb_ARCHI
 }
 
 

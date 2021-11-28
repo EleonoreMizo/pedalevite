@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "fstb/DataAlign.h"
 #include "fstb/def.h"
+#include "fstb/Vf32.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/pi/phase1/PhasedVoice.h"
 
@@ -715,7 +716,7 @@ void	PhasedVoice::process_block_dist_mono (float dst_ptr [], int nbr_spl)
 
 		x = fstb::limit (x, mi, ma);
 		const auto     t_0 = x.is_lt_0 ();
-		const auto     c   = fstb::ToolsSimd::select (t_0, c_n, c_p);
+		const auto     c   = fstb::select (t_0, c_n, c_p);
 		x.mac (c, x * x);
 
 		x.store (dst_ptr + pos);

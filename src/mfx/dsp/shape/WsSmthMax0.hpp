@@ -22,8 +22,6 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
-
 #include <cassert>
 
 
@@ -92,8 +90,8 @@ void  WsSmthMax0 <A>::process_block (float dst_ptr [], const float src_ptr [], i
 		const auto     cmp_m = (x < ma_2);
 		auto           x1 = x + a_2;
 		x1 = x1 * x1 * a_inv_2;
-		x  = fstb::ToolsSimd::select (cmp_p, x1  , x);
-		x  = fstb::ToolsSimd::select (cmp_m, zero, x);
+		x  = fstb::select (cmp_p, x1  , x);
+		x  = fstb::select (cmp_m, zero, x);
 		VD::store_f32 (dst_ptr + pos, x);
 	}
 }

@@ -132,14 +132,14 @@ fstb::Vf32	CompexGainFnc::compute_gain (const fstb::Vf32 env_2l2)
 	const auto     tst_pos  = el2.is_lt_0 ();
 	auto           ratio_lo = fstb::Vf32 (_ratio_lo);
 	auto           ratio_hi = fstb::Vf32 (_ratio_hi);
-	const auto     ratio    = fstb::ToolsSimd::select (tst_pos, ratio_lo, ratio_hi);
+	const auto     ratio    = fstb::select (tst_pos, ratio_lo, ratio_hi);
 	auto           linear   = el2 * ratio;
 
 	// Selects result
 	const auto     knee_th_abs = fstb::Vf32 (_knee_th_abs);
 	const auto     el2_abs     = fstb::abs (el2);
 	const auto     tst_knee    = (el2_abs < knee_th_abs);
-	const auto     vl2         = fstb::ToolsSimd::select (tst_knee, poly, linear);
+	const auto     vl2         = fstb::select (tst_knee, poly, linear);
 
 	// Computes and limits gain
 	auto           gain_l2     = vl2 - el2;

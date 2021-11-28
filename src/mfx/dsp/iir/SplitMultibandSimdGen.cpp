@@ -1866,7 +1866,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 
 			if (nbr_save_p2 == 1)
 			{
-				m_code += "\tx = fstb::ToolsSimd::select (mask, x_save, x);\n";
+				m_code += "\tx = fstb::select (mask, x_save, x);\n";
 			}
 			else
 			{
@@ -1930,7 +1930,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 			}
 			const std::string e_mask = build_mask (mask_save_p1);
 			m_code += "\tmask = " + e_mask + ";\n";
-			m_code += "\tx    = fstb::ToolsSimd::select (mask, x_save, x);\n";
+			m_code += "\tx    = fstb::select (mask, x_save, x);\n";
 		}
 
 		++ nbr_ap1;
@@ -1965,7 +1965,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 			}
 			const std::string e_mask = build_mask (mask_save_bf);
 			m_code += "\tmask = " + e_mask + ";\n";
-			m_code += "\tx    = fstb::ToolsSimd::select (mask, x_save, x);\n";
+			m_code += "\tx    = fstb::select (mask, x_save, x);\n";
 		}
 	}
 

@@ -184,10 +184,8 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 
 	// delta >  0 (attack)       ---> coef = _coef_atk
 	// delta <= 0 (release/hold) ---> coef = _coef_rls
-	const auto     coef_r_cur =
-		fstb::ToolsSimd::select (hold_state, zero, coef_r);
-	auto           coef       =
-		fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r_cur);
+	const auto     coef_r_cur = fstb::select (hold_state, zero, coef_r);
+	auto           coef       = fstb::select (delta_gt_0, coef_a, coef_r_cur);
 
 	// state += coef * (x - state)
 	state.mac (delta, coef);
@@ -206,7 +204,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls
 		const auto     delta_lt_0 = delta.is_lt_0 ();
-		coef = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
+		coef = fstb::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (x - state)
 		state.mac (delta, coef);
@@ -229,7 +227,7 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in) noexcept
 	{ \
 		delta = state##flt - state##fltn; \
 		const auto     delta_lt_0 = delta.is_lt_0 (); \
-		coef  = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
+		coef  = fstb::select (delta_lt_0, coef_r, coef_a); \
 		state##fltn.mac (delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_RESULT( ord) \
@@ -279,8 +277,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 			const auto     state0 = fstb::Vf32 (in_ptr [pos]);
 			assert (test_ge_0 (state0));
 
-			const auto     coef_r_cur =
-				fstb::ToolsSimd::select (hold_state, zero, coef_r);
+			const auto     coef_r_cur = fstb::select (hold_state, zero, coef_r);
 
 			auto           delta      = state0 - state1;
 
@@ -288,8 +285,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 			// delta <= 0 (release/hold) ---> coef = _coef_rls or 0
 			auto           delta_gt_0 = (delta > zero);
 			hold_state |= delta_gt_0;
-			auto           coef       =
-				fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r_cur);
+			auto           coef = fstb::select (delta_gt_0, coef_a, coef_r_cur);
 
 			// state += coef * (in - state)
 			state1.mac (delta, coef);

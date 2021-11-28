@@ -35,6 +35,8 @@ http://www.wtfpl.net/ for more details.
 	#error
 #endif
 
+#include <tuple>
+
 #include <cstdint>
 
 
@@ -138,6 +140,8 @@ public:
 	               or_h () const noexcept;
 	fstb_FORCEINLINE unsigned int
 	               movemask () const noexcept;
+	fstb_FORCEINLINE int
+	               count_bits () const noexcept;
 
 	static fstb_FORCEINLINE Vs32
 	               zero () noexcept;
@@ -177,7 +181,7 @@ private:
 
 
 
-/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+/*\\\ GLOBAL OPERATORS AND FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
@@ -204,6 +208,8 @@ fstb_FORCEINLINE Vs32 abs (const Vs32 &v) noexcept;
 fstb_FORCEINLINE Vs32 min (const Vs32 &lhs, const Vs32 &rhs) noexcept;
 fstb_FORCEINLINE Vs32 max (const Vs32 &lhs, const Vs32 &rhs) noexcept;
 fstb_FORCEINLINE Vs32 limit (const Vs32 &v, const Vs32 &mi, const Vs32 &ma) noexcept;
+fstb_FORCEINLINE Vs32 select (const Vs32 &cond, const Vs32 &v_t, const Vs32 &v_f) noexcept;
+fstb_FORCEINLINE std::tuple <Vs32, Vs32> swap_if (const Vs32 &cond, Vs32 lhs, Vs32 rhs) noexcept;
 
 
 

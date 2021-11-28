@@ -22,8 +22,6 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
-
 #include <cassert>
 #include <cmath>
 
@@ -90,7 +88,7 @@ void  WsSmthAbs <A>::process_block (float dst_ptr [], const float src_ptr [], in
 		const auto     xabs = fstb::abs (x);
 		const auto     cmp  = (x < a_2);
 		const auto     x1   = x * x * a_inv + a_4;
-		x = fstb::ToolsSimd::select (cmp, xabs, x1);
+		x = fstb::select (cmp, xabs, x1);
 		VD::store_f32 (dst_ptr + pos, x);
 	}
 }

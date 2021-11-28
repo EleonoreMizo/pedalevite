@@ -48,7 +48,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 	}
 	_z1 [2] = x;
 	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
-	x    = fstb::ToolsSimd::select (mask, x_save, x);
+	x    = fstb::select (mask, x_save, x);
 	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
 
 	// Stage 1
@@ -121,7 +121,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 	}
 	_z1 [9] = x;
 	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
-	x    = fstb::ToolsSimd::select (mask, x_save, x);
+	x    = fstb::select (mask, x_save, x);
 	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
 
 	// Stage 3
@@ -175,7 +175,7 @@ fstb::Vf32	SplitterSimd::Filter0::process_sample (fstb::Vf32 x) noexcept
 	}
 	_z1 [2] = x;
 	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
-	x    = fstb::ToolsSimd::select (mask, x_save, x);
+	x    = fstb::select (mask, x_save, x);
 	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
 
 	return x;

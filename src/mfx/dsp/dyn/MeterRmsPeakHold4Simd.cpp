@@ -283,10 +283,10 @@ void	MeterRmsPeakHold4Simd::process_sample_peak (fstb::Vf32 x_a, fstb::Vf32 &pea
 	const auto     hc_gt_0  = (hold_cnt > zero);
 	const auto     ph_cond  = xa_gt_ph | hc_gt_0;
 
-	const auto     hcm1     = fstb::ToolsSimd::select (hc_gt_0, hold_cnt - step, hold_cnt);
-	hold_cnt  = fstb::ToolsSimd::select (xa_gt_ph, hold_time, hcm1);
+	const auto     hcm1     = fstb::select (hc_gt_0, hold_cnt - step, hold_cnt);
+	hold_cnt  = fstb::select (xa_gt_ph, hold_time, hcm1);
 
-	const auto     coef     = fstb::ToolsSimd::select (ph_cond, zero, coef_r);
+	const auto     coef     = fstb::select (ph_cond, zero, coef_r);
 	peak_hold = fstb::max (x_a, peak_hold);
 	peak_hold *= one - coef;
 }
@@ -302,7 +302,7 @@ void	MeterRmsPeakHold4Simd::process_sample_rms (fstb::Vf32 x, fstb::Vf32 &rms_sq
 	const auto     x_2      = x * x;
 	const auto     delta    = x_2 - _rms_sq;
 	const auto     del_lt_0 = delta.is_lt_0 ();
-	const auto     coef     = fstb::ToolsSimd::select (del_lt_0, coef_r2, coef_a2);
+	const auto     coef     = fstb::select (del_lt_0, coef_r2, coef_a2);
 	rms_sq.mac (delta, coef);
 }
 
