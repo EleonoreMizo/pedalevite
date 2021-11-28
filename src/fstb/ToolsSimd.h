@@ -106,26 +106,6 @@ public:
 	               select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept;
 	static inline std::tuple <Vf32, Vf32>
 	               swap_cond (Vf32 cond, Vf32 lhs, Vf32 rhs) noexcept;
-	static inline Vs32
-	               cmp_gt_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               cmp_lt_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               cmp_lt0_s32 (Vs32 lhs) noexcept;
-	static inline Vs32
-	               cmp_eq_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               cmp_ne_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               and_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               or_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               xor_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline bool
-	               and_h (Vs32 cond) noexcept;
-	static inline bool
-	               or_h (Vs32 cond) noexcept;
 	static inline int
 	               count_bits (Vs32 x) noexcept;
 	static inline Vf32

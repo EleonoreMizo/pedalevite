@@ -443,7 +443,8 @@ Vf32	Approx::log2_crude (Vf32 val) noexcept
 
 	const auto     c0 = Vs32 (0x43800000);
 	auto           i  = ToolsSimd::cast_s32 (val);
-	i   = ToolsSimd::or_s32 (i >> 8, c0);
+	i >>= 8;
+	i  |= c0;
 	const auto     d  = Vf32 (382.95695f);
 	val = ToolsSimd::cast_f32 (i) - d;
 
@@ -522,14 +523,9 @@ Vf32	Approx::exp2_crude (Vf32 val) noexcept
 
 	auto           i  = ToolsSimd::cast_s32 (val + d);
 
-	/*** To do: this could be optimised with better ToolsSimd primitives ***/
-	const auto     tg = ToolsSimd::cmp_gt_s32 (i, c8);
-	const auto     te = ToolsSimd::cmp_eq_s32 (i, c8);
-	const auto     t  = ToolsSimd::or_s32 (tg, te);
-	i = fstb::ToolsSimd::and_s32 (i, t);
-
+	i  &= (i >= c8);
 	i <<= 8;
-	i = fstb::ToolsSimd::and_s32 (i, m);
+	i  &= m;
 	val = ToolsSimd::cast_f32 (i);
 
 	return val;

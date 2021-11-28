@@ -22,7 +22,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vs32.h"
 
 #include <cassert>
 
@@ -82,16 +82,16 @@ void  WsBadmood::process_block (float dst_ptr [], const float src_ptr [], int nb
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);
-		auto           exp_int = fstb::ToolsSimd::and_s32 (x_int, exp_mask);
-		auto           rem     = fstb::ToolsSimd::and_s32 (x_int, exp_lsb);
-		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
+		auto           exp_int = x_int & exp_mask;
+		const auto     rem     = x_int & exp_lsb;
+		const auto     cond    = (exp_int > exp_lsb);
 		x_int    -= exp_int;
 		exp_int >>= 1;
-		exp_int   = fstb::ToolsSimd::and_s32 (exp_int, exp_mask);
+		exp_int  &= exp_mask;
 		exp_int  += exp_add;
 		x_int    += exp_int;
-		x_int     = fstb::ToolsSimd::xor_s32 (x_int, rem << 8);
-		x_int     = fstb::ToolsSimd::and_s32 (x_int, cond);
+		x_int    ^= rem << 8;
+		x_int    &= cond;
 		VD::store_s32 (dst_ptr + pos, x_int);
 	}
 }

@@ -22,7 +22,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vs32.h"
 
 #include <cassert>
 
@@ -85,7 +85,7 @@ void	WsLight2::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);
-		auto           mnt_int = fstb::ToolsSimd::and_s32 (x_int, mnt_mask);
+		auto           mnt_int = x_int & mnt_mask;
 
 		// m - a * (m - m^2)^2 
 		auto           m  = mnt_int;
@@ -97,10 +97,10 @@ void	WsLight2::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 		mx >>= 30 - 18;      // 0:18
 		mx *= a;             // 0:23
 		mnt_int -= mx;       // 0:23
-		assert (! fstb::ToolsSimd::or_h (fstb::ToolsSimd::cmp_lt0_s32 (mnt_int)));
+		assert (! mnt_int.is_lt_0 ().or_h ());
 
-		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
-		x_int = fstb::ToolsSimd::or_s32 (x_int, mnt_int);
+		x_int &= mnt_invm;
+		x_int |= mnt_int;
 		VD::store_s32 (dst_ptr + pos, x_int);
 	}
 }

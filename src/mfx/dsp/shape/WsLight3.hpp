@@ -22,7 +22,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
+#include "fstb/Vs32.h"
 
 #include <cassert>
 
@@ -65,7 +65,7 @@ void	WsLight3::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);
 		// Clears the mantissa
-		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
+		x_int &= mnt_invm;
 		VD::store_s32 (dst_ptr + pos, x_int);
 	}
 }

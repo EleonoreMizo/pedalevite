@@ -96,6 +96,8 @@ public:
 
 	fstb_FORCEINLINE
 	               operator Vs32Native () const noexcept { return _x; }
+	fstb_FORCEINLINE explicit
+	               operator bool () const noexcept;
 
 	fstb_FORCEINLINE Vs32 &
 	               operator += (const Vs32Native &other) noexcept;
@@ -105,9 +107,37 @@ public:
 	               operator *= (const Vs32Native &other) noexcept;
 
 	fstb_FORCEINLINE Vs32 &
+	               operator &= (const Vs32Native &other) noexcept;
+	fstb_FORCEINLINE Vs32 &
+	               operator |= (const Vs32Native &other) noexcept;
+	fstb_FORCEINLINE Vs32 &
+	               operator ^= (const Vs32Native &other) noexcept;
+
+	fstb_FORCEINLINE Vs32 &
 	               operator <<= (int imm) noexcept;
 	fstb_FORCEINLINE Vs32 &
 	               operator >>= (int imm) noexcept;
+
+	fstb_FORCEINLINE Vs32
+	               operator - () const noexcept;
+	fstb_FORCEINLINE Vs32
+	               operator ~ () const noexcept;
+	fstb_FORCEINLINE Vs32
+	               is_lt_0 () const noexcept;
+
+	fstb_FORCEINLINE int32_t
+	               sum_h () const noexcept;
+	fstb_FORCEINLINE int32_t
+	               min_h () const noexcept;
+	fstb_FORCEINLINE int32_t
+	               max_h () const noexcept;
+
+	fstb_FORCEINLINE bool
+	               and_h () const noexcept;
+	fstb_FORCEINLINE bool
+	               or_h () const noexcept;
+	fstb_FORCEINLINE unsigned int
+	               movemask () const noexcept;
 
 	static fstb_FORCEINLINE Vs32
 	               zero () noexcept;
@@ -143,9 +173,6 @@ private:
 
 private:
 
-	bool           operator == (const Vs32 &other) const = delete;
-	bool           operator != (const Vs32 &other) const = delete;
-
 }; // class Vs32
 
 
@@ -157,11 +184,26 @@ private:
 fstb_FORCEINLINE Vs32 operator + (Vs32 lhs, const Vs32 &rhs) noexcept;
 fstb_FORCEINLINE Vs32 operator - (Vs32 lhs, const Vs32 &rhs) noexcept;
 fstb_FORCEINLINE Vs32 operator * (Vs32 lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator & (Vs32 lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator | (Vs32 lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator ^ (Vs32 lhs, const Vs32 &rhs) noexcept;
 
 template <typename T>
 fstb_FORCEINLINE Vs32 operator << (Vs32 lhs, T rhs) noexcept;
 template <typename T>
 fstb_FORCEINLINE Vs32 operator >> (Vs32 lhs, T rhs) noexcept;
+
+fstb_FORCEINLINE Vs32 operator == (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator != (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator <  (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator <= (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator >  (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 operator >= (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+
+fstb_FORCEINLINE Vs32 abs (const Vs32 &v) noexcept;
+fstb_FORCEINLINE Vs32 min (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 max (const Vs32 &lhs, const Vs32 &rhs) noexcept;
+fstb_FORCEINLINE Vs32 limit (const Vs32 &v, const Vs32 &mi, const Vs32 &ma) noexcept;
 
 
 
