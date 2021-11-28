@@ -452,7 +452,6 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 
 #if defined (fstb_HAS_SIMD)
 
-	using TS = fstb::ToolsSimd;
 	const auto     angle_norm_v = fstb::Vf32 (angle_norm);
 	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
@@ -467,7 +466,7 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 		const auto     angle = fstb::Approx::atan2_3th (di, dr);
 		const auto     arg_n = angle * angle_norm_v;
 		const auto     mag2  = b1r * b1r + b1i * b1i;
-		const auto     mag   = TS::sqrt_approx (mag2);
+		const auto     mag   = mag2.sqrt_approx ();
 
 		mag  .storeu (&slot._buf_freeze [bin_idx]);
 		arg_n.storeu (&slot._buf_freeze [img_idx]);

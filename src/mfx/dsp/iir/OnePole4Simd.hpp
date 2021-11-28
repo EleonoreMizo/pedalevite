@@ -441,7 +441,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 			const auto     src_1 = fstb::Vf32::loadu_pair (&in_ptr [index + 2]);
 #else
 			const auto     src_0 = fstb::Vf32::loadu (&in_ptr [index]);
-			const auto     src_1 = fstb::ToolsSimd::swap_2f32 (src_0);
+			const auto     src_1 = src_0.swap_pairs ();
 #endif
 
 			auto           x = src_0;

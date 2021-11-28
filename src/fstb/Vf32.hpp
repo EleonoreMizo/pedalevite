@@ -27,6 +27,7 @@ http://www.wtfpl.net/ for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cfloat>
 #include <cmath>
 
 
@@ -431,6 +432,21 @@ Vf32	Vf32::reverse () const noexcept
 
 
 
+Vf32	Vf32::swap_pairs () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { { _x [2], _x [3], _x [0], _x [1] } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_shuffle_ps (_x, _x, (2<<0) + (3<<2) + (0<<4) + (1<<6));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const float32x2_t v01 = vget_low_f32 (_x);
+	const float32x2_t v23 = vget_high_f32 (_x);
+	return vcombine_f32 (v23, v01);
+#endif // fstb_ARCHI
+}
+
+
+
 // Assumes "to nearest" rounding mode on x86
 Vf32	Vf32::round () const noexcept
 {
@@ -489,6 +505,81 @@ Vf32	Vf32::rcp_approx2 () const noexcept
 	r = vmulq_f32 (vrecpsq_f32 (_x, r), r);
 	r = vmulq_f32 (vrecpsq_f32 (_x, r), r);
 	return r;
+#endif // fstb_ARCHI
+}
+
+
+
+Vf32	Vf32::div_approx (const Vf32 &d) const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { {
+		_x [0] / d._x [0],
+		_x [1] / d._x [1],
+		_x [2] / d._x [2],
+		_x [3] / d._x [3]
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_div_ps (_x, d._x);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return _x * d.rcp_approx ();
+#endif // fstb_ARCHI
+}
+
+
+
+Vf32	Vf32::sqrt_approx () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { {
+		sqrtf (_x [0]),
+		sqrtf (_x [1]),
+		sqrtf (_x [2]),
+		sqrtf (_x [3])
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	// Zero and denormal values will produce INF with _mm_rsqrt_ps(), so
+	// we need a mask.
+	const __m128   z_flag  = _mm_cmplt_ps (_x, _mm_set1_ps (FLT_MIN));
+	const __m128   rsqrt_a = _mm_rsqrt_ps (_x);
+	const __m128   sqrt_a  = _mm_mul_ps (_x, rsqrt_a);
+	const __m128   sqrt_m  = _mm_andnot_ps (z_flag, sqrt_a);
+	return sqrt_m;
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const uint32x4_t  nz_flag = vtstq_u32 (
+		vreinterpretq_u32_f32 (_x),
+		vreinterpretq_u32_f32 (_x)
+	);
+	auto           rs      = vrsqrteq_f32 (_x);
+	rs *= vrsqrtsq_f32 (rs * float32x4_t (_x), rs);
+	const auto     sqrt_a  = rs * float32x4_t (_x);
+	return vreinterpretq_f32_u32 (vandq_u32 (
+		vreinterpretq_u32_f32 (sqrt_a),
+		nz_flag
+	));
+#endif // fstb_ARCHI
+}
+
+
+
+Vf32	Vf32::rsqrt () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { {
+		1.f / sqrtf (_x [0]),
+		1.f / sqrtf (_x [1]),
+		1.f / sqrtf (_x [2]),
+		1.f / sqrtf (_x [3])
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	__m128         rs = _mm_rsqrt_ps (_x);
+	rs = _mm_set1_ps (0.5f) * rs * (_mm_set1_ps (3) - __m128 (_x) * rs * rs);
+	return rs;
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	auto           rs = vrsqrteq_f32 (_x);
+	rs *= vrsqrtsq_f32 (rs * float32x4_t (_x), rs);
+	rs *= vrsqrtsq_f32 (rs * float32x4_t (_x), rs);
+	return rs;
 #endif // fstb_ARCHI
 }
 
@@ -575,7 +666,7 @@ std::tuple <float, float>	Vf32::extract_pair () const noexcept
 
 // <0> = v0 | v1 | v0 | v1
 // <1> = v2 | v3 | v2 | v3
-std::tuple <Vf32, Vf32>	Vf32::spread_pair () const noexcept
+std::tuple <Vf32, Vf32>	Vf32::spread_pairs () const noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	return std::make_tuple (
@@ -1295,6 +1386,36 @@ std::tuple <Vf32, Vf32> swap_if (const Vf32 &cond, Vf32 lhs, Vf32 rhs) noexcept
 		vbslq_f32 (cu32, rhs, lhs),
 		vbslq_f32 (cu32, lhs, rhs)
 	);
+#endif // fstb_ARCHI
+}
+
+
+
+Vf32 sqrt (const Vf32 &v) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { {
+		sqrtf (v._x [0]),
+		sqrtf (v._x [1]),
+		sqrtf (v._x [2]),
+		sqrtf (v._x [3])
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_sqrt_ps (v);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const uint32x4_t  nz_flag = vtstq_u32 (
+		vreinterpretq_u32_f32 (v),
+		vreinterpretq_u32_f32 (v)
+	);
+	float32x4_t    rs      = vrsqrteq_f32 (v);
+	rs *= vrsqrtsq_f32 (v, rs * rs);
+	rs *= vrsqrtsq_f32 (v, rs * rs);
+	rs *= vrsqrtsq_f32 (v, rs * rs);
+	const auto     sqrt_a  = rs * float32x4_t (v);
+	return vreinterpretq_f32_u32 (vandq_u32 (
+		vreinterpretq_u32_f32 (sqrt_a),
+		nz_flag
+	));
 #endif // fstb_ARCHI
 }
 

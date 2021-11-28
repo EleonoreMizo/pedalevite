@@ -217,7 +217,7 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 
 			// g0 = lvl / max (env, lvl)
 			const auto     e2 = fstb::Vf32::set_pair (e2_beg, e2_end);
-			const auto     e  = fstb::ToolsSimd::sqrt_approx (e2);
+			const auto     e  = e2.sqrt_approx ();
 			const auto     et = fstb::max (e, lvl);
 			const auto     g0 = lvl * et.rcp_approx ();
 

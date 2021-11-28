@@ -746,7 +746,7 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 		const auto     h2_n  = h2_nc * h2_nc + h2_ns * h2_ns;
 		const auto     h2_d  = h2_dc * h2_dc + h2_ds * h2_ds;
 		const auto     h2    = h2_n / h2_d;
-		const auto     h_abs = fstb::ToolsSimd::sqrt (h2);
+		const auto     h_abs = fstb::sqrt (h2);
 
 		auto           l     = fstb::Vf32::loadu_part (&lvl_arr [f_idx], ns);
 		l *= h_abs;

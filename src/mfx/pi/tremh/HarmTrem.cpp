@@ -293,19 +293,19 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 	// vr = m+ * lerp (lfo+, lfo-) + m- * lerp (lfo-, lfo+)
 	// v = m+ * lfo+ + m- * lfo-   |   m+ * lerp (lfo+, lfo-) + m- * lerp (lfo-, lfo+)
 	auto           vol_r  =
-		vol + v_ster * (fstb::ToolsSimd::swap_2f32 (vol) - vol);
+		vol + v_ster * (vol.swap_pairs () - vol);
 
 	auto           v_lo_l = vol   * v_lo_m;
 	auto           v_lo_r = vol_r * v_lo_m;
-	v_lo_l += fstb::ToolsSimd::swap_2f32 (v_lo_l);
-	v_lo_r += fstb::ToolsSimd::swap_2f32 (v_lo_r);
+	v_lo_l += v_lo_l.swap_pairs ();
+	v_lo_r += v_lo_r.swap_pairs ();
 	auto           v_lo   = fstb::ToolsSimd::interleave_2f32_lo (v_lo_l, v_lo_r);
 	v_lo += v_lo_o;
 
 	auto           v_hi_l = vol   * v_hi_m;
 	auto           v_hi_r = vol_r * v_hi_m;
-	v_hi_l += fstb::ToolsSimd::swap_2f32 (v_hi_l);
-	v_hi_r += fstb::ToolsSimd::swap_2f32 (v_hi_r);
+	v_hi_l += v_hi_l.swap_pairs ();
+	v_hi_r += v_hi_r.swap_pairs ();
 	auto           v_hi   = fstb::ToolsSimd::interleave_2f32_lo (v_hi_l, v_hi_r);
 	v_hi += v_hi_o;
 
@@ -316,7 +316,7 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 	v_to_b = fstb::max (v_to_b, zero);
 	v_to_b = one + v_to_b * v_to_b * (v_to_b * two - three);
 	fstb::Vf32     v_to_t;
-	std::tie (v_to_b, v_to_t) = v_to_b.spread_pair ();
+	std::tie (v_to_b, v_to_t) = v_to_b.spread_pairs ();
 
 	v_lo *= v_to_b;
 	v_hi *= v_to_t;

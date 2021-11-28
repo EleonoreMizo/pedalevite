@@ -42,21 +42,6 @@ namespace fstb
 
 
 
-Vf32	ToolsSimd::swap_2f32 (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { { v._x [2], v._x [3], v._x [0], v._x [1] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (v, v, (2<<0) + (3<<2) + (0<<4) + (1<<6));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const float32x2_t v01 = vget_low_f32 (v);
-	const float32x2_t v23 = vget_high_f32 (v);
-	return vcombine_f32 (v23, v01);
-#endif // fstb_ARCHI
-}
-
-
-
 Vs32	ToolsSimd::reverse_s32 (Vs32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -118,88 +103,6 @@ Vf32	ToolsSimd::fmsub (Vf32 x, Vf32 a, Vf32 b) noexcept
 
 
 
-Vf32	ToolsSimd::div_approx (Vf32 n, Vf32 d) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		n._x [0] / d._x [0],
-		n._x [1] / d._x [1],
-		n._x [2] / d._x [2],
-		n._x [3] / d._x [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_div_ps (n, d);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return n * d.rcp_approx ();
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::sqrt (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		sqrtf (v._x [0]),
-		sqrtf (v._x [1]),
-		sqrtf (v._x [2]),
-		sqrtf (v._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_sqrt_ps (v);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const uint32x4_t  nz_flag = vtstq_u32 (
-		vreinterpretq_u32_f32 (v),
-		vreinterpretq_u32_f32 (v)
-	);
-	float32x4_t    rs      = vrsqrteq_f32 (v);
-	rs *= vrsqrtsq_f32 (v, rs * rs);
-	rs *= vrsqrtsq_f32 (v, rs * rs);
-	rs *= vrsqrtsq_f32 (v, rs * rs);
-	const auto     sqrt_a  = rs * float32x4_t (v);
-	return vreinterpretq_f32_u32 (vandq_u32 (
-		vreinterpretq_u32_f32 (sqrt_a),
-		nz_flag
-	));
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::sqrt_approx (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		sqrtf (v._x [0]),
-		sqrtf (v._x [1]),
-		sqrtf (v._x [2]),
-		sqrtf (v._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	// Zero and denormal values will produce INF with _mm_rsqrt_ps(), so
-	// we need a mask.
-	const __m128   z_flag  = _mm_cmplt_ps (v, _mm_set1_ps (FLT_MIN));
-	const __m128   rsqrt_a = _mm_rsqrt_ps (v);
-	const __m128   sqrt_a  = _mm_mul_ps (v, rsqrt_a);
-	const __m128   sqrt_m  = _mm_andnot_ps (z_flag, sqrt_a);
-	return sqrt_m;
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const uint32x4_t  nz_flag = vtstq_u32 (
-		vreinterpretq_u32_f32 (v),
-		vreinterpretq_u32_f32 (v)
-	);
-	auto           rs      = vrsqrteq_f32 (v);
-	rs *= vrsqrtsq_f32 (rs * float32x4_t (v), rs);
-	const auto     sqrt_a  = rs * float32x4_t (v);
-	return vreinterpretq_f32_u32 (vandq_u32 (
-		vreinterpretq_u32_f32 (sqrt_a),
-		nz_flag
-	));
-#endif // fstb_ARCHI
-}
-
-
-
 Vf32	ToolsSimd::rsqrt_approx (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -229,29 +132,6 @@ Vf32	ToolsSimd::rsqrt_approx (Vf32 v) noexcept
 	return _mm_rsqrt_ps (v);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	auto           rs = vrsqrteq_f32 (v);
-	rs *= vrsqrtsq_f32 (rs * float32x4_t (v), rs);
-	return rs;
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::rsqrt_approx2 (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		1.f / sqrtf (v._x [0]),
-		1.f / sqrtf (v._x [1]),
-		1.f / sqrtf (v._x [2]),
-		1.f / sqrtf (v._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	__m128         rs = _mm_rsqrt_ps (v);
-	rs = _mm_set1_ps (0.5f) * rs * (_mm_set1_ps (3) - __m128 (v) * rs * rs);
-	return rs;
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	auto           rs = vrsqrteq_f32 (v);
-	rs *= vrsqrtsq_f32 (rs * float32x4_t (v), rs);
 	rs *= vrsqrtsq_f32 (rs * float32x4_t (v), rs);
 	return rs;
 #endif // fstb_ARCHI

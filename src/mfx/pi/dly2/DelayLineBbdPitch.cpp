@@ -483,7 +483,7 @@ void	DelayLineBbdPitch::finish_processing (float * const out_ptr_arr [2], const 
 
 #if defined (fstb_HAS_SIMD)
 		auto           env      = fstb::Vf32::set_pair (env_beg, env_end);
-		env  = fstb::ToolsSimd::sqrt_approx (env);
+		env  = env.sqrt_approx ();
 		env *= fstb::Vf32 (_duck_sens_inv);
 		const auto     amt      =
 			fstb::Vf32::set_pair (duck_amt_beg, duck_amt_end);

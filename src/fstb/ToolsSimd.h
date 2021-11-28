@@ -71,9 +71,6 @@ public:
 
 	static void    disable_denorm () noexcept;
 
-	static inline Vf32
-	               swap_2f32 (Vf32 v) noexcept;
-
 	static inline Vs32
 	               reverse_s32 (Vs32 x) noexcept;
 
@@ -82,15 +79,7 @@ public:
 	static inline Vf32
 	               fmsub (Vf32 x, Vf32 a, Vf32 b) noexcept;
 	static inline Vf32
-	               div_approx (Vf32 n, Vf32 d) noexcept;
-	static inline Vf32
-	               sqrt (Vf32 v) noexcept;
-	static inline Vf32
-	               sqrt_approx (Vf32 v) noexcept;
-	static inline Vf32
 	               rsqrt_approx (Vf32 v) noexcept;
-	static inline Vf32
-	               rsqrt_approx2 (Vf32 v) noexcept;
 	template <typename P>
 	static fstb_FORCEINLINE Vf32
 	               log2_base (Vf32 x, P poly) noexcept;

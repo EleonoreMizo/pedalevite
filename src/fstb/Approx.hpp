@@ -710,6 +710,7 @@ T	Approx::tan_mystran (T x) noexcept
 
 	const auto     x2 = x * x;
 	const auto     s  = Poly::horner (x2, c1, c3, c5, c7) * x;
+	using std::sqrt;
 	const auto     c  = T (sqrt (1 - s * s));
 
 	return s / c;
@@ -725,7 +726,7 @@ Vf32	Approx::tan_mystran (Vf32 x) noexcept
 	const auto     x2 = x * x;
 	const auto     s  = Poly::horner (x2, c1, c3, c5, c7) * x;
 
-	return s * ToolsSimd::rsqrt_approx2 (c1 - s * s);
+	return s * (c1 - s * s).rsqrt ();
 }
 
 
@@ -1229,12 +1230,13 @@ float	Approx::exp2_base (float val, P poly) noexcept
 template <typename T>
 T	Approx::tanh_from_sinh (T x) noexcept
 {
+	using std::sqrt;
 	return x / T (sqrt (T (1) + x * x));
 }
 
 Vf32	Approx::tanh_from_sinh (Vf32 x) noexcept
 {
-	return x * ToolsSimd::rsqrt_approx2 (x * x + Vf32 (1));
+	return x * (x * x + Vf32 (1)).rsqrt ();
 }
 
 

@@ -229,7 +229,7 @@ fstb::Vf32	MeterRmsPeakHold4Simd::get_rms () const noexcept
 {
 	const auto     rms_sq = fstb::Vf32::load (&_rms_sq);
 
-	return fstb::ToolsSimd::sqrt_approx (rms_sq);
+	return rms_sq.sqrt_approx ();
 }
 
 

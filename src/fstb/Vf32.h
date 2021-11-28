@@ -140,11 +140,19 @@ public:
 	fstb_FORCEINLINE Vf32
 	               reverse () const noexcept;
 	fstb_FORCEINLINE Vf32
+	               swap_pairs () const noexcept;
+	fstb_FORCEINLINE Vf32
 	               round () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               rcp_approx () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               rcp_approx2 () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               div_approx (const Vf32 &d) const noexcept;
+	fstb_FORCEINLINE Vf32
+	               sqrt_approx () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               rsqrt () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               signbit () const noexcept;
 	fstb_FORCEINLINE Vf32
@@ -155,7 +163,7 @@ public:
 	fstb_FORCEINLINE std::tuple <float, float>
 	               extract_pair () const noexcept;
 	fstb_FORCEINLINE std::tuple <Vf32, Vf32>
-	               spread_pair () const noexcept;
+	               spread_pairs () const noexcept;
 
 	fstb_FORCEINLINE float
 	               sum_h () const noexcept;
@@ -270,6 +278,9 @@ fstb_FORCEINLINE Vf32 max (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 limit (const Vf32 &v, const Vf32 &mi, const Vf32 &ma) noexcept;
 fstb_FORCEINLINE Vf32 select (const Vf32 &cond, const Vf32 &v_t, const Vf32 &v_f) noexcept;
 fstb_FORCEINLINE std::tuple <Vf32, Vf32> swap_if (const Vf32 &cond, Vf32 lhs, Vf32 rhs) noexcept;
+fstb_FORCEINLINE Vf32 sqrt (const Vf32 &v) noexcept;
+
+
 
 }  // namespace fstb
 

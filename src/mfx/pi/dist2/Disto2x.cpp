@@ -405,9 +405,8 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 
 		// Fix gain calculation
 #if 1
-		const auto     lvl_sq   =
-			fstb::Vf32::set_pair (lvl_pre_sq, lvl_post_sq);
-		const auto     lvl      = fstb::ToolsSimd::sqrt (lvl_sq);
+		const auto     lvl_sq   = fstb::Vf32::set_pair (lvl_pre_sq, lvl_post_sq);
+		const auto     lvl      = fstb::sqrt (lvl_sq);
 		const float    lvl_pre  = fstb::ToolsSimd::Shift <0>::extract (lvl);
 		const float    lvl_post = fstb::ToolsSimd::Shift <1>::extract (lvl);
 #else // Reference implementation

@@ -214,7 +214,7 @@ void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
 			fstb::Vf32::set_pair (vol_post_beg_sq, vol_post_end_sq);
 		const auto     nodiv0_v    = fstb::Vf32 (nodiv0);
 		vol_post_sq = fstb::max (vol_post_sq, nodiv0_v);
-		auto           comp_gain   = fstb::ToolsSimd::sqrt (
+		auto           comp_gain   = fstb::sqrt (
 			fstb::min (vol_pre_sq, lls_v) / vol_post_sq
 		);
 
