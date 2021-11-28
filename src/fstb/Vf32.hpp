@@ -686,9 +686,9 @@ unsigned int	Vf32::movemask () const noexcept
 	c._vf32 = _x;
 	return
 		   (c._u32 [0] >> 31)
-		| ((c._u32 [0] >> 30) & 2)
-		| ((c._u32 [0] >> 29) & 4)
-		| ((c._u32 [0] >> 28) & 8);
+		| ((c._u32 [1] >> 30) & 2)
+		| ((c._u32 [2] >> 29) & 4)
+		| ((c._u32 [3] >> 28) & 8);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return static_cast <unsigned int> (_mm_movemask_ps (_x));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
