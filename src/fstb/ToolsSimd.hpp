@@ -1057,44 +1057,6 @@ std::tuple <Vs32, Vs32>	ToolsSimd::swap_cond (Vs32 cond, Vs32 lhs, Vs32 rhs) noe
 
 
 
-Vs32	ToolsSimd::min_s32 (Vs32 lhs, Vs32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
-		std::min (lhs._x [0], rhs._x [0]),
-		std::min (lhs._x [1], rhs._x [1]),
-		std::min (lhs._x [2], rhs._x [2]),
-		std::min (lhs._x [3], rhs._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto     gt = _mm_cmpgt_epi32 (lhs, rhs);
-	return select (gt, lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vminq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
-Vs32	ToolsSimd::max_s32 (Vs32 lhs, Vs32 rhs) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
-		std::max (lhs._x [0], rhs._x [0]),
-		std::max (lhs._x [1], rhs._x [1]),
-		std::max (lhs._x [2], rhs._x [2]),
-		std::max (lhs._x [3], rhs._x [3])
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto     lt = _mm_cmplt_epi32 (lhs, rhs);
-	return select (lt, lhs, rhs);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vmaxq_s32 (lhs, rhs);
-#endif // fstb_ARCHI
-}
-
-
-
 template <int N>
 Vs32	ToolsSimd::srai_s32 (Vs32 x) noexcept
 {

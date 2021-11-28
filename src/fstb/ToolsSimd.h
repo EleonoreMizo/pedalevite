@@ -154,10 +154,6 @@ public:
 	               select (Vs32 cond, Vs32 v_t, Vs32 v_f) noexcept;
 	static inline std::tuple <Vs32, Vs32>
 	               swap_cond (Vs32 cond, Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               min_s32 (Vs32 lhs, Vs32 rhs) noexcept;
-	static inline Vs32
-	               max_s32 (Vs32 lhs, Vs32 rhs) noexcept;
 	template <int N>
 	static inline Vs32
 	               srai_s32 (Vs32 lhs) noexcept;

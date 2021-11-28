@@ -747,10 +747,10 @@ Vs32 min (const Vs32 &lhs, const Vs32 &rhs) noexcept
 		std::min (lhs._x [3], rhs._x [3])
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto     lt = (lhs < rhs);
+	const auto     gt = (lhs > rhs);
 	return _mm_or_si128 (
-		_mm_and_si128 (   lt, lhs),
-		_mm_andnot_si128 (lt, rhs)
+		_mm_and_si128 (   gt, rhs),
+		_mm_andnot_si128 (gt, lhs)
 	);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vminq_s32 (lhs, rhs);
