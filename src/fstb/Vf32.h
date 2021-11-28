@@ -136,6 +136,8 @@ public:
 	               msu (Vf32 a, Vf32 b) noexcept;
 
 	fstb_FORCEINLINE Vf32
+	               operator - () const noexcept;
+	fstb_FORCEINLINE Vf32
 	               reverse () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               round () const noexcept;

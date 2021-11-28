@@ -400,6 +400,24 @@ Vf32 &	Vf32::msu (Vf32 a, Vf32 b) noexcept
 
 
 
+Vf32	Vf32::operator - () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { {
+		-_x [0],
+		-_x [1],
+		-_x [2],
+		-_x [3]
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_xor_ps (_x, signbit_mask ());
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vnegq_f32 (_x);
+#endif // fstb_ARCHI
+}
+
+
+
 Vf32	Vf32::reverse () const noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
