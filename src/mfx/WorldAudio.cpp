@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/BitFieldSparseIterator.h"
 #include "fstb/DataAlign.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/cmd/DelayInterface.h"
 #include "mfx/piapi/BypassState.h"
 #include "mfx/piapi/ProcInfo.h"
