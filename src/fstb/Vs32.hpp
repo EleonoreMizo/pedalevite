@@ -365,6 +365,19 @@ Vs32	Vs32::is_lt_0 () const noexcept
 
 
 
+Vs32	Vs32::reverse () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { { _x [3], _x [2], _x [1], _x [0] } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_shuffle_epi32 (_x, (3<<0) + (2<<2) + (1<<4) + (0<<6));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vrev64q_s32 (vcombine_s32 (vget_high_s32 (_x), vget_low_s32 (_x)));
+#endif // fstb_ARCHI
+}
+
+
+
 int32_t	Vs32::sum_h () const noexcept
 {
 #if ! defined (fstb_HAS_SIMD)

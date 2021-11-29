@@ -558,14 +558,14 @@ fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat (const fstb::Vf
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	const auto     xx = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
+	const auto     xx = fstb::Vf32::interleave_pair_lo (x, y); // y[1 0] x[1 0]
 
 	fstb::Vf32      v1;
 	fstb::Vf32      v2;
 	iterate_parallel (xx, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	y = Mixer::mix (xx, v1, v2, v0m, v1m, v2m);
 
-	const auto     ys     = fstb::ToolsSimd::interleave_2f32_hi (y, y);
+	const auto     ys     = fstb::Vf32::interleave_pair_hi (y, y);
 
 	V128Par::store_f32 (_data._ic1eq, ic1eq);
 	V128Par::store_f32 (_data._ic2eq, ic2eq);
@@ -589,7 +589,7 @@ fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat_inc (const fstb
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	const auto     xx = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
+	const auto     xx = fstb::Vf32::interleave_pair_lo (x, y); // y[1 0] x[1 0]
 
 	fstb::Vf32      v1;
 	fstb::Vf32      v2;
@@ -597,7 +597,7 @@ fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat_inc (const fstb
 	y = Mixer::mix (xx, v1, v2, v0m, v1m, v2m);
 	increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
 
-	const auto     ys     = fstb::ToolsSimd::interleave_2f32_hi (y, y);
+	const auto     ys     = fstb::Vf32::interleave_pair_hi (y, y);
 
 	V128Par::store_f32 (_data._g0   , g0   );
 	V128Par::store_f32 (_data._g1   , g1   );
@@ -638,14 +638,14 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	do
 	{
 		auto           x = fstb::Vf32::loadu_pair (src_ptr + pos * 2);
-		x = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
+		x = fstb::Vf32::interleave_pair_lo (x, y); // y[1 0] x[1 0]
 
 		fstb::Vf32      v1;
 		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 
-		const auto      ys  = fstb::ToolsSimd::interleave_2f32_hi (y, y);
+		const auto      ys  = fstb::Vf32::interleave_pair_hi (y, y);
 		ys.storeu_pair (dst_ptr + pos * 2);
 		++ pos;
 	}
@@ -681,7 +681,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	do
 	{
 		auto           x = fstb::Vf32::loadu_pair (src_ptr + pos * 2);
-		x = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
+		x = fstb::Vf32::interleave_pair_lo (x, y); // y[1 0] x[1 0]
 
 		const auto     g0 = V128Src::load_f32 (g0_ptr + pos);
 		const auto     g1 = V128Src::load_f32 (g1_ptr + pos);
@@ -692,7 +692,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 
-		const auto     ys = fstb::ToolsSimd::interleave_2f32_hi (y, y);
+		const auto     ys = fstb::Vf32::interleave_pair_hi (y, y);
 		ys.storeu_pair (dst_ptr + pos * 2);
 		++ pos;
 	}
@@ -726,7 +726,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	do
 	{
 		auto           x = fstb::Vf32::loadu_pair (src_ptr + pos * 2);
-		x = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
+		x = fstb::Vf32::interleave_pair_lo (x, y); // y[1 0] x[1 0]
 
 		const auto     g0  = V128Src::load_f32 (g0_ptr  + pos);
 		const auto     g1  = V128Src::load_f32 (g1_ptr  + pos);
@@ -742,7 +742,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 
-		const auto     ys  = fstb::ToolsSimd::interleave_2f32_hi (y, y);
+		const auto     ys  = fstb::Vf32::interleave_pair_hi (y, y);
 		ys.storeu_pair (dst_ptr + pos * 2);
 		++ pos;
 	}
@@ -778,7 +778,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	do
 	{
 		auto           x = fstb::Vf32::loadu_pair (src_ptr + pos * 2);
-		x = fstb::ToolsSimd::interleave_2f32_lo (x, y);		// y[1 0] x[1 0]
+		x = fstb::Vf32::interleave_pair_lo (x, y); // y[1 0] x[1 0]
 
 		fstb::Vf32      v1;
 		fstb::Vf32      v2;
@@ -786,7 +786,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
 		increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
 
-		const auto     ys  = fstb::ToolsSimd::interleave_2f32_hi (y, y);
+		const auto     ys  = fstb::Vf32::interleave_pair_hi (y, y);
 		ys.storeu_pair (dst_ptr + pos * 2);
 		++ pos;
 	}

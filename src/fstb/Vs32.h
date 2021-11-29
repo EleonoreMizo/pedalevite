@@ -126,6 +126,8 @@ public:
 	               operator ~ () const noexcept;
 	fstb_FORCEINLINE Vs32
 	               is_lt_0 () const noexcept;
+	fstb_FORCEINLINE Vs32
+	               reverse () const noexcept;
 
 	fstb_FORCEINLINE int32_t
 	               sum_h () const noexcept;

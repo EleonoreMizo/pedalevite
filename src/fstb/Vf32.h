@@ -142,6 +142,16 @@ public:
 	fstb_FORCEINLINE Vf32
 	               swap_pairs () const noexcept;
 	fstb_FORCEINLINE Vf32
+	               monofy_pairs_lo () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               monofy_pairs_hi () const noexcept;
+
+	fstb_FORCEINLINE Vf32
+	               butterfly_w64 () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               butterfly_w32 () const noexcept;
+
+	fstb_FORCEINLINE Vf32
 	               round () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               rcp_approx () const noexcept;
@@ -197,6 +207,18 @@ public:
 	               set_mask (bool m0, bool m1, bool m2, bool m3) noexcept;
 	static fstb_FORCEINLINE Vf32Native
 	               signbit_mask () noexcept;
+	static fstb_FORCEINLINE Vf32
+	               interleave_pair_lo (Vf32 p0, Vf32 p1) noexcept;
+	static fstb_FORCEINLINE Vf32
+	               interleave_pair_hi (Vf32 p0, Vf32 p1) noexcept;
+	static fstb_FORCEINLINE std::tuple <Vf32, Vf32>
+	               interleave (Vf32 p0, Vf32 p1) noexcept;
+	static fstb_FORCEINLINE std::tuple <Vf32, Vf32>
+	               deinterleave (Vf32 i0, Vf32 i1) noexcept;
+	static fstb_FORCEINLINE Vf32
+	               deinterleave_lo (Vf32 i0, Vf32 i1) noexcept;
+	static fstb_FORCEINLINE Vf32
+	               deinterleave_hi (Vf32 i0, Vf32 i1) noexcept;
 
 	template <typename MEM>
 	static fstb_FORCEINLINE Vf32
@@ -222,6 +244,8 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static constexpr int32_t _sign32 = INT32_MIN;
 
 	template <typename MEM>
 	fstb_FORCEINLINE void

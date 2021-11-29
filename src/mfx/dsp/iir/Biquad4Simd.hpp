@@ -548,7 +548,7 @@ void	Biquad4Simd_Proc <STP>::process_block_2x2_latency (Biquad4SimdData &data, f
 #endif
 
 			auto           x = src_0;
-			x  = fstb::ToolsSimd::interleave_2f32_lo (x, y1);		// y1[1 0] x[1 0]
+			x  = fstb::Vf32::interleave_pair_lo (x, y1); // y1[1 0] x[1 0]
 			auto           sb { b1 * x1 +  b2 * x2 };
 			auto           sa { a1 * y1 +  a2 * y2 };
 			y2 = b0 * x  + (sb - sa);
@@ -558,7 +558,7 @@ void	Biquad4Simd_Proc <STP>::process_block_2x2_latency (Biquad4SimdData &data, f
 			STP::step_z_eq (b0, b1, b2, a1, a2, b_inc, a_inc);
 
 			x  = src_1;
-			x  = fstb::ToolsSimd::interleave_2f32_lo (x, y2);
+			x  = fstb::Vf32::interleave_pair_lo (x, y2);
 			sb = b1 * x2 +  b2 * x1;
 			sa = a1 * y2 +  a2 * y1;
 			y1 = b0 * x  + (sb - sa);
@@ -608,7 +608,7 @@ fstb::Vf32	Biquad4Simd_Proc <STP>::process_sample_2x2_latency (Biquad4SimdData &
 	const auto     y1 = V128Par::load_f32 (data._mem_y [data._mem_pos]);
 	const auto     y2 = V128Par::load_f32 (data._mem_y [      alt_pos]);
 
-	x = fstb::ToolsSimd::interleave_2f32_lo (x, y1);		// y1[1 0] x[1 0]
+	x = fstb::Vf32::interleave_pair_lo (x, y1); // y1[1 0] x[1 0]
 
 	auto           y  = b0 * x;
 	const auto     sb = b1 * x1 + b2 * x2;

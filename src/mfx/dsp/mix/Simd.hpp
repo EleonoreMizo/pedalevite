@@ -1338,7 +1338,8 @@ void	Simd <VD, VS>::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_
 		const auto	vec_data = V128Src::load_f32 (in_ptr);
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::interleave_f32 (vec_data_1, vec_data_2, vec_data, vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::interleave (vec_data, vec_data);
 		V128Dst::store_f32 (out_ptr, vec_data_1);
 		out_ptr += 4;
 		V128Dst::store_f32 (out_ptr, vec_data_2);
@@ -1378,7 +1379,8 @@ void	Simd <VD, VS>::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nb
 		vec_data *= vec_vol;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::interleave_f32 (vec_data_1, vec_data_2, vec_data, vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::interleave (vec_data, vec_data);
 		V128Dst::store_f32 (out_ptr, vec_data_1);
 		out_ptr += 4;
 		V128Dst::store_f32 (out_ptr, vec_data_2);
@@ -1421,7 +1423,8 @@ void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int 
 		vec_data *= vec_vol;
 		fstb::Vf32 vec_data_1;
 		fstb::Vf32 vec_data_2;
-		fstb::ToolsSimd::interleave_f32 (vec_data_1, vec_data_2, vec_data, vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::interleave (vec_data, vec_data);
 		V128Dst::store_f32 (out_ptr, vec_data_1);
 		out_ptr += 4;
 		V128Dst::store_f32 (out_ptr, vec_data_2);
@@ -1478,7 +1481,8 @@ void	Simd <VD, VS>::copy_2_2i (float out_ptr [], const float in_1_ptr [], const 
 		auto			in_2_vec_data = V128Src::load_f32 (in_2_ptr);
 		fstb::Vf32 vec_data_1;
 		fstb::Vf32 vec_data_2;
-		fstb::ToolsSimd::interleave_f32 (vec_data_1, vec_data_2, in_1_vec_data, in_2_vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::interleave (in_1_vec_data, in_2_vec_data);
 		V128Dst::store_f32 (out_ptr, vec_data_1);
 		out_ptr += 4;
 		V128Dst::store_f32 (out_ptr, vec_data_2);
@@ -1523,7 +1527,8 @@ void	Simd <VD, VS>::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], cons
 		in_2_vec_data *= vec_vol;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::interleave_f32 (vec_data_1, vec_data_2, in_1_vec_data, in_2_vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::interleave (in_1_vec_data, in_2_vec_data);
 		V128Dst::store_f32 (out_ptr, vec_data_1);
 		out_ptr += 4;
 		V128Dst::store_f32 (out_ptr, vec_data_2);
@@ -1571,7 +1576,8 @@ void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], co
 		in_2_vec_data *= vec_vol;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::interleave_f32 (vec_data_1, vec_data_2, in_1_vec_data, in_2_vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::interleave (in_1_vec_data, in_2_vec_data);
 		V128Dst::store_f32 (out_ptr, vec_data_1);
 		out_ptr += 4;
 		V128Dst::store_f32 (out_ptr, vec_data_2);
@@ -1678,7 +1684,7 @@ void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const
 		// First unpacking
 		fstb::Vf32     o1;	// A1 A2 B1 B2
 		fstb::Vf32     o3;	// C1 C2 D1 D2
-		fstb::ToolsSimd::interleave_f32 (o1, o3, i1, i2);
+		std::tie (o1, o3) = fstb::Vf32::interleave (i1, i2);
 
 		// Upper part to lower pos.
 		const auto	o2 = fstb::ToolsSimd::Shift <2>::rotate (o1);	// B1 B2 xx xx
@@ -1733,7 +1739,8 @@ void	Simd <VD, VS>::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		const auto	vec_data = vec_data_1 + vec_data_2;
 		V128Dst::store_f32 (out_ptr, vec_data);
 		out_ptr += 4;
@@ -1772,7 +1779,8 @@ void	Simd <VD, VS>::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nb
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		auto			vec_data = vec_data_1 + vec_data_2;
 		vec_data *= vec_vol;
 		V128Dst::store_f32 (out_ptr, vec_data);
@@ -1815,7 +1823,8 @@ void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int 
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		auto			vec_data = vec_data_1 + vec_data_2;
 		vec_data *= vec_vol;
 		V128Dst::store_f32 (out_ptr, vec_data);
@@ -1872,7 +1881,8 @@ void	Simd <VD, VS>::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const flo
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		V128Dst::store_f32 (out_1_ptr, vec_data_1);
 		out_1_ptr += 4;
 		V128Dst::store_f32 (out_2_ptr, vec_data_2);
@@ -1914,7 +1924,8 @@ void	Simd <VD, VS>::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const f
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		vec_data_1 *= vec_vol;
 		vec_data_2 *= vec_vol;
 		V128Dst::store_f32 (out_1_ptr, vec_data_1);
@@ -1961,7 +1972,8 @@ void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		vec_data_1 *= vec_vol;
 		vec_data_2 *= vec_vol;
 		V128Dst::store_f32 (out_1_ptr, vec_data_1);
@@ -2109,10 +2121,10 @@ void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const fl
 		fstb::Vf32     k1;   // A1 B1 A2 B2
 		fstb::Vf32     k2;   // C1 D1 C2 D2
 		fstb::Vf32     dummy;
-		fstb::ToolsSimd::interleave_f32 (k1, dummy, a1, a2);
-		fstb::ToolsSimd::interleave_f32 (k2, dummy, a3, a4);
-		a1 = fstb::ToolsSimd::interleave_2f32_lo (k1, k2);
-		a2 = fstb::ToolsSimd::interleave_2f32_hi (k1, k2);
+		std::tie (k1, dummy) = fstb::Vf32::interleave (a1, a2);
+		std::tie (k2, dummy) = fstb::Vf32::interleave (a3, a4);
+		a1 = fstb::Vf32::interleave_pair_lo (k1, k2);
+		a2 = fstb::Vf32::interleave_pair_hi (k1, k2);
 		V128Dst::store_f32 (out_1_ptr, a1);
 		V128Dst::store_f32 (out_2_ptr, a2);
 
@@ -3090,7 +3102,8 @@ void	Simd <VD, VS>::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_s
 		const auto	vec_data = V128Src::load_f32 (in_ptr);
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, vec_data, vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (vec_data, vec_data);
 		auto			out_vec_data = V128Dst::load_f32 (out_ptr);
 		vec_data_1 += out_vec_data;
 		V128Dst::store_f32 (out_ptr, vec_data_1);
@@ -3133,7 +3146,8 @@ void	Simd <VD, VS>::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr
 		vec_data *= vec_vol;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, vec_data, vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (vec_data, vec_data);
 		auto			out_vec_data = V128Dst::load_f32 (out_ptr);
 		vec_data_1 += out_vec_data;
 		V128Dst::store_f32 (out_ptr, vec_data_1);
@@ -3179,7 +3193,8 @@ void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int n
 		vec_data *= vec_vol;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, vec_data, vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (vec_data, vec_data);
 		auto			out_vec_data = V128Dst::load_f32 (out_ptr);
 		vec_data_1 += out_vec_data;
 		V128Dst::store_f32 (out_ptr, vec_data_1);
@@ -3239,7 +3254,8 @@ void	Simd <VD, VS>::mix_2_2i (float out_ptr [], const float in_1_ptr [], const f
 		const auto	in_2_vec_data = V128Src::load_f32 (in_2_ptr);
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_1_vec_data, in_2_vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_1_vec_data, in_2_vec_data);
 		auto			out_vec_data = V128Dst::load_f32 (out_ptr);
 		vec_data_1 += out_vec_data;
 		V128Dst::store_f32 (out_ptr, vec_data_1);
@@ -3287,7 +3303,8 @@ void	Simd <VD, VS>::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const
 		in_2_vec_data *= vec_vol;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_1_vec_data, in_2_vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_1_vec_data, in_2_vec_data);
 		auto			out_vec_data = V128Dst::load_f32 (out_ptr);
 		vec_data_1 += out_vec_data;
 		V128Dst::store_f32 (out_ptr, vec_data_1);
@@ -3338,7 +3355,8 @@ void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], con
 		in_2_vec_data *= vec_vol;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_1_vec_data, in_2_vec_data);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_1_vec_data, in_2_vec_data);
 		auto           out_vec_data = V128Dst::load_f32 (out_ptr);
 		vec_data_1 += out_vec_data;
 		V128Dst::store_f32 (out_ptr, vec_data_1);
@@ -3408,7 +3426,8 @@ void	Simd <VD, VS>::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_s
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		auto			vec_data = vec_data_1 + vec_data_2;
 		const auto	out_vec_data = V128Dst::load_f32 (out_ptr);
 		vec_data += out_vec_data;
@@ -3449,7 +3468,8 @@ void	Simd <VD, VS>::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		auto			vec_data = vec_data_1 + vec_data_2;
 		vec_data *= vec_vol;
 		const auto	out_vec_data = V128Dst::load_f32 (out_ptr);
@@ -3494,7 +3514,8 @@ void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int n
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		auto			vec_data = vec_data_1 + vec_data_2;
 		vec_data *= vec_vol;
 		const auto	out_vec_data = V128Dst::load_f32 (out_ptr);
@@ -3553,7 +3574,8 @@ void	Simd <VD, VS>::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const floa
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		const auto	out_vec_data_1 = V128Dst::load_f32 (out_1_ptr);
 		vec_data_1 += out_vec_data_1;
 		V128Dst::store_f32 (out_1_ptr, vec_data_1);
@@ -3601,7 +3623,8 @@ void	Simd <VD, VS>::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		const auto	out_vec_data_1 = V128Dst::load_f32 (out_1_ptr);
 		vec_data_1 += out_vec_data_1;
 		V128Dst::store_f32 (out_1_ptr, vec_data_1);
@@ -3650,7 +3673,8 @@ void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 		in_ptr += 8;
 		fstb::Vf32     vec_data_1;
 		fstb::Vf32     vec_data_2;
-		fstb::ToolsSimd::deinterleave_f32 (vec_data_1, vec_data_2, in_vec_data_1, in_vec_data_2);
+		std::tie (vec_data_1, vec_data_2) =
+			fstb::Vf32::deinterleave (in_vec_data_1, in_vec_data_2);
 		vec_data_1 *= vec_vol;
 		vec_data_2 *= vec_vol;
 		const auto	out_vec_data_1 = V128Dst::load_f32 (out_1_ptr);

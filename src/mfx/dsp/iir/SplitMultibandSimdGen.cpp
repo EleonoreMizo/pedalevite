@@ -1404,13 +1404,13 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 				if (lane == 0)
 				{
 					r._cinl +=
-						  vi_beg + "fstb::ToolsSimd::deinterleave_f32_lo ("
+						  vi_beg + "fstb::Vf32::deinterleave_lo ("
 						+ vo0 + ", " + vo0 + ");\n";
 				}
 				else if (lane == 1)
 				{
 					r._cinl +=
-						  vi_beg + "fstb::ToolsSimd::deinterleave_f32_hi ("
+						  vi_beg + "fstb::Vf32::deinterleave_hi ("
 						+ vo0 + ", " + vo0 + ");\n";
 				}
 				else
@@ -1434,14 +1434,14 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 					if (lane == 0)
 					{
 						r._cinl +=
-							  vi_beg + "fstb::ToolsSimd::deinterleave_f32_lo ("
+							  vi_beg + "fstb::Vf32::deinterleave_lo ("
 							+ vo0 + ", " + vo0 + ");\n";
 					}
 					else
 					{
 						assert (lane == 1);
 						r._cinl +=
-							  vi_beg + "fstb::ToolsSimd::deinterleave_f32_hi ("
+							  vi_beg + "fstb::Vf32::deinterleave_hi ("
 							+ vo0 + ", " + vo0 + ");\n";
 					}
 				}
@@ -1951,7 +1951,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 			m_code += "\tx_save = x;\n";
 		}
 
-		m_code += "\tx = fstb::ToolsSimd::butterfly_f32_w64 (x);\n";
+		m_code += "\tx = x.butterfly_w64 ();\n";
 
 		if (bypass_bf_flag)
 		{
@@ -1972,7 +1972,7 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_code (const ClassS
 	// Expansion
 	if (spec._expand_flag)
 	{
-		m_code += "\tx = fstb::ToolsSimd::deinterleave_f32_lo (x, x);\n";
+		m_code += "\tx = fstb::Vf32::deinterleave_lo (x, x);\n";
 	}
 
 	} // for spec

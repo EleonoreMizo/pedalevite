@@ -49,7 +49,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 	_z1 [2] = x;
 	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
 	x    = fstb::select (mask, x_save, x);
-	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
+	x = x.butterfly_w64 ();
 
 	// Stage 1
 	x1z = _z1 [3];
@@ -92,7 +92,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 	}
 	_z2 [5] = x1z;
 	_z1 [6] = x;
-	x = fstb::ToolsSimd::deinterleave_f32_lo (x, x);
+	x = fstb::Vf32::deinterleave_lo (x, x);
 
 	// Stage 2
 	x1z = _z1 [7];
@@ -122,7 +122,7 @@ fstb::Vf32	SplitterSimd::Filter3::process_sample (fstb::Vf32 x) noexcept
 	_z1 [9] = x;
 	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
 	x    = fstb::select (mask, x_save, x);
-	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
+	x = x.butterfly_w64 ();
 
 	// Stage 3
 	x1z = _z1 [10];
@@ -176,7 +176,7 @@ fstb::Vf32	SplitterSimd::Filter0::process_sample (fstb::Vf32 x) noexcept
 	_z1 [2] = x;
 	mask = fstb::ToolsSimd::cast_f32 (fstb::Vs32 (-1, -1, 0, 0));
 	x    = fstb::select (mask, x_save, x);
-	x = fstb::ToolsSimd::butterfly_f32_w64 (x);
+	x = x.butterfly_w64 ();
 
 	return x;
 }
@@ -198,9 +198,9 @@ void	SplitterSimd::process_sample (float x) noexcept
 {
 	const auto v0i = fstb::Vf32 (x);
 	const auto v0o = _filter_0.process_sample (v0i);
-	const auto v1i = fstb::ToolsSimd::deinterleave_f32_lo (v0o, v0o);
+	const auto v1i = fstb::Vf32::deinterleave_lo (v0o, v0o);
 	const auto v1o = _filter_1.process_sample (v1i);
-	const auto v2i = fstb::ToolsSimd::deinterleave_f32_hi (v0o, v0o);
+	const auto v2i = fstb::Vf32::deinterleave_hi (v0o, v0o);
 	const auto v2o = _filter_2.process_sample (v2i);
 	std::tie (
 		*(_out_ptr_arr [0]),

@@ -517,7 +517,7 @@ void	DPvabI2s::proc_loop ()
 			x1_flt *= sc_i_v;
 			fstb::Vf32     xl_flt;
 			fstb::Vf32     xr_flt;
-			fstb::ToolsSimd::deinterleave_f32 (xl_flt, xr_flt, x0_flt, x1_flt);
+			std::tie (xl_flt, xr_flt) = fstb::Vf32::deinterleave (x0_flt, x1_flt);
 			xl_flt.store (buf_flt_i_ptr +                 pos);
 			xr_flt.store (buf_flt_i_ptr + _block_size_a + pos);
 		}
@@ -550,7 +550,7 @@ void	DPvabI2s::proc_loop ()
 			xr_flt *= sc_o_v;
 			fstb::Vf32     x0_flt;
 			fstb::Vf32     x1_flt;
-			fstb::ToolsSimd::interleave_f32 (x0_flt, x1_flt, xl_flt, xr_flt);
+			std::tie (x0_flt, x1_flt) = fstb::Vf32::interleave (xl_flt, xr_flt);
 			const auto  x0_int = fstb::ToolsSimd::conv_f32_to_s32 (x0_flt);
 			const auto  x1_int = fstb::ToolsSimd::conv_f32_to_s32 (x1_flt);
 			x0_int.store (buf_int_o_ptr + pos * 2    );

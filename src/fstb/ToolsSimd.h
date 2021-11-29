@@ -71,9 +71,6 @@ public:
 
 	static void    disable_denorm () noexcept;
 
-	static inline Vs32
-	               reverse_s32 (Vs32 x) noexcept;
-
 	static inline Vf32
 	               rsqrt_approx (Vf32 v) noexcept;
 
@@ -82,30 +79,8 @@ public:
 	static inline Vs32
 	               cast_s32 (Vf32 x) noexcept;
 
-	static inline Vf32
-	               butterfly_f32_w64 (Vf32 x) noexcept;
-	static inline Vf32
-	               butterfly_f32_w32 (Vf32 x) noexcept;
-
-	static inline Vf32
-	               interleave_2f32_lo (Vf32 p0, Vf32 p1) noexcept;
-	static inline Vf32
-	               interleave_2f32_hi (Vf32 p0, Vf32 p1) noexcept;
-	static inline void
-	               interleave_f32 (Vf32 &i0, Vf32 &i1, Vf32 p0, Vf32 p1) noexcept;
-	static inline void
-	               deinterleave_f32 (Vf32 &p0, Vf32 &p1, Vf32 i0, Vf32 i1) noexcept;
-	static inline Vf32
-	               deinterleave_f32_lo (Vf32 i0, Vf32 i1) noexcept;
-	static inline Vf32
-	               deinterleave_f32_hi (Vf32 i0, Vf32 i1) noexcept;
 	static inline void
 	               transpose_f32 (Vf32 &a0, Vf32 &a1, Vf32 &a2, Vf32 &a3) noexcept;
-
-	static inline Vf32
-	               monofy_2f32_lo (Vf32 v) noexcept;
-	static inline Vf32
-	               monofy_2f32_hi (Vf32 v) noexcept;
 
 	static inline Vs32
 	               conv_f32_to_s32 (Vf32 x) noexcept;

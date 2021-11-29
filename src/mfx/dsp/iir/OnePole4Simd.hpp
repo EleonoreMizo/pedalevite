@@ -445,7 +445,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 #endif
 
 			auto           x = src_0;
-			x  = fstb::ToolsSimd::interleave_2f32_lo (x, y1);		// y1[1 0] x[1 0]
+			x  = fstb::Vf32::interleave_pair_lo (x, y1); // y1[1 0] x[1 0]
 			const auto     y2 = b0 * x + b1 * x1 - a1 * y1;
 			const auto     x2 = x;
 			auto           y { fstb::ToolsSimd::Shift <2>::rotate (y2) };
@@ -453,7 +453,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
 			x  = src_1;
-			x  = fstb::ToolsSimd::interleave_2f32_lo (x, y2);
+			x  = fstb::Vf32::interleave_pair_lo (x, y2);
 			y1 = b0 * x + b1 * x2 - a1 * y2;
 			x1 = x;
 			y  = fstb::ToolsSimd::Shift <2>::rotate (y1);
@@ -493,7 +493,7 @@ fstb::Vf32	OnePole4Simd_Proc <STP>::process_sample_2x2_latency (OnePole4SimdData
 	const auto     x1 = V128Par::load_f32 (data._mem_x);
 	const auto     y1 = V128Par::load_f32 (data._mem_y);
 
-	x = fstb::ToolsSimd::interleave_2f32_lo (x, y1);		// y1[1 0] x[1 0]
+	x = fstb::Vf32::interleave_pair_lo (x, y1); // y1[1 0] x[1 0]
 
 	const auto     y  = b0 * x + b1 * x1 - a1 * y1;
 

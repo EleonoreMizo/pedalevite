@@ -42,21 +42,6 @@ namespace fstb
 
 
 
-Vs32	ToolsSimd::reverse_s32 (Vs32 x) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	std::swap (x._x [0], x._x [3]);
-	std::swap (x._x [1], x._x [2]);
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	x = _mm_shuffle_epi32 (x, (3<<0) + (2<<2) + (1<<4) + (0<<6));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	x = vrev64q_s32 (vcombine_s32 (vget_high_s32 (x), vget_low_s32 (x)));
-#endif // fstb_ARCHI
-	return x;
-}
-
-
-
 Vf32	ToolsSimd::rsqrt_approx (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -119,164 +104,6 @@ Vs32	ToolsSimd::cast_s32 (Vf32 x) noexcept
 
 
 
-// a, b, c, d -> a+c, b+d, a-c, b-d
-Vf32	ToolsSimd::butterfly_f32_w64 (Vf32 x) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		x._x [0] + x._x [2],
-		x._x [1] + x._x [3],
-		x._x [0] - x._x [2],
-		x._x [1] - x._x [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, 0, _sign32, _sign32));
-	const auto x0   = _mm_shuffle_ps (x, x, (2<<0) + (3<<2) + (0<<4) + (1<<6)); // c, d, a, b
-	const auto x1   = _mm_xor_ps (x, sign); // a, b, -c, -d
-	return x0 + x1;
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const auto sign = int32x4_t { 0, 0, _sign32, _sign32 };
-	const auto x0   = vcombine_f32 (vget_high_f32 (x), vget_low_f32 (x)); // c, d, a, b
-	const auto x1   = // a, b, -c, -d
-		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (x), sign));
-	return x0 + x1;
-#endif
-}
-
-
-
-// a, b, c, d -> a+b, a-b, c+d, c-d
-Vf32	ToolsSimd::butterfly_f32_w32 (Vf32 x) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
-		x._x [0] + x._x [1],
-		x._x [0] + x._x [1],
-		x._x [2] - x._x [3],
-		x._x [2] - x._x [3]
-	} };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	const auto sign = _mm_castsi128_ps (_mm_setr_epi32 (0, _sign32, 0, _sign32));
-	const auto x0   = _mm_shuffle_ps (x, x, (1<<0) + (0<<2) + (3<<4) + (2<<6)); // b, a, d, c
-	const auto x1   = _mm_xor_ps (x, sign); // a, -b, c, -d
-	return x0 + x1;
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const auto sign = int32x4_t { 0, _sign32, 0, _sign32 };
-	const auto x0   = vrev64q_f32 (x); // b, a, d, c
-	const auto x1   = // a, -b, c, -d
-		vreinterpretq_f32_s32 (veorq_s32 (vreinterpretq_s32_f32 (x), sign));
-	return x0 + x1;
-#endif
-}
-
-
-
-// p0[0 1] p1[0 1]
-Vf32	ToolsSimd::interleave_2f32_lo (Vf32 p0, Vf32 p1) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { { p0._x [0], p0._x [1], p1._x [0], p1._x [1] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (p0, p1, (0<<0) + (1<<2) + (0<<4) + (1<<6));
-	// return _mm_movelh_ps (p0, p1);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const float32x2_t  p0x = vget_low_f32 (p0);
-	const float32x2_t  p1x = vget_low_f32 (p1);
-	return vcombine_f32 (p0x, p1x);
-#endif // fstb_ARCHI
-}
-
-
-
-// p0[2 3] p1[2 3]
-Vf32	ToolsSimd::interleave_2f32_hi (Vf32 p0, Vf32 p1) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { { p0._x [2], p0._x [3], p1._x [2], p1._x [3] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (p0, p1, (2<<0) + (3<<2) + (2<<4) + (3<<6));
-	// return _mm_movehl_ps (p1, p0);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const float32x2_t  p0x = vget_high_f32 (p0);
-	const float32x2_t  p1x = vget_high_f32 (p1);
-	return vcombine_f32 (p0x, p1x);
-#endif // fstb_ARCHI
-}
-
-
-
-void	ToolsSimd::interleave_f32 (Vf32 &i0, Vf32 &i1, Vf32 p0, Vf32 p1) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	i0._x [0] = p0._x [0];
-	i0._x [1] = p1._x [0];
-	i0._x [2] = p0._x [1];
-	i0._x [3] = p1._x [1];
-	i1._x [0] = p0._x [2];
-	i1._x [1] = p1._x [2];
-	i1._x [2] = p0._x [3];
-	i1._x [3] = p1._x [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	i0 = _mm_unpacklo_ps (p0, p1);
-	i1 = _mm_unpackhi_ps (p0, p1);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const float32x4x2_t  tmp = vzipq_f32 (p0, p1);
-	i0 = tmp.val [0];
-	i1 = tmp.val [1];
-#endif // fstb_ARCHI
-}
-
-
-
-void	ToolsSimd::deinterleave_f32 (Vf32 &p0, Vf32 &p1, Vf32 i0, Vf32 i1) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	p0._x [0] = i0._x [0];
-	p1._x [0] = i0._x [1];
-	p0._x [1] = i0._x [2];
-	p1._x [1] = i0._x [3];
-	p0._x [2] = i1._x [0];
-	p1._x [2] = i1._x [1];
-	p0._x [3] = i1._x [2];
-	p1._x [3] = i1._x [3];
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	p0 = _mm_shuffle_ps (i0, i1, (0<<0) | (2<<2) | (0<<4) | (2<<6));
-	p1 = _mm_shuffle_ps (i0, i1, (1<<0) | (3<<2) | (1<<4) | (3<<6));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	const float32x4x2_t  tmp = vuzpq_f32 (i0, i1);
-	p0 = tmp.val [0];
-	p1 = tmp.val [1];
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::deinterleave_f32_lo (Vf32 i0, Vf32 i1) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { { i0._x [0], i0._x [2], i1._x [0], i1._x [2] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (i0, i1, (0<<0) | (2<<2) | (0<<4) | (2<<6));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vuzpq_f32 (i0, i1).val [0];
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::deinterleave_f32_hi (Vf32 i0, Vf32 i1) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { { i0._x [1], i0._x [3], i1._x [1], i1._x [3] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (i0, i1, (1<<0) | (3<<2) | (1<<4) | (3<<6));
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vuzpq_f32 (i0, i1).val [1];
-#endif // fstb_ARCHI
-}
-
-
-
 // Sources:
 // https://github.com/Maratyszcza/NNPACK/blob/master/src/neon/transpose.h
 // https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_MM_TRANSPOSE4_PS&expand=5915,5949
@@ -287,12 +114,12 @@ void	ToolsSimd::transpose_f32 (Vf32 &a0, Vf32 &a1, Vf32 &a2, Vf32 &a3) noexcept
 	Vf32           tmp1;
 	Vf32           tmp2;
 	Vf32           tmp3;
-	interleave_f32 (tmp0, tmp1, a0, a1);
-	interleave_f32 (tmp2, tmp3, a2, a3);
-	a0 = interleave_2f32_lo (tmp0, tmp2);
-	a1 = interleave_2f32_hi (tmp0, tmp2);
-	a2 = interleave_2f32_lo (tmp1, tmp3);
-	a3 = interleave_2f32_hi (tmp1, tmp3);
+	std::tie (tmp0, tmp1) = Vf32::interleave (a0, a1);
+	std::tie (tmp2, tmp3) = Vf32::interleave (a2, a3);
+	a0 = Vf32::interleave_pair_lo (tmp0, tmp2);
+	a1 = Vf32::interleave_pair_hi (tmp0, tmp2);
+	a2 = Vf32::interleave_pair_lo (tmp1, tmp3);
+	a3 = Vf32::interleave_pair_hi (tmp1, tmp3);
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	const __m128   tmp0 = _mm_unpacklo_ps (a0, a1);
 	const __m128   tmp2 = _mm_unpacklo_ps (a2, a3);
@@ -309,39 +136,13 @@ void	ToolsSimd::transpose_f32 (Vf32 &a0, Vf32 &a1, Vf32 &a2, Vf32 &a3) noexcept
 	a1 = vcombine_f32 (vget_low_f32 (a01.val [1]), vget_low_f32 (a23.val [1]));
 	a2 = vcombine_f32 (vget_high_f32 (a01.val [0]), vget_high_f32 (a23.val [0]));
 	a3 = vcombine_f32 (vget_high_f32 (a01.val [1]), vget_high_f32 (a23.val [1]));
-#elif
+#else
 	// Generic form
 	Vf32           k0, k1, k2, k3;
-	interleave_f32 (k0, k1, a0, a2);
-	interleave_f32 (k2, k3, a1, a3);
-	interleave_f32 (a0, a1, k0, k2);
-	interleave_f32 (a2, a3, k1, k3);
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::monofy_2f32_lo (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { { v._x [0], v._x [0], v._x [2], v._x [2] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (v, v, 0xA0);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vuzpq_f32 (v, v).val [0];
-#endif // fstb_ARCHI
-}
-
-
-
-Vf32	ToolsSimd::monofy_2f32_hi (Vf32 v) noexcept
-{
-#if ! defined (fstb_HAS_SIMD)
-	return Vf32 { { v._x [1], v._x [1], v._x [3], v._x [3] } };
-#elif fstb_ARCHI == fstb_ARCHI_X86
-	return _mm_shuffle_ps (v, v, 0xF5);
-#elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vuzpq_f32 (v, v).val [1];
+	std::tie (k0, k1) = Vf32::interleave (a0, a2);
+	std::tie (k2, k3) = Vf32::interleave (a1, a3);
+	std::tie (a0, a1) = Vf32::interleave (k0, k2);
+	std::tie (a2, a3) = Vf32::interleave (k1, k3);
 #endif // fstb_ARCHI
 }
 

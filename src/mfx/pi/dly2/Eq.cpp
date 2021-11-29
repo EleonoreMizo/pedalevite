@@ -194,10 +194,10 @@ void	Eq::update_filter ()
 
 	fstb::Vf32     x0z_l;
 	fstb::Vf32     x0z_h;
-	fstb::ToolsSimd::deinterleave_f32 (x0z_l, x0z_h, b0z, a0z);
+	std::tie (x0z_l, x0z_h) = fstb::Vf32::deinterleave (b0z, a0z);
 	fstb::Vf32     x1z_l;
 	fstb::Vf32     x1z_h;
-	fstb::ToolsSimd::deinterleave_f32 (x1z_l, x1z_h, b1z, a1z);
+	std::tie (x1z_l, x1z_h) = fstb::Vf32::deinterleave (b1z, a1z);
 	const auto     x0z = x0z_l * x0z_h;
 	const auto     x1z = x0z_l * x1z_h + x1z_l * x0z_h;
 	const auto     x2z = x1z_l * x1z_h;
