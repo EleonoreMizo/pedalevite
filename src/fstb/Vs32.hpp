@@ -224,10 +224,10 @@ Vs32 &	Vs32::operator *= (const Vs32Native &other) noexcept
 Vs32 &	Vs32::operator &= (const Vs32Native &other) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	_x [0] &= other [0],
-	_x [1] &= other [1],
-	_x [2] &= other [2],
-	_x [3] &= other [3]
+	_x [0] &= other [0];
+	_x [1] &= other [1];
+	_x [2] &= other [2];
+	_x [3] &= other [3];
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_and_si128 (_x, other);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -241,10 +241,10 @@ Vs32 &	Vs32::operator &= (const Vs32Native &other) noexcept
 Vs32 &	Vs32::operator |= (const Vs32Native &other) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	_x [0] |= other [0],
-	_x [1] |= other [1],
-	_x [2] |= other [2],
-	_x [3] |= other [3]
+	_x [0] |= other [0];
+	_x [1] |= other [1];
+	_x [2] |= other [2];
+	_x [3] |= other [3];
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_or_si128 (_x, other);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -258,10 +258,10 @@ Vs32 &	Vs32::operator |= (const Vs32Native &other) noexcept
 Vs32 &	Vs32::operator ^= (const Vs32Native &other) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	_x [0] ^= other [0],
-	_x [1] ^= other [1],
-	_x [2] ^= other [2],
-	_x [3] ^= other [3]
+	_x [0] ^= other [0];
+	_x [1] ^= other [1];
+	_x [2] ^= other [2];
+	_x [3] ^= other [3];
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	_x = _mm_xor_si128 (_x, other);
 #elif fstb_ARCHI == fstb_ARCHI_ARM

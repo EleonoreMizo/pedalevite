@@ -614,12 +614,7 @@ Vf32	Vf32::log2_base (P poly) const noexcept
 	c._s32 [1] = (x1 & ~(255 << 23)) + (127 << 23);
 	c._s32 [2] = (x2 & ~(255 << 23)) + (127 << 23);
 	c._s32 [3] = (x3 & ~(255 << 23)) + (127 << 23);
-	Vf32           part { {
-		c._f32 [0],
-		c._f32 [1],
-		c._f32 [2],
-		c._f32 [3]
-	} };
+	Vf32           part { c._vf32 };
 
 #else // fstb_HAS_SIMD
 
@@ -1533,10 +1528,10 @@ Vf32 select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	/*** To do: implement as r = v_f ^ ((v_f ^ v_t) & cond) ***/
-	const Combo    cc { cond };
-	Combo          ct { v_t };
-	Combo          cf { v_f };
-	Combo          r;
+	const Vf32::Combo cc { cond };
+	Vf32::Combo    ct { v_t };
+	Vf32::Combo    cf { v_f };
+	Vf32::Combo    r;
 	r._s32 [0] = (ct._s32 [0] & cc._s32 [0]) | (cf._s32 [0] & ~cc._s32 [0]);
 	r._s32 [1] = (ct._s32 [1] & cc._s32 [1]) | (cf._s32 [1] & ~cc._s32 [1]);
 	r._s32 [2] = (ct._s32 [2] & cc._s32 [2]) | (cf._s32 [2] & ~cc._s32 [2]);
@@ -1556,7 +1551,7 @@ Vf32 select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept
 std::tuple <Vf32, Vf32> swap_if (Vf32 cond, Vf32 lhs, Vf32 rhs) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	const Combo    cc { cond };
+	const Vf32::Combo cc { cond };
 	if (cc._s32 [0] != 0) { std::swap (lhs._x [0], rhs._x [0]); }
 	if (cc._s32 [1] != 0) { std::swap (lhs._x [1], rhs._x [1]); }
 	if (cc._s32 [2] != 0) { std::swap (lhs._x [2], rhs._x [2]); }
