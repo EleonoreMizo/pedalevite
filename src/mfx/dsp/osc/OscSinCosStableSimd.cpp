@@ -112,7 +112,7 @@ void	OscSinCosStableSimd::correct_fast () noexcept
 {
 	auto           c       = fstb::Vf32::load (&_pos_cos);
 	auto           s       = fstb::Vf32::load (&_pos_sin);
-	const auto     norm_sq = fstb::ToolsSimd::fmadd (c * c, s, s);
+	const auto     norm_sq = fstb::fma (c * c, s, s);
 	const auto     c1_5    = fstb::Vf32 (1.5f);
 	const auto     c0_5    = fstb::Vf32 (0.5f);
 	const auto     mult    = c1_5 - norm_sq * c0_5;

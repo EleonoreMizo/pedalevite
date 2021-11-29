@@ -382,7 +382,7 @@ float	Approx::log2 (float val) noexcept
 
 Vf32	Approx::log2 (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, Approx::log2_poly2 <Vf32>);
+	return val.log2_base (Approx::log2_poly2 <Vf32>);
 }
 
 
@@ -396,7 +396,7 @@ float	Approx::log2_5th (float val) noexcept
 
 Vf32	Approx::log2_5th (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, Approx::log2_poly5 <Vf32>);
+	return val.log2_base (Approx::log2_poly5 <Vf32>);
 }
 
 
@@ -410,7 +410,7 @@ float	Approx::log2_7th (float val) noexcept
 
 Vf32	Approx::log2_7th (Vf32 val) noexcept
 {
-	return ToolsSimd::log2_base (val, Approx::log2_poly7 <Vf32>);
+	return val.log2_base (Approx::log2_poly7 <Vf32>);
 }
 
 
@@ -461,7 +461,7 @@ float	Approx::exp2 (float val) noexcept
 
 Vf32	Approx::exp2 (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, Approx::exp2_poly2 <Vf32>);
+	return val.exp2_base (Approx::exp2_poly2 <Vf32>);
 }
 
 
@@ -476,7 +476,7 @@ float	Approx::exp2_5th (float val) noexcept
 
 Vf32	Approx::exp2_5th (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, Approx::exp2_poly5 <Vf32>);
+	return val.exp2_base (Approx::exp2_poly5 <Vf32>);
 }
 
 
@@ -491,7 +491,7 @@ float	Approx::exp2_7th (float val) noexcept
 
 Vf32	Approx::exp2_7th (Vf32 val) noexcept
 {
-	return ToolsSimd::exp2_base (val, Approx::exp2_poly7 <Vf32>);
+	return val.exp2_base (Approx::exp2_poly7 <Vf32>);
 }
 
 
@@ -829,8 +829,6 @@ constexpr T	Approx::atan2_3th (T y, T x) noexcept
 
 Vf32	Approx::atan2_3th (Vf32 y, Vf32 x) noexcept
 {
-	using TS = ToolsSimd;
-
 	const auto     c3 = Vf32 (0.18208f);
 	const auto     c1 = Vf32 (PI * -0.25 - 0.18208);
 
@@ -840,8 +838,8 @@ Vf32	Approx::atan2_3th (Vf32 y, Vf32 x) noexcept
 	const auto     c0 = b [1];
 	const auto     r2 = r * r;
 	auto           a  = c3;
-	a  = TS::fmadd (a, r2, c1);
-	a  = TS::fmadd (a, r , c0);
+	a  = fma (a, r2, c1);
+	a  = fma (a, r , c0);
 	a ^= ys;
 
 	return a;
@@ -872,8 +870,6 @@ constexpr T	Approx::atan2_7th (T y, T x) noexcept
 
 Vf32	Approx::atan2_7th (Vf32 y, Vf32 x) noexcept
 {
-	using TS = ToolsSimd;
-
 	const auto     c7 = Vf32 ( 0.0386379f);
 	const auto     c5 = Vf32 (-0.145917f);
 	const auto     c3 = Vf32 ( 0.0386379f);
@@ -884,7 +880,7 @@ Vf32	Approx::atan2_7th (Vf32 y, Vf32 x) noexcept
 	const auto     r  = b [0];
 	const auto     c0 = b [1];
 	const auto     r2 = r * r;
-	auto           a  = TS::fmadd (Poly::horner (r2, c1, c3, c5, c7), r, c0);
+	auto           a  = fma (Poly::horner (r2, c1, c3, c5, c7), r, c0);
 	a ^= ys;
 
 	return a;

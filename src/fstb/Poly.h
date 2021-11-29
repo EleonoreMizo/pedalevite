@@ -93,8 +93,6 @@ private:
 	template <class T>
 	fstb_FORCEINLINE static constexpr T
 	               fma (T x, T a, T b) noexcept;
-	fstb_FORCEINLINE static Vf32
-	               fma (Vf32 x, Vf32 a, Vf32 b) noexcept;
 
 
 

@@ -22,8 +22,6 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
-
 
 
 namespace fstb
@@ -146,16 +144,15 @@ constexpr T	Poly::estrin (T x, T c0, T c1, T c2, T c3, T c4, T c5, T c6, T c7) n
 
 
 
+// We don't use std::fma for scalars, as it could be very slow, depending on
+// the platform.
 template <class T>
 constexpr T	Poly::fma (T x, T a, T b) noexcept
 {
 	return x * a + b;
 }
 
-Vf32	Poly::fma (Vf32 x, Vf32 a, Vf32 b) noexcept
-{
-	return ToolsSimd::fmadd (x, a, b);
-}
+
 
 }  // namespace fstb
 

@@ -75,21 +75,7 @@ public:
 	               reverse_s32 (Vs32 x) noexcept;
 
 	static inline Vf32
-	               fmadd (Vf32 x, Vf32 a, Vf32 b) noexcept;
-	static inline Vf32
-	               fmsub (Vf32 x, Vf32 a, Vf32 b) noexcept;
-	static inline Vf32
 	               rsqrt_approx (Vf32 v) noexcept;
-	template <typename P>
-	static fstb_FORCEINLINE Vf32
-	               log2_base (Vf32 x, P poly) noexcept;
-	static inline Vf32
-	               log2_approx2 (Vf32 v) noexcept;
-	template <typename P>
-	static fstb_FORCEINLINE Vf32
-	               exp2_base (Vf32 x, P poly) noexcept;
-	static inline Vf32
-	               exp2_approx2 (Vf32 v) noexcept;
 
 	static inline Vf32
 	               cast_f32 (Vs32 x) noexcept;

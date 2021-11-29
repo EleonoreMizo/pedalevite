@@ -153,6 +153,12 @@ public:
 	               sqrt_approx () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               rsqrt () const noexcept;
+	template <typename P>
+	fstb_FORCEINLINE Vf32
+	               log2_base (P poly) const noexcept;
+	template <typename P>
+	fstb_FORCEINLINE Vf32
+	               exp2_base (P poly) const noexcept;
 	fstb_FORCEINLINE Vf32
 	               signbit () const noexcept;
 	fstb_FORCEINLINE Vf32
@@ -272,13 +278,17 @@ fstb_FORCEINLINE Vf32 operator >  (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 operator >= (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 
 fstb_FORCEINLINE Vf32 abs (const Vf32 &v) noexcept;
+fstb_FORCEINLINE Vf32 fma (const Vf32 &x, const Vf32 &a, const Vf32 &b) noexcept;
+fstb_FORCEINLINE Vf32 fms (const Vf32 &x, const Vf32 &a, const Vf32 &b) noexcept;
 fstb_FORCEINLINE Vf32 round (const Vf32 &v) noexcept;
 fstb_FORCEINLINE Vf32 min (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 max (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 limit (const Vf32 &v, const Vf32 &mi, const Vf32 &ma) noexcept;
-fstb_FORCEINLINE Vf32 select (const Vf32 &cond, const Vf32 &v_t, const Vf32 &v_f) noexcept;
-fstb_FORCEINLINE std::tuple <Vf32, Vf32> swap_if (const Vf32 &cond, Vf32 lhs, Vf32 rhs) noexcept;
-fstb_FORCEINLINE Vf32 sqrt (const Vf32 &v) noexcept;
+fstb_FORCEINLINE Vf32 select (Vf32 cond, Vf32 v_t, Vf32 v_f) noexcept;
+fstb_FORCEINLINE std::tuple <Vf32, Vf32> swap_if (Vf32 cond, Vf32 lhs, Vf32 rhs) noexcept;
+fstb_FORCEINLINE Vf32 sqrt (Vf32 v) noexcept;
+fstb_FORCEINLINE Vf32 log2 (Vf32 v) noexcept;
+fstb_FORCEINLINE Vf32 exp2 (Vf32 v) noexcept;
 
 
 
