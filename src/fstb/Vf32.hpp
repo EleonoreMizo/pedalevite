@@ -522,7 +522,7 @@ Vf32	Vf32::div_approx (const Vf32 &d) const noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_div_ps (_x, d._x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	return _x * d.rcp_approx ();
+	return _x * d.rcp_approx ()._x;
 #endif // fstb_ARCHI
 }
 
