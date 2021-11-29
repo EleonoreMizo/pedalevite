@@ -701,7 +701,7 @@ Vf32	Vf32::exp2_base (P poly) const noexcept
 	const auto     val_floor = Vf32 { _mm_cvtepi32_ps (xi) };
 # elif fstb_ARCHI == fstb_ARCHI_ARM
 	const int      round_ofs = 256;
-	int32x4_t      xi = vcvtq_s32_f32 (_x + Vf32 (round_ofs));
+	int32x4_t      xi = vcvtq_s32_f32 (_x + vdupq_n_s32 (round_ofs));
 	xi -= vdupq_n_s32 (round_ofs);
 	const auto     val_floor = Vf32 { vcvtq_f32_s32 (xi) };
 # endif // fstb_ARCHI
@@ -1727,7 +1727,7 @@ Vf32 exp2 (Vf32 v) noexcept
 	const int      round_ofs = 256;
 	const auto     r = Vf32 (round_ofs + 0.5f);
 	auto           i = vcvtq_s32_f32 (v + r);
-	i -= Vs32 (round_ofs);
+	i -= vdupq_n_f32 (round_ofs);
 	v -= vcvtq_f32_s32 (i);
 #endif // fstb_ARCHI
 
