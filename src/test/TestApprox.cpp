@@ -81,11 +81,6 @@ int	TestApprox::perform_test ()
 		[] (Vf32 x) { return fstb::Approx::log2 (x); },
 		"log2", 1e-3f, 1e3f
 	);
-	test_op1_all_flt_v <false> (
-		[] (double x) { return log2 (x); },
-		[] (Vf32 x) { return fstb::ToolsSimd::log2_approx2 (x); },
-		"log2_approx2", 1e-3f, 1e3f
-	);
 
 	test_op1_all_flt <false> (
 		[] (double x) { return log2 (x); },
@@ -99,6 +94,12 @@ int	TestApprox::perform_test ()
 		[] (float x) { return fstb::Approx::log2_7th (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_7th (x); },
 		"log2_7th", 1e-3f, 1e3f
+	);
+
+	test_op1_all_flt_v <false> (
+		[] (double x) { return log2 (x); },
+		[] (Vf32 x) { return fstb::log2 (x); },
+		"log2", 1e-3f, 1e3f
 	);
 
 	// exp2
@@ -116,11 +117,6 @@ int	TestApprox::perform_test ()
 		[] (Vf32 x) { return fstb::Approx::exp2 (x); },
 		"exp2", -20.f, 20.f
 	);
-	test_op1_all_flt_v <true> (
-		[] (double x) { return exp2 (x); },
-		[] (Vf32 x) { return fstb::ToolsSimd::exp2_approx2 (x); },
-		"exp2_approx2", -20.f, 20.f
-	);
 
 	test_op1_all_flt <true> (
 		[] (double x) { return exp2 (x); },
@@ -134,6 +130,12 @@ int	TestApprox::perform_test ()
 		[] (float x) { return fstb::Approx::exp2_7th (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2_7th (x); },
 		"exp2_7th", -20.f, 20.f
+	);
+
+	test_op1_all_flt_v <true> (
+		[] (double x) { return exp2 (x); },
+		[] (Vf32 x) { return fstb::exp2 (x); },
+		"exp2", -20.f, 20.f
 	);
 
 	// tan
