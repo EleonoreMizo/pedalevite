@@ -221,7 +221,7 @@ static inline S conv_t_to_s (T x) { return static_cast <S> (x); }
 template <>
 inline float conv_t_to_s (fstb::Vf32 x)
 {
-	return fstb::ToolsSimd::Shift <0>::extract (x);
+	return x.template extract <0> ();
 }
 
 

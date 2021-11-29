@@ -75,16 +75,16 @@ void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int
 		switch (nbr_spl - n4)
 		{
 		case 1:
-			pos_cos = fstb::ToolsSimd::Shift <1>::compose (prv_cos, pos_cos);
-			pos_sin = fstb::ToolsSimd::Shift <1>::compose (prv_sin, pos_sin);
+			pos_cos = fstb::Vf32::compose <1> (prv_cos, pos_cos);
+			pos_sin = fstb::Vf32::compose <1> (prv_sin, pos_sin);
 			break;
 		case 2:
-			pos_cos = fstb::ToolsSimd::Shift <2>::compose (prv_cos, pos_cos);
-			pos_sin = fstb::ToolsSimd::Shift <2>::compose (prv_sin, pos_sin);
+			pos_cos = fstb::Vf32::compose <2> (prv_cos, pos_cos);
+			pos_sin = fstb::Vf32::compose <2> (prv_sin, pos_sin);
 			break;
 		case 3:
-			pos_cos = fstb::ToolsSimd::Shift <3>::compose (prv_cos, pos_cos);
-			pos_sin = fstb::ToolsSimd::Shift <3>::compose (prv_sin, pos_sin);
+			pos_cos = fstb::Vf32::compose <3> (prv_cos, pos_cos);
+			pos_sin = fstb::Vf32::compose <3> (prv_sin, pos_sin);
 			break;
 		default:
 			assert (false);

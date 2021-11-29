@@ -275,7 +275,7 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 		do
 		{
 			const auto     state0 = fstb::Vf32 (in_ptr [pos]);
-			assert (test_ge_0 (state0));
+			assert (state0 >= fstb::Vf32::zero ());
 
 			const auto     coef_r_cur = fstb::select (hold_state, zero, coef_r);
 
@@ -384,22 +384,9 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::check_and_reset (fstb::Vf32 &hold_st
 
 		auto           mask = V128Par::load_f32 (_reset_mask);
 		hold_state &= mask;
-		mask        = fstb::ToolsSimd::Shift <1>::rotate (mask);
+		mask        = mask.template rotate <1> ();
 		V128Par::store_f32 (_reset_mask, mask);
 	}
-}
-
-
-
-template <class VP, int ORD>
-bool	EnvFollowerAHR1LrSimdHelper <VP, ORD>::test_ge_0 (const fstb::Vf32 &in) noexcept
-{
-	return (
-		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <1>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <2>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <3>::extract (in) >= 0
-	);
 }
 
 

@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "fstb/Poly.h"
 #include "fstb/ToolsSimd.h"
 
 
@@ -67,10 +68,8 @@ float	FncFiniteAsym <BL, BU, GF, RES>::operator () (float x) const noexcept
    }
 
 	const Curve &  curve = _coef_arr [pos];
-	return        curve [0]
-	       + x * (curve [1]
-	       + x * (curve [2]
-	       + x *  curve [3]));
+
+	return fstb::Poly::horner (x, curve [0], curve [1], curve [2], curve [3]);
 }
 
 
@@ -98,19 +97,15 @@ fstb::Vf32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::Vf32 x) const noe
 	auto           c3   = zero;
 	for (int k = 0; k < 4; ++k)
 	{
-		const int      p     = fstb::ToolsSimd::Shift <0>::extract (pos);
+		const int      p     = pos.template extract <0> ();
 		const Curve &  curve = _coef_arr [p];
-		fstb::ToolsSimd::Shift <0>::insert (c0, curve [0]);
-		fstb::ToolsSimd::Shift <0>::insert (c1, curve [1]);
-		fstb::ToolsSimd::Shift <0>::insert (c2, curve [2]);
-		fstb::ToolsSimd::Shift <0>::insert (c3, curve [3]);
-		c0  = fstb::ToolsSimd::Shift <1>::rotate (c0);
-		c1  = fstb::ToolsSimd::Shift <1>::rotate (c1);
-		c2  = fstb::ToolsSimd::Shift <1>::rotate (c2);
-		c3  = fstb::ToolsSimd::Shift <1>::rotate (c3);
-		pos = fstb::ToolsSimd::Shift <1>::rotate (pos);
+		c0  = c0.template insert <0> (curve [0]).template rotate <1> ();
+		c1  = c1.template insert <0> (curve [1]).template rotate <1> ();
+		c2  = c2.template insert <0> (curve [2]).template rotate <1> ();
+		c3  = c3.template insert <0> (curve [3]).template rotate <1> ();
+		pos = pos.template rotate <1> ();
 	}
-	const auto     y    = c0 + x * (c1 + x * (c2 + x * c3));
+	const auto     y = fstb::Poly::horner (x, c0, c1, c2, c3);
 
 	return y;
 }

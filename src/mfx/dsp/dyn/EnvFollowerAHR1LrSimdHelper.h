@@ -118,8 +118,6 @@ private:
 	               copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) noexcept;
 	fstb_FORCEINLINE void
 	               check_and_reset (fstb::Vf32 &hold_state, int nbr_spl) noexcept;
-	fstb_FORCEINLINE static bool
-	               test_ge_0 (const fstb::Vf32 &in) noexcept;
 
 	alignas (16) VectFloat4
 	               _state [ORD];

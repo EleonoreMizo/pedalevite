@@ -407,8 +407,8 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 #if 1
 		const auto     lvl_sq   = fstb::Vf32::set_pair (lvl_pre_sq, lvl_post_sq);
 		const auto     lvl      = fstb::sqrt (lvl_sq);
-		const float    lvl_pre  = fstb::ToolsSimd::Shift <0>::extract (lvl);
-		const float    lvl_post = fstb::ToolsSimd::Shift <1>::extract (lvl);
+		const float    lvl_pre  = lvl.template extract <0> ();
+		const float    lvl_post = lvl.template extract <1> ();
 #else // Reference implementation
 		const float    lvl_pre  = sqrtf (lvl_pre_sq);
 		const float    lvl_post = sqrtf (lvl_post_sq);

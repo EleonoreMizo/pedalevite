@@ -607,19 +607,19 @@ void	WorldAudio::check_signal_level (float * const * dst_arr, const float * cons
 	const auto     rms   = _lvl_meter->get_rms ();
 	_lvl_meter->clear_peak ();
 
-	_meter_result._audio_io [Dir_IN ]._chn_arr [0]._peak = fstb::ToolsSimd::Shift <0>::extract (hold);
-	_meter_result._audio_io [Dir_IN ]._chn_arr [0]._rms  = fstb::ToolsSimd::Shift <0>::extract (rms );
-	_meter_result._audio_io [Dir_IN ]._chn_arr [1]._peak = fstb::ToolsSimd::Shift <1>::extract (hold);
-	_meter_result._audio_io [Dir_IN ]._chn_arr [1]._rms  = fstb::ToolsSimd::Shift <1>::extract (rms );
-	_meter_result._audio_io [Dir_OUT]._chn_arr [0]._peak = fstb::ToolsSimd::Shift <2>::extract (hold);
-	_meter_result._audio_io [Dir_OUT]._chn_arr [0]._rms  = fstb::ToolsSimd::Shift <2>::extract (rms );
-	_meter_result._audio_io [Dir_OUT]._chn_arr [1]._peak = fstb::ToolsSimd::Shift <3>::extract (hold);
-	_meter_result._audio_io [Dir_OUT]._chn_arr [1]._rms  = fstb::ToolsSimd::Shift <3>::extract (rms );
+	_meter_result._audio_io [Dir_IN ]._chn_arr [0]._peak = hold.template extract <0> ();
+	_meter_result._audio_io [Dir_IN ]._chn_arr [0]._rms  = rms .template extract <0> ();
+	_meter_result._audio_io [Dir_IN ]._chn_arr [1]._peak = hold.template extract <1> ();
+	_meter_result._audio_io [Dir_IN ]._chn_arr [1]._rms  = rms .template extract <1> ();
+	_meter_result._audio_io [Dir_OUT]._chn_arr [0]._peak = hold.template extract <2> ();
+	_meter_result._audio_io [Dir_OUT]._chn_arr [0]._rms  = rms .template extract <2> ();
+	_meter_result._audio_io [Dir_OUT]._chn_arr [1]._peak = hold.template extract <3> ();
+	_meter_result._audio_io [Dir_OUT]._chn_arr [1]._rms  = rms .template extract <3> ();
 
-	const float    p_i_0 = fstb::ToolsSimd::Shift <0>::extract (peak);
-	const float    p_i_1 = fstb::ToolsSimd::Shift <1>::extract (peak);
-	const float    p_o_0 = fstb::ToolsSimd::Shift <2>::extract (peak);
-	const float    p_o_1 = fstb::ToolsSimd::Shift <3>::extract (peak);
+	const float    p_i_0 = peak.template extract <0> ();
+	const float    p_i_1 = peak.template extract <1> ();
+	const float    p_o_0 = peak.template extract <2> ();
+	const float    p_o_1 = peak.template extract <3> ();
 
 	const float    p_i   = std::max (p_i_0, p_i_1);
 	if (p_i > Cst::_clip_lvl)

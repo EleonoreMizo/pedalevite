@@ -100,7 +100,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::set_rls_coef (int env, float c
 template <class VD, class VS, class VP, int ORD>
 fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fstb::Vf32 &in) noexcept
 {
-	assert (test_ge_0 (in));
+	assert (in >= fstb::Vf32::zero ());
 
 	const auto     zero       = fstb::Vf32::zero ();
 	const auto     one        = fstb::Vf32 (1);
@@ -209,7 +209,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::Vf32 out_
 	do
 	{
 		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
-		assert (test_ge_0 (state0));
+		assert (state0 >= fstb::Vf32::zero ());
 
 		const auto     hc_lt_0    = hold_c.is_lt_0 ();
 		const auto     coef_r_cur = coef_r & hc_lt_0;
@@ -289,7 +289,7 @@ fstb::Vf32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fst
 	do
 	{
 		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
-		assert (test_ge_0 (state0));
+		assert (state0 >= fstb::Vf32::zero ());
 
 		const auto     hc_lt_0    = hold_c.is_lt_0 ();
 		const auto     coef_r_cur = coef_r & hc_lt_0;
@@ -429,19 +429,6 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-template <class VD, class VS, class VP, int ORD>
-bool	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::test_ge_0 (const fstb::Vf32 &in) noexcept
-{
-	return (
-		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <1>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <2>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <3>::extract (in) >= 0
-	);
-}
 
 
 

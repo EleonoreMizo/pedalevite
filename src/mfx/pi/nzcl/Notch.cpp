@@ -192,8 +192,8 @@ Not sure if the benefit is interesting, especially for small buffers.
 			auto           gt = (thr * g0 - one) * mul;
 			gt = fstb::max (gt, zero);
 
-			const float    gt_beg = fstb::ToolsSimd::Shift <0>::extract (gt);
-			const float    gt_end = fstb::ToolsSimd::Shift <1>::extract (gt);
+			const float    gt_beg = gt.template extract <0> ();
+			const float    gt_end = gt.template extract <1> ();
 
 			// Simple linear interpolation on the gain
 			// Division can be avoided just by reading a table, block_len is

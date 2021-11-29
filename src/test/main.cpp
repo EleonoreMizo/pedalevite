@@ -830,8 +830,8 @@ int	test_transients ()
 			x = env.process_sample (x);
 			for (int chn = 0; chn < 4; ++chn)
 			{
-				dst_arr [chn] [pos] = fstb::ToolsSimd::Shift <0>::extract (x);
-				x = fstb::ToolsSimd::Shift <-1>::rotate (x);
+				dst_arr [chn] [pos] = x.template extract <0> ();
+				x = x.template rotate <-1> ();
 			}
 		}
 

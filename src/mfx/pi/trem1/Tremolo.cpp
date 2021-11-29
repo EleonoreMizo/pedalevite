@@ -204,8 +204,8 @@ void	Tremolo::do_process_block (piapi::ProcInfo &proc)
 	vol = one - fstb::min (vol * v_satl * half, one);
 	vol = (one - vol * vol) / v_satl;
 
-	const float    vol_beg = fstb::ToolsSimd::Shift <0>::extract (vol);
-	const float    vol_end = fstb::ToolsSimd::Shift <1>::extract (vol);
+	const float    vol_beg = vol.template extract <0> ();
+	const float    vol_end = vol.template extract <1> ();
 
 	// Signal processing
 	if (proc._dir_arr [piapi::Dir_OUT]._nbr_chn > 1)

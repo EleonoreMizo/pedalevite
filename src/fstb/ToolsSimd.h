@@ -108,17 +108,6 @@ public:
 	class Shift
 	{
 	public:
-		static inline Vf32
-		               rotate (Vf32 a) noexcept;
-		static inline float
-		               extract (Vf32 a) noexcept;
-		static inline Vf32
-		               insert (Vf32 a, float val) noexcept;
-		static inline Vf32
-		               spread (Vf32 a) noexcept;
-		static inline Vf32
-		               compose (Vf32 a, Vf32 b) noexcept;
-
 		static inline Vs32
 		               rotate (Vs32 a) noexcept;
 		static inline int32_t

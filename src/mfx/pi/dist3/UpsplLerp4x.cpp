@@ -67,7 +67,7 @@ void	UpsplLerp4x::process_block (float dst_ptr [], const float src_ptr [], int n
 		old.store (dst_ptr + pos * 4);
 		old = cur;
 	}
-	_val_old = fstb::ToolsSimd::Shift <0>::extract (old);
+	_val_old = old.template extract <0> ();
 }
 
 

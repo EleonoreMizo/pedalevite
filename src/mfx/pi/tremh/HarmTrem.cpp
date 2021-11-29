@@ -283,8 +283,8 @@ void	HarmTrem::do_process_block (piapi::ProcInfo &proc)
 	const auto     v_hi_m = fstb::max (v_t_hi * v_p2n2, zero);
 
 	// From the original signal (2 elements, duplicated):
-	const auto     v_lo_m2 = fstb::ToolsSimd::Shift <2>::rotate (v_lo_m);
-	const auto     v_hi_m2 = fstb::ToolsSimd::Shift <2>::rotate (v_hi_m);
+	const auto     v_lo_m2 = v_lo_m.template rotate <2> ();
+	const auto     v_hi_m2 = v_hi_m.template rotate <2> ();
 	const auto     v_lo_o = one - v_lo_m - v_lo_m2;
 	const auto     v_hi_o = one - v_hi_m - v_hi_m2;
 
@@ -495,13 +495,13 @@ void	HarmTrem::mix_buf (float dst_ptr [], int buf, int nbr_spl, fstb::Vf32 v_gai
 
 	if (r_flag)
 	{
-		gain_beg = fstb::ToolsSimd::Shift <2>::extract (v_gain);
-		gain_end = fstb::ToolsSimd::Shift <3>::extract (v_gain);
+		gain_beg = v_gain.template extract <2> ();
+		gain_end = v_gain.template extract <3> ();
 	}
 	else
 	{
-		gain_beg = fstb::ToolsSimd::Shift <0>::extract (v_gain);
-		gain_end = fstb::ToolsSimd::Shift <1>::extract (v_gain);
+		gain_beg = v_gain.template extract <0> ();
+		gain_end = v_gain.template extract <1> ();
 	}
 	if (copy_flag)
 	{

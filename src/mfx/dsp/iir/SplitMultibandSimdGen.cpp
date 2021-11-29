@@ -1416,9 +1416,9 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 				else
 				{
 					fstb::snprintf4all (txt_0, sizeof (txt_0),
-						"fstb::Vf32 (fstb::ToolsSimd::Shift <%d>::extract (v%do));\n",
-						coord_arr [0]._lane_idx,
-						coord_arr [0]._group_idx
+						"v%do.template spread <%d> ();\n",
+						coord_arr [0]._group_idx,
+						coord_arr [0]._lane_idx
 					);
 					r._cinl += vi_beg + txt_0;
 				}
@@ -1450,13 +1450,13 @@ SplitMultibandSimdGen::Result	SplitMultibandSimdGen::generate_filter_proc () con
 				{
 					fstb::snprintf4all (txt_0, sizeof (txt_0),
 						"fstb::Vf32::set_pair_fill (\n"
-						"\t\tfstb::ToolsSimd::Shift <%d>::extract (v%do),\n"
-						"\t\tfstb::ToolsSimd::Shift <%d>::extract (v%do)\n"
+						"\t\tv%do.template extract <%d> (),\n"
+						"\t\tv%do.template extract <%d> ()\n"
 						"\t);\n",
-						coord_arr [0]._lane_idx,
 						coord_arr [0]._group_idx,
-						coord_arr [1]._lane_idx,
-						coord_arr [1]._group_idx
+						coord_arr [0]._lane_idx,
+						coord_arr [1]._group_idx,
+						coord_arr [1]._lane_idx
 					);
 					r._cinl += vi_beg + txt_0;
 				}

@@ -367,7 +367,7 @@ float	TransSZBilin::compute_k_approx (float f) noexcept
 #if defined (fstb_HAS_SIMD)
 	const auto     den_v    = fstb::Vf32 (f);
 	const auto     invden_v = den_v.rcp_approx ();
-	const float    invden   = fstb::ToolsSimd::Shift <0>::extract (invden_v);
+	const float    invden   = invden_v.template extract <0> ();
 	const float    k        = num * invden;
 #else
 	const float    k        = num / f;

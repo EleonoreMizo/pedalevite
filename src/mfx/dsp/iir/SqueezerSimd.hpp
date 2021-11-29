@@ -207,10 +207,10 @@ float	SqueezerSimd <BR, LFOP>::process_sample (float x) noexcept
 	const auto     shaped = shape_feedback (ytmp);
 
 	// 4 poles
-	const float    sv_0 = fstb::ToolsSimd::Shift <0>::extract (shaped);
-	const float    sv_1 = fstb::ToolsSimd::Shift <1>::extract (shaped);
-	const float    sv_2 = fstb::ToolsSimd::Shift <2>::extract (shaped);
-	const float    sv_3 = fstb::ToolsSimd::Shift <3>::extract (shaped);
+	const float    sv_0 = shaped.template extract <0> ();
+	const float    sv_1 = shaped.template extract <1> ();
+	const float    sv_2 = shaped.template extract <2> ();
+	const float    sv_3 = shaped.template extract <3> ();
 	_y [1 - 1] = _g * (xp         + _x  ) - _p * sv_0;
 	_y [2 - 1] = _g * (_y [1 - 1] + sv_0) - _p * sv_1;
 	_y [3 - 1] = _g * (_y [2 - 1] + sv_1) - _p * sv_2;

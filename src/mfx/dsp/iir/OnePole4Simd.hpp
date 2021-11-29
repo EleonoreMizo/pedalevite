@@ -318,16 +318,15 @@ void	OnePole4Simd_Proc <STP>::process_block_serial_latency (OnePole4SimdData &da
 			const float    src_0 = in_ptr [index + 0];
 			const float    src_1 = in_ptr [index + 1];
 
-			auto           tmp { fstb::ToolsSimd::Shift <1>::rotate (y1) };
-			auto           x {
-				fstb::ToolsSimd::Shift <0>::insert (tmp, src_0) };
+			auto           tmp { y1.template rotate <1> () };
+			auto           x   { tmp.template insert <0> (src_0) };
 			const auto     y2  = b0 * x  + b1 * x1 - a1 * y1;
 			const auto     x2  = x;
 			tmp.storeu_scalar (&out_ptr [index + 0]);
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
-			tmp = fstb::ToolsSimd::Shift <1>::rotate (y2);
-			x   = fstb::ToolsSimd::Shift <0>::insert (tmp, src_1);
+			tmp = y2.template rotate <1> ();
+			x   = tmp.template insert <0> (src_1);
 			y1  = b0 * x  + b1 * x2 - a1 * y2;
 			x1  = x;
 			tmp.storeu_scalar (&out_ptr [index + 1]);
@@ -365,15 +364,15 @@ float	OnePole4Simd_Proc <STP>::process_sample_serial_latency (OnePole4SimdData &
 	const auto     x1 = V128Par::load_f32 (data._mem_x);
 	const auto     y1 = V128Par::load_f32 (data._mem_y);
 
-	const auto     tmp = fstb::ToolsSimd::Shift <1>::rotate (y1);
-	const auto     x   = fstb::ToolsSimd::Shift <0>::insert (tmp, x_s);
+	const auto     tmp = y1.template rotate <1> ();
+	const auto     x   = tmp.template insert <0> (x_s);
 
 	const auto     y   = b0 * x + b1 * x1 - a1 * y1;
 
 	V128Par::store_f32 (data._mem_x, x);
 	V128Par::store_f32 (data._mem_y, y);
 
-	const float    y_s = fstb::ToolsSimd::Shift <0>::extract (tmp);
+	const float    y_s = tmp.template extract <0> ();
 
 	STP::step_z_eq_store_result (data, b0, b1, a1, b_inc, a_inc);
 
@@ -448,7 +447,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 			x  = fstb::Vf32::interleave_pair_lo (x, y1); // y1[1 0] x[1 0]
 			const auto     y2 = b0 * x + b1 * x1 - a1 * y1;
 			const auto     x2 = x;
-			auto           y { fstb::ToolsSimd::Shift <2>::rotate (y2) };
+			auto           y { y2.template rotate <2> () };
 			y.storeu_pair (&out_ptr [index + 0]);
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
@@ -456,7 +455,7 @@ void	OnePole4Simd_Proc <STP>::process_block_2x2_latency (OnePole4SimdData &data,
 			x  = fstb::Vf32::interleave_pair_lo (x, y2);
 			y1 = b0 * x + b1 * x2 - a1 * y2;
 			x1 = x;
-			y  = fstb::ToolsSimd::Shift <2>::rotate (y1);
+			y  = y1.template rotate <2> ();
 			y.storeu_pair (&out_ptr [index + 2]);
 			STP::step_z_eq (b0, b1, a1, b_inc, a_inc);
 
@@ -500,7 +499,7 @@ fstb::Vf32	OnePole4Simd_Proc <STP>::process_sample_2x2_latency (OnePole4SimdData
 	V128Par::store_f32 (data._mem_x, x);
 	V128Par::store_f32 (data._mem_y, y);
 
-	y = fstb::ToolsSimd::Shift <2>::rotate (y);
+	y = y.template rotate <2> ();
 
 	STP::step_z_eq_store_result (data, b0, b1, a1, b_inc, a_inc);
 
@@ -1225,8 +1224,8 @@ void	OnePole4Simd <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], c
 template <class VD, class VS, class VP>
 fstb::Vf32	OnePole4Simd <VD, VS, VP>::process_sample_2x2_immediate (const fstb::Vf32 &x) noexcept
 {
-	float          x_0 = fstb::ToolsSimd::Shift <0>::extract (x);
-	float          x_1 = fstb::ToolsSimd::Shift <1>::extract (x);
+	float          x_0 = x.template extract <0> ();
+	float          x_1 = x.template extract <1> ();
 
 	x_0 = process_sample_single_stage_noswap (0, x_0);
 	x_1 = process_sample_single_stage_noswap (1, x_1);

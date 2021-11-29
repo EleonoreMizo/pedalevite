@@ -110,9 +110,6 @@ private:
 
 	typedef	float	VectFloat4 [4];
 
-	fstb_FORCEINLINE static bool
-	               test_ge_0 (const fstb::Vf32 &in) noexcept;
-
 	alignas (fstb_SIMD128_ALIGN) VectFloat4
 	               _state [ORD];
 	alignas (fstb_SIMD128_ALIGN) VectFloat4

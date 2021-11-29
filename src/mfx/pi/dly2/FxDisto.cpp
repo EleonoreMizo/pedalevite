@@ -227,8 +227,8 @@ void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
 		comp_gain = fstb::min (comp_gain, max_gain);
 #	endif
 
-		comp_gain_beg = fstb::ToolsSimd::Shift <0>::extract (comp_gain);
-		comp_gain_end = fstb::ToolsSimd::Shift <1>::extract (comp_gain);
+		comp_gain_beg = comp_gain.template extract <0> ();
+		comp_gain_end = comp_gain.template extract <1> ();
 
 #else // Reference implementation
 

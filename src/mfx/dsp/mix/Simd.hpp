@@ -118,10 +118,7 @@ void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, fl
 	if (nbr_spl > 0)
 	{
 		Fpu::scale_1_vlr (
-			data_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			data_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -222,11 +219,7 @@ void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int n
 	if (nbr_spl > 0)
 	{
 		Fpu::scale_2_vlr (
-			data_1_ptr,
-			data_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			data_1_ptr, data_2_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -374,11 +367,7 @@ void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int n
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_1_1_vlr (
-			out_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -531,12 +520,8 @@ void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_1_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_1_ptr, out_2_ptr, in_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -682,12 +667,8 @@ void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], con
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_2_1_vlr (
-			out_ptr,
-			in_1_ptr,
-			in_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_1_ptr, in_2_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -853,13 +834,8 @@ void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_2_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_1_ptr,
-			in_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_1_ptr, out_2_ptr, in_1_ptr, in_2_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -970,14 +946,9 @@ void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [],
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_spread_1_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_l),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_r),
-			e_vol_l,
-			e_vol_r
+			out_1_ptr, out_2_ptr, in_ptr, nbr_spl,
+			vec_vol_l.template extract <0> (), vec_vol_r.template extract <0> (),
+			e_vol_l, e_vol_r
 		);
 	}
 }
@@ -1083,12 +1054,8 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_xfade_2_1_vlr (
-			out_ptr,
-			in_1_ptr,
-			in_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_xf),
-			e_xf
+			out_ptr, in_1_ptr, in_2_ptr, nbr_spl,
+			vec_xf.template extract <0> (), e_xf
 		);
 	}
 }
@@ -1279,10 +1246,10 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 	if (nbr_spl > 0)
 	{
 		StereoLevel new_s_vol (
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_l2l),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_l2r),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_r2l),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_r2r)
+			vec_vol_l2l.template extract <0> (),
+			vec_vol_l2r.template extract <0> (),
+			vec_vol_r2l.template extract <0> (),
+			vec_vol_r2r.template extract <0> ()
 		);
 		
 		Fpu::copy_mat_2_2_vlr (
@@ -1438,11 +1405,7 @@ void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int 
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_1_2i_vlr (
-			out_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -1592,12 +1555,8 @@ void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], co
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_2_2i_vlr (
-			out_ptr,
-			in_1_ptr,
-			in_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_1_ptr, in_2_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -1678,17 +1637,17 @@ void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const
 	for (int nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
 	{
 		// We start with:
-		const auto	i1 = V128Src::load_f32 (in_1_ptr);	// A1 B1 C1 D1
-		const auto	i2 = V128Src::load_f32 (in_2_ptr);	// A2 B2 C2 D2
+		const auto	i1 = V128Src::load_f32 (in_1_ptr); // A1 B1 C1 D1
+		const auto	i2 = V128Src::load_f32 (in_2_ptr); // A2 B2 C2 D2
 
 		// First unpacking
-		fstb::Vf32     o1;	// A1 A2 B1 B2
-		fstb::Vf32     o3;	// C1 C2 D1 D2
+		fstb::Vf32     o1; // A1 A2 B1 B2
+		fstb::Vf32     o3; // C1 C2 D1 D2
 		std::tie (o1, o3) = fstb::Vf32::interleave (i1, i2);
 
 		// Upper part to lower pos.
-		const auto	o2 = fstb::ToolsSimd::Shift <2>::rotate (o1);	// B1 B2 xx xx
-		const auto	o4 = fstb::ToolsSimd::Shift <2>::rotate (o3);	// D1 D2 xx xx
+		const auto	o2 = o1.template rotate <2> (); // B1 B2 xx xx
+		const auto	o4 = o3.template rotate <2> (); // D1 D2 xx xx
 
 		V128Dst::store_f32 (out_ptr     , o1);
 		V128Dst::store_f32 (out_ptr +  4, o2);
@@ -1837,11 +1796,7 @@ void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int 
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_2i_1_vlr (
-			out_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -1988,12 +1943,8 @@ void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const
 	if (nbr_spl > 0)
 	{
 		Fpu::copy_2i_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_1_ptr, out_2_ptr, in_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -2274,11 +2225,7 @@ void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nb
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_1_1_vlr (
-			out_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -2428,12 +2375,8 @@ void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_1_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_1_ptr, out_2_ptr, in_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -2582,12 +2525,8 @@ void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], cons
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_2_1_vlr (
-			out_ptr,
-			in_1_ptr,
-			in_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_1_ptr, in_2_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -2750,13 +2689,8 @@ void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_2_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_1_ptr,
-			in_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_1_ptr, out_2_ptr, in_1_ptr, in_2_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -2881,14 +2815,9 @@ void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], 
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_spread_1_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_l),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_r),
-			e_vol_l,
-			e_vol_r
+			out_1_ptr, out_2_ptr, in_ptr, nbr_spl,
+			vec_vol_l.template extract <0> (), vec_vol_r.template extract <0> (),
+			e_vol_l, e_vol_r
 		);
 	}
 }
@@ -3044,10 +2973,10 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 	if (nbr_spl > 0)
 	{
 		StereoLevel new_s_vol (
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_l2l),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_l2r),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_r2l),
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol_r2r)
+			vec_vol_l2l.template extract <0> (),
+			vec_vol_l2r.template extract <0> (),
+			vec_vol_r2l.template extract <0> (),
+			vec_vol_r2r.template extract <0> ()
 		);
 		
 		Fpu::mix_mat_2_2_vlr (
@@ -3211,11 +3140,7 @@ void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int n
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_1_2i_vlr (
-			out_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -3374,12 +3299,8 @@ void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], con
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_2_2i_vlr (
-			out_ptr,
-			in_1_ptr,
-			in_2_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_1_ptr, in_2_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -3530,11 +3451,7 @@ void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int n
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_2i_1_vlr (
-			out_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_ptr, in_ptr, nbr_spl, vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -3693,12 +3610,8 @@ void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	if (nbr_spl > 0)
 	{
 		Fpu::mix_2i_2_vlr (
-			out_1_ptr,
-			out_2_ptr,
-			in_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_vol),
-			e_vol
+			out_1_ptr, out_2_ptr, in_ptr, nbr_spl,
+			vec_vol.template extract <0> (), e_vol
 		);
 	}
 }
@@ -3973,12 +3886,7 @@ void	Simd <VD, VS>::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e
 	nbr_spl &= 3;
 	if (nbr_spl > 0)
 	{
-		Fpu::fill_lr (
-			out_ptr,
-			nbr_spl,
-			fstb::ToolsSimd::Shift <0>::extract (vec_val),
-			e_val
-		);
+		Fpu::fill_lr (out_ptr, nbr_spl, vec_val.template extract <0> (), e_val);
 	}
 }
 

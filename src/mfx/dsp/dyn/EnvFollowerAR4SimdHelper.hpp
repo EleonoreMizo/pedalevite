@@ -86,7 +86,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_rls_coef (int env, float co
 template <class VD, class VS, class VP, int ORD>
 fstb::Vf32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fstb::Vf32 &in) noexcept
 {
-	assert (test_ge_0 (in));
+	assert (in >= fstb::Vf32::zero ());
 
 	const auto     coef_a = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r = V128Par::load_f32 (_coef_rls);
@@ -169,7 +169,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::Vf32 out_p
 	do
 	{
 		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
-		assert (test_ge_0 (state0));
+		assert (state0 >= fstb::Vf32::zero ());
 
 		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (0, 1)
 		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (1, 2)
@@ -228,7 +228,7 @@ fstb::Vf32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::analyse_block (const fstb
 	do
 	{
 		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
-		assert (test_ge_0 (state0));
+		assert (state0 >= fstb::Vf32::zero ());
 
 		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (0, 1)
 		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (1, 2)
@@ -330,19 +330,6 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-template <class VD, class VS, class VP, int ORD>
-bool	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::test_ge_0 (const fstb::Vf32 &in) noexcept
-{
-	return (
-		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <1>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <2>::extract (in) >= 0
-		&& fstb::ToolsSimd::Shift <3>::extract (in) >= 0
-	);
-}
 
 
 

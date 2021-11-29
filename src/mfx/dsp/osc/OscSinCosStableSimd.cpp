@@ -69,15 +69,15 @@ void	OscSinCosStableSimd::set_step (float angle_rad) noexcept
 
 	auto           pos_cos = fstb::Vf32::load (&_pos_cos);
 	auto           pos_sin = fstb::Vf32::load (&_pos_sin);
-	const float    old_cos = fstb::ToolsSimd::Shift <0>::extract (pos_cos);
-	const float    old_sin = fstb::ToolsSimd::Shift <0>::extract (pos_sin);
+	const float    old_cos = pos_cos.template extract <0> ();
+	const float    old_sin = pos_sin.template extract <0> ();
 	for (int i = 1; i < _nbr_units; ++i)
 	{
 		step (pos_cos, pos_sin, alpha, beta);
-		pos_cos = fstb::ToolsSimd::Shift <1>::rotate (pos_cos);
-		pos_sin = fstb::ToolsSimd::Shift <1>::rotate (pos_sin);
-		pos_cos = fstb::ToolsSimd::Shift <0>::insert (pos_cos, old_cos);
-		pos_sin = fstb::ToolsSimd::Shift <0>::insert (pos_sin, old_sin);
+		pos_cos = pos_cos.template rotate <1> ();
+		pos_sin = pos_sin.template rotate <1> ();
+		pos_cos = pos_cos.template insert <0> (old_cos);
+		pos_sin = pos_sin.template insert <0> (old_sin);
 	}
 	pos_cos.store (&_pos_cos);
 	pos_sin.store (&_pos_sin);

@@ -151,6 +151,19 @@ public:
 	fstb_FORCEINLINE Vf32
 	               butterfly_w32 () const noexcept;
 
+	template <int SHIFT>
+	fstb_FORCEINLINE Vf32
+	               rotate () const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE float
+	               extract () const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE Vf32
+	               insert (float val) const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE Vf32
+	               spread () const noexcept;
+
 	fstb_FORCEINLINE Vf32
 	               round () const noexcept;
 	fstb_FORCEINLINE Vf32
@@ -219,6 +232,9 @@ public:
 	               deinterleave_lo (Vf32 i0, Vf32 i1) noexcept;
 	static fstb_FORCEINLINE Vf32
 	               deinterleave_hi (Vf32 i0, Vf32 i1) noexcept;
+	template <int POS>
+	static fstb_FORCEINLINE Vf32
+	               compose (Vf32 a, Vf32 b) noexcept;
 
 	template <typename MEM>
 	static fstb_FORCEINLINE Vf32

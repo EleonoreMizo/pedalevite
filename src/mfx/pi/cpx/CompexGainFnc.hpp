@@ -165,7 +165,7 @@ fstb::Vf32	CompexGainFnc::compute_gain (const fstb::Vf32 env_2l2)
 	// Stores the gain adjustment if requested
 	if (store_flag)
 	{
-		_cur_gain = fstb::ToolsSimd::Shift <0>::extract (gain_l2);
+		_cur_gain = gain_l2.template extract <0> ();
 	}
 
 	// Additional gain (manual + auto)

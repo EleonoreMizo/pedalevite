@@ -527,6 +527,94 @@ Vf32	Vf32::butterfly_w32 () const noexcept
 
 
 
+// Positive = to the left, rotates towards the higher indexes
+template <int SHIFT>
+Vf32	Vf32::rotate () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { {
+		_x [(0 - SHIFT) & 3],
+		_x [(1 - SHIFT) & 3],
+		_x [(2 - SHIFT) & 3],
+		_x [(3 - SHIFT) & 3]
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	switch (SHIFT & 3)
+	{
+	case 1:  return _mm_shuffle_ps (_x, _x, (2<<6) | (1<<4) | (0<<2) | (3<<0));
+	case 2:  return _mm_shuffle_ps (_x, _x, (1<<6) | (0<<4) | (3<<2) | (2<<0));
+	case 3:  return _mm_shuffle_ps (_x, _x, (0<<6) | (3<<4) | (2<<2) | (1<<0));
+	default: return *this;
+	}
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	int32x4_t     aa = vreinterpretq_s32_f32 (_x);
+	switch (SHIFT & 3)
+	{
+	case 1:  aa = vextq_s32 (aa, aa, 3); break;
+	case 2:  aa = vextq_s32 (aa, aa, 2); break;
+	case 3:  aa = vextq_s32 (aa, aa, 1); break;
+	default: /* Nothing */               break;
+	}
+	return vreinterpretq_f32_s32 (aa);
+#endif // fstb_ARCHI
+}
+
+
+
+template <int POS>
+float	Vf32::extract () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return _x [POS & 3];
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	auto           a = _x;
+	switch (POS & 3)
+	{
+	case 1:  a = _mm_shuffle_ps (a, a, 1);	break;
+	case 2:  a = _mm_shuffle_ps (a, a, 2);	break;
+	case 3:  a = _mm_shuffle_ps (a, a, 3);	break;
+	default: /* Nothing */                 break;
+	}
+	return _mm_cvtss_f32 (a);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vgetq_lane_f32 (_x, POS & 3);
+#endif // fstb_ARCHI
+}
+
+
+
+template <int POS>
+Vf32	Vf32::insert (float val) const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	auto           a = *this;
+	a._x [POS & 3] = val;
+	return a;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	auto           a = rotate <(-POS) & 3> ();
+	a._x = _mm_move_ss (a._x, _mm_set_ss (val));
+	return a.template rotate <POS> ();
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vsetq_lane_f32 (val, _x, POS & 3);
+#endif // fstb_ARCHI
+}
+
+
+
+template <int POS>
+Vf32	Vf32::spread () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vf32 (extract <POS> ());
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_shuffle_ps (_x, _x, 0x55 * (POS & 3));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vdupq_n_f32 (vgetq_lane_f32 (_x, POS & 3));
+#endif // fstb_ARCHI
+}
+
+
+
 // Assumes "to nearest" rounding mode on x86
 Vf32	Vf32::round () const noexcept
 {
@@ -1273,6 +1361,53 @@ Vf32	Vf32::deinterleave_hi (Vf32 i0, Vf32 i1) noexcept
 	return _mm_shuffle_ps (i0._x, i1._x, (1<<0) | (3<<2) | (1<<4) | (3<<6));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vuzpq_f32 (i0._x, i1._x).val [1];
+#endif // fstb_ARCHI
+}
+
+
+
+// Extracts the vector at the position POS from the double-width vector {a b}
+// Concatenates a [POS...3] with b [0...3-POS]
+template <int POS>
+Vf32	Vf32::compose (Vf32 a, Vf32 b) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	switch (POS & 3)
+	{
+	case 1:  return { { a._x [1], a._x [2], a._x [3], b._x [0] } };
+	case 2:  return { { a._x [2], a._x [3], b._x [0], b._x [1] } };
+	case 3:  return { { a._x [3], b._x [0], b._x [1], b._x [2] } };
+	default: return a;
+	}
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	switch (POS & 3)
+	{
+	case 1:
+		{
+			const auto     tmp = _mm_move_ss (a._x, b._x);
+			return _mm_shuffle_ps (tmp, tmp, (0<<6) | (3<<4) | (2<<2) | (1<<0));
+		}
+	case 2:
+		return _mm_shuffle_ps (a._x, b._x, (1<<6) | (0<<4) | (3<<2) | (2<<0));
+	case 3:
+		return _mm_move_ss (
+			_mm_shuffle_ps (b._x, b._x, (2<<6) | (1<<4) | (0<<2) | (3<<0)),
+			_mm_shuffle_ps (a._x, a._x, (2<<6) | (1<<4) | (0<<2) | (3<<0))
+		);
+	default:
+		return a;
+	}
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	if (POS == 0)
+	{
+		return a;
+	}
+	else
+	{
+		const auto     aa = vreinterpretq_s32_f32 (a._x);
+		const auto     bb = vreinterpretq_s32_f32 (b._x);
+		return vreinterpretq_f32_s32 (vextq_s32 (aa, bb, POS));
+	}
 #endif // fstb_ARCHI
 }
 

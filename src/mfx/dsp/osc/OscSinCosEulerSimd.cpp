@@ -78,10 +78,8 @@ void	OscSinCosEulerSimd::set_step (float stp) noexcept
 	_step_cosn = cosf (stp * _nbr_units);
 	_step_sinn = sinf (stp * _nbr_units);
 
-	const float    c0 =
-		fstb::ToolsSimd::Shift <0>::extract (fstb::Vf32::load (&_pos_cos));
-	const float    s0 =
-		fstb::ToolsSimd::Shift <0>::extract (fstb::Vf32::load (&_pos_sin));
+	const float    c0 = fstb::Vf32::load (&_pos_cos).template extract <0> ();
+	const float    s0 = fstb::Vf32::load (&_pos_sin).template extract <0> ();
 	resync (c0, s0);
 }
 
@@ -188,10 +186,10 @@ void	OscSinCosEulerSimd::resync (float c0, float s0) noexcept
 	{
 		const float    c_new = c0 * _step_cos1 - s0 * _step_sin1;
 		const float    s_new = c0 * _step_sin1 + s0 * _step_cos1;
-		c = fstb::ToolsSimd::Shift <0>::insert (c, c_new);
-		s = fstb::ToolsSimd::Shift <0>::insert (s, s_new);
-		c = fstb::ToolsSimd::Shift <-1>::rotate (c);
-		s = fstb::ToolsSimd::Shift <-1>::rotate (s);
+		c = c.template insert <0 > (c_new);
+		s = s.template insert <0 > (s_new);
+		c = c.template rotate <-1> ();
+		s = s.template rotate <-1> ();
 		c0 = c_new;
 		s0 = s_new;
 	}

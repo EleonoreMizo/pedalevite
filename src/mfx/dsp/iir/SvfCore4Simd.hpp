@@ -22,8 +22,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/ToolsSimd.h"
-
 
 
 namespace mfx
@@ -816,8 +814,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 template <class VD, class VS, class VP, class MX>
 fstb::Vf32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (const fstb::Vf32 &x) noexcept
 {
-	float          x_0 = fstb::ToolsSimd::Shift <0>::extract (x);
-	float          x_1 = fstb::ToolsSimd::Shift <1>::extract (x);
+	float          x_0 = x.template extract <0> ();
+	float          x_1 = x.template extract <1> ();
 
 	x_0 = process_sample_single_stage (_data, x_0, 0, 0);
 	x_1 = process_sample_single_stage (_data, x_1, 1, 1);
@@ -958,19 +956,19 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fs
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	const auto     x     = fstb::ToolsSimd::Shift <0>::insert (y, x_s);
+	const auto     x     = y.template insert <0> (x_s);
 
 	fstb::Vf32      v1;
 	fstb::Vf32      v2;
 	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
-	y = fstb::ToolsSimd::Shift <1>::rotate (y);
+	y = y.template rotate <1> ();
 
 	V128Par::store_f32 (_data._ic1eq, ic1eq);
 	V128Par::store_f32 (_data._ic2eq, ic2eq);
 	V128Par::store_f32 (_data._y    , y    );
 
-	const float    y_s = fstb::ToolsSimd::Shift <0>::extract (y);
+	const float    y_s = y.template extract <0> ();
 
 	return y_s;
 }
@@ -990,13 +988,13 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, cons
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	const auto     x     = fstb::ToolsSimd::Shift <0>::insert (y, x_s);
+	const auto     x     = y.template insert <0> (x_s);
 
 	fstb::Vf32      v1;
 	fstb::Vf32      v2;
 	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 	y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
-	y = fstb::ToolsSimd::Shift <1>::rotate (y);
+	y = y.template rotate <1> ();
 	increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
 
 	V128Par::store_f32 (_data._g0   , g0   );
@@ -1009,7 +1007,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, cons
 	V128Par::store_f32 (_data._ic2eq, ic2eq);
 	V128Par::store_f32 (_data._y    , y    );
 
-	const float    y_s = fstb::ToolsSimd::Shift <0>::extract (y);
+	const float    y_s = y.template extract <0> ();
 
 	return y_s;
 }
@@ -1038,13 +1036,13 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	int            pos = 0;
 	do
 	{
-		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
+		const auto     x = y.template insert <0> (src_ptr [pos]);
 
 		fstb::Vf32      v1;
 		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
-		y = fstb::ToolsSimd::Shift <1>::rotate (y);
+		y = y.template rotate <1> ();
 
 		y.storeu_scalar (dst_ptr + pos);
 		++ pos;
@@ -1079,7 +1077,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	int            pos = 0;
 	do
 	{
-		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
+		const auto     x = y.template insert <0> (src_ptr [pos]);
 
 		const auto     g0 = V128Src::load (g0_ptr + pos);
 		const auto     g1 = V128Src::load (g1_ptr + pos);
@@ -1089,7 +1087,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
-		y = fstb::ToolsSimd::Shift <1>::rotate (y);
+		y = y.template rotate <1> ();
 
 		y.storeu_scalar (dst_ptr + pos);
 		++ pos;
@@ -1123,7 +1121,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	int            pos = 0;
 	do
 	{
-		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
+		const auto     x   = y.template insert <0> (src_ptr [pos]);
 
 		const auto     g0  = V128Src::load_f32 (g0_ptr  + pos);
 		const auto     g1  = V128Src::load_f32 (g1_ptr  + pos);
@@ -1138,7 +1136,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 		const auto     v2m = V128Src::load_f32 (v2m_ptr + pos);
 
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
-		y = fstb::ToolsSimd::Shift <1>::rotate (y);
+		y = y.template rotate <1> ();
 
 		y.storeu_scalar (dst_ptr + pos);
 		++ pos;
@@ -1174,13 +1172,13 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	int            pos = 0;
 	do
 	{
-		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
+		const auto     x = y.template insert <0> (src_ptr [pos]);
 
 		fstb::Vf32      v1;
 		fstb::Vf32      v2;
 		iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
 		y = Mixer::mix (x, v1, v2, v0m, v1m, v2m);
-		y = fstb::ToolsSimd::Shift <1>::rotate (y);
+		y = y.template rotate <1> ();
 		increment (g0, g1, g2, v0m, v1m, v2m, g0i, g1i, g2i, v0mi, v1mi, v2mi);
 
 		y.storeu_scalar (dst_ptr + pos);

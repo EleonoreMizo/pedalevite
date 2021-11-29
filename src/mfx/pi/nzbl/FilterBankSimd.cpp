@@ -228,8 +228,8 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 			gt = gt * gt;
 
 			// Volume
-			const float    gt_beg = fstb::ToolsSimd::Shift <0>::extract (gt);
-			const float    gt_end = fstb::ToolsSimd::Shift <1>::extract (gt);
+			const float    gt_beg = gt.template extract <0> ();
+			const float    gt_end = gt.template extract <1> ();
 			dsp::mix::Align::scale_1_vlr (buf2_ptr, block_len, gt_beg, gt_end);
 
 			block_pos += block_len;

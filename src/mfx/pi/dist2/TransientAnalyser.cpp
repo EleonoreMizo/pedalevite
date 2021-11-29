@@ -284,10 +284,11 @@ void	TransientAnalyser::perpare_mono_input (fstb::Vf32 buf_ptr [], const float *
 
 void	TransientAnalyser::spread_and_store (fstb::Vf32 dst_ptr [], fstb::Vf32 x)
 {
-	fstb::ToolsSimd::Shift <0>::spread (x).store (dst_ptr + 0);
-	fstb::ToolsSimd::Shift <1>::spread (x).store (dst_ptr + 1);
-	fstb::ToolsSimd::Shift <2>::spread (x).store (dst_ptr + 2);
-	fstb::ToolsSimd::Shift <3>::spread (x).store (dst_ptr + 3);
+	/*** To do: check if a matrix transpose is faster ***/
+	x.template spread <0> ().store (dst_ptr + 0);
+	x.template spread <1> ().store (dst_ptr + 1);
+	x.template spread <2> ().store (dst_ptr + 2);
+	x.template spread <3> ().store (dst_ptr + 3);
 }
 
 

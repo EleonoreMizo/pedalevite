@@ -279,8 +279,8 @@ void	Approx::sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept
 {
 	const auto     xv = Vf32::set_pair (x, 1 - fabsf (1 - 2*x));
 	const auto     yv = sin_rbj_halfpi (xv);
-	sx  = ToolsSimd::Shift <0>::extract (yv);
-	s2x = ToolsSimd::Shift <1>::extract (yv);
+	sx  = yv.template extract <0> ();
+	s2x = yv.template extract <1> ();
 }
 
 

@@ -464,10 +464,10 @@ void	SplitMultibandLinSimd <O>::process_sample (float x) noexcept
 		}
 
 		// Deinterleaves the bands
-		*(pack._buf_d_ptr_arr [0]) = TS::Shift <0>::extract (y);
-		*(pack._buf_d_ptr_arr [1]) = TS::Shift <1>::extract (y);
-		*(pack._buf_d_ptr_arr [2]) = TS::Shift <2>::extract (y);
-		*(pack._buf_d_ptr_arr [3]) = TS::Shift <3>::extract (y);
+		*(pack._buf_d_ptr_arr [0]) = y.template extract <0> ();
+		*(pack._buf_d_ptr_arr [1]) = y.template extract <1> ();
+		*(pack._buf_d_ptr_arr [2]) = y.template extract <2> ();
+		*(pack._buf_d_ptr_arr [3]) = y.template extract <3> ();
 	}
 
 	// Output

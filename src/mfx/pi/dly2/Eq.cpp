@@ -168,14 +168,14 @@ void	Eq::update_filter ()
 
 #if 0
 
-	const float    b0z_l = fstb::ToolsSimd::Shift <0>::extract (b0z);
-	const float    b0z_h = fstb::ToolsSimd::Shift <1>::extract (b0z);
-	const float    b1z_l = fstb::ToolsSimd::Shift <0>::extract (b1z);
-	const float    b1z_h = fstb::ToolsSimd::Shift <1>::extract (b1z);
-	const float    a0z_l = fstb::ToolsSimd::Shift <0>::extract (a0z);
-	const float    a0z_h = fstb::ToolsSimd::Shift <1>::extract (a0z);
-	const float    a1z_l = fstb::ToolsSimd::Shift <0>::extract (a1z);
-	const float    a1z_h = fstb::ToolsSimd::Shift <1>::extract (a1z);
+	const float    b0z_l = b0z.template extract <0> ();
+	const float    b0z_h = b0z.template extract <1> ();
+	const float    b1z_l = b1z.template extract <0> ();
+	const float    b1z_h = b1z.template extract <1> ();
+	const float    a0z_l = a0z.template extract <0> ();
+	const float    a0z_h = a0z.template extract <1> ();
+	const float    a1z_l = a1z.template extract <0> ();
+	const float    a1z_h = a1z.template extract <1> ();
 
 	const float    bz [3] =
 	{
@@ -203,15 +203,15 @@ void	Eq::update_filter ()
 	const auto     x2z = x1z_l * x1z_h;
 	const float    bz [3] =
 	{
-		fstb::ToolsSimd::Shift <0>::extract (x0z),
-		fstb::ToolsSimd::Shift <0>::extract (x1z),
-		fstb::ToolsSimd::Shift <0>::extract (x2z)
+		x0z.template extract <0> (),
+		x1z.template extract <0> (),
+		x2z.template extract <0> ()
 	};
 	const float    az [3] =
 	{
-		fstb::ToolsSimd::Shift <1>::extract (x0z),
-		fstb::ToolsSimd::Shift <1>::extract (x1z),
-		fstb::ToolsSimd::Shift <1>::extract (x2z)
+		x0z.template extract <1> (),
+		x1z.template extract <1> (),
+		x2z.template extract <1> ()
 	};
 
 #endif

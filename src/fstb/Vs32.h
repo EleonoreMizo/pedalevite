@@ -129,6 +129,19 @@ public:
 	fstb_FORCEINLINE Vs32
 	               reverse () const noexcept;
 
+	template <int SHIFT>
+	fstb_FORCEINLINE Vs32
+	               rotate () const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE int32_t
+	               extract () const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE Vs32
+	               insert (int32_t val) const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE Vs32
+	               spread () const noexcept;
+
 	fstb_FORCEINLINE int32_t
 	               sum_h () const noexcept;
 	fstb_FORCEINLINE int32_t
@@ -147,6 +160,10 @@ public:
 
 	static fstb_FORCEINLINE Vs32
 	               zero () noexcept;
+
+	template <int POS>
+	static fstb_FORCEINLINE Vs32
+	               compose (Vs32 a, Vs32 b) noexcept;
 
 	template <typename MEM>
 	static fstb_FORCEINLINE Vs32
