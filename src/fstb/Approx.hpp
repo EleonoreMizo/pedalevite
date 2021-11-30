@@ -1014,6 +1014,8 @@ constexpr T	Approx::tanh_andy (T x) noexcept
 // 3: ?
 // Ref:
 // Chris Lomont, Fast Inverse Square Root, 2003-02
+// Jan Kadlec, http://rrrola.wz.cz/inv_sqrt.html, 2010
+// Matthew Robertson, A Brief History of InvSqrt, 2012
 // Robin Green, Even Faster Math Functions, 2020-03, GDC
 template <int P>
 float	Approx::rsqrt (float x) noexcept
@@ -1025,11 +1027,15 @@ float	Approx::rsqrt (float x) noexcept
 	assert (x >= 0);
 
 	constexpr int     cs  =
-		  (P == 0) ? 0x5F37624F
+		  (P == 0) ? 0x5F37642F
+		: (P == 1) ? 0x5F1FFFF9
 		: (P == 2) ? 0x5F37599E
 		:            0x5F375A86;
 
-	const float    xh = x * 0.5f;
+	constexpr float   hmul = (P == 1) ? 0.703952253f       : 0.5f;
+	constexpr float   nrc  = (P == 1) ? 2.38924456f * hmul : 1.5f;
+
+	const float    xh = x * hmul;
 	union
 	{
 		int32_t        _i;
@@ -1039,10 +1045,9 @@ float	Approx::rsqrt (float x) noexcept
 	c._i = cs - (c._i >> 1);
 	x    = c._f;
 
-	constexpr float   nr1 = (P == 1) ? 1.5008909f : 1.5f;
-	if (P > 0) { x *= nr1  - xh * x * x; }
-	if (P > 1) { x *= 1.5f - xh * x * x; }
-	if (P > 2) { x *= 1.5f - xh * x * x; }
+	if (P > 0) { x *= nrc - xh * x * x; }
+	if (P > 1) { x *= nrc - xh * x * x; }
+	if (P > 2) { x *= nrc - xh * x * x; }
 
 	return x;
 }
@@ -1063,7 +1068,7 @@ double	Approx::rsqrt (double x) noexcept
 		double         _f;
 	}              c;
 	c._f = x;
-	c._i = 0x5FE6EC85E7DE30DALL - (c._i >> 1);
+	c._i = 0x5FE6EB50C7B537A9LL - (c._i >> 1);
 	x    = c._f;
 
 	if (P > 0) { x *= 1.5 - xh * x * x; }

@@ -46,26 +46,25 @@ Vf32	ToolsSimd::rsqrt_approx (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 	// Ref:
-	// Robin Green, Even Faster Math Functions, 2020-03, GDC
-	// Chris Lomont, Fast Inverse Square Root, 2003-02
-	const float    xh0 = v._x [0] * 0.5f;
-	const float    xh1 = v._x [1] * 0.5f;
-	const float    xh2 = v._x [2] * 0.5f;
-	const float    xh3 = v._x [3] * 0.5f;
+	// Jan Kadlec, http://rrrola.wz.cz/inv_sqrt.html, 2010
+	const float    xh0 = v._x [0] * 0.703952253f;
+	const float    xh1 = v._x [1] * 0.703952253f;
+	const float    xh2 = v._x [2] * 0.703952253f;
+	const float    xh3 = v._x [3] * 0.703952253f;
 	Combo          c;
 	c._vf32    = v;
-	c._s32 [0] = 0x5F375A82 - (c._s32 [0] >> 1);
-	c._s32 [1] = 0x5F375A82 - (c._s32 [1] >> 1);
-	c._s32 [2] = 0x5F375A82 - (c._s32 [2] >> 1);
-	c._s32 [3] = 0x5F375A82 - (c._s32 [3] >> 1);
+	c._s32 [0] = 0x5F1FFFF9 - (c._s32 [0] >> 1);
+	c._s32 [1] = 0x5F1FFFF9 - (c._s32 [1] >> 1);
+	c._s32 [2] = 0x5F1FFFF9 - (c._s32 [2] >> 1);
+	c._s32 [3] = 0x5F1FFFF9 - (c._s32 [3] >> 1);
 	float          x0 = c._f32 [0];
 	float          x1 = c._f32 [1];
 	float          x2 = c._f32 [2];
 	float          x3 = c._f32 [3];
-	x0 *= 1.5008909f - xh0 * x0 * x0;
-	x1 *= 1.5008909f - xh1 * x1 * x1;
-	x2 *= 1.5008909f - xh2 * x2 * x2;
-	x3 *= 1.5008909f - xh3 * x3 * x3;
+	x0 *= 1.681914091f - xh0 * x0 * x0;
+	x1 *= 1.681914091f - xh1 * x1 * x1;
+	x2 *= 1.681914091f - xh2 * x2 * x2;
+	x3 *= 1.681914091f - xh3 * x3 * x3;
 	return Vf32 { { x0, x1, x2, x3 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_rsqrt_ps (v);
