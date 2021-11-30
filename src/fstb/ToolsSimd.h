@@ -72,9 +72,6 @@ public:
 	static void    disable_denorm () noexcept;
 
 	static inline Vf32
-	               rsqrt_approx (Vf32 v) noexcept;
-
-	static inline Vf32
 	               cast_f32 (Vs32 x) noexcept;
 	static inline Vs32
 	               cast_s32 (Vf32 x) noexcept;

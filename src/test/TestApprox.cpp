@@ -216,11 +216,6 @@ int	TestApprox::perform_test ()
 	);
 	test_op1_all_flt_v <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
-		[] (Vf32 x) { return fstb::ToolsSimd::rsqrt_approx (x); },
-		"rsqrt_approx", 1e-9f, 4.f, 0.001
-	);
-	test_op1_all_flt_v <true> (ret_val,
-		[] (double x) { return 1 / sqrt (x); },
 		[] (Vf32 x) { return x.rsqrt (); },
 		"rsqrt", 1e-9f, 4.f, 1e-6
 	);

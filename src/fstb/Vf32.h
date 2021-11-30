@@ -176,6 +176,8 @@ public:
 	               sqrt_approx () const noexcept;
 	fstb_FORCEINLINE Vf32
 	               rsqrt () const noexcept;
+	fstb_FORCEINLINE Vf32
+	               rsqrt_approx () const noexcept;
 	template <typename P>
 	fstb_FORCEINLINE Vf32
 	               log2_base (P poly) const noexcept;

@@ -69,7 +69,8 @@ std::array <fstb::Vf32, 2>	XFadeEqPowC2::compute_gain (fstb::Vf32 x) noexcept
 	const auto     xi2 = xi  * xi;
 	const auto     x4  = x2  * x2;
 	const auto     xi4 = xi2 * xi2;
-	const auto     mul = fstb::ToolsSimd::rsqrt_approx (xi4 + x4);
+	const auto     sum = xi4 + x4;
+	const auto     mul = sum.rsqrt_approx ();
 	const auto     fi  = x2  * mul;
 	const auto     fo  = xi2 * mul;
 

@@ -753,6 +753,31 @@ Vf32	Vf32::rsqrt () const noexcept
 
 
 
+Vf32	Vf32::rsqrt_approx () const noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	// Ref:
+	// Jan Kadlec, http://rrrola.wz.cz/inv_sqrt.html, 2010
+	const auto     xh = (*this) * Vf32 (0.703952253f);
+	Combo          c { _x };
+	c._s32 [0] = 0x5F1FFFF9 - (c._s32 [0] >> 1);
+	c._s32 [1] = 0x5F1FFFF9 - (c._s32 [1] >> 1);
+	c._s32 [2] = 0x5F1FFFF9 - (c._s32 [2] >> 1);
+	c._s32 [3] = 0x5F1FFFF9 - (c._s32 [3] >> 1);
+	auto           rs = Vf32 { c._vf32 };
+	rs *= Vf32 (1.681914091f) - xh * rs * rs;
+	return rs;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_rsqrt_ps (_x);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	auto           rs = vrsqrteq_f32 (_x);
+	rs *= vrsqrtsq_f32 (rs * float32x4_t (_x), rs);
+	return rs;
+#endif // fstb_ARCHI
+}
+
+
+
 // poly is a user-provided Vf32 log2 approximation from [1 ; 2[ to [0 ; 1[
 template <typename P>
 Vf32	Vf32::log2_base (P poly) const noexcept

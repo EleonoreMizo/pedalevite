@@ -28,7 +28,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #if defined (fstb_HAS_SIMD)
-	#include "fstb/ToolsSimd.h"
+	#include "fstb/Vf32.h"
 #endif // fstb_HAS_SIMD
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/dsp/mix/Generic.h"
@@ -395,7 +395,6 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 {
 #if defined (fstb_HAS_SIMD)
 
-	using TS = fstb::ToolsSimd;
 	const auto     eps = fstb::Vf32 (1e-9f);
 	const auto     one = fstb::Vf32 (1.f);
 	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
@@ -406,7 +405,7 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 
 		const auto     mag2 = b_r * b_r + b_i * b_i;
 		const auto     mgt0 = (mag2 > eps);
-		const auto     mult = TS::rsqrt_approx (mag2);
+		const auto     mult = mag2.rsqrt_approx ();
 		b_r *= mult;
 		b_i *= mult;
 		b_r  = fstb::select (mgt0, b_r, one);

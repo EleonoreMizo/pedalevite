@@ -96,7 +96,7 @@ void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nb
 			const auto     vol_sq = fstb::Vf32::load (buf_ptr + pos);
 			auto           x      = fstb::Vf32::loadu (src_loc_ptr + pos);
 			const auto     vol_gt_lvl = (vol_sq > lvl4_sq);
-			const auto     mult   = fstb::ToolsSimd::rsqrt_approx (vol_sq);
+			const auto     mult   = vol_sq.rsqrt_approx ();
 			const auto     xlim   = x * lvl4 * mult;
 			x = fstb::select (vol_gt_lvl, xlim, x);
 			x.storeu (dst_loc_ptr + pos);
