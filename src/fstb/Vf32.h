@@ -320,6 +320,7 @@ fstb_FORCEINLINE Vf32 operator >= (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 abs (const Vf32 &v) noexcept;
 fstb_FORCEINLINE Vf32 fma (const Vf32 &x, const Vf32 &a, const Vf32 &b) noexcept;
 fstb_FORCEINLINE Vf32 fms (const Vf32 &x, const Vf32 &a, const Vf32 &b) noexcept;
+fstb_FORCEINLINE Vf32 fnma (const Vf32 &x, const Vf32 &a, const Vf32 &b) noexcept;
 fstb_FORCEINLINE Vf32 round (const Vf32 &v) noexcept;
 fstb_FORCEINLINE Vf32 min (const Vf32 &lhs, const Vf32 &rhs) noexcept;
 fstb_FORCEINLINE Vf32 max (const Vf32 &lhs, const Vf32 &rhs) noexcept;

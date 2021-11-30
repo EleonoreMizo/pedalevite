@@ -1804,6 +1804,29 @@ Vf32 fms (const Vf32 &x, const Vf32 &a, const Vf32 &b) noexcept
 	return _mm_sub_ps (_mm_mul_ps (x, a), b);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	#if defined (__ARM_FEATURE_FMA)
+	return -vfmsq_f32 (b, x, a);
+	#else
+	return -vmlsq_f32 (b, x, a);
+	#endif
+#endif // fstb_ARCHI
+}
+
+
+
+// Returns - x * a + b
+Vf32 fnma (const Vf32 &x, const Vf32 &a, const Vf32 &b) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return { {
+		b._x [0] - x._x [0] * a._x [0],
+		b._x [1] - x._x [1] * a._x [1],
+		b._x [2] - x._x [2] * a._x [2],
+		b._x [3] - x._x [3] * a._x [3]
+	} };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_sub_ps (b, _mm_mul_ps (x, a));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_FEATURE_FMA)
 	return vfmsq_f32 (b, x, a);
 	#else
 	return vmlsq_f32 (b, x, a);
@@ -2053,9 +2076,9 @@ Vf32 exp2 (Vf32 v) noexcept
 	// c5 = 0.00132508
 
 	// i = round (v)
-	// v = v - i   
+	// v = v - i
 #if fstb_ARCHI == fstb_ARCHI_X86
-	auto           i = _mm_cvtps_epi32 (v);          
+	auto           i = _mm_cvtps_epi32 (v);
 	v -= _mm_cvtepi32_ps (i);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const int      round_ofs = 256;
