@@ -104,22 +104,6 @@ public:
 	static inline Vs32
 	               slli_s32 (Vs32 lhs) noexcept;
 
-	template <int SHIFT>
-	class Shift
-	{
-	public:
-		static inline Vs32
-		               rotate (Vs32 a) noexcept;
-		static inline int32_t
-		               extract (Vs32 a) noexcept;
-		static inline Vs32
-		               insert (Vs32 a, int32_t val) noexcept;
-		static inline Vs32
-		               spread (Vs32 a) noexcept;
-		static inline Vs32
-		               compose (Vs32 a, Vs32 b) noexcept;
-	};
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
