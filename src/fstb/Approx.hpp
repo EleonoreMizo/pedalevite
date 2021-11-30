@@ -792,19 +792,20 @@ order-5 version:
 	c1  = -sum(c*)
 	err = 8.4e-4
 order-7 version:
-	c7  =  0.0386379
-	c5  = -0.145917
-	c3  =  0.321088
+	c7  =  0.0386378786305289
+	c5  = -0.145916508504993
+	c3  =  0.321088057777014
 	c1  = -sum(c*)
 	err = 1.2e-4
+
+n = 1000
 FindFit[
-	Table[Pi/4 - ArcTan[(x-1)/999], {x, 1000}],
-	Pi/4 + (-Pi/4 - c3 - c5 - c7) ((x-1)/999)
-		   + c3 ((x-1)/999)^3
-		   + c5 ((x-1)/999)^5
-		   + c7 ((x-1)/999)^7,
-	{c7, c5, c3},
-	x
+	Table[-ArcTan[x], {x, 0, 1, 1/n}],
+	  (-Pi/4 - c3 - c5 - c7) ((x - 1)/n)
+	+ c3 ((x - 1)/n)^3
+	+ c5 ((x - 1)/n)^5
+	+ c7 ((x - 1)/n)^7,
+	{c7, c5, c3}, x
 ]
 */
 
@@ -847,13 +848,14 @@ Vf32	Approx::atan2_3th (Vf32 y, Vf32 x) noexcept
 
 
 
+// Max error: +/-1.2e-4 rad
 template <typename T>
 constexpr T	Approx::atan2_7th (T y, T x) noexcept
 {
-	constexpr auto c7 = T ( 0.0386379);
-	constexpr auto c5 = T (-0.145917);
-	constexpr auto c3 = T ( 0.0386379);
-	constexpr auto c1 = T (PI * -0.25 - 0.0386379 - -0.145917 - 0.0386379);
+	constexpr auto c7 = T ( 0.0386378786305289);
+	constexpr auto c5 = T (-0.145916508504993);
+	constexpr auto c3 = T ( 0.321088057777014);
+	constexpr auto c1 = T (PI * -0.25 - 0.0386378786305289 - -0.145916508504993 - 0.321088057777014);
 
 	const auto     b  = atan2_beg (y, x);
 	const auto     r  = b [0];
@@ -870,10 +872,10 @@ constexpr T	Approx::atan2_7th (T y, T x) noexcept
 
 Vf32	Approx::atan2_7th (Vf32 y, Vf32 x) noexcept
 {
-	const auto     c7 = Vf32 ( 0.0386379f);
-	const auto     c5 = Vf32 (-0.145917f);
-	const auto     c3 = Vf32 ( 0.0386379f);
-	const auto     c1 = Vf32 (PI * -0.25 - 0.0386379 - -0.145917 - 0.0386379);
+	const auto     c7 = Vf32 ( 0.0386378786305289f);
+	const auto     c5 = Vf32 (-0.145916508504993f);
+	const auto     c3 = Vf32 ( 0.321088057777014f);
+	const auto     c1 = Vf32 (PI * -0.25 - 0.0386378786305289 - -0.145916508504993 - 0.321088057777014);
 
 	const auto     ys = y.signbit ();
 	const auto     b  = atan2_beg (y, x);
