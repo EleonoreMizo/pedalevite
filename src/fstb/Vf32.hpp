@@ -1950,14 +1950,9 @@ Vf32 log2 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 
-	assert (
-	      v._x [0] > 0
-		&& v._x [1] > 0
-		&& v._x [2] > 0
-		&& v._x [3] > 0
-	);
-	/*** To do: approximation ***/
-	return Vf32 { {
+	assert (v > Vf32 (0));
+	/*** To do: actual approximation matching the SIMD formula ***/
+	return { {
 		logf (v._x [0]) * float (LOG2_E),
 		logf (v._x [1]) * float (LOG2_E),
 		logf (v._x [2]) * float (LOG2_E),
@@ -1966,6 +1961,11 @@ Vf32 log2 (Vf32 v) noexcept
 
 #else // fstb_HAS_SIMD
 
+	// Rational fraction approximating log2 (x)
+	// [sqrt (0.5) ; sqrt (2)] -> [-0.5 ; 0.5]
+	// f: x -> (x - 1) * (x^2 + c1*x + c0) / (d2*x^2 + d1*x + d0)
+	// No analytic continuity on the full range, although this is "almost" C0
+	// (good enough for single precision).
 	const auto     c0    = Vf32 (1.011593342e+01f);
 	const auto     c1    = Vf32 (1.929443550e+01f);
 	const auto     d0    = Vf32 (2.095932245e+00f);
@@ -2000,7 +2000,7 @@ Vf32 log2 (Vf32 v) noexcept
 
 	auto           num = spl_mantissa + c1;
 	num = fma (num, spl_mantissa, c0);
-	num *= spl_mantissa - one;
+	num = fms (num, spl_mantissa, num);
 
 	auto           den = d2;
 	den = fma (den, spl_mantissa, d1);
@@ -2025,12 +2025,12 @@ Vf32 exp2 (Vf32 v) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
 
-	/*** To do: actual approximation ***/
-	return Vf32 { {
-		expf (v._x [0] * float (LN2)),
-		expf (v._x [1] * float (LN2)),
-		expf (v._x [2] * float (LN2)),
-		expf (v._x [3] * float (LN2)),
+	/*** To do: actual approximation matching the SIMD formula ***/
+	return { {
+		exp2f (v._x [0]),
+		exp2f (v._x [1]),
+		exp2f (v._x [2]),
+		exp2f (v._x [3]),
 	} };
 
 #else // fstb_HAS_SIMD
