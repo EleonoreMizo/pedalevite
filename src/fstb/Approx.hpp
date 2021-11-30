@@ -1079,6 +1079,32 @@ double	Approx::rsqrt (double x) noexcept
 	return x;
 }
 
+template <int P>
+Vf32	Approx::rsqrt (Vf32 x) noexcept
+{
+	static_assert (
+		(P >= 0 && P <= 3),
+		"The number of Newton iterations must be in [0 ; 3]"
+	);
+	assert (x >= Vf32::zero ());
+
+	// Result is more or less equivalent to rough approx + 1 N-R iteration.
+	auto           r = x.rsqrt_approx ();
+
+	if (P > 1)
+	{
+		const auto     xh  = Vf32 (0.5f) * x;
+		const auto     nrc = Vf32 (1.5f);
+		r *= nrc - xh * r * r;
+		if (P > 2)
+		{
+			r *= nrc - xh * r * r;
+		}
+	}
+
+	return r;
+}
+
 
 
 // Approximation of the Wright Omega function:

@@ -33,6 +33,7 @@ http://www.wtfpl.net/ for more details.
 #include "test/TimerAccurate.h"
 
 #include <algorithm>
+#include <type_traits>
 #include <vector>
 
 #include <cassert>
@@ -194,35 +195,45 @@ int	TestApprox::perform_test ()
 
 	// rsqrt
 
-	test_op1_all_flt_s <true> (ret_val,
+	test_op1_all_s <float, true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <0> (x); },
 		"rsqrt <0>", 1e-9f, 4.f, 0.035
 	);
-	test_op1_all_flt_s <true> (ret_val,
+	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <1> (x); },
+		[] (Vf32 x) { return fstb::Approx::rsqrt <1> (x); },
 		"rsqrt <1>", 1e-9f, 4.f, 0.001
 	);
-	test_op1_all_flt_s <true> (ret_val,
+	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <2> (x); },
+		[] (Vf32 x) { return fstb::Approx::rsqrt <2> (x); },
 		"rsqrt <2>", 1e-9f, 4.f, 5e-06
 	);
-	test_op1_all_flt_s <true> (ret_val,
+	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <3> (x); },
+		[] (Vf32 x) { return fstb::Approx::rsqrt <3> (x); },
 		"rsqrt <3>", 1e-9f, 4.f, 2e-07
 	);
+
 	test_op1_all_flt_v <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (Vf32 x) { return x.rsqrt (); },
 		"rsqrt", 1e-9f, 4.f, 1e-6
 	);
 
+	test_op1_all_s <double, true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (double x) { return fstb::Approx::rsqrt <3> (x); },
+		"rsqrt <3>", 1e-9f, 4.f, 1e-7
+	);
+
 	// atan2
 	// Make sure we do not test (0, 0) as the angle is not defined and
-	// there may be different results for the approx and the reference.
+	// the results between the approx and the reference may differ.
 
 	TestFncLogic <float, false>::test_op2 (ret_val,
 		[] (double x, double y) { return atan2 (y, x); },
@@ -372,6 +383,7 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (int &ret_val, const OPREF
 
 	double         err_max = 0;
 	double         err_tot = 0;
+	int            count   = 0;
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
 		const double   val_src = pos * mul + add;
@@ -389,28 +401,39 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (int &ret_val, const OPREF
 		const double   val_tst = double (conv_t_to_s <S> (dst_t));
 
 		double         err_abs = fabs (val_tst - val_ref);
+		bool           check_flag = true;
 		if (REL_FLAG)
 		{
-			assert (val_ref != 0);
-			err_abs /= fabs (val_ref);
+			if (val_ref == 0)
+			{
+				check_flag = false;
+			}
+			else
+			{
+				err_abs /= fabs (val_ref);
+			}
 		}
 
-		if (err_allowed > 0 && err_abs > err_allowed)
+		if (check_flag)
 		{
-			printf (
-				"\n*** Error: too large error %.3g. "
-				"Input: %.9g, expected: %.9g, output: %.9g.\n",
-				err_abs, val_src, val_ref, val_tst
-			);
-			ret_val = -1;
-			return;
-		}
+			if (err_allowed > 0 && err_abs > err_allowed)
+			{
+				printf (
+					"\n*** Error: too large error %.3g. "
+					"Input: %.9g, expected: %.9g, output: %.9g.\n",
+					err_abs, val_src, val_ref, val_tst
+				);
+				ret_val = -1;
+				return;
+			}
 
-		err_max  = std::max (err_max, err_abs);
-		err_tot += err_abs;
+			err_max  = std::max (err_max, err_abs);
+			err_tot += err_abs;
+			++ count;
+		}
 	}
 
-	const double   err_avg = err_tot / double (nbr_spl);
+	const double   err_avg = err_tot / double (count);
 	printf (
 		"Err max%s: %.3g, avg: %.3g\n",
 		(REL_FLAG) ? " (relative)" : "",
@@ -440,6 +463,7 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF
 
 	double         err_max = 0;
 	double         err_tot = 0;
+	long long      count   = 0;
 	for (int pos1 = 0; pos1 < nbr_spl; ++pos1)
 	{
 		const double   val_src1 = pos1 * mul1 + add1;
@@ -463,32 +487,40 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF
 			const double   val_tst = double (conv_t_to_s <S> (dst_t));
 
 			double         err_abs = fabs (val_tst - val_ref);
+			bool           check_flag = true;
 			if (REL_FLAG)
 			{
-				if (val_ref != 0)
+				if (val_ref == 0)
+				{
+					check_flag = false;
+				}
+				else
 				{
 					err_abs /= fabs (val_ref);
 				}
 			}
 
-			if (err_allowed > 0 && err_abs > err_allowed)
+			if (check_flag)
 			{
-				printf (
-					"\n*** Error: too large error %.3g. "
-					"Input: (%.9g, %.9g), expected: %.9g, output: %.9g.\n",
-					err_abs, val_src1, val_src2, val_ref, val_tst
-				);
-				ret_val = -1;
-				return;
-			}
+				if (err_allowed > 0 && err_abs > err_allowed)
+				{
+					printf (
+						"\n*** Error: too large error %.3g. "
+						"Input: (%.9g, %.9g), expected: %.9g, output: %.9g.\n",
+						err_abs, val_src1, val_src2, val_ref, val_tst
+					);
+					ret_val = -1;
+					return;
+				}
 
-			err_max  = std::max (err_max, err_abs);
-			err_tot += err_abs;
+				err_max  = std::max (err_max, err_abs);
+				err_tot += err_abs;
+				++ count;
+			}
 		}
 	}
 
-	const double   ns2     = double (nbr_spl) * double (nbr_spl);
-	const double   err_avg = err_tot / ns2;
+	const double   err_avg = err_tot / double (count);
 	printf (
 		"Err max%s: %.3g, avg: %.3g\n",
 		(REL_FLAG) ? " (relative)" : "",
@@ -501,7 +533,7 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF
 template <bool REL_FLAG, typename OPREF, typename OPTSTS, typename OPTSTV>
 void	TestApprox::test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed)
 {
-	test_op1_all_flt_s <REL_FLAG> (
+	test_op1_all_s <float, REL_FLAG> (
 		ret_val, op_ref, op_s, name, min_val, max_val, err_allowed
 	);
 	test_op1_all_flt_v <REL_FLAG> (
@@ -511,22 +543,27 @@ void	TestApprox::test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTS
 
 
 
-template <bool REL_FLAG, typename OPREF, typename OPTSTS>
-void	TestApprox::test_op1_all_flt_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val, double err_allowed)
+template <typename T, bool REL_FLAG, typename OPREF, typename OPTSTS>
+void	TestApprox::test_op1_all_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val, double err_allowed)
 {
-	const auto     name_s = name + " (float)";
-	TestFncLogic <float, REL_FLAG>::test_op1 (
+	auto           name_s = name + " (";
+	name_s +=
+		  std::is_same <T, float >::value ? "float"
+		: std::is_same <T, double>::value ? "double"
+		:                                   "\?\?\?";
+	name_s += ")";
+	TestFncLogic <T, REL_FLAG>::test_op1 (
 		ret_val, op_ref, op_s, name_s, min_val, max_val, err_allowed
 	);
 	if (ret_val == 0)
 	{
-		TestFncSpeed <float, 0>::test_op1 (
+		TestFncSpeed <T, 0>::test_op1 (
 			op_s, name_s, min_val, max_val
 		);
-		TestFncSpeed <float, 1>::test_op1 (
+		TestFncSpeed <T, 1>::test_op1 (
 			op_s, name_s, min_val, max_val
 		);
-		TestFncSpeed <float, 2>::test_op1 (
+		TestFncSpeed <T, 2>::test_op1 (
 			op_s, name_s, min_val, max_val
 		);
 	}

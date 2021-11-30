@@ -75,8 +75,8 @@ private:
 
 	template <bool REL_FLAG, typename OPREF, typename OPTSTS, typename OPTSTV>
 	static void    test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed);
-	template <bool REL_FLAG, typename OPREF, typename OPTSTS>
-	static void    test_op1_all_flt_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val, double err_allowed);
+	template <typename T, bool REL_FLAG, typename OPREF, typename OPTSTS>
+	static void    test_op1_all_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val, double err_allowed);
 	template <bool REL_FLAG, typename OPREF, typename OPTSTV>
 	static void    test_op1_all_flt_v (int &ret_val, const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed);
 

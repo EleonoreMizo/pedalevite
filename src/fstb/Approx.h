@@ -173,6 +173,9 @@ public:
 	template <int P = 1>
 	static inline double
 	               rsqrt (double x) noexcept;
+	template <int P = 1>
+	static inline Vf32
+	               rsqrt (Vf32 x) noexcept;
 
 	template <typename T>
 	static inline T
