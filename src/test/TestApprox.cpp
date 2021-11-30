@@ -52,144 +52,192 @@ int	TestApprox::perform_test ()
 
 	// sin
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return sin (x); },
 		[] (float x) { return fstb::Approx::sin_nick (x); },
 		[] (Vf32 x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick", -pi_f, pi_f
+		"sin_nick", -pi_f, pi_f, 0.001
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return sin (x * fstb::PI * 0.5f); },
 		[] (float x) { return fstb::Approx::sin_rbj_halfpi (x); },
 		[] (Vf32 x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi", -1.f, 1.f
+		"sin_rbj_halfpi", -1.f, 1.f, 2e-07
 	);
 
 	// log2
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2_crude (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_crude (x); },
-		"log2_crude", 1e-3f, 1e3f
+		"log2_crude", 1e-3f, 1e3f, 0.05
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2 (x); },
 		[] (Vf32 x) { return fstb::Approx::log2 (x); },
-		"log2", 1e-3f, 1e3f
+		"log2", 1e-3f, 1e3f, 0.01
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2_5th (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_5th (x); },
-		"log2_5th", 1e-3f, 1e3f
+		"log2_5th", 1e-3f, 1e3f, 0.0002
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2_7th (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_7th (x); },
-		"log2_7th", 1e-3f, 1e3f
+		"log2_7th", 1e-3f, 1e3f, 7e-06
 	);
 
-	test_op1_all_flt_v <false> (
+	test_op1_all_flt_v <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (Vf32 x) { return fstb::log2 (x); },
-		"log2", 1e-3f, 1e3f
+		"log2", 1e-3f, 1e3f, 1e-06
 	);
 
 	// exp2
 
-	test_op1_all_flt <true> (
+	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2_crude (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2_crude (x); },
-		"exp2_crude", -20.f, 20.f
+		"exp2_crude", -20.f, 20.f, 0.035
 	);
 
-	test_op1_all_flt <true> (
+	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2 (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2 (x); },
-		"exp2", -20.f, 20.f
+		"exp2", -20.f, 20.f, 0.0035
 	);
 
-	test_op1_all_flt <true> (
+	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2_5th (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2_5th (x); },
-		"exp2_5th", -20.f, 20.f
+		"exp2_5th", -20.f, 20.f, 1e-6
 	);
 
-	test_op1_all_flt <true> (
+	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2_7th (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2_7th (x); },
-		"exp2_7th", -20.f, 20.f
+		"exp2_7th", -20.f, 20.f, 1e-6
 	);
 
-	test_op1_all_flt_v <true> (
+	test_op1_all_flt_v <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (Vf32 x) { return fstb::exp2 (x); },
-		"exp2", -20.f, 20.f
+		"exp2", -20.f, 20.f, 1e-6
 	);
 
 	// tan
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tan (x); },
 		[] (float x) { return fstb::Approx::tan_taylor5 (x); },
 		[] (Vf32 x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5", -1.f, 1.f
+		"tan_taylor5", -1.f, 1.f, 0.1
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tan (x); },
 		[] (float x) { return fstb::Approx::tan_mystran (x); },
 		[] (Vf32 x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran", -1.f, 1.f
+		"tan_mystran", -1.f, 1.f, 2e-05
 	);
 
 	// tanh
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_mystran (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran", -5.f, 5.f
+		"tanh_mystran", -5.f, 5.f, 0.004
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_2dat (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat", -10.f, 10.f
+		"tanh_2dat", -10.f, 10.f, 1e-06
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_andy (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_andy (x); },
-		"tanh_andy", -5.f, 5.f
+		"tanh_andy", -5.f, 5.f, 0.0007
 	);
 
-	test_op1_all_flt <false> (
+	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_urs (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_urs (x); },
-		"tanh_urs", -10.f, 10.f
+		"tanh_urs", -10.f, 10.f, 2e-05
 	);
 
 	// pow
 
-	TestFncLogic <double, true>::test_op2 (
+	TestFncLogic <double, true>::test_op2 (ret_val,
 		[] (double x, double y) { return pow (x, y); },
 		[] (double x, double y) { return fstb::Approx::pow_crude (x, y); },
-		"pow_crude (double)", 0.1f, 10.0f, -10.f, 10.f
+		"pow_crude (double)", 0.1f, 10.0f, -10.f, 10.f, 0.71
+	);
+
+	// rsqrt
+
+	test_op1_all_flt_s <true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (float x) { return fstb::Approx::rsqrt <0> (x); },
+		"rsqrt <0>", 1e-9f, 4.f, 0.035
+	);
+	test_op1_all_flt_s <true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (float x) { return fstb::Approx::rsqrt <1> (x); },
+		"rsqrt <1>", 1e-9f, 4.f, 0.001
+	);
+	test_op1_all_flt_s <true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (float x) { return fstb::Approx::rsqrt <2> (x); },
+		"rsqrt <2>", 1e-9f, 4.f, 5e-06
+	);
+	test_op1_all_flt_s <true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (float x) { return fstb::Approx::rsqrt <3> (x); },
+		"rsqrt <3>", 1e-9f, 4.f, 2e-07
+	);
+	test_op1_all_flt_v <true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (Vf32 x) { return fstb::ToolsSimd::rsqrt_approx (x); },
+		"rsqrt_approx", 1e-9f, 4.f, 0.001
+	);
+	test_op1_all_flt_v <true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (Vf32 x) { return x.rsqrt (); },
+		"rsqrt", 1e-9f, 4.f, 1e-6
+	);
+
+	// atan2
+	// Make sure we do not test (0, 0) as the angle is not defined and
+	// there may be different results for the approx and the reference.
+
+	TestFncLogic <float, false>::test_op2 (ret_val,
+		[] (double x, double y) { return atan2 (y, x); },
+		[] (float x, float y) { return fstb::Approx::atan2_3th (y, x); },
+		"atan2_3th (float)", -10.001f, 10.f, -10.f, 10.f, 0.007
+	);
+	TestFncLogic <float, false>::test_op2 (ret_val,
+		[] (double x, double y) { return atan2 (y, x); },
+		[] (float x, float y) { return fstb::Approx::atan2_7th (y, x); },
+		"atan2_7th (float)", -10.001f, 10.f, -10.f, 10.f, 0.00012
 	);
 
 	return ret_val;
@@ -215,6 +263,7 @@ inline fstb::Vf32 conv_s_to_t (float x)
 }
 
 
+
 template <typename S, typename T>
 static inline S conv_t_to_s (T x) { return static_cast <S> (x); }
 
@@ -223,6 +272,18 @@ inline float conv_t_to_s (fstb::Vf32 x)
 {
 	return x.template extract <0> ();
 }
+
+
+
+template <typename T>
+static inline bool check_all_elt_same (T x) { fstb::unused (x); return true; }
+
+template <>
+inline bool check_all_elt_same (fstb::Vf32 x)
+{
+	return bool (x.template spread <0> () == x);
+}
+
 
 
 template <typename T, int ILL2>
@@ -300,8 +361,13 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::stri
 // OPREF is always scalar with double as input and output types.
 template <typename T, bool REL_FLAG>
 template <typename OPTST, typename OPREF, typename S>
-void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val, S max_val)
+void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val, S max_val, double err_allowed)
 {
+	if (ret_val != 0)
+	{
+		return;
+	}
+
 	printf ("Logic test %s... ", name.c_str ());
 	fflush (stdout);
 
@@ -319,6 +385,12 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, cons
 		const double   val_ref = op_ref (val_src);
 
 		const T        dst_t = op_tst (src_t);
+		if (! check_all_elt_same (dst_t))
+		{
+			printf ("\n*** Error: different vector elements.\n");
+			ret_val = -1;
+			return;
+		}
 		const double   val_tst = double (conv_t_to_s <S> (dst_t));
 
 		double         err_abs = fabs (val_tst - val_ref);
@@ -327,6 +399,18 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, cons
 			assert (val_ref != 0);
 			err_abs /= fabs (val_ref);
 		}
+
+		if (err_allowed > 0 && err_abs > err_allowed)
+		{
+			printf (
+				"\n*** Error: too large error %.3g. "
+				"Input: %.9g, expected: %.9g, output: %.9g.\n",
+				err_abs, val_src, val_ref, val_tst
+			);
+			ret_val = -1;
+			return;
+		}
+
 		err_max  = std::max (err_max, err_abs);
 		err_tot += err_abs;
 	}
@@ -343,8 +427,13 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, cons
 
 template <typename T, bool REL_FLAG>
 template <typename OPTST, typename OPREF, typename S>
-void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val1, S max_val1, S min_val2, S max_val2)
+void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val1, S max_val1, S min_val2, S max_val2, double err_allowed)
 {
+	if (ret_val != 0)
+	{
+		return;
+	}
+
 	printf ("Logic test %s... ", name.c_str ());
 	fflush (stdout);
 
@@ -370,6 +459,12 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, cons
 			const double   val_ref = op_ref (val_src1, val_src2);
 
 			const T        dst_t = op_tst (src_t1, src_t2);
+			if (! check_all_elt_same (dst_t))
+			{
+				printf ("\n*** Error: different vector elements.\n");
+				ret_val = -1;
+				return;
+			}
 			const double   val_tst = double (conv_t_to_s <S> (dst_t));
 
 			double         err_abs = fabs (val_tst - val_ref);
@@ -380,6 +475,18 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, cons
 					err_abs /= fabs (val_ref);
 				}
 			}
+
+			if (err_allowed > 0 && err_abs > err_allowed)
+			{
+				printf (
+					"\n*** Error: too large error %.3g. "
+					"Input: (%.9g, %.9g), expected: %.9g, output: %.9g.\n",
+					err_abs, val_src1, val_src2, val_ref, val_tst
+				);
+				ret_val = -1;
+				return;
+			}
+
 			err_max  = std::max (err_max, err_abs);
 			err_tot += err_abs;
 		}
@@ -397,52 +504,62 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, cons
 
 
 template <bool REL_FLAG, typename OPREF, typename OPTSTS, typename OPTSTV>
-void	TestApprox::test_op1_all_flt (const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val)
+void	TestApprox::test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed)
 {
-	test_op1_all_flt_s <REL_FLAG> (op_ref, op_s, name, min_val, max_val);
-	test_op1_all_flt_v <REL_FLAG> (op_ref, op_v, name, min_val, max_val);
+	test_op1_all_flt_s <REL_FLAG> (
+		ret_val, op_ref, op_s, name, min_val, max_val, err_allowed
+	);
+	test_op1_all_flt_v <REL_FLAG> (
+		ret_val, op_ref, op_v, name, min_val, max_val, err_allowed
+	);
 }
 
 
 
 template <bool REL_FLAG, typename OPREF, typename OPTSTS>
-void	TestApprox::test_op1_all_flt_s (const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val)
+void	TestApprox::test_op1_all_flt_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val, double err_allowed)
 {
 	const auto     name_s = name + " (float)";
 	TestFncLogic <float, REL_FLAG>::test_op1 (
-		op_ref, op_s, name_s, min_val, max_val
+		ret_val, op_ref, op_s, name_s, min_val, max_val, err_allowed
 	);
-	TestFncSpeed <float, 0>::test_op1 (
-		op_s, name_s, min_val, max_val
-	);
-	TestFncSpeed <float, 1>::test_op1 (
-		op_s, name_s, min_val, max_val
-	);
-	TestFncSpeed <float, 2>::test_op1 (
-		op_s, name_s, min_val, max_val
-	);
+	if (ret_val == 0)
+	{
+		TestFncSpeed <float, 0>::test_op1 (
+			op_s, name_s, min_val, max_val
+		);
+		TestFncSpeed <float, 1>::test_op1 (
+			op_s, name_s, min_val, max_val
+		);
+		TestFncSpeed <float, 2>::test_op1 (
+			op_s, name_s, min_val, max_val
+		);
+	}
 }
 
 
 
 template <bool REL_FLAG, typename OPREF, typename OPTSTV>
-void	TestApprox::test_op1_all_flt_v (const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, float min_val, float max_val)
+void	TestApprox::test_op1_all_flt_v (int &ret_val, const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed)
 {
 	typedef fstb::Vf32 Vf32;
 
 	const auto     name_v = name + " (Vf32)";
 	TestFncLogic <Vf32, REL_FLAG>::test_op1 (
-		op_ref, op_v, name_v, min_val, max_val
+		ret_val, op_ref, op_v, name_v, min_val, max_val, err_allowed
 	);
-	TestFncSpeed <Vf32, 0>::test_op1 (
-		op_v, name_v, min_val, max_val
-	);
-	TestFncSpeed <Vf32, 1>::test_op1 (
-		op_v, name_v, min_val, max_val
-	);
-	TestFncSpeed <Vf32, 2>::test_op1 (
-		op_v, name_v, min_val, max_val
-	);
+	if (ret_val == 0)
+	{
+		TestFncSpeed <Vf32, 0>::test_op1 (
+			op_v, name_v, min_val, max_val
+		);
+		TestFncSpeed <Vf32, 1>::test_op1 (
+			op_v, name_v, min_val, max_val
+		);
+		TestFncSpeed <Vf32, 2>::test_op1 (
+			op_v, name_v, min_val, max_val
+		);
+	}
 }
 
 
