@@ -48,7 +48,6 @@ int	TestApprox::perform_test ()
 {
 	int            ret_val = 0;
 
-	const float    pi_f = float (fstb::PI);
 	typedef fstb::Vf32 Vf32;
 
 	// sin
@@ -57,14 +56,14 @@ int	TestApprox::perform_test ()
 		[] (double x) { return sin (x); },
 		[] (float x) { return fstb::Approx::sin_nick (x); },
 		[] (Vf32 x) { return fstb::Approx::sin_nick (x); },
-		"sin_nick", -pi_f, pi_f, 0.001
+		"sin_nick", -fstb::PI, fstb::PI, 0.001
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return sin (x * fstb::PI * 0.5f); },
 		[] (float x) { return fstb::Approx::sin_rbj_halfpi (x); },
 		[] (Vf32 x) { return fstb::Approx::sin_rbj_halfpi (x); },
-		"sin_rbj_halfpi", -1.f, 1.f, 2e-07
+		"sin_rbj_halfpi", -1.0, 1.0, 2e-07
 	);
 
 	// log2
@@ -73,34 +72,34 @@ int	TestApprox::perform_test ()
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2_crude (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_crude (x); },
-		"log2_crude", 1e-3f, 1e3f, 0.05
+		"log2_crude", 1e-3, 1e3, 0.05
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2 (x); },
 		[] (Vf32 x) { return fstb::Approx::log2 (x); },
-		"log2", 1e-3f, 1e3f, 0.01
+		"log2", 1e-3, 1e3, 0.01
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2_5th (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_5th (x); },
-		"log2_5th", 1e-3f, 1e3f, 0.0002
+		"log2_5th", 1e-3, 1e3, 0.0002
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2_7th (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_7th (x); },
-		"log2_7th", 1e-3f, 1e3f, 7e-06
+		"log2_7th", 1e-3, 1e3, 7e-06
 	);
 
 	test_op1_all_flt_v <false> (ret_val,
 		[] (double x) { return log2 (x); },
 		[] (Vf32 x) { return fstb::log2 (x); },
-		"log2", 1e-3f, 1e3f, 1e-06
+		"log2", 1e-3, 1e3, 1e-06
 	);
 
 	// exp2
@@ -109,34 +108,34 @@ int	TestApprox::perform_test ()
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2_crude (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2_crude (x); },
-		"exp2_crude", -20.f, 20.f, 0.035
+		"exp2_crude", -20.0, 20.0, 0.035
 	);
 
 	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2 (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2 (x); },
-		"exp2", -20.f, 20.f, 0.0035
+		"exp2", -20.0, 20.0, 0.0035
 	);
 
 	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2_5th (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2_5th (x); },
-		"exp2_5th", -20.f, 20.f, 1e-6
+		"exp2_5th", -20.0, 20.0, 1e-6
 	);
 
 	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (float x) { return fstb::Approx::exp2_7th (x); },
 		[] (Vf32 x) { return fstb::Approx::exp2_7th (x); },
-		"exp2_7th", -20.f, 20.f, 1e-6
+		"exp2_7th", -20.0, 20.0, 1e-6
 	);
 
 	test_op1_all_flt_v <true> (ret_val,
 		[] (double x) { return exp2 (x); },
 		[] (Vf32 x) { return fstb::exp2 (x); },
-		"exp2", -20.f, 20.f, 1e-6
+		"exp2", -20.0, 20.0, 1e-6
 	);
 
 	// tan
@@ -145,14 +144,14 @@ int	TestApprox::perform_test ()
 		[] (double x) { return tan (x); },
 		[] (float x) { return fstb::Approx::tan_taylor5 (x); },
 		[] (Vf32 x) { return fstb::Approx::tan_taylor5 (x); },
-		"tan_taylor5", -1.f, 1.f, 0.1
+		"tan_taylor5", -1.0, 1.0, 0.1
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tan (x); },
 		[] (float x) { return fstb::Approx::tan_mystran (x); },
 		[] (Vf32 x) { return fstb::Approx::tan_mystran (x); },
-		"tan_mystran", -1.f, 1.f, 2e-05
+		"tan_mystran", -1.0, 1.0, 2e-05
 	);
 
 	// tanh
@@ -161,28 +160,28 @@ int	TestApprox::perform_test ()
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_mystran (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_mystran (x); },
-		"tanh_mystran", -5.f, 5.f, 0.004
+		"tanh_mystran", -5.0, 5.0, 0.004
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_2dat (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_2dat (x); },
-		"tanh_2dat", -10.f, 10.f, 1e-06
+		"tanh_2dat", -10.0, 10.0, 1e-06
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_andy (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_andy (x); },
-		"tanh_andy", -5.f, 5.f, 0.0007
+		"tanh_andy", -5.0, 5.0, 0.0007
 	);
 
 	test_op1_all_flt <false> (ret_val,
 		[] (double x) { return tanh (x); },
 		[] (float x) { return fstb::Approx::tanh_urs (x); },
 		[] (Vf32 x) { return fstb::Approx::tanh_urs (x); },
-		"tanh_urs", -10.f, 10.f, 2e-05
+		"tanh_urs", -10.0, 10.0, 2e-05
 	);
 
 	// pow
@@ -190,7 +189,7 @@ int	TestApprox::perform_test ()
 	TestFncLogic <double, true>::test_op2 (ret_val,
 		[] (double x, double y) { return pow (x, y); },
 		[] (double x, double y) { return fstb::Approx::pow_crude (x, y); },
-		"pow_crude (double)", 0.1f, 10.0f, -10.f, 10.f, 0.71
+		"pow_crude (double)", 0.1, 10.0, -10.0, 10.0, 0.71
 	);
 
 	// rsqrt
@@ -198,37 +197,47 @@ int	TestApprox::perform_test ()
 	test_op1_all_s <float, true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <0> (x); },
-		"rsqrt <0>", 1e-9f, 4.f, 0.035
+		"rsqrt <0>", 1e-9, 4.0, 0.035
 	);
 	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <1> (x); },
 		[] (Vf32 x) { return fstb::Approx::rsqrt <1> (x); },
-		"rsqrt <1>", 1e-9f, 4.f, 0.001
+		"rsqrt <1>", 1e-9, 4.0, 0.001
 	);
 	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <2> (x); },
 		[] (Vf32 x) { return fstb::Approx::rsqrt <2> (x); },
-		"rsqrt <2>", 1e-9f, 4.f, 5e-06
+		"rsqrt <2>", 1e-9, 4.0, 5e-06
 	);
 	test_op1_all_flt <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (float x) { return fstb::Approx::rsqrt <3> (x); },
 		[] (Vf32 x) { return fstb::Approx::rsqrt <3> (x); },
-		"rsqrt <3>", 1e-9f, 4.f, 2e-07
+		"rsqrt <3>", 1e-9, 4.0, 2e-07
 	);
 
 	test_op1_all_flt_v <true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
 		[] (Vf32 x) { return x.rsqrt (); },
-		"rsqrt", 1e-9f, 4.f, 1e-6
+		"rsqrt", 1e-9, 4.0, 1e-6
 	);
 
 	test_op1_all_s <double, true> (ret_val,
 		[] (double x) { return 1 / sqrt (x); },
+		[] (double x) { return fstb::Approx::rsqrt <2> (x); },
+		"rsqrt <2>", 1e-9, 4.0, 5e-6
+	);
+	test_op1_all_s <double, true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
 		[] (double x) { return fstb::Approx::rsqrt <3> (x); },
-		"rsqrt <3>", 1e-9f, 4.f, 1e-7
+		"rsqrt <3>", 1e-9, 4.0, 5e-11
+	);
+	test_op1_all_s <double, true> (ret_val,
+		[] (double x) { return 1 / sqrt (x); },
+		[] (double x) { return fstb::Approx::rsqrt <4> (x); },
+		"rsqrt <4>", 1e-9, 4.0, 5e-16
 	);
 
 	// atan2
@@ -238,12 +247,12 @@ int	TestApprox::perform_test ()
 	TestFncLogic <float, false>::test_op2 (ret_val,
 		[] (double x, double y) { return atan2 (y, x); },
 		[] (float x, float y) { return fstb::Approx::atan2_3th (y, x); },
-		"atan2_3th (float)", -10.001f, 10.f, -10.f, 10.f, 0.007
+		"atan2_3th (float)", -10.001, 10.0, -10.0, 10.0, 0.007
 	);
 	TestFncLogic <float, false>::test_op2 (ret_val,
 		[] (double x, double y) { return atan2 (y, x); },
 		[] (float x, float y) { return fstb::Approx::atan2_7th (y, x); },
-		"atan2_7th (float)", -10.001f, 10.f, -10.f, 10.f, 0.00012
+		"atan2_7th (float)", -10.001, 10.0, -10.0, 10.0, 0.00012
 	);
 
 	return ret_val;
@@ -292,10 +301,19 @@ inline bool check_all_elt_same (fstb::Vf32 x)
 
 
 
+template <typename T>
+struct ToScalar {	typedef T Type; };
+template <>
+struct ToScalar <fstb::Vf32> { typedef fstb::Vf32::Scalar Type; };
+
+
+
 template <typename T, int ILL2>
-template <typename OP, typename S>
-void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::string &name, S min_val, S max_val)
+template <typename OP>
+void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::string &name, double min_val, double max_val)
 {
+	typedef typename ToScalar <T>::Type S;
+
 	constexpr int  nbr_blocks  = 1000;
 	constexpr int  nbr_tests   = 100;
 	constexpr int  block_len_s = 64;
@@ -311,7 +329,8 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::stri
 	Buffer          dst_arr (block_len);
 
 	BufferFiller::gen_rnd_scaled (
-		reinterpret_cast <S *> (&src_arr [0]), block_len_s, min_val, max_val
+		reinterpret_cast <S *> (&src_arr [0]), block_len_s,
+		S (min_val), S (max_val)
 	);
 
 	printf ("Speed test %s, interleave %d... ", name.c_str (), interleave);
@@ -366,9 +385,11 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::stri
 
 // OPREF is always scalar with double as input and output types.
 template <typename T, bool REL_FLAG>
-template <typename OPTST, typename OPREF, typename S>
-void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val, S max_val, double err_allowed)
+template <typename OPTST, typename OPREF>
+void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, double min_val, double max_val, double err_allowed)
 {
+	typedef typename ToScalar <T>::Type S;
+
 	if (ret_val != 0)
 	{
 		return;
@@ -444,9 +465,11 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (int &ret_val, const OPREF
 
 
 template <typename T, bool REL_FLAG>
-template <typename OPTST, typename OPREF, typename S>
-void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val1, S max_val1, S min_val2, S max_val2, double err_allowed)
+template <typename OPTST, typename OPREF>
+void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, double min_val1, double max_val1, double min_val2, double max_val2, double err_allowed)
 {
+	typedef typename ToScalar <T>::Type S;
+
 	if (ret_val != 0)
 	{
 		return;
@@ -531,7 +554,7 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF
 
 
 template <bool REL_FLAG, typename OPREF, typename OPTSTS, typename OPTSTV>
-void	TestApprox::test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed)
+void	TestApprox::test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, double min_val, double max_val, double err_allowed)
 {
 	test_op1_all_s <float, REL_FLAG> (
 		ret_val, op_ref, op_s, name, min_val, max_val, err_allowed
@@ -544,7 +567,7 @@ void	TestApprox::test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTS
 
 
 template <typename T, bool REL_FLAG, typename OPREF, typename OPTSTS>
-void	TestApprox::test_op1_all_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val, double err_allowed)
+void	TestApprox::test_op1_all_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, double min_val, double max_val, double err_allowed)
 {
 	auto           name_s = name + " (";
 	name_s +=
@@ -572,7 +595,7 @@ void	TestApprox::test_op1_all_s (int &ret_val, const OPREF &op_ref, const OPTSTS
 
 
 template <bool REL_FLAG, typename OPREF, typename OPTSTV>
-void	TestApprox::test_op1_all_flt_v (int &ret_val, const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed)
+void	TestApprox::test_op1_all_flt_v (int &ret_val, const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, double min_val, double max_val, double err_allowed)
 {
 	typedef fstb::Vf32 Vf32;
 

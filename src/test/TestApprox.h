@@ -58,27 +58,27 @@ private:
 		static_assert (ILL2 >= 0, "ILL2 must be in [0 ; 3]");
 		static_assert (ILL2 <= 3, "ILL2 must be in [0 ; 3]");
 	public:
-		template <typename OP, typename S>
-		static void    test_op1 (const OP &op, const std::string &name, S min_val, S max_val);
+		template <typename OP>
+		static void    test_op1 (const OP &op, const std::string &name, double min_val, double max_val);
 	};
 
 	template <typename T, bool REL_FLAG>
 	class TestFncLogic
 	{
 	public:
-		template <typename OPTST, typename OPREF, typename S>
-		static void    test_op1 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val, S max_val, double err_allowed);
+		template <typename OPTST, typename OPREF>
+		static void    test_op1 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, double min_val, double max_val, double err_allowed);
 
-		template <typename OPTST, typename OPREF, typename S>
-		static void    test_op2 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, S min_val1, S max_val1, S min_val2, S max_val2, double err_allowed);
+		template <typename OPTST, typename OPREF>
+		static void    test_op2 (int &ret_val, const OPREF &op_ref, const OPTST &op_tst, const std::string &name, double min_val1, double max_val1, double min_val2, double max_val2, double err_allowed);
 	};
 
 	template <bool REL_FLAG, typename OPREF, typename OPTSTS, typename OPTSTV>
-	static void    test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed);
+	static void    test_op1_all_flt (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const OPTSTV &op_v, const std::string &name, double min_val, double max_val, double err_allowed);
 	template <typename T, bool REL_FLAG, typename OPREF, typename OPTSTS>
-	static void    test_op1_all_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, float min_val, float max_val, double err_allowed);
+	static void    test_op1_all_s (int &ret_val, const OPREF &op_ref, const OPTSTS &op_s, const std::string &name, double min_val, double max_val, double err_allowed);
 	template <bool REL_FLAG, typename OPREF, typename OPTSTV>
-	static void    test_op1_all_flt_v (int &ret_val, const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, float min_val, float max_val, double err_allowed);
+	static void    test_op1_all_flt_v (int &ret_val, const OPREF &op_ref, const OPTSTV &op_v, const std::string &name, double min_val, double max_val, double err_allowed);
 
 
 
