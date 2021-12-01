@@ -1899,8 +1899,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/hiir/test/TimerAccurate.hpp \
         ../../src/test/Axis.cpp \
         ../../src/test/Axis.h \
-        ../../src/test/BufferFiller.cpp \
         ../../src/test/BufferFiller.h \
+        ../../src/test/BufferFiller.hpp \
         ../../src/test/DrawShapers.cpp \
         ../../src/test/DrawShapers.h \
         ../../src/test/EPSPlot.h \

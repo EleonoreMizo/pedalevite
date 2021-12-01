@@ -36,9 +36,12 @@ class BufferFiller
 
 public:
 
-	static void    gen_rnd_non_zero (float buf_ptr [], int nbr_spl);
-	static void    gen_rnd_positive (float buf_ptr [], int nbr_spl);
-	static void    gen_rnd_scaled (float buf_ptr [], int nbr_spl, float min_val, float max_val);
+	template <typename T>
+	static void    gen_rnd_non_zero (T buf_ptr [], int nbr_spl);
+	template <typename T>
+	static void    gen_rnd_positive (T buf_ptr [], int nbr_spl);
+	template <typename T>
+	static void    gen_rnd_scaled (T buf_ptr [], int nbr_spl, T min_val, T max_val);
 
 
 
@@ -69,7 +72,7 @@ private:
 
 
 
-//#include "BufferFiller.hpp"
+#include "test/BufferFiller.hpp"
 
 
 

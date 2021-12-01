@@ -120,7 +120,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\test\Axis.cpp" />
-    <ClCompile Include="..\..\..\src\test\BufferFiller.cpp" />
     <ClCompile Include="..\..\..\src\test\Testadrv.cpp" />
     <ClCompile Include="..\..\..\src\test\TestAnalysisFreq.cpp" />
     <ClCompile Include="..\..\..\src\test\TestBigMuffPi.cpp" />
@@ -191,6 +190,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\src\test\Axis.h" />
     <ClInclude Include="..\..\..\src\test\BufferFiller.h" />
+    <ClInclude Include="..\..\..\src\test\BufferFiller.hpp" />
     <ClInclude Include="..\..\..\src\test\Testadrv.h" />
     <ClInclude Include="..\..\..\src\test\TestAnalysisFreq.h" />
     <ClInclude Include="..\..\..\src\test\TestBigMuffPi.h" />
