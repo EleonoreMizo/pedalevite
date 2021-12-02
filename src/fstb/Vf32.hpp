@@ -104,7 +104,7 @@ Vf32::Vf32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept
 template <typename MEM>
 void	Vf32::store (MEM *ptr) const noexcept
 {
-	assert (is_ptr_align_nz (ptr, 16));
+	assert (is_ptr_align_nz (ptr, fstb_SIMD128_ALIGN));
 
 #if ! defined (fstb_HAS_SIMD)
 	*reinterpret_cast <Vf32Native *> (ptr) = _x;
@@ -1441,7 +1441,7 @@ Vf32	Vf32::compose (Vf32 a, Vf32 b) noexcept
 template <typename MEM>
 Vf32	Vf32::load (const MEM *ptr) noexcept
 {
-	assert (is_ptr_align_nz (ptr, 16));
+	assert (is_ptr_align_nz (ptr, fstb_SIMD128_ALIGN));
 
 #if ! defined (fstb_HAS_SIMD)
 	return *reinterpret_cast <const Vf32 *> (ptr);

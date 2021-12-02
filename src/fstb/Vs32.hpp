@@ -72,7 +72,7 @@ Vs32::Vs32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept
 template <typename MEM>
 void	Vs32::store (MEM *ptr) const noexcept
 {
-	assert (is_ptr_align_nz (ptr, 16));
+	assert (is_ptr_align_nz (ptr, fstb_SIMD128_ALIGN));
 
 #if ! defined (fstb_HAS_SIMD)
 	*reinterpret_cast <Vs32Native *> (ptr) = _x;
@@ -107,7 +107,7 @@ void	Vs32::storeu_part (MEM *ptr, int n) const noexcept
 {
 	assert (n > 0);
 
-	if (n >= 4)
+	if (n >= _length)
 	{
 		storeu (ptr);
 		return;
@@ -712,7 +712,7 @@ Vs32	Vs32::compose (Vs32 a, Vs32 b) noexcept
 template <typename MEM>
 Vs32	Vs32::load (const MEM *ptr) noexcept
 {
-	assert (is_ptr_align_nz (ptr, 16));
+	assert (is_ptr_align_nz (ptr, fstb_SIMD128_ALIGN));
 
 #if ! defined (fstb_HAS_SIMD)
 	return *reinterpret_cast <const Vs32 *> (ptr);

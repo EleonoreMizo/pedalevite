@@ -71,6 +71,8 @@ class Vf32
 
 public:
 
+	static constexpr int _len_l2 = 2;
+	static constexpr int _length = 1 << _len_l2;
 	typedef float Scalar;
 
 	               Vf32 ()                        = default;
@@ -274,8 +276,8 @@ public:
 	union Combo
 	{
 		Vf32Native     _vf32;
-		int32_t        _s32 [4];
-		uint32_t       _u32 [4];
+		int32_t        _s32 [_length];
+		uint32_t       _u32 [_length];
 	};
 	static_assert (
 		sizeof (Combo) == sizeof (Vf32Native),

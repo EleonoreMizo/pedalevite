@@ -71,6 +71,8 @@ class Vs32
 
 public:
 
+	static constexpr int _len_l2 = 2;
+	static constexpr int _length = 1 << _len_l2;
 	typedef int32_t Scalar;
 
 	               Vs32 ()                        = default;
