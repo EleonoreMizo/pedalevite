@@ -82,6 +82,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/iifix/IIFixDesc.h"
 #include "mfx/pi/lfo1/Lfo.h"
 #include "mfx/pi/lfo1/LfoDesc.h"
+#include "mfx/pi/lipid/Lipidipi.h"
+#include "mfx/pi/lipid/LipidipiDesc.h"
 #include "mfx/pi/lpfs/Squeezer.h"
 #include "mfx/pi/lpfs/SqueezerDesc.h"
 #include "mfx/pi/moog1/MoogLpf.h"
@@ -234,6 +236,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::unique_ptr <mfx::p
 		add <sfreeze::SpectralFreezeDesc, sfreeze::SpectralFreeze  > (fl);
 		add <vfreeze::VelvetFreezeDesc  , vfreeze::VelvetFreeze    > (fl);
 		add <badrad::BadRadioDesc       , badrad::BadRadio         > (fl);
+		add <lipid::LipidipiDesc        , lipid::Lipidipi          > (fl);
 
 		fact_list.swap (fl);
 	}

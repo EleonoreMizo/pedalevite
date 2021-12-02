@@ -1142,6 +1142,12 @@ commonsrc = \
         ../../src/mfx/pi/lfo1/LfoDesc.hpp \
         ../../src/mfx/pi/lfo1/LfoType.h \
         ../../src/mfx/pi/lfo1/Param.h \
+        ../../src/mfx/pi/lipid/Cst.h \
+        ../../src/mfx/pi/lipid/Lipidipi.cpp \
+        ../../src/mfx/pi/lipid/Lipidipi.h \
+        ../../src/mfx/pi/lipid/LipidipiDesc.cpp \
+        ../../src/mfx/pi/lipid/LipidipiDesc.h \
+        ../../src/mfx/pi/lipid/Param.h \
         ../../src/mfx/pi/lpfs/Param.h \
         ../../src/mfx/pi/lpfs/Squeezer.cpp \
         ../../src/mfx/pi/lpfs/Squeezer.h \
