@@ -64,6 +64,7 @@ AS_IF(
         CXX="clang++"
         CC="clang"
         LD="clang++"
+        CXXLD="clang++"
         MFLAGS="$MFLAGS -fexperimental-new-pass-manager -mllvm -inline-threshold=1000"
         COMPWARNFLAGS=""
         AC_MSG_NOTICE([Using clang as compiler.])
