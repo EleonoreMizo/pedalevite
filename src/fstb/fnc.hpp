@@ -779,6 +779,33 @@ constexpr T	sshift_r (T x) noexcept
 
 
 
+template <typename T>
+constexpr T	sra_ceil (T x, int s) noexcept
+{
+	assert (s >= 0);
+
+	const auto     div = T (1) << s;
+	const auto     ofs = div - T (1);
+
+	return (x + ofs) >> s;
+}
+
+
+
+template <typename T>
+constexpr T	div_ceil (T num, T den) noexcept
+{
+	assert (den > T (0));
+
+	const auto     ofs = den - T (1);
+	const auto     n_o = num + ofs;
+	assert (n_o > T (0));
+
+	return n_o / den;
+}
+
+
+
 template <class T>
 constexpr T	sq (T x) noexcept
 {

@@ -81,6 +81,10 @@ template <class T, int S>
 inline constexpr T       sshift_l (T x) noexcept;
 template <class T, int S>
 inline constexpr T       sshift_r (T x) noexcept;
+template <typename T>
+inline constexpr T       sra_ceil (T x, int s) noexcept;
+template <typename T>
+inline constexpr T       div_ceil (T num, T den) noexcept;
 template <class T>
 inline constexpr T       sq (T x) noexcept;
 template <class T>
