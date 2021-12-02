@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Param.h
-        Author: Laurent de Soras, 2020
+        Author: Laurent de Soras, 2022
 
 --- Legal stuff ---
 

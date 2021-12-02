@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         EtonDesc.cpp
-        Author: Laurent de Soras, 2018
+        Author: Laurent de Soras, 2022
 
 --- Legal stuff ---
 
@@ -12,13 +12,6 @@ To Public License, Version 2, as published by Sam Hocevar. See
 http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
-
-
-
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
 
 
 
