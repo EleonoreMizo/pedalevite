@@ -126,8 +126,8 @@ void	OscSinCosStable <T>::correct () noexcept
 template <class T>
 void	OscSinCosStable <T>::correct_fast () noexcept
 {
-	const double   norm_sq = double (_pos_cos * _pos_cos + _pos_sin * _pos_sin);
-	const DataType mult    = DataType ((3.0 - norm_sq) * 0.5);
+	const auto     norm_sq = _pos_cos * _pos_cos + _pos_sin * _pos_sin;
+	const auto     mult    = (DataType (3.0) - norm_sq) * DataType (0.5);
 	// 2nd order approx: mult = (3/8) * norm_sq^2 - (10/8) * norm_sq + (15/8)
 
 	_pos_cos *= mult;
