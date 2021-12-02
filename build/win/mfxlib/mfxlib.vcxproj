@@ -1058,6 +1058,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable4Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable4Simd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetable.h" />

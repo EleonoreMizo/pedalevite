@@ -652,6 +652,8 @@ commonsrc = \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.h \
         ../../src/mfx/dsp/osc/OscSinCosStable.h \
         ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
+        ../../src/mfx/dsp/osc/OscSinCosStable4Simd.h \
+        ../../src/mfx/dsp/osc/OscSinCosStable4Simd.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.hpp \
