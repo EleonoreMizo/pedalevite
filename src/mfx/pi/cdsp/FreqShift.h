@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
+#include "fstb/def.h"
 #include "fstb/SingleObj.h"
 #include "mfx/dsp/osc/OscSinCosStableSimd.h"
 #include "mfx/dsp/iir/Biquad.h"
@@ -87,7 +88,9 @@ private:
 		Buf_NBR_ELT
 	};
 
-	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
+	typedef std::vector <
+		float, fstb::AllocAlign <float, fstb_SIMD128_ALIGN>
+	> BufAlign;
 	typedef std::array <BufAlign, Buf_NBR_ELT> BufArray;
 
 	static const int
@@ -114,7 +117,7 @@ private:
 	void           update_step ();
 
 	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
-	fstb::SingleObj <Aligned, fstb::AllocAlign <Aligned, 16> >
+	fstb::SingleObj <Aligned, fstb::AllocAlign <Aligned, fstb_SIMD128_ALIGN> >
 	               _ali;
 	float          _inv_fs;
 	float          _freq;
