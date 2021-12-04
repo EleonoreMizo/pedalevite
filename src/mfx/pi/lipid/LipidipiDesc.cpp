@@ -28,7 +28,6 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/lipid/LipidipiDesc.h"
 #include "mfx/pi/lipid/Param.h"
 #include "mfx/pi/param/TplLin.h"
-#include "mfx/pi/param/TplLog.h"
 #include "mfx/piapi/Tag.h"
 
 #include <cassert>
@@ -59,7 +58,7 @@ LipidipiDesc::LipidipiDesc ()
 
 	// Fat
 	auto           lin_sptr = std::make_shared <param::TplLin> (
-		0, double (Cst::_max_image_pairs),
+		0, double (Cst::_max_voice_pairs),
 		"Fat",
 		"",
 		0,
@@ -68,15 +67,14 @@ LipidipiDesc::LipidipiDesc ()
 	_desc_set.add_glob (Param_FAT, lin_sptr);
 
 	// Grease
-	auto           log_sptr = std::make_shared <param::TplLog> (
-		0.1, 10,
+	lin_sptr = std::make_shared <param::TplLin> (
+		1, double (Cst::_max_pitch),
 		"Grease\nGrs",
-		"Hz",
-		param::HelperDispNum::Preset_FLOAT_STD,
+		"cent",
 		0,
 		"%2.2f"
 	);
-	_desc_set.add_glob (Param_GREASE, log_sptr);
+	_desc_set.add_glob (Param_GREASE, lin_sptr);
 }
 
 

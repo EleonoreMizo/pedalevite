@@ -25,13 +25,13 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
-#include "fstb/DataAlign.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
-#include "fstb/SingleObj.h"
-#include "fstb/Vf32.h"
-#include "mfx/dsp/osc/OscSinCosStable4Simd.h"
-#include "mfx/pi/cdsp/PhaseHalfPi.h"
+#include "mfx/dsp/dly/DelayLine.h"
+#include "mfx/dsp/dly/DelayLineReaderPitch.h"
+#include "mfx/dsp/rspl/InterpolatorHermite43.h"
+#include "mfx/dsp/wnd/XFadeEqPowC2.h"
+#include "mfx/dsp/wnd/XFadeShape.h"
 #include "mfx/pi/lipid/Cst.h"
 #include "mfx/pi/lipid/LipidipiDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
@@ -81,12 +81,8 @@ protected:
 
 private:
 
-	static constexpr int _nbr_osc_pair_per_vec = fstb::Vf32::_length / 2;
-	static constexpr int _max_nbr_vec =
-		fstb::div_ceil (Cst::_max_image_pairs * 2, fstb::Vf32::_length);
-	static constexpr int _osc_arr_len = _max_nbr_vec * fstb::Vf32::_length;
-
-	static constexpr int _nbr_coef    = 8; // For the pi/2 phaser
+	static constexpr double _win_dur = 0.100; // s
+	static constexpr int _max_nbr_voices = Cst::_max_voice_pairs * 2;
 
 	typedef std::vector <
 		float, fstb::AllocAlign <float, fstb_SIMD128_ALIGN>
@@ -95,26 +91,12 @@ private:
 	class Channel
 	{
 	public:
-		cdsp::PhaseHalfPi <_nbr_coef>
-		               _ssb;
+		dsp::dly::DelayLine
+		               _delay;
+		std::array <dsp::dly::DelayLineReaderPitch <float>, _max_nbr_voices>
+		               _reader_arr;
 	};
-
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
-
-	typedef std::array <float, _osc_arr_len> OscArrBuf;
-
-	class Aligned
-	{
-	public:
-		ChannelArray   _chn_arr;
-
-		// Oscillator are grouped by pairs, one for the negative frequency
-		// shift, the other one for the equivalent positive shift.
-		alignas (fstb_SIMD128_ALIGN) std::array <
-			dsp::osc::OscSinCosStable4Simd <fstb::DataAlign <true> >,
-			_max_nbr_vec
-		>              _osc_arr;
-	};
 
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
@@ -127,19 +109,22 @@ private:
 	ParamStateSet  _state_set;
 	ParamProcSimple
 	               _param_proc { _state_set };
-	float          _sample_freq = 0;    // Hz, > 0. <= 0: not initialized
-	float          _inv_fs      = 0;    // 1 / _sample_freq
+	float          _sample_freq  = 0;   // Hz, > 0. <= 0: not initialized
+	float          _inv_fs       = 0;   // 1 / _sample_freq
+	float          _min_dly_time = 0;   // s, > 0. 0 = not initialized
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	fstb::SingleObj <Aligned, fstb::AllocAlign <Aligned, fstb_SIMD128_ALIGN> >
-	               _ali;
-	int            _nbr_osc     = 0;
-	int            _nbr_osc_vec = 0;
+	ChannelArray   _chn_arr;
+	mfx::dsp::rspl::InterpolatorHermite43
+	               _interp;
+	dsp::wnd::XFadeShape <dsp::wnd::XFadeEqPowC2>
+	               _xfade_shape;
+	BufAlign       _buf_dly;
+	BufAlign       _buf_mix;
 
-	std::array <double, _nbr_coef>
-	               _coef_list;
+	int            _nbr_vc_pairs = 0;
 
 
 

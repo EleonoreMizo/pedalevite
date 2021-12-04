@@ -41,7 +41,8 @@ class Cst
 
 public:
 
-	static constexpr int _max_image_pairs = 16;
+	static constexpr int _max_voice_pairs = 16;
+	static constexpr int _max_pitch       = 21; // Cents
 
 
 

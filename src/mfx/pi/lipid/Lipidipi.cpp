@@ -24,11 +24,10 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/Approx.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
-#include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/lipid/Cst.h"
 #include "mfx/pi/lipid/Param.h"
 #include "mfx/pi/lipid/Lipidipi.h"
 #include "mfx/piapi/Dir.h"
@@ -58,7 +57,8 @@ namespace lipid
 
 
 
-constexpr int	Cst::_max_image_pairs;
+constexpr int	Cst::_max_voice_pairs;
+constexpr int	Cst::_max_pitch;
 
 
 
@@ -67,23 +67,14 @@ Lipidipi::Lipidipi (piapi::HostInterface &host)
 {
 	dsp::mix::Align::setup ();
 
-	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-		_coef_list.data (), _nbr_coef, 1 / 1000.0
-	);
-
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_FAT   , 1);
-	_state_set.set_val_nat (desc_set, Param_GREASE, 1);
+	_state_set.set_val_nat (desc_set, Param_FAT   , 4);
+	_state_set.set_val_nat (desc_set, Param_GREASE, 10);
 
 	_state_set.add_observer (Param_FAT   , _param_change_flag);
 	_state_set.add_observer (Param_GREASE, _param_change_flag);
-
-	for (auto &chn : _ali->_chn_arr)
-	{
-		chn._ssb.set_coefs (_coef_list.data ());
-	}
 }
 
 
@@ -113,26 +104,58 @@ int	Lipidipi::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	fstb::unused (max_buf_len);
 
+	latency = 0;
+
 	_sample_freq = float (    sample_freq);
 	_inv_fs      = float (1 / sample_freq);
 
+	const int      mbl_align = (max_buf_len + 3) & ~3;
+	_buf_dly.resize (mbl_align);
+	_buf_mix.resize (mbl_align);
+
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
+	_xfade_shape.set_sample_freq (sample_freq);
+	_xfade_shape.set_duration (_win_dur);
 
-	for (auto &chn : _ali->_chn_arr)
+	// When the delay is set to the maximum, we need room to push first
+	// the new data, then read the delayed data.
+	const double   add_dly  = max_buf_len / sample_freq;
+	// Shifted by Cst::_max_pitch_up because at +1 octave, we read the line
+	// at twice the speed.
+	const double   max_rate = std::exp2 (double (Cst::_max_pitch) / 1200);
+	const double   max_dly  = _win_dur * max_rate + add_dly;
+
+	for (auto &chn : _chn_arr)
 	{
-		fstb::unused (chn);
-		// Nothing at the moment
+		chn._delay.set_interpolator (_interp);
+		chn._delay.set_sample_freq (sample_freq, 0);
+		chn._delay.set_max_delay_time (max_dly);
+
+		for (auto &reader : chn._reader_arr)
+		{
+			reader.set_tmp_buf (&_buf_dly [0], int (_buf_dly.size ()));
+			reader.set_delay_line (chn._delay);
+			reader.set_resampling_range (float (1.0 / max_rate), float (max_rate));
+			reader.set_crossfade_normal (
+				_xfade_shape.get_len (),
+				_xfade_shape.use_shape ()
+			);
+			reader.set_crossfade_pitchshift (
+				_xfade_shape.get_len (),
+				_xfade_shape.use_shape ()
+			);
+			assert (reader.is_ready ());
+		}
 	}
+
+	// We add a microsecond because of possible rounding errors
+	_min_dly_time = float (_chn_arr [0]._delay.get_min_delay_time () + 1e-6);
 
 	_param_change_flag.set ();
 
 	update_param (true);
 	_param_proc.req_steady ();
-
-	latency = fstb::round_int (hiir::PolyphaseIir2Designer::compute_group_delay (
-		_coef_list.data (), _nbr_coef, 1000 * _inv_fs, true
-	));
 
 	clear_buffers ();
 
@@ -163,36 +186,26 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 
 	// Signal processing
 	const int      nbr_spl = proc._nbr_spl;
-	for (int pos = 0; pos < nbr_spl; ++pos)
+	for (int chn_idx = 0; chn_idx < nbr_chn_proc; ++chn_idx)
 	{
-		// Computes the oscillator values
-		alignas (fstb_SIMD128_ALIGN) OscArrBuf cos_arr;
-		alignas (fstb_SIMD128_ALIGN) OscArrBuf sin_arr;
-		for (int vec_idx = 0; vec_idx < _nbr_osc_vec; ++vec_idx)
+		// Inserts incoming data into the delay lines
+		Channel &      chn = _chn_arr [chn_idx];
+		chn._delay.push_block (proc._src_arr [chn_idx], nbr_spl);
+
+		// Dry signal
+		dsp::mix::Align::copy_1_1 (
+			proc._dst_arr [chn_idx], proc._src_arr [chn_idx], nbr_spl
+		);
+
+		// Reads the lines
+		const int      nbr_voices = _nbr_vc_pairs * 2;
+		for (int vc_idx = 0; vc_idx < nbr_voices; ++vc_idx)
 		{
-			const auto     sc { _ali->_osc_arr [vec_idx].step () };
-			const auto     sca_idx = vec_idx << fstb::Vf32::_len_l2;
-			std::get <0> (sc).store (&cos_arr [sca_idx]);
-			std::get <1> (sc).store (&sin_arr [sca_idx]);
-		}
-
-		for (int chn_idx = 0; chn_idx < nbr_chn_proc; ++chn_idx)
-		{
-			Channel &      chn = _ali->_chn_arr [chn_idx];
-
-			const auto     in  = proc._src_arr [chn_idx] [pos];
-			auto           sum = in;
-
-			float          x;
-			float          y;
-			chn._ssb.process_sample (x, y, in);
-			for (int k = 0; k < _nbr_osc; ++k)
-			{
-				const auto     val = x * cos_arr [k] + y * sin_arr [k];
-				sum += val;
-			}
-
-			proc._dst_arr [chn_idx] [pos] = sum;
+			auto &         reader = chn._reader_arr [vc_idx];
+			reader.read_data (_buf_mix.data (), nbr_spl, -nbr_spl);
+			dsp::mix::Align::mix_1_1 (
+				proc._dst_arr [chn_idx], _buf_mix.data (), nbr_spl
+			);
 		}
 	}
 
@@ -213,15 +226,18 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 
 
 
+constexpr double	Lipidipi::_win_dur;
+
+
+
 void	Lipidipi::clear_buffers ()
 {
-	for (auto &chn : _ali->_chn_arr)
+	for (auto &chn : _chn_arr)
 	{
-		chn._ssb.clear_buffers ();
-	}
-	for (auto &osc : _ali->_osc_arr)
-	{
-		osc.clear_buffers ();
+		for (auto &reader : chn._reader_arr)
+		{
+			reader.clear_buffers ();
+		}
 	}
 }
 
@@ -234,29 +250,34 @@ void	Lipidipi::update_param (bool force_flag)
 		const auto     fat    = float (_state_set.get_val_end_nat (Param_FAT));
 		const auto     grease = float (_state_set.get_val_end_nat (Param_GREASE));
 
-		const auto     nbr_pairs = fstb::ceil_int (fat);
-		_nbr_osc     = nbr_pairs * 2;
-		_nbr_osc_vec = fstb::div_ceil (_nbr_osc, fstb::Vf32::_length);
+		_nbr_vc_pairs = fstb::ceil_int (fat);
+		const float    gr_oct = grease * (1 / 1200.0f);
 
-		// Frequency difference between two consecutive pairs, Hz
-		if (_nbr_osc > 0)
+		if (_nbr_vc_pairs > 0)
 		{
-			assert (_nbr_osc > 1);
-			const auto     osc_e_mul  = fstb::rcp_uint <float> (_nbr_osc - 1);
-			const auto     angle_dif  = float (fstb::PI * 2) * grease * _inv_fs;
-			constexpr auto ratio_end  = 0.5f;
-			const auto     ratio_step =
-				fstb::Approx::exp2 (fstb::Approx::log2 (ratio_end) * osc_e_mul);
-			const auto     rs2        = ratio_step * ratio_step;
-			const auto     rs4        = rs2 * rs2;
-			const auto     a_mul      = fstb::Vf32 (rs4);
-			auto           a_cur      = fstb::Vf32 (angle_dif);
-			a_cur *= fstb::Vf32 (1, -ratio_step, rs2, -ratio_step * rs2);
+			const float    oct_per_vc =
+				gr_oct * fstb::rcp_uint <float> (std::max (_nbr_vc_pairs - 1, 1));
 
-			for (int vec_idx = 0; vec_idx < _nbr_osc_vec; ++vec_idx)
+			// Frequency difference between two consecutive pairs, Hz
+			for (int pair_idx = 0; pair_idx < _nbr_vc_pairs; ++pair_idx)
 			{
-				_ali->_osc_arr [vec_idx].set_step (a_cur);
-				a_cur *= a_mul;
+				float          rate  =
+					fstb::Approx::exp2 (oct_per_vc * (_nbr_vc_pairs - pair_idx));
+
+				for (int pol = 0; pol < 2; ++pol)
+				{
+					const int      rd_idx = pair_idx * 2 + pol;
+					const float    dly_s  =
+						std::max (float (2 * _win_dur * (rate - 1)), _min_dly_time);
+					for (auto &chn : _chn_arr)
+					{
+						auto &         reader = chn._reader_arr [rd_idx];
+						reader.set_delay_time (dly_s, 0);
+						reader.set_grain_pitch (rate);
+					}
+
+					rate = 1.f / rate;
+				}
 			}
 		}
 	}
