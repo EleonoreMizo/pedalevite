@@ -28,10 +28,8 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/dly/DelayLine.h"
-#include "mfx/dsp/dly/DelayLineReaderPitch.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
-#include "mfx/dsp/wnd/XFadeEqPowC2.h"
-#include "mfx/dsp/wnd/XFadeShape.h"
+#include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/lipid/Cst.h"
 #include "mfx/pi/lipid/LipidipiDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
@@ -40,6 +38,8 @@ http://www.wtfpl.net/ for more details.
 
 #include <array>
 #include <vector>
+
+#include <cstdint>
 
 
 
@@ -81,25 +81,56 @@ protected:
 
 private:
 
-	static constexpr double _win_dur = 0.100; // s
-	static constexpr int _max_nbr_voices = Cst::_max_voice_pairs * 2;
+	static constexpr double _avg_dly         = 0.012; // s
+	static constexpr double _max_depth       = 0.010; // s
+	static_assert (_max_depth <= _avg_dly, "");
+	static constexpr double _lpf_cutoff_freq = 1.0;   // Hz
+	static constexpr int    _seg_len         = 64;    // Linear segment length, samples
+	static_assert (fstb::is_pow_2 (_seg_len), "");
+	static constexpr int    _seg_msk         = _seg_len - 1;
 
 	typedef std::vector <
 		float, fstb::AllocAlign <float, fstb_SIMD128_ALIGN>
 	> BufAlign;
+
+	class Voice
+	{
+	public:
+		// Random generator state. It is just a counter being hashed.
+		uint32_t       _rnd_state;
+
+		// Low-pass filter on the signed rnd result
+		std::array <dsp::iir::Biquad, 2>
+		               _lpf_arr;
+
+		// Turns the filtered result into a delay value
+		float          _dly_scale;
+
+		// Maximum delay change, in second per segment (_seg_len).
+		float          _rate_min; // < 0
+		float          _rate_max; // > 0
+
+		// Final delay values for the segment, s, >= 0.
+		// _seg_pos indicates where we are in the segment.
+		float          _delay_beg;
+		float          _delay_end;
+	};
+	typedef std::array <Voice, Cst::_max_voices> VoiceArray;
 
 	class Channel
 	{
 	public:
 		dsp::dly::DelayLine
 		               _delay;
-		std::array <dsp::dly::DelayLineReaderPitch <float>, _max_nbr_voices>
-		               _reader_arr;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
+	void           start_new_segment ();
+
+	static uint32_t
+	               compute_initial_rnd_state (int vc_idx) noexcept;
 
 	piapi::HostInterface &
 	               _host;
@@ -117,14 +148,13 @@ private:
 	               _param_change_flag;
 
 	ChannelArray   _chn_arr;
+	VoiceArray     _voice_arr;
 	mfx::dsp::rspl::InterpolatorHermite43
 	               _interp;
-	dsp::wnd::XFadeShape <dsp::wnd::XFadeEqPowC2>
-	               _xfade_shape;
 	BufAlign       _buf_dly;
-	BufAlign       _buf_mix;
 
-	int            _nbr_vc_pairs = 0;
+	int            _nbr_voices   = 0;
+	int            _seg_pos      = 0;   // [0 ; _seg_len-1]
 
 
 

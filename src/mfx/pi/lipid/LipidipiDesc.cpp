@@ -58,7 +58,7 @@ LipidipiDesc::LipidipiDesc ()
 
 	// Fat
 	auto           lin_sptr = std::make_shared <param::TplLin> (
-		0, double (Cst::_max_voice_pairs),
+		0, double (Cst::_max_voices),
 		"Fat",
 		"",
 		0,
