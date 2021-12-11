@@ -27,9 +27,10 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
+#include "mfx/dsp/ctrl/Ramp.h"
 #include "mfx/dsp/dly/DelayLine.h"
-#include "mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/dsp/iir/Biquad.h"
+#include "mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/pi/lipid/Cst.h"
 #include "mfx/pi/lipid/LipidipiDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
@@ -122,6 +123,10 @@ private:
 	public:
 		dsp::dly::DelayLine
 		               _delay;
+
+		// One bandpass filter per voice
+		std::array <dsp::iir::Biquad, Cst::_max_voices>
+		               _vc_filt_arr;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -142,19 +147,31 @@ private:
 	               _param_proc { _state_set };
 	float          _sample_freq  = 0;   // Hz, > 0. <= 0: not initialized
 	float          _inv_fs       = 0;   // 1 / _sample_freq
-	float          _min_dly_time = 0;   // s, > 0. 0 = not initialized
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
 	ChannelArray   _chn_arr;
 	VoiceArray     _voice_arr;
-	mfx::dsp::rspl::InterpolatorHermite43
-	               _interp;
-	BufAlign       _buf_dly;
 
+	mfx::dsp::rspl::InterpolatorHermite43
+	               _interp;             // Delay interpolator
+	BufAlign       _buf_dly;            // Temp buffer for the delay output
+	float          _min_dly_time = 0;   // s, > 0. 0 = not initialized
+
+	float          _fatness      = 0;
+
+	// Equivalent to ceil (_fatness). The last voice may be faded, depending
+	// on the fractional part.
 	int            _nbr_voices   = 0;
-	int            _seg_pos      = 0;   // [0 ; _seg_len-1]
+
+	// Segment position for the delay ramps. [0 ; _seg_len-1].
+	// We compute a new segment when _seg_pos == 0 at the beginning of a block.
+	int            _seg_pos      = 0;
+
+	// Overall volume, linear
+	dsp::ctrl::Ramp
+	               _vol          { 1.f };
 
 
 
