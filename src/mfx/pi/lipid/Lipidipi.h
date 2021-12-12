@@ -89,6 +89,8 @@ private:
 	static constexpr int    _seg_len         = 64;    // Linear segment length, samples
 	static_assert (fstb::is_pow_2 (_seg_len), "");
 	static constexpr int    _seg_msk         = _seg_len - 1;
+	static constexpr int    _vc_per_grp      = 4;     // Number of voices per group, > 0
+	static constexpr int    _max_voices      = Cst::_max_groups * _vc_per_grp;
 
 	typedef std::vector <
 		float, fstb::AllocAlign <float, fstb_SIMD128_ALIGN>
@@ -116,7 +118,7 @@ private:
 		float          _delay_beg;
 		float          _delay_end;
 	};
-	typedef std::array <Voice, Cst::_max_voices> VoiceArray;
+	typedef std::array <Voice, _max_voices> VoiceArray;
 
 	class Channel
 	{
@@ -125,7 +127,7 @@ private:
 		               _delay;
 
 		// One bandpass filter per voice
-		std::array <dsp::iir::Biquad, Cst::_max_voices>
+		std::array <dsp::iir::Biquad, _max_voices>
 		               _vc_filt_arr;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
@@ -157,13 +159,14 @@ private:
 	mfx::dsp::rspl::InterpolatorHermite43
 	               _interp;             // Delay interpolator
 	BufAlign       _buf_dly;            // Temp buffer for the delay output
+	BufAlign       _buf_mix;            // Temp buffer for the delay mix
 	float          _min_dly_time = 0;   // s, > 0. 0 = not initialized
 
 	float          _fatness      = 0;
 
 	// Equivalent to ceil (_fatness). The last voice may be faded, depending
 	// on the fractional part.
-	int            _nbr_voices   = 0;
+	int            _nbr_groups   = 0;
 
 	// Segment position for the delay ramps. [0 ; _seg_len-1].
 	// We compute a new segment when _seg_pos == 0 at the beginning of a block.
@@ -171,7 +174,9 @@ private:
 
 	// Overall volume, linear
 	dsp::ctrl::Ramp
-	               _vol          { 1.f };
+	               _vol_dry      { 0.5f };
+	dsp::ctrl::Ramp
+	               _vol_wet      { 0.5f };
 
 
 

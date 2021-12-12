@@ -60,7 +60,7 @@ namespace lipid
 
 
 
-constexpr int	Cst::_max_voices;
+constexpr int	Cst::_max_groups;
 constexpr int	Cst::_max_pitch;
 
 
@@ -73,11 +73,13 @@ Lipidipi::Lipidipi (piapi::HostInterface &host)
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_FAT   , 4);
+	_state_set.set_val_nat (desc_set, Param_FAT   ,  4);
 	_state_set.set_val_nat (desc_set, Param_GREASE, 16);
+	_state_set.set_val_nat (desc_set, Param_SUET  ,  0.45);
 
 	_state_set.add_observer (Param_FAT   , _param_change_flag);
 	_state_set.add_observer (Param_GREASE, _param_change_flag);
+	_state_set.add_observer (Param_SUET  , _param_change_flag);
 }
 
 
@@ -114,30 +116,10 @@ int	Lipidipi::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	const int      mbl_align = (max_buf_len + 3) & ~3;
 	_buf_dly.resize (mbl_align);
+	_buf_mix.resize (mbl_align);
 
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
-
-	constexpr std::array <double, 3>  bs { 1, 0, 0 };
-	constexpr std::array <double, 3>  as { 1, fstb::SQRT2, 1 };
-	std::array <float, 3>   bz;
-	std::array <float, 3>   az;
-	dsp::iir::TransSZBilin::map_s_to_z (
-		bz.data (), az.data (),
-		bs.data (), as.data (),
-		_lpf_cutoff_freq, sample_freq
-	);
-
-	for (int vc_idx = 0; vc_idx < Cst::_max_voices; ++vc_idx)
-	{
-		auto &         vc = _voice_arr [vc_idx];
-
-		vc._rnd_state = compute_initial_rnd_state (vc_idx);
-		for (auto &filter : vc._lpf_arr)
-		{
-			filter.set_z_eq (bz.data (), az.data ());
-		}
-	}
 
 	// When the delay is set to the maximum, we need room to push first
 	// the new data, then read the delayed data.
@@ -154,8 +136,10 @@ int	Lipidipi::do_reset (double sample_freq, int max_buf_len, int &latency)
 	// We add a microsecond because of possible rounding errors
 	_min_dly_time = float (_chn_arr [0]._delay.get_min_delay_time () + 1e-6);
 
-	const int      vol_ramp_len = fstb::ceil_int (sample_freq * 0.001);
-	_vol.set_time (vol_ramp_len, fstb::rcp_uint <float> (vol_ramp_len));
+	const auto     vol_ramp_len = fstb::ceil_int (sample_freq * 0.001);
+	const auto     val_step     = fstb::rcp_uint <float> (vol_ramp_len);
+	_vol_dry.set_time (vol_ramp_len, val_step);
+	_vol_wet.set_time (vol_ramp_len, val_step);
 
 	_param_change_flag.set ();
 
@@ -209,7 +193,8 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 		const auto     rel_beg = float (_seg_pos          ) * seg_mul;
 		const auto     rel_end = float (_seg_pos + blk_len) * seg_mul;
 
-		_vol.tick (blk_len);
+		_vol_dry.tick (blk_len);
+		_vol_wet.tick (blk_len);
 
 		for (int chn_idx = 0; chn_idx < nbr_chn_proc; ++chn_idx)
 		{
@@ -218,14 +203,16 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 			chn._delay.push_block (proc._src_arr [chn_idx] + blk_pos, blk_len);
 
 			// Dry signal
-			dsp::mix::Align::copy_1_1 (
+			dsp::mix::Align::copy_1_1_vlrauto (
 				proc._dst_arr [chn_idx] + blk_pos,
 				proc._src_arr [chn_idx] + blk_pos,
-				blk_len
+				blk_len,
+				_vol_dry.get_beg (), _vol_dry.get_end ()
 			);
 
 			// Processes all voices
-			for (int vc_idx = 0; vc_idx < _nbr_voices; ++vc_idx)
+			const int      nbr_voices = _nbr_groups * _vc_per_grp;
+			for (int vc_idx = 0; vc_idx < nbr_voices; ++vc_idx)
 			{
 				const auto &   vc = _voice_arr [vc_idx];
 
@@ -245,15 +232,24 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 				);
 
 				// Voice mixing
-				dsp::mix::Align::mix_1_1 (
-					proc._dst_arr [chn_idx] + blk_pos, _buf_dly.data (), blk_len
-				);
+				if (vc_idx == 0)
+				{
+					dsp::mix::Align::copy_1_1 (
+						_buf_mix.data (), _buf_dly.data (), blk_len
+					);
+				}
+				else
+				{
+					dsp::mix::Align::mix_1_1 (
+						_buf_mix.data (), _buf_dly.data (), blk_len
+					);
+				}
 			}
 
-			// Applies volume
-			dsp::mix::Align::scale_1_vlrauto (
-				proc._dst_arr [chn_idx] + blk_pos, blk_len,
-				_vol.get_beg (), _vol.get_end ()
+			// Final mix
+			dsp::mix::Align::mix_1_1_vlrauto (
+				proc._dst_arr [chn_idx] + blk_pos, _buf_mix.data (), blk_len,
+				_vol_wet.get_beg (), _vol_wet.get_end ()
 			);
 		}
 
@@ -286,20 +282,26 @@ constexpr double	Lipidipi::_max_depth;
 constexpr double	Lipidipi::_lpf_cutoff_freq;
 constexpr int	Lipidipi::_seg_len;
 constexpr int	Lipidipi::_seg_msk;
+constexpr int	Lipidipi::_vc_per_grp;
+constexpr int	Lipidipi::_max_voices;
 
 
 
 void	Lipidipi::clear_buffers ()
 {
-	for (int vc_idx = 0; vc_idx < Cst::_max_voices; ++vc_idx)
+	for (int vc_idx = 0; vc_idx < _max_voices; ++vc_idx)
 	{
 		auto &         vc = _voice_arr [vc_idx];
 		vc._rnd_state = compute_initial_rnd_state (vc_idx);
 		vc._delay_beg = float (_avg_dly);
 		vc._delay_end = float (_avg_dly);
+		const uint32_t h   = fstb::Hash::hash (uint32_t (12345 + vc_idx));
+		const float    val = float (int16_t (h));
+		const std::array <float, 2> s { val, val };
 		for (auto &filter : vc._lpf_arr)
 		{
 			filter.clear_buffers ();
+			filter.set_state (s.data (), s.data ());
 		}
 	}
 
@@ -312,7 +314,8 @@ void	Lipidipi::clear_buffers ()
 		}
 	}
 
-	_vol.clear_buffers ();
+	_vol_dry.clear_buffers ();
+	_vol_wet.clear_buffers ();
 }
 
 
@@ -323,20 +326,21 @@ void	Lipidipi::update_param (bool force_flag)
 	{
 		_fatness = float (_state_set.get_val_end_nat (Param_FAT));
 		const auto     grease = float (_state_set.get_val_end_nat (Param_GREASE));
+		const auto     suet   = float (_state_set.get_val_end_nat (Param_SUET));
+		const auto     mix    = fstb::sq (suet);
 
-		const int      nbr_vc_full = fstb::floor_int (_fatness);
-		_nbr_voices = fstb::ceil_int (_fatness);
+		const int      nbr_grp_full = fstb::floor_int (_fatness);
+		_nbr_groups = fstb::ceil_int (_fatness);
 		// Makes sure rounding errors are not an issue
-		_nbr_voices = std::min (_nbr_voices, int (Cst::_max_voices));
+		_nbr_groups = std::min (_nbr_groups, int (Cst::_max_groups));
 		const float    gr_oct = grease * (1 / 1200.0f);
 
-		if (_nbr_voices <= 0)
+		float          gain_fix = 1;
+		if (_nbr_groups > 0)
 		{
-			_vol.set_val (1);
-		}
+			// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+			// Delay LFOs
 
-		else
-		{
 			// Maximum playback rate (1 = no pitch change)
 			const float    ratio_max = fstb::Approx::exp2 (gr_oct);
 			const float    ratio_min = 1 / ratio_max;
@@ -365,25 +369,48 @@ void	Lipidipi::update_param (bool force_flag)
 			const auto     dly_scale    =
 				float (scale_rnd * amplitude * filter_scale);
 
-			const auto     fade = _fatness - nbr_vc_full; // 0 -> 1
+			constexpr std::array <double, 3>  d_bs { 1, 0, 0 };
+			constexpr std::array <double, 3>  d_as { 1, fstb::SQRT2, 1 };
+			std::array <float, 3>   d_bz;
+			std::array <float, 3>   d_az;
+			dsp::iir::TransSZBilin::map_s_to_z (
+				d_bz.data (), d_az.data (),
+				d_bs.data (), d_as.data (),
+				cutoff_freq, block_fs
+			);
+
+			for (auto &vc : _voice_arr)
+			{
+				for (auto &filter : vc._lpf_arr)
+				{
+					filter.set_z_eq (d_bz.data (), d_az.data ());
+				}
+			}
+
+			// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+			// Band-pass filters
+
+			// Formula: https://www.desmos.com/calculator/oxasvqwzmz
+
+			const auto     fade = _fatness - nbr_grp_full; // 0 -> 1
 			constexpr int  order    = 16;
 			const float    fade_vol =
 				1 - fstb::ipowpc <order> (1 - fade) * (float (order) * fade + 1);
-			const float    volume =
-				  (nbr_vc_full > 0)
-				? float (fstb::SQRT2 * 0.5)
-				: fstb::Approx::rsqrt <1> (1 + fade_vol);
-			_vol.set_val (volume);
 
-			float          f1   = 5 * _inv_fs; // Relative to Fs
-			const auto     rmul = 1.f / std::max (_fatness - 1, 1.f);
-			for (int vc_idx = 0; vc_idx < _nbr_voices; ++vc_idx)
+			auto           lvl_w    = mix;
+			if (nbr_grp_full == 0)
 			{
-				auto &         vc = _voice_arr [vc_idx];
-				vc._dly_scale = dly_scale;
-				vc._rate_min  = rate_min;
-				vc._rate_max  = rate_max;
+				lvl_w *= fade_vol;
+			}
+			const auto     lvl_w_sq = float (_vc_per_grp) * fstb::sq (lvl_w);
+			const auto     lvl_d_sq = fstb::sq (1 - mix);
+			gain_fix = fstb::Approx::rsqrt <1> (lvl_d_sq + lvl_w_sq);
 
+			constexpr auto f1_hz = 5.f;
+			float          f1    = f1_hz * _inv_fs; // Relative to Fs
+			const auto     rmul  = 1.f / std::max (_fatness - 1, 1.f);
+			for (int grp_idx = 0; grp_idx < _nbr_groups; ++grp_idx)
+			{
 				// Computes the bandpass parameters for the given voice.
 				// Splitting frequencies are log-spaced from 100 to 3200 Hz.
 				// First voice starts at 5 Hz.
@@ -397,30 +424,31 @@ void	Lipidipi::update_param (bool force_flag)
 				constexpr auto f_beg =  100.f;
 				constexpr auto f_end = 3200.f;
 				constexpr auto f_rat = f_end / f_beg;
-				const bool     last_voice_flag = (vc_idx == _nbr_voices - 1);
-				const float    level = last_voice_flag ? fade_vol : 1.f; // Linear
+				const bool     last_grp_flag = (grp_idx == nbr_grp_full);
+				const float    level = last_grp_flag ? fade_vol : 1.f; // Linear
 				float          f2    = 0;
-				if (last_voice_flag)
+				if (last_grp_flag)
 				{
 					f2 = fstb::lerp (r0, r1, fade);
 				}
 				else
 				{
-					f2 = f_beg * powf (f_rat, float (vc_idx) * rmul) * _inv_fs;
-					if (vc_idx == nbr_vc_full - 1)
+					f2 = f_beg * powf (f_rat, float (grp_idx) * rmul) * _inv_fs;
+					if (grp_idx == nbr_grp_full - 1)
 					{
-						f2 = fstb::lerp (r1, std::min (f2, r1), fade);
+						const float    s = 1 - fstb::ipowpc <3> (1 - fade);
+						f2 = fstb::lerp (r1, std::min (f2, r1), s);
 					}
 				}
 				assert (f1 < f2);
 
 				// Computes the bandwidth and center frequencies
 				constexpr auto pi_f = float (fstb::PI);
-				const float    f1_w = tanf (f1 * pi_f); // Relative to Fs/pi
-				const float    f2_w = tanf (f2 * pi_f);
-				const float    f0_w = sqrtf (f1_w * f2_w);
-				const float    q    = f0_w / (f2_w - f1_w);
-				const float    f0   = atanf (f0_w) * (1.f / pi_f); // Relative to Fs
+				const auto     f1_w = tanf (f1 * pi_f); // Relative to Fs/pi
+				const auto     f2_w = tanf (f2 * pi_f);
+				const auto     f0_w = sqrtf (f1_w * f2_w);
+				const auto     q    = f0_w / (f2_w - f1_w);
+				const auto     f0   = atanf (f0_w) * (1.f / pi_f); // Relative to Fs
 
 				// Computes the filter coefficients
 				std::array <float, 3>   bs;
@@ -432,15 +460,33 @@ void	Lipidipi::update_param (bool force_flag)
 				dsp::iir::TransSZBilin::map_s_to_z_approx (
 					bz.data (), az.data (), bs.data (), as.data (), k
 				);
-				for (auto &chn : _chn_arr)
+
+				// Integrates the band level into the filter coefficients
+				for (auto &coef : bz) { coef *= level; }
+
+				// Sets voice parameters
+				const int      vc_beg = grp_idx * _vc_per_grp;
+				for (int vc_cnt = 0; vc_cnt < _vc_per_grp; ++vc_cnt)
 				{
-					chn._vc_filt_arr [vc_idx].set_z_eq (bz.data (), az.data ());
+					const auto     vc_idx = vc_beg + vc_cnt;
+					auto &         vc     = _voice_arr [vc_idx];
+					vc._dly_scale = dly_scale;
+					vc._rate_min  = rate_min;
+					vc._rate_max  = rate_max;
+
+					for (auto &chn : _chn_arr)
+					{
+						chn._vc_filt_arr [vc_idx].set_z_eq (bz.data (), az.data ());
+					}
 				}
 
-				// Next voice
+				// Next group
 				f1 = f2;
-			}
-		}
+			} // for grp_idx
+		} // _nbr_groups > 0
+
+		_vol_dry.set_val (gain_fix * (1 - mix));
+		_vol_wet.set_val (gain_fix *      mix );
 	}
 }
 
@@ -449,7 +495,8 @@ void	Lipidipi::update_param (bool force_flag)
 void	Lipidipi::start_new_segment ()
 {
 	// Computes the delay states for the end of the block
-	for (int vc_idx = 0; vc_idx < _nbr_voices; ++vc_idx)
+	const int      nbr_voices = _nbr_groups * _vc_per_grp;
+	for (int vc_idx = 0; vc_idx < nbr_voices; ++vc_idx)
 	{
 		auto &         vc = _voice_arr [vc_idx];
 
