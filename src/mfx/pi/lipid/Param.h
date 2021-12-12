@@ -40,6 +40,7 @@ enum Param
 	Param_FAT = 0,
 	Param_GREASE,
 	Param_SUET,
+	Param_LARD,
 
 	Param_NBR_ELT
 

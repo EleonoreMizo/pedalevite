@@ -62,6 +62,7 @@
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Trémolo bi-bande</a></li>
 	<li><a href="#fx-hypercomb">Hypercomb — Filtre en peigne polyphonique</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix — Adaptation d’impédance d’entrée</a></li>
+	<li><a href="#fx-lipidipi">Lipidipi — Régime riche en gras</a></li>
 	<li><a href="#fx-midside">Mid Side Coder — Codage et décodage mid-side</a></li>
 	<li><a href="#fx-moogflt">Moog Filter — Filtre</a></li>
 	<li><a href="#fx-nzbl">Noise Bleach — Barrière anti-bruit</a></li>
@@ -2055,6 +2056,43 @@ Ce paramètre permet d’affecter des durées différentes à chaque note.</p>
 
 
 
+<h3><a id="fx-lipidipi"></a>Lipidipi — Régime riche en gras</h3>
+
+<p>Lipidipi permet d’enrichir le son en lui donnant du poids, comme si
+plusieurs instruments jouaient simultanément.</p>
+<p>L’effet fonctionne un peu comme un chorus, mais donne un son beaucoup moins
+typé et probablement plus fonctionnel.
+Il génère des groupes de 4 répliques du signal original, légèrement déaccordés.
+Chaque groupe est filtré pour occuper une bande de fréquences
+particulière, de façon à casser les rapports harmoniques entre les partiels.
+Les fréquences de séparation entre les bandes vont de 100&#8239;Hz à
+3200&#8239;Hz.</p>
+
+<p class="var">Fat</p>
+<p>Règle le nombre de groupes de répliques.
+Plus il y a de groupes, plus l’effet devient transparent en s’éloignant du
+son typique d’un chorus.
+Par contre, l’occupation CPU augmente en conséquence.</p>
+
+<p class="var">Grease</p>
+<p>Indique la transposition maximale des répliques, en centièmes de
+demi-tons.
+Plus la transposition est importante, plus l’effet sera marqué.</p>
+
+<p class="var">Suet</p>
+<p>Règle le mix entre le son original et les répliques.
+Il n’a pas d’unité particulière.
+45&#8239;% affecte un poids à peu près identique entre les deux types
+de signaux.</p>
+
+<p class="var">Lard</p>
+<p>Sélectionne la stéréo du traitement.
+En mode stéréo, chaque canal est indépendant de l’autre.
+L’effet devient plus spatial pour une source mono, mais peut casser les
+relations de phase sur un son qui est déjà stéré.</p>
+
+
+
 <h3><a id="fx-midside"></a>Mid Side Coder — Codage et décodage mid-side</h3>
 
 <p>Cet effet, qui travaille normalement sur une source à deux canaux, permet
@@ -3780,9 +3818,14 @@ de l’effet.</p>
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
 
+<p><b>r47, 2021-12-12</b></p>
+<ul>
+<li>Ajout de l’effet Lipidipi.</li>
+</ul>
+
 <p><b>r46, 2021-10-31</b></p>
 <ul>
-<li>Ajout de l’effets Bad Radio.</li>
+<li>Ajout de l’effet Bad Radio.</li>
 </ul>
 
 <p><b>r45, 2021-05-26</b></p>

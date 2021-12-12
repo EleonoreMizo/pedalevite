@@ -27,6 +27,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/lipid/Cst.h"
 #include "mfx/pi/lipid/LipidipiDesc.h"
 #include "mfx/pi/lipid/Param.h"
+#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/Simple.h"
 #include "mfx/piapi/Tag.h"
@@ -55,7 +56,7 @@ LipidipiDesc::LipidipiDesc ()
 	_info._unique_id = "lipidipi";
 	_info._name      = "Lipidipi";
 	_info._tag_list  = { piapi::Tag::_modulation_0 };
-	_info._chn_pref  = piapi::ChnPref::NONE;
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	// Fat
 	auto           lin_sptr = std::make_shared <param::TplLin> (
@@ -80,6 +81,12 @@ LipidipiDesc::LipidipiDesc ()
 	// Suet
 	auto           sim_sptr = std::make_shared <param::Simple> ("Suet\nSu");
 	_desc_set.add_glob (Param_SUET, sim_sptr);
+
+	// Lard
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
+		"Mono\nStereo", "Lard\nLrd", ""
+	);
+	_desc_set.add_glob (Param_LARD, enu_sptr);
 }
 
 

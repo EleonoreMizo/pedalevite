@@ -117,6 +117,14 @@ private:
 		// _seg_pos indicates where we are in the segment.
 		float          _delay_beg;
 		float          _delay_end;
+
+		// Bandpass filter, for audio
+/*** To do:
+put the filter in a group structure, and premix the whole group before
+filtering it at once.
+***/
+		dsp::iir::Biquad
+		               _bpf;
 	};
 	typedef std::array <Voice, _max_voices> VoiceArray;
 
@@ -125,19 +133,16 @@ private:
 	public:
 		dsp::dly::DelayLine
 		               _delay;
-
-		// One bandpass filter per voice
-		std::array <dsp::iir::Biquad, _max_voices>
-		               _vc_filt_arr;
+		VoiceArray     _voice_arr;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
-	void           clear_buffers ();
-	void           update_param (bool force_flag = false);
-	void           start_new_segment ();
+	void           clear_buffers () noexcept;
+	void           update_param (bool force_flag = false) noexcept;
+	void           start_new_segment () noexcept;
 
 	static uint32_t
-	               compute_initial_rnd_state (int vc_idx) noexcept;
+	               compute_initial_rnd_state (int chn_idx, int vc_idx) noexcept;
 
 	piapi::HostInterface &
 	               _host;
@@ -154,7 +159,6 @@ private:
 	               _param_change_flag;
 
 	ChannelArray   _chn_arr;
-	VoiceArray     _voice_arr;
 
 	mfx::dsp::rspl::InterpolatorHermite43
 	               _interp;             // Delay interpolator
@@ -177,6 +181,8 @@ private:
 	               _vol_dry      { 0.5f };
 	dsp::ctrl::Ramp
 	               _vol_wet      { 0.5f };
+
+	bool           _stereo_flag  = true;
 
 
 

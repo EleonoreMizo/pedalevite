@@ -76,10 +76,12 @@ Lipidipi::Lipidipi (piapi::HostInterface &host)
 	_state_set.set_val_nat (desc_set, Param_FAT   ,  4);
 	_state_set.set_val_nat (desc_set, Param_GREASE, 16);
 	_state_set.set_val_nat (desc_set, Param_SUET  ,  0.45);
+	_state_set.set_val_nat (desc_set, Param_LARD  ,  1);
 
 	_state_set.add_observer (Param_FAT   , _param_change_flag);
 	_state_set.add_observer (Param_GREASE, _param_change_flag);
 	_state_set.add_observer (Param_SUET  , _param_change_flag);
+	_state_set.add_observer (Param_LARD  , _param_change_flag);
 }
 
 
@@ -160,7 +162,13 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 	const int      nbr_chn_src = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
 	const int      nbr_chn_dst = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	assert (nbr_chn_src <= nbr_chn_dst);
-	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
+
+	int            nbr_chn_proc   = nbr_chn_dst;
+	const bool     mono_proc_flag = (! _stereo_flag && nbr_chn_src == 1);
+	if (mono_proc_flag)
+	{
+		nbr_chn_proc = 1;
+	}
 
 	// Events
 	_param_proc.handle_msg (proc);
@@ -175,6 +183,7 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 
 	// Signal processing
 
+	const int      nbr_chn_dly = (_stereo_flag) ? nbr_chn_dst : 1;
 	const int      nbr_spl = proc._nbr_spl;
 	int            blk_pos = 0;
 	do
@@ -198,15 +207,20 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 
 		for (int chn_idx = 0; chn_idx < nbr_chn_proc; ++chn_idx)
 		{
+			const int      chn_src_idx = std::min (chn_idx, nbr_chn_src - 1);
+			const int      chn_dly_idx = std::min (chn_idx, nbr_chn_dly - 1);
+
+			Channel &      chn     = _chn_arr [chn_idx    ];
+			const Channel& chn_dly = _chn_arr [chn_dly_idx];
+			const float *  src_ptr = proc._src_arr [chn_src_idx] + blk_pos;
+			float *        dst_ptr = proc._dst_arr [chn_idx    ] + blk_pos;
+
 			// Inserts incoming data into the delay lines
-			Channel &      chn = _chn_arr [chn_idx];
-			chn._delay.push_block (proc._src_arr [chn_idx] + blk_pos, blk_len);
+			chn._delay.push_block (src_ptr, blk_len);
 
 			// Dry signal
 			dsp::mix::Align::copy_1_1_vlrauto (
-				proc._dst_arr [chn_idx] + blk_pos,
-				proc._src_arr [chn_idx] + blk_pos,
-				blk_len,
+				dst_ptr, src_ptr, blk_len,
 				_vol_dry.get_beg (), _vol_dry.get_end ()
 			);
 
@@ -214,11 +228,12 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 			const int      nbr_voices = _nbr_groups * _vc_per_grp;
 			for (int vc_idx = 0; vc_idx < nbr_voices; ++vc_idx)
 			{
-				const auto &   vc = _voice_arr [vc_idx];
+				const auto &   vc_dly      = chn_dly._voice_arr [vc_idx];
+				const auto     dly_dif     = vc_dly._delay_end - vc_dly._delay_beg;
+				const auto     dly_beg_seg = vc_dly._delay_beg + rel_beg * dly_dif;
+				const auto     dly_end_seg = vc_dly._delay_beg + rel_end * dly_dif;
 
-				const auto     dly_dif     = vc._delay_end - vc._delay_beg;
-				const auto     dly_beg_seg = vc._delay_beg + rel_beg * dly_dif;
-				const auto     dly_end_seg = vc._delay_beg + rel_end * dly_dif;
+				auto &         vc = chn._voice_arr [vc_idx];
 
 				// Reads the line
 				chn._delay.read_block (
@@ -227,9 +242,7 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 				);
 
 				// Voice filtering
-				chn._vc_filt_arr [vc_idx].process_block (
-					_buf_dly.data (), _buf_dly.data (), blk_len
-				);
+				vc._bpf.process_block (_buf_dly.data (), _buf_dly.data (), blk_len);
 
 				// Voice mixing
 				if (vc_idx == 0)
@@ -248,7 +261,7 @@ void	Lipidipi::do_process_block (piapi::ProcInfo &proc)
 
 			// Final mix
 			dsp::mix::Align::mix_1_1_vlrauto (
-				proc._dst_arr [chn_idx] + blk_pos, _buf_mix.data (), blk_len,
+				dst_ptr, _buf_mix.data (), blk_len,
 				_vol_wet.get_beg (), _vol_wet.get_end ()
 			);
 		}
@@ -287,30 +300,30 @@ constexpr int	Lipidipi::_max_voices;
 
 
 
-void	Lipidipi::clear_buffers ()
+void	Lipidipi::clear_buffers () noexcept
 {
-	for (int vc_idx = 0; vc_idx < _max_voices; ++vc_idx)
+	for (int chn_idx = 0; chn_idx < _max_nbr_chn; ++chn_idx)
 	{
-		auto &         vc = _voice_arr [vc_idx];
-		vc._rnd_state = compute_initial_rnd_state (vc_idx);
-		vc._delay_beg = float (_avg_dly);
-		vc._delay_end = float (_avg_dly);
-		const uint32_t h   = fstb::Hash::hash (uint32_t (12345 + vc_idx));
-		const float    val = float (int16_t (h));
-		const std::array <float, 2> s { val, val };
-		for (auto &filter : vc._lpf_arr)
-		{
-			filter.clear_buffers ();
-			filter.set_state (s.data (), s.data ());
-		}
-	}
+		auto &         chn = _chn_arr [chn_idx];
 
-	for (auto &chn : _chn_arr)
-	{
 		chn._delay.clear_buffers ();
-		for (auto &filter : chn._vc_filt_arr)
+
+		for (int vc_idx = 0; vc_idx < _max_voices; ++vc_idx)
 		{
-			filter.clear_buffers ();
+			auto &         vc = chn._voice_arr [vc_idx];
+			vc._rnd_state = compute_initial_rnd_state (chn_idx, vc_idx);
+			vc._delay_beg = float (_avg_dly);
+			vc._delay_end = float (_avg_dly);
+			const auto     seed = 12345 + chn_idx * 6789 + vc_idx;
+			const uint32_t h    = fstb::Hash::hash (uint32_t (seed));
+			const float    val  = float (int16_t (h));
+			const std::array <float, 2> s { val, val };
+			for (auto &filter : vc._lpf_arr)
+			{
+				filter.clear_buffers ();
+				filter.set_state (s.data (), s.data ());
+			}
+			vc._bpf.clear_buffers ();
 		}
 	}
 
@@ -320,15 +333,16 @@ void	Lipidipi::clear_buffers ()
 
 
 
-void	Lipidipi::update_param (bool force_flag)
+void	Lipidipi::update_param (bool force_flag) noexcept
 {
 	if (_param_change_flag (true) || force_flag)
 	{
 		_fatness = float (_state_set.get_val_end_nat (Param_FAT));
 		const auto     grease = float (_state_set.get_val_end_nat (Param_GREASE));
 		const auto     suet   = float (_state_set.get_val_end_nat (Param_SUET));
-		const auto     mix    = fstb::sq (suet);
+		_stereo_flag = _state_set.get_val_bool (Param_LARD);
 
+		const auto     mix    = fstb::sq (suet);
 		const int      nbr_grp_full = fstb::floor_int (_fatness);
 		_nbr_groups = fstb::ceil_int (_fatness);
 		// Makes sure rounding errors are not an issue
@@ -379,11 +393,14 @@ void	Lipidipi::update_param (bool force_flag)
 				cutoff_freq, block_fs
 			);
 
-			for (auto &vc : _voice_arr)
+			for (auto &chn : _chn_arr)
 			{
-				for (auto &filter : vc._lpf_arr)
+				for (auto &vc : chn._voice_arr)
 				{
-					filter.set_z_eq (d_bz.data (), d_az.data ());
+					for (auto &filter : vc._lpf_arr)
+					{
+						filter.set_z_eq (d_bz.data (), d_az.data ());
+					}
 				}
 			}
 
@@ -461,22 +478,21 @@ void	Lipidipi::update_param (bool force_flag)
 					bz.data (), az.data (), bs.data (), as.data (), k
 				);
 
-				// Integrates the band level into the filter coefficients
+				// Merges the band level into the filter coefficients
 				for (auto &coef : bz) { coef *= level; }
 
 				// Sets voice parameters
 				const int      vc_beg = grp_idx * _vc_per_grp;
-				for (int vc_cnt = 0; vc_cnt < _vc_per_grp; ++vc_cnt)
+				for (auto &chn : _chn_arr)
 				{
-					const auto     vc_idx = vc_beg + vc_cnt;
-					auto &         vc     = _voice_arr [vc_idx];
-					vc._dly_scale = dly_scale;
-					vc._rate_min  = rate_min;
-					vc._rate_max  = rate_max;
-
-					for (auto &chn : _chn_arr)
+					for (int vc_cnt = 0; vc_cnt < _vc_per_grp; ++vc_cnt)
 					{
-						chn._vc_filt_arr [vc_idx].set_z_eq (bz.data (), az.data ());
+						const auto     vc_idx = vc_beg + vc_cnt;
+						auto &         vc     = chn._voice_arr [vc_idx];
+						vc._dly_scale = dly_scale;
+						vc._rate_min  = rate_min;
+						vc._rate_max  = rate_max;
+						vc._bpf.set_z_eq (bz.data (), az.data ());
 					}
 				}
 
@@ -492,49 +508,55 @@ void	Lipidipi::update_param (bool force_flag)
 
 
 
-void	Lipidipi::start_new_segment ()
+void	Lipidipi::start_new_segment () noexcept
 {
 	// Computes the delay states for the end of the block
 	const int      nbr_voices = _nbr_groups * _vc_per_grp;
-	for (int vc_idx = 0; vc_idx < nbr_voices; ++vc_idx)
+	for (auto &chn : _chn_arr)
 	{
-		auto &         vc = _voice_arr [vc_idx];
-
-		// Starts from the end of the previous block
-		vc._delay_beg = vc._delay_end;
-
-		// Random generation and filtering
-		++ vc._rnd_state;
-		const auto     rnd_val_u = fstb::Hash::hash (vc._rnd_state);
-		const auto     rnd_val_s = int16_t (rnd_val_u); // Makes it signed
-		float          delay = float (rnd_val_s);
-		for (auto &filter : vc._lpf_arr)
+		for (int vc_idx = 0; vc_idx < nbr_voices; ++vc_idx)
 		{
-			delay = filter.process_sample (delay);
-		}
+			auto &         vc = chn._voice_arr [vc_idx];
 
-		delay *= vc._dly_scale;
-		delay  = fstb::limit (delay, float (-_max_depth), float (+_max_depth));
-		delay += float (_avg_dly);
+			// Starts from the end of the previous block
+			vc._delay_beg = vc._delay_end;
+
+			// Random generation and filtering
+			++ vc._rnd_state;
+			const auto     rnd_val_u = fstb::Hash::hash (vc._rnd_state);
+			const auto     rnd_val_s = int16_t (rnd_val_u); // Makes it signed
+			float          delay = float (rnd_val_s);
+			for (auto &filter : vc._lpf_arr)
+			{
+				delay = filter.process_sample (delay);
+			}
+
+			delay *= vc._dly_scale;
+			delay  = fstb::limit (delay, float (-_max_depth), float (+_max_depth));
+			delay += float (_avg_dly);
 
 #if 0 // Not really necessary actually
-		// Takes the rate limit into account
-		delay  = fstb::limit (
-			delay,
-			vc._delay_beg + vc._rate_min,
-			vc._delay_beg + vc._rate_max
-		);
+			// Takes the rate limit into account
+			delay  = fstb::limit (
+				delay,
+				vc._delay_beg + vc._rate_min,
+				vc._delay_beg + vc._rate_max
+			);
 #endif
 
-		vc._delay_end = delay;
+			vc._delay_end = delay;
+		}
 	}
 }
 
 
 
-uint32_t	Lipidipi::compute_initial_rnd_state (int vc_idx) noexcept
+uint32_t	Lipidipi::compute_initial_rnd_state (int chn_idx, int vc_idx) noexcept
 {
-	return uint32_t (vc_idx) << 16;
+	assert (chn_idx >= 0);
+	assert (vc_idx >= 0);
+
+	return uint32_t ((chn_idx << 24) + (vc_idx << 16));
 }
 
 
