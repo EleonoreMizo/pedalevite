@@ -62,6 +62,7 @@
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Two-band tremolo</a></li>
 	<li><a href="#fx-hypercomb">Hypercomb — Polyphonic comb filter</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix</a></li>
+	<li><a href="#fx-lipidipi">Lipidipi — Fat ensemble effect</a></li>
 	<li><a href="#fx-midside">Mid Side Coder</a></li>
 	<li><a href="#fx-moogflt">Moog Filter — Filter</a></li>
 	<li><a href="#fx-nzbl">Noise Bleach — Noise gate</a></li>
@@ -1931,6 +1932,40 @@ from the pedalboard with just this effect.</p>
 
 
 
+<h3><a id="fx-lipidipi"></a>Lipidipi — Fat ensemble effect</h3>
+
+<p>Lipidipi fattens the sound by adding weight, as if several instruments
+played together simultaneously.</p>
+<p>The effect works a bit like a chorus, but the sound is less typical and
+possibly more functional.
+It generates groups of 4 replicas of the original signal, slightly detuned.
+Each group is filtered to occupy its own frequency band, in order to break the
+harmonic relationships between the partials.
+The crossover frequencies range from 100&#8239;Hz to 3200&#8239;Hz.</p>
+
+<p class="var">Fat</p>
+<p>Sets the number of replica groups.
+The more groups, the more the effect become transparent, going further from
+a typical chorus tone.
+However, the CPU usage increases consequently.</p>
+
+<p class="var">Grease</p>
+<p>Sets the maximum detuning for the replicas, in cents of semi-tones.
+The greater the detuning, the more pronounced the effect.</p>
+
+<p class="var">Suet</p>
+<p>Sets the mix between the original signal and the replicas.
+There is no specific unit.
+45&#8239;% gives similar weights to both types of signals.</p>
+
+<p class="var">Lard</p>
+<p>Enables stereo processing.
+In stereo, each channel is processed independently of the other.
+It gives more spatiality to the effect for a mono source, but may break the
+phase consistency on a stereo source.</p>
+
+
+
 <h3><a id="fx-midside"></a>Mid Side Coder</h3>
 
 <p>This effect, usually working on a bi-channel source, can encode or decode
@@ -3533,9 +3568,14 @@ This precision can be changed with <span class="key">Select</span>.
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
 
+<p><b>r47, 2021-12-12</b></p>
+<ul>
+<li>Added the Lipidipi effect.</li>
+</ul>
+
 <p><b>r46, 2021-10-31</b></p>
 <ul>
-<li>Ajout Bad Radio effect.</li>
+<li>Added the Bad Radio effect.</li>
 </ul>
 
 <p><b>r45, 2021-05-26</b></p>

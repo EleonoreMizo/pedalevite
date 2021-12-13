@@ -475,6 +475,9 @@
     <Filter Include="mfx\pi\badrad">
       <UniqueIdentifier>{51c3b308-403e-4373-b2f7-f3acedc0951b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\lipid">
+      <UniqueIdentifier>{85b31179-ff4b-46f3-90af-5af6ec1b7bdf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5415,6 +5418,18 @@
     <ClInclude Include="..\..\..\src\fstb\Vu32.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\Lipidipi.h">
+      <Filter>mfx\pi\lipid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\LipidipiDesc.h">
+      <Filter>mfx\pi\lipid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\Param.h">
+      <Filter>mfx\pi\lipid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\Cst.h">
+      <Filter>mfx\pi\lipid</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable4Simd.h">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
@@ -6871,6 +6886,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\badrad\BadRadioDesc.cpp">
       <Filter>mfx\pi\badrad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\lipid\Lipidipi.cpp">
+      <Filter>mfx\pi\lipid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\lipid\LipidipiDesc.cpp">
+      <Filter>mfx\pi\lipid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

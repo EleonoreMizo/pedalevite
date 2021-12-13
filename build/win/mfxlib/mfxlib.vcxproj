@@ -1382,6 +1382,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplit.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplitDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\Lipidipi.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\LipidipiDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lipid\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltMode.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltVariant.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltInterface.h" />
@@ -2113,6 +2117,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\hcomb\Voice_mfx_pi_hcomb.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFix.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFixDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\lipid\Lipidipi.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\lipid\LipidipiDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpf.cpp" />
