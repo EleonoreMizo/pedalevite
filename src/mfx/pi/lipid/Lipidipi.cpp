@@ -143,6 +143,9 @@ int	Lipidipi::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_vol_dry.set_time (vol_ramp_len, val_step);
 	_vol_wet.set_time (vol_ramp_len, val_step);
 
+	const auto     f_beg = _f_beg_hz / sample_freq; // Relative to Fs
+	_f_beg_l2 = float (log2 (f_beg));
+
 	_param_change_flag.set ();
 
 	update_param (true);
@@ -297,6 +300,9 @@ constexpr int	Lipidipi::_seg_len;
 constexpr int	Lipidipi::_seg_msk;
 constexpr int	Lipidipi::_vc_per_grp;
 constexpr int	Lipidipi::_max_voices;
+constexpr float	Lipidipi::_f1_hz;
+constexpr double	Lipidipi::_f_beg_hz;
+constexpr double	Lipidipi::_f_end_hz;
 
 
 
@@ -376,6 +382,7 @@ void	Lipidipi::update_param (bool force_flag) noexcept
 			// We subtract about 4.5 dB (1.68 linear) to take the true peak value
 			// of the white noise into account.
 			const float    wn_tp_amp    = 1.68f;
+
 			const double   filter_scale =
 				sqrt (block_fs * 0.5f / (cutoff_freq * wn_tp_amp));
 
@@ -409,7 +416,7 @@ void	Lipidipi::update_param (bool force_flag) noexcept
 
 			// Formula: https://www.desmos.com/calculator/oxasvqwzmz
 
-			const auto     fade = _fatness - nbr_grp_full; // 0 -> 1
+			const auto     fade     = _fatness - nbr_grp_full; // 0 -> 1
 			constexpr int  order    = 16;
 			const float    fade_vol =
 				1 - fstb::ipowpc <order> (1 - fade) * (float (order) * fade + 1);
@@ -423,9 +430,14 @@ void	Lipidipi::update_param (bool force_flag) noexcept
 			const auto     lvl_d_sq = fstb::sq (1 - mix);
 			gain_fix = fstb::Approx::rsqrt <1> (lvl_d_sq + lvl_w_sq);
 
-			constexpr auto f1_hz = 5.f;
-			float          f1    = f1_hz * _inv_fs; // Relative to Fs
-			const auto     rmul  = 1.f / std::max (_fatness - 1, 1.f);
+			constexpr auto pi_f  = float (fstb::PI);
+			// Relative to Fs/pi.
+			// We use the taylor approx because f1_hz remains low.
+			float          f1_w  =
+				fstb::Approx::tan_taylor5 (_f1_hz * _inv_fs * pi_f);
+
+			const auto     rmul    = 1.f / std::max (_fatness - 1, 1.f);
+			const auto     f_r_mul = _f_rat_l2 * rmul;
 			for (int grp_idx = 0; grp_idx < _nbr_groups; ++grp_idx)
 			{
 				// Computes the bandpass parameters for the given voice.
@@ -438,9 +450,6 @@ void	Lipidipi::update_param (bool force_flag) noexcept
 				constexpr auto nyq_r = 0.5f;
 				constexpr auto r0    = nyq_r * 0.95f;
 				constexpr auto r1    = nyq_r * 0.90f;
-				constexpr auto f_beg =  100.f;
-				constexpr auto f_end = 3200.f;
-				constexpr auto f_rat = f_end / f_beg;
 				const bool     last_grp_flag = (grp_idx == nbr_grp_full);
 				const float    level = last_grp_flag ? fade_vol : 1.f; // Linear
 				float          f2    = 0;
@@ -450,28 +459,32 @@ void	Lipidipi::update_param (bool force_flag) noexcept
 				}
 				else
 				{
-					f2 = f_beg * powf (f_rat, float (grp_idx) * rmul) * _inv_fs;
+					f2 = fstb::Approx::exp2 (_f_beg_l2 + f_r_mul * float (grp_idx));
 					if (grp_idx == nbr_grp_full - 1)
 					{
 						const float    s = 1 - fstb::ipowpc <3> (1 - fade);
 						f2 = fstb::lerp (r1, std::min (f2, r1), s);
 					}
 				}
-				assert (f1 < f2);
 
 				// Computes the bandwidth and center frequencies
-				constexpr auto pi_f = float (fstb::PI);
-				const auto     f1_w = tanf (f1 * pi_f); // Relative to Fs/pi
-				const auto     f2_w = tanf (f2 * pi_f);
-				const auto     f0_w = sqrtf (f1_w * f2_w);
-				const auto     q    = f0_w / (f2_w - f1_w);
-				const auto     f0   = atanf (f0_w) * (1.f / pi_f); // Relative to Fs
+				const auto     f2_w   = fstb::Approx::tan_pade33 (f2 * pi_f);
+				assert (f1_w < f2_w);
+				const auto     f0sq_w = f1_w * f2_w;
+				const auto     f0_w   = sqrtf (f0sq_w);
+				const auto     q      = f0_w / (f2_w - f1_w);
 
 				// Computes the filter coefficients
 				std::array <float, 3>   bs;
 				std::array <float, 3>   as;
 				dsp::iir::DesignEq2p::make_band_pass (bs.data (), as.data (), q);
-				const auto     k = dsp::iir::TransSZBilin::compute_k_approx (f0);
+#if 1 // Simplified
+				// k = 1 / tan (pi * f0) = 1 / f0_w = rsqrt (f0sq_w)
+				const auto     k = fstb::Approx::rsqrt <1> (f0sq_w);
+#else // Reference formula
+				const auto     f0 = atanf (f0_w) * (1.f / pi_f); // Rel. to Fs
+				const auto     k  = dsp::iir::TransSZBilin::compute_k_approx (f0);
+#endif
 				std::array <float, 3>   bz;
 				std::array <float, 3>   az;
 				dsp::iir::TransSZBilin::map_s_to_z_approx (
@@ -497,7 +510,7 @@ void	Lipidipi::update_param (bool force_flag) noexcept
 				}
 
 				// Next group
-				f1 = f2;
+				f1_w = f2_w;
 			} // for grp_idx
 		} // _nbr_groups > 0
 
@@ -558,6 +571,10 @@ uint32_t	Lipidipi::compute_initial_rnd_state (int chn_idx, int vc_idx) noexcept
 
 	return uint32_t ((chn_idx << 24) + (vc_idx << 16));
 }
+
+
+
+const float	Lipidipi::_f_rat_l2 = float (log2 (_f_end_hz / _f_beg_hz));
 
 
 

@@ -91,6 +91,9 @@ private:
 	static constexpr int    _seg_msk         = _seg_len - 1;
 	static constexpr int    _vc_per_grp      = 4;     // Number of voices per group, > 0
 	static constexpr int    _max_voices      = Cst::_max_groups * _vc_per_grp;
+	static constexpr float  _f1_hz           =    5.f;
+	static constexpr double _f_beg_hz        =  100.0; // Hz
+	static constexpr double _f_end_hz        = 3200.0; // Hz
 
 	typedef std::vector <
 		float, fstb::AllocAlign <float, fstb_SIMD128_ALIGN>
@@ -181,8 +184,12 @@ filtering it at once.
 	               _vol_dry      { 0.5f };
 	dsp::ctrl::Ramp
 	               _vol_wet      { 0.5f };
-
 	bool           _stereo_flag  = true;
+
+	float          _f_beg_l2     = 0; // log2 (_f_beg_hz / fs)
+
+	static const float
+	               _f_rat_l2;
 
 
 
