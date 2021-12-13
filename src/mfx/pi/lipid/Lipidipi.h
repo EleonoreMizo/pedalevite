@@ -90,7 +90,6 @@ private:
 	static_assert (fstb::is_pow_2 (_seg_len), "");
 	static constexpr int    _seg_msk         = _seg_len - 1;
 	static constexpr int    _vc_per_grp      = 4;     // Number of voices per group, > 0
-	static constexpr int    _max_voices      = Cst::_max_groups * _vc_per_grp;
 	static constexpr float  _f1_hz           =    5.f;
 	static constexpr double _f_beg_hz        =  100.0; // Hz
 	static constexpr double _f_end_hz        = 3200.0; // Hz
@@ -121,28 +120,32 @@ private:
 		float          _delay_beg;
 		float          _delay_end;
 
+	};
+	typedef std::array <Voice, _vc_per_grp> VoiceArray;
+
+	class Group
+	{
+	public:
+		VoiceArray     _voice_arr;
 		// Bandpass filter, for audio
-/*** To do:
-put the filter in a group structure, and premix the whole group before
-filtering it at once.
-***/
 		dsp::iir::Biquad
 		               _bpf;
 	};
-	typedef std::array <Voice, _max_voices> VoiceArray;
+	typedef std::array <Group, Cst::_max_groups> GroupArray;
 
 	class Channel
 	{
 	public:
 		dsp::dly::DelayLine
 		               _delay;
-		VoiceArray     _voice_arr;
+		GroupArray     _group_arr;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
 	void           clear_buffers () noexcept;
 	void           update_param (bool force_flag = false) noexcept;
 	void           start_new_segment () noexcept;
+	void           start_new_segment_chn (Channel &chn) noexcept;
 
 	static uint32_t
 	               compute_initial_rnd_state (int chn_idx, int vc_idx) noexcept;
@@ -166,7 +169,8 @@ filtering it at once.
 	mfx::dsp::rspl::InterpolatorHermite43
 	               _interp;             // Delay interpolator
 	BufAlign       _buf_dly;            // Temp buffer for the delay output
-	BufAlign       _buf_mix;            // Temp buffer for the delay mix
+	BufAlign       _buf_grp;            // Temp buffer for mixing delays into the group
+	BufAlign       _buf_mix;            // Temp buffer for mixing groups into the final wet part
 	float          _min_dly_time = 0;   // s, > 0. 0 = not initialized
 
 	float          _fatness      = 0;
