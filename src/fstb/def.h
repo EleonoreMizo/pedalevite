@@ -199,11 +199,7 @@ namespace fstb
 			#error ARM SIMD is supported only on little endian architectures
 		#endif
 		#define fstb_HAS_SIMD      (1)
-		#if (fstb_WORD_SIZE == 64)
-			#define fstb_SIMD128_ALIGN (16)
-		#else
-			#define fstb_SIMD128_ALIGN (8)
-		#endif
+		#define fstb_SIMD128_ALIGN (16)
 	#endif
 
 #elif fstb_ARCHI == fstb_ARCHI_X86
