@@ -30,6 +30,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cfloat>
 #include <cmath>
+#if ! defined (fstb_HAS_SIMD)
+# include <cstring>
+#endif // fstb_HAS_SIMD
 
 
 
@@ -45,7 +48,9 @@ namespace fstb
 Vf32	ToolsSimd::cast_f32 (Vs32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const Vf32 *> (&x);
+	Vf32           result;
+	memcpy (&result, &x, sizeof (x));
+	return result;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_castsi128_ps (x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -58,7 +63,9 @@ Vf32	ToolsSimd::cast_f32 (Vs32 x) noexcept
 Vs32	ToolsSimd::cast_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return *reinterpret_cast <const Vs32 *> (&x);
+	Vs32           result;
+	memcpy (&result, &x, sizeof (x));
+	return result;
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_castps_si128 (x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
