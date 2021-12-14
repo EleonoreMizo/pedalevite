@@ -442,7 +442,7 @@ void	Lipidipi::update_param (bool force_flag) noexcept
 
 			// Formula: https://www.desmos.com/calculator/oxasvqwzmz
 
-			const auto     fade     = _fatness - nbr_grp_full; // 0 -> 1
+			const auto     fade     = _fatness - float (nbr_grp_full); // 0 -> 1
 			constexpr int  order    = 16;
 			const float    fade_vol =
 				1 - fstb::ipowpc <order> (1 - fade) * (float (order) * fade + 1);
