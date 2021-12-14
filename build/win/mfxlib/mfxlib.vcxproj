@@ -1130,6 +1130,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\Poly3L1Bias.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\SineQPoly3.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\SineQPoly3.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\SlewRateLimiter.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\SlewRateLimiter.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsinh.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym1.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym1.hpp" />

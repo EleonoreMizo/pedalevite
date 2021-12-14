@@ -57,29 +57,14 @@ void	DistSlewRateLim::set_sample_freq (double sample_freq) noexcept
 
 void	DistSlewRateLim::clear_buffers () noexcept
 {
-	_state = 0;
+	_limiter.clear_buffers ();
 }
 
 
 
 void	DistSlewRateLim::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl) noexcept
 {
-	assert (dst_ptr != nullptr);
-	assert (src_ptr != nullptr);
-	assert (nbr_spl > 0);
-
-	float          state = _state;
-
-	for (int pos = 0; pos < nbr_spl; ++pos)
-	{
-		const float    x       = src_ptr [pos];
-		const float    val_min = state - _rate_max_n;
-		const float    val_max = state + _rate_max_p;
-		state = fstb::limit (x, val_min, val_max);
-		dst_ptr [pos] = state;
-	}
-
-	_state = state;
+	_limiter.process_block (dst_ptr, src_ptr, nbr_spl);
 }
 
 
@@ -120,14 +105,16 @@ void	DistSlewRateLim::set_rate_limit_neg (float rate_max_s) noexcept
 
 void	DistSlewRateLim::update_rate_p () noexcept
 {
-	_rate_max_p = _rate_max_p_s * _inv_fs;
+	const auto     rate_max = _rate_max_p_s * _inv_fs;
+	_limiter.set_max_rate_p (rate_max);
 }
 
 
 
 void	DistSlewRateLim::update_rate_n () noexcept
 {
-	_rate_max_n = _rate_max_n_s * _inv_fs;
+	const auto     rate_max = _rate_max_n_s * _inv_fs;
+	_limiter.set_max_rate_n (rate_max);
 }
 
 

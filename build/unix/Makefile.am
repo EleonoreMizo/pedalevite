@@ -738,6 +738,8 @@ commonsrc = \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.hpp \
         ../../src/mfx/dsp/shape/SineQPoly3.h \
         ../../src/mfx/dsp/shape/SineQPoly3.hpp \
+        ../../src/mfx/dsp/shape/SlewRateLimiter.h \
+        ../../src/mfx/dsp/shape/SlewRateLimiter.hpp \
         ../../src/mfx/dsp/shape/WsAsinh.h \
         ../../src/mfx/dsp/shape/WsAsym1.h \
         ../../src/mfx/dsp/shape/WsAsym1.hpp \

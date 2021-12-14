@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
+#include "mfx/dsp/shape/SlewRateLimiter.h"
 
 
 
@@ -75,10 +75,9 @@ private:
 	float          _inv_fs        = 1.f / _sample_freq;
 	float          _rate_max_p_s  = 1000;                    // Pos, units/s
 	float          _rate_max_n_s  = 1000;                    // Neg, units/s
-	float          _rate_max_p    = _rate_max_p_s * _inv_fs; // Pos, units/spl
-	float          _rate_max_n    = _rate_max_n_s * _inv_fs; // Neg, units/spl
 
-	float          _state         = 0;
+	SlewRateLimiter <float>
+	               _limiter;
 
 
 
