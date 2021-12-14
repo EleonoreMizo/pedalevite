@@ -54,7 +54,7 @@ typedef __m128i   Vu32Native;
 
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 
-typedef int32x4_t Vu32Native;
+typedef uint32x4_t Vu32Native;
 
 #else // fstb_ARCHI
 #error
