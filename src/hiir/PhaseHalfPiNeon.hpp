@@ -125,10 +125,10 @@ hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float 
 	const auto     spl_mid =
 #if ! defined (__BYTE_ORDER__) || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 		// Requires a little-endian architecture, which is generally the case
-		load2a (filter_ptr [_nbr_stages]._mem);
+		load2a (filter_ptr [_nbr_stages]._mem + 2);
 #else
 		// Safe on any platform, but possibly slower.
-		vget_low_f32 (load4a (filter_ptr [_nbr_stages]._mem));
+		vget_high_f32 (load4a (filter_ptr [_nbr_stages]._mem));
 #endif
 	auto           y       = vcombine_f32 (spl_mid, comb);
 	auto           mem     = load4a (filter_ptr [0]._mem);

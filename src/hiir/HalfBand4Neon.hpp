@@ -59,8 +59,8 @@ HalfBand4Neon <NC>::HalfBand4Neon () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		storea (_bifilter [0] [i]._coef, vdupq_n_f32 ());
-		storea (_bifilter [1] [i]._coef, vdupq_n_f32 ());
+		storea (_bifilter [0] [i]._coef, vdupq_n_f32 (0));
+		storea (_bifilter [1] [i]._coef, vdupq_n_f32 (0));
 	}
 
 	clear_buffers ();

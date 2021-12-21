@@ -116,7 +116,7 @@ template <int NC>
 void	Upsampler2xNeonOld <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
 	const auto     spl_in = vdup_n_f32 (input);
-	const auto     spl_m  = vget_low_f32 (load4a (_filter [_nbr_stages]._mem));
+	const auto     spl_m  = vget_high_f32 (load4a (_filter [_nbr_stages]._mem));
 	auto           y      = vcombine_f32 (spl_m, spl_in);
 	auto           mem    = load4a (_filter [0]._mem);
 

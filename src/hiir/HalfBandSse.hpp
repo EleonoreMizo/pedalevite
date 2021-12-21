@@ -349,7 +349,7 @@ void	HalfBandSse <NC>::set_single_coef (int index, double coef) noexcept
 template <int NC>
 std::array <float, 2>	HalfBandSse <NC>::process_2_paths (float input) noexcept
 {
-	StageDataSse * filter_ptr = &_filter [_phase] [0];
+	StageDataSse * filter_ptr = _filter [_phase].data ();
 
 	const auto     spl_in  = _mm_load_ss (&input);
 	const auto     prev    = _mm_load_ss (&_prev);
@@ -360,7 +360,7 @@ std::array <float, 2>	HalfBandSse <NC>::process_2_paths (float input) noexcept
 
 	auto           mem     = _mm_load_ps (filter_ptr [0]._mem);
 
-	StageProcSseV4 <_nbr_stages>::process_sample_pos (&filter_ptr [0], y, mem);
+	StageProcSseV4 <_nbr_stages>::process_sample_pos (filter_ptr, y, mem);
 
 	_mm_store_ps (filter_ptr [_nbr_stages]._mem, y);
 

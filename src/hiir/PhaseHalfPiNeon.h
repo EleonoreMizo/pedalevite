@@ -102,8 +102,8 @@ private:
 	static constexpr int _coef_shift  = ((NBR_COEFS & 1) * 2) ^ 3;
 
 	// Stage 0 contains only input memory
-	typedef std::array <StageDataNeonV4, NBR_STAGES + 1> Filter;
-   typedef std::array <Filter, _nbr_phases> FilterBiPhase;
+	typedef std::array <StageDataNeonV4, _nbr_stages + 1> Filter;
+	typedef std::array <Filter, _nbr_phases> FilterBiPhase;
 
 	inline void    set_single_coef (int index, double coef) noexcept;
 

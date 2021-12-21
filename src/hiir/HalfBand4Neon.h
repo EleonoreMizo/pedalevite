@@ -99,7 +99,7 @@ private:
 
 	static constexpr int _nbr_phases = 2;
 
-	typedef std::array <StageDataSse, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
+	typedef std::array <StageDataNeonV4, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
 
 	typedef	std::array <Filter, _nbr_phases>	FilterBiPhase;
 
