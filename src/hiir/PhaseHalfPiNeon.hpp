@@ -38,6 +38,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	PhaseHalfPiNeon <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	PhaseHalfPiNeon <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -51,17 +58,16 @@ PhaseHalfPiNeon <NC>::PhaseHalfPiNeon () noexcept
 ,	_prev (0)
 ,	_phase (0)
 {
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int phase = 0; phase < _nbr_phases; ++phase)
 	{
-		for (int i = 0; i < NBR_STAGES + 1; ++i)
+		for (int i = 0; i < _nbr_stages + 1; ++i)
 		{
 			storea (_filter [phase] [i]._coef, vdupq_n_f32 (0));
 		}
-		if ((NBR_COEFS & 1) != 0)
-		{
-			const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
-			_filter [phase] [NBR_STAGES]._coef [pos] = 1;
-		}
+	}
+	for (int i = NBR_COEFS; i < _nbr_stages * _stage_width; ++i)
+	{
+		set_single_coef (i, 1);
 	}
 
 	clear_buffers ();
@@ -88,14 +94,9 @@ void	PhaseHalfPiNeon <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		for (int i = 0; i < NBR_COEFS; ++i)
-		{
-			const int      stage = (i / STAGE_WIDTH) + 1;
-			const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-			_filter [phase] [stage]._coef [pos] = DataType (coef_arr [i]);
-		}
+		set_single_coef (i, coef_arr [i]);
 	}
 }
 
@@ -120,22 +121,22 @@ hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float 
 {
 	StageDataNeonV4 * filter_ptr = &_filter [_phase] [0];
 
-	const float32x2_t comb    = vset_lane_f32 (input, vdup_n_f32 (_prev), 1);
-	const float32x2_t spl_mid =
+	const auto     comb    = vset_lane_f32 (input, vdup_n_f32 (_prev), 1);
+	const auto     spl_mid =
 #if ! defined (__BYTE_ORDER__) || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 		// Requires a little-endian architecture, which is generally the case
-		load2a (filter_ptr [NBR_STAGES]._mem);
+		load2a (filter_ptr [_nbr_stages]._mem);
 #else
 		// Safe on any platform, but possibly slower.
-		vget_low_f32 (load4a (filter_ptr [NBR_STAGES]._mem));
+		vget_low_f32 (load4a (filter_ptr [_nbr_stages]._mem));
 #endif
-	float32x4_t       y       = vcombine_f32 (comb, spl_mid);
-	float32x4_t       mem     = load4a (filter_ptr [0]._mem);
+	auto           y       = vcombine_f32 (spl_mid, comb);
+	auto           mem     = load4a (filter_ptr [0]._mem);
 
-	StageProcNeonV4 <NBR_STAGES>::process_sample_neg (&filter_ptr [0], y, mem);
+	StageProcNeonV4 <_nbr_stages>::process_sample_neg (&filter_ptr [0], y, mem);
 
-	out_0  = vgetq_lane_f32 (y, 3);
-	out_1  = vgetq_lane_f32 (y, 2);
+	out_0  = vgetq_lane_f32 (y, 1);
+	out_1  = vgetq_lane_f32 (y, 0);
 
 	_prev  = input;
 	_phase = 1 - _phase;
@@ -195,9 +196,9 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPiNeon <NC>::clear_buffers () noexcept
 {
-   for (int phase = 0; phase < NBR_PHASES; ++phase)
+   for (int phase = 0; phase < _nbr_phases; ++phase)
    {
-		for (int i = 0; i < NBR_STAGES + 1; ++i)
+		for (int i = 0; i < _nbr_stages + 1; ++i)
 		{
 			storea (_filter [phase] [i]._mem, vdupq_n_f32 (0));
 		}
@@ -211,6 +212,33 @@ void	PhaseHalfPiNeon <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	PhaseHalfPiNeon <NC>::_stage_width;
+template <int NC>
+constexpr int	PhaseHalfPiNeon <NC>::_nbr_stages;
+template <int NC>
+constexpr int	PhaseHalfPiNeon <NC>::_nbr_phases;
+template <int NC>
+constexpr int	PhaseHalfPiNeon <NC>::_coef_shift;
+
+
+
+template <int NC>
+void	PhaseHalfPiNeon <NC>::set_single_coef (int index, double coef) noexcept
+{
+	assert (index >= 0);
+	assert (index < _nbr_stages * _stage_width);
+
+	const int      stage = (index / _stage_width) + 1;
+	const int      pos   = (index ^ _coef_shift) & (_stage_width - 1);
+	for (int phase = 0; phase < _nbr_phases; ++phase)
+	{
+		_filter [phase] [stage]._coef [pos] = DataType (coef);
+	}
+}
 
 
 

@@ -51,6 +51,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	Upsampler2x3dnow <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	Upsampler2x3dnow <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -62,14 +69,14 @@ template <int NC>
 Upsampler2x3dnow <NC>::Upsampler2x3dnow () noexcept
 :	_filter ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		_filter [i]._coefs.m64_f32 [0] = 0;
 		_filter [i]._coefs.m64_f32 [1] = 0;
 	}
-	if (NBR_COEFS < NBR_STAGES * 2)
+	if (NBR_COEFS < _nbr_stages * 2)
 	{
-		_filter [NBR_STAGES]._coefs.m64_f32 [0] = 1;
+		_filter [_nbr_stages]._coefs.m64_f32 [0] = 1;
 	}
 
 	clear_buffers ();
@@ -98,8 +105,8 @@ void	Upsampler2x3dnow <NC>::set_coefs (const double coef_arr [NBR_COEFS]) noexce
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int      stage = (i / STAGE_WIDTH) + 1;
-		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
+		const int      stage = (i / _stage_width) + 1;
+		const int      pos = (i ^ 1) & (_stage_width - 1);
 		_filter [stage]._coefs.m64_f32 [pos] = DataType (coef_arr [i]);
 	}
 }
@@ -123,7 +130,7 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
-	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
+	constexpr int  CURR_CELL = _nbr_stages * sizeof (_filter [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [0];
 	__m64          result;
@@ -134,7 +141,7 @@ void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float in
 		mov            edx, filter_ptr
 		punpckldq      mm0, mm0
 	}
-	StageProc3dnow <NBR_STAGES>::process_sample_pos ();
+	StageProc3dnow <_nbr_stages>::process_sample_pos ();
 	__asm
 	{
 		movq           [edx + CURR_CELL + 1*8], mm0
@@ -142,8 +149,8 @@ void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float in
 		femms
 	}
 
-	out_0 = _filter [NBR_STAGES]._mem.m64_f32 [1];
-	out_1 = _filter [NBR_STAGES]._mem.m64_f32 [0];
+	out_0 = _filter [_nbr_stages]._mem.m64_f32 [1];
+	out_1 = _filter [_nbr_stages]._mem.m64_f32 [0];
 }
 
 
@@ -171,7 +178,7 @@ void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr 
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
+	constexpr int  CURR_CELL = _nbr_stages * sizeof (_filter [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [0];
 
@@ -193,7 +200,7 @@ void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr 
 #if defined (_MSC_VER) && ! defined (NDEBUG)
 	__asm push        eax
 #endif
-	StageProc3dnow <NBR_STAGES>::process_sample_pos ();
+	StageProc3dnow <_nbr_stages>::process_sample_pos ();
 #if defined (_MSC_VER) && ! defined (NDEBUG)
 	__asm pop         eax
 #endif
@@ -297,7 +304,7 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x3dnow <NC>::clear_buffers () noexcept
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		_filter [i]._mem.m64_f32 [0] = 0;
 		_filter [i]._mem.m64_f32 [1] = 0;
@@ -311,6 +318,13 @@ void	Upsampler2x3dnow <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	Upsampler2x3dnow <NC>::_stage_width;
+template <int NC>
+constexpr int	Upsampler2x3dnow <NC>::_nbr_stages;
 
 
 

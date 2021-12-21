@@ -39,6 +39,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int	Upsampler2xNeonOld <NC>::_nbr_chn;
+template <int NC>
+constexpr int	Upsampler2xNeonOld <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -50,14 +57,13 @@ template <int NC>
 Upsampler2xNeonOld <NC>::Upsampler2xNeonOld () noexcept
 :	_filter ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		storea (_filter [i]._coef, vdupq_n_f32 (0));
 	}
-	if ((NBR_COEFS & 1) != 0)
+	for (int i = NBR_COEFS; i < _nbr_stages * _stage_width; ++i)
 	{
-		const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
-		_filter [NBR_STAGES]._coef [pos] = 1;
+		set_single_coef (i, 1);
 	}
 
 	clear_buffers ();
@@ -86,9 +92,7 @@ void	Upsampler2xNeonOld <NC>::set_coefs (const double coef_arr [NBR_COEFS]) noex
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int      stage = (i / STAGE_WIDTH) + 1;
-		const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = DataType (coef_arr [i]);
+		set_single_coef (i, coef_arr [i]);
 	}
 }
 
@@ -111,15 +115,15 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xNeonOld <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
-	const float32x2_t spl_in = vdup_n_f32 (input);
-	const float32x2_t spl_m  = vget_low_f32 (load4a (_filter [NBR_STAGES]._mem));
-	float32x4_t       y      = vcombine_f32 (spl_in, spl_m);
-	float32x4_t       mem    = load4a (_filter [0]._mem);
+	const auto     spl_in = vdup_n_f32 (input);
+	const auto     spl_m  = vget_low_f32 (load4a (_filter [_nbr_stages]._mem));
+	auto           y      = vcombine_f32 (spl_m, spl_in);
+	auto           mem    = load4a (_filter [0]._mem);
 
-	StageProcNeonV4 <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
+	StageProcNeonV4 <_nbr_stages>::process_sample_pos (&_filter [0], y, mem);
 
-	out_0 = vgetq_lane_f32 (y, 3);
-	out_1 = vgetq_lane_f32 (y, 2);
+	out_0 = vgetq_lane_f32 (y, 1);
+	out_1 = vgetq_lane_f32 (y, 0);
 }
 
 
@@ -171,7 +175,7 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xNeonOld <NC>::clear_buffers () noexcept
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		storea (_filter [i]._mem, vdupq_n_f32 (0));
 	}
@@ -184,6 +188,28 @@ void	Upsampler2xNeonOld <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	Upsampler2xNeonOld <NC>::_stage_width;
+template <int NC>
+constexpr int	Upsampler2xNeonOld <NC>::_nbr_stages;
+template <int NC>
+constexpr int	Upsampler2xNeonOld <NC>::_coef_shift;
+
+
+
+template <int NC>
+void	Upsampler2xNeonOld <NC>::set_single_coef (int index, double coef) noexcept
+{
+	assert (index >= 0);
+	assert (index < _nbr_stages * _stage_width);
+
+	const int      stage = (index / _stage_width) + 1;
+	const int      pos   = (index ^ _coef_shift) & (_stage_width - 1);
+	_filter [stage]._coef [pos] = DataType (coef);
+}
 
 
 

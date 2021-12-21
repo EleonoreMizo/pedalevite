@@ -44,6 +44,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int	Upsampler2xSseOld <NC>::_nbr_chn;
+template <int NC>
+constexpr int	Upsampler2xSseOld <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -55,14 +62,13 @@ template <int NC>
 Upsampler2xSseOld <NC>::Upsampler2xSseOld () noexcept
 :	_filter ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		_mm_store_ps (_filter [i]._coef, _mm_setzero_ps ());
 	}
-	if ((NBR_COEFS & 1) != 0)
+	for (int i = NBR_COEFS; i < _nbr_stages * _stage_width; ++i)
 	{
-		const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
-		_filter [NBR_STAGES]._coef [pos] = 1;
+		set_single_coef (i, 1);
 	}
 
 	clear_buffers ();
@@ -91,9 +97,7 @@ void	Upsampler2xSseOld <NC>::set_coefs (const double coef_arr [NBR_COEFS]) noexc
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int      stage = (i / STAGE_WIDTH) + 1;
-		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = DataType (coef_arr [i]);
+		set_single_coef (i, coef_arr [i]);
 	}
 }
 
@@ -116,20 +120,18 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xSseOld <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
-	const __m128   spl_in  = _mm_set_ss (input);
-	const __m128   spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
-	__m128         y       = _mm_shuffle_ps (spl_in, spl_mid, 0x40);
+	const auto     spl_in  = _mm_set_ss (input);
+	const auto     spl_mid = _mm_load_ps (_filter [_nbr_stages]._mem);
+	constexpr auto shuf    = (2 << 0) | (3 << 2) | (0 << 4) | (0 << 6);
+	auto           y       = _mm_shuffle_ps (spl_mid, spl_in, shuf);
 
-	__m128         mem     = _mm_load_ps (_filter [0]._mem);
+	auto           mem     = _mm_load_ps (_filter [0]._mem);
 
-	StageProcSseV4 <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
+	StageProcSseV4 <_nbr_stages>::process_sample_pos (&_filter [0], y, mem);
 
-	_mm_store_ps (_filter [NBR_STAGES]._mem, y);
+	_mm_store_ps (_filter [_nbr_stages]._mem, y);
 
-	// The latest shufps/movss instruction pairs can be freely inverted
-	y = _mm_shuffle_ps (y, y, 0xE3);
-	out_0 = _mm_cvtss_f32 (y);
-	y = _mm_shuffle_ps (y, y, 0xE2);
+	out_0 = _mm_cvtss_f32 (_mm_shuffle_ps (y, y, 1));
 	out_1 = _mm_cvtss_f32 (y);
 }
 
@@ -182,7 +184,7 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xSseOld <NC>::clear_buffers () noexcept
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		_mm_store_ps (_filter [i]._mem, _mm_setzero_ps ());
 	}
@@ -195,6 +197,28 @@ void	Upsampler2xSseOld <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	Upsampler2xSseOld <NC>::_stage_width;
+template <int NC>
+constexpr int	Upsampler2xSseOld <NC>::_nbr_stages;
+template <int NC>
+constexpr int	Upsampler2xSseOld <NC>::_coef_shift;
+
+
+
+template <int NC>
+void	Upsampler2xSseOld <NC>::set_single_coef (int index, double coef) noexcept
+{
+	assert (index >= 0);
+	assert (index < _nbr_stages * _stage_width);
+
+	const int      stage = (index / _stage_width) + 1;
+	const int      pos   = (index ^ _coef_shift) & (_stage_width - 1);
+	_filter [stage]._coef [pos] = DataType (coef);
+}
 
 
 

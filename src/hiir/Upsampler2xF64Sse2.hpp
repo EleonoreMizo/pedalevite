@@ -37,6 +37,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	Upsampler2xF64Sse2 <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	Upsampler2xF64Sse2 <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -174,6 +181,13 @@ void	Upsampler2xF64Sse2 <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	Upsampler2xF64Sse2 <NC>::_stage_width;
+template <int NC>
+constexpr int	Upsampler2xF64Sse2 <NC>::_nbr_stages;
 
 
 

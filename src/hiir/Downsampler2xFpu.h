@@ -23,7 +23,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/Downsampler2xFpuTpl.h"
+#include "hiir/Downsampler2xTpl.h"
 
 
 
@@ -33,7 +33,7 @@ namespace hiir
 
 
 template <int NC>
-using Downsampler2xFpu = Downsampler2xFpuTpl <NC, float>;
+using Downsampler2xFpu = Downsampler2xTpl <NC, float, 1>;
 
 
 

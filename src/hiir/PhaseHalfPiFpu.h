@@ -23,7 +23,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/PhaseHalfPiFpuTpl.h"
+#include "hiir/PhaseHalfPiTpl.h"
 
 
 
@@ -33,7 +33,7 @@ namespace hiir
 
 
 template <int NC>
-using PhaseHalfPiFpu = PhaseHalfPiFpuTpl <NC, float>;
+using PhaseHalfPiFpu = PhaseHalfPiTpl <NC, float, 1>;
 
 
 

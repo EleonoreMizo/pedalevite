@@ -87,31 +87,26 @@ private:
 	static const int  _buf_len = 64;
 
 #if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
-	using Dwnspl42 = typename std::conditional <
-		(NC42 >= 4)
-	,	hiir::Downsampler2xSse <NC42>
-	,	hiir::Downsampler2xFpu <NC42>
-	>::type;
-	using Dwnspl21 = typename std::conditional <
-		(NC21 >= 4)
-	,	hiir::Downsampler2xSse <NC21>
-	,	hiir::Downsampler2xFpu <NC21>
+	template <int NC>
+	using Dwnspl = typename std::conditional <
+		(NC >= 1) // Current SSE version is always faster than the FPU
+	,	hiir::Downsampler2xSse <NC>
+	,	hiir::Downsampler2xFpu <NC>
 	>::type;
 #elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM && (defined (__clang__) || fstb_WORD_SIZE == 64)
-	using Dwnspl42 = typename std::conditional <
-		(NC42 >= 16)
-	,	hiir::Downsampler2xNeonOld <NC42>
-	,	hiir::Downsampler2xNeon <NC42>
-	>::type;
-	using Dwnspl21 = typename std::conditional <
-		(NC21 >= 16)
-	,	hiir::Downsampler2xNeonOld <NC21>
-	,	hiir::Downsampler2xNeon <NC21>
+	template <int NC>
+	using Dwnspl = typename std::conditional <
+		(NC >= 16)
+	,	hiir::Downsampler2xNeonOld <NC>
+	,	hiir::Downsampler2xNeon <NC>
 	>::type;
 #else
-	typedef hiir::Downsampler2xFpu <NC42> Dwnspl42;
-	typedef hiir::Downsampler2xFpu <NC21> Dwnspl21;
+	template <int NC>
+	using Dwnspl = hiir::Downsampler2xFpu <NC>;
 #endif
+
+	using Dwnspl42 = Dwnspl <NC42>;
+	using Dwnspl21 = Dwnspl <NC21>;
 
 	Dwnspl42       _ds_42;
 	Dwnspl21       _ds_21;

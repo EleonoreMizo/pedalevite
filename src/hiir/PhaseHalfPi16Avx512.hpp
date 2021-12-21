@@ -37,6 +37,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	PhaseHalfPi16Avx512 <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	PhaseHalfPi16Avx512 <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -109,10 +116,6 @@ void	PhaseHalfPi16Avx512 <NC>::process_sample (__m512 &out_0, __m512 &out_1, __m
 {
 	out_0 = input;                   // Even coefs
 	out_1 = _mm512_load_ps (_prev);  // Odd coefs
-
-	#if defined (_MSC_VER)
-		#pragma inline_depth (255)
-	#endif   // _MSC_VER
 
 	StageProc16Avx512 <NBR_COEFS>::process_sample_neg (
 		NBR_COEFS, out_0, out_1, &_bifilter [_phase] [0]
@@ -236,6 +239,11 @@ void	PhaseHalfPi16Avx512 <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	PhaseHalfPi16Avx512 <NC>::_nbr_phases;
 
 
 

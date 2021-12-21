@@ -33,6 +33,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/test/SpeedTester.h"
 #include "hiir/Downsampler2xF64Fpu.h"
 #include "hiir/Downsampler2xFpu.h"
+#include "hiir/HalfBandF64Fpu.h"
+#include "hiir/HalfBandFpu.h"
 #include "hiir/PhaseHalfPiF64Fpu.h"
 #include "hiir/PhaseHalfPiFpu.h"
 #include "hiir/Upsampler2xF64Fpu.h"
@@ -58,6 +60,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_test_SSE2)
 #include "hiir/Downsampler2x2F64Sse2.h"
 #include "hiir/Downsampler2xF64Sse2.h"
+#include "hiir/HalfBand2F64Sse2.h"
+#include "hiir/HalfBandF64Sse2.h"
 #include "hiir/PhaseHalfPi2F64Sse2.h"
 #include "hiir/PhaseHalfPiF64Sse2.h"
 #include "hiir/Upsampler2x2F64Sse2.h"
@@ -67,6 +71,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_test_AVX)
 #include "hiir/Downsampler2x4F64Avx.h"
 #include "hiir/Downsampler2x8Avx.h"
+#include "hiir/HalfBand4F64Avx.h"
+#include "hiir/HalfBand8Avx.h"
 #include "hiir/PhaseHalfPi4F64Avx.h"
 #include "hiir/PhaseHalfPi8Avx.h"
 #include "hiir/Upsampler2x4F64Avx.h"
@@ -74,18 +80,22 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #endif
 
 #if defined (hiir_test_AVX512)
-#include "hiir/Downsampler2x8F64Avx512.h"
 #include "hiir/Downsampler2x16Avx512.h"
-#include "hiir/PhaseHalfPi8F64Avx512.h"
+#include "hiir/Downsampler2x8F64Avx512.h"
+#include "hiir/HalfBand16Avx512.h"
+#include "hiir/HalfBand8F64Avx512.h"
 #include "hiir/PhaseHalfPi16Avx512.h"
-#include "hiir/Upsampler2x8F64Avx512.h"
+#include "hiir/PhaseHalfPi8F64Avx512.h"
 #include "hiir/Upsampler2x16Avx512.h"
+#include "hiir/Upsampler2x8F64Avx512.h"
 #endif
 
 #if defined (hiir_test_NEON)
 #include "hiir/Downsampler2x4Neon.h"
 #include "hiir/Downsampler2xNeon.h"
 #include "hiir/Downsampler2xNeonOld.h"
+#include "hiir/HalfBand4Neon.h"
+#include "hiir/HalfBandNeon.h"
 #include "hiir/PhaseHalfPi4Neon.h"
 #include "hiir/PhaseHalfPiNeon.h"
 #include "hiir/Upsampler2x4Neon.h"
@@ -162,6 +172,194 @@ void	TestAllClassesSpeed <NC>::perform_test () noexcept
 {
 	CpuId          cpu;
 
+	// Half-band
+	{
+		SpeedTester <AuxProc11 <HalfBandFpu <NBR_COEFS> > > st;
+		st.perform_test ("HalfBandFpu", "process_block");
+	}
+#if defined (hiir_test_SSE)
+	if (cpu._sse_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBandSse <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBandSse", "process_block");
+	}
+	if (cpu._sse_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBand4Sse <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand4Sse", "process_block");
+	}
+#endif
+#if defined (hiir_test_AVX)
+	if (cpu._avx_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBand8Avx <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand8Avx", "process_block");
+	}
+#endif
+#if defined (hiir_test_AVX512)
+	if (cpu._avx512f_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBand16Avx512 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand16Avx512", "process_block");
+	}
+#endif
+#if defined (hiir_test_NEON)
+	if (cpu._neon_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBandNeon <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBandNeon", "process_block");
+	}
+	if (cpu._neon_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBand4Neon <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand4Neon", "process_block");
+	}
+#endif
+	{
+		SpeedTester <AuxProc11 <HalfBandF64Fpu <NBR_COEFS> > > st;
+		st.perform_test ("HalfBandF64Fpu", "process_block");
+	}
+#if defined (hiir_test_SSE2)
+	if (cpu._sse2_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBandF64Sse2 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBandF64Sse2", "process_block");
+	}
+	if (cpu._sse2_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBand2F64Sse2 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand2F64Sse2", "process_block");
+	}
+#endif
+#if defined (hiir_test_AVX)
+	if (cpu._avx_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBand4F64Avx <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand4F64Avx", "process_block");
+	}
+#endif
+#if defined (hiir_test_AVX512)
+	if (cpu._avx512f_flag)
+	{
+		typedef	SpeedTester <AuxProc11 <HalfBand8F64Avx512 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand8F64Avx512", "process_block");
+	}
+#endif
+
+	// Half-band, split
+	{
+		SpeedTester <AuxProc12Split <HalfBandFpu <NBR_COEFS> > > st;
+		st.perform_test ("HalfBandFpu", "process_block_split");
+	}
+#if defined (hiir_test_SSE)
+	if (cpu._sse_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBandSse <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBandSse", "process_block_split");
+	}
+	if (cpu._sse_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBand4Sse <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand4Sse", "process_block_split");
+	}
+#endif
+#if defined (hiir_test_AVX)
+	if (cpu._avx_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBand8Avx <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand8Avx", "process_block_split");
+	}
+#endif
+#if defined (hiir_test_AVX512)
+	if (cpu._avx512f_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBand16Avx512 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand16Avx512", "process_block_split");
+	}
+#endif
+#if defined (hiir_test_NEON)
+	if (cpu._neon_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBandNeon <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBandNeon", "process_block_split");
+	}
+	if (cpu._neon_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBand4Neon <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand4Neon", "process_block_split");
+	}
+#endif
+	{
+		SpeedTester <AuxProc11 <HalfBandF64Fpu <NBR_COEFS> > > st;
+		st.perform_test ("HalfBandF64Fpu", "process_block_split");
+	}
+#if defined (hiir_test_SSE2)
+	if (cpu._sse2_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBandF64Sse2 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBandF64Sse2", "process_block_split");
+	}
+	if (cpu._sse2_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBand2F64Sse2 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand2F64Sse2", "process_block_split");
+	}
+#endif
+#if defined (hiir_test_AVX)
+	if (cpu._avx_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBand4F64Avx <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand4F64Avx", "process_block_split");
+	}
+#endif
+#if defined (hiir_test_AVX512)
+	if (cpu._avx512f_flag)
+	{
+		typedef	SpeedTester <AuxProc12Split <HalfBand8F64Avx512 <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("HalfBand8F64Avx512", "process_block_split");
+	}
+#endif
+
 	// Downsampler
 	{
 		SpeedTester <AuxProc11 <Downsampler2xFpu <NBR_COEFS> > > st;
@@ -216,18 +414,21 @@ void	TestAllClassesSpeed <NC>::perform_test () noexcept
 	}
 #endif
 #if defined (hiir_test_NEON)
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc11 <Downsampler2xNeonOld <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
 		st.perform_test ("Downsampler2xNeonOld", "process_block");
 	}
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc11 <Downsampler2xNeon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
 		st.perform_test ("Downsampler2xNeon", "process_block");
 	}
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc11 <Downsampler2x4Neon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
@@ -289,6 +490,13 @@ void	TestAllClassesSpeed <NC>::perform_test () noexcept
 #if defined (hiir_test_SSE)
 	if (cpu._sse_flag)
 	{
+		typedef	SpeedTester <AuxProc12Split <Downsampler2xSseOld <NBR_COEFS> > > TestType;
+		AlignedObject <TestType>   container;
+		TestType &     st = container.use ();
+		st.perform_test ("Downsampler2xSseOld", "process_block_split");
+	}
+	if (cpu._sse_flag)
+	{
 		typedef	SpeedTester <AuxProc12Split <Downsampler2xSse <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
@@ -321,18 +529,21 @@ void	TestAllClassesSpeed <NC>::perform_test () noexcept
 	}
 #endif
 #if defined (hiir_test_NEON)
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc12Split <Downsampler2xNeonOld <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
 		st.perform_test ("Downsampler2xNeonOld", "process_block_split");
 	}
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc12Split <Downsampler2xNeon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
 		st.perform_test ("Downsampler2xNeon", "process_block_split");
 	}
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc12Split <Downsampler2x4Neon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
@@ -433,18 +644,21 @@ void	TestAllClassesSpeed <NC>::perform_test () noexcept
 	}
 #endif
 #if defined (hiir_test_NEON)
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc11 <Upsampler2xNeonOld <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
 		st.perform_test ("Upsampler2xNeonOld", "process_block");
 	}
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc11 <Upsampler2xNeon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
 		st.perform_test ("Upsampler2xNeon", "process_block");
 	}
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc11 <Upsampler2x4Neon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
@@ -538,12 +752,14 @@ void	TestAllClassesSpeed <NC>::perform_test () noexcept
 	}
 #endif
 #if defined (hiir_test_NEON)
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc12 <PhaseHalfPiNeon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;
 		TestType &     st = container.use ();
 		st.perform_test ("PhaseHalfPiNeon", "process_block");
 	}
+	if (cpu._neon_flag)
 	{
 		typedef	SpeedTester <AuxProc12 <PhaseHalfPi4Neon <NBR_COEFS> > > TestType;
 		AlignedObject <TestType>   container;

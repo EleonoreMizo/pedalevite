@@ -1,13 +1,28 @@
 /*****************************************************************************
 
-        PhaseHalfPiFpuTpl.h
+        Upsampler2xTpl.h
         Author: Laurent de Soras, 2005
 
-From the input signal, generates two signals with a pi/2 phase shift, using
-FPU.
+Upsamples by a factor 2 the input signal, using FPU.
 
 Template parameters:
-	- NC: number of coefficients, > 0
+
+- NC: number of coefficients, > 0
+
+- DT: data type. Requires:
+	DT::DT ();
+	DT::DT (float);
+	DT::DT (int);
+	DT::DT (const DT &)
+	DT & DT::operator = (const DT &);
+	DT & DT::operator += (const DT &);
+	DT & DT::operator -= (const DT &);
+	DT & DT::operator *= (const DT &);
+	DT operator + (DT, const DT &);
+	DT operator - (DT, const DT &);
+	DT operator * (DT, const DT &);
+
+- NCHN: number of contained scalars, if DT is a vector type.
 
 --- Legal stuff ---
 
@@ -21,8 +36,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (hiir_PhaseHalfPiFpuTpl_HEADER_INCLUDED)
-#define hiir_PhaseHalfPiFpuTpl_HEADER_INCLUDED
+#if ! defined (hiir_Upsampler2xTpl_HEADER_INCLUDED)
+#define hiir_Upsampler2xTpl_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -34,7 +49,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "hiir/def.h"
-#include "hiir/StageDataFpu.h"
+#include "hiir/StageDataTpl.h"
 
 #include <array>
 
@@ -45,26 +60,25 @@ namespace hiir
 
 
 
-template <int NC, typename DT>
-class PhaseHalfPiFpuTpl
+template <int NC, typename DT, int NCHN>
+class Upsampler2xTpl
 {
 
 	static_assert ((NC > 0), "Number of coefficient must be positive.");
+	static_assert ((NCHN > 0), "Number of channels must be positive.");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
 	typedef DT DataType;
-	static constexpr int _nbr_chn  = 1;
+	static constexpr int _nbr_chn  = NCHN;
 	static constexpr int NBR_COEFS = NC;
 
-	void           set_coefs (const double coef_arr []) noexcept;
-
+	void           set_coefs (const double coef_arr [NBR_COEFS]) noexcept;
 	hiir_FORCEINLINE void
 	               process_sample (DataType &out_0, DataType &out_1, DataType input) noexcept;
-	void           process_block (DataType out_0_ptr [], DataType out_1_ptr [], const DataType in_ptr [], long nbr_spl) noexcept;
-
+	void           process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept;
 	void           clear_buffers () noexcept;
 
 
@@ -79,16 +93,10 @@ protected:
 
 private:
 
-	static constexpr int _nbr_phases = 2;
-
 	// Stages 0 and 1 contain only input memories
-	typedef std::array <StageDataFpu <DataType>, NBR_COEFS + 2> Filter;
+	typedef std::array <StageDataTpl <DataType>, NBR_COEFS + 2> Filter;
 
-	typedef	std::array <Filter, _nbr_phases>	FilterBiPhase;
-
-	FilterBiPhase  _bifilter;
-	DataType       _prev;
-	int            _phase;			// 0 or 1
+	Filter         _filter;
 
 
 
@@ -96,10 +104,10 @@ private:
 
 private:
 
-	bool           operator == (const PhaseHalfPiFpuTpl <NC, DT> &other) = delete;
-	bool           operator != (const PhaseHalfPiFpuTpl <NC, DT> &other) = delete;
+	bool           operator == (const Upsampler2xTpl <NC, DT, NCHN> &other) = delete;
+	bool           operator != (const Upsampler2xTpl <NC, DT, NCHN> &other) = delete;
 
-}; // class PhaseHalfPiFpuTpl
+}; // class Upsampler2xTpl
 
 
 
@@ -107,11 +115,11 @@ private:
 
 
 
-#include "hiir/PhaseHalfPiFpuTpl.hpp"
+#include "hiir/Upsampler2xTpl.hpp"
 
 
 
-#endif   // hiir_PhaseHalfPiFpuTpl_HEADER_INCLUDED
+#endif   // hiir_Upsampler2xTpl_HEADER_INCLUDED
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        StageProcFpu.hpp
+        StageProcTpl.hpp
         Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
@@ -16,7 +16,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if defined (hiir_StageProc_CURRENT_CODEHEADER)
-	#error Recursive inclusion of StageProcFpu code header.
+	#error Recursive inclusion of StageProcTpl code header.
 #endif
 #define hiir_StageProc_CURRENT_CODEHEADER
 
@@ -26,10 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#if defined (_MSC_VER)
-	#pragma inline_depth (255)
-#endif
 
 
 
@@ -43,7 +39,7 @@ namespace hiir
 
 
 template <int REMAINING, typename DT>
-void	StageProcFpu <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
+void	StageProcTpl <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataTpl <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
@@ -63,7 +59,7 @@ void	StageProcFpu <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &
 	spl_0 = tmp_0;
 	spl_1 = tmp_1;
 
-	StageProcFpu <REMAINING - 2, DT>::process_sample_pos (
+	StageProcTpl <REMAINING - 2, DT>::process_sample_pos (
 		nbr_coefs,
 		spl_0,
 		spl_1,
@@ -72,7 +68,7 @@ void	StageProcFpu <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &
 }
 
 template <typename DT>
-void	StageProcFpu <1, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
+void	StageProcTpl <1, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataTpl <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -89,7 +85,7 @@ void	StageProcFpu <1, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, D
 }
 
 template <typename DT>
-void	StageProcFpu <0, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
+void	StageProcTpl <0, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataTpl <DT> *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 
@@ -100,7 +96,7 @@ void	StageProcFpu <0, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, D
 
 
 template <int REMAINING, typename DT>
-void	StageProcFpu <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
+void	StageProcTpl <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataTpl <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
@@ -120,7 +116,7 @@ void	StageProcFpu <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &
 	spl_0 = tmp_0;
 	spl_1 = tmp_1;
 
-	StageProcFpu <REMAINING - 2, DT>::process_sample_neg (
+	StageProcTpl <REMAINING - 2, DT>::process_sample_neg (
 		nbr_coefs,
 		spl_0,
 		spl_1,
@@ -129,7 +125,7 @@ void	StageProcFpu <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &
 }
 
 template <typename DT>
-void	StageProcFpu <1, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
+void	StageProcTpl <1, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataTpl <DT> *stage_arr) noexcept
 {
 	const int      cnt   = nbr_coefs + 2 - 1;
 
@@ -146,7 +142,7 @@ void	StageProcFpu <1, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, D
 }
 
 template <typename DT>
-void	StageProcFpu <0, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr) noexcept
+void	StageProcTpl <0, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataTpl <DT> *stage_arr) noexcept
 {
 	const int      cnt = nbr_coefs + 2;
 

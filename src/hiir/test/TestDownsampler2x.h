@@ -50,7 +50,7 @@ public:
 
 	typedef TO TestedType;
 	typedef typename TO::DataType DataType;
-	static const int  _nbr_chn = TO::_nbr_chn;
+	static constexpr int _nbr_chn = TO::_nbr_chn;
 
 	enum {         NBR_COEFS = TestedType::NBR_COEFS };
 

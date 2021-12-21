@@ -93,7 +93,7 @@ private:
 #if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
 	template <int NC>
 	using Dwnspl = typename std::conditional <
-		(NC >= 4)
+		(NC >= 1) // Current SSE version is always faster than the FPU
 	,	hiir::Downsampler2xSse <NC>
 	,	hiir::Downsampler2xFpu <NC>
 	>::type;

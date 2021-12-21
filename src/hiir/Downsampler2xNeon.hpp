@@ -40,6 +40,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	Downsampler2xNeon <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	Downsampler2xNeon <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -267,6 +274,13 @@ void	Downsampler2xNeon <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	Downsampler2xNeon <NC>::_stage_width;
+template <int NC>
+constexpr int	Downsampler2xNeon <NC>::_nbr_stages;
 
 
 

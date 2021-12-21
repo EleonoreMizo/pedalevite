@@ -37,6 +37,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	PhaseHalfPiF64Sse2 <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	PhaseHalfPiF64Sse2 <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -120,8 +127,8 @@ void	PhaseHalfPiF64Sse2 <NC>::process_sample (double &out_0, double &out_1, doub
 	StageProcF64Sse2 <_nbr_stages>::process_sample_neg (
 		x, &_bifilter [_phase] [0]
 	);
-	_mm_storel_pd (&out_1, x);
-	_mm_storeh_pd (&out_0, x);
+	out_0 = _mm_cvtsd_f64 (_mm_unpackhi_pd (x, x));
+	out_1 = _mm_cvtsd_f64 (x);
 
 	_prev  = input;
 	_phase = 1 - _phase;
@@ -168,21 +175,22 @@ void	PhaseHalfPiF64Sse2 <NC>::process_block (double out_0_ptr [], double out_1_p
 	auto           prev = _mm_set1_pd (_prev);
 	while (pos < end)
 	{
-		auto           input_0 = _mm_set1_pd (in_ptr [pos    ]);
-		auto           x       = _mm_shuffle_pd (prev, input_0, 1);
+		const auto     input_0 = _mm_set1_pd (in_ptr [pos    ]);
+		auto           x_0     = _mm_shuffle_pd (prev, input_0, 1);
 		StageProcF64Sse2 <_nbr_stages>::process_sample_neg (
-			x, &_bifilter [0] [0]
+			x_0, &_bifilter [0] [0]
 		);
-		_mm_storel_pd (out_1_ptr + pos    , x);
-		_mm_storeh_pd (out_0_ptr + pos    , x);
 
-		auto           input_1 = _mm_set1_pd (in_ptr [pos + 1]);
-		x = _mm_shuffle_pd (input_0, input_1, 1); // prev = input_0
+		const auto     input_1 = _mm_set1_pd (in_ptr [pos + 1]);
+		auto           x_1 = _mm_shuffle_pd (input_0, input_1, 1); // prev = input_0
 		StageProcF64Sse2 <_nbr_stages>::process_sample_neg (
-			x, &_bifilter [1] [0]
+			x_1, &_bifilter [1] [0]
 		);
-		_mm_storel_pd (out_1_ptr + pos + 1, x);
-		_mm_storeh_pd (out_0_ptr + pos + 1, x);
+
+		const auto     y_0 = _mm_unpackhi_pd (x_0, x_1);
+		const auto     y_1 = _mm_unpacklo_pd (x_0, x_1);
+		_mm_storeu_pd (out_0_ptr + pos, y_0);
+		_mm_storeu_pd (out_1_ptr + pos, y_1);
 
 		pos += 2;
 		prev = input_1;
@@ -227,6 +235,15 @@ void	PhaseHalfPiF64Sse2 <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	PhaseHalfPiF64Sse2 <NC>::_stage_width;
+template <int NC>
+constexpr int	PhaseHalfPiF64Sse2 <NC>::_nbr_stages;
+template <int NC>
+constexpr int	PhaseHalfPiF64Sse2 <NC>::_nbr_phases;
 
 
 

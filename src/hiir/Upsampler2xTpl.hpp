@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Upsampler2xFpuTpl.hpp
+        Upsampler2xTpl.hpp
         Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
@@ -15,19 +15,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (hiir_Upsampler2xFpuTpl_CURRENT_CODEHEADER)
-	#error Recursive inclusion of Upsampler2xFpuTpl code header.
+#if defined (hiir_Upsampler2xTpl_CURRENT_CODEHEADER)
+	#error Recursive inclusion of Upsampler2xTpl code header.
 #endif
-#define	hiir_Upsampler2xFpuTpl_CURRENT_CODEHEADER
+#define	hiir_Upsampler2xTpl_CURRENT_CODEHEADER
 
-#if ! defined (hiir_Upsampler2xFpuTpl_CODEHEADER_INCLUDED)
-#define	hiir_Upsampler2xFpuTpl_CODEHEADER_INCLUDED
+#if ! defined (hiir_Upsampler2xTpl_CODEHEADER_INCLUDED)
+#define	hiir_Upsampler2xTpl_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcFpu.h"
+#include "hiir/StageProcTpl.h"
 
 #include <cassert>
 
@@ -39,6 +39,13 @@ namespace hiir
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC, typename DT, int NCHN>
+constexpr int 	Upsampler2xTpl <NC, DT, NCHN>::_nbr_chn;
+template <int NC, typename DT, int NCHN>
+constexpr int 	Upsampler2xTpl <NC, DT, NCHN>::NBR_COEFS;
 
 
 
@@ -56,8 +63,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr [NBR_COEFS]) noexcept
+template <int NC, typename DT, int NCHN>
+void	Upsampler2xTpl <NC, DT, NCHN>::set_coefs (const double coef_arr [NBR_COEFS]) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -83,12 +90,12 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_1, DataType input) noexcept
+template <int NC, typename DT, int NCHN>
+void	Upsampler2xTpl <NC, DT, NCHN>::process_sample (DataType &out_0, DataType &out_1, DataType input) noexcept
 {
 	DataType       even = input;
 	DataType       odd  = input;
-	StageProcFpu <NBR_COEFS, DataType>::process_sample_pos (
+	StageProcTpl <NBR_COEFS, DataType>::process_sample_pos (
 		NBR_COEFS,
 		even,
 		odd,
@@ -115,8 +122,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
+template <int NC, typename DT, int NCHN>
+void	Upsampler2xTpl <NC, DT, NCHN>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_ptr != nullptr);
 	assert (in_ptr  != nullptr);
@@ -148,12 +155,12 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Upsampler2xFpuTpl <NC, DT>::clear_buffers () noexcept
+template <int NC, typename DT, int NCHN>
+void	Upsampler2xTpl <NC, DT, NCHN>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._mem = 0;
+		_filter [i]._mem = DataType (0.f);
 	}
 }
 
@@ -171,9 +178,9 @@ void	Upsampler2xFpuTpl <NC, DT>::clear_buffers () noexcept
 
 
 
-#endif   // hiir_Upsampler2xFpuTpl_CODEHEADER_INCLUDED
+#endif   // hiir_Upsampler2xTpl_CODEHEADER_INCLUDED
 
-#undef hiir_Upsampler2xFpuTpl_CURRENT_CODEHEADER
+#undef hiir_Upsampler2xTpl_CURRENT_CODEHEADER
 
 
 

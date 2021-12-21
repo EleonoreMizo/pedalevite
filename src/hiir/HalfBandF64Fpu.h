@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        StageDataFpu.h
-        Author: Laurent de Soras, 2020
+        HalfBandF64Fpu.h
+        Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
 
@@ -16,12 +16,14 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (hiir_StageDataFpu_HEADER_INCLUDED)
-#define hiir_StageDataFpu_HEADER_INCLUDED
+#if ! defined (hiir_HalfBandF64Fpu_HEADER_INCLUDED)
+#define hiir_HalfBandF64Fpu_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include "hiir/HalfBandTpl.h"
 
 
 
@@ -30,16 +32,8 @@ namespace hiir
 
 
 
-template <typename DT>
-class StageDataFpu
-{
-
-public:
-
-   DT             _coef = 0;  // a_{n-2}
-   DT             _mem  = 0;  // y of the stage
-
-}; // class StageDataFpu
+template <int NC>
+using HalfBandF64Fpu = HalfBandTpl <NC, double, 1>;
 
 
 
@@ -47,7 +41,11 @@ public:
 
 
 
-#endif   // hiir_StageDataFpu_HEADER_INCLUDED
+//#include "hiir/HalfBandF64Fpu.hpp"
+
+
+
+#endif   // hiir_HalfBandF64Fpu_HEADER_INCLUDED
 
 
 

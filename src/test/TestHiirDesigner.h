@@ -23,6 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <vector>
+
 
 
 class TestHiirDesigner
@@ -45,6 +47,13 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static std::vector <double>
+	               build_filter (int nbr_coef, double fs, double f_tst, double tg_pdly);
+	template <int R, typename U, typename D>
+	static void    measure_phase_delay (U &us, D &ds, double fs, double f_tst);
+	static double  find_delay (const std::vector <float> &ref, const std::vector <float> &tst, int skip);
+	static double  evaluate_mag_lpf (const std::vector <double> &coef_arr, double f_fs);
 
 
 

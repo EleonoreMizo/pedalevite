@@ -37,6 +37,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	PhaseHalfPi4Sse <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	PhaseHalfPi4Sse <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -109,10 +116,6 @@ void	PhaseHalfPi4Sse <NC>::process_sample (__m128 &out_0, __m128 &out_1, __m128 
 {
 	out_0 = input;                // Even coefs
 	out_1 = _mm_load_ps (_prev);  // Odd coefs
-
-	#if defined (_MSC_VER)
-		#pragma inline_depth (255)
-	#endif   // _MSC_VER
 
 	StageProc4Sse <NBR_COEFS>::process_sample_neg (
 		NBR_COEFS, out_0, out_1, &_bifilter [_phase] [0]
@@ -236,6 +239,11 @@ void	PhaseHalfPi4Sse <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	PhaseHalfPi4Sse <NC>::_nbr_phases;
 
 
 

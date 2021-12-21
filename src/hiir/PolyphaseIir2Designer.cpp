@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/PolyphaseIir2Designer.h"
 
 #include <array>
+#include <functional>
 
 #include <cassert>
 #include <cmath>
@@ -199,11 +200,75 @@ void	PolyphaseIir2Designer::compute_coefs_spec_order_tbw (double coef_arr [], in
 Name: compute_coefs_spec_order_gdly
 Description:
 	Computes the coefficients for a half-band polyphase IIR filter by
+	specifying a phase delay and the desired filter order.
+	It is also possible to specify the allowed ranges for attenuation and
+	transition bandwidth.
+	Phase delay range is constrained by the filter order and the measurement
+	frequency, so the function may fail if the requirement cannot be met.
+	Important note: the downsampler classes introduce an *advance* of 1/2
+	output sample (half rate, so that's 1 input sample full rate). You have to
+	take that into account if you're targetting the downsamplers by adding 1.0
+	to the phase_delay value.
+Input parameters:
+	- nbr_coefs: Number of desired coefficients. > 0.
+	- phase_delay: required phase delay in samples. The phase delay is measured
+		at f_rel, and is reached within +/-prec samples. > 0.
+	- f_rel: Normalised relative frequency for the phase delay measurement.
+		Range is [0 ; 1[, where 1/2 is the Nyquist frequency for a full-rate
+		(not decimated) filter.
+	- prec: Precision of the phase delay requirement, in samples. > 0.
+	- atten_lb: Lower bound for the stopband attenuation, in dB.
+		Range ]0 ; atten_ub[
+	- atten_ub: Upper bound for the stopband attenuation, in dB. > atten_lb.
+	- trans_lb: Lower bound for the normalized transition bandwidth (relative
+		to the sampling rate). Range ]0 ; trans_ub[
+	- trans_ub: Upper bound for the normalized transition bandwidth (relative
+		to the sampling rate). Range ]trans_lb ; 1/2[
+Output parameters:
+	- coef_arr: Coefficient list, must be large enough to store all the
+		coefficients.
+Input/output parameters:
+	- attenuation_ptr: if the function succeeds and attenuation_ptr is not 0,
+		the attenuation in dB for the designed filter is written on pointed
+		location.
+	- transition_ptr: if the function succeeds and transition_ptr is not 0,
+		the normalized transition bandwidth is written there.
+Returns:
+	- 0 on success,
+	- Negative number on failure, mainly because the constraints are too tight
+		or the requirements unreachable. In this case, the output parameters
+		should be considered as invalid.
+Throws: Nothing
+==============================================================================
+*/
+
+PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_pdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double phase_delay, double f_rel, double prec, double atten_lb, double atten_ub, double trans_lb, double trans_ub) noexcept
+{
+	using namespace std::placeholders;
+
+	return compute_coefs_spec_order_delay (
+		coef_arr, attenuation_ptr, transition_ptr, nbr_coefs, phase_delay,
+		f_rel, prec, atten_lb, atten_ub, trans_lb, trans_ub,
+		std::bind (compute_phase_delay, _1, _2, _3)
+	);
+}
+
+
+
+/*
+==============================================================================
+Name: compute_coefs_spec_order_gdly
+Description:
+	Computes the coefficients for a half-band polyphase IIR filter by
 	specifying a group delay and the desired filter order.
 	It is also possible to specify the allowed ranges for attenuation and
 	transition bandwidth.
 	Group delay range is constrained by the filter order and the measurement
 	frequency, so the function may fail if the requirement cannot be met.
+	Important note: the downsampler classes introduce an *advance* of 1/2
+	output sample (half rate, so that's 1 input sample full rate). You have to
+	take that into account if you're targetting the downsamplers by adding 1.0
+	to the group_delay value.
 Input parameters:
 	- nbr_coefs: Number of desired coefficients. > 0.
 	- group_delay: required group delay in samples. The group delay is measured
@@ -239,100 +304,13 @@ Throws: Nothing
 
 PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_gdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double group_delay, double f_rel, double prec, double atten_lb, double atten_ub, double trans_lb, double trans_ub) noexcept
 {
-	assert (nbr_coefs > 0);
-	assert (nbr_coefs <= _max_order);
-	assert (group_delay > 0);
-	assert (f_rel >= 0);
-	assert (f_rel < 1);
-	assert (prec > 0);
-	assert (atten_lb > 0);
-	assert (atten_lb < atten_ub);
-	assert (trans_lb > 0);
-	assert (trans_lb < trans_ub);
-	assert (trans_ub < 0.5);
+	using namespace std::placeholders;
 
-	ResCode        ret_val = ResCode_OK;
-
-	double         lb_tbw = trans_lb;
-	double         ub_tbw = trans_ub;
-	std::array <double, _max_order>  lb_coef_arr;
-	std::array <double, _max_order>  ub_coef_arr;
-
-	compute_coefs_spec_order_tbw (ub_coef_arr.data (), nbr_coefs, ub_tbw);
-	compute_coefs_spec_order_tbw (lb_coef_arr.data (), nbr_coefs, lb_tbw);
-
-	double         ub_gdly  =
-		compute_group_delay (ub_coef_arr.data (), nbr_coefs, f_rel, false);
-	double         lb_gdly  =
-		compute_group_delay (lb_coef_arr.data (), nbr_coefs, f_rel, false);
-
-	// Checks if the group delay and transition bandwidth requirements
-	// could be met
-	if ((ub_gdly - group_delay) * (group_delay - lb_gdly) <= 0)
-	{
-		ret_val = ResCode_FAIL_GD_TBW;
-	}
-
-	double         rs_attn = 0;
-	double         rs_tbw  = 0;
-
-	if (ret_val == ResCode_OK)
-	{
-		// Simple bisection method
-		const int      max_it    = 1000;
-		int            nbr_it    = 0;
-		double         rs_gdly   = 0;
-		bool           conv_flag = false;
-		do
-		{
-			rs_tbw  = (ub_tbw + lb_tbw) * 0.5;
-			rs_attn = compute_atten_from_order_tbw (nbr_coefs, rs_tbw);
-			compute_coefs_spec_order_tbw (coef_arr, nbr_coefs, rs_tbw);
-			rs_gdly = compute_group_delay (coef_arr, nbr_coefs, f_rel, false);
-
-			if ((group_delay - lb_gdly) * (group_delay - rs_gdly) < 0)
-			{
-				ub_tbw  = rs_tbw;
-//				ub_gdly = rs_gdly; // ub_gdly not used in the loop actually
-			}
-			else
-			{
-				lb_tbw  = rs_tbw;
-				lb_gdly = rs_gdly;
-			}
-
-			++ nbr_it;
-			conv_flag = (fabs (rs_gdly - group_delay) > prec);
-		}
-		while (conv_flag && nbr_it < max_it);
-
-		// Checks convergence
-		if (nbr_it >= max_it && ! conv_flag)
-		{
-			ret_val = ResCode_FAIL_CONV;
-		}
-
-		// Checks the attenuation requirement
-		else if (   rs_attn < atten_lb
-		         || rs_attn > atten_ub)
-		{
-			ret_val = ResCode_FAIL_ATTEN;
-		}
-	}
-
-	if (ret_val == ResCode_OK)
-	{
-		if (attenuation_ptr != nullptr)
-		{
-			*attenuation_ptr = rs_attn;
-		}
-		if (transition_ptr != nullptr)
-		{
-			*transition_ptr = rs_tbw;
-		}
-	}
-
-	return ret_val;
+	return compute_coefs_spec_order_delay (
+		coef_arr, attenuation_ptr, transition_ptr, nbr_coefs, group_delay,
+		f_rel, prec, atten_lb, atten_ub, trans_lb, trans_ub,
+		std::bind (compute_group_delay, _1, _2, _3, false)
+	);
 }
 
 
@@ -340,6 +318,72 @@ PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_g
 /*
 ==============================================================================
 Name: compute_phase_delay
+Description:
+	Computes the phase delay introduced by a complete filter at a specified
+	frequency.
+	The delay is given for a constant sampling rate between input and output.
+	Note that the result is accurate only in the passband, where A0 and A1
+	outputs of are almost equal.
+Input parameters:
+	- coef_arr: filter coefficient, as given by the designing functions.
+		Actually only even coefficients (A0 part) are used.
+	- nbr_coefs: Number of filter coefficients. > 0.
+	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
+Returns:
+	The phase delay in samples, >= 0.
+Throws: Nothing
+==============================================================================
+*/
+
+double	PolyphaseIir2Designer::compute_phase_delay (const double coef_arr [], int nbr_coefs, double f_fs) noexcept
+{
+	using namespace std::placeholders;
+
+	return compute_full_delay (
+		coef_arr, nbr_coefs, f_fs,
+		std::bind (compute_unit_phase_delay, _1, _2)
+	);
+}
+
+
+
+/*
+==============================================================================
+Name: compute_group_delay
+Description:
+	Computes the group delay introduced by a complete filter at a specified
+	frequency.
+	The delay is given for a constant sampling rate between input and output.
+	Note that the result is accurate only in the passband, where A0 and A1
+	outputs of are almost equal.
+Input parameters:
+	- coef_arr: filter coefficient, as given by the designing functions.
+		Actually only even coefficients (A0 part) are used.
+	- nbr_coefs: Number of filter coefficients. > 0.
+	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
+	- ph_flag: set if filter is used in pi/2-phaser mode, in the form
+		(a - z^-2) / (1 - az^-2)
+Returns:
+	The group delay in samples, >= 0.
+Throws: Nothing
+==============================================================================
+*/
+
+double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag) noexcept
+{
+	using namespace std::placeholders;
+
+	return compute_full_delay (
+		coef_arr, nbr_coefs, f_fs,
+		std::bind (compute_unit_group_delay, _1, _2, ph_flag)
+	);
+}
+
+
+
+/*
+==============================================================================
+Name: compute_unit_phase_delay
 Description:
 	Computes the phase delay introduced by a single filtering unit at a
 	specified frequency.
@@ -353,7 +397,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_phase_delay (double a, double f_fs) noexcept
+double	PolyphaseIir2Designer::compute_unit_phase_delay (double a, double f_fs) noexcept
 {
 	assert (a >= 0);
 	assert (a <= 1);
@@ -363,14 +407,16 @@ double	PolyphaseIir2Designer::compute_phase_delay (double a, double f_fs) noexce
 	const double   w  = 2 * hiir::PI * f_fs;
 	const double   c  = cos (w);
 	const double   s  = sin (w);
-	const double   x  = a + c + a * (c * (a + c) + s * s);
-	const double   y  = a * a * s - s;
-	double         ph = atan2 (y, x);
+	const double   ac = (a + 1) * c;
+	const double   as = (a - 1) * s;
+	const double   x  = (ac + as) * (ac - as);
+	const double   y  = 2 * ac * as;
+	double         ph = -atan2 (y, x);
 	if (ph < 0)
 	{
 		ph += 2 * hiir::PI;
 	}
-	const double   dly = ph / w;
+	const double   dly = (w > 0) ? ph / w : 2 * (1 - a) / (1 + a);
 
 	return dly;
 }
@@ -379,7 +425,7 @@ double	PolyphaseIir2Designer::compute_phase_delay (double a, double f_fs) noexce
 
 /*
 ==============================================================================
-Name: compute_group_delay
+Name: compute_unit_group_delay
 Description:
 	Computes the group delay introduced by a single filtering unit at a
 	specified frequency.
@@ -397,7 +443,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_group_delay (double a, double f_fs, bool ph_flag) noexcept
+double	PolyphaseIir2Designer::compute_unit_group_delay (double a, double f_fs, bool ph_flag) noexcept
 {
 	assert (a >= 0);
 	assert (a <= 1);
@@ -410,43 +456,6 @@ double	PolyphaseIir2Designer::compute_group_delay (double a, double f_fs, bool p
 	const double   dly = 2 * (1 - a2) / (a2 + sig * a * cos (2 * w) + 1);
 
 	return dly;
-}
-
-
-
-/*
-==============================================================================
-Name: compute_group_delay
-Description:
-	Computes the group delay introduced by a complete filter at a specified
-	frequency.
-	The delay is given for a constant sampling rate between input and output.
-Input parameters:
-	- coef_arr: filter coefficient, as given by the designing functions
-	- nbr_coefs: Number of filter coefficients. > 0.
-	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
-	- ph_flag: set if filter is used in pi/2-phaser mode, in the form
-		(a - z^-2) / (1 - az^-2)
-Returns:
-	The group delay in samples, >= 0.
-Throws: Nothing
-==============================================================================
-*/
-
-double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag) noexcept
-{
-	assert (nbr_coefs > 0);
-	assert (f_fs >= 0);
-	assert (f_fs < 0.5);
-
-	double         dly_total = 0;
-	for (int k = 0; k < nbr_coefs; k += 2)
-	{
-		const double   dly = compute_group_delay (coef_arr [k], f_fs, ph_flag);
-		dly_total += dly;
-	}
-
-	return dly_total;
 }
 
 
@@ -582,6 +591,125 @@ double	PolyphaseIir2Designer::compute_acc_den (double q, int order, int c) noexc
 	while (fabs (q_i2) > 1e-100);
 
 	return acc;
+}
+
+
+
+template <typename F>
+PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_delay (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double delay, double f_rel, double prec, double atten_lb, double atten_ub, double trans_lb, double trans_ub, F compute_delay) noexcept
+{
+	assert (nbr_coefs > 0);
+	assert (nbr_coefs <= _max_order);
+	assert (delay > 0);
+	assert (f_rel >= 0);
+	assert (f_rel < 1);
+	assert (prec > 0);
+	assert (atten_lb > 0);
+	assert (atten_lb < atten_ub);
+	assert (trans_lb > 0);
+	assert (trans_lb < trans_ub);
+	assert (trans_ub < 0.5);
+
+	ResCode        ret_val = ResCode_OK;
+
+	double         lb_tbw = trans_lb;
+	double         ub_tbw = trans_ub;
+	std::array <double, _max_order>  lb_coef_arr;
+	std::array <double, _max_order>  ub_coef_arr;
+
+	compute_coefs_spec_order_tbw (ub_coef_arr.data (), nbr_coefs, ub_tbw);
+	compute_coefs_spec_order_tbw (lb_coef_arr.data (), nbr_coefs, lb_tbw);
+
+	double   ub_gdly = compute_delay (ub_coef_arr.data (), nbr_coefs, f_rel);
+	double   lb_gdly = compute_delay (lb_coef_arr.data (), nbr_coefs, f_rel);
+
+	// Checks if the group delay and transition bandwidth requirements
+	// could be met
+	if ((ub_gdly - delay) * (delay - lb_gdly) <= 0)
+	{
+		ret_val = ResCode_FAIL_GD_TBW;
+	}
+
+	double         rs_attn = 0;
+	double         rs_tbw  = 0;
+
+	if (ret_val == ResCode_OK)
+	{
+		// Simple bisection method
+		const int      max_it    = 1000;
+		int            nbr_it    = 0;
+		double         rs_gdly   = 0;
+		bool           conv_flag = false;
+		do
+		{
+			rs_tbw  = (ub_tbw + lb_tbw) * 0.5;
+			rs_attn = compute_atten_from_order_tbw (nbr_coefs, rs_tbw);
+			compute_coefs_spec_order_tbw (coef_arr, nbr_coefs, rs_tbw);
+			rs_gdly = compute_delay (coef_arr, nbr_coefs, f_rel);
+
+			if ((delay - lb_gdly) * (delay - rs_gdly) < 0)
+			{
+				ub_tbw  = rs_tbw;
+//				ub_gdly = rs_gdly; // ub_gdly not used in the loop actually
+			}
+			else
+			{
+				lb_tbw  = rs_tbw;
+				lb_gdly = rs_gdly;
+			}
+
+			++ nbr_it;
+			conv_flag = (fabs (rs_gdly - delay) > prec);
+		}
+		while (conv_flag && nbr_it < max_it);
+
+		// Checks convergence
+		if (nbr_it >= max_it && ! conv_flag)
+		{
+			ret_val = ResCode_FAIL_CONV;
+		}
+
+		// Checks the attenuation requirement
+		else if (   rs_attn < atten_lb
+		         || rs_attn > atten_ub)
+		{
+			ret_val = ResCode_FAIL_ATTEN;
+		}
+	}
+
+	if (ret_val == ResCode_OK)
+	{
+		if (attenuation_ptr != nullptr)
+		{
+			*attenuation_ptr = rs_attn;
+		}
+		if (transition_ptr != nullptr)
+		{
+			*transition_ptr = rs_tbw;
+		}
+	}
+
+	return ret_val;
+}
+
+
+
+// double compute_delay_single (double coef, double f_fs);
+template <typename F>
+double	PolyphaseIir2Designer::compute_full_delay (const double coef_arr [], int nbr_coefs, double f_fs, F compute_delay_single) noexcept
+{
+	assert (nbr_coefs > 0);
+	assert (f_fs >= 0);
+	assert (f_fs < 0.5);
+
+	double         dly_total = 0;
+	for (int k = 0; k < nbr_coefs; k += 2)
+	{
+		const double   dly = compute_delay_single (coef_arr [k], f_fs);
+		dly_total += dly;
+	}
+
+	return dly_total;
 }
 
 

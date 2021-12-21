@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <vector>
+
 
 
 namespace hiir
@@ -46,7 +48,10 @@ class ResultCheck
 
 public:
 
-	static int     check_dspl (const SweepingSine &ss, double bw, double at, const T out_ptr [], bool hiband_flag);
+	static std::vector <T>
+	               generate_test_signal (const SweepingSine &ss, long len, int nbr_chn);
+
+	static int     check_halfband (const SweepingSine &ss, double bw, double at, const T out_ptr [], bool hiband_flag, int rate_div);
 	static int     check_uspl (const SweepingSine &ss, double bw, double at, const T out_ptr []);
 	static int     check_phase (const SweepingSine &ss, double bw, const T out_0_ptr [], const T out_1_ptr []);
 

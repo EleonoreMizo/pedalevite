@@ -44,6 +44,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	PhaseHalfPiSse <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	PhaseHalfPiSse <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -57,17 +64,16 @@ PhaseHalfPiSse <NC>::PhaseHalfPiSse () noexcept
 ,	_prev (0)
 ,	_phase (0)
 {
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int phase = 0; phase < _nbr_phases; ++phase)
 	{
-		for (int i = 0; i < NBR_STAGES + 1; ++i)
+		for (int i = 0; i < _nbr_stages + 1; ++i)
 		{
 			_mm_store_ps (_filter [phase] [i]._coef, _mm_setzero_ps ());
 		}
-		if ((NBR_COEFS & 1) != 0)
-		{
-			const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
-			_filter [phase] [NBR_STAGES]._coef [pos] = 1;
-		}
+	}
+	for (int i = NBR_COEFS; i < _nbr_stages * _stage_width; ++i)
+	{
+		set_single_coef (i, 1);
 	}
 
 	clear_buffers ();
@@ -94,14 +100,9 @@ void	PhaseHalfPiSse <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		for (int i = 0; i < NBR_COEFS; ++i)
-		{
-			const int      stage = (i / STAGE_WIDTH) + 1;
-			const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
-			_filter [phase] [stage]._coef [pos] = DataType (coef_arr [i]);
-		}
+		set_single_coef (i, coef_arr [i]);
 	}
 }
 
@@ -126,23 +127,21 @@ hiir_FORCEINLINE void	PhaseHalfPiSse <NC>::process_sample (float &out_0, float &
 {
 	StageDataSse * filter_ptr = &_filter [_phase] [0];
 
-	const __m128   spl_in  = _mm_load_ss (&input);
-	const __m128   prev    = _mm_load_ss (&_prev);
-	const __m128   comb    = _mm_unpacklo_ps (prev, spl_in);
-	const __m128   spl_mid = _mm_load_ps (filter_ptr [NBR_STAGES]._mem);
-	__m128         y       = _mm_shuffle_ps (comb, spl_mid, 0x44);
+	const auto     spl_in  = _mm_load_ss (&input);
+	const auto     prev    = _mm_load_ss (&_prev);
+	const auto     comb    = _mm_unpacklo_ps (prev, spl_in);
+	const auto     spl_mid = _mm_load_ps (filter_ptr [_nbr_stages]._mem);
+	constexpr auto shuf    = (2 << 0) | (3 << 2) | (0 << 4) | (1 << 6);
+	auto           y       = _mm_shuffle_ps (spl_mid, comb, shuf);
 
-	__m128         mem     = _mm_load_ps (filter_ptr [0]._mem);
+	auto           mem     = _mm_load_ps (filter_ptr [0]._mem);
 
-	StageProcSseV4 <NBR_STAGES>::process_sample_neg (&filter_ptr [0], y, mem);
+	StageProcSseV4 <_nbr_stages>::process_sample_neg (&filter_ptr [0], y, mem);
 
-	_mm_store_ps (filter_ptr [NBR_STAGES]._mem, y);
+	_mm_store_ps (filter_ptr [_nbr_stages]._mem, y);
 
-	// The latest shufps/movss instruction pairs can be freely inverted
-	y     = _mm_shuffle_ps (y, y, 0xE3);
+	out_1 = _mm_cvtss_f32 (_mm_shuffle_ps (y, y, 1));
 	out_0 = _mm_cvtss_f32 (y);
-	y     = _mm_shuffle_ps (y, y, 0xE2);
-	out_1 = _mm_cvtss_f32 (y);
 
 	_prev  = input;
 	_phase = 1 - _phase;
@@ -202,9 +201,9 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPiSse <NC>::clear_buffers () noexcept
 {
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int phase = 0; phase < _nbr_phases; ++phase)
 	{
-		for (int i = 0; i < NBR_STAGES + 1; ++i)
+		for (int i = 0; i < _nbr_stages + 1; ++i)
 		{
 			_mm_store_ps (_filter [phase] [i]._mem, _mm_setzero_ps ());
 		}
@@ -218,6 +217,33 @@ void	PhaseHalfPiSse <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	PhaseHalfPiSse <NC>::_stage_width;
+template <int NC>
+constexpr int	PhaseHalfPiSse <NC>::_nbr_stages;
+template <int NC>
+constexpr int	PhaseHalfPiSse <NC>::_nbr_phases;
+template <int NC>
+constexpr int	PhaseHalfPiSse <NC>::_coef_shift;
+
+
+
+template <int NC>
+void	PhaseHalfPiSse <NC>::set_single_coef (int index, double coef) noexcept
+{
+	assert (index >= 0);
+	assert (index < _nbr_stages * _stage_width);
+
+	const int      stage = (index / _stage_width) + 1;
+	const int      pos   = (index ^ _coef_shift) & (_stage_width - 1);
+	for (int phase = 0; phase < _nbr_phases; ++phase)
+	{
+		_filter [phase] [stage]._coef [pos] = DataType (coef);
+	}
+}
 
 
 

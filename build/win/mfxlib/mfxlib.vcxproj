@@ -603,8 +603,8 @@
     <ClInclude Include="..\..\..\src\hiir\Downsampler2xF64Sse2.h" />
     <ClInclude Include="..\..\..\src\hiir\Downsampler2xF64Sse2.hpp" />
     <ClInclude Include="..\..\..\src\hiir\Downsampler2xFpu.h" />
-    <ClInclude Include="..\..\..\src\hiir\Downsampler2xFpuTpl.h" />
-    <ClInclude Include="..\..\..\src\hiir\Downsampler2xFpuTpl.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xTpl.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xTpl.hpp" />
     <ClInclude Include="..\..\..\src\hiir\Downsampler2xNeon.h" />
     <ClInclude Include="..\..\..\src\hiir\Downsampler2xNeon.hpp" />
     <ClInclude Include="..\..\..\src\hiir\Downsampler2xNeonOld.h" />
@@ -617,6 +617,30 @@
     <ClInclude Include="..\..\..\src\hiir\fnc.hpp" />
     <ClInclude Include="..\..\..\src\hiir\fnc_neon.h" />
     <ClInclude Include="..\..\..\src\hiir\fnc_neon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand16Avx512.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand16Avx512.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand2F64Sse2.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand2F64Sse2.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand4F64Avx.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand4F64Avx.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand4Neon.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand4Neon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand4Sse.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand4Sse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand8Avx.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand8Avx.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand8F64Avx512.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBand8F64Avx512.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandF64Sse2.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandF64Sse2.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandFpu.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandF64Fpu.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandNeon.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandNeon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandSse.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandSse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandTpl.h" />
+    <ClInclude Include="..\..\..\src\hiir\HalfBandTpl.hpp" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPi16Avx512.h" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPi16Avx512.hpp" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPi2F64Sse2.h" />
@@ -637,8 +661,8 @@
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiF64Sse2.h" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiF64Sse2.hpp" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiFpu.h" />
-    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiFpuTpl.h" />
-    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiFpuTpl.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiTpl.h" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiTpl.hpp" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiNeon.h" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiNeon.hpp" />
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiSse.h" />
@@ -650,7 +674,7 @@
     <ClInclude Include="..\..\..\src\hiir\StageDataF64Avx.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataF64Avx512.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataF64Sse2.h" />
-    <ClInclude Include="..\..\..\src\hiir\StageDataFpu.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageDataTpl.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataNeonV2.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataNeonV4.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataSse.h" />
@@ -672,8 +696,8 @@
     <ClInclude Include="..\..\..\src\hiir\StageProc8F64Avx512.hpp" />
     <ClInclude Include="..\..\..\src\hiir\StageProcF64Sse2.h" />
     <ClInclude Include="..\..\..\src\hiir\StageProcF64Sse2.hpp" />
-    <ClInclude Include="..\..\..\src\hiir\StageProcFpu.h" />
-    <ClInclude Include="..\..\..\src\hiir\StageProcFpu.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcTpl.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcTpl.hpp" />
     <ClInclude Include="..\..\..\src\hiir\StageProcNeonV2.h" />
     <ClInclude Include="..\..\..\src\hiir\StageProcNeonV2.hpp" />
     <ClInclude Include="..\..\..\src\hiir\StageProcNeonV4.h" />
@@ -703,6 +727,8 @@
     <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesSpeed.hpp" />
     <ClInclude Include="..\..\..\src\hiir\test\TestDownsampler2x.h" />
     <ClInclude Include="..\..\..\src\hiir\test\TestDownsampler2x.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\test\TestHalfBand.h" />
+    <ClInclude Include="..\..\..\src\hiir\test\TestHalfBand.hpp" />
     <ClInclude Include="..\..\..\src\hiir\test\TestPhaseHalfPi.h" />
     <ClInclude Include="..\..\..\src\hiir\test\TestPhaseHalfPi.hpp" />
     <ClInclude Include="..\..\..\src\hiir\test\TestUpsampler2x.h" />
@@ -729,8 +755,8 @@
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xF64Sse2.h" />
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xF64Sse2.hpp" />
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xFpu.h" />
-    <ClInclude Include="..\..\..\src\hiir\Upsampler2xFpuTpl.h" />
-    <ClInclude Include="..\..\..\src\hiir\Upsampler2xFpuTpl.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xTpl.h" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xTpl.hpp" />
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xNeon.h" />
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xNeon.hpp" />
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xNeonOld.h" />
@@ -1034,6 +1060,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler8xSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler8xSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Zpk.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Align.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.h" />
@@ -1816,6 +1844,9 @@
     <ClCompile Include="..\..\..\src\hiir\PolyphaseIir2Designer.cpp" />
     <ClCompile Include="..\..\..\src\hiir\test\BlockSplitter.cpp" />
     <ClCompile Include="..\..\..\src\hiir\test\CpuId_hiir_test.cpp" />
+    <ClCompile Include="..\..\..\src\hiir\test\main.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\hiir\test\SweepingSine_hiir_test.cpp" />
     <ClCompile Include="..\..\..\src\mfx\adrv\CbInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\adrv\DAlsa.cpp">

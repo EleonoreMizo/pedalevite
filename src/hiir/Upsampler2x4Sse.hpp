@@ -37,6 +37,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	Upsampler2x4Sse <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	Upsampler2x4Sse <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor

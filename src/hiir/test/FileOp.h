@@ -44,8 +44,8 @@ class FileOp
 
 public:
 
-	static int     save_raw_data_16 (const char *filename_0, const T src_ptr [], long nbr_spl, float scale);
-	static int     save_raw_data_16_stereo (const char *filename_0, const T src_0_ptr [], const T src_1_ptr [], long nbr_spl, float scale);
+	static int     save_raw_data (const char *filename_0, const T src_ptr [], long nbr_spl, int bits, float scale);
+	static int     save_raw_data_stereo (const char *filename_0, const T src_0_ptr [], const T src_1_ptr [], long nbr_spl, int bits, float scale);
 
 
 

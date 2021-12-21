@@ -98,9 +98,9 @@ private:
 	FilterBiPhase  _bifilter;
 	union
 	{
-		__attribute__ ((aligned (16))) float32x4_t
+		alignas (16) float32x4_t
 		               _prev4;     // Just to ensure alignement
-		__attribute__ ((aligned (16))) float
+		alignas (16) float
 		               _prev [4];
 	};
 	int            _phase;			// 0 or 1

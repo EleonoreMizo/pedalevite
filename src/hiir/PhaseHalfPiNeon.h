@@ -96,14 +96,19 @@ protected:
 
 private:
 
-	static constexpr int STAGE_WIDTH = 4;
-	static constexpr int NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH;
-	static constexpr int NBR_PHASES  = 2;
+	static constexpr int _stage_width = 4;
+	static constexpr int _nbr_stages  = (NBR_COEFS + _stage_width-1) / _stage_width;
+	static constexpr int _nbr_phases  = 2;
+	static constexpr int _coef_shift  = ((NBR_COEFS & 1) * 2) ^ 3;
 
-	typedef std::array <StageDataNeonV4, NBR_STAGES + 1> Filter;  // Stage 0 contains only input memory
-   typedef std::array <Filter, NBR_PHASES> FilterBiPhase;
+	// Stage 0 contains only input memory
+	typedef std::array <StageDataNeonV4, NBR_STAGES + 1> Filter;
+   typedef std::array <Filter, _nbr_phases> FilterBiPhase;
 
-	FilterBiPhase  _filter;    // Should be the first member (thus easier to align)
+	inline void    set_single_coef (int index, double coef) noexcept;
+
+	// Should be the first member (thus easier to align)
+	FilterBiPhase  _filter;
 	float          _prev;
 	int            _phase;     // 0 or 1
 

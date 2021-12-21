@@ -241,22 +241,22 @@ commonsrc = \
         ../../src/hiir/def.h \
         ../../src/hiir/Downsampler2xF64Fpu.h \
         ../../src/hiir/Downsampler2xFpu.h \
-        ../../src/hiir/Downsampler2xFpuTpl.h \
-        ../../src/hiir/Downsampler2xFpuTpl.hpp \
+        ../../src/hiir/Downsampler2xTpl.h \
+        ../../src/hiir/Downsampler2xTpl.hpp \
         ../../src/hiir/fnc.h \
         ../../src/hiir/fnc.hpp \
         ../../src/hiir/PhaseHalfPiF64Fpu.h \
         ../../src/hiir/PhaseHalfPiFpu.h \
-        ../../src/hiir/PhaseHalfPiFpuTpl.h \
-        ../../src/hiir/PhaseHalfPiFpuTpl.hpp \
+        ../../src/hiir/PhaseHalfPiTpl.h \
+        ../../src/hiir/PhaseHalfPiTpl.hpp \
         ../../src/hiir/PolyphaseIir2Designer.cpp \
         ../../src/hiir/PolyphaseIir2Designer.h \
-        ../../src/hiir/StageDataFpu.h \
-        ../../src/hiir/StageProcFpu.h \
-        ../../src/hiir/StageProcFpu.hpp \
+        ../../src/hiir/StageDataTpl.h \
+        ../../src/hiir/StageProcTpl.h \
+        ../../src/hiir/StageProcTpl.hpp \
         ../../src/hiir/Upsampler2xFpu.h \
-        ../../src/hiir/Upsampler2xFpuTpl.h \
-        ../../src/hiir/Upsampler2xFpuTpl.hpp \
+        ../../src/hiir/Upsampler2xTpl.h \
+        ../../src/hiir/Upsampler2xTpl.hpp \
         ../../src/lal/Dir.h \
         ../../src/lal/Mat.h \
         ../../src/lal/Mat.hpp \
@@ -620,6 +620,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/TransSZMatched.hpp \
         ../../src/mfx/dsp/iir/Upsampler4xSimd.h \
         ../../src/mfx/dsp/iir/Upsampler4xSimd.hpp \
+        ../../src/mfx/dsp/iir/Upsampler8xSimd.h \
+        ../../src/mfx/dsp/iir/Upsampler8xSimd.hpp \
         ../../src/mfx/dsp/iir/Zpk.cpp \
         ../../src/mfx/dsp/iir/Zpk.h \
         ../../src/mfx/dsp/mix/Align.cpp \

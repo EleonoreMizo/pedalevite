@@ -102,8 +102,9 @@ CpuId::CpuId ()
 
 #elif hiir_ARCHI == hiir_ARCHI_ARM
 
-	/*** To do ***/
+# if defined (__ARM_NEON_FP)
 	_neon_flag = true;
+# endif
 
 #endif
 }

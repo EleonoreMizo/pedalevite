@@ -4,7 +4,7 @@
         Author: Laurent de Soras, 2020
 
 From the input signal, generates two signals with a pi/2 phase shift, using
-SSE instruction set. Works on vectors of 2 double.
+SSE2 instruction set. Works on vectors of 2 double.
 
 This object must be aligned on a 16-byte boundary!
 
@@ -91,7 +91,8 @@ private:
 
 	static constexpr int _nbr_phases = 2;
 
-	typedef std::array <StageDataF64Sse2, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
+	// Stages 0 and 1 contain only input memories
+	typedef std::array <StageDataF64Sse2, NBR_COEFS + 2> Filter;
 
 	typedef	std::array <Filter, _nbr_phases>	FilterBiPhase;
 

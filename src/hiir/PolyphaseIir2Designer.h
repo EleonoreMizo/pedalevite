@@ -36,7 +36,7 @@ References:
 
 *	Artur Krukowski
 	Polyphase Two-Path Filter Designer in Java
-	http://www.cmsa.wmin.ac.uk/~artur/Poly.html
+	http://www.cmsa.wmin.ac.uk/~artur/Poly.html (dead link)
 
 *	R.A. Valenzuela, A.G. Constantinides
 	Digital Signal Processing Schemes for Efficient Interpolation and Decimation
@@ -45,7 +45,7 @@ References:
 *	Scott Wardle
 	A Hilbert-Transformer Frequency Shifter for Audio
 	International Conference on Digital Audio Effects (DAFx) 1998
-	http://www.iua.upf.es/dafx98/papers/WAR19.PS
+	https://dafx.de/paper-archive/1998/WAR19.PS
 
 --- Legal stuff ---
 
@@ -101,11 +101,14 @@ public:
 
 	static int     compute_coefs (double coef_arr [], double attenuation, double transition) noexcept;
 	static void    compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition) noexcept;
+	static ResCode compute_coefs_spec_order_pdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double phase_delay, double f_rel, double prec = 1e-6, double atten_lb = 0.001, double atten_ub = 10000.0, double trans_lb = 0.001, double trans_ub = 0.499) noexcept;
 	static ResCode compute_coefs_spec_order_gdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double group_delay, double f_rel, double prec = 1e-6, double atten_lb = 0.001, double atten_ub = 10000.0, double trans_lb = 0.001, double trans_ub = 0.499) noexcept;
 
-	static double  compute_phase_delay (double a, double f_fs) noexcept;
-	static double  compute_group_delay (double a, double f_fs, bool ph_flag) noexcept;
+	static double  compute_phase_delay (const double coef_arr [], int nbr_coefs, double f_fs) noexcept;
 	static double  compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag) noexcept;
+
+	static double  compute_unit_phase_delay (double a, double f_fs) noexcept;
+	static double  compute_unit_group_delay (double a, double f_fs, bool ph_flag) noexcept;
 
 
 
@@ -125,6 +128,10 @@ private:
 	static double  compute_coef (int index, double k, double q, int order) noexcept;
 	static double  compute_acc_num (double q, int order, int c) noexcept;
 	static double  compute_acc_den (double q, int order, int c) noexcept;
+	template <typename F>
+	static ResCode compute_coefs_spec_order_delay (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double delay, double f_rel, double prec, double atten_lb, double atten_ub, double trans_lb, double trans_ub, F compute_delay) noexcept;
+	template <typename F>
+	static double  compute_full_delay (const double coef_arr [], int nbr_coefs, double f_fs, F compute_delay_single) noexcept;
 
 
 

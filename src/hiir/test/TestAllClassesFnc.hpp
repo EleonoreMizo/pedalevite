@@ -32,10 +32,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/test/CpuId.h"
 #include "hiir/test/SweepingSine.h"
 #include "hiir/test/TestDownsampler2x.h"
+#include "hiir/test/TestHalfBand.h"
 #include "hiir/test/TestPhaseHalfPi.h"
 #include "hiir/test/TestUpsampler2x.h"
 #include "hiir/Downsampler2xF64Fpu.h"
 #include "hiir/Downsampler2xFpu.h"
+#include "hiir/HalfBandF64Fpu.h"
+#include "hiir/HalfBandFpu.h"
 #include "hiir/fnc.h"
 #include "hiir/PhaseHalfPiF64Fpu.h"
 #include "hiir/PhaseHalfPiFpu.h"
@@ -53,6 +56,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/Downsampler2x4Sse.h"
 #include "hiir/Downsampler2xSse.h"
 #include "hiir/Downsampler2xSseOld.h"
+#include "hiir/HalfBand4Sse.h"
+#include "hiir/HalfBandSse.h"
 #include "hiir/PhaseHalfPi4Sse.h"
 #include "hiir/PhaseHalfPiSse.h"
 #include "hiir/Upsampler2x4Sse.h"
@@ -63,6 +68,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_test_SSE2)
 #include "hiir/Downsampler2x2F64Sse2.h"
 #include "hiir/Downsampler2xF64Sse2.h"
+#include "hiir/HalfBand2F64Sse2.h"
+#include "hiir/HalfBandF64Sse2.h"
 #include "hiir/PhaseHalfPi2F64Sse2.h"
 #include "hiir/PhaseHalfPiF64Sse2.h"
 #include "hiir/Upsampler2x2F64Sse2.h"
@@ -72,6 +79,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_test_AVX)
 #include "hiir/Downsampler2x4F64Avx.h"
 #include "hiir/Downsampler2x8Avx.h"
+#include "hiir/HalfBand4F64Avx.h"
+#include "hiir/HalfBand8Avx.h"
 #include "hiir/PhaseHalfPi4F64Avx.h"
 #include "hiir/PhaseHalfPi8Avx.h"
 #include "hiir/Upsampler2x4F64Avx.h"
@@ -79,18 +88,22 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #endif
 
 #if defined (hiir_test_AVX512)
-#include "hiir/Downsampler2x8F64Avx512.h"
 #include "hiir/Downsampler2x16Avx512.h"
-#include "hiir/PhaseHalfPi8F64Avx512.h"
+#include "hiir/Downsampler2x8F64Avx512.h"
+#include "hiir/HalfBand16Avx512.h"
+#include "hiir/HalfBand8F64Avx512.h"
 #include "hiir/PhaseHalfPi16Avx512.h"
-#include "hiir/Upsampler2x8F64Avx512.h"
+#include "hiir/PhaseHalfPi8F64Avx512.h"
 #include "hiir/Upsampler2x16Avx512.h"
+#include "hiir/Upsampler2x8F64Avx512.h"
 #endif
 
 #if defined (hiir_test_NEON)
 #include "hiir/Downsampler2x4Neon.h"
 #include "hiir/Downsampler2xNeon.h"
 #include "hiir/Downsampler2xNeonOld.h"
+#include "hiir/HalfBand4Neon.h"
+#include "hiir/HalfBandNeon.h"
 #include "hiir/PhaseHalfPi4Neon.h"
 #include "hiir/PhaseHalfPiNeon.h"
 #include "hiir/Upsampler2x4Neon.h"
@@ -146,6 +159,26 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 	const float    fs  = 44100;
 	const long     len = round_int (fs * 20.0f);
 	SweepingSine   ss (fs, 20, 22000, len);
+
+	if (ret_val == 0)
+	{
+		// hiir::HalfBandFpu
+		typedef HalfBandFpu <NBR_COEFS> TestedType;
+		TestedType     dspl;
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "fpu", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0)
+	{
+		// hiir::HalfBandF64Fpu
+		typedef HalfBandF64Fpu <NBR_COEFS> TestedType;
+		TestedType     dspl;
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "fpu", transition_bw, stopband_at
+		);
+	}
 
 	if (ret_val == 0)
 	{
@@ -242,6 +275,28 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 #if defined (hiir_test_SSE)
 	if (ret_val == 0 && cpu._sse_flag)
 	{
+		// hiir::HalfBandSse
+		typedef HalfBandSse <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "sse", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._sse_flag)
+	{
+		// hiir::HalfBand4Sse
+		typedef HalfBand4Sse <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "sse", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._sse_flag)
+	{
 		// hiir::Downsampler2xSseOld
 		typedef Downsampler2xSseOld <NBR_COEFS> TestedType;
 		AlignedObject <TestedType> container;
@@ -332,6 +387,28 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 #if defined (hiir_test_SSE2)
 	if (ret_val == 0 && cpu._sse2_flag)
 	{
+		// hiir::HalfBandF64Sse2
+		typedef HalfBandF64Sse2 <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "sse2", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._sse2_flag)
+	{
+		// hiir::HalfBand2F64Sse2
+		typedef HalfBand2F64Sse2 <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "sse2", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._sse2_flag)
+	{
 		// hiir::Downsampler2xF64Sse2
 		typedef Downsampler2xF64Sse2 <NBR_COEFS> TestedType;
 		AlignedObject <TestedType> container;
@@ -398,6 +475,28 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 #endif
 
 #if defined (hiir_test_AVX)
+	if (ret_val == 0 && cpu._avx_flag)
+	{
+		// hiir::HalfBand8Avx
+		typedef HalfBand8Avx <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "avx", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._avx_flag)
+	{
+		// hiir::HalfBand4F64Avx
+		typedef HalfBand4F64Avx <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "avx", transition_bw, stopband_at
+		);
+	}
+
 	if (ret_val == 0 && cpu._avx_flag)
 	{
 		// hiir::Downsampler2x4F64Avx
@@ -468,8 +567,30 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 #if defined (hiir_test_AVX512)
 	if (ret_val == 0 && cpu._avx512f_flag)
 	{
-		// hiir::Downsampler2x8F64Avx512
-		typedef Downsampler2x8F64Avx512 <NBR_COEFS> TestedType;
+		// hiir::HalfBand16Avx512
+		typedef HalfBand16Avx512 <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "avx512", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._avx512f_flag)
+	{
+		// hiir::HalfBand8F64Avx512
+		typedef HalfBand8F64Avx512 <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "avx512", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._avx512f_flag)
+	{
+		// hiir::Downsampler2x16Avx512
+		typedef Downsampler2x16Avx512 <NBR_COEFS> TestedType;
 		AlignedObject <TestedType> container;
 		TestedType &   dspl = container.use ();
 		ret_val = TestDownsampler2x <TestedType>::perform_test (
@@ -479,8 +600,8 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 
 	if (ret_val == 0 && cpu._avx512f_flag)
 	{
-		// hiir::Downsampler2x16Avx512
-		typedef Downsampler2x16Avx512 <NBR_COEFS> TestedType;
+		// hiir::Downsampler2x8F64Avx512
+		typedef Downsampler2x8F64Avx512 <NBR_COEFS> TestedType;
 		AlignedObject <TestedType> container;
 		TestedType &   dspl = container.use ();
 		ret_val = TestDownsampler2x <TestedType>::perform_test (
@@ -512,8 +633,8 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 
 	if (ret_val == 0 && cpu._avx512f_flag)
 	{
-		// hiir::Upsampler2x8F64Avx512
-		typedef Upsampler2x8F64Avx512 <NBR_COEFS> TestedType;
+		// hiir::Upsampler2x16Avx512
+		typedef Upsampler2x16Avx512 <NBR_COEFS> TestedType;
 		AlignedObject <TestedType> container;
 		TestedType &   dspl = container.use ();
 		ret_val = TestUpsampler2x <TestedType>::perform_test (
@@ -523,8 +644,8 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 
 	if (ret_val == 0 && cpu._avx512f_flag)
 	{
-		// hiir::Upsampler2x16Avx512
-		typedef Upsampler2x16Avx512 <NBR_COEFS> TestedType;
+		// hiir::Upsampler2x8F64Avx512
+		typedef Upsampler2x8F64Avx512 <NBR_COEFS> TestedType;
 		AlignedObject <TestedType> container;
 		TestedType &   dspl = container.use ();
 		ret_val = TestUpsampler2x <TestedType>::perform_test (
@@ -534,6 +655,28 @@ int	TestAllClassesFnc <NC>::perform_test (double transition_bw)
 #endif
 
 #if defined (hiir_test_NEON)
+	if (ret_val == 0 && cpu._neon_flag)
+	{
+		// hiir::HalfBandNeon
+		typedef HalfBandNeon <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "neon", transition_bw, stopband_at
+		);
+	}
+
+	if (ret_val == 0 && cpu._neon_flag)
+	{
+		// hiir::HalfBand4Neon
+		typedef HalfBand4Neon <NBR_COEFS> TestedType;
+		AlignedObject <TestedType> container;
+		TestedType &   dspl = container.use ();
+		ret_val = TestHalfBand <TestedType>::perform_test (
+			dspl, coef_arr, ss, "neon", transition_bw, stopband_at
+		);
+	}
+
 	if (ret_val == 0 && cpu._neon_flag)
 	{
 		// hiir::Downsampler2xNeon

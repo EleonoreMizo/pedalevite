@@ -51,6 +51,11 @@ namespace test
 
 
 template <class TO>
+constexpr int	TestDownsampler2x <TO>::_nbr_chn;
+
+
+
+template <class TO>
 int	TestDownsampler2x <TO>::perform_test (TO &dspl, const double coef_arr [NBR_COEFS], const SweepingSine &ss, const char *type_0, double transition_bw, double stopband_at)
 {
 	assert (coef_arr != nullptr);
@@ -68,27 +73,10 @@ int	TestDownsampler2x <TO>::perform_test (TO &dspl, const double coef_arr [NBR_C
 		datatype_0, _nbr_chn, type_0, NBR_COEFS
 	);
 
-	const long     len = ss.get_len ();
-	std::vector <DataType>  src (len * _nbr_chn);
-	printf ("Generating sweeping sine... ");
-	fflush (stdout);
-	if (_nbr_chn == 1)
-	{
-		ss.generate (&src [0]);
-	}
-	else
-	{
-		std::vector <DataType>	src_base (len);
-		ss.generate (&src_base [0]);
-		for (long pos = 0; pos <len; ++pos)
-		{
-			for (int chn = 0; chn < _nbr_chn; ++chn)
-			{
-				src [pos * _nbr_chn + chn] = src_base [pos];
-			}
-		}
-	}
-	printf ("Done.\n");
+	const auto     len = ss.get_len ();
+	const auto     src = ResultCheck <DataType>::generate_test_signal (
+		ss, len, _nbr_chn
+	);
 
 	dspl.set_coefs (coef_arr);
 	dspl.clear_buffers ();
@@ -188,12 +176,8 @@ int	TestDownsampler2x <TO>::check_band (std::vector <DataType> &dst_chk, const s
 		dst_chk [pos] = dest [pos * _nbr_chn + chn];
 	}
 
-	ret_val = ResultCheck <DataType>::check_dspl (
-		ss,
-		transition_bw,
-		stopband_at,
-		&dst_chk [0],
-		hi_flag
+	ret_val = ResultCheck <DataType>::check_halfband (
+		ss, transition_bw, stopband_at, dst_chk.data (), hi_flag, 2
 	);
 
 	char           filename_0 [255+1];
@@ -201,10 +185,9 @@ int	TestDownsampler2x <TO>::check_band (std::vector <DataType> &dst_chk, const s
 		filename_0, filename_fmt_0,
 		TestedType::NBR_COEFS, type_0, _nbr_chn, chn
 	);
-	FileOp <DataType>::save_raw_data_16 (
-		filename_0, &dst_chk [0], len_proc, 1
+	FileOp <DataType>::save_raw_data (
+		filename_0, dst_chk.data (), len_proc, hiir_test_file_resol, 1.f
 	);
-
 
 	return ret_val;
 }

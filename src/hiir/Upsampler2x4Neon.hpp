@@ -38,6 +38,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	Upsampler2x4Neon <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	Upsampler2x4Neon <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor

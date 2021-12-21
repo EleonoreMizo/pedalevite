@@ -90,9 +90,12 @@ namespace test
 
 
 // Testing options
-#undef  hiir_test_SAVE_RESULTS
+// Saving results generates a pretty large number of files (raw PCM data,
+// mono or interleaved stereo, 24-bit signed integer, little endian).
+#undef hiir_test_SAVE_RESULTS
 #define hiir_test_LONG_FUNC_TESTS
 #define hiir_test_LONG_SPEED_TESTS
+constexpr int hiir_test_file_resol = 24; // Bitdepth for the saved files
 constexpr int hiir_test_nbr_blocks = 65536;
 
 

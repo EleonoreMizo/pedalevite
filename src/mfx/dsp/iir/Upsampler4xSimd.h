@@ -83,31 +83,26 @@ protected:
 private:
 
 #if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
-	using Upspl42 = typename std::conditional <
-		(NC42 >= 4)
-	,	hiir::Upsampler2xSse <NC42>
-	,	hiir::Upsampler2xFpu <NC42>
-	>::type;
-	using Upspl21 = typename std::conditional <
-		(NC21 >= 4)
-	,	hiir::Upsampler2xSse <NC21>
-	,	hiir::Upsampler2xFpu <NC21>
+	template <int NC>
+	using Upspl = typename std::conditional <
+		(NC >= 1) // Current SSE version is always faster than the FPU
+	,	hiir::Upsampler2xSse <NC>
+	,	hiir::Upsampler2xFpu <NC>
 	>::type;
 #elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM && (defined (__clang__) || fstb_WORD_SIZE == 64)
-	using Upspl42 = typename std::conditional <
-		(NC42 >= 12)
-	,	hiir::Upsampler2xNeonOld <NC42>
-	,	hiir::Upsampler2xNeon <NC42>
-	>::type;
-	using Upspl21 = typename std::conditional <
-		(NC21 >= 12)
-	,	hiir::Upsampler2xNeonOld <NC42>
-	,	hiir::Upsampler2xNeon <NC42>
+	template <int NC>
+	using Upspl = typename std::conditional <
+		(NC >= 12)
+	,	hiir::Upsampler2xNeonOld <NC>
+	,	hiir::Upsampler2xNeon <NC>
 	>::type;
 #else
-	typedef hiir::Upsampler2xFpu <NC42> Upspl42;
-	typedef hiir::Upsampler2xFpu <NC21> Upspl21;
+	template <int NC>
+	using Upspl = hiir::Downsampler2xFpu <NC>;
 #endif
+
+	using Upspl42 = Upspl <NC42>;
+	using Upspl21 = Upspl <NC21>;
 
 	Upspl42        _us_42;
 	Upspl21        _us_21;

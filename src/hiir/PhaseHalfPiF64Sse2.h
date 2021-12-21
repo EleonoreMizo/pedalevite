@@ -3,6 +3,14 @@
         PhaseHalfPiF64Sse2.h
         Author: Laurent de Soras, 2020
 
+From the input signal, generates two signals with a pi/2 phase shift, using
+SSE2 instruction set.
+
+This object must be aligned on a 16-byte boundary!
+
+Template parameters:
+	- NC: number of coefficients, > 0
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -90,7 +98,8 @@ private:
 
 	typedef std::array <Filter, _nbr_phases> FilterBiPhase;
 
-	FilterBiPhase  _bifilter;  // Should be the first member (thus easier to align)
+	// Should be the first member (thus easier to align)
+	FilterBiPhase  _bifilter;
 	DataType       _prev;
 	int            _phase;     // 0 or 1
 

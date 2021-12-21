@@ -29,10 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "hiir/StageDataSse.h"
 
-#if defined (_MSC_VER)
-	#pragma inline_depth (255)
-#endif
-
 
 
 namespace hiir

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PhaseHalfPiFpuTpl.hpp
+        PhaseHalfPiTpl.hpp
         Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
@@ -15,19 +15,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (hiir_PhaseHalfPiFpuTpl_CURRENT_CODEHEADER)
-	#error Recursive inclusion of PhaseHalfPiFpuTpl code header.
+#if defined (hiir_PhaseHalfPiTpl_CURRENT_CODEHEADER)
+	#error Recursive inclusion of PhaseHalfPiTpl code header.
 #endif
-#define hiir_PhaseHalfPiFpuTpl_CURRENT_CODEHEADER
+#define hiir_PhaseHalfPiTpl_CURRENT_CODEHEADER
 
-#if ! defined (hiir_PhaseHalfPiFpuTpl_CODEHEADER_INCLUDED)
-#define hiir_PhaseHalfPiFpuTpl_CODEHEADER_INCLUDED
+#if ! defined (hiir_PhaseHalfPiTpl_CODEHEADER_INCLUDED)
+#define hiir_PhaseHalfPiTpl_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcFpu.h"
+#include "hiir/StageProcTpl.h"
 
 
 
@@ -37,6 +37,13 @@ namespace hiir
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC, typename DT, int NCHN>
+constexpr int 	PhaseHalfPiTpl <NC, DT, NCHN>::_nbr_chn;
+template <int NC, typename DT, int NCHN>
+constexpr int 	PhaseHalfPiTpl <NC, DT, NCHN>::NBR_COEFS;
 
 
 
@@ -54,8 +61,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::set_coefs (const double coef_arr []) noexcept
+template <int NC, typename DT, int NCHN>
+void	PhaseHalfPiTpl <NC, DT, NCHN>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -83,13 +90,13 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_1, DataType input) noexcept
+template <int NC, typename DT, int NCHN>
+void	PhaseHalfPiTpl <NC, DT, NCHN>::process_sample (DataType &out_0, DataType &out_1, DataType input) noexcept
 {
 	out_0 = input;   // Even coefs
 	out_1 = _prev;   // Odd coefs
 
-	StageProcFpu <NBR_COEFS, DataType>::process_sample_neg (
+	StageProcTpl <NBR_COEFS, DataType>::process_sample_neg (
 		NBR_COEFS, out_0, out_1, _bifilter [_phase].data ()
 	);
 
@@ -116,8 +123,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType out_1_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
+template <int NC, typename DT, int NCHN>
+void	PhaseHalfPiTpl <NC, DT, NCHN>::process_block (DataType out_0_ptr [], DataType out_1_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (out_0_ptr != nullptr);
 	assert (out_1_ptr != nullptr);
@@ -140,7 +147,7 @@ void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType 
 		const DataType input_0 = in_ptr [pos];
 		out_0_ptr [pos] = input_0;
 		out_1_ptr [pos] = _prev;
-		StageProcFpu <NBR_COEFS, DataType>::process_sample_neg (
+		StageProcTpl <NBR_COEFS, DataType>::process_sample_neg (
 			NBR_COEFS,
 			out_0_ptr [pos],
 			out_1_ptr [pos],
@@ -150,7 +157,7 @@ void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType 
 		const DataType input_1 = in_ptr [pos + 1];
 		out_0_ptr [pos + 1] = input_1;
 		out_1_ptr [pos + 1] = input_0;	// _prev
-		StageProcFpu <NBR_COEFS, DataType>::process_sample_neg (
+		StageProcTpl <NBR_COEFS, DataType>::process_sample_neg (
 			NBR_COEFS,
 			out_0_ptr [pos + 1],
 			out_1_ptr [pos + 1],
@@ -180,16 +187,16 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	PhaseHalfPiFpuTpl <NC, DT>::clear_buffers () noexcept
+template <int NC, typename DT, int NCHN>
+void	PhaseHalfPiTpl <NC, DT, NCHN>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_bifilter [0] [i]._mem = 0;
-		_bifilter [1] [i]._mem = 0;
+		_bifilter [0] [i]._mem = DataType (0.f);
+		_bifilter [1] [i]._mem = DataType (0.f);
 	}
 
-	_prev  = 0;
+	_prev  = DataType (0.f);
 	_phase = 0;
 }
 
@@ -203,13 +210,18 @@ void	PhaseHalfPiFpuTpl <NC, DT>::clear_buffers () noexcept
 
 
 
+template <int NC, typename DT, int NCHN>
+constexpr int	PhaseHalfPiTpl <NC, DT, NCHN>::_nbr_phases;
+
+
+
 }  // namespace hiir
 
 
 
-#endif   // hiir_PhaseHalfPiFpuTpl_CODEHEADER_INCLUDED
+#endif   // hiir_PhaseHalfPiTpl_CODEHEADER_INCLUDED
 
-#undef hiir_PhaseHalfPiFpuTpl_CURRENT_CODEHEADER
+#undef hiir_PhaseHalfPiTpl_CURRENT_CODEHEADER
 
 
 

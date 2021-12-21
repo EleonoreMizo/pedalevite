@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Downsampler2xFpuTpl.hpp
+        Downsampler2xTpl.hpp
         Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
@@ -15,19 +15,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (hiir_Downsampler2xFpuTpl_CURRENT_CODEHEADER)
-	#error Recursive inclusion of Downsampler2xFpuTpl code header.
+#if defined (hiir_Downsampler2xTpl_CURRENT_CODEHEADER)
+	#error Recursive inclusion of Downsampler2xTpl code header.
 #endif
-#define hiir_Downsampler2xFpuTpl_CURRENT_CODEHEADER
+#define hiir_Downsampler2xTpl_CURRENT_CODEHEADER
 
-#if ! defined (hiir_Downsampler2xFpuTpl_CODEHEADER_INCLUDED)
-#define hiir_Downsampler2xFpuTpl_CODEHEADER_INCLUDED
+#if ! defined (hiir_Downsampler2xTpl_CODEHEADER_INCLUDED)
+#define hiir_Downsampler2xTpl_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcFpu.h"
+#include "hiir/StageProcTpl.h"
 
 #include <cassert>
 
@@ -39,6 +39,13 @@ namespace hiir
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC, typename DT, int NCHN>
+constexpr int 	Downsampler2xTpl <NC, DT, NCHN>::_nbr_chn;
+template <int NC, typename DT, int NCHN>
+constexpr int 	Downsampler2xTpl <NC, DT, NCHN>::NBR_COEFS;
 
 
 
@@ -56,8 +63,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr []) noexcept
+template <int NC, typename DT, int NCHN>
+void	Downsampler2xTpl <NC, DT, NCHN>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
@@ -81,19 +88,19 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-typename Downsampler2xFpuTpl <NC, DT>::DataType	Downsampler2xFpuTpl <NC, DT>::process_sample (const DataType in_ptr [2]) noexcept
+template <int NC, typename DT, int NCHN>
+typename Downsampler2xTpl <NC, DT, NCHN>::DataType	Downsampler2xTpl <NC, DT, NCHN>::process_sample (const DataType in_ptr [2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
 	DataType       spl_0 (in_ptr [1]);
 	DataType       spl_1 (in_ptr [0]);
 
-	StageProcFpu <NBR_COEFS, DataType>::process_sample_pos (
+	StageProcTpl <NBR_COEFS, DataType>::process_sample_pos (
 		NBR_COEFS, spl_0, spl_1, _filter.data ()
 	);
 
-	return 0.5f * (spl_0 + spl_1);
+	return DataType (0.5f) * (spl_0 + spl_1);
 }
 
 
@@ -113,8 +120,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
+template <int NC, typename DT, int NCHN>
+void	Downsampler2xTpl <NC, DT, NCHN>::process_block (DataType out_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr != nullptr);
 	assert (out_ptr != nullptr);
@@ -152,20 +159,20 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::process_sample_split (DataType &low, DataType &high, const DataType in_ptr [2]) noexcept
+template <int NC, typename DT, int NCHN>
+void	Downsampler2xTpl <NC, DT, NCHN>::process_sample_split (DataType &low, DataType &high, const DataType in_ptr [2]) noexcept
 {
 	assert (in_ptr != nullptr);
 
 	DataType       spl_0 = in_ptr [1];
 	DataType       spl_1 = in_ptr [0];
 
-	StageProcFpu <NBR_COEFS, DataType>::process_sample_pos (
+	StageProcTpl <NBR_COEFS, DataType>::process_sample_pos (
 		NBR_COEFS, spl_0, spl_1, _filter.data ()
 	);
 
-	low  = (spl_0 + spl_1) * 0.5f;
-	high =  spl_0 - low; // (spl_0 - spl_1) * 0.5f;
+	low  = (spl_0 + spl_1) * DataType (0.5f);
+	high =  spl_0 - low; // (spl_0 - spl_1) * DataType (0.5f);
 }
 
 
@@ -194,8 +201,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::process_block_split (DataType out_l_ptr [], DataType out_h_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
+template <int NC, typename DT, int NCHN>
+void	Downsampler2xTpl <NC, DT, NCHN>::process_block_split (DataType out_l_ptr [], DataType out_h_ptr [], const DataType in_ptr [], long nbr_spl) noexcept
 {
 	assert (in_ptr    != nullptr);
 	assert (out_l_ptr != nullptr);
@@ -230,12 +237,12 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <int NC, typename DT>
-void	Downsampler2xFpuTpl <NC, DT>::clear_buffers () noexcept
+template <int NC, typename DT, int NCHN>
+void	Downsampler2xTpl <NC, DT, NCHN>::clear_buffers () noexcept
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._mem = 0;
+		_filter [i]._mem = DataType (0.f);
 	}
 }
 
@@ -253,9 +260,9 @@ void	Downsampler2xFpuTpl <NC, DT>::clear_buffers () noexcept
 
 
 
-#endif   // hiir_Downsampler2xFpuTpl_CODEHEADER_INCLUDED
+#endif   // hiir_Downsampler2xTpl_CODEHEADER_INCLUDED
 
-#undef hiir_Downsampler2xFpuTpl_CURRENT_CODEHEADER
+#undef hiir_Downsampler2xTpl_CURRENT_CODEHEADER
 
 
 

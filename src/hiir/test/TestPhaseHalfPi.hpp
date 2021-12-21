@@ -70,27 +70,10 @@ int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [NBR_C
 		datatype_0, nbr_chn, type_0, NBR_COEFS
 	);
 
-	const long     len = ss.get_len ();
-	std::vector <DataType>	src (len * nbr_chn);
-	printf ("Generating sweeping sine... ");
-	fflush (stdout);
-	if (nbr_chn == 1)
-	{
-		ss.generate (&src [0]);
-	}
-	else
-	{
-		std::vector <DataType>	src_base (len);
-		ss.generate (&src_base [0]);
-		for (long pos = 0; pos <len; ++pos)
-		{
-			for (int chn = 0; chn < nbr_chn; ++chn)
-			{
-				src [pos * nbr_chn + chn] = src_base [pos];
-			}
-		}
-	}
-	printf ("Done.\n");
+	const auto     len = ss.get_len ();
+	const auto     src = ResultCheck <DataType>::generate_test_signal (
+		ss, len, nbr_chn
+	);
 
 	phaser.set_coefs (coef_arr);
 	phaser.clear_buffers ();
@@ -136,8 +119,9 @@ int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [NBR_C
 			filename_0, "phaser_%02d_%s_%dx-%01d.raw",
 			TestedType::NBR_COEFS, type_0, nbr_chn, chn
 		);
-		FileOp <DataType>::save_raw_data_16_stereo (
-			filename_0, &dst_chk_0 [0], &dst_chk_1 [0], len, 1
+		FileOp <DataType>::save_raw_data_stereo (
+			filename_0, dst_chk_0.data (), dst_chk_1.data (),
+			len, hiir_test_file_resol, 1.f
 		);
 	}
 

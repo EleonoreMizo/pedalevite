@@ -51,6 +51,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int 	PhaseHalfPi3dnow <NC>::_nbr_chn;
+template <int NC>
+constexpr int 	PhaseHalfPi3dnow <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -64,16 +71,16 @@ PhaseHalfPi3dnow <NC>::PhaseHalfPi3dnow () noexcept
 ,	_prev (0)
 ,	_phase (0)
 {
-   for (int phase = 0; phase < NBR_PHASES; ++phase)
+   for (int phase = 0; phase < _nbr_phases; ++phase)
    {
-	   for (int i = 0; i < NBR_STAGES + 1; ++i)
+	   for (int i = 0; i < _nbr_stages + 1; ++i)
 	   {
 		   _filter [phase] [i]._coefs.m64_f32 [0] = 0;
 		   _filter [phase] [i]._coefs.m64_f32 [1] = 0;
 	   }
-	   if (NBR_COEFS < NBR_STAGES * 2)
+	   if (NBR_COEFS < _nbr_stages * 2)
 	   {
-		   _filter [phase] [NBR_STAGES]._coefs.m64_f32 [0] = 1;
+		   _filter [phase] [_nbr_stages]._coefs.m64_f32 [0] = 1;
 	   }
    }
 
@@ -101,12 +108,12 @@ void	PhaseHalfPi3dnow <NC>::set_coefs (const double coef_arr []) noexcept
 {
 	assert (coef_arr != nullptr);
 
-   for (int phase = 0; phase < NBR_PHASES; ++phase)
+   for (int phase = 0; phase < _nbr_phases; ++phase)
    {
 	   for (int i = 0; i < NBR_COEFS; ++i)
 	   {
-		   const int      stage = (i / STAGE_WIDTH) + 1;
-		   const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
+		   const int      stage = (i / _stage_width) + 1;
+		   const int      pos   = (i ^ 1) & (_stage_width - 1);
 		   _filter [phase] [stage]._coefs.m64_f32 [pos] = DataType (coef_arr [i]);
 	   }
    }
@@ -131,7 +138,7 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float input) noexcept
 {
-	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]);
+	constexpr int  CURR_CELL = _nbr_stages * sizeof (_filter [0] [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [_phase] [0];
    __m64           result;
@@ -144,7 +151,7 @@ void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float in
 		mov            edx, filter_ptr
 		movq           mm0, result
 	}
-	StageProc3dnow <NBR_STAGES>::process_sample_neg ();
+	StageProc3dnow <_nbr_stages>::process_sample_neg ();
 	__asm
 	{
 		movq           [edx + CURR_CELL + 1*8], mm0
@@ -152,8 +159,8 @@ void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float in
 		femms
 	}
 
-   out_0 = filter_ptr [NBR_STAGES]._mem.m64_f32 [1];
-   out_1 = filter_ptr [NBR_STAGES]._mem.m64_f32 [0];
+   out_0 = filter_ptr [_nbr_stages]._mem.m64_f32 [1];
+   out_1 = filter_ptr [_nbr_stages]._mem.m64_f32 [0];
 
 	_prev  = input;
 	_phase = 1 - _phase;
@@ -205,7 +212,7 @@ void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [
 	{
 		float          prev = _prev;
 
-		constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]);
+		constexpr int  CURR_CELL = _nbr_stages * sizeof (_filter [0] [0]);
 
 		StageData3dnow *  filter_ptr = &_filter [0] [0];
 		StageData3dnow *  filter2_ptr = &_filter [1] [0];
@@ -236,7 +243,7 @@ void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [
 		__asm push        eax
 		__asm push        ecx
 #endif
-		StageProc3dnow <NBR_STAGES>::process_sample_neg ();
+		StageProc3dnow <_nbr_stages>::process_sample_neg ();
 #if defined (_MSC_VER) && ! defined (NDEBUG)
 		__asm pop         ecx
 		__asm pop         eax
@@ -284,9 +291,9 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPi3dnow <NC>::clear_buffers () noexcept
 {
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int phase = 0; phase < _nbr_phases; ++phase)
 	{
-		for (int i = 0; i < NBR_STAGES + 1; ++i)
+		for (int i = 0; i < _nbr_stages + 1; ++i)
 		{
 			_filter [phase] [i]._mem.m64_f32 [0] = 0;
 			_filter [phase] [i]._mem.m64_f32 [1] = 0;
@@ -301,6 +308,15 @@ void	PhaseHalfPi3dnow <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	PhaseHalfPi3dnow <NC>::_stage_width;
+template <int NC>
+constexpr int	PhaseHalfPi3dnow <NC>::_nbr_stages;
+template <int NC>
+constexpr int	PhaseHalfPi3dnow <NC>::_nbr_phases;
 
 
 

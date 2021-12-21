@@ -26,7 +26,6 @@ http://www.wtfpl.net/ for more details.
 #include "hiir/def.h"
 
 #include <algorithm>
-#include <vector>
 
 #include <cassert>
 #include <cmath>
@@ -45,14 +44,47 @@ namespace test
 
 
 
+template <typename T>
+std::vector <T>	ResultCheck <T>::generate_test_signal (const SweepingSine &ss, long len, int nbr_chn)
+{
+	assert (len > 0);
+	assert (nbr_chn > 0);
+
+	std::vector <T>  src (len * nbr_chn);
+	printf ("Generating sweeping sine... ");
+	fflush (stdout);
+	if (nbr_chn == 1)
+	{
+		ss.generate (src.data ());
+	}
+	else
+	{
+		std::vector <T>   src_base (len);
+		ss.generate (src_base.data ());
+		for (long pos = 0; pos <len; ++pos)
+		{
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				src [pos * nbr_chn + chn] = src_base [pos];
+			}
+		}
+	}
+	printf ("Done.\n");
+
+	return src;
+}
+
+
+
 // We should take group delay into account
 template <typename T>
-int	ResultCheck <T>::check_dspl (const SweepingSine &ss, double bw, double at, const T out_ptr [], bool hiband_flag)
+int	ResultCheck <T>::check_halfband (const SweepingSine &ss, double bw, double at, const T out_ptr [], bool hiband_flag, int rate_div)
 {
 	assert (out_ptr != nullptr);
 	assert (bw > 0);
 	assert (bw < 0.5);
 	assert (at > 0);
+	assert (rate_div == 1 || rate_div == 2);
 
 	int            ret_val = 0;
 
@@ -67,10 +99,10 @@ int	ResultCheck <T>::check_dspl (const SweepingSine &ss, double bw, double at, c
 	const float    f_lo_end  = f_nyquist * float (0.5 - bw);
 	const float    f_hi_beg  = f_nyquist * float (0.5 + bw);
 	const long     pos_lo_b  = 0;
-	const long     pos_lo_e  = ss.get_sample_pos_for (f_lo_end)  / 2;
+	const long     pos_lo_e  = ss.get_sample_pos_for (f_lo_end)  / rate_div;
 	assert (pos_lo_b < pos_lo_e);
-	const long     pos_hi_b  = ss.get_sample_pos_for (f_hi_beg)  / 2;
-	const long     pos_hi_e  = ss.get_sample_pos_for (f_nyquist) / 2;
+	const long     pos_hi_b  = ss.get_sample_pos_for (f_hi_beg)  / rate_div;
+	const long     pos_hi_e  = ss.get_sample_pos_for (f_nyquist) / rate_div;
 	assert (pos_hi_b < pos_hi_e);
 
 	// Measures lower band volume

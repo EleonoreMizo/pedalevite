@@ -86,11 +86,11 @@ protected:
 
 private:
 
-	static constexpr int STAGE_WIDTH = 2;
-	static constexpr int NBR_STAGES  =
-		(NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH;
+	static constexpr int _stage_width = 2;
+	static constexpr int _nbr_stages  =
+		(NBR_COEFS + _stage_width - 1) / _stage_width;
 
-	typedef std::array <StageData3dnow, NBR_STAGES + 1> Filter; // Stage 0 contains only input memory
+	typedef std::array <StageData3dnow, _nbr_stages + 1> Filter; // Stage 0 contains only input memory
 
 	Filter         _filter;    // Should be the first member (thus easier to align)
 

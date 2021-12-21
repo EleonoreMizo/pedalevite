@@ -40,6 +40,13 @@ namespace hiir
 
 
 
+template <int NC>
+constexpr int	Downsampler2xNeonOld <NC>::_nbr_chn;
+template <int NC>
+constexpr int	Downsampler2xNeonOld <NC>::NBR_COEFS;
+
+
+
 /*
 ==============================================================================
 Name: ctor
@@ -51,14 +58,13 @@ template <int NC>
 Downsampler2xNeonOld <NC>::Downsampler2xNeonOld () noexcept
 :	_filter ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		storea (_filter [i]._mem, vdupq_n_f32 (0));
 	}
-	if ((NBR_COEFS & 1) != 0)
+	for (int i = NBR_COEFS; i < _nbr_stages * _stage_width; ++i)
 	{
-		const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
-		_filter [NBR_STAGES]._coef [pos] = 1;
+		set_single_coef (i, 1);
 	}
 
 	clear_buffers ();
@@ -87,9 +93,7 @@ void	Downsampler2xNeonOld <NC>::set_coefs (const double coef_arr []) noexcept
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int      stage = (i / STAGE_WIDTH) + 1;
-		const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = float (coef_arr [i]);
+		set_single_coef (i, coef_arr [i]);
 	}
 }
 
@@ -113,15 +117,15 @@ float	Downsampler2xNeonOld <NC>::process_sample (const float in_ptr [2]) noexcep
 	assert (in_ptr != nullptr);
 
 	// Combines two input samples and two mid-processing data
-	const float32x2_t spl_in  = vreinterpret_f32_u8 (
+	const auto     spl_in  = vreinterpret_f32_u8 (
 		vld1_u8 (reinterpret_cast <const uint8_t *> (in_ptr))
 	);
-	const float32x2_t spl_m = vget_low_f32 (load4a (_filter [NBR_STAGES]._mem));
-	float32x4_t       y     = vcombine_f32 (spl_in, spl_m);
-	float32x4_t       mem   = load4a (_filter [0]._mem);
+	const auto     spl_m = vget_low_f32 (load4a (_filter [_nbr_stages]._mem));
+	auto           y     = vcombine_f32 (spl_in, spl_m);
+	auto           mem   = load4a (_filter [0]._mem);
 
 	// Processes each stage
-	StageProcNeonV4 <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
+	StageProcNeonV4 <_nbr_stages>::process_sample_pos (&_filter [0], y, mem);
 
 	// Averages both paths and outputs the result
 	const float       out_0  = vgetq_lane_f32 (y, 3);
@@ -193,21 +197,22 @@ void	Downsampler2xNeonOld <NC>::process_sample_split (float &low, float &high, c
 	assert (in_ptr != nullptr);
 
 	// Combines two input samples and two mid-processing data
-	const float32x2_t spl_in  = vreinterpret_f32_u8 (
+	const auto     spl_in = vreinterpret_f32_u8 (
 		vld1_u8 (reinterpret_cast <const uint8_t *> (in_ptr))
 	);
-	const float32x2_t spl_m = vget_low_f32 (load4a (_filter [NBR_STAGES]._mem));
-	float32x4_t       y     = vcombine_f32 (spl_in, spl_m);
-	float32x4_t       mem   = load4a (_filter [0]._mem);
+	const auto     spl_m  = vget_low_f32 (load4a (_filter [_nbr_stages]._mem));
+	auto           y      = vcombine_f32 (spl_m, spl_in);
+	auto           mem    = load4a (_filter [0]._mem);
 
 	// Processes each stage
-	StageProcNeonV4 <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
+	StageProcNeonV4 <_nbr_stages>::process_sample_pos (&_filter [0], y, mem);
 
 	// Outputs the result
-	const float       out_0  = vgetq_lane_f32 (y, 3);
-	const float       out_1  = vgetq_lane_f32 (y, 2);
-	low  = (out_0 + out_1) * 0.5f;
-	high =  out_0 - low;
+	const auto     both   = vget_low_f32 (y) * vdup_n_f32 (0.5f);
+	const float    even   = vget_lane_f32 (y, 1);
+	const float    odd    = vget_lane_f32 (y, 0);
+	low  = even + odd;
+	high = even - odd;
 }
 
 
@@ -271,7 +276,7 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2xNeonOld <NC>::clear_buffers () noexcept
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
 		storea (_filter [i]._mem, vdupq_n_f32 (0));
 	}
@@ -284,6 +289,28 @@ void	Downsampler2xNeonOld <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	Downsampler2xNeonOld <NC>::_stage_width;
+template <int NC>
+constexpr int	Downsampler2xNeonOld <NC>::_nbr_stages;
+template <int NC>
+constexpr int	Downsampler2xNeonOld <NC>::_coef_shift;
+
+
+
+template <int NC>
+void	Downsampler2xNeonOld <NC>::set_single_coef (int index, double coef) noexcept
+{
+	assert (index >= 0);
+	assert (index < _nbr_stages * _stage_width);
+
+	const int      stage = (index / _stage_width) + 1;
+	const int      pos   = (index ^ _coef_shift) & (_stage_width - 1);
+	_filter [stage]._coef [pos] = DataType (coef);
+}
 
 
 
