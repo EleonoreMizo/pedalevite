@@ -112,6 +112,17 @@ private:
 
 	hiir_FORCEINLINE std::array <float, 2>
 	               process_2_paths (float input) noexcept;
+	template <typename FL, typename FH>
+	hiir_FORCEINLINE long
+	               process_block_quad (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl, FL fnc_l, FH fnc_h) noexcept;
+
+	hiir_FORCEINLINE static void
+	               store_low (float *ptr, __m128 even, __m128 odd, __m128 half) noexcept;
+	hiir_FORCEINLINE static void
+	               store_high (float *ptr, __m128 even, __m128 odd, __m128 half) noexcept;
+	hiir_FORCEINLINE static void
+	               bypass (float *, __m128, __m128, __m128) noexcept {}
+
 
 	// Should be the first member (thus easier to align)
 	alignas (16) FilterBiPhase
