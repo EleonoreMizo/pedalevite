@@ -2095,11 +2095,11 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestFfft::perform_test ();
 #endif
 
-#if main_TEST_SPEED
+#if 1 || main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestHiir::perform_test ();
 #endif
 
-#if 0
+#if 1
 	if (ret_val == 0) ret_val = TestHiirDesigner::perform_test ();
 #endif
 
@@ -2199,7 +2199,7 @@ int main (int argc, char *argv [])
 	#endif
 #endif
 
-#if 1 || main_TEST_SPEED
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
 #endif
 

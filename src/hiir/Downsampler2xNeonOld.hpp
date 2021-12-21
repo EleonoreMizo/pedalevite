@@ -130,7 +130,7 @@ float	Downsampler2xNeonOld <NC>::process_sample (const float in_ptr [2]) noexcep
 	// Averages both paths and outputs the result
 	const float       even = vgetq_lane_f32 (y, 1);
 	const float       odd  = vgetq_lane_f32 (y, 0);
-	const float       out  = (out_0 + out_1) * 0.5f;
+	const float       out  = (even + odd) * 0.5f;
 
 	return out;
 }
