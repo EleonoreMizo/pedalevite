@@ -150,9 +150,24 @@ void	HalfBandNeon <NC>::process_block (float out_ptr [], const float in_ptr [], 
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	for (long pos = 0; pos < nbr_spl; ++pos)
+	if (_phase != 0)
 	{
-		out_ptr [pos] = process_sample (in_ptr [pos]);
+		out_ptr [0] = process_sample (in_ptr [0]);
+		++ out_ptr;
+		++ in_ptr;
+		-- nbr_spl;
+	}
+
+	if (nbr_spl > 0)
+	{
+		const long     n4 = process_block_quad (
+			out_ptr, nullptr, in_ptr, nbr_spl, store_low, bypass
+		);
+
+		for (long pos = n4; pos < nbr_spl; ++pos)
+		{
+			out_ptr [pos] = process_sample (in_ptr [pos]);
+		}
 	}
 }
 
@@ -206,9 +221,24 @@ void	HalfBandNeon <NC>::process_block_hpf (float out_ptr [], const float in_ptr 
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	for (long pos = 0; pos < nbr_spl; ++pos)
+	if (_phase != 0)
 	{
-		out_ptr [pos] = process_sample_hpf (in_ptr [pos]);
+		out_ptr [0] = process_sample_hpf (in_ptr [0]);
+		++ out_ptr;
+		++ in_ptr;
+		-- nbr_spl;
+	}
+
+	if (nbr_spl > 0)
+	{
+		const long     n4 = process_block_quad (
+			nullptr, out_ptr, in_ptr, nbr_spl, bypass, store_high
+		);
+
+		for (long pos = n4; pos < nbr_spl; ++pos)
+		{
+			out_ptr [pos] = process_sample_hpf (in_ptr [pos]);
+		}
 	}
 }
 
@@ -273,9 +303,25 @@ void	HalfBandNeon <NC>::process_block_split (float out_l_ptr [], float out_h_ptr
 	assert (out_l_ptr + nbr_spl <= out_h_ptr || out_h_ptr + nbr_spl <= out_l_ptr);
 	assert (nbr_spl > 0);
 
-	for (long pos = 0; pos < nbr_spl; ++pos)
+	if (_phase != 0)
 	{
-		process_sample_split (out_l_ptr [pos], out_h_ptr [pos], in_ptr [pos]);
+		process_sample_split (out_l_ptr [0], out_h_ptr [0], in_ptr [0]);
+		++ out_l_ptr;
+		++ out_h_ptr;
+		++ in_ptr;
+		-- nbr_spl;
+	}
+
+	if (nbr_spl > 0)
+	{
+		const long     n4 = process_block_quad (
+			out_l_ptr, out_h_ptr, in_ptr, nbr_spl, store_low, store_high
+		);
+
+		for (long pos = n4; pos < nbr_spl; ++pos)
+		{
+			process_sample_split (out_l_ptr [pos], out_h_ptr [pos], in_ptr [pos]);
+		}
 	}
 }
 
@@ -366,6 +412,79 @@ float32x2_t	HalfBandNeon <NC>::process_2_paths (float input) noexcept
 	_phase = 1 - _phase;
 
 	return vget_low_f32 (y) * vdup_n_f32 (0.5f);
+}
+
+
+
+template <int NC>
+template <typename FL, typename FH>
+long	HalfBandNeon <NC>::process_block_quad (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl, FL fnc_l, FH fnc_h) noexcept
+{
+	assert (_phase == 0);
+
+	const auto     half   = vdupq_n_f32 (0.5f);
+
+	const long     n4     = nbr_spl & ~(4-1);
+	auto           prev   = _prev;
+	auto           y_2    = load4a (_filter [0] [_nbr_stages]._mem);
+	auto           y_3    = load4a (_filter [1] [_nbr_stages]._mem);
+	for (long pos = 0; pos < n4; pos += 4)
+	{
+		const auto     x      = load4u (in_ptr + pos);
+
+		const auto     comb_0 = float32x2_t { prev, vgetq_lane_f32 (x, 0) };
+		auto           y_0    = vcombine_f32 (vget_high_f32 (y_2), comb_0);
+		auto           mem_0  = load4a (_filter [0] [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter [0].data (), y_0, mem_0);
+		storea (_filter [0] [_nbr_stages]._mem, y_0);
+
+		auto           y_1    = vcombine_f32 (vget_high_f32 (y_3), vget_low_f32 (x));
+		auto           mem_1  = load4a (_filter [1] [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter [1].data (), y_1, mem_1);
+		storea (_filter [1] [_nbr_stages]._mem, y_1);
+
+		const auto     comb_2 = float32x2_t { vgetq_lane_f32 (x, 1), vgetq_lane_f32 (x, 2) };
+		               y_2    = vcombine_f32 (vget_high_f32 (y_0), comb_2);
+		auto           mem_2  = load4a (_filter [0] [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter [0].data (), y_2, mem_2);
+		storea (_filter [0] [_nbr_stages]._mem, y_2);
+
+		               y_3    = vcombine_f32 (vget_high_f32 (y_1), vget_high_f32 (x));
+		auto           mem_3  = load4a (_filter [1] [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter [1].data (), y_3, mem_3);
+		storea (_filter [1] [_nbr_stages]._mem, y_3);
+
+		prev = vgetq_lane_f32 (x, 3);
+
+		const auto     u_02 = vcombine_f32 (vget_low_f32 (y_0), vget_low_f32 (y_2));
+		const auto     u_13 = vcombine_f32 (vget_low_f32 (y_1), vget_low_f32 (y_3));
+		const auto     both = vtrnq_f32 (u_02, u_13);
+		const auto     odd  = both.val [0];
+		const auto     even = both.val [1];
+		fnc_l (out_l_ptr + pos, even, odd, half);
+		fnc_h (out_h_ptr + pos, even, odd, half);
+	}
+	_prev = prev;
+
+	return n4;
+}
+
+
+
+template <int NC>
+void	HalfBandNeon <NC>::store_low (float *ptr, float32x4_t even, float32x4_t odd, float32x4_t half) noexcept
+{
+	const auto     low  = (even + odd) * half;
+	storeu (ptr, low);
+}
+
+
+
+template <int NC>
+void	HalfBandNeon <NC>::store_high (float *ptr, float32x4_t even, float32x4_t odd, float32x4_t half) noexcept
+{
+	const auto     high = (even - odd) * half;
+	storeu (ptr, high);
 }
 
 

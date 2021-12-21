@@ -111,6 +111,16 @@ private:
 
 	hiir_FORCEINLINE float32x2_t
 	               process_2_paths (float input) noexcept;
+	template <typename FL, typename FH>
+	hiir_FORCEINLINE long
+	               process_block_quad (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl, FL fnc_l, FH fnc_h) noexcept;
+
+	hiir_FORCEINLINE static void
+	               store_low (float *ptr, float32x4_t even, float32x4_t odd, float32x4_t half) noexcept;
+	hiir_FORCEINLINE static void
+	               store_high (float *ptr, float32x4_t even, float32x4_t odd, float32x4_t half) noexcept;
+	hiir_FORCEINLINE static void
+	               bypass (float *, float32x4_t, float32x4_t, float32x4_t) noexcept {}
 
 	FilterBiPhase  _filter;    // Should be the first member (thus easier to align)
 	float          _prev;
