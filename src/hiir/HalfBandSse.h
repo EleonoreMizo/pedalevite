@@ -123,7 +123,6 @@ private:
 	hiir_FORCEINLINE static void
 	               bypass (float *, __m128, __m128, __m128) noexcept {}
 
-
 	// Should be the first member (thus easier to align)
 	alignas (16) FilterBiPhase
 	               _filter;

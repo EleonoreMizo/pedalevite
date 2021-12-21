@@ -95,13 +95,13 @@ private:
 #elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM && (defined (__clang__) || fstb_WORD_SIZE == 64)
 	template <int NC>
 	using Upspl = typename std::conditional <
-		(NC >= 12)
+		(NC >= 10)
 	,	hiir::Upsampler2xNeonOld <NC>
 	,	hiir::Upsampler2xNeon <NC>
 	>::type;
 #else
 	template <int NC>
-	using Upspl = hiir::Downsampler2xFpu <NC>;
+	using Upspl = hiir::Upsampler2xFpu <NC>;
 #endif
 
 	using Upspl84 = Upspl <NC84>;

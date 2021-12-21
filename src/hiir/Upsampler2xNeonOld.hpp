@@ -151,13 +151,12 @@ void	Upsampler2xNeonOld <NC>::process_block (float out_ptr [], const float in_pt
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	long           pos = 0;
-	do
+	const long     n4 = process_block_quad (out_ptr, in_ptr, nbr_spl);
+
+	for (long pos = n4; pos < nbr_spl; ++pos)
 	{
 		process_sample (out_ptr [pos * 2], out_ptr [pos * 2 + 1], in_ptr [pos]);
-		++ pos;
 	}
-	while (pos < nbr_spl);
 }
 
 
@@ -209,6 +208,58 @@ void	Upsampler2xNeonOld <NC>::set_single_coef (int index, double coef) noexcept
 	const int      stage = (index / _stage_width) + 1;
 	const int      pos   = (index ^ _coef_shift) & (_stage_width - 1);
 	_filter [stage]._coef [pos] = DataType (coef);
+}
+
+
+
+template <int NC>
+long	Upsampler2xNeonOld <NC>::process_block_quad (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept
+{
+	const long     n4   = nbr_spl & ~(4-1);
+	auto           y_3  = load4a (_filter [_nbr_stages]._mem);
+	for (long pos = 0; pos < n4; pos += 4)
+	{
+		const auto     x      = load4u (in_ptr + pos);
+
+		auto           y_0    = vcombine_f32 (
+			vget_high_f32 (y_3), vdup_lane_f32 (vget_low_f32 (x), 0)
+		);
+		auto           mem_0  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_0, mem_0);
+		storea (_filter [_nbr_stages]._mem, y_0);
+
+		auto           y_1    = vcombine_f32 (
+			vget_high_f32 (y_0), vdup_lane_f32 (vget_low_f32 (x), 1)
+		);
+		auto           mem_1  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_1, mem_1);
+		storea (_filter [_nbr_stages]._mem, y_1);
+
+		auto           y_2    = vcombine_f32 (
+			vget_high_f32 (y_1), vdup_lane_f32 (vget_high_f32 (x), 0)
+		);
+		auto           mem_2  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_2, mem_2);
+		storea (_filter [_nbr_stages]._mem, y_2);
+
+		               y_3    = vcombine_f32 (
+			vget_high_f32 (y_2), vdup_lane_f32 (vget_high_f32 (x), 1)
+		);
+		auto           mem_3  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_3, mem_3);
+		storea (_filter [_nbr_stages]._mem, y_3);
+
+		const auto    y_01 = vcombine_f32 (
+			vrev64_f32 (vget_low_f32 (y_0)), vrev64_f32 (vget_low_f32 (y_1))
+		);
+		const auto    y_23 = vcombine_f32 (
+			vrev64_f32 (vget_low_f32 (y_2)), vrev64_f32 (vget_low_f32 (y_3))
+		);
+		storeu (out_ptr + pos * 2    , y_01);
+		storeu (out_ptr + pos * 2 + 4, y_23);
+	}
+
+	return n4;
 }
 
 

@@ -105,6 +105,9 @@ private:
 
 	inline void    set_single_coef (int index, double coef) noexcept;
 
+	hiir_FORCEINLINE long
+	               process_block_quad (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept;
+
 	// Should be the first member (thus easier to align)
 	alignas (16) Filter
 	               _filter;

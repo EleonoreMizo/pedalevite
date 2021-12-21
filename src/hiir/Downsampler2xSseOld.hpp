@@ -168,11 +168,10 @@ void	Downsampler2xSseOld <NC>::process_block (float out_ptr [], const float in_p
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 2);
 	assert (nbr_spl > 0);
 
-	const long     n4   = process_block_quad (
+	const long     n4 = process_block_quad (
 		out_ptr, nullptr, in_ptr, nbr_spl, store_low, bypass
 	);
 
-	const auto     half = _mm_set1_ps (0.5f);
 	for (long pos = n4; pos < nbr_spl; ++pos)
 	{
 		out_ptr [pos] = process_sample (in_ptr + pos * 2);
@@ -264,11 +263,10 @@ void	Downsampler2xSseOld <NC>::process_block_split (float out_l_ptr [], float ou
 	assert (out_h_ptr != out_l_ptr);
 	assert (nbr_spl > 0);
 
-	const long     n4   = process_block_quad (
+	const long     n4 = process_block_quad (
 		out_l_ptr, out_h_ptr, in_ptr, nbr_spl, store_low, store_high
 	);
 
-	const auto     half = _mm_set1_ps (0.5f);
 	for (long pos = n4; pos < nbr_spl; ++pos)
 	{
 		process_sample_split (out_l_ptr [pos], out_h_ptr [pos], in_ptr + pos * 2);
@@ -334,8 +332,9 @@ long	Downsampler2xSseOld <NC>::process_block_quad (float out_l_ptr [], float out
 {
 	const auto     half   = _mm_set1_ps (0.5f);
 
-	constexpr auto shuf_0 = (2 << 0) | (3 << 2) | (0 << 4) | (1 << 6);
-	constexpr auto shuf_1 = (2 << 0) | (3 << 2) | (2 << 4) | (3 << 6);
+	constexpr auto shuf_y = (2 << 0) | (3 << 2);
+	constexpr auto shuf_0 = shuf_y | (0 << 4) | (1 << 6);
+	constexpr auto shuf_1 = shuf_y | (2 << 4) | (3 << 6);
 
 	const long     n4     = nbr_spl & ~(4-1);
 	auto           y_3    = _mm_load_ps (_filter [_nbr_stages]._mem);

@@ -125,7 +125,7 @@ float	Downsampler2xNeonOld <NC>::process_sample (const float in_ptr [2]) noexcep
 	auto           mem   = load4a (_filter [0]._mem);
 
 	// Processes each stage
-	StageProcNeonV4 <_nbr_stages>::process_sample_pos (&_filter [0], y, mem);
+	StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y, mem);
 
 	// Averages both paths and outputs the result
 	const float       even = vgetq_lane_f32 (y, 1);
@@ -160,13 +160,14 @@ void	Downsampler2xNeonOld <NC>::process_block (float out_ptr [], const float in_
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 2);
 	assert (nbr_spl > 0);
 
-	long           pos = 0;
-	do
+	const long     n4   = process_block_quad (
+		out_ptr, nullptr, in_ptr, nbr_spl, store_low, bypass
+	);
+
+	for (long pos = n4; pos < nbr_spl; ++pos)
 	{
 		out_ptr [pos] = process_sample (in_ptr + pos * 2);
-		++ pos;
 	}
-	while (pos < nbr_spl);
 }
 
 
@@ -205,7 +206,7 @@ void	Downsampler2xNeonOld <NC>::process_sample_split (float &low, float &high, c
 	auto           mem    = load4a (_filter [0]._mem);
 
 	// Processes each stage
-	StageProcNeonV4 <_nbr_stages>::process_sample_pos (&_filter [0], y, mem);
+	StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y, mem);
 
 	// Outputs the result
 	const auto     both = vget_low_f32 (y) * vdup_n_f32 (0.5f);
@@ -252,13 +253,14 @@ void	Downsampler2xNeonOld <NC>::process_block_split (float out_l_ptr [], float o
 	assert (out_h_ptr != out_l_ptr);
 	assert (nbr_spl > 0);
 
-	long           pos = 0;
-	do
+	const long     n4   = process_block_quad (
+		out_l_ptr, out_h_ptr, in_ptr, nbr_spl, store_low, store_high
+	);
+
+	for (long pos = n4; pos < nbr_spl; ++pos)
 	{
 		process_sample_split (out_l_ptr [pos], out_h_ptr [pos], in_ptr + pos * 2);
-		++ pos;
 	}
-	while (pos < nbr_spl);
 }
 
 
@@ -310,6 +312,73 @@ void	Downsampler2xNeonOld <NC>::set_single_coef (int index, double coef) noexcep
 	const int      stage = (index / _stage_width) + 1;
 	const int      pos   = (index ^ _coef_shift) & (_stage_width - 1);
 	_filter [stage]._coef [pos] = DataType (coef);
+}
+
+
+
+template <int NC>
+template <typename FL, typename FH>
+long	Downsampler2xNeonOld <NC>::process_block_quad (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl, FL fnc_l, FH fnc_h) noexcept
+{
+	assert (_phase == 0);
+
+	const auto     half = vdupq_n_f32 (0.5f);
+
+	const long     n4   = nbr_spl & ~(4-1);
+	auto           y_3  = load4a (_filter [_nbr_stages]._mem);
+	for (long pos = 0; pos < n4; pos += 4)
+	{
+		const auto     x_0    = load4u (in_ptr + pos * 2    );
+		const auto     x_2    = load4u (in_ptr + pos * 2 + 4);
+
+		auto           y_0    = vcombine_f32 (vget_high_f32 (y_3), vget_low_f32 (x_0));
+		auto           mem_0  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_0, mem_0);
+		storea (_filter [_nbr_stages]._mem, y_0);
+
+		auto           y_1    = vcombine_f32 (vget_high_f32 (y_0), vget_high_f32 (x_0));
+		auto           mem_1  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_1, mem_1);
+		storea (_filter [_nbr_stages]._mem, y_1);
+
+		auto           y_2    = vcombine_f32 (vget_high_f32 (y_1), vget_low_f32 (x_2));
+		auto           mem_2  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_2, mem_2);
+		storea (_filter [_nbr_stages]._mem, y_2);
+
+		               y_3    = vcombine_f32 (vget_high_f32 (y_2), vget_high_f32 (x_2));
+		auto           mem_3  = load4a (_filter [0]._mem);
+		StageProcNeonV4 <_nbr_stages>::process_sample_pos (_filter.data (), y_3, mem_3);
+		storea (_filter [_nbr_stages]._mem, y_3);
+
+		const auto     u_02 = vcombine_f32 (vget_low_f32 (y_0), vget_low_f32 (y_2));
+		const auto     u_13 = vcombine_f32 (vget_low_f32 (y_1), vget_low_f32 (y_3));
+		const auto     both = vtrnq_f32 (u_02, u_13);
+		const auto     odd  = both.val [0];
+		const auto     even = both.val [1];
+		fnc_l (out_l_ptr + pos, even, odd, half);
+		fnc_h (out_h_ptr + pos, even, odd, half);
+	}
+
+	return n4;
+}
+
+
+
+template <int NC>
+void	Downsampler2xNeonOld <NC>::store_low (float *ptr, float32x4_t even, float32x4_t odd, float32x4_t half) noexcept
+{
+	const auto     low  = (even + odd) * half;
+	storeu (ptr, low);
+}
+
+
+
+template <int NC>
+void	Downsampler2xNeonOld <NC>::store_high (float *ptr, float32x4_t even, float32x4_t odd, float32x4_t half) noexcept
+{
+	const auto     high = (even - odd) * half;
+	storeu (ptr, high);
 }
 
 
