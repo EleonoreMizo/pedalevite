@@ -149,13 +149,10 @@ void	Upsampler2xNeon <NC>::process_block (float out_ptr [], const float in_ptr [
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	long           pos = 0;
-	do
+	for (long pos = 0; pos < nbr_spl; ++pos)
 	{
 		process_sample (out_ptr [pos * 2], out_ptr [pos * 2 + 1], in_ptr [pos]);
-		++ pos;
 	}
-	while (pos < nbr_spl);
 }
 
 

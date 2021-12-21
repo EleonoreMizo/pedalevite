@@ -155,13 +155,10 @@ void	Downsampler2xNeon <NC>::process_block (float out_ptr [], const float in_ptr
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 2);
 	assert (nbr_spl > 0);
 
-	long           pos = 0;
-	do
+	for (long pos = 0; pos < nbr_spl; ++pos)
 	{
 		out_ptr [pos] = process_sample (in_ptr + pos * 2);
-		++ pos;
 	}
-	while (pos < nbr_spl);
 }
 
 
@@ -237,13 +234,10 @@ void	Downsampler2xNeon <NC>::process_block_split (float out_l_ptr [], float out_
 	assert (out_h_ptr != out_l_ptr);
 	assert (nbr_spl > 0);
 
-	long           pos = 0;
-	do
+	for (long pos = 0; pos < nbr_spl; ++pos)
 	{
 		process_sample_split (out_l_ptr [pos], out_h_ptr [pos], in_ptr + pos * 2);
-		++ pos;
 	}
-	while (pos < nbr_spl);
 }
 
 
