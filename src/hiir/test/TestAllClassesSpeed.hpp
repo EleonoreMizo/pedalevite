@@ -50,6 +50,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/Downsampler2x4Sse.h"
 #include "hiir/Downsampler2xSse.h"
 #include "hiir/Downsampler2xSseOld.h"
+#include "hiir/HalfBand4Sse.h"
+#include "hiir/HalfBandSse.h"
 #include "hiir/PhaseHalfPi4Sse.h"
 #include "hiir/PhaseHalfPiSse.h"
 #include "hiir/Upsampler2x4Sse.h"
