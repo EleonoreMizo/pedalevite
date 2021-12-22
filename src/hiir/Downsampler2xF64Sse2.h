@@ -88,6 +88,17 @@ private:
 	static constexpr int _nbr_stages  =
 		(NBR_COEFS + _stage_width - 1) / _stage_width;
 
+	template <typename FL, typename FH>
+	hiir_FORCEINLINE long
+	               process_block_double (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl, FL fnc_l, FH fnc_h) noexcept;
+
+	hiir_FORCEINLINE static void
+	               store_low (double *ptr, __m128d even, __m128d odd, __m128d half) noexcept;
+	hiir_FORCEINLINE static void
+	               store_high (double *ptr, __m128d even, __m128d odd, __m128d half) noexcept;
+	hiir_FORCEINLINE static void
+	               bypass (double *, __m128d, __m128d, __m128d) noexcept {}
+
 	// Stage 0 contains only input memory
 	typedef std::array <StageDataF64Sse2, _nbr_stages + 1> Filter;
 

@@ -87,6 +87,9 @@ private:
 	// Stage 0 contains only input memory
 	typedef std::array <StageDataF64Sse2, _nbr_stages + 1> Filter;
 
+	hiir_FORCEINLINE long
+	               process_block_double (double out_ptr [], const double in_ptr [], long nbr_spl) noexcept;
+
 	Filter         _filter;    // Should be the first member (thus easier to align)
 
 

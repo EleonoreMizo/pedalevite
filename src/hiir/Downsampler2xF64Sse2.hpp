@@ -115,7 +115,7 @@ double	Downsampler2xF64Sse2 <NC>::process_sample (const double in_ptr [2]) noexc
 	assert (in_ptr != nullptr);
 
 	auto           x  = _mm_loadu_pd (in_ptr);
-	StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
+	StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x, _filter.data ());
 	x = _mm_add_sd (x, _mm_shuffle_pd (x, x, 1));
 	x = _mm_mul_sd (x, _mm_set_sd (0.5f));
 
@@ -147,14 +147,12 @@ void	Downsampler2xF64Sse2 <NC>::process_block (double out_ptr [], const double i
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 2);
 	assert (nbr_spl > 0);
 
-	const auto     half = _mm_set1_pd (0.5f);
-	for (long pos = 0; pos < nbr_spl; ++pos)
+	const long     n2 = process_block_double (
+		out_ptr, nullptr, in_ptr, nbr_spl, store_low, bypass
+	);
+	if (n2 < nbr_spl)
 	{
-		auto           x  = _mm_loadu_pd (in_ptr + pos * 2);
-		StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
-		x = _mm_add_sd (x, _mm_shuffle_pd (x, x, 1));
-		x = _mm_mul_sd (x, half);
-		out_ptr [pos] = _mm_cvtsd_f64 (x);
+		out_ptr [n2] = process_sample (in_ptr + n2 * 2);
 	}
 }
 
@@ -186,7 +184,7 @@ void	Downsampler2xF64Sse2 <NC>::process_sample_split (double &low, double &high,
 	assert (in_ptr != nullptr);
 
 	auto           x  = _mm_loadu_pd (in_ptr);
-	StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
+	StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x, _filter.data ());
 	x = _mm_mul_pd (x, _mm_set1_pd (0.5f));
 	const auto     xr = _mm_shuffle_pd (x, x, 1);
 	low  = _mm_cvtsd_f64 (_mm_add_sd (xr, x));
@@ -230,15 +228,12 @@ void	Downsampler2xF64Sse2 <NC>::process_block_split (double out_l_ptr [], double
 	assert (out_h_ptr != out_l_ptr);
 	assert (nbr_spl > 0);
 
-	const auto     half = _mm_set1_pd (0.5f);
-	for (long pos = 0; pos < nbr_spl; ++pos)
+	const long     n2 = process_block_double (
+		out_l_ptr, out_h_ptr, in_ptr, nbr_spl, store_low, store_high
+	);
+	if (n2 < nbr_spl)
 	{
-		auto           x  = _mm_loadu_pd (in_ptr + pos * 2);
-		StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
-		x = _mm_mul_pd (x, half);
-		const auto     xr = _mm_shuffle_pd (x, x, 1);
-		out_l_ptr [pos] = _mm_cvtsd_f64 (_mm_add_sd (xr, x));
-		out_h_ptr [pos] = _mm_cvtsd_f64 (_mm_sub_sd (xr, x));
+		process_sample_split (out_l_ptr [n2], out_h_ptr [n2], in_ptr + n2 * 2);
 	}
 }
 
@@ -270,6 +265,55 @@ void	Downsampler2xF64Sse2 <NC>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int NC>
+constexpr int	Downsampler2xF64Sse2 <NC>::_stage_width;
+template <int NC>
+constexpr int	Downsampler2xF64Sse2 <NC>::_nbr_stages;
+
+
+
+template <int NC>
+template <typename FL, typename FH>
+long	Downsampler2xF64Sse2 <NC>::process_block_double (double out_l_ptr [], double out_h_ptr [], const double in_ptr [], long nbr_spl, FL fnc_l, FH fnc_h) noexcept
+{
+	const auto     half = _mm_set1_pd (0.5f);
+
+	const long     n2   = nbr_spl & ~(2-1);
+	for (long pos = 0; pos < n2; pos += 2)
+	{
+		auto           x_0 = _mm_loadu_pd (in_ptr + pos * 2);
+		auto           x_1 = _mm_loadu_pd (in_ptr + pos * 2 + 2);
+		StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x_0, _filter.data ());
+		StageProcF64Sse2 <_nbr_stages>::process_sample_pos (x_1, _filter.data ());
+		const auto     odd  = _mm_unpacklo_pd (x_0, x_1);
+		const auto     even = _mm_unpackhi_pd (x_0, x_1);
+		fnc_l (out_l_ptr + pos, even, odd, half);
+		fnc_h (out_h_ptr + pos, even, odd, half);
+	}
+
+	return n2;
+}
+
+
+
+template <int NC>
+void	Downsampler2xF64Sse2 <NC>::store_low (double *ptr, __m128d even, __m128d odd, __m128d half) noexcept
+{
+	const auto     low  = _mm_mul_pd (_mm_add_pd (even, odd), half);
+	_mm_storeu_pd (ptr, low);
+}
+
+
+
+template <int NC>
+void	Downsampler2xF64Sse2 <NC>::store_high (double *ptr, __m128d even, __m128d odd, __m128d half) noexcept
+{
+	const auto     high = _mm_mul_pd (_mm_sub_pd (even, odd), half);
+	_mm_storeu_pd (ptr, high);
+}
 
 
 
