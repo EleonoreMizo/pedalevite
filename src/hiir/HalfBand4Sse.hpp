@@ -342,8 +342,13 @@ void	HalfBand4Sse <NC>::process_block_2_paths (float out_l_ptr [], float out_h_p
 	while (pos < end)
 	{
 		const auto     ofs_0   = pos * _nbr_chn;
+		const auto     ofs_1   = ofs_0 + _nbr_chn;
 		auto           input_0 = _mm_loadu_ps (in_ptr + ofs_0);
+		auto           input_1 = _mm_loadu_ps (in_ptr + ofs_1);
+
 		input_0 = _mm_mul_ps (input_0, half);
+		input_1 = _mm_mul_ps (input_1, half);
+
 		auto           tmp_0   = input_0;
 		auto           tmp_1   = prev;
 		StageProc4Sse <NBR_COEFS>::process_sample_pos (
@@ -352,16 +357,13 @@ void	HalfBand4Sse <NC>::process_block_2_paths (float out_l_ptr [], float out_h_p
 		fnc_l (out_l_ptr + ofs_0, tmp_0, tmp_1);
 		fnc_h (out_h_ptr + ofs_0, tmp_0, tmp_1);
 
-		const auto     ofs_1   = ofs_0 + _nbr_chn;
-		auto           input_1 = _mm_loadu_ps (in_ptr + ofs_1);
-		input_1 = _mm_mul_ps (input_1, half);
-		tmp_0   = input_1;
-		tmp_1   = input_0;  // prev
+		auto           tmp_2   = input_1;
+		auto           tmp_3   = input_0;  // prev
 		StageProc4Sse <NBR_COEFS>::process_sample_pos (
-			NBR_COEFS, tmp_0, tmp_1, &_bifilter [1] [0]
+			NBR_COEFS, tmp_2, tmp_3, &_bifilter [1] [0]
 		);
-		fnc_l (out_l_ptr + ofs_1, tmp_0, tmp_1);
-		fnc_h (out_h_ptr + ofs_1, tmp_0, tmp_1);
+		fnc_l (out_l_ptr + ofs_1, tmp_2, tmp_3);
+		fnc_h (out_h_ptr + ofs_1, tmp_2, tmp_3);
 
 		prev = input_1;
 		pos += 2;

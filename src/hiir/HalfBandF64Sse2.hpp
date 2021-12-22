@@ -363,17 +363,19 @@ void	HalfBandF64Sse2 <NC>::process_block_2_paths (double out_l_ptr [], double ou
 	while (pos < end)
 	{
 		const auto     input_0 = _mm_set1_pd (in_ptr [pos    ]);
-		auto           x_0     = _mm_unpacklo_pd (prev, input_0);
-		StageProcF64Sse2 <_nbr_stages>::process_sample_pos (
-			x_0, &_bifilter [0] [0]
-		);
-		x_0 = _mm_mul_pd (x_0, half);
-
 		const auto     input_1 = _mm_set1_pd (in_ptr [pos + 1]);
+
+		auto           x_0 = _mm_unpacklo_pd (prev, input_0);
 		auto           x_1 = _mm_unpacklo_pd (input_0, input_1); // prev = input_0
+
 		StageProcF64Sse2 <_nbr_stages>::process_sample_pos (
-			x_1, &_bifilter [1] [0]
+			x_0, _bifilter [0].data ()
 		);
+		StageProcF64Sse2 <_nbr_stages>::process_sample_pos (
+			x_1, _bifilter [1].data ()
+		);
+
+		x_0 = _mm_mul_pd (x_0, half);
 		x_1 = _mm_mul_pd (x_1, half);
 
 		const auto     even_0 = _mm_cvtsd_f64 (_mm_unpackhi_pd (x_0, x_0));
