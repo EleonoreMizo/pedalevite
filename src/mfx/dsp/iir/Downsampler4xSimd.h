@@ -96,7 +96,7 @@ private:
 #elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM && (defined (__clang__) || fstb_WORD_SIZE == 64)
 	template <int NC>
 	using Dwnspl = typename std::conditional <
-		(NC >= 16)
+		(NC >= 20)
 	,	hiir::Downsampler2xNeonOld <NC>
 	,	hiir::Downsampler2xNeon <NC>
 	>::type;

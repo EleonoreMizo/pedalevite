@@ -93,6 +93,9 @@ private:
 	// Stage 0 contains only input memory
 	typedef std::array <StageDataNeonV2, _nbr_stages + 1> Filter;
 
+	hiir_FORCEINLINE long
+	               process_block_quad (float out_ptr [], const float in_ptr [], long nbr_spl) noexcept;
+
 	Filter         _filter;		// Should be the first member (thus easier to align)
 
 
