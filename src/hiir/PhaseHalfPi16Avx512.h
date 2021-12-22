@@ -96,11 +96,8 @@ private:
 	typedef	std::array <Filter, _nbr_phases>	FilterBiPhase;
 
 	FilterBiPhase  _bifilter;
-	union
-	{
-		__m512         _prev16;    // Just to ensure alignement
-		float          _prev [_nbr_chn];
-	};
+	alignas (64) float
+	               _prev [_nbr_chn];
 	int            _phase;			// 0 or 1
 
 

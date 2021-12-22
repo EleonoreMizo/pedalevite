@@ -123,13 +123,8 @@ private:
 	               bypass (float *, __m128, __m128) noexcept {}
 
 	FilterBiPhase  _bifilter;
-	union
-	{
-		alignas (16) __m128
-		               _prev_v;     // Just to ensure alignement
-		alignas (16) float
-		               _prev [_nbr_chn];
-	};
+	alignas (16) float
+	               _prev [_nbr_chn];
 	int            _phase;			// 0 or 1
 
 

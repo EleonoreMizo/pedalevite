@@ -41,9 +41,9 @@ class StageDataF64Avx512
 
 public:
 
-	alignas (32) double
+	alignas (64) double
 	               _coef [8];
-	alignas (32) double
+	alignas (64) double
 	               _mem [8];   // y of the stage
 
 }; // class StageDataF64Avx512
