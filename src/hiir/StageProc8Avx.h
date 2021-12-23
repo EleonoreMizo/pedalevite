@@ -33,7 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "hiir/def.h"
 
-//#include <xmmintrin.h>
 #include <immintrin.h>
 
 
