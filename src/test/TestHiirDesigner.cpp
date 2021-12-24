@@ -120,7 +120,7 @@ int	TestHiirDesigner::perform_test ()
 	ds.set_coefs (coef_84.data (), coef_42.data (), coef_21.data ());
 	measure_phase_delay <rate> (us, ds, fs, f_tst);
 
-#elif 0
+#elif 1
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// 4x
@@ -170,10 +170,10 @@ int	TestHiirDesigner::perform_test ()
 # if 1
 	const double   tg_pdly  =  5.0; // Desired phase delay (in samples) at oversampled rate
 	constexpr int  nbr_coef = 12;   // Number of coefficients
-# elif 0
+# elif 1
 	const double   tg_pdly  =  4.0;
 	constexpr int  nbr_coef = 10;
-# elif 0
+# elif 1
 	const double   tg_pdly  =  3.0;
 	constexpr int  nbr_coef =  8;
 # else
@@ -192,13 +192,21 @@ int	TestHiirDesigner::perform_test ()
 	else
 	{
 		printf ("Phase delays:\n");
-		for (int k = 0; k < 20; ++k)
+		constexpr int  nbr_val = 20;
+		for (int k = 0; k < nbr_val; ++k)
 		{
-			const double   f0 = 0.5 * k / (20 * rate);
+#  if 1
+			// Linearly spaced
+			const double   f0 = 0.5 * k / (nbr_val * rate);
+#  else
+			// Log spaced
+			const double   f0 = 20 * pow (2, k * 10.0 / nbr_val) / (fs * rate);
+#  endif
 			const double   d  = hiir::PolyphaseIir2Designer::compute_phase_delay (
-				coef_21.data (), nbr_coef, f0
+				coef_21.data (), nbr_coef, f0, false
 			);
-			printf ("%5.0f Hz : %6.2f spl\n", f0 * rate * fs, d);
+			const double   ph = f0 * (d - tg_pdly - 0.5) * 2; // phase error in % (1.0 => pi)
+			printf ("%5.0f Hz : %6.2f spl (%6.2f %%)\n", f0 * rate * fs, d, ph * 100);
 		}
 
 		hiir::Upsampler2xFpu <nbr_coef> us;
@@ -225,25 +233,25 @@ int	TestHiirDesigner::perform_test ()
 # endif
 
 	hiir::PhaseHalfPiTpl <nc, VecTest, vec_size> ph;
-	hiir::Upsampler2xTpl <nc, VecTest, vec_size> us;
-	hiir::Downsampler2xTpl <nc, VecTest, vec_size> ds;
+	hiir::Upsampler2xTpl <nc, VecTest, vec_size> ups;
+	hiir::Downsampler2xTpl <nc, VecTest, vec_size> dws;
 	hiir::HalfBandTpl <nc, VecTest, vec_size> hb;
 	ph.set_coefs (coef_arr.data ());
-	us.set_coefs (coef_arr.data ());
-	ds.set_coefs (coef_arr.data ());
+	ups.set_coefs (coef_arr.data ());
+	dws.set_coefs (coef_arr.data ());
 	hb.set_coefs (coef_arr.data ());
 	ph.clear_buffers ();
-	us.clear_buffers ();
-	ds.clear_buffers ();
+	ups.clear_buffers ();
+	dws.clear_buffers ();
 	hb.clear_buffers ();
 	constexpr int  len = 10;
 	alignas (fstb_SIMD128_ALIGN) std::array <VecTest, len * 2> src_arr {};
 	alignas (fstb_SIMD128_ALIGN) std::array <VecTest, len * 2> dst1_arr {};
 	alignas (fstb_SIMD128_ALIGN) std::array <VecTest, len * 2> dst2_arr {};
 	ph.process_block (dst1_arr.data (), dst2_arr.data (), src_arr.data (), len);
-	us.process_block (dst1_arr.data (), src_arr.data (), len);
-	ds.process_block (dst1_arr.data (), src_arr.data (), len);
-	ds.process_block_split (dst1_arr.data (), dst2_arr.data (), src_arr.data (), len);
+	ups.process_block (dst1_arr.data (), src_arr.data (), len);
+	dws.process_block (dst1_arr.data (), src_arr.data (), len);
+	dws.process_block_split (dst1_arr.data (), dst2_arr.data (), src_arr.data (), len);
 	hb.process_block (dst1_arr.data (), src_arr.data (), len);
 	hb.process_block_hpf (dst1_arr.data (), src_arr.data (), len);
 	hb.process_block_split (dst1_arr.data (), dst2_arr.data (), src_arr.data (), len);
