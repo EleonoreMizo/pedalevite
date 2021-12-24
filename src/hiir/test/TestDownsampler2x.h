@@ -50,11 +50,10 @@ public:
 
 	typedef TO TestedType;
 	typedef typename TO::DataType DataType;
-	static constexpr int _nbr_chn = TO::_nbr_chn;
+	static constexpr int _nbr_chn   = TO::_nbr_chn;
+	static constexpr int _nbr_coefs = TestedType::NBR_COEFS;
 
-	enum {         NBR_COEFS = TestedType::NBR_COEFS };
-
-	static int     perform_test (TO &dspl, const double coef_arr [NBR_COEFS], const SweepingSine &ss, const char *type_0, double transition_bw, double stopband_at);
+	static int     perform_test (TO &dspl, const double coef_arr [_nbr_coefs], const SweepingSine &ss, const char *type_0, double transition_bw, double stopband_at);
 
 
 

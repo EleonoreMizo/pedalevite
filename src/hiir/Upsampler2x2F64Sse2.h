@@ -63,6 +63,7 @@ public:
 	typedef double DataType;
 	static constexpr int _nbr_chn  = 2;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               Upsampler2x2F64Sse2 () noexcept;
 	               Upsampler2x2F64Sse2 (const Upsampler2x2F64Sse2 <NC> &other) = default;

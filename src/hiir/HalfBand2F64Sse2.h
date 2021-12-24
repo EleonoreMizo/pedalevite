@@ -58,6 +58,7 @@ public:
 	typedef double DataType;
 	static constexpr int _nbr_chn  = 2;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               HalfBand2F64Sse2 () noexcept;
 	               HalfBand2F64Sse2 (const HalfBand2F64Sse2 <NC> &other) = default;

@@ -42,6 +42,8 @@ template <int NC>
 constexpr int 	Downsampler2x8Avx <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	Downsampler2x8Avx <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	Downsampler2x8Avx <NC>::_delay;
 
 
 

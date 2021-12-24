@@ -55,6 +55,8 @@ public:
 	static int     check_uspl (const SweepingSine &ss, double bw, double at, const T out_ptr []);
 	static int     check_phase (const SweepingSine &ss, double bw, const T out_0_ptr [], const T out_1_ptr []);
 
+	static int     check_delay (const T out_ptr [], const T ref_ptr [], long nbr_spl, double dly_expect, double f_fs);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -66,6 +68,9 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static double  find_delay (const T tst_ptr [], const T ref_ptr [], long len, long skip, int start);
+	static double  find_extremum_pos_parabolic (double r1, double r2, double r3) noexcept;
 
 
 

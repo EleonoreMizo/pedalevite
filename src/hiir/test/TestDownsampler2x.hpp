@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/test/FileOp.h"
 #include "hiir/test/ResultCheck.h"
 #include "hiir/test/SweepingSine.h"
+#include "hiir/test/TestDelay.h"
 
 #include <type_traits>
 
@@ -52,11 +53,13 @@ namespace test
 
 template <class TO>
 constexpr int	TestDownsampler2x <TO>::_nbr_chn;
+template <class TO>
+constexpr int	TestDownsampler2x <TO>::_nbr_coefs;
 
 
 
 template <class TO>
-int	TestDownsampler2x <TO>::perform_test (TO &dspl, const double coef_arr [NBR_COEFS], const SweepingSine &ss, const char *type_0, double transition_bw, double stopband_at)
+int	TestDownsampler2x <TO>::perform_test (TO &dspl, const double coef_arr [_nbr_coefs], const SweepingSine &ss, const char *type_0, double transition_bw, double stopband_at)
 {
 	assert (coef_arr != nullptr);
 	assert (type_0   != nullptr);
@@ -70,7 +73,7 @@ int	TestDownsampler2x <TO>::perform_test (TO &dspl, const double coef_arr [NBR_C
 		:                                          "<unknown type>";
 	printf (
 		"Test: Downsampler2x, %s, %d chn, %s implementation, %d coefficients.\n",
-		datatype_0, _nbr_chn, type_0, NBR_COEFS
+		datatype_0, _nbr_chn, type_0, _nbr_coefs
 	);
 
 	const auto     len = ss.get_len ();
@@ -150,6 +153,17 @@ int	TestDownsampler2x <TO>::perform_test (TO &dspl, const double coef_arr [NBR_C
 		);
 	}
 
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Delay
+
+	if (ret_val == 0)
+	{
+		printf ("Checking delay... ");
+		fflush (stdout);
+		ret_val = TestDelay <TO>::test_downsampler (dspl, coef_arr);
+		printf ("Done.\n");
+	}
+
 	printf ("\n");
 
 	return ret_val;
@@ -181,10 +195,7 @@ int	TestDownsampler2x <TO>::check_band (std::vector <DataType> &dst_chk, const s
 	);
 
 	char           filename_0 [255+1];
-	sprintf (
-		filename_0, filename_fmt_0,
-		TestedType::NBR_COEFS, type_0, _nbr_chn, chn
-	);
+	sprintf (filename_0, filename_fmt_0, _nbr_coefs, type_0, _nbr_chn, chn);
 	FileOp <DataType>::save_raw_data (
 		filename_0, dst_chk.data (), len_proc, hiir_test_file_resol, 1.f
 	);

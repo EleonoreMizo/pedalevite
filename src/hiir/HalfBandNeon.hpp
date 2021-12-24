@@ -42,6 +42,8 @@ template <int NC>
 constexpr int 	HalfBandNeon <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	HalfBandNeon <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	HalfBandNeon <NC>::_delay;
 
 
 

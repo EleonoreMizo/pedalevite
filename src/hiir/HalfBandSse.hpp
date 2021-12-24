@@ -49,6 +49,8 @@ template <int NC>
 constexpr int 	HalfBandSse <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	HalfBandSse <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	HalfBandSse <NC>::_delay;
 
 
 

@@ -58,6 +58,7 @@ public:
 	typedef float DataType;
 	static constexpr int _nbr_chn  = 8;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               PhaseHalfPi8Avx () noexcept;
 	               PhaseHalfPi8Avx (const PhaseHalfPi8Avx <NC> &other) = default;

@@ -55,6 +55,8 @@ template <int NC>
 constexpr int 	PhaseHalfPi3dnow <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	PhaseHalfPi3dnow <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	PhaseHalfPi3dnow <NC>::_delay;
 
 
 

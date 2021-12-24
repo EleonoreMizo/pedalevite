@@ -61,8 +61,9 @@ class Downsampler2x2F64Sse2
 public:
 
 	typedef double DataType;
-	static constexpr int  _nbr_chn  = 2;
-	static constexpr int  NBR_COEFS = NC;
+	static constexpr int _nbr_chn  = 2;
+	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = -1;
 
 	               Downsampler2x2F64Sse2 () noexcept;
 	               Downsampler2x2F64Sse2 (const Downsampler2x2F64Sse2 <NC> &other) = default;

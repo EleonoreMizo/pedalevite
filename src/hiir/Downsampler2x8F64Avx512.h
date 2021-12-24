@@ -62,6 +62,7 @@ public:
 	typedef double DataType;
 	static constexpr int _nbr_chn  = 8;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = -1;
 
 	               Downsampler2x8F64Avx512 () noexcept;
 	               Downsampler2x8F64Avx512 (const Downsampler2x8F64Avx512 <NC> &other) = default;

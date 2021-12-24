@@ -59,6 +59,8 @@ template <int NC>
 constexpr int 	Downsampler2x3dnow <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	Downsampler2x3dnow <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	Downsampler2x3dnow <NC>::_delay;
 
 
 

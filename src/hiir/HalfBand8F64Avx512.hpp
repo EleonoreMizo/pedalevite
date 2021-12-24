@@ -41,6 +41,8 @@ template <int NC>
 constexpr int 	HalfBand8F64Avx512 <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	HalfBand8F64Avx512 <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	HalfBand8F64Avx512 <NC>::_delay;
 
 
 

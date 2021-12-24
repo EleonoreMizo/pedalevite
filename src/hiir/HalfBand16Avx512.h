@@ -58,6 +58,7 @@ public:
 	typedef float DataType;
 	static constexpr int _nbr_chn  = 16;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               HalfBand16Avx512 () noexcept;
 	               HalfBand16Avx512 (const HalfBand16Avx512 <NC> &other) = default;

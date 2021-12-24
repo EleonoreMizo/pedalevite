@@ -7,9 +7,6 @@ Half-band filter, low-pass or high-pass, using SSE2 instruction set.
 
 This object must be aligned on a 16-byte boundary!
 
-If the number of coefficients is 2 or 3 modulo 4, the output is delayed from
-1 sample, compared to the theoretical formula (or FPU implementation).
-
 Template parameters:
 	- NC: number of coefficients, > 0
 
@@ -60,6 +57,7 @@ public:
 	typedef double DataType;
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               HalfBandF64Sse2 () noexcept;
 	               HalfBandF64Sse2 (const HalfBandF64Sse2 <NC> &other) = default;

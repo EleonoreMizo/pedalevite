@@ -41,6 +41,8 @@ template <int NC>
 constexpr int 	PhaseHalfPi16Avx512 <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	PhaseHalfPi16Avx512 <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	PhaseHalfPi16Avx512 <NC>::_delay;
 
 
 

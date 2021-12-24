@@ -58,6 +58,7 @@ public:
 	typedef float DataType;
 	static constexpr int _nbr_chn  = 4;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               PhaseHalfPi4Neon () noexcept;
 	               PhaseHalfPi4Neon (const PhaseHalfPi4Neon <NC> &other) = default;

@@ -42,6 +42,8 @@ template <int NC>
 constexpr int 	PhaseHalfPiNeon <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	PhaseHalfPiNeon <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	PhaseHalfPiNeon <NC>::_delay;
 
 
 

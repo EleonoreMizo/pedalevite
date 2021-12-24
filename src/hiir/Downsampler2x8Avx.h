@@ -63,6 +63,7 @@ public:
 	typedef float DataType;
 	static constexpr int _nbr_chn  = 8;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = -1;
 
 	               Downsampler2x8Avx () noexcept;
 	               Downsampler2x8Avx (const Downsampler2x8Avx <NC> &other) = default;

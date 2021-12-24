@@ -58,6 +58,7 @@ public:
 	typedef double DataType;
 	static constexpr int _nbr_chn  = 8;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               HalfBand8F64Avx512 () noexcept;
 	               HalfBand8F64Avx512 (const HalfBand8F64Avx512 <NC> &other) = default;

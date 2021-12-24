@@ -70,6 +70,7 @@ public:
 	typedef DT DataType;
 	static constexpr int _nbr_chn  = NCHN;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	void           set_coefs (const double coef_arr []) noexcept;
 

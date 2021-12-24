@@ -48,6 +48,8 @@ template <int NC>
 constexpr int 	PhaseHalfPiSse <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	PhaseHalfPiSse <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	PhaseHalfPiSse <NC>::_delay;
 
 
 

@@ -7,8 +7,8 @@ Upsamples by a factor 2 the input signal, using NEON instruction set.
 
 This object must be aligned on a 16-byte boundary!
 
-If the number of coefficients is 2 or 3 modulo 4, the output is delayed from
-1 sample, compared to the theoretical formula (or FPU implementation).
+The output is delayed from 2 sample, compared to the theoretical formula (or
+FPU implementation).
 
 Template parameters:
 	- NC: number of coefficients, > 0
@@ -61,6 +61,7 @@ public:
 	typedef float DataType;
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 2;
 
 	               Upsampler2xNeonOld () noexcept;
 	               Upsampler2xNeonOld (const Upsampler2xNeonOld <NC> &other) = default;

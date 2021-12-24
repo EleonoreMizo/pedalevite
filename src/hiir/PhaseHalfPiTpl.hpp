@@ -44,6 +44,8 @@ template <int NC, typename DT, int NCHN>
 constexpr int 	PhaseHalfPiTpl <NC, DT, NCHN>::_nbr_chn;
 template <int NC, typename DT, int NCHN>
 constexpr int 	PhaseHalfPiTpl <NC, DT, NCHN>::NBR_COEFS;
+template <int NC, typename DT, int NCHN>
+constexpr double	PhaseHalfPiTpl <NC, DT, NCHN>::_delay;
 
 
 

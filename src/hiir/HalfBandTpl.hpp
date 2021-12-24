@@ -41,6 +41,8 @@ template <int NC, typename DT, int NCHN>
 constexpr int 	HalfBandTpl <NC, DT, NCHN>::_nbr_chn;
 template <int NC, typename DT, int NCHN>
 constexpr int 	HalfBandTpl <NC, DT, NCHN>::NBR_COEFS;
+template <int NC, typename DT, int NCHN>
+constexpr double	HalfBandTpl <NC, DT, NCHN>::_delay;
 
 
 

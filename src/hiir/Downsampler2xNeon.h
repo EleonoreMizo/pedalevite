@@ -59,6 +59,7 @@ public:
 	typedef float DataType;
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = -1;
 
 	               Downsampler2xNeon () noexcept;
 	               Downsampler2xNeon (const Downsampler2xNeon <NC> &other) = default;

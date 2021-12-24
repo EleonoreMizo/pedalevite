@@ -319,11 +319,111 @@ int	ResultCheck <T>::check_phase (const SweepingSine &ss, double bw, const T out
 
 
 
+template <typename T>
+int	ResultCheck <T>::check_delay (const T out_ptr [], const T ref_ptr [], long nbr_spl, double dly_expect, double f_fs)
+{
+	assert (out_ptr != nullptr);
+	assert (ref_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	constexpr auto max_dly_err = 0.01; // Samples
+
+	int            ret_val = 0;
+
+	const int      skip      = nbr_spl / 8;
+	const double   wl_half   = 0.5 / f_fs; // Half a period
+	const int      start     = ceil_int (dly_expect - wl_half);
+	const double   dly_found =
+		find_delay (out_ptr, ref_ptr, nbr_spl, skip, start);
+	const double   err       = fabs (dly_found - dly_expect);
+	if (err > max_dly_err)
+	{
+		printf (
+			"Error: abnormal delay error (%f spl, expected %f spl).\n",
+			dly_found, dly_expect
+		);
+		ret_val = -1;
+	}
+
+	return ret_val;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <typename T>
+double	ResultCheck <T>::find_delay (const T tst_ptr [], const T ref_ptr [], long len, long skip, int start)
+{
+	constexpr int  dly_max =  64;
+	constexpr int  dly_min = -64;
+	constexpr int  extra   = dly_max - dly_min + 1;
+
+	assert (tst_ptr != nullptr);
+	assert (ref_ptr != nullptr);
+	assert (skip >= 0);
+	assert (len > skip + extra);
+
+	double         sel_val = -1e+300;
+	int            sel_dly = dly_min - 1;
+	start = std::min (std::max (start, dly_min), dly_max);
+
+	std::array <double, extra> dly_arr;
+	for (int dly_tst = start; dly_tst <= dly_max; ++dly_tst)
+	{
+		double         sum = 0;
+		for (long pos = skip - dly_min; pos < len - dly_max; ++pos)
+		{
+			sum += ref_ptr [pos] * tst_ptr [pos + dly_tst];
+		}
+
+		dly_arr [dly_tst - dly_min] = sum;
+		if (sum <= sel_val)
+		{
+			if (dly_tst < dly_min + 2)
+			{
+				return double (sel_dly);
+			}
+			const double   frac = find_extremum_pos_parabolic (
+				dly_arr [dly_tst - 2 - dly_min],
+				dly_arr [dly_tst - 1 - dly_min],
+				sum
+			);
+			return double (sel_dly) + frac;
+		}
+
+		sel_val = sum;
+		sel_dly = dly_tst;
+	}
+
+	// Not found
+	return double (dly_max + 1);
+}
+
+
+
+// Finds the x position of the extremum (min or max) in the parabolic-
+// interpolated curve passes through (-1, r1), (0, r2) and (+1, r3).
+// The curve is implicitely defined by:
+// f(x) = ((r3 + r1) / 2 - r2) * x^2 + ((r3 - r1) / 2) * x + r2
+// The points must not be aligned so the extremum exists.
+// It is not necessariy located between -1 and 1.
+template <typename T>
+double	ResultCheck <T>::find_extremum_pos_parabolic (double r1, double r2, double r3) noexcept
+{
+	const auto     den = 2 * r2 - (r3 + r1);
+	assert (den != 0);
+
+	const auto     pos = (r3 - r1) * 0.5 / den;
+
+	return pos;
+}
 
 
 

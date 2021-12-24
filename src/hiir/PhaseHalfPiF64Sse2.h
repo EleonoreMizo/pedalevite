@@ -58,6 +58,7 @@ public:
 	typedef double DataType;
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               PhaseHalfPiF64Sse2 () noexcept;
 	               PhaseHalfPiF64Sse2 (const PhaseHalfPiF64Sse2 <NC> &other) = default;

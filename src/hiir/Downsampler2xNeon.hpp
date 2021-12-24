@@ -44,6 +44,8 @@ template <int NC>
 constexpr int 	Downsampler2xNeon <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	Downsampler2xNeon <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	Downsampler2xNeon <NC>::_delay;
 
 
 

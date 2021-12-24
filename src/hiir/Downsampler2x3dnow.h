@@ -55,8 +55,9 @@ class Downsampler2x3dnow
 public:
 
 	typedef float DataType;
-	static constexpr int  _nbr_chn  = 1;
-	static constexpr int  NBR_COEFS = NC;
+	static constexpr int _nbr_chn  = 1;
+	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = -1;
 
 	               Downsampler2x3dnow () noexcept;
 	               Downsampler2x3dnow (const Downsampler2x3dnow <NC> &other) = default;

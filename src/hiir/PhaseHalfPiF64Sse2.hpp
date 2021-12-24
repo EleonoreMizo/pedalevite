@@ -41,6 +41,8 @@ template <int NC>
 constexpr int 	PhaseHalfPiF64Sse2 <NC>::_nbr_chn;
 template <int NC>
 constexpr int 	PhaseHalfPiF64Sse2 <NC>::NBR_COEFS;
+template <int NC>
+constexpr double	PhaseHalfPiF64Sse2 <NC>::_delay;
 
 
 

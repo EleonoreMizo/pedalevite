@@ -725,6 +725,8 @@
     <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesFnc.hpp" />
     <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesSpeed.h" />
     <ClInclude Include="..\..\..\src\hiir\test\TestAllClassesSpeed.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\test\TestDelay.h" />
+    <ClInclude Include="..\..\..\src\hiir\test\TestDelay.hpp" />
     <ClInclude Include="..\..\..\src\hiir\test\TestDownsampler2x.h" />
     <ClInclude Include="..\..\..\src\hiir\test\TestDownsampler2x.hpp" />
     <ClInclude Include="..\..\..\src\hiir\test\TestHalfBand.h" />

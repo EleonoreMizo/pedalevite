@@ -249,7 +249,7 @@ PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_p
 	return compute_coefs_spec_order_delay (
 		coef_arr, attenuation_ptr, transition_ptr, nbr_coefs, phase_delay,
 		f_rel, prec, atten_lb, atten_ub, trans_lb, trans_ub,
-		std::bind (compute_phase_delay, _1, _2, _3)
+		std::bind (compute_phase_delay, _1, _2, _3, false)
 	);
 }
 
@@ -322,27 +322,49 @@ Description:
 	Computes the phase delay introduced by a complete filter at a specified
 	frequency.
 	The delay is given for a constant sampling rate between input and output.
-	Note that the result is accurate only in the passband, where A0 and A1
-	outputs of are almost equal.
 Input parameters:
 	- coef_arr: filter coefficient, as given by the designing functions.
-		Actually only even coefficients (A0 part) are used.
 	- nbr_coefs: Number of filter coefficients. > 0.
 	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
+	- ph_flag: set if filter is used in pi/2-phaser mode, in the form
+		(a - z^-2) / (1 - az^-2)
 Returns:
-	The phase delay in samples, >= 0.
+	The phase delay in samples, >= 0. In the phaser mode, the delay is
+	negative and corresponds to the path for even coefficients (A0).
 Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_phase_delay (const double coef_arr [], int nbr_coefs, double f_fs) noexcept
+double	PolyphaseIir2Designer::compute_phase_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag) noexcept
 {
-	using namespace std::placeholders;
+	assert (coef_arr != nullptr);
+	assert (nbr_coefs > 0);
+	assert (f_fs >= 0);
+	assert (f_fs < 0.5);
 
-	return compute_full_delay (
-		coef_arr, nbr_coefs, f_fs,
-		std::bind (compute_unit_phase_delay, _1, _2)
-	);
+	auto           dly_arr = std::array <double, 2> { 0, 1 };
+	for (int k = 0; k < nbr_coefs; ++k)
+	{
+		const auto     dly =
+			compute_unit_phase_delay (coef_arr [k], f_fs, ph_flag);
+		dly_arr [k & 1] += dly;
+	}
+
+	const auto     com       = dly_arr [0];     // Common delay (the even path)
+	auto           dly_final = com;
+
+	if (! ph_flag && f_fs > 0)
+	{
+		const auto     w   = 2 * hiir::PI * f_fs;
+		const auto     phi = (dly_arr [1] - com) * w;
+		assert (std::abs (phi) < hiir::PI);
+		const auto     re  = cos (phi) + 1;      // Complex sum of both paths
+		const auto     im  = sin (phi) + 0;
+		const auto     dif = atan2 (im, re) / w; // Odd path relative to the even
+		dly_final += dif;
+	}
+
+	return dly_final;
 }
 
 
@@ -371,12 +393,20 @@ Throws: Nothing
 
 double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag) noexcept
 {
-	using namespace std::placeholders;
+	assert (coef_arr != nullptr);
+	assert (nbr_coefs > 0);
+	assert (f_fs >= 0);
+	assert (f_fs < 0.5);
 
-	return compute_full_delay (
-		coef_arr, nbr_coefs, f_fs,
-		std::bind (compute_unit_group_delay, _1, _2, ph_flag)
-	);
+	double         dly_total = 0;
+	for (int k = 0; k < nbr_coefs; k += 2)
+	{
+		const auto     dly =
+			compute_unit_group_delay (coef_arr [k], f_fs, ph_flag);
+		dly_total += dly;
+	}
+
+	return dly_total;
 }
 
 
@@ -389,34 +419,38 @@ Description:
 	specified frequency.
 	The delay is given for a constant sampling rate between input and output.
 Input parameters:
-	- a: coefficient for the cell, [0 ; 1]
+	- a: coefficient for the cell, [0 ; 1[
 	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
+	- ph_flag: set if filtering unit is used in pi/2-phaser mode, in the form
+		(a - z^-2) / (1 - az^-2)
 Returns:
-	The phase delay in samples, >= 0.
+	The phase delay in samples, positive when ph_flag is false, negative in
+	phaser mode.
 Throws: Nothing
 ==============================================================================
 */
 
-double	PolyphaseIir2Designer::compute_unit_phase_delay (double a, double f_fs) noexcept
+double	PolyphaseIir2Designer::compute_unit_phase_delay (double a, double f_fs, bool ph_flag) noexcept
 {
 	assert (a >= 0);
-	assert (a <= 1);
+	assert (a < 1);
 	assert (f_fs >= 0);
 	assert (f_fs < 0.5);
 
-	const double   w  = 2 * hiir::PI * f_fs;
-	const double   c  = cos (w);
-	const double   s  = sin (w);
-	const double   ac = (a + 1) * c;
-	const double   as = (a - 1) * s;
-	const double   x  = (ac + as) * (ac - as);
-	const double   y  = 2 * ac * as;
-	double         ph = -atan2 (y, x);
-	if (ph < 0)
+	const auto     w  = 2 * hiir::PI * f_fs;
+	const auto     c  = cos (w);
+	const auto     s  = sin (w);
+	const auto     u  = (ph_flag) ? -1 : 1;
+	const auto     ac = (a + u) * c;
+	const auto     as = (a - u) * s;
+	const auto     x  = u * (ac * ac - as * as);
+	const auto     y  = u * 2 * ac * as;
+	auto           ph = -atan2 (y, x);
+	if (ph * u < 0)
 	{
-		ph += 2 * hiir::PI;
+		ph += u * 2 * hiir::PI;
 	}
-	const double   dly = (w > 0) ? ph / w : 2 * (1 - a) / (1 + a);
+	const auto     dly = (w > 0) ? ph / w : -2 * u * (a - u) / (a + u);
 
 	return dly;
 }
@@ -433,7 +467,7 @@ Description:
 	To compute the group delay of a complete filter, add the group delays
 	of all the units in A0 (z).
 Input parameters:
-	- a: coefficient for the cell, [0 ; 1]
+	- a: coefficient for the cell, [0 ; 1[
 	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
 	- ph_flag: set if filtering unit is used in pi/2-phaser mode, in the form
 		(a - z^-2) / (1 - az^-2)
@@ -446,14 +480,14 @@ Throws: Nothing
 double	PolyphaseIir2Designer::compute_unit_group_delay (double a, double f_fs, bool ph_flag) noexcept
 {
 	assert (a >= 0);
-	assert (a <= 1);
+	assert (a < 1);
 	assert (f_fs >= 0);
 	assert (f_fs < 0.5);
 
-	const double   w   = 2 * hiir::PI * f_fs;
-	const double   a2  = a * a;
-	const double   sig = (ph_flag) ? -2 : 2;
-	const double   dly = 2 * (1 - a2) / (a2 + sig * a * cos (2 * w) + 1);
+	const auto     w   = 2 * hiir::PI * f_fs;
+	const auto     a2  = a * a;
+	const auto     sig = (ph_flag) ? -2 : 2;
+	const auto     dly = 2 * (1 - a2) / (a2 + sig * a * cos (2 * w) + 1);
 
 	return dly;
 }
@@ -690,26 +724,6 @@ PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_d
 	}
 
 	return ret_val;
-}
-
-
-
-// double compute_delay_single (double coef, double f_fs);
-template <typename F>
-double	PolyphaseIir2Designer::compute_full_delay (const double coef_arr [], int nbr_coefs, double f_fs, F compute_delay_single) noexcept
-{
-	assert (nbr_coefs > 0);
-	assert (f_fs >= 0);
-	assert (f_fs < 0.5);
-
-	double         dly_total = 0;
-	for (int k = 0; k < nbr_coefs; k += 2)
-	{
-		const double   dly = compute_delay_single (coef_arr [k], f_fs);
-		dly_total += dly;
-	}
-
-	return dly_total;
 }
 
 

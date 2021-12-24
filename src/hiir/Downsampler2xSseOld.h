@@ -7,8 +7,8 @@ Downsamples by a factor 2 the input signal, using SSE instruction set.
 
 This object must be aligned on a 16-byte boundary!
 
-If the number of coefficients is 2 or 3 modulo 4, the output is delayed from
-1 sample, compared to the theoretical formula (or FPU implementation).
+The output is delayed from 1 sample, compared to the theoretical formula (or
+FPU implementation).
 
 Template parameters:
 	- NC: number of coefficients, > 0
@@ -60,8 +60,9 @@ class Downsampler2xSseOld
 public:
 
 	typedef float DataType;
-	static constexpr int  _nbr_chn  = 1;
-	static constexpr int  NBR_COEFS = NC;
+	static constexpr int _nbr_chn  = 1;
+	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 2 - 1;
 
 	               Downsampler2xSseOld () noexcept;
 	               Downsampler2xSseOld (const Downsampler2xSseOld <NC> &other) = default;

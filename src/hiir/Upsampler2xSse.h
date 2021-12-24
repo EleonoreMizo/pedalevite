@@ -57,6 +57,7 @@ public:
 	typedef float DataType;
 	static constexpr int _nbr_chn  = 1;
 	static constexpr int NBR_COEFS = NC;
+	static constexpr double _delay = 0;
 
 	               Upsampler2xSse () noexcept;
 	               Upsampler2xSse (const Upsampler2xSse &other)    = default;

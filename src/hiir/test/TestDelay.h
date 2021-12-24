@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestHalfBand.h
+        TestDelay.h
         Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
@@ -16,14 +16,12 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (hiir_test_TestHalfBand_HEADER_INCLUDED)
-#define hiir_test_TestHalfBand_HEADER_INCLUDED
+#if ! defined (hiir_test_TestDelay_HEADER_INCLUDED)
+#define hiir_test_TestDelay_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include <vector>
 
 
 
@@ -34,10 +32,8 @@ namespace test
 
 
 
-class SweepingSine;
-
 template <class TO>
-class TestHalfBand
+class TestDelay
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -49,7 +45,10 @@ public:
 	static constexpr int _nbr_chn   = TO::_nbr_chn;
 	static constexpr int _nbr_coefs = TO::NBR_COEFS;
 
-	static int     perform_test (TO &filter, const double coef_arr [_nbr_coefs], const SweepingSine &ss, const char *type_0, double transition_bw, double stopband_at);
+	static int     test_halfband (TO &filter, const double coef_arr [_nbr_coefs]);
+	static int     test_downsampler (TO &filter, const double coef_arr [_nbr_coefs]);
+	static int     test_upsampler (TO &filter, const double coef_arr [_nbr_coefs]);
+	static int     test_phaser (TO &filter, const double coef_arr [_nbr_coefs]);
 
 
 
@@ -64,7 +63,8 @@ protected:
 
 private:
 
-	static int     check_band (std::vector <DataType> &dst_chk, const std::vector <DataType> &dest, bool hi_flag, int chn, const SweepingSine &ss, const char *type_0, double transition_bw, double stopband_at, const char *filename_fmt_0);
+	static constexpr double _f_fs = 1.f / 20;
+	static constexpr int    _len  = 200000; // Must be even
 
 
 
@@ -72,15 +72,15 @@ private:
 
 private:
 
-	               TestHalfBand ()                               = delete;
-	               TestHalfBand (const TestHalfBand &other)      = delete;
-	               TestHalfBand (TestHalfBand &&other)           = delete;
-	TestHalfBand & operator = (const TestHalfBand &other)        = delete;
-	TestHalfBand & operator = (TestHalfBand &&other)             = delete;
-	bool           operator == (const TestHalfBand &other) const = delete;
-	bool           operator != (const TestHalfBand &other) const = delete;
+	               TestDelay ()                               = delete;
+	               TestDelay (const TestDelay &other)         = delete;
+	               TestDelay (TestDelay &&other)              = delete;
+	TestDelay &    operator = (const TestDelay &other)        = delete;
+	TestDelay &    operator = (TestDelay &&other)             = delete;
+	bool           operator == (const TestDelay &other) const = delete;
+	bool           operator != (const TestDelay &other) const = delete;
 
-}; // class TestHalfBand
+}; // class TestDelay
 
 
 
@@ -89,11 +89,11 @@ private:
 
 
 
-#include "hiir/test/TestHalfBand.hpp"
+#include "hiir/test/TestDelay.hpp"
 
 
 
-#endif   // hiir_test_TestHalfBand_HEADER_INCLUDED
+#endif   // hiir_test_TestDelay_HEADER_INCLUDED
 
 
 

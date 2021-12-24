@@ -51,15 +51,12 @@ namespace test
 
 
 template <class TO>
-int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [NBR_COEFS], const SweepingSine &ss, const char *type_0, double transition_bw)
+int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [_nbr_coefs], const SweepingSine &ss, const char *type_0, double transition_bw)
 {
 	assert (coef_arr != nullptr);
 	assert (type_0   != nullptr);
 	assert (transition_bw > 0);
 	assert (transition_bw < 0.5);
-
-	typedef typename TO::DataType DataType;
-	const int      nbr_chn = TO::_nbr_chn;
 
 	const char *   datatype_0 =
 		  std::is_same <DataType, double>::value ? "double"
@@ -67,19 +64,19 @@ int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [NBR_C
 		:                                          "<unknown type>";
 	printf (
 		"Test: PhaseHalfPi, %s, %d chn, %s implementation, %d coefficients.\n",
-		datatype_0, nbr_chn, type_0, NBR_COEFS
+		datatype_0, _nbr_chn, type_0, _nbr_coefs
 	);
 
 	const auto     len = ss.get_len ();
 	const auto     src = ResultCheck <DataType>::generate_test_signal (
-		ss, len, nbr_chn
+		ss, len, _nbr_chn
 	);
 
 	phaser.set_coefs (coef_arr);
 	phaser.clear_buffers ();
 
-	std::vector <DataType>	dest_0 (len * nbr_chn, 0);
-	std::vector <DataType>	dest_1 (len * nbr_chn, 0);
+	std::vector <DataType>	dest_0 (len * _nbr_chn, 0);
+	std::vector <DataType>	dest_1 (len * _nbr_chn, 0);
 
 	printf ("Phasing... ");
 	fflush (stdout);
@@ -88,7 +85,7 @@ int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [NBR_C
 	{
 		const long     b_pos = bs.get_pos ();
 		const long     b_len = bs.get_len ();
-		const int      idx   = b_pos * nbr_chn;
+		const int      idx   = b_pos * _nbr_chn;
 		phaser.process_block (
 			&dest_0 [idx], &dest_1 [idx], &src [idx], b_len
 		);
@@ -98,11 +95,11 @@ int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [NBR_C
 	int            ret_val = 0;
 	std::vector <DataType>  dst_chk_0 (len);
 	std::vector <DataType>  dst_chk_1 (len);
-	for (int chn = 0; chn < nbr_chn && ret_val == 0; ++chn)
+	for (int chn = 0; chn < _nbr_chn && ret_val == 0; ++chn)
 	{
 		for (long pos = 0; pos < len; ++pos)
 		{
-			const int      idx = pos * nbr_chn + chn;
+			const int      idx = pos * _nbr_chn + chn;
 			dst_chk_0 [pos] = dest_0 [idx];
 			dst_chk_1 [pos] = dest_1 [idx];
 		}
@@ -117,12 +114,23 @@ int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [NBR_C
 		char           filename_0 [255+1];
 		sprintf (
 			filename_0, "phaser_%02d_%s_%dx-%01d.raw",
-			TestedType::NBR_COEFS, type_0, nbr_chn, chn
+			_nbr_coefs, type_0, _nbr_chn, chn
 		);
 		FileOp <DataType>::save_raw_data_stereo (
 			filename_0, dst_chk_0.data (), dst_chk_1.data (),
 			len, hiir_test_file_resol, 1.f
 		);
+	}
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Delay
+
+	if (ret_val == 0)
+	{
+		printf ("Checking delay... ");
+		fflush (stdout);
+		ret_val = TestDelay <TO>::test_phaser (phaser, coef_arr);
+		printf ("Done.\n");
 	}
 
 	printf ("\n");
