@@ -106,16 +106,16 @@ private:
 	typedef std::shared_ptr <NWindow> WinSPtr;
 
 	PageSwitcher & _page_switcher;
-	const View *   _view_ptr;     // 0 = not connected
-	PageMgrInterface *            // 0 = not connected
-	               _page_ptr;
+	const View *   _view_ptr = nullptr;    // 0 = not connected
+	PageMgrInterface *                     // 0 = not connected
+	               _page_ptr = nullptr;
 	Vec2d          _page_size;
 
 	WinSPtr        _menu_sptr;
 	TxtSPtr        _title_sptr;
 	TxtArray       _choice_list;
 
-	QArg *         _arg_ptr;
+	QArg *         _arg_ptr  = nullptr;
 
 
 

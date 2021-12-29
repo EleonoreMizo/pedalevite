@@ -53,13 +53,8 @@ namespace pg
 
 Question::Question (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_view_ptr (nullptr)
-,	_page_ptr (nullptr)
-,	_page_size ()
 ,	_menu_sptr ( std::make_shared <NWindow> (Entry_WINDOW))
 ,	_title_sptr (std::make_shared <NText  > (Entry_TITLE ))
-,	_choice_list ()
-,	_arg_ptr (nullptr)
 {
 	_menu_sptr->set_autoscroll (true);
 	_title_sptr->set_justification (0.5f, 0, false);
@@ -67,11 +62,12 @@ Question::Question (PageSwitcher &page_switcher)
 
 
 
+// arg is a pure output object
 void	Question::msg_box (std::string title, std::string msg_ok, QArg &arg, PageSwitcher &ps, int node_id)
 {
 	arg._title = title;
 	arg._choice_arr.clear ();
-	arg._choice_arr.push_back (msg_ok);
+	arg._choice_arr.emplace_back (msg_ok);
 	arg._selection = 0;
 	arg._check_set.clear ();
 	arg._ok_flag = false;
