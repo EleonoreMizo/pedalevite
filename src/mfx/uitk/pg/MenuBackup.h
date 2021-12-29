@@ -82,26 +82,41 @@ private:
 		Entry_EXPORT
 	};
 
+	enum class State
+	{
+		NORMAL = 0,
+		DATE_CHECK,
+		DATE_SET
+	};
+
 	typedef std::shared_ptr <NText> TxtSPtr;
+
+	void           save (int node_id);
+	void           save_now (int node_id);
 
 	static std::string
 	               make_backup_filename ();
 
 	PageSwitcher & _page_switcher;
-	Model *        _model_ptr;    // 0 = not connected
-	const View *   _view_ptr;     // 0 = not connected
-	PageMgrInterface *            // 0 = not connected
-	               _page_ptr;
+	Model *        _model_ptr = nullptr;   // 0 = not connected
+	const View *   _view_ptr  = nullptr;   // 0 = not connected
+	PageMgrInterface *                     // 0 = not connected
+	               _page_ptr  = nullptr;
 	Vec2d          _page_size;
-	const ui::Font *              // 0 = not connected
-	               _fnt_ptr;
+	const ui::Font *                       // 0 = not connected
+	               _fnt_ptr   = nullptr;
 
 	TxtSPtr        _date_sptr;
 	TxtSPtr        _save_sptr;
 	TxtSPtr        _restore_sptr;
 	TxtSPtr        _export_sptr;
 
+	State          _state     = State::NORMAL;
 	Question::QArg _msg_arg;
+
+	// Indicates that the current date is *considered* valid, and the user
+	// will not be prompted to check it.
+	bool           _date_valid_flag = false;
 
 
 

@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "mfx/uitk/pg/MenuBackup.h"
+#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -55,16 +56,10 @@ namespace pg
 
 MenuBackup::MenuBackup (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_model_ptr (nullptr)
-,	_view_ptr (nullptr)
-,	_page_ptr (nullptr)
-,	_page_size ()
-,	_fnt_ptr (nullptr)
 ,	_date_sptr (   std::make_shared <NText> (Entry_DATE   ))
 ,	_save_sptr (   std::make_shared <NText> (Entry_SAVE   ))
 ,	_restore_sptr (std::make_shared <NText> (Entry_RESTORE))
 ,	_export_sptr ( std::make_shared <NText> (Entry_EXPORT ))
-,	_msg_arg ()
 {
 	_date_sptr   ->set_justification (0.5f, 0, false);
 	_save_sptr   ->set_justification (0.5f, 0, false);
@@ -92,6 +87,33 @@ void	MenuBackup::do_connect (Model &model, const View &view, PageMgrInterface &p
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
+
+	if (_state == State::DATE_CHECK)
+	{
+		_state = State::NORMAL;
+		const int      sel = (_msg_arg._ok_flag) ? _msg_arg._selection : 2;
+		switch (sel)
+		{
+		case 0: // Continue - Don't ask this question anymore
+			_date_valid_flag = true;
+			save_now (-1);
+			break;
+		case 1: // Check now - Don't ask this question anymore
+			_page_switcher.call_page (PageType_EDIT_DATE, nullptr);
+			_date_valid_flag = true;
+			_state           = State::DATE_SET;
+			return;
+		case 2: // Cancel
+		default:
+			// Nothing
+			break;
+		}
+	}
+	else if (_state == State::DATE_SET)
+	{
+		save_now (-1);
+		_state = State::NORMAL;
+	}
 
 	_page_ptr->clear_all_nodes ();
 
@@ -157,21 +179,7 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 				_page_switcher.call_page (PageType_EDIT_DATE, nullptr, node_id);
 				break;
 			case Entry_SAVE:
-#if fstb_SYS == fstb_SYS_LINUX
-				{
-					std::string    pathname (Cst::_config_dir);
-					pathname += '/';
-					pathname += make_backup_filename ();
-					const int      ret_sc = _model_ptr->save_to_disk (pathname);
-					Question::msg_box (
-						"Saved backup",
-						(ret_sc == 0) ? "OK" : "Failed",
-						_msg_arg, _page_switcher, node_id
-					);
-				}
-#else // fstb_SYS
-				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
-#endif // fstb_SYS
+				save (node_id);
 				break;
 			case Entry_RESTORE:
 				/*** To do ***/
@@ -225,6 +233,49 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	MenuBackup::save (int node_id)
+{
+	/*** To do:
+	Check the date at the system level and OR the result on _date_valid_flag.
+	***/
+
+	if (_date_valid_flag)
+	{
+		save_now (node_id);
+	}
+
+	else
+	{
+		// First, makes sure the date is correctly set.
+		_msg_arg._title = "Is system date OK\?";
+		_msg_arg._choice_arr.clear ();
+		_msg_arg._choice_arr.emplace_back ("Yes, continue");
+		_msg_arg._choice_arr.emplace_back ("Check it now");
+		_msg_arg._choice_arr.emplace_back ("Cancel");
+		_msg_arg._selection = 1;
+		_msg_arg._check_set.clear ();
+		_page_switcher.call_page (PageType_QUESTION, &_msg_arg, node_id);
+		_state = State::DATE_CHECK;
+	}
+}
+
+
+
+void	MenuBackup::save_now (int node_id)
+{
+	std::string    pathname (Cst::_config_dir);
+	pathname += '/';
+	pathname += make_backup_filename ();
+	const int      ret_sc = _model_ptr->save_to_disk (pathname);
+	Question::msg_box (
+		"Saved backup",
+		(ret_sc == 0) ? "OK" : "Failed",
+		_msg_arg, _page_switcher, node_id
+	);
+}
 
 
 
