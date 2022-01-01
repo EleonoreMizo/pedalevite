@@ -238,9 +238,17 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 
 void	MenuBackup::save (int node_id)
 {
-	/*** To do:
-	Check the date at the system level and OR the result on _date_valid_flag.
-	***/
+#if fstb_SYS == fstb_SYS_LINUX
+	// If the system is synchronised to an NTP server, we can assume the date
+	// is correct.
+	if (! _date_valid_flag)
+	{
+		const auto     res = system (
+			"(timedatectl --property=NTPSynchronized show | grep '=yes') > /dev/null"
+		);
+		_date_valid_flag |= (res == 0);
+	}
+#endif
 
 	if (_date_valid_flag)
 	{
