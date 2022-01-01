@@ -5,6 +5,9 @@
 
 Hyperbolic mapping taking the mid-course value as curve parameter.
 
+Optimised formulas by Geraint Luff:
+https://gist.github.com/geraintluff/b7ad635b031cb4c7aa4bffe77246316e
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -88,7 +91,11 @@ private:
 	std::string    _unit;
 	Categ          _categ   = piapi::ParamDescInterface::Categ_UNDEFINED;
 	int32_t        _flags   = 0;
-	double         _val_mid = 0.5; // In ]0 ; 1[
+
+	double         _k       = 1;
+	double         _vmin    = 0;
+	double         _vtopf   = 1;
+	double         _vbotf   = 0;
 
 
 

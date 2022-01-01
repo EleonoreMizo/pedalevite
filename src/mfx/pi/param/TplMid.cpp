@@ -52,7 +52,10 @@ namespace param
 TplMid::TplMid (double val_min, double val_max, double val_mid, const char *name_0, const char *unit_0, int group_index, const char *format_0)
 :	_group_index (group_index)
 ,	_unit (unit_0)
-,	_val_mid ((val_mid - val_min) / (val_max - val_min))
+,	_k ((val_mid - val_min) / (val_max - val_mid))
+,	_vmin (val_min)
+,	_vtopf (val_max * _k - val_min)
+,	_vbotf (_k - 1)
 {
 	assert (val_min < val_max);
 	assert (val_min < val_mid);
@@ -191,15 +194,11 @@ bool	TplMid::do_conv_str_to_nat (double &nat, const std::string &txt) const
 
 
 
-// f : { [0 ; 1], ]0 ; 1[ } -> [a ; b]
-// x, p -> a + (b - a) * x * p / (1 - p - x * (1 - 2 * p))
 double	TplMid::do_conv_nrm_to_nat (double nrm) const
 {
-	const double   a = _phdn.get_val_min ();
-	const double   b = _phdn.get_val_max ();
-
-	nrm *= _val_mid / (1 - _val_mid - nrm * (1 - 2 * _val_mid));
-	double         nat = a + nrm * (b - a);
+	double         nat = (_vmin + nrm * _vtopf) / (1 + nrm * _vbotf);
+	const double   a   = _phdn.get_val_min ();
+	const double   b   = _phdn.get_val_max ();
 	nat = fstb::limit (nat, a, b);
 
 	return nat;
@@ -207,17 +206,9 @@ double	TplMid::do_conv_nrm_to_nat (double nrm) const
 
 
 
-// f^-1 : { [a ; b], ]0 ; 1[ } -> [0 ; 1]
-// y, p -> (y - a) * (1 - p) / (b * p - a * (1 - p) + y * (1 - 2 * p))
 double	TplMid::do_conv_nat_to_nrm (double nat) const
 {
-	const double   a   = _phdn.get_val_min ();
-	const double   b   = _phdn.get_val_max ();
-
-	const double   num = (nat - a) * (1 - _val_mid);
-	const double   den =
-		b * _val_mid - a * (1 - _val_mid) + nat * (1 - 2 * _val_mid);
-	double         nrm = num / den;
+	double         nrm = (nat - _vmin) / (_vtopf - nat * _vbotf);
 	nrm = fstb::limit (nrm, 0.0, 1.0);
 
 	return nrm;
