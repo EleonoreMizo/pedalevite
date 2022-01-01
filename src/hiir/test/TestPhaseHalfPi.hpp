@@ -83,9 +83,9 @@ int	TestPhaseHalfPi <TO>::perform_test (TO &phaser, const double coef_arr [_nbr_
 	BlockSplitter	bs (64);
 	for (bs.start (len); bs.is_continuing (); bs.set_next_block ())
 	{
-		const long     b_pos = bs.get_pos ();
-		const long     b_len = bs.get_len ();
-		const int      idx   = b_pos * _nbr_chn;
+		const auto     b_pos = bs.get_pos ();
+		const auto     b_len = bs.get_len ();
+		const auto     idx   = b_pos * _nbr_chn;
 		phaser.process_block (
 			&dest_0 [idx], &dest_1 [idx], &src [idx], b_len
 		);

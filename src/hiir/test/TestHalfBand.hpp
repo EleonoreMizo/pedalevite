@@ -91,9 +91,9 @@ int	TestHalfBand <TO>::perform_test (TO &filter, const double coef_arr [_nbr_coe
 	fflush (stdout);
 	for (bs.start (len); bs.is_continuing (); bs.set_next_block ())
 	{
-		const long     b_pos = bs.get_pos ();
-		const long     b_len = bs.get_len ();
-		const int      idx   = b_pos * _nbr_chn;
+		const auto     b_pos = bs.get_pos ();
+		const auto     b_len = bs.get_len ();
+		const auto     idx   = b_pos * _nbr_chn;
 		filter.process_block (&dest_lo [idx], &src [idx], b_len);
 	}
 	printf ("Done.\n");
@@ -117,9 +117,9 @@ int	TestHalfBand <TO>::perform_test (TO &filter, const double coef_arr [_nbr_coe
 		fflush (stdout);
 		for (bs.start (len); bs.is_continuing (); bs.set_next_block ())
 		{
-			const long     b_pos = bs.get_pos ();
-			const long     b_len = bs.get_len ();
-			const int      idx   = b_pos * _nbr_chn;
+			const auto     b_pos = bs.get_pos ();
+			const auto     b_len = bs.get_len ();
+			const auto     idx   = b_pos * _nbr_chn;
 			filter.process_block_hpf (&dest_hi [idx], &src [idx], b_len);
 		}
 		printf ("Done.\n");
