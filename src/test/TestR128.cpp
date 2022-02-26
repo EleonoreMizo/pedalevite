@@ -110,7 +110,7 @@ int	TestR128::perform_test ()
 		SpecAllResults { { SpecResult { 0, 0, { Result { Win::I, -23 } } } } }
 	);
 
-	// 7 and 8 require real audio exerpts
+	// 7 and 8 require real audio excerpts
 
 	// 9
 	{
@@ -337,7 +337,7 @@ int	TestR128::perform_test ()
 		SpecAllResults { { SpecResult { 0, 0, { Result { Win::LRA, 15, 1, 1 } } } } }
 	);
 
-	// 5 and 6 require real audio exerpts
+	// 5 and 6 require real audio excerpts
 
 	printf ("Done.\n\n");
 
