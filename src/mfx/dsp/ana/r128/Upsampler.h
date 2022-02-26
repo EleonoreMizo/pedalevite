@@ -91,8 +91,7 @@ private:
 	               process_sample_nx_internal (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr) noexcept;
 
 	// Alignment is not strictly required but could help auto-vectorisation.
-	alignas (fstb_SIMD128_ALIGN) Phase
-	               _buf {};       // Source buffer. Contains _fir_len - 1 samples
+	Phase          _buf {};       // Source buffer. Contains _fir_len - 1 samples
 
 	alignas (fstb_SIMD128_ALIGN) static const PhaseArray
 	               _phase_arr;
