@@ -68,6 +68,8 @@ public:
 
 	inline SumType process_sample (DataType x) noexcept;
 	void           process_block (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept;
+	void           analyse_block (const DataType src_ptr [], int nbr_spl) noexcept;
+	inline SumType get_val () const noexcept;
 	void           clear_buffers () noexcept;
 
 
@@ -83,6 +85,9 @@ protected:
 private:
 
 	typedef std::vector <DataType> SplArray;
+
+	template <typename F>
+	void           process_block_internal (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl, F store_result) noexcept;
 
 	SplArray      _buf     = SplArray (1, 0);
 	int           _win_len = 1;         // Samples, > 0

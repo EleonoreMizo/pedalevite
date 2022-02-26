@@ -91,6 +91,7 @@
 #include "test/TestOscWavetableSyncHard.h"
 #include "test/TestPinkShade.h"
 #include "test/TestPsu.h"
+#include "test/TestR128.h"
 #include "test/TestRcClipGeneric.h"
 #include "test/TestRemez.h"
 #include "test/TestRnd.h"
@@ -2019,6 +2020,10 @@ int main (int argc, char *argv [])
 
 #define main_TEST_SPEED 0
 
+#if 1
+	if (ret_val == 0) ret_val = TestR128::perform_test ();
+#endif
+
 #if 0
 	if (ret_val == 0) ret_val = TestOnsetNinos2::perform_test ();
 #endif
@@ -2095,11 +2100,11 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestFfft::perform_test ();
 #endif
 
-#if 1 || main_TEST_SPEED
+#if main_TEST_SPEED
 	if (ret_val == 0) ret_val = TestHiir::perform_test ();
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestHiirDesigner::perform_test ();
 #endif
 

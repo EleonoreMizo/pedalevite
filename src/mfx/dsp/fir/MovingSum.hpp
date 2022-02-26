@@ -93,35 +93,30 @@ template <typename DT, typename ST>
 void	MovingSum <DT, ST>::process_block (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl) noexcept
 {
 	assert (dst_ptr != nullptr);
-	assert (src_ptr != nullptr);
-	assert (nbr_spl > 0);
 
-	int            pos = 0;
-	do
-	{
-		int            work_len = nbr_spl - pos;
-		work_len = std::min (work_len, _win_len - _pos_rw);
+	process_block_internal (
+		dst_ptr, src_ptr, nbr_spl,
+		[] (SumType *d_ptr, SumType val) { *d_ptr = val; }
+	);
+}
 
-		for (int k = 0; k < work_len; ++k)
-		{
-			const DataType x = src_ptr [pos + k];
-			_sum_u += x;
-			_sum_d -= _buf [_pos_rw];
-			_buf [_pos_rw] = x;
-			dst_ptr [pos + k] = _sum_u + _sum_d;
-			++ _pos_rw;
-		}
 
-		if (_pos_rw >= _win_len)
-		{
-			_sum_d  = _sum_u;
-			_sum_u  = 0;
-			_pos_rw = 0;
-		}
 
-		pos += work_len;
-	}
-	while (pos < nbr_spl);
+template <typename DT, typename ST>
+void	MovingSum <DT, ST>::analyse_block (const DataType src_ptr [], int nbr_spl) noexcept
+{
+	process_block_internal (
+		nullptr, src_ptr, nbr_spl,
+		[] (SumType *d_ptr, SumType val) { fstb::unused (d_ptr, val); }
+	);
+}
+
+
+
+template <typename DT, typename ST>
+typename MovingSum <DT, ST>::SumType	MovingSum <DT, ST>::get_val () const noexcept
+{
+	return _sum_u + _sum_d;
 }
 
 
@@ -142,6 +137,46 @@ void	MovingSum <DT, ST>::clear_buffers () noexcept
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+// dst_ptr may be null if the results are not stored.
+// void store_result (SumType &dst, SumType val)
+template <typename DT, typename ST>
+template <typename F>
+void	MovingSum <DT, ST>::process_block_internal (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl, F store_result) noexcept
+{
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	int            pos = 0;
+	do
+	{
+		int            work_len = nbr_spl - pos;
+		work_len = std::min (work_len, _win_len - _pos_rw);
+
+		for (int k = 0; k < work_len; ++k)
+		{
+			const auto     ofs = pos + k;
+			const auto     x   = src_ptr [ofs];
+			_sum_u += x;
+			_sum_d -= _buf [_pos_rw];
+			_buf [_pos_rw] = x;
+			store_result (dst_ptr + ofs, _sum_u + _sum_d);
+			++ _pos_rw;
+		}
+
+		if (_pos_rw >= _win_len)
+		{
+			_sum_d  = _sum_u;
+			_sum_u  = 0;
+			_pos_rw = 0;
+		}
+
+		pos += work_len;
+	}
+	while (pos < nbr_spl);
+}
 
 
 

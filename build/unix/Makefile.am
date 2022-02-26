@@ -380,6 +380,24 @@ commonsrc = \
         ../../src/mfx/doc/SignalPort.h \
         ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
+        ../../src/mfx/dsp/ana/r128/AllMeters.cpp \
+        ../../src/mfx/dsp/ana/r128/AllMeters.h \
+        ../../src/mfx/dsp/ana/r128/ChnMerger.cpp \
+        ../../src/mfx/dsp/ana/r128/ChnMerger.h \
+        ../../src/mfx/dsp/ana/r128/FilterK.cpp \
+        ../../src/mfx/dsp/ana/r128/FilterK.h \
+        ../../src/mfx/dsp/ana/r128/HistoLu.cpp \
+        ../../src/mfx/dsp/ana/r128/HistoLu.h \
+        ../../src/mfx/dsp/ana/r128/MeanSq.cpp \
+        ../../src/mfx/dsp/ana/r128/MeanSq.h \
+        ../../src/mfx/dsp/ana/r128/PeakDetectAccurate.cpp \
+        ../../src/mfx/dsp/ana/r128/PeakDetectAccurate.h \
+        ../../src/mfx/dsp/ana/r128/PeakDetectStd.cpp \
+        ../../src/mfx/dsp/ana/r128/PeakDetectStd.h \
+        ../../src/mfx/dsp/ana/r128/SegmentHelper.cpp \
+        ../../src/mfx/dsp/ana/r128/SegmentHelper.h \
+        ../../src/mfx/dsp/ana/r128/Upsampler.cpp \
+        ../../src/mfx/dsp/ana/r128/Upsampler.h \
         ../../src/mfx/dsp/ana/ClipDetect.cpp \
         ../../src/mfx/dsp/ana/ClipDetect.h \
         ../../src/mfx/dsp/ana/FreqAmGha.cpp \
@@ -1984,6 +2002,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestPinkShade.h \
         ../../src/test/TestPsu.cpp \
         ../../src/test/TestPsu.h \
+        ../../src/test/TestR128.cpp \
+        ../../src/test/TestR128.h \
         ../../src/test/TestRcClipGeneric.cpp \
         ../../src/test/TestRcClipGeneric.h \
         ../../src/test/TestRemez.cpp \

@@ -147,6 +147,7 @@
     <ClCompile Include="..\..\..\src\test\TestOnsetNinos2.cpp" />
     <ClCompile Include="..\..\..\src\test\TestOscSinCosStable.cpp" />
     <ClCompile Include="..\..\..\src\test\TestPinkShade.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestR128.cpp" />
     <ClCompile Include="..\..\..\src\test\TestRcClipGeneric.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDiodeClipScreamer.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDisplayFrameBufSimple.cpp">
@@ -216,6 +217,7 @@
     <ClInclude Include="..\..\..\src\test\TestOnsetNinos2.h" />
     <ClInclude Include="..\..\..\src\test\TestOscSinCosStable.h" />
     <ClInclude Include="..\..\..\src\test\TestPinkShade.h" />
+    <ClInclude Include="..\..\..\src\test\TestR128.h" />
     <ClInclude Include="..\..\..\src\test\TestRcClipGeneric.h" />
     <ClInclude Include="..\..\..\src\test\TestDiodeClipScreamer.h" />
     <ClInclude Include="..\..\..\src\test\TestDisplayFrameBufSimple.h" />
