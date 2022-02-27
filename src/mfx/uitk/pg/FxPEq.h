@@ -133,6 +133,7 @@ private:
 	               compute_y_pos (const std::vector <float> &lvl_arr, int pix_h) const;
 	void           display_graduations (float f_beg, float f_end, int nbr_freq);
 	int            conv_freq_to_x (float f, float f_beg, float f_end, int nbr_freq) const;
+	int            conv_pitch_to_x (float note, float f_beg, float f_end, int nbr_freq) const;
 	int            conv_db_to_y (float db, int pix_h) const;
 	void           move_param (int dir);
 	void           change_param (int dir);

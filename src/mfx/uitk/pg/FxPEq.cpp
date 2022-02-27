@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/peq/Param.h"
 #include "mfx/uitk/grap/PrimLine.h"
+#include "mfx/uitk/grap/PrimBox.h"
 #include "mfx/uitk/grap/RenderCtx.h"
 #include "mfx/uitk/pg/FxPEq.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -48,6 +49,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cstring>
+#include <climits>
 #include <cmath>
 
 
@@ -359,6 +361,67 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 			++ node_id;
 		}
 	}
+
+	// Keyboard
+#if PV_VERSION == 2
+	constexpr auto st_per_oct = 12;
+	constexpr auto kc_ol = 40;
+	constexpr auto kc_w  = 80;
+	constexpr auto kc_b  = 0;
+	const auto     ky_w  = height - h_t * 2;
+	const auto     ky_b  = ky_w - h_t;
+	const auto     ky_0  = ky_b - h_t;
+	constexpr std::array <bool, st_per_oct> bk_flag_arr =
+	{
+		false, true, false, true, false, false, true, // C - F#
+		false, true, false, true, false               // G - B
+	};
+
+	// Background, fill everything in white
+	constexpr auto note_beg  = 12 + 5;
+	constexpr auto note_end  = 125;
+	const int      kbd_x_l   =
+		conv_pitch_to_x (float (note_beg) - 0.5f, f_beg, f_end, nbr_freq);
+	const int      kbd_x_r   =
+		conv_pitch_to_x (float (note_end) - 0.5f, f_beg, f_end, nbr_freq);
+	grap::PrimBox::draw_filled (
+		ctx, kbd_x_l, ky_0, kbd_x_r - kbd_x_l, ky_w - ky_0, kc_w
+	);
+
+	bool           bk_p_flag = false; // Blackness of the previous key
+	for (int note_idx = note_beg; note_idx < note_end; ++note_idx)
+	{
+		const int      oct_idx   = note_idx / st_per_oct;
+		const int      st_idx    = note_idx - oct_idx * st_per_oct;
+		const auto     kx_l      =
+			conv_pitch_to_x (float (note_idx) - 0.5f, f_beg, f_end, nbr_freq);
+		const auto     kx_h      =
+			conv_pitch_to_x (float (note_idx) + 0.5f, f_beg, f_end, nbr_freq);
+		const auto     kx_m      = (kx_l + kx_h + 1) / 2;
+		const auto     bk_c_flag = bk_flag_arr [st_idx];
+		switch ((bk_c_flag ? 1 : 0) + (bk_p_flag ? 2 : 0))
+		{
+		case 0: // White preceded by white
+			grap::PrimLine::draw_v (ctx, kx_l, ky_0, ky_w, kc_ol, false);
+			break;
+		case 1: // Black preceded by white
+			grap::PrimBox::draw_filled (
+				ctx, kx_l, ky_0, kx_h - kx_l, ky_b - ky_0, kc_b
+			);
+			grap::PrimLine::draw_v (ctx, kx_m, ky_b, ky_w, kc_ol, false);
+			break;
+		case 2: // White preceded by black
+			// Nothing
+			break;
+		default:
+			assert (false);
+			break;
+		}
+
+		bk_p_flag = bk_c_flag;
+	}
+
+#endif
 
 	// dB
 #if PV_VERSION != 2
@@ -765,6 +828,23 @@ int	FxPEq::conv_freq_to_x (float f, float f_beg, float f_end, int nbr_freq) cons
 	const float    l_amp = log2f (f_amp);
 	const float    x_flt = l_rel * float (nbr_freq) / l_amp;
 	const int      x     = fstb::round_int (x_flt);
+
+	return x;
+}
+
+
+
+// Result can be out of the window
+int	FxPEq::conv_pitch_to_x (float note, float f_beg, float f_end, int nbr_freq) const
+{
+	/*** To do: simplify formula to remove the exp/log stuff. ***/
+
+	constexpr auto st_per_oct = 12;
+	constexpr auto oct_per_st = 1.0 / double (st_per_oct);
+	constexpr auto note_a440  = 69; // MIDI note for A440
+	const auto     oct_a      = float ((note - note_a440) * oct_per_st);
+	const auto     freq       = 440.f * exp2f (oct_a);
+	const auto     x          = conv_freq_to_x (freq, f_beg, f_end, nbr_freq);
 
 	return x;
 }
