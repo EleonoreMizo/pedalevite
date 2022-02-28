@@ -479,6 +479,8 @@
     <ClInclude Include="..\..\..\src\fstb\BitFieldSparseIterator.hpp" />
     <ClInclude Include="..\..\..\src\fstb\BitFieldTools.h" />
     <ClInclude Include="..\..\..\src\fstb\BitFieldTools.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\ClockUnsafe.h" />
+    <ClInclude Include="..\..\..\src\fstb\ClockUnsafe.hpp" />
     <ClInclude Include="..\..\..\src\fstb\CpuId.h" />
     <ClInclude Include="..\..\..\src\fstb\Crc32.h" />
     <ClInclude Include="..\..\..\src\fstb\Crc32.hpp" />

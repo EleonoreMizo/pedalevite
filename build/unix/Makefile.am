@@ -207,6 +207,8 @@ commonsrc = \
         ../../src/fstb/BitFieldSparseIterator.hpp \
         ../../src/fstb/BitFieldTools.h \
         ../../src/fstb/BitFieldTools.hpp \
+        ../../src/fstb/ClockUnsafe.h \
+        ../../src/fstb/ClockUnsafe.hpp \
         ../../src/fstb/CpuId.cpp \
         ../../src/fstb/CpuId.h \
         ../../src/fstb/Crc32.cpp \
