@@ -1181,9 +1181,9 @@ somme de travail.</p>
 <h3><a id="soft-prepare"></a>Préparation du système</h3>
 
 <p>Télécharger
-<a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a> <strong>en
-version Lite</strong>.
-La version minimum recommandée est datée du 2019-09-26 (Buster).
+<a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi
+OS</a> <strong>en version Lite</strong>.
+La version minimum recommandée est datée du 2019-09-26 (Buster, 32 bits).
 Décompresser quelque part le fichier <code>.img</code> contenu dans
 l’archive.</p>
 
@@ -1325,8 +1325,9 @@ modifications&#8239;:</p>
 <h3><a id="soft-install-dep"></a>Installation des dépendances logicielles</h3>
 
 <p>Installer git, Jack2, ALSA et autoconf&#8239;:</p>
-<pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev
-sudo apt-get -y install wiringpi git git-core autoconf</pre>
+<pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev \
+    wiringpi git git-core autoconf \
+    raspberrypi-kernel raspberrypi-kernel-headers</pre>
 <p>En principe wiringPi est maintenant livré en standard, mais la version
 incluse dans le système ne supporte pas forcément correctement le Pi 4.
 Taper&#8239;:</p>
@@ -1412,14 +1413,19 @@ sudo mkdir -p /opt/pedalevite/etc/config
 sudo mkdir -p /opt/pedalevite/etc/font
 sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
+sudo cp ../../src/enable_ccr.ko /opt/pedalevite/bin/enable_ccr.ko
 sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh
 sudo cp ../../etc/font/* /opt/pedalevite/etc/font</pre>
 <p>Le Pi peut éventuellement être connecté à toutes les cartes et
 périphériques nécessaires (cf. les instructions de montage).
 Une fois ceci fait, on peut lancer Pédale Vite pour tester&#8239;:</p>
-<pre class="term">sudo /opt/pedalevite/bin/pedalevite</pre>
-<p>Le programme doit se mettre en route et tourner normalement.
-<code>Ctrl+C</code> pour l’interrompre.</p>
+<pre class="term">sudo insmod /opt/pedalevite/bin/enable_ccr.ko
+sudo /opt/pedalevite/bin/pedalevite</pre>
+<p>La première ligne est un module noyau qui sert à autoriser les applications
+à lire le compteur de cycles du CPU.
+Le programme doit se mettre en route et tourner normalement.
+<code>Ctrl+C</code> pour l’interrompre, ou le quitter via les menus de
+l’interface d’utilisation.</p>
 
 
 
@@ -1449,6 +1455,7 @@ case "$1" in
 	mount --bind /opt/pedalevite/ /opt/pedalevite/
 	mount -o remount,rw /opt/pedalevite/
         echo "Starting Pedale Vite..."
+	insmod /opt/pedalevite/bin/enable_ccr.ko
         /opt/pedalevite/bin/pedalevite &
         echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor > /dev/null
         echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null

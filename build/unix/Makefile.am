@@ -1,5 +1,9 @@
 ACLOCAL_AMFLAGS = -I m4
 
+if UNX
+SUBDIRS = ../../src/enable_ccr
+endif
+
 warningflags = \
         -Wall \
         -Wextra \
