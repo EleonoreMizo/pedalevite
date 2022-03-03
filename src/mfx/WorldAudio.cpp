@@ -136,7 +136,17 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	_proc_date_end = date_cur;
 	_proc_date_beg = date_cur;
 	_period_now    = 1;
-	_rate_expected = float (sample_freq / (int64_t (max_block_size) * 1000000));
+#if defined (mfx_Worldaudio_USE_UNSAFE_CLOCK)
+	std::chrono::microseconds time_eval (10'000);
+	const auto     t_beg      = read_clock ();
+	std::this_thread::sleep_for (time_eval);
+	const auto     t_end      = read_clock ();
+	const int64_t  clock_freq =
+		int64_t (t_end - t_beg) * 1'000'000 / time_eval.count ();
+#else
+	const int64_t  clock_freq = 1'000'000; // Hz
+#endif
+	_rate_expected = float (sample_freq / (max_block_size * clock_freq));
 
 	_prog_switcher.reset (sample_freq, max_block_size);
 }
