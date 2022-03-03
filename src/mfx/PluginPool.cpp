@@ -210,7 +210,7 @@ const piapi::PluginDescInterface &	PluginPool::get_model_desc (std::string model
 
 
 
-PluginPool::PluginDetails &	PluginPool::use_plugin (int index)
+PluginDetails &	PluginPool::use_plugin (int index)
 {
 	assert (index >= 0);
 	assert (index < Cst::_max_nbr_plugins);
@@ -224,7 +224,7 @@ PluginPool::PluginDetails &	PluginPool::use_plugin (int index)
 
 
 
-const PluginPool::PluginDetails &	PluginPool::use_plugin (int index) const
+const PluginDetails &	PluginPool::use_plugin (int index) const
 {
 	assert (index >= 0);
 	assert (index < Cst::_max_nbr_plugins);

@@ -27,10 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/BitFieldSparse.h"
-#include "mfx/piapi/PluginInterface.h"
 #include "mfx/Cst.h"
-#include "mfx/PluginPoolHostInterface.h"
+#include "mfx/PluginDetails.h"
 #include "mfx/SharedRscState.h"
 
 #include <array>
@@ -60,46 +58,8 @@ class PluginPool
 
 public:
 
-	typedef std::unique_ptr <piapi::PluginInterface> PluginUPtr;
-	typedef std::unique_ptr <PluginPoolHostInterface> HostUPtr;
-
-	class PluginDetails
-	{
-	public:
-		PluginUPtr     _pi_uptr;
-		HostUPtr       _host_uptr;
-		const piapi::PluginDescInterface *
-		               _desc_ptr = nullptr;
-
-		// Must be set by the client after each reset()
-		int            _latency  = 0;
-
-		// Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
-		std::vector <float>
-		               _param_arr;
-
-		// Final value of modulated parameters. Negative if not available.
-		// Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
-		// Only indicative, there is no guarantee of validity.
-		std::vector <float>
-		               _param_mod_arr;
-
-		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-		// Audio thread only
-
-		// Same remark. Managed by the audio thread only.
-		fstb::BitFieldSparse
-		               _param_update;
-
-		// Indicates that the latest change comes from the audio thread.
-		// Same remark. Audio thread only
-		std::vector <bool>
-		               _param_update_from_audio;
-
-		// Reset flags. Audio thread only
-		bool           _rst_steady_flag = false;
-		bool           _rst_full_flag   = false;
-	};
+	typedef PluginDetails::PluginUPtr PluginUPtr;
+	typedef PluginDetails::HostUPtr HostUPtr;
 
 	               PluginPool ();
 	               ~PluginPool () = default;

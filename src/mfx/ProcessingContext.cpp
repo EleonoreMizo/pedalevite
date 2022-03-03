@@ -276,8 +276,7 @@ std::string	ProcessingContext::dump_ctrl (const PluginPool &plugin_pool) const
 
 			// Parameter coordinates
 			assert (pc._plugin_id >= 0);
-			const PluginPool::PluginDetails &   details =
-				plugin_pool.use_plugin (pc._plugin_id);
+			const PluginDetails &details = plugin_pool.use_plugin (pc._plugin_id);
 			assert (details._desc_ptr != nullptr);
 			const piapi::PluginDescInterface &  pi_desc = *details._desc_ptr;
 			const piapi::PluginInfo pi_info { pi_desc.get_info () };

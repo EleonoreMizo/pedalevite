@@ -278,7 +278,7 @@ void	WorldAudio::reset_everything ()
 
 void	WorldAudio::reset_plugin (int pi_id)
 {
-	PluginPool::PluginDetails &  details = _pi_pool.use_plugin (pi_id);
+	PluginDetails& details = _pi_pool.use_plugin (pi_id);
 	int            dummy_lat = 0;
 	details._pi_uptr->reset (_sample_freq, _max_block_size, dummy_lat);
 }
@@ -458,7 +458,7 @@ void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node)
 {
 	if (node._aux_param_flag)
 	{
-		PluginPool::PluginDetails &  details = _pi_pool.use_plugin (node._pi_id);
+		PluginDetails &   details = _pi_pool.use_plugin (node._pi_id);
 		cmd::DelayInterface *	delay_ptr =
 			dynamic_cast <cmd::DelayInterface *> (details._pi_uptr.get ());
 		if (delay_ptr == nullptr)
@@ -503,7 +503,7 @@ void	WorldAudio::handle_controller (const ControlSource &controller, float val_r
 		const int            pi_id = coord._plugin_id;
 		const int            index = coord._param_index;
 
-		PluginPool::PluginDetails &   details = _pi_pool.use_plugin (pi_id);
+		PluginDetails &      details = _pi_pool.use_plugin (pi_id);
 		details._param_update.fill_bit (index);
 
 		// If the parameter is directly linked to the controller,
@@ -897,7 +897,7 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 	}
 
 	// Handles modulations and automations
-	PluginPool::PluginDetails &  details = _pi_pool.use_plugin (plugin_id);
+	PluginDetails &   details = _pi_pool.use_plugin (plugin_id);
 	if (details._param_update.has_a_bit_set ())
 	{
 		fstb::BitFieldSparseIterator param_it (details._param_update);
@@ -1156,8 +1156,7 @@ void	WorldAudio::handle_signals (const piapi::ProcInfo &proc_info, const Process
 void	WorldAudio::handle_msg_param (const WaMsg::Param &msg)
 {
 	const int      index = msg._index;
-	PluginPool::PluginDetails &   details =
-		_pi_pool.use_plugin (msg._plugin_id);
+	PluginDetails &   details = _pi_pool.use_plugin (msg._plugin_id);
 	details._param_arr [index] = msg._val;
 	details._param_update.fill_bit (index);
 	details._param_update_from_audio [index] = false;
@@ -1181,8 +1180,7 @@ void	WorldAudio::handle_msg_tempo (const WaMsg::Tempo &msg)
 
 void	WorldAudio::handle_msg_reset (const WaMsg::Reset &msg)
 {
-	PluginPool::PluginDetails &   details =
-		_pi_pool.use_plugin (msg._plugin_id);
+	PluginDetails &   details = _pi_pool.use_plugin (msg._plugin_id);
 	details._rst_steady_flag |= msg._steady_flag;
 	details._rst_full_flag   |= msg._full_flag;
 }

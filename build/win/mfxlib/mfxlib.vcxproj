@@ -1491,6 +1491,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreeze.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreezeDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\PluginDetails.h" />
     <ClInclude Include="..\..\..\src\mfx\PluginPoolHostInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\PluginPoolHostMini.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
@@ -2253,6 +2254,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\vfreeze\VelvetFreezeDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\PluginDetails.cpp" />
     <ClCompile Include="..\..\..\src\mfx\PluginPoolHostInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProgSwitcher.cpp" />

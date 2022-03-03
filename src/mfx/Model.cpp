@@ -1472,8 +1472,7 @@ float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
 	const int      pi_id     = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
 
-	const PluginPool::PluginDetails &   details =
-		_central.use_pi_pool ().use_plugin (pi_id);
+	const PluginDetails & details = _central.use_pi_pool ().use_plugin (pi_id);
 	float          val = details._param_mod_arr [index];
 	if (val < 0)
 	{
@@ -1868,7 +1867,7 @@ void	Model::apply_settings_tuner ()
 
 	_tuner_pi_id = _central.set_plugin (0, Cst::_plugin_tuner, false, true);
 
-	const PluginPool::PluginDetails &   details =
+	const PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
 	_tuner_ptr = dynamic_cast <pi::tuner::Tuner *> (details._pi_uptr.get ());
 	assert (_tuner_ptr != nullptr);
@@ -2054,8 +2053,7 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_id)
 void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings)
 {
 	// Parameters
-	const PluginPool::PluginDetails &   details =
-		_central.use_pi_pool ().use_plugin (pi_id);
+	const PluginDetails &   details = _central.use_pi_pool ().use_plugin (pi_id);
 	int            nbr_param =
 		details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
 	const int      nbr_param_check = int (settings._param_list.size ());
@@ -2317,8 +2315,7 @@ void	Model::process_action_param (const doc::ActionParam &action)
 			// At this point we are not sure about the type of a
 			// named plugin, so we have to check the parameter range.
 			PluginPool &   pi_pool   = _central.use_pi_pool ();
-			const PluginPool::PluginDetails & details =
-				pi_pool.use_plugin (pi_id);
+			const PluginDetails & details = pi_pool.use_plugin (pi_id);
 			const int      nbr_param =
 				details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
 			if (action._index < nbr_param)
@@ -2546,8 +2543,7 @@ void	Model::build_slot_info ()
 			const int      pi_id = spi._pi_id_arr [type];
 			if (pi_id >= 0)
 			{
-				const PluginPool::PluginDetails &   details =
-					pi_pool.use_plugin (pi_id);
+				const PluginDetails &   details = pi_pool.use_plugin (pi_id);
 				info [type] =
 					std::make_shared <ModelObserverInterface::PluginInfo> (
 						*details._pi_uptr,
@@ -2953,8 +2949,7 @@ void	Model::fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitDa
 	const int      pi_id = _pi_id_map [slot_id]._pi_id_arr [PiType_MAIN];
 	assert (pi_id >= 0);
 
-	const PluginPool::PluginDetails &   details =
-		_central.use_pi_pool ().use_plugin (pi_id);
+	const PluginDetails &   details = _central.use_pi_pool ().use_plugin (pi_id);
 	pi_data._nbr_io_arr [Dir_IN ] = 1;
 	pi_data._nbr_io_arr [Dir_OUT] = 1;
 	pi_data._nbr_sig              = 0;

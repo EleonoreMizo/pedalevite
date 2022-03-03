@@ -5574,6 +5574,9 @@
     <ClInclude Include="..\..\..\src\fstb\ClockUnsafe.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\PluginDetails.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -7060,6 +7063,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\r128\AllMeters.cpp">
       <Filter>mfx\dsp\ana\r128</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\PluginDetails.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

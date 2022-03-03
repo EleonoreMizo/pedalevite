@@ -88,8 +88,7 @@ void	ControlledParam::update_internal_val(float val_nrm)
 // Parameter value in the plug-in pool is updated if there is an absolute controler.
 float	ControlledParam::compute_final_val (PluginPool &pi_pool) const
 {
-	PluginPool::PluginDetails &   details =
-		pi_pool.use_plugin (_param._plugin_id);
+	PluginDetails &   details = pi_pool.use_plugin (_param._plugin_id);
 
 	float          val = 0;
 	int            beg = 0;

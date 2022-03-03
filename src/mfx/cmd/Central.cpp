@@ -200,8 +200,7 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 		_plugin_pool.list_plugins (SharedRscState_INUSE);
 	for (int pi_id : id_list)
 	{
-		PluginPool::PluginDetails &         details  =
-			_plugin_pool.use_plugin (pi_id);
+		PluginDetails &details = _plugin_pool.use_plugin (pi_id);
 		details._latency = 0;
 #if ! defined (NDEBUG)
 		int            ret_val =
@@ -440,8 +439,7 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 		const int      pi_id = _plugin_pool.create (
 			model, std::make_unique <PluginCb> (*this)
 		);
-		PluginPool::PluginDetails &   details =
-			_plugin_pool.use_plugin (pi_id);
+		PluginDetails &details = _plugin_pool.use_plugin (pi_id);
 		if (_sample_freq > 0)
 		{
 			details._latency = 0;
@@ -1006,8 +1004,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 					{
 						pi_id = inst_node.first;
 						inst_node.second = true;
-						PluginPool::PluginDetails &   details =
-							_plugin_pool.use_plugin (pi_id);
+						PluginDetails &details = _plugin_pool.use_plugin (pi_id);
 						const auto     state = details._pi_uptr->get_state ();
 						if (_sample_freq > 0)
 						{
@@ -1042,8 +1039,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 			pi_id = _plugin_pool.create (
 				model, std::make_unique <PluginCb> (*this)
 			);
-			PluginPool::PluginDetails &   details =
-				_plugin_pool.use_plugin (pi_id);
+			PluginDetails &details = _plugin_pool.use_plugin (pi_id);
 			if (_sample_freq > 0)
 			{
 #if ! defined (NDEBUG)
@@ -1180,8 +1176,7 @@ void	Central::add_controller (ProcessingContext &ctx, const doc::CtrlLink &link,
 	// the current public value.
 	if (abs_flag)
 	{
-		PluginPool::PluginDetails &   details =
-			_plugin_pool.use_plugin (coord._plugin_id);
+		PluginDetails &details = _plugin_pool.use_plugin (coord._plugin_id);
 		const float    val_nrm = details._param_arr [coord._param_index];
 		unit_sptr->update_internal_val (val_nrm);
 	}

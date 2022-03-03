@@ -588,8 +588,7 @@ PluginAux &	Router::create_plugin_aux (Document &doc, PluginPool &plugin_pool, D
 
 	if (_sample_freq > 0)
 	{
-		const PluginPool::PluginDetails &   details =
-			plugin_pool.use_plugin (plug._pi_id);
+		const PluginDetails &   details = plugin_pool.use_plugin (plug._pi_id);
 		int         latency = 0;
 		details._pi_uptr->reset (_sample_freq, _max_block_size, latency);
 	}

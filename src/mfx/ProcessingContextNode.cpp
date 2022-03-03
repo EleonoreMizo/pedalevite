@@ -128,8 +128,7 @@ std::string	ProcessingContextNode::dump_as_str (const PluginPool &plugin_pool) c
 	); out += indent + txt_0;
 	if (_pi_id >= 0)
 	{
-		const PluginPool::PluginDetails &   details =
-			plugin_pool.use_plugin (_pi_id);
+		const PluginDetails &   details = plugin_pool.use_plugin (_pi_id);
 		assert (details._desc_ptr != nullptr);
 		const piapi::PluginDescInterface &  pi_desc = *details._desc_ptr;
 		const piapi::PluginInfo pi_info { pi_desc.get_info () };
