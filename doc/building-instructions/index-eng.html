@@ -1268,17 +1268,13 @@ sudo mkdir -p /opt/pedalevite/etc/config
 sudo mkdir -p /opt/pedalevite/etc/font
 sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
-sudo cp ../../src/enable_ccr.ko /opt/pedalevite/bin/enable_ccr.ko
 sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh
 sudo cp ../../etc/font/* /opt/pedalevite/etc/font</pre>
 <p>The Pi can possibly be connected to all the required cards and peripherals
 (see the building instructions).
 Once done, run Pédale Vite for a quick check&#8239;:</p>
-<pre class="term">sudo insmod /opt/pedalevite/bin/enable_ccr.ko
-sudo /opt/pedalevite/bin/pedalevite</pre>
-<p>The first line is a kernel module enabling the read access on the CPU cycle
-counter for user-land applications.
-The program should run normally.
+<pre class="term">sudo /opt/pedalevite/bin/pedalevite</pre>
+<p>The program should run normally.
 <code>Ctrl+C</code> to stop it, or quit it from the user interface menus.</p>
 
 
@@ -1309,7 +1305,6 @@ case "$1" in
 	mount --bind /opt/pedalevite/ /opt/pedalevite/
 	mount -o remount,rw /opt/pedalevite/
         echo "Starting Pedale Vite..."
-	insmod /opt/pedalevite/bin/enable_ccr.ko
         /opt/pedalevite/bin/pedalevite &
         echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor > /dev/null
         echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null

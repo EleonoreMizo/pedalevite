@@ -1413,17 +1413,13 @@ sudo mkdir -p /opt/pedalevite/etc/config
 sudo mkdir -p /opt/pedalevite/etc/font
 sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
-sudo cp ../../src/enable_ccr.ko /opt/pedalevite/bin/enable_ccr.ko
 sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh
 sudo cp ../../etc/font/* /opt/pedalevite/etc/font</pre>
 <p>Le Pi peut éventuellement être connecté à toutes les cartes et
 périphériques nécessaires (cf. les instructions de montage).
 Une fois ceci fait, on peut lancer Pédale Vite pour tester&#8239;:</p>
-<pre class="term">sudo insmod /opt/pedalevite/bin/enable_ccr.ko
-sudo /opt/pedalevite/bin/pedalevite</pre>
-<p>La première ligne est un module noyau qui sert à autoriser les applications
-à lire le compteur de cycles du CPU.
-Le programme doit se mettre en route et tourner normalement.
+<pre class="term">sudo /opt/pedalevite/bin/pedalevite</pre>
+<p>Le programme doit se mettre en route et tourner normalement.
 <code>Ctrl+C</code> pour l’interrompre, ou le quitter via les menus de
 l’interface d’utilisation.</p>
 
@@ -1455,7 +1451,6 @@ case "$1" in
 	mount --bind /opt/pedalevite/ /opt/pedalevite/
 	mount -o remount,rw /opt/pedalevite/
         echo "Starting Pedale Vite..."
-	insmod /opt/pedalevite/bin/enable_ccr.ko
         /opt/pedalevite/bin/pedalevite &
         echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor > /dev/null
         echo -1 | sudo tee /proc/sys/kernel/sched_rt_runtime_us > /dev/null

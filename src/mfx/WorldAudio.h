@@ -28,8 +28,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 // For debugging: records all the processing steps
 #undef mfx_WorldAudio_BUF_REC
 
-#define mfx_Worldaudio_USE_UNSAFE_CLOCK
-
+// Define this symbol to use the highest resolution timer, based on clock
+// cycles. However it seems worsen the performances on ARM.
+#undef mfx_Worldaudio_USE_UNSAFE_CLOCK
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
