@@ -28,12 +28,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 // For debugging: records all the processing steps
 #undef mfx_WorldAudio_BUF_REC
 
+#define mfx_Worldaudio_USE_UNSAFE_CLOCK
+
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "conc/CellPool.h"
 #include "fstb/AllocAlign.h"
+#if defined (mfx_Worldaudio_USE_UNSAFE_CLOCK)
+# include "fstb/ClockUnsafe.h"
+#endif
 #include "fstb/SingleObj.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold.h"
@@ -92,6 +97,17 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+// Temporary test code
+#if defined (mfx_Worldaudio_USE_UNSAFE_CLOCK)
+	typedef fstb::ClockUnsafe::Counter ClockCount;
+	fstb_FORCEINLINE ClockCount   read_clock () const noexcept { return fstb::ClockUnsafe::read (); }
+	static fstb_FORCEINLINE auto  get_clock_val (ClockCount c) noexcept { return c; }
+#else
+	typedef std::chrono::microseconds ClockCount;
+	fstb_FORCEINLINE ClockCount   read_clock () const noexcept { return _input_device.get_cur_date (); }
+	static fstb_FORCEINLINE auto  get_clock_val (ClockCount c) noexcept { return c.count (); }
+#endif
 
 	enum class CellRet
 	{
@@ -184,10 +200,8 @@ private:
 	float          _tempo_cur;          // BPM, > 0
 
 	bool           _denorm_conf_flag;   // Indicates we have configured the denormal stuff for the processing thread
-	std::chrono::microseconds
-	               _proc_date_beg;
-	std::chrono::microseconds
-	               _proc_date_end;
+	ClockCount     _proc_date_beg;
+	ClockCount     _proc_date_end;
 	dsp::dyn::MeterRmsPeakHold
 	               _proc_analyser;
 

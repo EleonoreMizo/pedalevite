@@ -132,7 +132,7 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	for (auto &x : _sig_res_arr) { x = 0; }
 
 	_meter_result.reset ();
-	const std::chrono::microseconds  date_cur (_input_device.get_cur_date ());
+	const ClockCount  date_cur (read_clock ());
 	_proc_date_end = date_cur;
 	_proc_date_beg = date_cur;
 	_period_now    = 1;
@@ -153,17 +153,17 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	assert (nbr_spl <= _max_block_size);
 
 	// Time measurement
-	const std::chrono::microseconds  date_beg (_input_device.get_cur_date ());
-	const std::chrono::microseconds  dur_tot  (      date_beg - _proc_date_beg);
-	const std::chrono::microseconds  dur_proc (_proc_date_end - _proc_date_beg);
-	if (dur_tot.count () > 0)
+	const ClockCount  date_beg (read_clock ());
+	const ClockCount  dur_tot  (      date_beg - _proc_date_beg);
+	const ClockCount  dur_proc (_proc_date_end - _proc_date_beg);
+	if (get_clock_val (dur_tot) > 0)
 	{
-		const float    ratio =
-			float (dur_proc.count ()) / float (dur_tot.count ());
+		const float    ratio = 
+			float (get_clock_val (dur_proc)) / float (get_clock_val (dur_tot));
 		_proc_analyser.process_sample (ratio);
 		_meter_result._dsp_use._peak = float (_proc_analyser.get_peak_hold ());
 		_meter_result._dsp_use._rms  = float (_proc_analyser.get_rms ());
-		_period_now = float (dur_tot.count ()) * _rate_expected;
+		_period_now = float (get_clock_val (dur_tot)) * _rate_expected;
 	}
 	_proc_date_beg = date_beg;
 
@@ -230,7 +230,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 		_tempo_new = 0;
 	}
 
-	_proc_date_end = _input_device.get_cur_date ();
+	_proc_date_end = read_clock ();
 }
 
 
