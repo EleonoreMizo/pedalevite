@@ -1467,12 +1467,7 @@ float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	const auto     it_id_map = _pi_id_map.find (slot_id);
-	assert (it_id_map != _pi_id_map.end ());
-	const int      pi_id     = it_id_map->second._pi_id_arr [type];
-	assert (pi_id >= 0);
-
-	const PluginDetails & details = _central.use_pi_pool ().use_plugin (pi_id);
+	const PluginDetails & details = use_plugin_details (slot_id, type);
 	float          val = details._param_mod_arr [index];
 	if (val < 0)
 	{
@@ -1481,6 +1476,21 @@ float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
 
 	return val;
 }
+
+
+
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+
+Model::CpuMeter	Model::get_plugin_cpu_meter (int slot_id) const
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+
+	const PluginDetails & details = use_plugin_details (slot_id, PiType_MAIN);
+
+	return { details._dsp_use._rms, details._dsp_use._peak };
+}
+
+#endif // mfx_PluginDetails_USE_TIMINGS
 
 
 
@@ -2634,6 +2644,24 @@ void	Model::find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) co
 			}
 		}
 	}
+}
+
+
+
+const PluginDetails &	Model::use_plugin_details (int slot_id, PiType type) const
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+
+	const auto     it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	const int      pi_id     = it_id_map->second._pi_id_arr [type];
+	assert (pi_id >= 0);
+
+	const PluginDetails & details = _central.use_pi_pool ().use_plugin (pi_id);
+
+	return details;
 }
 
 

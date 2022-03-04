@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
+#include "mfx/PluginDetails.h"
 #include "mfx/View.h"
 
 #include <algorithm>
@@ -79,6 +80,7 @@ SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_chn_sptr ( std::make_shared <NText  > (Entry_CHN    ))
 ,	_frs_sptr ( std::make_shared <NText  > (Entry_FRESH  ))
 ,	_lbl_sptr ( std::make_shared <NText  > (Entry_LABEL  ))
+,	_cpu_sptr ( std::make_shared <NText  > (Entry_MET_CPU))
 ,	_label_param ()
 ,	_selfx_param ()
 {
@@ -98,6 +100,7 @@ SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 	_menu_sptr->push_back (_chn_sptr);
 	_menu_sptr->push_back (_frs_sptr);
 	_menu_sptr->push_back (_lbl_sptr);
+	_menu_sptr->push_back (_cpu_sptr);
 	_menu_sptr->set_autoscroll (true);
 }
 
@@ -164,6 +167,9 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	for (auto &sptr : {
 		_typ_sptr, _inb_sptr, _ina_sptr, _del_sptr, _rtn_sptr,
 		_prs_sptr, _rst_sptr, _chn_sptr, _frs_sptr, _lbl_sptr
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+		, _cpu_sptr
+#endif // mfx_PluginDetails_USE_TIMINGS
 	})
 	{
 		sptr->set_font (*_fnt_ptr);
@@ -173,6 +179,9 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	}
 
 	_page_ptr->push_back (_menu_sptr);
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	_page_ptr->set_timer (0, true);
+#endif // mfx_PluginDetails_USE_TIMINGS
 
 	update_display ();
 }
@@ -181,7 +190,9 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 void	SlotMenu::do_disconnect ()
 {
-	// Nothing
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	_page_ptr->set_timer (0, false);
+#endif // mfx_PluginDetails_USE_TIMINGS
 }
 
 
@@ -192,7 +203,13 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 
 	const int      node_id = evt.get_target ();
 
-	if (evt.is_button_ex ())
+	if (evt.is_timer ())
+	{
+		refresh_display ();
+		ret_val = EvtProp_CATCH;
+	}
+
+	else if (evt.is_button_ex ())
 	{
 		const Button   but = evt.get_button_ex ();
 		switch (but)
@@ -445,7 +462,38 @@ void	SlotMenu::update_display ()
 
 	_page_ptr->set_nav_layout (nav_list);
 
+	refresh_display ();
+
 	_menu_sptr->invalidate_all ();
+}
+
+
+
+// Called reguarly, for moving things
+void	SlotMenu::refresh_display ()
+{
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const int      slot_id      = _loc_edit._slot_id;
+	const bool     exist_flag   = (slot_id >= 0);
+	const bool     full_flag    =
+		(exist_flag && ! preset.is_slot_empty (slot_id));
+	if (full_flag)
+	{
+		const Model::CpuMeter   res = _model_ptr->get_plugin_cpu_meter (slot_id);
+		const float    cpu_avg = std::min (res._rms  * 100, 99.99f);
+		const float    cpu_max = std::min (res._peak * 100, 99.99f);
+		char           txt_0 [255+1];
+		fstb::snprintf4all (txt_0, sizeof (txt_0),
+			"CPU  : %5.2f%%/%5.2f%%", cpu_avg, cpu_max
+		);
+		_cpu_sptr->set_text (txt_0);
+	}
+	else
+	{
+		_cpu_sptr->set_text ("CPU  : N.A.");
+	}
+#endif // mfx_PluginDetails_USE_TIMINGS
 }
 
 

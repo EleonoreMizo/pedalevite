@@ -28,18 +28,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 // For debugging: records all the processing steps
 #undef mfx_WorldAudio_BUF_REC
 
-// Define this symbol to use the highest resolution timer, based on clock
-// cycles. However it seems worsen the performances on ARM.
-#undef mfx_Worldaudio_USE_UNSAFE_CLOCK
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "conc/CellPool.h"
 #include "fstb/AllocAlign.h"
-#if defined (mfx_Worldaudio_USE_UNSAFE_CLOCK)
-# include "fstb/ClockUnsafe.h"
-#endif
 #include "fstb/SingleObj.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold.h"
@@ -48,6 +42,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/BufPack.h"
 #include "mfx/Cst.h"
 #include "mfx/MeterResultSet.h"
+#include "mfx/PerfClockCount.h"
 #include "mfx/ProgSwitcher.h"
 #include "mfx/WaMsgQueue.h"
 
@@ -100,14 +95,10 @@ protected:
 private:
 
 // Temporary test code
-#if defined (mfx_Worldaudio_USE_UNSAFE_CLOCK)
-	typedef fstb::ClockUnsafe::Counter ClockCount;
-	fstb_FORCEINLINE ClockCount   read_clock () const noexcept { return fstb::ClockUnsafe::read (); }
-	static fstb_FORCEINLINE auto  get_clock_val (ClockCount c) noexcept { return c; }
+#if defined (mfx_PerfClockCount_USE_UNSAFE_CLOCK)
+	fstb_FORCEINLINE PerfClockCount  read_clock () const noexcept { return fstb::ClockUnsafe::read (); }
 #else
-	typedef std::chrono::microseconds ClockCount;
-	fstb_FORCEINLINE ClockCount   read_clock () const noexcept { return _input_device.get_cur_date (); }
-	static fstb_FORCEINLINE auto  get_clock_val (ClockCount c) noexcept { return c.count (); }
+	fstb_FORCEINLINE PerfClockCount  read_clock () const noexcept { return _input_device.get_cur_date (); }
 #endif
 
 	enum class CellRet
@@ -158,7 +149,7 @@ private:
 	void           store_send (int nbr_spl);
 	void           copy_output (float * const * dst_arr, int nbr_spl);
 	void           process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl);
-	void           process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info);
+	PluginDetails& process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info);
 	void           mix_source_channels (const ProcessingContextNode::Side &side, const ProcessingContext::PluginContext::MixInputArray &mix_in_arr, int nbr_spl);
 	void           prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContext::PluginContext &pi_ctx, PiType type, bool use_byp_as_src_flag);
 	void           handle_signals (const piapi::ProcInfo &proc_info, const ProcessingContextNode &node);
@@ -201,8 +192,9 @@ private:
 	float          _tempo_cur;          // BPM, > 0
 
 	bool           _denorm_conf_flag;   // Indicates we have configured the denormal stuff for the processing thread
-	ClockCount     _proc_date_beg;
-	ClockCount     _proc_date_end;
+	PerfClockCount _proc_date_beg;
+	PerfClockCount _proc_date_end;
+	PerfClockCount _dur_tot;            // Duration of the previous frame
 	dsp::dyn::MeterRmsPeakHold
 	               _proc_analyser;
 

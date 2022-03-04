@@ -205,7 +205,7 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 #if ! defined (NDEBUG)
 		int            ret_val =
 #endif
-			details._pi_uptr->reset (
+			details.reset_plugin (
 				sample_freq, max_block_size, details._latency
 			);
 #if ! defined (NDEBUG)
@@ -446,7 +446,7 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 #if ! defined (NDEBUG)
 			int            ret_val =
 #endif
-				details._pi_uptr->reset (
+				details.reset_plugin (
 					_sample_freq,
 					_max_block_size,
 					details._latency
@@ -1014,7 +1014,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 #if ! defined (NDEBUG)
 								int            ret_val =
 #endif
-									details._pi_uptr->reset (
+									details.reset_plugin (
 										_sample_freq, _max_block_size, latency
 									);
 								details._latency = latency;
@@ -1045,7 +1045,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 #if ! defined (NDEBUG)
 				int            ret_val =
 #endif
-					details._pi_uptr->reset (
+					details.reset_plugin (
 						_sample_freq,
 						_max_block_size,
 						latency

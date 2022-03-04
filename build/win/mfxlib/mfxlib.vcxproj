@@ -1381,6 +1381,7 @@
     <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\PerfClockCount.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\BypassState.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ChnPref.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h" />

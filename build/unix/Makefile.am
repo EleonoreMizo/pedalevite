@@ -1674,6 +1674,7 @@ commonsrc = \
         ../../src/mfx/ParamCoord.hpp \
         ../../src/mfx/PiType.h \
         ../../src/mfx/PedalLoc.h \
+        ../../src/mfx/PerfClockCount.h \
         ../../src/mfx/PluginDetails.cpp \
         ../../src/mfx/PluginDetails.h \
         ../../src/mfx/PluginPool.cpp \

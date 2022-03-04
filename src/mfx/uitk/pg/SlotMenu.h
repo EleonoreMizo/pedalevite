@@ -108,13 +108,15 @@ private:
 		Entry_RESET,
 		Entry_CHN,
 		Entry_FRESH,
-		Entry_LABEL
+		Entry_LABEL,
+		Entry_MET_CPU
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
 
 	void           update_display ();
+	void           refresh_display ();
 	EvtProp        change_type (int dir);
 	void           reset_plugin ();
 	void           select_plugin (int node_id);
@@ -151,6 +153,7 @@ private:
 	TxtSPtr        _chn_sptr;
 	TxtSPtr        _frs_sptr;
 	TxtSPtr        _lbl_sptr;
+	TxtSPtr        _cpu_sptr;
 
 	EditLabel::Param
 	               _label_param;

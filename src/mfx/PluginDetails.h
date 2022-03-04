@@ -25,11 +25,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+#define mfx_PluginDetails_USE_TIMINGS
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/BitFieldSparse.h"
 #include "mfx/piapi/PluginInterface.h"
 #include "mfx/PluginPoolHostInterface.h"
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+# include "mfx/dsp/dyn/MeterRmsPeakHold.h"
+# include "mfx/MeterResult.h"
+#endif // mfx_PluginDetails_USE_TIMINGS
 
 #include <memory>
 #include <vector>
@@ -56,6 +64,8 @@ public:
 
 	typedef std::unique_ptr <piapi::PluginInterface> PluginUPtr;
 	typedef std::unique_ptr <PluginPoolHostInterface> HostUPtr;
+
+	int            reset_plugin (double sample_freq, int max_block_size, int &latency);
 
 	PluginUPtr     _pi_uptr;
 	HostUPtr       _host_uptr;
@@ -85,6 +95,11 @@ public:
 	std::vector <float>
 	               _param_mod_arr;
 
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	// Valid only for "main" plug-ins. Includes the d/w/b aux plug-in.
+	MeterResult    _dsp_use; // In [0 ; 1]
+#endif // mfx_PluginDetails_USE_TIMINGS
+
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Audio thread only
 
@@ -100,6 +115,11 @@ public:
 	// Reset flags. Audio thread only
 	bool           _rst_steady_flag = false;
 	bool           _rst_full_flag   = false;
+
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	dsp::dyn::MeterRmsPeakHold
+	               _proc_analyser;
+#endif // mfx_PluginDetails_USE_TIMINGS
 
 
 

@@ -77,6 +77,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaM
 ,	_denorm_conf_flag (false)
 ,	_proc_date_beg (0)
 ,	_proc_date_end (0)
+,	_dur_tot (0)
 ,	_proc_analyser ()
 ,	_sig_res_arr ()
 ,	_reset_flag (false)
@@ -132,15 +133,15 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	for (auto &x : _sig_res_arr) { x = 0; }
 
 	_meter_result.reset ();
-	const ClockCount  date_cur (read_clock ());
+	const PerfClockCount date_cur (read_clock ());
 	_proc_date_end = date_cur;
 	_proc_date_beg = date_cur;
 	_period_now    = 1;
-#if defined (mfx_Worldaudio_USE_UNSAFE_CLOCK)
+#if defined (mfx_PerfClockCount_USE_UNSAFE_CLOCK)
 	std::chrono::microseconds time_eval (10'000);
-	const auto     t_beg      = read_clock ();
+	const auto     t_beg      = get_clock_val (read_clock ());
 	std::this_thread::sleep_for (time_eval);
-	const auto     t_end      = read_clock ();
+	const auto     t_end      = get_clock_val (read_clock ());
 	const int64_t  clock_freq =
 		int64_t (t_end - t_beg) * 1'000'000 / time_eval.count ();
 #else
@@ -163,17 +164,17 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	assert (nbr_spl <= _max_block_size);
 
 	// Time measurement
-	const ClockCount  date_beg (read_clock ());
-	const ClockCount  dur_tot  (      date_beg - _proc_date_beg);
-	const ClockCount  dur_proc (_proc_date_end - _proc_date_beg);
-	if (get_clock_val (dur_tot) > 0)
+	const PerfClockCount date_beg (read_clock ());
+	_dur_tot = date_beg - _proc_date_beg;
+	const PerfClockCount dur_proc (_proc_date_end - _proc_date_beg);
+	if (get_clock_val (_dur_tot) > 0)
 	{
 		const float    ratio = 
-			float (get_clock_val (dur_proc)) / float (get_clock_val (dur_tot));
+			float (get_clock_val (dur_proc)) / float (get_clock_val (_dur_tot));
 		_proc_analyser.process_sample (ratio);
 		_meter_result._dsp_use._peak = float (_proc_analyser.get_peak_hold ());
 		_meter_result._dsp_use._rms  = float (_proc_analyser.get_rms ());
-		_period_now = float (get_clock_val (dur_tot)) * _rate_expected;
+		_period_now = float (get_clock_val (_dur_tot)) * _rate_expected;
 	}
 	_proc_date_beg = date_beg;
 
@@ -290,7 +291,7 @@ void	WorldAudio::reset_plugin (int pi_id)
 {
 	PluginDetails& details = _pi_pool.use_plugin (pi_id);
 	int            dummy_lat = 0;
-	details._pi_uptr->reset (_sample_freq, _max_block_size, dummy_lat);
+	details.reset_plugin (_sample_freq, _max_block_size, dummy_lat);
 }
 
 
@@ -816,6 +817,10 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 
 void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl)
 {
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	const PerfClockCount date_beg (read_clock ());
+#endif // mfx_PluginDetails_USE_TIMINGS
+
 	// Source mix
 	if (! pi_ctx._mix_in_arr.empty ())
 	{
@@ -827,6 +832,7 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	}
 
 	// Plug-in processing
+	PluginDetails *   details_ptr = nullptr;
 	if (pi_ctx._node_arr [PiType_MAIN]._pi_id >= 0)
 	{
 		piapi::ProcInfo   proc_info;
@@ -849,7 +855,9 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 			: piapi::BypassState_IGNORE;
 		prepare_buffers (proc_info, pi_ctx, PiType_MAIN, false);
 
-		process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
+		details_ptr = &process_single_plugin (
+			pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info
+		);
 
 #if defined (mfx_WorldAudio_BUF_REC)
 		if (_data_rec_flag)
@@ -883,12 +891,37 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 
 	// Makes sure the silent buffer hasn't been corrupted.
 	//assert (check_silent_buffer ());
+
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	// CPU usage
+	// We use the total duration of the previous frame but this is not really
+	// an issue as this duration should be more or less constant when there
+	// is no dropout.
+	if (details_ptr != nullptr)
+	{
+		MeterResult &  m_result = details_ptr->_dsp_use;
+		dsp::dyn::MeterRmsPeakHold &  m_ana = details_ptr->_proc_analyser;
+
+		const PerfClockCount date_end (read_clock ());
+		const PerfClockCount dur_proc (date_end - date_beg);
+		if (get_clock_val (_dur_tot) > 0)
+		{
+			const float    ratio = 
+				float (get_clock_val (dur_proc)) / float (get_clock_val (_dur_tot));
+			m_ana.process_sample (ratio);
+			m_result._peak = float (m_ana.get_peak_hold ());
+			m_result._rms  = float (m_ana.get_rms ());
+		}
+	}
+#else
+	fstb::unused (details_ptr);
+#endif // mfx_PluginDetails_USE_TIMINGS
 }
 
 
 
 // Fills the event-related members in proc_info.
-void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info)
+PluginDetails &	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info)
 {
 	assert (plugin_id >= 0);
 
@@ -1000,6 +1033,8 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 			_reset_flag = true;
 		}
 	}
+
+	return details;
 }
 
 

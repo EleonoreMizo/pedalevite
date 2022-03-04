@@ -112,6 +112,13 @@ public:
 		int            _rotenc_index { -1 };
 	};
 
+	class CpuMeter
+	{
+	public:
+		float          _rms  = 0;
+		float          _peak = 0;
+	};
+
 	typedef fstb::msg::QueueRetMgr <fstb::msg::MsgRet <ModelMsgCmdAsync> > CmdAsyncMgr;
 
 	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io);
@@ -196,6 +203,9 @@ public:
 	std::chrono::microseconds
 	               get_cur_date () const;
 	float          get_param_val_mod (int slot_id, PiType type, int index) const;
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	CpuMeter       get_plugin_cpu_meter (int slot_id) const;
+#endif // mfx_PluginDetails_USE_TIMINGS
 
 	int            start_d2d_rec (const char pathname_0 [], size_t max_len);
 	int            stop_d2d_rec ();
@@ -305,6 +315,8 @@ private:
 	void           notify_slot_info ();
 	bool           find_slot_cur_preset (std::array <int, Cst::_max_named_targets> &result_arr, int &nbr_results, const doc::FxId &fx_id) const;
 	void           find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const;
+	const PluginDetails &
+	               use_plugin_details (int slot_id, PiType type) const;
 	bool           set_param_pre_commit (int slot_id, int pi_id, PiType type, int index, float val);
 	bool           set_param_beats_pre_commit (int slot_id, int pi_id, int index, float val_beats, doc::ParamPresentation &pres, const piapi::PluginDescInterface &pi_desc, float &val_nrm);
 	bool           set_param_pres_pre_commit (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr);

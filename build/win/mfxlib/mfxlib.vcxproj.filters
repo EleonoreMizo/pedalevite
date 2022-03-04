@@ -5577,6 +5577,9 @@
     <ClInclude Include="..\..\..\src\mfx\PluginDetails.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\PerfClockCount.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

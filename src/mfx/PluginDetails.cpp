@@ -33,6 +33,21 @@ namespace mfx
 
 
 
+int	PluginDetails::reset_plugin (double sample_freq, int max_block_size, int &latency)
+{
+	assert (_pi_uptr);
+
+#if defined (mfx_PluginDetails_USE_TIMINGS)
+	_proc_analyser.set_sample_freq (sample_freq / max_block_size);
+	_proc_analyser.set_release_time_s (1.0);
+	_proc_analyser.clear_buffers ();
+#endif // mfx_PluginDetails_USE_TIMINGS
+
+	return _pi_uptr->reset (sample_freq, max_block_size, latency);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
