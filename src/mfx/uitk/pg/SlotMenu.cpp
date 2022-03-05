@@ -166,9 +166,18 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	int            y     = 0;
 	for (auto &sptr : {
 		_typ_sptr, _inb_sptr, _ina_sptr, _del_sptr, _rtn_sptr,
-		_prs_sptr, _rst_sptr, _chn_sptr, _frs_sptr, _lbl_sptr
+		_prs_sptr, _rst_sptr, _chn_sptr, _frs_sptr,
 #if defined (mfx_PluginDetails_USE_TIMINGS)
-		, _cpu_sptr
+# if PV_VERSION == 1
+		// In v1, the display is too small to show all the lines at once, so one
+		// has to scroll to see the last lines. However the scrolling is limited
+		// to the browsable parts of the UI, so if the CPU line (not browsable)
+		// is last, it is never displayed. Therefore as a quick fix, we have to
+		// reorder the lines so the CPU line is not the last one.
+		_cpu_sptr, _lbl_sptr
+# else
+		_lbl_sptr, _cpu_sptr
+# endif // PV_VERSION
 #endif // mfx_PluginDetails_USE_TIMINGS
 	})
 	{
