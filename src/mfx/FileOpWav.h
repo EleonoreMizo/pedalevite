@@ -86,7 +86,7 @@ private:
 	{
 		char           _chunk_id [4] = { 'f', 'm', 't', ' ' };  // "fmt "
 		uint32_t       _chunk_size = 0;
-		int16_t        _format_tag = 0;
+		uint16_t       _format_tag = 0;
 		uint16_t       _channels = 0;
 		uint32_t       _samples_per_sec = 0;
 		uint32_t       _avg_bytes_per_sec = 0;
