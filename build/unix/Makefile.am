@@ -234,6 +234,7 @@ commonsrc = \
         ../../src/fstb/ToolsSimd.cpp \
         ../../src/fstb/ToolsSimd.h \
         ../../src/fstb/ToolsSimd.hpp \
+        ../../src/fstb/VecAlign.h \
         ../../src/fstb/Vf32.h \
         ../../src/fstb/Vf32.hpp \
         ../../src/fstb/Vs32.h \

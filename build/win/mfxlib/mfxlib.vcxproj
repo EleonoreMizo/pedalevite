@@ -576,6 +576,7 @@
     <ClInclude Include="..\..\..\src\fstb\util\ObservableSingleMixin.hpp" />
     <ClInclude Include="..\..\..\src\fstb\util\ObserverInterface.h" />
     <ClInclude Include="..\..\..\src\fstb\util\ObserverInterface.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\VecAlign.h" />
     <ClInclude Include="..\..\..\src\fstb\Vf32.h" />
     <ClInclude Include="..\..\..\src\fstb\Vf32.hpp" />
     <ClInclude Include="..\..\..\src\fstb\Vs32.h" />
