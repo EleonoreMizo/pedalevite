@@ -1,0 +1,207 @@
+(kicad_sch (version 20211123) (generator eeschema)
+
+  (uuid 5f58c02c-5144-4740-88b6-2b6add1f316a)
+
+  (paper "A3")
+
+  (title_block
+    (title "Pédale Vite v2 — Auxiliary boards")
+    (date "2019-10-22")
+    (company "Laurent DE SORAS")
+    (comment 1 "Licensed under WTFPL v2 / CC0")
+    (comment 4 "Main board")
+  )
+
+  (lib_symbols
+  )
+
+
+  (sheet (at 22.86 20.32) (size 38.1 10.16) (fields_autoplaced)
+    (stroke (width 0) (type solid) (color 0 0 0 0))
+    (fill (color 0 0 0 0.0000))
+    (uuid 00000000-0000-0000-0000-00005d89da36)
+    (property "Sheet name" "LED board" (id 0) (at 22.86 19.4814 0)
+      (effects (font (size 1.524 1.524)) (justify left bottom))
+    )
+    (property "Sheet file" "leds.kicad_sch" (id 1) (at 22.86 31.1662 0)
+      (effects (font (size 1.524 1.524)) (justify left top))
+    )
+  )
+
+  (sheet (at 22.86 35.56) (size 38.1 10.16) (fields_autoplaced)
+    (stroke (width 0) (type solid) (color 0 0 0 0))
+    (fill (color 0 0 0 0.0000))
+    (uuid 00000000-0000-0000-0000-00005d89e30d)
+    (property "Sheet name" "Rotary encoders (parameters)" (id 0) (at 22.86 34.7214 0)
+      (effects (font (size 1.524 1.524)) (justify left bottom))
+    )
+    (property "Sheet file" "rot-enc-param.kicad_sch" (id 1) (at 22.86 46.4062 0)
+      (effects (font (size 1.524 1.524)) (justify left top))
+    )
+  )
+
+  (sheet (at 22.86 50.8) (size 38.1 10.16) (fields_autoplaced)
+    (stroke (width 0) (type solid) (color 0 0 0 0))
+    (fill (color 0 0 0 0.0000))
+    (uuid 00000000-0000-0000-0000-00005d89eaee)
+    (property "Sheet name" "Rotary encoders (navigation)" (id 0) (at 22.86 49.9614 0)
+      (effects (font (size 1.524 1.524)) (justify left bottom))
+    )
+    (property "Sheet file" "rot-enc-nav.kicad_sch" (id 1) (at 22.86 61.6462 0)
+      (effects (font (size 1.524 1.524)) (justify left top))
+    )
+  )
+
+  (sheet (at 22.86 66.04) (size 38.1 10.16) (fields_autoplaced)
+    (stroke (width 0) (type solid) (color 0 0 0 0))
+    (fill (color 0 0 0 0.0000))
+    (uuid 00000000-0000-0000-0000-00005d8a11c9)
+    (property "Sheet name" "Navigation buttons" (id 0) (at 22.86 65.2014 0)
+      (effects (font (size 1.524 1.524)) (justify left bottom))
+    )
+    (property "Sheet file" "but-nav.kicad_sch" (id 1) (at 22.86 76.8862 0)
+      (effects (font (size 1.524 1.524)) (justify left top))
+    )
+  )
+
+  (sheet (at 22.86 81.28) (size 38.1 10.16) (fields_autoplaced)
+    (stroke (width 0) (type solid) (color 0 0 0 0))
+    (fill (color 0 0 0 0.0000))
+    (uuid 00000000-0000-0000-0000-00005d9245f3)
+    (property "Sheet name" "Power supply" (id 0) (at 22.86 80.4414 0)
+      (effects (font (size 1.524 1.524)) (justify left bottom))
+    )
+    (property "Sheet file" "psu.kicad_sch" (id 1) (at 22.86 92.1262 0)
+      (effects (font (size 1.524 1.524)) (justify left top))
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+    (path "/00000000-0000-0000-0000-00005d89da36" (page "2"))
+    (path "/00000000-0000-0000-0000-00005d89e30d" (page "3"))
+    (path "/00000000-0000-0000-0000-00005d89eaee" (page "4"))
+    (path "/00000000-0000-0000-0000-00005d8a11c9" (page "5"))
+    (path "/00000000-0000-0000-0000-00005d9245f3" (page "6"))
+  )
+
+  (symbol_instances
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d920a47"
+      (reference "#FLG01") (unit 1) (value "PWR_FLAG") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d920a6b"
+      (reference "#FLG02") (unit 1) (value "PWR_FLAG") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-00005d89da36/00000000-0000-0000-0000-00005d8a5bf4"
+      (reference "D100") (unit 1) (value "0 RED") (footprint "LEDs:LED_D5.0mm")
+    )
+    (path "/00000000-0000-0000-0000-00005d89da36/00000000-0000-0000-0000-00005d8a5c38"
+      (reference "D101") (unit 1) (value "1 GREEN") (footprint "LEDs:LED_D5.0mm")
+    )
+    (path "/00000000-0000-0000-0000-00005d89da36/00000000-0000-0000-0000-00005d8a5c5a"
+      (reference "D102") (unit 1) (value "2 RED") (footprint "LEDs:LED_D5.0mm")
+    )
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d9206f7"
+      (reference "J501") (unit 1) (value "230VAC") (footprint "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm")
+    )
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d920686"
+      (reference "J502") (unit 1) (value "5VDC") (footprint "Connectors_Terminal_Blocks:TerminalBlock_Altech_AK300-2_P5.00mm")
+    )
+    (path "/00000000-0000-0000-0000-00005d89da36/00000000-0000-0000-0000-00005d8d304d"
+      (reference "MK101") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d89da36/00000000-0000-0000-0000-00005d8d3054"
+      (reference "MK102") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8d2963"
+      (reference "MK401") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8d296a"
+      (reference "MK402") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8d2971"
+      (reference "MK403") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8d2978"
+      (reference "MK404") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d9223fa"
+      (reference "MK501") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d922408"
+      (reference "MK502") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d92240f"
+      (reference "MK503") (unit 1) (value "Mounting_Hole") (footprint "Mounting_Holes:MountingHole_3.2mm_M3")
+    )
+    (path "/00000000-0000-0000-0000-00005d89da36/00000000-0000-0000-0000-00005d8a6868"
+      (reference "P100") (unit 1) (value "LEDS") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_4pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8a82e1"
+      (reference "P200") (unit 1) (value "ROTENC 1") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_3pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8a82e8"
+      (reference "P201") (unit 1) (value "ROTENC 2") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_3pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8a82ef"
+      (reference "P202") (unit 1) (value "ROTENC 3") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_3pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8a82f6"
+      (reference "P203") (unit 1) (value "ROTENC 4") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_3pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8a82da"
+      (reference "P204") (unit 1) (value "ROTENC 5") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_3pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d89eaee/00000000-0000-0000-0000-00005d8a84b6"
+      (reference "P300") (unit 1) (value "ROTENC 6 SW") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_4pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d89eaee/00000000-0000-0000-0000-00005d8a84af"
+      (reference "P301") (unit 1) (value "ROTENC 7 SW") (footprint "Sockets_MOLEX_KK-System:Socket_MOLEX-KK-RM2-54mm_Lock_4pin_straight")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8ab70b"
+      (reference "P400") (unit 1) (value "NAV SW") (footprint "Pin_Headers:Pin_Header_Straight_2x04_Pitch2.54mm")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8b5cf1"
+      (reference "SW200") (unit 1) (value "PARAM 0") (footprint "pedale-vite:RotaryEncoder_Bourns_PEC11R-Switch_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8b5e2f"
+      (reference "SW201") (unit 1) (value "PARAM 1") (footprint "pedale-vite:RotaryEncoder_Bourns_PEC11R-Switch_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8b5e6e"
+      (reference "SW202") (unit 1) (value "PARAM 2") (footprint "pedale-vite:RotaryEncoder_Bourns_PEC11R-Switch_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8b5eae"
+      (reference "SW203") (unit 1) (value "PARAM 3") (footprint "pedale-vite:RotaryEncoder_Bourns_PEC11R-Switch_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-00005d89e30d/00000000-0000-0000-0000-00005d8b5ef0"
+      (reference "SW204") (unit 1) (value "PARAM 4") (footprint "pedale-vite:RotaryEncoder_Bourns_PEC11R-Switch_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-00005d89eaee/00000000-0000-0000-0000-00005d8ae547"
+      (reference "SW300") (unit 1) (value "UP-DOWN") (footprint "pedale-vite:RotaryEncoder_Bourns_PEC11R-Switch_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-00005d89eaee/00000000-0000-0000-0000-00005d8ae58d"
+      (reference "SW301") (unit 1) (value "LEFT-RIGHT") (footprint "pedale-vite:RotaryEncoder_Bourns_PEC11R-Switch_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8b4971"
+      (reference "SW400") (unit 1) (value "SELECT") (footprint "pedale-vite:SW_MEC_5GTH9")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8b4a24"
+      (reference "SW401") (unit 1) (value "ESCAPE") (footprint "pedale-vite:SW_MEC_5GTH9")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8b4871"
+      (reference "SW402") (unit 1) (value "UP") (footprint "pedale-vite:SW_MEC_5GTH9")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8b491c"
+      (reference "SW403") (unit 1) (value "DOWN") (footprint "pedale-vite:SW_MEC_5GTH9")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8b4945"
+      (reference "SW404") (unit 1) (value "LEFT") (footprint "pedale-vite:SW_MEC_5GTH9")
+    )
+    (path "/00000000-0000-0000-0000-00005d8a11c9/00000000-0000-0000-0000-00005d8b4a52"
+      (reference "SW405") (unit 1) (value "RIGHT") (footprint "pedale-vite:SW_MEC_5GTH9")
+    )
+    (path "/00000000-0000-0000-0000-00005d9245f3/00000000-0000-0000-0000-00005d924859"
+      (reference "U501") (unit 1) (value "RAC15-05SK") (footprint "pedale-vite:Converter_ACDC_RECOM_RAC15-xxSK_THT")
+    )
+  )
+)

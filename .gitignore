@@ -42,6 +42,7 @@ var/
 legacy/
 doc/internal/
 doc/v1/exported/
+doc/v1/pcb-v1_1/*-backup*
 doc/v1/pcb*/*.bak
 doc/v1/pcb*/*-bak
 doc/v1/pcb*/*.bck
@@ -49,6 +50,6 @@ doc/boards/*/*.bak
 doc/boards/*/*-bak
 doc/boards/*/*.bck
 doc/boards/*/*-rescue.lib
-doc/boards/*/rescue-backup
+doc/boards/*/*-backup*
 build/win/.vs/
 build/win/fontgen/freetype/
