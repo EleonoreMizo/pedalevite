@@ -76,6 +76,19 @@ void	ToolsSimd::disable_denorm () noexcept
 	// #pragma STDC FENV_ACCESS ON
 	// fesetenv (_FE_DFL_DISABLE_SSE_DENORMS_ENV);
 
+#elif (fstb_ARCHI == fstb_ARCHI_ARM)
+# if (fstb_WORD_SIZE == 64 && fstb_COMPILER == fstb_COMPILER_GCC) // Aarch64
+
+	// https://developer.arm.com/documentation/ddi0595/2021-12/AArch64-Registers/FPCR--Floating-point-Control-Register
+	uint64_t       fpcr_old = 0;
+	asm volatile ("mrs %0, fpcr " : "=r" (fpcr_old));
+
+	constexpr auto fz = uint64_t (1ULL << 24); // Flush denormal to zero
+
+	const auto     fpcr_new = fpcr_old | fz;
+	asm volatile ("msr fpcr, %0 " : : "r" (fpcr_new));
+
+# endif
 #endif
 }
 
