@@ -15,8 +15,8 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if ! defined (fstb_VectF32_CODEHEADER_INCLUDED)
-#define fstb_VectF32_CODEHEADER_INCLUDED
+#if ! defined (fstb_Vf32_CODEHEADER_INCLUDED)
+#define fstb_Vf32_CODEHEADER_INCLUDED
 
 
 
@@ -2141,7 +2141,7 @@ Vf32 exp2 (Vf32 v) noexcept
 
 
 
-#endif   // fstb_VectF32_CODEHEADER_INCLUDED
+#endif   // fstb_Vf32_CODEHEADER_INCLUDED
 
 
 

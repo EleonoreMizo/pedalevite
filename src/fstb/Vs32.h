@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (fstb_VectS32_HEADER_INCLUDED)
-#define fstb_VectS32_HEADER_INCLUDED
+#if ! defined (fstb_Vs32_HEADER_INCLUDED)
+#define fstb_Vs32_HEADER_INCLUDED
 
 
 
@@ -242,7 +242,7 @@ fstb_FORCEINLINE std::tuple <Vs32, Vs32> swap_if (const Vs32 &cond, Vs32 lhs, Vs
 
 
 
-#endif   // fstb_VectS32_HEADER_INCLUDED
+#endif   // fstb_Vs32_HEADER_INCLUDED
 
 
 

@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (fstb_VectF32_HEADER_INCLUDED)
-#define fstb_VectF32_HEADER_INCLUDED
+#if ! defined (fstb_Vf32_HEADER_INCLUDED)
+#define fstb_Vf32_HEADER_INCLUDED
 
 
 
@@ -345,7 +345,7 @@ fstb_FORCEINLINE Vf32 exp2 (Vf32 v) noexcept;
 
 
 
-#endif   // fstb_VectF32_HEADER_INCLUDED
+#endif   // fstb_Vf32_HEADER_INCLUDED
 
 
 

@@ -110,7 +110,7 @@ public:
 
 	fstb_TYPEDEF_ALIGN (32, uint8_t , VectI08 [32]);
 	fstb_TYPEDEF_ALIGN (32, uint32_t, VectI32 [ 8]);
-	fstb_TYPEDEF_ALIGN (32, float   , Vf32 [ 8]);
+	fstb_TYPEDEF_ALIGN (32, float   , VectF32 [ 8]);
 
 	static const VectI32
 	               _zero;

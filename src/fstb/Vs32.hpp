@@ -15,8 +15,8 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if ! defined (fstb_VectS32_CODEHEADER_INCLUDED)
-#define fstb_VectS32_CODEHEADER_INCLUDED
+#if ! defined (fstb_Vs32_CODEHEADER_INCLUDED)
+#define fstb_Vs32_CODEHEADER_INCLUDED
 
 
 
@@ -1047,7 +1047,7 @@ std::tuple <Vs32, Vs32> swap_if (const Vs32 &cond, Vs32 lhs, Vs32 rhs) noexcept
 
 
 
-#endif   // fstb_VectS32_CODEHEADER_INCLUDED
+#endif   // fstb_Vs32_CODEHEADER_INCLUDED
 
 
 

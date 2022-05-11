@@ -15,8 +15,8 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if ! defined (fstb_VectU32_CODEHEADER_INCLUDED)
-#define fstb_VectU32_CODEHEADER_INCLUDED
+#if ! defined (fstb_Vu32_CODEHEADER_INCLUDED)
+#define fstb_Vu32_CODEHEADER_INCLUDED
 
 
 
@@ -197,7 +197,7 @@ Vu32 operator >> (Vu32 lhs, T rhs) noexcept
 
 
 
-#endif   // fstb_VectU32_CODEHEADER_INCLUDED
+#endif   // fstb_Vu32_CODEHEADER_INCLUDED
 
 
 

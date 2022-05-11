@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (fstb_VectU32_HEADER_INCLUDED)
-#define fstb_VectU32_HEADER_INCLUDED
+#if ! defined (fstb_Vu32_HEADER_INCLUDED)
+#define fstb_Vu32_HEADER_INCLUDED
 
 
 
@@ -153,7 +153,7 @@ fstb_FORCEINLINE Vu32 operator >> (Vu32 lhs, T rhs) noexcept;
 
 
 
-#endif   // fstb_VectU32_HEADER_INCLUDED
+#endif   // fstb_Vu32_HEADER_INCLUDED
 
 
 
