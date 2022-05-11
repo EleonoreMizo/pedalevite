@@ -213,7 +213,7 @@ void	Approx::cos_sin_rbj (Vf32 &c, Vf32 &s, Vf32 x) noexcept
 	auto           xc = x + hp;
 
 	// xc -> [-pi ; pi]
-	xc = select ((xc < p ), xc - tp, xc);
+	xc = select ((xc > p ), xc - tp, xc);
 
 	// xc -> [-pi/2 ; pi/2]
 	xc = restrict_sin_angle_to_mhpi_hpi (xc, hpm, hp, pm, p);
