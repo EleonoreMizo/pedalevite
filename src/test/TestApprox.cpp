@@ -66,6 +66,29 @@ int	TestApprox::perform_test ()
 		"sin_rbj_halfpi", -1.0, 1.0, 2e-07
 	);
 
+	test_op1_all_flt_v <false> (ret_val,
+		[] (double x) { return cos (x); },
+		[] (Vf32 x) {
+			Vf32 c;
+			Vf32 s;
+			fstb::Approx::cos_sin_rbj (c, s, x);
+			return c;
+		},
+		"cos_sin_rbj cos", -3 * fstb::PI, 3 * fstb::PI, 1e-6
+	);
+	test_op1_all_flt_v <false> (ret_val,
+		[] (double x) { return sin (x); },
+		[] (Vf32 x) {
+			Vf32 c;
+			Vf32 s;
+			fstb::Approx::cos_sin_rbj (c, s, x);
+			return s;
+		},
+		"cos_sin_rbj sin", -3 * fstb::PI, 3 * fstb::PI, 1e-6
+	);
+
+
+
 	// log2
 
 	test_op1_all_flt <false> (ret_val,
