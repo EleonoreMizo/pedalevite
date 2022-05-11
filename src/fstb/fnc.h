@@ -72,6 +72,7 @@ template <class T>
 inline constexpr bool    is_eq (T v1, T v2, T eps = T (1e-9)) noexcept;
 template <class T>
 inline constexpr bool    is_eq_rel (T v1, T v2, T tol = T (1e-6)) noexcept;
+inline constexpr bool    is_eq_ulp (float v1, float v2, int32_t tol = 1) noexcept;
 inline int     get_prev_pow_2 (uint32_t x) noexcept;
 inline int     get_next_pow_2 (uint32_t x) noexcept;
 inline constexpr double  sinc (double x) noexcept;
