@@ -86,6 +86,8 @@ public:
 	               Vf32 (int a) noexcept;
 	explicit fstb_FORCEINLINE
 	               Vf32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vf32 (const std::tuple <Scalar, Scalar, Scalar, Scalar> &a) noexcept;
 	               Vf32 (const Vf32 &other)       = default;
 	               Vf32 (Vf32 &&other)            = default;
 	               ~Vf32 ()                       = default;

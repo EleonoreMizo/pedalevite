@@ -82,6 +82,8 @@ public:
 	               Vs32 (Scalar a) noexcept;
 	explicit fstb_FORCEINLINE
 	               Vs32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vs32 (const std::tuple <Scalar, Scalar, Scalar, Scalar> &a) noexcept;
 	               Vs32 (const Vs32 &other)       = default;
 	               Vs32 (Vs32 &&other)            = default;
 	               ~Vs32 ()                       = default;
@@ -143,6 +145,9 @@ public:
 	template <int POS>
 	fstb_FORCEINLINE Vs32
 	               spread () const noexcept;
+
+	fstb_FORCEINLINE std::tuple <int32_t, int32_t, int32_t, int32_t>
+	               explode () const noexcept;
 
 	fstb_FORCEINLINE int32_t
 	               sum_h () const noexcept;

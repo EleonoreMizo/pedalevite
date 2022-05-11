@@ -101,6 +101,21 @@ Vf32::Vf32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept
 
 
 
+// Initialises with a0 | a1 | a2 | a3
+Vf32::Vf32 (const std::tuple <Scalar, Scalar, Scalar, Scalar> &a) noexcept
+#if ! defined (fstb_HAS_SIMD)
+:	_x { std::get <0> (a), std::get <1> (a), std::get <2> (a), std::get <3> (a) }
+#elif fstb_ARCHI == fstb_ARCHI_X86
+:	_x { _mm_set_ps (std::get <3> (a), std::get <2> (a), std::get <1> (a), std::get <0> (a)) }
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+:	_x { std::get <0> (a), std::get <1> (a), std::get <2> (a), std::get <3> (a) }
+#endif // fstb_ARCHI
+{
+	// Nothing
+}
+
+
+
 template <typename MEM>
 void	Vf32::store (MEM *ptr) const noexcept
 {

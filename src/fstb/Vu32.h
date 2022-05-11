@@ -35,6 +35,8 @@ http://www.wtfpl.net/ for more details.
 	#error
 #endif
 
+#include <tuple>
+
 #include <cstdint>
 
 
@@ -78,11 +80,25 @@ public:
 	               Vu32 (Vu32Native a) noexcept : _x { a } {}
    explicit fstb_FORCEINLINE
 	               Vu32 (Scalar a) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vu32 (Scalar a0, Scalar a1, Scalar a2, Scalar a3) noexcept;
+	explicit fstb_FORCEINLINE
+	               Vu32 (const std::tuple <Scalar, Scalar, Scalar, Scalar> &a) noexcept;
 	               Vu32 (const Vu32 &other)       = default;
 	               Vu32 (Vu32 &&other)            = default;
 	               ~Vu32 ()                       = default;
 	Vu32 &         operator = (const Vu32 &other) = default;
 	Vu32 &         operator = (Vu32 &&other)      = default;
+
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               store (MEM *ptr) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu (MEM *ptr) const noexcept;
+	template <typename MEM>
+	fstb_FORCEINLINE void
+	               storeu_part (MEM *ptr, int n) const noexcept;
 
 	fstb_FORCEINLINE
 	               operator Vu32Native () const noexcept { return _x; }
@@ -93,11 +109,23 @@ public:
 	               operator -= (const Vu32Native &other) noexcept;
 	fstb_FORCEINLINE Vu32 &
 	               operator *= (const Vu32Native &other) noexcept;
+	fstb_FORCEINLINE Vu32 &
+	               operator *= (const Scalar &other) noexcept;
+
+	fstb_FORCEINLINE Vu32 &
+	               operator &= (const Vu32Native &other) noexcept;
+	fstb_FORCEINLINE Vu32 &
+	               operator |= (const Vu32Native &other) noexcept;
+	fstb_FORCEINLINE Vu32 &
+	               operator ^= (const Vu32Native &other) noexcept;
 
 	fstb_FORCEINLINE Vu32 &
 	               operator <<= (int imm) noexcept;
 	fstb_FORCEINLINE Vu32 &
 	               operator >>= (int imm) noexcept;
+
+	fstb_FORCEINLINE std::tuple <uint32_t, uint32_t, uint32_t, uint32_t>
+	               explode () const noexcept;
 
 
 
@@ -137,6 +165,10 @@ private:
 fstb_FORCEINLINE Vu32 operator + (Vu32 lhs, const Vu32 &rhs) noexcept;
 fstb_FORCEINLINE Vu32 operator - (Vu32 lhs, const Vu32 &rhs) noexcept;
 fstb_FORCEINLINE Vu32 operator * (Vu32 lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator * (Vu32 lhs, const Vu32::Scalar rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator & (Vu32 lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator | (Vu32 lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator ^ (Vu32 lhs, const Vu32 &rhs) noexcept;
 
 template <typename T>
 fstb_FORCEINLINE Vu32 operator << (Vu32 lhs, T rhs) noexcept;
