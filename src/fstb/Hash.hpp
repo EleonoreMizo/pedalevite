@@ -122,6 +122,19 @@ constexpr uint32_t	Hash::hash (uint32_t x) noexcept
 
 
 
+Vu32	Hash::hash (Vu32 x) noexcept
+{
+	x ^= x >> 16;
+	x *= uint32_t (0x7FEB352Dlu);
+	x ^= x >> 15;
+	x *= uint32_t (0x846CA68Blu);
+	x ^= x >> 16;
+ 
+	return x;
+}
+
+
+
 constexpr uint32_t	Hash::hash_inv (uint32_t x) noexcept
 {
 #if 0
@@ -137,6 +150,19 @@ constexpr uint32_t	Hash::hash_inv (uint32_t x) noexcept
 	x *= uint32_t (0x1D69E2A5lu);
 	x ^= x >> 16;
 #endif
+
+	return x;
+}
+
+
+
+Vu32	Hash::hash_inv (Vu32 x) noexcept
+{
+	x ^= x >> 16;
+	x *= uint32_t (0x43021123lu);
+	x ^= x >> 15 ^ x >> 30;
+	x *= uint32_t (0x1D69E2A5lu);
+	x ^= x >> 16;
 
 	return x;
 }
