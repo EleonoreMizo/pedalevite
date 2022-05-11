@@ -5412,12 +5412,6 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable4Simd.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\fstb\VectU32.h">
-      <Filter>fstb</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\fstb\VectU32.hpp">
-      <Filter>fstb</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\SlewRateLimiter.h">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>

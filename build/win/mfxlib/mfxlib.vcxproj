@@ -580,8 +580,6 @@
     <ClInclude Include="..\..\..\src\fstb\Vf32.hpp" />
     <ClInclude Include="..\..\..\src\fstb\Vs32.h" />
     <ClInclude Include="..\..\..\src\fstb\Vs32.hpp" />
-    <ClInclude Include="..\..\..\src\fstb\VectU32.h" />
-    <ClInclude Include="..\..\..\src\fstb\VectU32.hpp" />
     <ClInclude Include="..\..\..\src\fstb\Vu32.h" />
     <ClInclude Include="..\..\..\src\fstb\Vu32.hpp" />
     <ClInclude Include="..\..\..\src\hiir\def.h" />
