@@ -777,6 +777,14 @@ constexpr T	Approx::tan_pade55 (T x) noexcept
 	return x * num / den;
 }
 
+/*
+Coefficients for an order-7 Pade approximant:
+-135135, 17325,  -378,  1
+-135135, 62370, -3150, 28
+Source:
+https://www.wolframalpha.com/input?i=Pade+approximant+tan%28x%29+order+7%2C7
+*/
+
 
 
 /*
