@@ -1026,6 +1026,7 @@ constexpr T	lerp (T v0, T v1, T p) noexcept
 // f(x) = ((r3 + r1) / 2 - r2) * x^2 + ((r3 - r1) / 2) * x + r2
 // The points must not be aligned so the extremum exists.
 // It is not necessariy located between -1 and 1.
+// The value at this point is y = r2 + 0.25 * x * (r3 - r1)
 template <class T>
 constexpr T	find_extremum_pos_parabolic (T r1, T r2, T r3) noexcept
 {
