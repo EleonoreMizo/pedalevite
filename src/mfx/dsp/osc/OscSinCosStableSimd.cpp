@@ -46,11 +46,11 @@ namespace osc
 OscSinCosStableSimd::OscSinCosStableSimd () noexcept
 :	_pos_cos ()
 ,	_pos_sin ()
-,	_alpha ()
-,	_beta ()
+,	_v_alpha ()
+,	_v_beta ()
 {
-	fstb::Vf32::zero ().store (&_alpha);
-	fstb::Vf32::zero ().store (&_beta );
+	fstb::Vf32::zero ().store (&_v_alpha);
+	fstb::Vf32::zero ().store (&_v_beta );
 	clear_buffers ();
 }
 
@@ -58,37 +58,22 @@ OscSinCosStableSimd::OscSinCosStableSimd () noexcept
 
 void	OscSinCosStableSimd::set_step (float angle_rad) noexcept
 {
-	fstb::Vf32     alpha;
-	fstb::Vf32     beta;
 	fstb::Vf32     alpha4;
 	fstb::Vf32     beta4;
-	compute_step (alpha , beta , angle_rad             );
-	compute_step (alpha4, beta4, angle_rad * _nbr_units);
-	alpha4.store (&_alpha);
-	beta4.store (&_beta);
+	compute_step (_s_alpha, _s_beta, angle_rad             );
+	compute_step (  alpha4,   beta4, angle_rad * _nbr_units);
+	alpha4.store (&_v_alpha);
+	beta4.store (&_v_beta);
 
-	auto           pos_cos = fstb::Vf32::load (&_pos_cos);
-	auto           pos_sin = fstb::Vf32::load (&_pos_sin);
-	const float    old_cos = pos_cos.template extract <0> ();
-	const float    old_sin = pos_sin.template extract <0> ();
-	for (int i = 1; i < _nbr_units; ++i)
-	{
-		step (pos_cos, pos_sin, alpha, beta);
-		pos_cos = pos_cos.template rotate <1> ();
-		pos_sin = pos_sin.template rotate <1> ();
-		pos_cos = pos_cos.template insert <0> (old_cos);
-		pos_sin = pos_sin.template insert <0> (old_sin);
-	}
-	pos_cos.store (&_pos_cos);
-	pos_sin.store (&_pos_sin);
+	update_future (_s_alpha, _s_beta);
 }
 
 
 
 void	OscSinCosStableSimd::step () noexcept
 {
-	auto           alpha   = fstb::Vf32::load (&_alpha);
-	auto           beta    = fstb::Vf32::load (&_beta );
+	auto           alpha   = fstb::Vf32::load (&_v_alpha);
+	auto           beta    = fstb::Vf32::load (&_v_beta );
 	auto           pos_cos = fstb::Vf32::load (&_pos_cos);
 	auto           pos_sin = fstb::Vf32::load (&_pos_sin);
 
@@ -104,6 +89,7 @@ void	OscSinCosStableSimd::clear_buffers () noexcept
 {
 	fstb::Vf32 (1)     .store (&_pos_cos);
 	fstb::Vf32::zero ().store (&_pos_sin);
+	update_future (_s_alpha, _s_beta);
 }
 
 
@@ -112,7 +98,7 @@ void	OscSinCosStableSimd::correct_fast () noexcept
 {
 	auto           c       = fstb::Vf32::load (&_pos_cos);
 	auto           s       = fstb::Vf32::load (&_pos_sin);
-	const auto     norm_sq = fstb::fma (c * c, s, s);
+	const auto     norm_sq = fstb::fma (s, s, c * c);
 	const auto     c1_5    = fstb::Vf32 (1.5f);
 	const auto     c0_5    = fstb::Vf32 (0.5f);
 	const auto     mult    = c1_5 - norm_sq * c0_5;

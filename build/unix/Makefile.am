@@ -2000,6 +2000,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestOscSampleSyncHard.h \
         ../../src/test/TestOscSinCosStable.cpp \
         ../../src/test/TestOscSinCosStable.h \
+        ../../src/test/TestOscSinCosStableSimd.cpp \
+        ../../src/test/TestOscSinCosStableSimd.h \
         ../../src/test/TestOscWavetable.cpp \
         ../../src/test/TestOscWavetable.h \
         ../../src/test/TestOscWavetableSub.cpp \

@@ -93,19 +93,26 @@ protected:
 private:
 
 	fstb_FORCEINLINE void
-	               step (fstb::Vf32 &pos_cos, fstb::Vf32 &pos_sin, fstb::Vf32 alpha, fstb::Vf32 beta) noexcept;
+	               update_future (float alpha, float beta);
 
+	template <typename T>
+	fstb_FORCEINLINE void
+	               step (T &pos_cos, T &pos_sin, T alpha, T beta) noexcept;
+
+	template <typename T>
 	static inline void
-	               compute_step (fstb::Vf32 &alpha, fstb::Vf32 &beta, float angle_rad) noexcept;
+	               compute_step (T &alpha, T &beta, float angle_rad) noexcept;
 
 	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _pos_cos;
 	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
 	               _pos_sin;
 	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
-	               _alpha;
+	               _v_alpha;
 	alignas (fstb_SIMD128_ALIGN) fstb::Vf32
-	               _beta;
+	               _v_beta;
+	float          _s_alpha = 0;
+	float          _s_beta  = 0;
 
 
 

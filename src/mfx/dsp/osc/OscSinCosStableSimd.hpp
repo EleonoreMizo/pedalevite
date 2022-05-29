@@ -49,8 +49,8 @@ void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int
 	assert (VD::check_ptr (sin_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     alpha   = fstb::Vf32::load (&_alpha);
-	const auto     beta    = fstb::Vf32::load (&_beta );
+	const auto     alpha   = fstb::Vf32::load (&_v_alpha);
+	const auto     beta    = fstb::Vf32::load (&_v_beta );
 	auto           pos_cos = fstb::Vf32::load (&_pos_cos);
 	auto           pos_sin = fstb::Vf32::load (&_pos_sin);
 
@@ -120,7 +120,31 @@ fstb::Vf32	OscSinCosStableSimd::get_sin () const noexcept
 
 
 
-void	OscSinCosStableSimd::step (fstb::Vf32 &pos_cos, fstb::Vf32 &pos_sin, fstb::Vf32 alpha, fstb::Vf32 beta) noexcept
+void	OscSinCosStableSimd::update_future (float alpha, float beta) 
+{
+	auto           pos_cos = fstb::Vf32::load (&_pos_cos);
+	auto           pos_sin = fstb::Vf32::load (&_pos_sin);
+
+	float          cur_cos = pos_cos.template extract <0> ();
+	float          cur_sin = pos_sin.template extract <0> ();
+	step (cur_cos, cur_sin, alpha, beta);
+	pos_cos = pos_cos.template insert <1> (cur_cos);
+	pos_sin = pos_sin.template insert <1> (cur_sin);
+	step (cur_cos, cur_sin, alpha, beta);
+	pos_cos = pos_cos.template insert <2> (cur_cos);
+	pos_sin = pos_sin.template insert <2> (cur_sin);
+	step (cur_cos, cur_sin, alpha, beta);
+	pos_cos = pos_cos.template insert <3> (cur_cos);
+	pos_sin = pos_sin.template insert <3> (cur_sin);
+
+	pos_cos.store (&_pos_cos);
+	pos_sin.store (&_pos_sin);
+}
+
+
+
+template <typename T>
+void	OscSinCosStableSimd::step (T &pos_cos, T &pos_sin, T alpha, T beta) noexcept
 {
 	const auto     tmp = pos_cos - alpha * pos_sin;
 	pos_sin += beta * tmp;
@@ -129,14 +153,15 @@ void	OscSinCosStableSimd::step (fstb::Vf32 &pos_cos, fstb::Vf32 &pos_sin, fstb::
 
 
 
-void	OscSinCosStableSimd::compute_step (fstb::Vf32 &alpha, fstb::Vf32 &beta, float angle_rad) noexcept
+template <typename T>
+void	OscSinCosStableSimd::compute_step (T &alpha, T &beta, float angle_rad) noexcept
 {
-   const auto     a = tan (angle_rad * 0.5f);
-   alpha = fstb::Vf32 (a);
+   const auto     a = tanf (angle_rad * 0.5f);
+   alpha = T (a);
 
 // const auto     b = sin (angle_rad);
 	const auto     b = 2 * a / (1 + a * a);
-   beta  = fstb::Vf32 (b);
+   beta  = T (b);
 }
 
 

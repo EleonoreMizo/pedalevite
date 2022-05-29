@@ -147,6 +147,7 @@
     <ClCompile Include="..\..\..\src\test\TestMoogLadderMystran.cpp" />
     <ClCompile Include="..\..\..\src\test\TestOnsetNinos2.cpp" />
     <ClCompile Include="..\..\..\src\test\TestOscSinCosStable.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestOscSinCosStableSimd.cpp" />
     <ClCompile Include="..\..\..\src\test\TestPinkShade.cpp" />
     <ClCompile Include="..\..\..\src\test\TestR128.cpp" />
     <ClCompile Include="..\..\..\src\test\TestRcClipGeneric.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="..\..\..\src\test\TestMoogLadderMystran.h" />
     <ClInclude Include="..\..\..\src\test\TestOnsetNinos2.h" />
     <ClInclude Include="..\..\..\src\test\TestOscSinCosStable.h" />
+    <ClInclude Include="..\..\..\src\test\TestOscSinCosStableSimd.h" />
     <ClInclude Include="..\..\..\src\test\TestPinkShade.h" />
     <ClInclude Include="..\..\..\src\test\TestR128.h" />
     <ClInclude Include="..\..\..\src\test\TestRcClipGeneric.h" />

@@ -22,7 +22,6 @@
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/nz/WhiteFast.h"
-#include "mfx/dsp/osc/OscSinCosStableSimd.h"
 #include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/dsp/rspl/InterpPhaseFpu.h"
@@ -86,6 +85,7 @@
 #include "test/TestOscSampleSyncFade.h"
 #include "test/TestOscSampleSyncHard.h"
 #include "test/TestOscSinCosStable.h"
+#include "test/TestOscSinCosStableSimd.h"
 #include "test/TestOscWavetable.h"
 #include "test/TestOscWavetableSub.h"
 #include "test/TestOscWavetableSyncHard.h"
@@ -1588,70 +1588,6 @@ int	test_queue_ret ()
 
 
 
-int test_osc_sin_cos_stable_simd ()
-{
-	int            ret_val = 0;
-
-	printf ("Testing OscSinCosStableSimd...\n");
-
-	float          step = 1e-3f;
-	const float    tol  = 1e-5f;
-	mfx::dsp::osc::OscSinCosStableSimd   osc;
-
-	const int      len_vec = 10000;
-	const int      len     = len_vec * mfx::dsp::osc::OscSinCosStableSimd::_nbr_units;
-	std::vector <float>  cos_arr (len);
-	std::vector <float>  sin_arr (len);
-
-	osc.clear_buffers ();
-	osc.set_step (step);
-
-	{
-		int            pos      = 0;
-		int            work_len = 64;
-		do
-		{
-			work_len = std::min (work_len, len - pos);
-			osc.process_block (&cos_arr [pos], &sin_arr [pos], work_len);
-			pos     += work_len;
-			work_len = 1 + (work_len & 0x7F);
-		}
-		while (pos < len);
-	}
-
-	double         err_sum = 0;
-	float          err_max = 0;
-	for (int pos = 0; pos < len && ret_val == 0; ++pos)
-	{
-		const double   angle = double (pos) * step;
-		const float    c     = float (cos (angle));
-		const float    s     = float (sin (angle));
-
-		const float    dif_c = fabsf (cos_arr [pos] - c);
-		const float    dif_s = fabsf (sin_arr [pos] - s);
-
-		if (dif_c > tol || dif_s > tol)
-		{
-			printf ("Error at position %d\n", pos);
-			ret_val = -1;
-		}
-
-		err_sum += dif_c + dif_s;
-		err_max = std::max (err_max, dif_c);
-		err_max = std::max (err_max, dif_s);
-	}
-
-	if (ret_val == 0)
-	{
-		const double   err = err_sum / (len * 2);
-		printf ("Average error: %g. Maximum: %g\n", err, err_max);
-	}
-
-	return ret_val;
-}
-
-
-
 int	test_file_write_fs_ro ()
 {
 	std::string    pathname = "results/test_file_write_fs_ro.txt";
@@ -1868,7 +1804,7 @@ int main (int argc, char *argv [])
 
 #define main_TEST_SPEED 0
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestR128::perform_test ();
 #endif
 
@@ -1906,6 +1842,10 @@ int main (int argc, char *argv [])
 
 #if 0
 	if (ret_val == 0) ret_val = Testadrv::perform_test ();
+#endif
+
+#if main_TEST_SPEED
+	if (ret_val == 0) ret_val = TestOscSinCosStableSimd::perform_test ();
 #endif
 
 #if main_TEST_SPEED
@@ -2108,10 +2048,6 @@ int main (int argc, char *argv [])
 	#if fstb_ARCHI == fstb_ARCHI_X86
 		if (ret_val == 0) test_mult_cplx_vect ();
 	#endif
-#endif
-
-#if 0
-	if (ret_val == 0) ret_val = test_osc_sin_cos_stable_simd ();
 #endif
 
 #if main_TEST_SPEED
