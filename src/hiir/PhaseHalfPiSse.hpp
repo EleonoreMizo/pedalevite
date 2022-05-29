@@ -142,8 +142,8 @@ hiir_FORCEINLINE void	PhaseHalfPiSse <NC>::process_sample (float &out_0, float &
 
 	_mm_store_ps (filter_ptr [_nbr_stages]._mem, y);
 
-	out_1 = _mm_cvtss_f32 (_mm_shuffle_ps (y, y, 1));
-	out_0 = _mm_cvtss_f32 (y);
+	out_0 = _mm_cvtss_f32 (_mm_shuffle_ps (y, y, 1));
+	out_1 = _mm_cvtss_f32 (y);
 
 	_prev  = input;
 	_phase = 1 - _phase;
