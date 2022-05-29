@@ -258,7 +258,7 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 			const auto     f2 = f * f;
 			const auto     f3 = f * f2;
 			auto           b0 = fstb::Poly::horner (f2, c3, c5, c7);
-			b0 = fstb::fma (f, b0, f3);
+			b0 = fstb::fma (b0, f3, f);
 			b0 = fstb::limit (b0, limn, limp);
 			b0.store (tmp_ptr + pos);
 		}
