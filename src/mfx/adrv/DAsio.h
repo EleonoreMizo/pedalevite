@@ -85,6 +85,7 @@ private:
 	};
 
 	void           process_block (long buf_index) noexcept;
+	void           process_block (long buf_index, int proc_ofs, int proc_size) noexcept;
 
 	static void    process_asio (long doubleBufferIndex, ::ASIOBool directProcess);
 	static void    samplerate_did_change (::ASIOSampleRate sRate);
@@ -112,6 +113,7 @@ private:
 
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
+	int            _split_pos = 0; // For debugging. Buffer split position, [0 ; _block_size-1]
 
 	static DAsio * _instance_ptr;
 

@@ -409,6 +409,35 @@ std::string	DAsio::do_get_last_error () const
 
 void	DAsio::process_block (long buf_index) noexcept
 {
+#if 1 // Standard processing
+
+	process_block (buf_index, 0, _block_size);
+
+#else // To debug variable buffer lengths (1 sample up to full block length)
+
+	if (_split_pos > 0)
+	{
+		process_block (buf_index, 0, _split_pos);
+	}
+	process_block (buf_index, _split_pos, _block_size - _split_pos);
+
+	++ _split_pos;
+	if (_split_pos >= _block_size - 1)
+	{
+		_split_pos = 1;
+	}
+
+#endif
+}
+
+
+
+void	DAsio::process_block (long buf_index, int proc_ofs, int proc_size) noexcept
+{
+	assert (proc_ofs >= 0);
+	assert (proc_size > 0);
+	assert (proc_ofs + proc_size <= _block_size);
+
 	const int      buf_alig_sz = (_block_size + 3) & -4;
 
 	const std::array <float *, _nbr_chn> src_arr =
@@ -429,27 +458,27 @@ void	DAsio::process_block (long buf_index) noexcept
 		const ::ASIOBufferInfo &   buf_info = _buf_info_arr [Dir_IN ] [chn];
 		const int32_t *   asio_src_ptr = static_cast <const int32_t *> (
 			buf_info.buffers [buf_index]
-		);
+		) + proc_ofs;
 
-		for (int pos = 0; pos < _block_size; ++pos)
+		for (int pos = 0; pos < proc_size; ++pos)
 		{
 			src_arr [chn] [pos] =
 				float (asio_src_ptr [pos]) * (2.f * fstb::TWOPM32);
 		}
 	}
 
-	_cb_ptr->process_block (&dst_arr [0], &src_arr [0], _block_size);
+	_cb_ptr->process_block (&dst_arr [0], &src_arr [0], proc_size);
 
 	for (int chn = 0; chn < _nbr_chn; ++chn)
 	{
 		const ::ASIOBufferInfo &   buf_info = _buf_info_arr [Dir_OUT] [chn];
 		int32_t *      asio_dst_ptr = static_cast <int32_t *> (
 			buf_info.buffers [buf_index]
-		);
+		) + proc_ofs;
 
 		if (asio_dst_ptr != nullptr)
 		{
-			for (int pos = 0; pos < _block_size; ++pos)
+			for (int pos = 0; pos < proc_size; ++pos)
 			{
 				float          val     = dst_arr [chn] [pos];
 				int32_t        val_int = fstb::conv_int_fast (val * (1 << 23));
