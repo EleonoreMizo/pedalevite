@@ -82,9 +82,10 @@ void	FreqShift::reset (double sample_freq, int max_buf_len, double &latency)
 		buf.resize (max_buf_len);
 	}
 
-	latency = hiir::PolyphaseIir2Designer::compute_group_delay (
+	latency  = hiir::PolyphaseIir2Designer::compute_group_delay (
 		_coef_list.data (), _nbr_coef, 1000 * _inv_fs, true
 	);
+	latency += PhaseHalfPi <_nbr_coef>::_delay;
 
 	clear_buffers ();
 }
@@ -138,8 +139,10 @@ void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const
 
 		float *        dst_ptr = dst_ptr_arr [c];
 
-#if 1
-		for (int pos = 0; pos < nbr_spl; pos += 4)
+		constexpr int  simd_w = fstb::Vf32::_length;
+		const auto     nx     = nbr_spl & ~(simd_w - 1);
+
+		for (int pos = 0; pos < nx; pos += simd_w)
 		{
 			const auto     co  = fstb::Vf32::load (&_buf_arr [Buf_COS] [pos]);
 			const auto     si  = fstb::Vf32::load (&_buf_arr [Buf_SIN] [pos]);
@@ -149,8 +152,7 @@ void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const
 			val.store (dst_ptr + pos);
 		}
 
-#else // Reference implementation
-		for (int pos = 0; pos < nbr_spl; ++pos)
+		for (int pos = nx; pos < nbr_spl; ++pos)
 		{
 			const float   co  = _buf_arr [Buf_COS] [pos];
 			const float   si  = _buf_arr [Buf_SIN] [pos];
@@ -159,8 +161,6 @@ void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const
 			const float   val = co * x + si * y;
 			dst_ptr [pos] = val;
 		}
-
-#endif
 	}
 }
 
