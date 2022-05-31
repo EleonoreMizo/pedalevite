@@ -175,6 +175,7 @@
     <ClCompile Include="..\..\..\src\test\TestSlidingMax.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSlidingOp.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSmooth.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestSpectralFreeze.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitAp5.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitMultiband.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitMultibandBustad.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="..\..\..\src\test\TestSlidingMax.h" />
     <ClInclude Include="..\..\..\src\test\TestSlidingOp.h" />
     <ClInclude Include="..\..\..\src\test\TestSmooth.h" />
+    <ClInclude Include="..\..\..\src\test\TestSpectralFreeze.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitAp5.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitMultiband.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitMultibandBustad.h" />

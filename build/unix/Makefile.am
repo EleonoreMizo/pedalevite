@@ -2038,6 +2038,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSlidingOp.h \
         ../../src/test/TestSmooth.cpp \
         ../../src/test/TestSmooth.h \
+        ../../src/test/TestSpectralFreeze.cpp \
+        ../../src/test/TestSpectralFreeze.h \
         ../../src/test/TestSplitAp5.cpp \
         ../../src/test/TestSplitAp5.h \
         ../../src/test/TestSplitMultiband.cpp \

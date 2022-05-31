@@ -101,6 +101,7 @@
 #include "test/TestSlidingMax.h"
 #include "test/TestSlidingOp.h"
 #include "test/TestSmooth.h"
+#include "test/TestSpectralFreeze.h"
 #include "test/TestSplitAp5.h"
 #include "test/TestSplitMultiband.h"
 #include "test/TestSplitMultibandBustad.h"
@@ -1803,6 +1804,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #define main_TEST_SPEED 0
+
+#if 1
+	if (ret_val == 0) ret_val = TestSpectralFreeze::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestR128::perform_test ();
