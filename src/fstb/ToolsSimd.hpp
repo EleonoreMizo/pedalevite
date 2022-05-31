@@ -123,12 +123,12 @@ void	ToolsSimd::transpose_f32 (Vf32 &a0, Vf32 &a1, Vf32 &a2, Vf32 &a3) noexcept
 Vs32	ToolsSimd::conv_f32_to_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
+	return Vs32 {
 		conv_int_fast (x._x [0]),
 		conv_int_fast (x._x [1]),
 		conv_int_fast (x._x [2]),
 		conv_int_fast (x._x [3])
-	} };
+	};
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cvtps_epi32 (x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -143,12 +143,12 @@ Vs32	ToolsSimd::conv_f32_to_s32 (Vf32 x) noexcept
 Vs32	ToolsSimd::round_f32_to_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
+	return Vs32 {
 		round_int (x._x [0]),
 		round_int (x._x [1]),
 		round_int (x._x [2]),
 		round_int (x._x [3])
-	} };
+	};
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cvtps_epi32 (x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -169,12 +169,12 @@ Vs32	ToolsSimd::round_f32_to_s32 (Vf32 x) noexcept
 Vs32	ToolsSimd::floor_f32_to_s32 (Vf32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
+	return Vs32 {
 		floor_int (x._x [0]),
 		floor_int (x._x [1]),
 		floor_int (x._x [2]),
 		floor_int (x._x [3])
-	} };
+	};
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	x = _mm_add_ps (x, _mm_set1_ps (-0.5f));
 	return _mm_cvtps_epi32 (x);
@@ -194,12 +194,12 @@ Vs32	ToolsSimd::floor_f32_to_s32 (Vf32 x) noexcept
 Vf32	ToolsSimd::conv_s32_to_f32 (Vs32 x) noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
-	return Vf32 { {
+	return Vf32 {
 		float (x._x [0]),
 		float (x._x [1]),
 		float (x._x [2]),
 		float (x._x [3])
-	} };
+	};
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cvtepi32_ps (x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -232,12 +232,12 @@ Vs32	ToolsSimd::srai_s32 (Vs32 x) noexcept
 	static_assert (N >= 0, "");
 	static_assert (N <= 32, "");
 #if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
+	return Vs32 {
 		x._x [0] >> N,
 		x._x [1] >> N,
 		x._x [2] >> N,
 		x._x [3] >> N
-	} };
+	};
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_srai_epi32 (x, N);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -253,12 +253,12 @@ Vs32	ToolsSimd::srli_s32 (Vs32 x) noexcept
 	static_assert (N >= 0, "");
 	static_assert (N <= 32, "");
 #if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
+	return Vs32 {
 		int32_t (uint32_t (x._x [0]) >> N),
 		int32_t (uint32_t (x._x [1]) >> N),
 		int32_t (uint32_t (x._x [2]) >> N),
 		int32_t (uint32_t (x._x [3]) >> N)
-	} };
+	};
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_srli_epi32 (x, N);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
@@ -274,12 +274,12 @@ Vs32	ToolsSimd::slli_s32 (Vs32 x) noexcept
 	static_assert (N >= 0, "");
 	static_assert (N <= 32, "");
 #if ! defined (fstb_HAS_SIMD)
-	return Vs32 { {
+	return Vs32 {
 		x._x [0] << N,
 		x._x [1] << N,
 		x._x [2] << N,
 		x._x [3] << N
-	} };
+	};
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_slli_epi32 (x, N);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
