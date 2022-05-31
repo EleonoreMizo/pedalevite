@@ -83,7 +83,6 @@ int	TestOscSinCosStableSimd::test_block_size ()
 	osc.set_step (angle);
 	osc.clear_buffers ();
 
-	float          phase_ref = 0;
 	int            pos_blk   = 0;
 	int            buf_len   = 1;
 	alignas (16) std::array <float, buf_len_max + buf_margin> buf_cos;
@@ -129,7 +128,6 @@ int	TestOscSinCosStableSimd::test_block_size ()
 			}
 		}
 
-		phase_ref += angle * buf_len;
 		pos_blk += buf_len;
 		osc.correct_fast ();
 
