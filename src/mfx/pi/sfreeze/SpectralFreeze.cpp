@@ -124,15 +124,15 @@ double	SpectralFreeze::do_get_param_val (piapi::ParamCateg categ, int index, int
 
 int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
-	/*** To do:
-		Resampling to 44.1 or 48 kHz when the sampling rate is higher, so the
-		sound remains more or less the same whatever the sampling rate.
-	***/
-
 	latency = 0;
 
 	_sample_freq = float (    sample_freq);
 	_inv_fs      = float (1 / sample_freq);
+
+	compute_fft_var (sample_freq);
+	_fft.set_length (_fft_len_l2);
+	_buf_pcm.resize (_fft_len);
+	_buf_bins.resize (_fft_len);
 
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
@@ -162,6 +162,7 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 		for (auto &slot : chn._slot_arr)
 		{
+			slot._buf_freeze.resize (_fft_len);
 			slot._frz_state = FreezeState::NONE;
 			slot._nbr_hops  = 0;
 		}
@@ -173,7 +174,7 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
 	{
-		auto &         pcf  = _param_change_flag_slot_arr [slot_idx];
+		auto &         pcf = _param_change_flag_slot_arr [slot_idx];
 		pcf.set ();
 	}
 
@@ -363,6 +364,55 @@ void	SpectralFreeze::update_param (bool force_flag)
 
 
 
+void	SpectralFreeze::compute_fft_var (double sample_freq) noexcept
+{
+	constexpr auto fs_thr   = 50'000.0; // Hz
+	constexpr auto proc_thr = 20'000.0; // Hz
+
+	// Computes the FFT length for the given sampling rate.
+	// Over 50 kHz, we double the default length each octave, so the bandwidth
+	// per bin is kept more or less constant.
+	_fft_len_l2 = _fft_len_l2_min;
+	while (   _fft_len_l2 < _fft_len_l2_max
+	       && sample_freq > fs_thr * double (1 << (_fft_len_l2 - _fft_len_l2_min)))
+	{
+		++ _fft_len_l2;
+	}
+
+	_fft_len  = 1 << _fft_len_l2;
+
+	// Range for all bins. DC is 0 and Nyquist is _bin_top
+	_nbr_bins = _fft_len / 2;
+	_bin_top  = _nbr_bins;
+
+	// Base-2 log of the hop size, in samples. Must be <= _fft_len_l2 - 2
+	_hop_size_l2 = _fft_len_l2 - 2;
+	_hop_size    = 1 << _hop_size_l2;
+	_hop_ratio   = 1 << (_fft_len_l2 - _hop_size_l2);
+
+	// FFT normalisation factor combined with window scaling to compensate
+	// for the amplitude change caused by the overlap.
+	const float   scale_win =
+		(_hop_ratio <= 2) ? 1.f : 8.f / float (3 * _hop_ratio);
+	const auto    scale_fft = 1.f / _fft_len;
+	_scale_amp   =  scale_fft * scale_win;
+
+	// Last bin + 1 being processed. Other bins (ultrasonic content) are cleared
+	const auto     nyquist_freq = sample_freq * 0.5;
+	const int      bin_end_raw = fstb::ceil_int (
+		double (_bin_top) * proc_thr / nyquist_freq
+	);
+	_bin_end     = std::min (bin_end_raw, _bin_top);
+
+#if defined (fstb_HAS_SIMD)
+	// Vector and scalar ranges and indexes
+	_bin_end_vec = _bin_beg + ((_bin_end - _bin_beg) & ~(_simd_w - 1));
+	_bin_beg_sca = _bin_end_vec;
+#endif
+}
+
+
+
 int	SpectralFreeze::conv_freq_to_bin (float f) const noexcept
 {
 	assert (f >= 0);
@@ -513,7 +563,7 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 
 void	SpectralFreeze::synthesise_bins (Channel &chn) noexcept
 {
-	_buf_bins.fill (0.f);
+	std::fill (_buf_bins.begin (), _buf_bins.end (), 0.f);
 
 	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
 	{
@@ -566,13 +616,7 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 	constexpr float   gain_thr  = 1e-6f; // -120 dB
 	if (gain >= gain_thr)
 	{
-		// FFT normalisation factor combined with window scaling
-		constexpr int     hop_ratio = 1 << (_fft_len_l2 - _hop_size_l2);
-		constexpr float   scale_win = (hop_ratio <= 2) ? 1 : 8.f / (3 * hop_ratio);
-		constexpr float   scale_fft = 1.f / _fft_len;
-		constexpr float   scale     = scale_fft * scale_win;
-
-		const float       gain_sc   = gain * scale;
+		const float       gain_sc   = gain * _scale_amp;
 
 #if defined (fstb_HAS_SIMD)
 

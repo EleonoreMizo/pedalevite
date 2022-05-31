@@ -23,7 +23,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "ffft/FFTRealFixLen.h"
+#include "mfx/pi/cdsp/FFTRealRange.h"
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
@@ -38,7 +38,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
-#include <array>
+#include <vector>
 
 
 
@@ -81,26 +81,16 @@ protected:
 private:
 
 	// Base-2 log of the FFT length, in samples
-	static constexpr int _fft_len_l2 = 12;
-	static constexpr int _fft_len    = 1 << _fft_len_l2;
+	// _fft_len_l2_min is used at standard rates (< 50 kHz)
+	static constexpr int _fft_len_l2_min = 12;
+	static constexpr int _fft_len_l2_max = 16;
 
-	// Range of "useful" bins. DC is 0 and Nyquist is _bin_end
-	static constexpr int _nbr_bins   = _fft_len / 2;
-	static constexpr int _bin_beg    = 1;
-	static constexpr int _bin_end    = _nbr_bins;
+	// Range for all bins. DC is 0 and Nyquist is _bin_top
+	static constexpr int _bin_beg = 1;
 
-	// Vector and scalar ranges and indexes
 #if defined (fstb_HAS_SIMD)
-	static constexpr int _simd_w      = 4;
-	static constexpr int _bin_end_vec = _bin_beg + ((_bin_end - _bin_beg) & ~(_simd_w - 1));
-	static constexpr int _bin_beg_sca = _bin_end_vec;
-#else
-	static constexpr int _bin_beg_sca = _bin_beg;
+	static constexpr int _simd_w = 4;
 #endif
-
-	// Base-2 log of the overlap, in samples. Must be <= _fft_len_l2
-	static constexpr int _hop_size_l2 = _fft_len_l2 - 2;
-	static constexpr int _hop_size    = 1 << _hop_size_l2;
 
 	enum class FreezeState
 	{
@@ -121,7 +111,8 @@ private:
 		// CAPTURE2: real = magnitude of the frozen bin, imag = normalised angle
 		// (1 is 2 * pi rad) of the phase difference between the two frames
 		// Bins 0 and _nbr_bins are never stored.
-		std::array <float, _fft_len>
+		// Length: _fft_len
+		std::vector <float>
 							_buf_freeze;
 
 		// Number of hops elapsed since the freeze beginning. Helps to adjust
@@ -155,6 +146,7 @@ private:
 
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
+	void           compute_fft_var (double sample_freq) noexcept;
 	int            conv_freq_to_bin (float f) const noexcept;
 	void           analyse_bins (Channel &chn) noexcept;
 	void           analyse_capture1 (Slot &slot) noexcept;
@@ -184,15 +176,43 @@ private:
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_misc;
 
+	// Base-2 log of the FFT length, in samples
+	int            _fft_len_l2  = 0;
+	int            _fft_len     = 0;
+
+	// Range for all bins. DC is 0 and Nyquist is _bin_top
+	int            _nbr_bins    = 0;
+	int            _bin_top     = 0;
+
+	// Base-2 log of the hop size, in samples. Must be <= _fft_len_l2
+	int            _hop_size_l2 = 0;
+	int            _hop_size    = 0;
+	int            _hop_ratio   = 0;
+
+	// FFT normalisation factor combined with window scaling to compensate
+	// for the amplitude change caused by the overlap.
+	float          _scale_amp   = 0;
+
+	// Last bin + 1 being processed. Other bins (ultrasonic content) are cleared
+	int            _bin_end     = 0;
+
+	// Vector and scalar ranges and indexes
+#if defined (fstb_HAS_SIMD)
+	int            _bin_end_vec = 0;
+	int            _bin_beg_sca = 0;
+#else
+	int            _bin_beg_sca = _bin_beg;
+#endif
+
 	ChannelArray   _chn_arr;
 
-	ffft::FFTRealFixLen <_fft_len_l2>
+	cdsp::FFTRealRange <_fft_len_l2_min, _fft_len_l2_max>
 	               _fft;
-	dsp::wnd::ProcHann <float, (_fft_len_l2 - _hop_size_l2 == 1)>
+	dsp::wnd::ProcHann <float, false>
 	               _frame_win;
-	std::array <float, _fft_len>
+	std::vector <float>          // Length: _fft_len
 	               _buf_pcm;
-	std::array <float, _fft_len>
+	std::vector <float>          // Length: _fft_len
 	               _buf_bins;
 
 	// Crossfading position, [0 ; Cst::_nbr_slots]. Integer = pure slot.
