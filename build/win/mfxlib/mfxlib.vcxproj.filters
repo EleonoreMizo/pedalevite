@@ -5577,6 +5577,24 @@
     <ClInclude Include="..\..\..\src\fstb\VecAlign.h">
       <Filter>fstb</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealRange.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealRange.hpp">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalRange.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalRange.hpp">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalWrapper.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalWrapper.hpp">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

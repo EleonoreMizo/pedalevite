@@ -1001,6 +1001,12 @@ commonsrc = \
         ../../src/mfx/pi/colorme/ColorMeDesc.h \
         ../../src/mfx/pi/colorme/Cst.h \
         ../../src/mfx/pi/colorme/Param.h \
+        ../../src/mfx/pi/cdsp/FFTRealInternalRange.h \
+        ../../src/mfx/pi/cdsp/FFTRealInternalRange.hpp \
+        ../../src/mfx/pi/cdsp/FFTRealInternalWrapper.h \
+        ../../src/mfx/pi/cdsp/FFTRealInternalWrapper.hpp \
+        ../../src/mfx/pi/cdsp/FFTRealRange.h \
+        ../../src/mfx/pi/cdsp/FFTRealRange.hpp \
         ../../src/mfx/pi/cdsp/FreqShift.cpp \
         ../../src/mfx/pi/cdsp/FreqShift.h \
         ../../src/mfx/pi/cdsp/FreqSplitter5.cpp \

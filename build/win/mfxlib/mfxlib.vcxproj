@@ -1397,6 +1397,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Ovrspl.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalRange.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalRange.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalWrapper.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalWrapper.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealRange.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealRange.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqShift.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter8.h" />
