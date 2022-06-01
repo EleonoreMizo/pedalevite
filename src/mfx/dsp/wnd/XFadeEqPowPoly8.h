@@ -17,7 +17,7 @@ https://www.desmos.com/calculator/pu6axgieum
 
 Template parameters:
 
-- OFLAG: uses the original formula instead of the original one
+- OFLAG: uses the original formula instead of the modified one
 
 --- Legal stuff ---
 
