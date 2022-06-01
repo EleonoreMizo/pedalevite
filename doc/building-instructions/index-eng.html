@@ -1232,7 +1232,7 @@ echo 'export LD_LIBRARY_PATH=/usr/local/clang_'$clangversion'/lib:$LD_LIBRARY_PA
 . .bashrc
 clang++ --version</pre>
 <p>The part beginning with <code>wget</code> and ending with <code>.xz</code>
-fits on a single line.
+fits on a single line, as well as the second <code>echo</code> line.
 Theoretically, everything should work well, however I encountered some
 issues when running executable files using the bundled libc++, which was not
 found.
@@ -1256,7 +1256,7 @@ git clone https://github.com/EleonoreMizo/pedalevite.git</pre>
 ./configure-v2-release</pre>
 <p>If Clang was installed at the previous step, replace the last line
 with&#8239;:</p>
-<pre class="term">./configure-v2-release --enable-clang</pre>
+<pre class="term">./configure-v2-release CXX='clang++' CC='clang'</pre>
 <p>Finally (for all versions), compile it&#8239;:</p>
 <pre class="term">make -j4</pre>
 <p>Check that everything succeeded and that there is an executable file
@@ -1726,6 +1726,11 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r10, 2022-05-24</b></p>
+<ul>
+<li>Changed the <code>configure</<code> options to compile with Clang.</li>
+</ul>
 
 <p><b>r9, 2021-03-26</b></p>
 <ul>

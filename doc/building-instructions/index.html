@@ -1377,7 +1377,7 @@ echo 'export LD_LIBRARY_PATH=/usr/local/clang_'$clangversion'/lib:$LD_LIBRARY_PA
 . .bashrc
 clang++ --version</pre>
 <p>La partie commençant par <code>wget</code> et finissant par <code>.xz</code>
-tient sur une seule ligne.
+tient sur une seule ligne, ainsi que la deuxième ligne <code>echo</code>.
 En principe, tout devrait marcher correctement, cependant j’ai eu des
 problèmes à lancer des exécutables utilisant la libc++ intégrée à Clang, qui
 n’était pas trouvée.
@@ -1401,7 +1401,7 @@ git clone https://github.com/EleonoreMizo/pedalevite.git</pre>
 ./configure-v2-release</pre>
 <p>Si Clang a été installé à l’étape précédente, remplacer la dernière
 ligne par&#8239;:</p>
-<pre class="term">./configure-v2-release --enable-clang</pre>
+<pre class="term">./configure-v2-release CXX='clang++' CC='clang'</pre>
 <p>Finalement (on reprend le tonc commun), on compile&#8239;:</p>
 <pre class="term">make -j4</pre>
 <p>Vérifier que tout s’est bien passé et qu’il y a un exécutable
@@ -1918,9 +1918,15 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
 
+<p><b>r10, 2022-05-24</b></p>
+<ul>
+<li>Dans <code>configure</<code>, changement de l’option permettant de
+compiler avec Clang.</li>
+</ul>
+
 <p><b>r9, 2021-03-26</b></p>
 <ul>
-<li>jouts dans la section des diagnostics concernant la fraction de temps
+<li>Ajouts dans la section des diagnostics concernant la fraction de temps
 attribuée aux threads temps-réels.</li>
 </ul>
 
