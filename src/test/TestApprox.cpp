@@ -278,6 +278,15 @@ int	TestApprox::perform_test ()
 		"atan2_7th (float)", -10.001, 10.0, -10.0, 10.0, 0.00012
 	);
 
+	// Misc
+
+	test_op1_all_flt_v <false> (ret_val,
+		[] (double x) { return round (x); },
+		[] (Vf32 x) { return round (x); },
+		"round", -10.0, 10.0, 1e-6
+	);
+
+
 	return ret_val;
 }
 

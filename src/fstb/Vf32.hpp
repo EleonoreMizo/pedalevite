@@ -648,7 +648,7 @@ Vf32	Vf32::round () const noexcept
 	const auto     p    = vdupq_n_f32 (+0.5f);
 	const auto     gt0  = vcgtq_f32 (_x, zero);
 	const auto     u    = vbslq_f32 (gt0, p, m);
-	return vaddq_f32 (_x, u);
+	return vcvtq_f32_s32 (vcvtq_s32_f32 (vaddq_f32 (_x, u)));
 #endif // fstb_ARCHI
 }
 
