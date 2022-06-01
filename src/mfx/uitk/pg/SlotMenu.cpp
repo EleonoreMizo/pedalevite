@@ -441,6 +441,7 @@ void	SlotMenu::update_display ()
 	_chn_sptr->show (full_flag);
 	_frs_sptr->show (full_flag);
 	_lbl_sptr->show (full_flag);
+	_cpu_sptr->show (full_flag);
 	if (full_flag)
 	{
 		const doc::Slot & slot = preset.use_slot (slot_id);
