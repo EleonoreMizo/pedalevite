@@ -77,17 +77,16 @@ int	TestSpectralFreeze::perform_test ()
 	float * const* src_arr = pi_proc.use_buf_list_src ();
 	mfx::piapi::ProcInfo &   proc_info = pi_proc.use_proc_info ();
 	pi_proc.reset_param ();
-	constexpr auto frz_idx =
-		  mfx::pi::sfreeze::Param_SLOT_BASE
-		+ mfx::pi::sfreeze::ParamSlot_FREEZE;
-	pi_proc.set_param_nat (frz_idx, 0.0);
+	constexpr auto base = int (mfx::pi::sfreeze::Param_SLOT_BASE);
+	pi_proc.set_param_nat (base + mfx::pi::sfreeze::ParamSlot_FREEZE, 0.0);
+	pi_proc.set_param_nat (base + mfx::pi::sfreeze::ParamSlot_GAIN  , 1.0);
 	pi_proc.set_param_nat (mfx::pi::sfreeze::Param_DMODE, double (mfx::pi::sfreeze::DMode_CUT));
 
 	do
 	{
 		if (pos >= pos_auto_1 && pos < pos_auto_1 + max_block_size)
 		{
-			pi_proc.set_param_nat (frz_idx, 1.0);
+			pi_proc.set_param_nat (base + mfx::pi::sfreeze::ParamSlot_FREEZE, 1.0);
 		}
 
 		const int      block_len =
