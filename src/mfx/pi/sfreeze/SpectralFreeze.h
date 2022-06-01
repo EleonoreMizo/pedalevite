@@ -38,6 +38,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
+#include <array>
 #include <vector>
 
 
