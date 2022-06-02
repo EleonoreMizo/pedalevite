@@ -51,6 +51,8 @@ enum Param
 	Param_XFGAIN,
 	Param_DMODE,
 	Param_PHASE,
+	Param_CRY_AMT,
+	Param_CRY_RAD,
 	Param_NBR_ELT
 
 }; // enum Param

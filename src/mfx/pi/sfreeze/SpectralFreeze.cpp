@@ -86,17 +86,23 @@ SpectralFreeze::SpectralFreeze (piapi::HostInterface &host)
 		pcf.add_observer (_param_change_flag);
 	}
 
-	_state_set.set_val_nat (desc_set, Param_XFADE , 0);
-	_state_set.set_val_nat (desc_set, Param_XFGAIN, 0);
-	_state_set.set_val_nat (desc_set, Param_DMODE , 0);
-	_state_set.set_val_nat (desc_set, Param_PHASE , 0);
+	_state_set.set_val_nat (desc_set, Param_XFADE  , 0);
+	_state_set.set_val_nat (desc_set, Param_XFGAIN , 0);
+	_state_set.set_val_nat (desc_set, Param_DMODE  , 0);
+	_state_set.set_val_nat (desc_set, Param_PHASE  , 0);
+	_state_set.set_val_nat (desc_set, Param_CRY_AMT, 0);
+	_state_set.set_val_nat (desc_set, Param_CRY_RAD, Cst::_max_cryst_rad);
 
 	_state_set.add_observer (Param_XFADE , _param_change_flag_misc);
 	_state_set.add_observer (Param_XFGAIN, _param_change_flag_misc);
 	_state_set.add_observer (Param_DMODE , _param_change_flag_misc);
 	_state_set.add_observer (Param_PHASE , _param_change_flag_misc);
 
-	_param_change_flag_misc.add_observer (_param_change_flag);
+	_state_set.add_observer (Param_CRY_AMT, _param_change_flag_cryst);
+	_state_set.add_observer (Param_CRY_RAD, _param_change_flag_cryst);
+
+	_param_change_flag_misc .add_observer (_param_change_flag);
+	_param_change_flag_cryst.add_observer (_param_change_flag);
 }
 
 
@@ -133,6 +139,11 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_fft.set_length (_fft_len_l2);
 	_buf_pcm.resize (_fft_len);
 	_buf_bins.resize (_fft_len);
+	_weight_arr.resize (_nbr_bins);
+
+	// Makes sure the PCM buffer can be recycled to precompute the magnitudes
+	// for the crystalise effect.
+	assert (_fft_len >= _nbr_bins + Cst::_max_cryst_rad * 2);
 
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
@@ -358,6 +369,13 @@ void	SpectralFreeze::update_param (bool force_flag)
 			_phasing  = speed * hop_dur * 0.5f;
 
 			_dry_mode = _state_set.get_val_enum <DMode> (Param_DMODE);
+		}
+
+		// Crystalise
+		if (_param_change_flag_cryst (true) || force_flag)
+		{
+			_cryst_amt = float (_state_set.get_val_end_nat (Param_CRY_AMT));
+			_cryst_rad = _state_set.get_val_int (Param_CRY_RAD);
 		}
 	}
 }
@@ -599,6 +617,11 @@ void	SpectralFreeze::synthesise_bins (Channel &chn) noexcept
 			synthesise_playback (slot, gain);
 		}
 	}
+
+	if (_cryst_amt >= 1e-3f)
+	{
+		process_crystalise ();
+	}
 }
 
 
@@ -691,6 +714,112 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 
 			// Next
 			phase_val = -phase_val;
+		}
+	}
+}
+
+
+
+void	SpectralFreeze::process_crystalise () noexcept
+{
+	crystalise_analyse ();
+	crystalise_decimate ();
+}
+
+
+
+void	SpectralFreeze::crystalise_analyse () noexcept
+{
+	// Zeroes the look-up margins for the precomputed squared bin magnitudes.
+	// Recycles _buf_pcm for this use
+	constexpr auto ofs           = Cst::_max_cryst_rad;
+	const auto     it_sq_mag_beg = _buf_pcm.begin ();
+	std::fill (
+		it_sq_mag_beg,
+		it_sq_mag_beg + ofs + _bin_beg,
+		0.f
+	);
+	std::fill (
+		it_sq_mag_beg + ofs + _bin_end,
+		it_sq_mag_beg + ofs + _bin_end + Cst::_max_cryst_rad,
+		0.f
+	);
+
+	// Precomputes the squared bin magnitudes
+	const int      img_ofs = _nbr_bins;
+	for (int bin_idx = _bin_beg; bin_idx < _bin_end; ++bin_idx)
+	{
+		const auto     img_idx = bin_idx + img_ofs;
+		_buf_pcm [ofs + bin_idx] =
+			  fstb::sq (_buf_bins [bin_idx])
+			+ fstb::sq (_buf_bins [img_idx]);
+	}
+
+	// Analysis: finds to which extent each bin is a local maximum.
+	// Gives 0 for a local minimum and _cryst_rad * 2 for the largest span
+	for (int main_idx = _bin_beg; main_idx < _bin_end; ++main_idx)
+	{
+		const auto     bin_mag_sq = _buf_pcm [ofs + main_idx];
+
+		// Contains the local maximum aera { forward, backwards }.
+		// Defaults at the maximum possible
+		std::array <int, 2>  dist_arr { _cryst_rad, _cryst_rad };
+
+		// Scans in both directions
+		int            dir = 1; // Starts with forward search
+		for (int dir_idx = 0; dir_idx < 2; ++dir_idx)
+		{
+			for (int k = 1; k <= _cryst_rad; ++k)
+			{
+				const auto     pos_rel    = k * dir;
+				const auto     tst_idx    = main_idx + pos_rel;
+				const auto     tst_mag_sq = _buf_pcm [ofs + tst_idx];
+				if (bin_mag_sq < tst_mag_sq)
+				{
+					// Another maximum: stops here and updates the area
+					dist_arr [dir_idx] = k - 1;
+					break;
+				}
+			}
+			dir = -1; // Goes backwards at the next iteration
+		}
+
+		// Stores the result
+		_weight_arr [main_idx] = dist_arr [0] + dist_arr [1]; 
+	}
+}
+
+
+
+// Floating point threshold with smooth step function
+void	SpectralFreeze::crystalise_decimate () noexcept
+{
+	// Curvature for the amount -> threshold mapping
+	constexpr auto curve   = 0.625f;
+
+	// The step spans over 2 units, making the transition a bit smoother
+	constexpr auto step_sz = 2.f;
+
+	const auto     amt_map = _cryst_amt * (_cryst_amt * curve + (1.f - curve));
+	const auto     max_dia = float (_cryst_rad * 2 + (step_sz - 1));
+	const auto     thr     = amt_map * max_dia;
+	const auto     img_ofs = _nbr_bins;
+	for (int bin_idx = _bin_beg; bin_idx < _bin_end; ++bin_idx)
+	{
+		const auto     weight = float (_weight_arr [bin_idx]);
+		if (weight < thr)
+		{
+			const auto     img_idx = bin_idx + img_ofs;
+			float          gate    = 0;
+			constexpr auto scale_x = 1.f / step_sz;
+			const auto     dif     = (thr - weight) * scale_x;
+			if (dif < 1)
+			{
+				// Sigmoid, inverted: 0 -> 1 and 1 -> 0
+				gate = 1 - fstb::sq (dif) * (3 - dif * 2);
+			}
+			_buf_bins [bin_idx] *= gate;
+			_buf_bins [img_idx] *= gate;
 		}
 	}
 }

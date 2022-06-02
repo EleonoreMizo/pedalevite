@@ -32,6 +32,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/Simple.h"
 #include "mfx/pi/param/TplLin.h"
+#include "mfx/pi/param/TplInt.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/piapi/Tag.h"
@@ -121,6 +122,22 @@ SpectralFreezeDesc::SpectralFreezeDesc ()
 	pll_sptr->use_mapper ().add_segment (0.9, 10   , true);
 	pll_sptr->use_mapper ().add_segment (1.0, 20   , false);
 	_desc_set.add_glob (Param_PHASE, pll_sptr);
+
+	// Crystalise amount
+	auto           sim_sptr = std::make_shared <param::Simple> (
+		"Crystalise amount\nCrystalise amt\nCrystalise\nCrystal\nCryst\nCr"
+	);
+	_desc_set.add_glob (Param_CRY_AMT, sim_sptr);
+
+	// Crystalise bandwidth
+	auto           int_sptr = std::make_shared <param::TplInt> (
+		1, Cst::_max_cryst_rad,
+		"Crystalise radius",
+		"bins",
+		0,
+		"%.0f"
+	);
+	_desc_set.add_glob (Param_CRY_RAD, int_sptr);
 }
 
 

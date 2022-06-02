@@ -154,6 +154,9 @@ private:
 	void           analyse_capture2 (Slot &slot) noexcept;
 	void           synthesise_bins (Channel &chn) noexcept;
 	void           synthesise_playback (Slot &slot, float gain) noexcept;
+	void           process_crystalise () noexcept;
+	void           crystalise_analyse () noexcept;
+	void           crystalise_decimate () noexcept;
 	void           check_dry_level (Channel &chn) noexcept;
 
 	static float   conv_pos_to_dry_lvl (float x) noexcept;
@@ -176,6 +179,8 @@ private:
 	               _param_change_flag_slot_arr;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_misc;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_cryst;
 
 	// Base-2 log of the FFT length, in samples
 	int            _fft_len_l2  = 0;
@@ -211,10 +216,12 @@ private:
 	               _fft;
 	dsp::wnd::ProcHann <float, false>
 	               _frame_win;
-	std::vector <float>          // Length: _fft_len
+	std::vector <float>          // Length: _fft_len. Also hosts the precalculated squared magnitudes for the crystalise effect
 	               _buf_pcm;
 	std::vector <float>          // Length: _fft_len
 	               _buf_bins;
+	std::vector <int>            // Length: _nbr_bins. Only [_bin_beg ; bin_end[ range is valid
+	               _weight_arr;
 
 	// Crossfading position, [0 ; Cst::_nbr_slots]. Integer = pure slot.
 	// Wraps to 0 for Cst::_nbr_slots
@@ -228,6 +235,9 @@ private:
 
 	// Playback mode
 	DMode          _dry_mode   = DMode_MIX;
+
+	float          _cryst_amt  = 0; // Crystalise amount, [0 ; 1]. 0 = disabled.
+	int            _cryst_rad  = 1; // Crystalise radius in bins, > 0
 
 
 
