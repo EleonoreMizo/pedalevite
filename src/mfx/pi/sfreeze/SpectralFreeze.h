@@ -23,7 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/cdsp/FFTRealRange.h"
+#include "fstb/def.h"
+
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
@@ -31,6 +32,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/spec/FrameOverlapAna.h"
 #include "mfx/dsp/spec/FrameOverlapSyn.h"
 #include "mfx/dsp/wnd/ProcHann.h"
+#include "mfx/pi/cdsp/FFTRealRange.h"
 #include "mfx/pi/sfreeze/Cst.h"
 #include "mfx/pi/sfreeze/DMode.h"
 #include "mfx/pi/sfreeze/SpectralFreezeDesc.h"
@@ -40,6 +42,8 @@ http://www.wtfpl.net/ for more details.
 
 #include <array>
 #include <vector>
+
+#include <cstdint>
 
 
 
@@ -88,6 +92,11 @@ private:
 
 	// Range for all bins. DC is 0 and Nyquist is _bin_top
 	static constexpr int _bin_beg = 1;
+
+	// Offset of the 0th bin in _buf_pcm when used to store the bin magnitudes
+	// The offset is required in order to provide some margins to avoid doing
+	// tests for boundaries during analysis pass for the Crystalise effect.
+	static constexpr int _cryst_ofs = Cst::_max_cryst_rad;
 
 #if defined (fstb_HAS_SIMD)
 	static constexpr int _simd_w = 4;
@@ -155,6 +164,7 @@ private:
 	void           synthesise_bins (Channel &chn) noexcept;
 	void           synthesise_playback (Slot &slot, float gain) noexcept;
 	void           process_crystalise () noexcept;
+	void           crystalise_precomp_mag () noexcept;
 	void           crystalise_analyse () noexcept;
 	void           crystalise_decimate () noexcept;
 	void           check_dry_level (Channel &chn) noexcept;
@@ -220,7 +230,7 @@ private:
 	               _buf_pcm;
 	std::vector <float>          // Length: _fft_len
 	               _buf_bins;
-	std::vector <int>            // Length: _nbr_bins. Only [_bin_beg ; bin_end[ range is valid
+	std::vector <int32_t>        // Length: _nbr_bins. Only [_bin_beg ; bin_end[ range is valid
 	               _weight_arr;
 
 	// Crossfading position, [0 ; Cst::_nbr_slots]. Integer = pure slot.

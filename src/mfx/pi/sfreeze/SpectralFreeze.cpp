@@ -24,10 +24,12 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/Approx.h"
 #include "fstb/def.h"
+
+#include "fstb/Approx.h"
 #include "fstb/fnc.h"
 #if defined (fstb_HAS_SIMD)
+	#include "fstb/ToolsSimd.h"
 	#include "fstb/Vf32.h"
 #endif // fstb_HAS_SIMD
 #include "mfx/dsp/mix/Align.h"
@@ -722,44 +724,108 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 
 void	SpectralFreeze::process_crystalise () noexcept
 {
+	crystalise_precomp_mag ();
 	crystalise_analyse ();
 	crystalise_decimate ();
 }
 
 
 
-void	SpectralFreeze::crystalise_analyse () noexcept
+// Zeroes the look-up margins for the precomputed squared bin magnitudes.
+// Recycles _buf_pcm for this use
+void	SpectralFreeze::crystalise_precomp_mag () noexcept
 {
-	// Zeroes the look-up margins for the precomputed squared bin magnitudes.
-	// Recycles _buf_pcm for this use
-	constexpr auto ofs           = Cst::_max_cryst_rad;
 	const auto     it_sq_mag_beg = _buf_pcm.begin ();
 	std::fill (
 		it_sq_mag_beg,
-		it_sq_mag_beg + ofs + _bin_beg,
+		it_sq_mag_beg + _cryst_ofs + _bin_beg,
 		0.f
 	);
 	std::fill (
-		it_sq_mag_beg + ofs + _bin_end,
-		it_sq_mag_beg + ofs + _bin_end + Cst::_max_cryst_rad,
+		it_sq_mag_beg + _cryst_ofs + _bin_end,
+		it_sq_mag_beg + _cryst_ofs + _bin_end + Cst::_max_cryst_rad,
 		0.f
 	);
 
 	// Precomputes the squared bin magnitudes
 	const int      img_ofs = _nbr_bins;
-	for (int bin_idx = _bin_beg; bin_idx < _bin_end; ++bin_idx)
+
+#if defined (fstb_HAS_SIMD)
+
+	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
 		const auto     img_idx = bin_idx + img_ofs;
-		_buf_pcm [ofs + bin_idx] =
-			  fstb::sq (_buf_bins [bin_idx])
-			+ fstb::sq (_buf_bins [img_idx]);
+		const auto     re = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
+		const auto     im = fstb::Vf32::loadu (&_buf_bins [img_idx]);
+		const auto     ma = re * re + im * im;
+		ma.storeu (&_buf_pcm [_cryst_ofs + bin_idx]);
 	}
 
-	// Analysis: finds to which extent each bin is a local maximum.
-	// Gives 0 for a local minimum and _cryst_rad * 2 for the largest span
-	for (int main_idx = _bin_beg; main_idx < _bin_end; ++main_idx)
+#endif // fstb_HAS_SIMD
+
+	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
 	{
-		const auto     bin_mag_sq = _buf_pcm [ofs + main_idx];
+		const auto     img_idx = bin_idx + img_ofs;
+		const auto     mag_sq  =
+			  fstb::sq (_buf_bins [bin_idx])
+			+ fstb::sq (_buf_bins [img_idx]);
+		_buf_pcm [_cryst_ofs + bin_idx] = mag_sq;
+	}
+}
+
+
+
+// Analysis: finds to which extent each bin is a local maximum.
+// Gives 0 for a local minimum and _cryst_rad * 2 for the largest span
+void	SpectralFreeze::crystalise_analyse () noexcept
+{
+#if defined (fstb_HAS_SIMD)
+
+	using Vf32 = fstb::Vf32;
+	using Vs32 = fstb::Vs32;
+
+	for (int main_idx = _bin_beg; main_idx < _bin_end_vec; main_idx += _simd_w)
+	{
+		const auto     bin_mag_sq =
+			Vf32::loadu (&_buf_pcm [_cryst_ofs + main_idx]);
+
+		// Contains the local maximum aera { forward, backwards }.
+		// Defaults at the maximum possible
+		std::array <Vs32, 2>  dist_arr { Vs32 (_cryst_rad), Vs32 (_cryst_rad) };
+
+		// Scans in both directions
+		int            dir = 1; // Starts with forward search
+		for (int dir_idx = 0; dir_idx < 2; ++dir_idx)
+		{
+			// We use a negative increment ("inc_neg") because using 0 or -1
+			// (instead of +1) makes it a valid mask for testing with or_h().
+			auto           dist    = Vs32::zero ();
+			auto           inc_neg = Vs32 (-1);
+			for (int k = 1; k <= _cryst_rad && inc_neg.or_h (); ++k)
+			{
+				const auto     pos_rel    = k * dir;
+				const auto     tst_idx    = main_idx + pos_rel;
+				const auto     tst_mag_sq =
+					Vf32::loadu (&_buf_pcm [_cryst_ofs + tst_idx]);
+				const auto     ge_mask    = (bin_mag_sq >= tst_mag_sq);
+				inc_neg &= fstb::ToolsSimd::cast_s32 (ge_mask);
+				dist -= inc_neg;
+			}
+			dist_arr [dir_idx] = dist;
+
+			dir = -1; // Goes backwards at the next iteration
+		}
+
+		// Stores the result
+		const auto     dist_tot = dist_arr [0] + dist_arr [1];
+		dist_tot.storeu (&_weight_arr [main_idx]);
+	}
+
+#endif // fstb_HAS_SIMD
+
+	for (int main_idx = _bin_beg_sca; main_idx < _bin_end; ++main_idx)
+	{
+		const auto     bin_mag_sq = _buf_pcm [_cryst_ofs + main_idx];
 
 		// Contains the local maximum aera { forward, backwards }.
 		// Defaults at the maximum possible
@@ -773,7 +839,7 @@ void	SpectralFreeze::crystalise_analyse () noexcept
 			{
 				const auto     pos_rel    = k * dir;
 				const auto     tst_idx    = main_idx + pos_rel;
-				const auto     tst_mag_sq = _buf_pcm [ofs + tst_idx];
+				const auto     tst_mag_sq = _buf_pcm [_cryst_ofs + tst_idx];
 				if (bin_mag_sq < tst_mag_sq)
 				{
 					// Another maximum: stops here and updates the area
@@ -785,13 +851,14 @@ void	SpectralFreeze::crystalise_analyse () noexcept
 		}
 
 		// Stores the result
-		_weight_arr [main_idx] = dist_arr [0] + dist_arr [1]; 
+		const auto     dist_sum = int32_t (dist_arr [0] + dist_arr [1]);
+		_weight_arr [main_idx] = dist_sum; 
 	}
 }
 
 
 
-// Floating point threshold with smooth step function
+// Floating point threshold with a smooth step function
 void	SpectralFreeze::crystalise_decimate () noexcept
 {
 	// Curvature for the amount -> threshold mapping
@@ -799,21 +866,56 @@ void	SpectralFreeze::crystalise_decimate () noexcept
 
 	// The step spans over 2 units, making the transition a bit smoother
 	constexpr auto step_sz = 2.f;
+	constexpr auto scale_x = 1.f / step_sz;
 
 	const auto     amt_map = _cryst_amt * (_cryst_amt * curve + (1.f - curve));
 	const auto     max_dia = float (_cryst_rad * 2 + (step_sz - 1));
 	const auto     thr     = amt_map * max_dia;
 	const auto     img_ofs = _nbr_bins;
-	for (int bin_idx = _bin_beg; bin_idx < _bin_end; ++bin_idx)
+
+#if defined (fstb_HAS_SIMD)
+
+	using Vf32 = fstb::Vf32;
+	using Vs32 = fstb::Vs32;
+
+	const auto     zero  = Vf32::zero ();
+	const auto     one   = Vf32 (1);
+	const auto     two   = Vf32 (2);
+	const auto     three = Vf32 (3);
+	const auto     thr_v = Vf32 (thr);
+	const auto     scx_v = Vf32 (scale_x);
+
+	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
+	{
+		const auto     img_idx = bin_idx + img_ofs;
+
+		const auto     weight  = fstb::ToolsSimd::conv_s32_to_f32 (
+			Vs32::loadu (&_weight_arr [bin_idx])
+		);
+		const auto     dif  = thr_v - weight;
+		const auto     s_in = limit (dif * scx_v, zero, one);
+
+		// Sigmoid, inverted: 0 -> 1 and 1 -> 0
+		const auto     gate = one - fstb::sq (s_in) * (three - s_in * two);
+
+		const auto     re   = Vf32::loadu (&_buf_bins [bin_idx]) * gate;
+		const auto     im   = Vf32::loadu (&_buf_bins [img_idx]) * gate;
+		re.storeu (&_buf_bins [bin_idx]);
+		im.storeu (&_buf_bins [img_idx]);
+	}
+
+#endif // fstb_HAS_SIMD
+
+	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
 	{
 		const auto     weight = float (_weight_arr [bin_idx]);
 		if (weight < thr)
 		{
 			const auto     img_idx = bin_idx + img_ofs;
 			float          gate    = 0;
-			constexpr auto scale_x = 1.f / step_sz;
-			const auto     dif     = (thr - weight) * scale_x;
-			if (dif < 1)
+			const auto     dif     = thr - weight;
+			const auto     s_in    = dif * scale_x;
+			if (s_in < 1)
 			{
 				// Sigmoid, inverted: 0 -> 1 and 1 -> 0
 				gate = 1 - fstb::sq (dif) * (3 - dif * 2);
