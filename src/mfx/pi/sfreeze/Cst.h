@@ -41,8 +41,7 @@ class Cst
 
 public:
 
-	static constexpr int _nbr_slots     = 4;
-	static constexpr int _max_cryst_rad = 16; // Bins
+	static constexpr int _nbr_slots = 4;
 
 
 

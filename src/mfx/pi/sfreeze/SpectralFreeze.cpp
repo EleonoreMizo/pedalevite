@@ -93,18 +93,14 @@ SpectralFreeze::SpectralFreeze (piapi::HostInterface &host)
 	_state_set.set_val_nat (desc_set, Param_DMODE  , 0);
 	_state_set.set_val_nat (desc_set, Param_PHASE  , 0);
 	_state_set.set_val_nat (desc_set, Param_CRY_AMT, 0);
-	_state_set.set_val_nat (desc_set, Param_CRY_RAD, Cst::_max_cryst_rad);
 
-	_state_set.add_observer (Param_XFADE , _param_change_flag_misc);
-	_state_set.add_observer (Param_XFGAIN, _param_change_flag_misc);
-	_state_set.add_observer (Param_DMODE , _param_change_flag_misc);
-	_state_set.add_observer (Param_PHASE , _param_change_flag_misc);
-
-	_state_set.add_observer (Param_CRY_AMT, _param_change_flag_cryst);
-	_state_set.add_observer (Param_CRY_RAD, _param_change_flag_cryst);
+	_state_set.add_observer (Param_XFADE  , _param_change_flag_misc);
+	_state_set.add_observer (Param_XFGAIN , _param_change_flag_misc);
+	_state_set.add_observer (Param_DMODE  , _param_change_flag_misc);
+	_state_set.add_observer (Param_PHASE  , _param_change_flag_misc);
+	_state_set.add_observer (Param_CRY_AMT, _param_change_flag_misc);
 
 	_param_change_flag_misc .add_observer (_param_change_flag);
-	_param_change_flag_cryst.add_observer (_param_change_flag);
 }
 
 
@@ -145,7 +141,7 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	// Makes sure the PCM buffer can be recycled to precompute the magnitudes
 	// for the crystalise effect.
-	assert (_fft_len >= _nbr_bins + Cst::_max_cryst_rad * 2);
+	assert (_fft_len >= _nbr_bins + _cryst_rad * 2);
 
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
@@ -368,16 +364,10 @@ void	SpectralFreeze::update_param (bool force_flag)
 				float (_state_set.get_val_end_nat (Param_PHASE));
 			const float   hop_dur = _inv_fs * _hop_size;
 			// * 0.5f because the phase difference is set in both directions
-			_phasing  = speed * hop_dur * 0.5f;
+			_phasing   = speed * hop_dur * 0.5f;
 
-			_dry_mode = _state_set.get_val_enum <DMode> (Param_DMODE);
-		}
-
-		// Crystalise
-		if (_param_change_flag_cryst (true) || force_flag)
-		{
+			_dry_mode  = _state_set.get_val_enum <DMode> (Param_DMODE);
 			_cryst_amt = float (_state_set.get_val_end_nat (Param_CRY_AMT));
-			_cryst_rad = _state_set.get_val_int (Param_CRY_RAD);
 		}
 	}
 }
@@ -557,10 +547,10 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 		if (! fstb::is_null (fabsf (b0r) + fabsf (b0i)))
 		{
 			// Division formula without scaling: bin / bin_old = b1 / b0
-			const float    b1r   = bin.real ();
-			const float    b1i   = bin.imag ();
-			const float    dr    = b1r * b0r + b1i * b0i;
-			const float    di    = b1i * b0r - b1r * b0i;
+			const float    b1r = bin.real ();
+			const float    b1i = bin.imag ();
+			const float    dr  = b1r * b0r + b1i * b0i;
+			const float    di  = b1i * b0r - b1r * b0i;
 
 			// Extracts the angle
 			// If the 3rd-order approximation is not accurate enough, we can
@@ -590,7 +580,7 @@ void	SpectralFreeze::synthesise_bins (Channel &chn) noexcept
 		auto &         slot = chn._slot_arr [slot_idx];
 		if (slot._frz_state == FreezeState::REPLAY)
 		{
-			float          gain       = slot._gain;
+			float          gain = slot._gain;
 
 			// 0 = pure slot, >= 1 = silent
 			float          xf_pos_rel = std::min (
@@ -638,7 +628,7 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 		slot._phase_acc -= 1;
 	}
 
-	constexpr float   gain_thr  = 1e-6f; // -120 dB
+	constexpr float   gain_thr = 1e-6f; // -120 dB
 	if (gain >= gain_thr)
 	{
 		const float       gain_sc   = gain * _scale_amp;
@@ -743,7 +733,7 @@ void	SpectralFreeze::crystalise_precomp_mag () noexcept
 	);
 	std::fill (
 		it_sq_mag_beg + _cryst_ofs + _bin_end,
-		it_sq_mag_beg + _cryst_ofs + _bin_end + Cst::_max_cryst_rad,
+		it_sq_mag_beg + _cryst_ofs + _bin_end + _cryst_rad,
 		0.f
 	);
 
@@ -868,8 +858,8 @@ void	SpectralFreeze::crystalise_decimate () noexcept
 	constexpr auto step_sz = 2.f;
 	constexpr auto scale_x = 1.f / step_sz;
 
+	constexpr auto max_dia = float (_cryst_rad * 2);
 	const auto     amt_map = _cryst_amt * (_cryst_amt * curve + (1.f - curve));
-	const auto     max_dia = float (_cryst_rad * 2);
 	const auto     thr     = amt_map * max_dia;
 	const auto     img_ofs = _nbr_bins;
 

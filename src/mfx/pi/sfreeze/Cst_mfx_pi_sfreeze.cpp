@@ -44,7 +44,6 @@ namespace sfreeze
 
 
 constexpr int	Cst::_nbr_slots;
-constexpr int	Cst::_max_cryst_rad;
 
 
 

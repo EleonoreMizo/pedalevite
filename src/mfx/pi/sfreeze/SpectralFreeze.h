@@ -91,12 +91,15 @@ private:
 	static constexpr int _fft_len_l2_max = 16;
 
 	// Range for all bins. DC is 0 and Nyquist is _bin_top
-	static constexpr int _bin_beg = 1;
+	static constexpr int _bin_beg   = 1;
+
+	// Radius for the crystalise effect, in bins.
+	static constexpr int _cryst_rad = 16;
 
 	// Offset of the 0th bin in _buf_pcm when used to store the bin magnitudes
 	// The offset is required in order to provide some margins to avoid doing
 	// tests for boundaries during analysis pass for the Crystalise effect.
-	static constexpr int _cryst_ofs = Cst::_max_cryst_rad;
+	static constexpr int _cryst_ofs = _cryst_rad;
 
 #if defined (fstb_HAS_SIMD)
 	static constexpr int _simd_w = 4;
@@ -189,8 +192,6 @@ private:
 	               _param_change_flag_slot_arr;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_misc;
-	fstb::util::NotificationFlagCascadeSingle
-	               _param_change_flag_cryst;
 
 	// Base-2 log of the FFT length, in samples
 	int            _fft_len_l2  = 0;
@@ -247,7 +248,6 @@ private:
 	DMode          _dry_mode   = DMode_MIX;
 
 	float          _cryst_amt  = 0; // Crystalise amount, [0 ; 1]. 0 = disabled.
-	int            _cryst_rad  = 1; // Crystalise radius in bins, > 0
 
 
 
