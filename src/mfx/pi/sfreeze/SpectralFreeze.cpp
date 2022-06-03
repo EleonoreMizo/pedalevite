@@ -869,7 +869,7 @@ void	SpectralFreeze::crystalise_decimate () noexcept
 	constexpr auto scale_x = 1.f / step_sz;
 
 	const auto     amt_map = _cryst_amt * (_cryst_amt * curve + (1.f - curve));
-	const auto     max_dia = float (_cryst_rad * 2 + (step_sz - 1));
+	const auto     max_dia = float (_cryst_rad * 2);
 	const auto     thr     = amt_map * max_dia;
 	const auto     img_ofs = _nbr_bins;
 
