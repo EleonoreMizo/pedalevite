@@ -1413,6 +1413,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cmerge\ChnMergeDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\crysta\Crystalise.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\crysta\CrystaliseDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\crysta\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\csplit\ChnSplit.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\csplit\ChnSplitDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dclip\DiodeClipper.h" />
@@ -2129,6 +2132,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\Compex.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\crysta\Crystalise.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\crysta\CrystaliseDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\csplit\ChnSplit.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\csplit\ChnSplitDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dclip\DiodeClipper.cpp" />

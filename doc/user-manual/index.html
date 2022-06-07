@@ -48,6 +48,7 @@
 	<li><a href="#fx-compex">CompEx — Compresseur/Expanseur</a></li>
 	<li><a href="#fx-convert-mono">Convert To Mono</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
+	<li><a href="#fx-crystalise">Crystalise — Altération timbrale</a></li>
 	<li><a href="#fx-delay">Delay — Écho stéréo</a></li>
 	<li><a href="#fx-dclip">Diode clipper — Saturation à diodes</a></li>
 	<li><a href="#fx-disto3">Distortion 3</a></li>
@@ -1356,6 +1357,20 @@ Attention, en cas d’entrée mono, le réglage dans <a href="#screen-fx-setup">
 configuration de l’effet</a> donnant la préférence au mono prend le dessus sur
 l’effet lui-même.
 Il est donc important de s’assurer qu’on est en <span class="ui">Auto</span>.</p>
+
+
+
+<h3><a id="fx-crystalise"></a>Crystalise — Altération timbrale</h3>
+
+<p>Modifie la tonalité du son joué en coupant les fréquences isolées et en ne
+gardant que les pics du spectre les plus pronéminents.
+À partir d’un certain niveau, les attaque du son disparaissent.
+Attention, cet effet a une latence de traitement importante.</p>
+
+<p class="var">Amount</p>
+<p>Intensité de l’effet, en pourcentage.
+Plus la valeur est élevée, plus les pics «&nbsp;mineurs&nbsp;» sont écartés
+du son traité.</p>
 
 
 
@@ -3827,6 +3842,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r50, 2022-06-07</b></p>
+<ul>
+<li>Crystalise est maintenant un effet à part entière.</li>
+</ul>
 
 <p><b>r49, 2022-06-03</b></p>
 <ul>

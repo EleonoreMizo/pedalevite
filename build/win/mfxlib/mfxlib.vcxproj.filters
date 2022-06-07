@@ -481,6 +481,9 @@
     <Filter Include="mfx\dsp\ana\r128">
       <UniqueIdentifier>{2b95f458-e8b9-44aa-bafe-c7b250e0ccc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\crysta">
+      <UniqueIdentifier>{2f6d8f30-c8cc-477e-ab59-b054dce782b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5595,6 +5598,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FFTRealInternalWrapper.hpp">
       <Filter>mfx\pi\cdsp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\crysta\CrystaliseDesc.h">
+      <Filter>mfx\pi\crysta</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\crysta\Crystalise.h">
+      <Filter>mfx\pi\crysta</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\crysta\Param.h">
+      <Filter>mfx\pi\crysta</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -7084,6 +7096,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\PluginDetails.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\crysta\Crystalise.cpp">
+      <Filter>mfx\pi\crysta</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\crysta\CrystaliseDesc.cpp">
+      <Filter>mfx\pi\crysta</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

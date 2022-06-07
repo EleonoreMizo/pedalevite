@@ -1024,6 +1024,11 @@ commonsrc = \
         ../../src/mfx/pi/cpx/CompexGainFnc.h \
         ../../src/mfx/pi/cpx/CompexGainFnc.hpp \
         ../../src/mfx/pi/cpx/Param.h \
+        ../../src/mfx/pi/crysta/Crystalise.cpp \
+        ../../src/mfx/pi/crysta/Crystalise.h \
+        ../../src/mfx/pi/crysta/CrystaliseDesc.cpp \
+        ../../src/mfx/pi/crysta/CrystaliseDesc.h \
+        ../../src/mfx/pi/crysta/Param.h \
         ../../src/mfx/pi/csplit/ChnSplit.cpp \
         ../../src/mfx/pi/csplit/ChnSplit.h \
         ../../src/mfx/pi/csplit/ChnSplitDesc.cpp \

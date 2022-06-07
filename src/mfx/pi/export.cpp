@@ -40,6 +40,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/colorme/ColorMeDesc.h"
 #include "mfx/pi/cpx/Compex.h"
 #include "mfx/pi/cpx/CompexDesc.h"
+#include "mfx/pi/crysta/Crystalise.h"
+#include "mfx/pi/crysta/CrystaliseDesc.h"
 #include "mfx/pi/csplit/ChnSplit.h"
 #include "mfx/pi/csplit/ChnSplitDesc.h"
 #include "mfx/pi/dclip/DiodeClipper.h"
@@ -237,6 +239,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::unique_ptr <mfx::p
 		add <vfreeze::VelvetFreezeDesc  , vfreeze::VelvetFreeze    > (fl);
 		add <badrad::BadRadioDesc       , badrad::BadRadio         > (fl);
 		add <lipid::LipidipiDesc        , lipid::Lipidipi          > (fl);
+		add <crysta::CrystaliseDesc     , crysta::Crystalise       > (fl);
 
 		fact_list.swap (fl);
 	}

@@ -48,6 +48,7 @@
 	<li><a href="#fx-compex">CompEx — Dynamics compressor/expander</a></li>
 	<li><a href="#fx-convert-mono">Convert To Mono</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
+	<li><a href="#fx-crystalise">Crystalise — Tone alteration</a></li>
 	<li><a href="#fx-delay">Delay — Stereo delay</a></li>
 	<li><a href="#fx-dclip">Diode clipper — Diode distortion</a></li>
 	<li><a href="#fx-disto3">Distortion 3</a></li>
@@ -1248,6 +1249,20 @@ to stereo.
 With a mono input, the setting in the <a href="#screen-fx-setup">effect
 configuration</a> is overriding the effect.
 So please ensure that you are in <span class="ui">Auto</span>.</p>
+
+
+
+<h3><a id="fx-crystalise"></a>Crystalise — Tone alteration</h3>
+
+<p>Alters the played tone by silencing isolated frequencies and keeping only
+the most proeminent spectral peaks.
+When the settings are high enough, attacks become deleted from the sound.
+Beware, this effect has a significant processing latency.</p>
+
+<p class="var">Amount</p>
+<p>Effect intensity, in percent.
+The higher the value, the more the minor peaks are discarded from the
+processed sound.</p>
 
 
 
@@ -3577,6 +3592,11 @@ This precision can be changed with <span class="key">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r50, 2022-06-07</b></p>
+<ul>
+<li>Crystalise is now an effect of its own.</li>
+</ul>
 
 <p><b>r49, 2022-06-03</b></p>
 <ul>
