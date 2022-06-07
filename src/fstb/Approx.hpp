@@ -236,7 +236,7 @@ constexpr T	Approx::sin_rbj_halfpi (T x) noexcept
 	const auto     c  = T ( 0.0796915849);
 	const auto     d  = T (-0.6459640619);
 	const auto     e  = T ( 1.5707963268);
-	const T        x2 = x * x;
+	const auto     x2 = x * x;
 
 	return Poly::horner (x2, e, d, c, b, a) * x;
 
