@@ -21,6 +21,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #endif
 
 
+#undef piapi2vst_PlugWrap_DEBUG_HOST_CALLS
+
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -43,11 +45,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cstdint>
-
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+# include <cstdio>
+#endif
 
 
 namespace piapi2vst
 {
+
+
+
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+static FILE * _dbg_file_ptr = nullptr;
+#endif
 
 
 
@@ -458,6 +468,15 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 ::VstIntPtr VSTCALLBACK	PlugWrap::vst_dispatch (::AEffect* e, ::VstInt32 opcode, ::VstInt32 index, ::VstIntPtr value, void* ptr, float opt)
 {
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	fprintf (
+		_dbg_file_ptr,
+		"vst_dispatch: opcode=%d, index=%d, value=%lld, ptr=%p, opt=%f\n",
+		int (opcode), int (index), (long long) (value), ptr, opt
+	);
+	fflush (_dbg_file_ptr);
+#endif
+
 	PlugWrap *     wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
 
@@ -678,6 +697,11 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 float VSTCALLBACK	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
 {
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	fprintf (_dbg_file_ptr, "vst_get_param: index=%d\n", int (index));
+	fflush (_dbg_file_ptr);
+#endif
+
 	const PlugWrap * const  wrapper_ptr =
 		static_cast <const PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
@@ -693,6 +717,14 @@ float VSTCALLBACK	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
 
 void VSTCALLBACK	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float value)
 {
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	fprintf (
+		_dbg_file_ptr, "vst_set_param: index=%d, value=%f\n",
+		int (index), value
+	);
+	fflush (_dbg_file_ptr);
+#endif
+
 	PlugWrap *  const wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
 
@@ -716,6 +748,11 @@ void VSTCALLBACK	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float 
 
 void VSTCALLBACK	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
 {
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	fprintf (_dbg_file_ptr, "vst_process: sampleFrames=%d\n", int (sampleFrames));
+	fflush (_dbg_file_ptr);
+#endif
+
 	PlugWrap * const  wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
 
@@ -760,6 +797,11 @@ void VSTCALLBACK	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, f
 
 void VSTCALLBACK	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
 {
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	fprintf (_dbg_file_ptr, "vst_process_replacing: sampleFrames=%d\n", int (sampleFrames));
+	fflush (_dbg_file_ptr);
+#endif
+
 	PlugWrap * const  wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
 
@@ -977,6 +1019,12 @@ extern "C"
 //------------------------------------------------------------------------
 VST_EXPORT static ::AEffect * piapi2vst_PlugWrap_create_vst (::audioMasterCallback audioMaster)
 {
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	piapi2vst::_dbg_file_ptr = fopen ("C:\\Temp\\pv_log.txt", "w");
+	fprintf (piapi2vst::_dbg_file_ptr, "piapi2vst_PlugWrap_create_vst: entering\n");
+	fflush (piapi2vst::_dbg_file_ptr);
+#endif
+
 	// Get VST Version of the Host
 	if (! audioMaster (nullptr, ::audioMasterVersion, 0, 0, nullptr, 0))
 	{
@@ -987,6 +1035,10 @@ VST_EXPORT static ::AEffect * piapi2vst_PlugWrap_create_vst (::audioMasterCallba
 	::AEffect *    vst_ptr = nullptr;
 	bool           ok_flag = true;
 
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	fprintf (piapi2vst::_dbg_file_ptr, "piapi2vst_PlugWrap_create_vst: creating plug-in\n");
+	fflush (piapi2vst::_dbg_file_ptr);
+#endif
 	try
 	{
 		piapi2vst::PlugWrap *   fx_ptr =
@@ -995,10 +1047,19 @@ VST_EXPORT static ::AEffect * piapi2vst_PlugWrap_create_vst (::audioMasterCallba
 	}
 	catch (...)
 	{
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+		fprintf (piapi2vst::_dbg_file_ptr, "piapi2vst_PlugWrap_create_vst: exception\n");
+		fflush (piapi2vst::_dbg_file_ptr);
+#endif
 		ok_flag = false;
 	}
 
 	assert (ok_flag);
+
+#if defined (piapi2vst_PlugWrap_DEBUG_HOST_CALLS)
+	fprintf (piapi2vst::_dbg_file_ptr, "piapi2vst_PlugWrap_create_vst: vst_ptr=%p\n", vst_ptr);
+	fflush (piapi2vst::_dbg_file_ptr);
+#endif
 
 	// Returns the VST AEffect structure
 	return vst_ptr;
