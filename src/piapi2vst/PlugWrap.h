@@ -121,13 +121,16 @@ private:
 
 	static ::VstInt32
 	               gen_vst_id (const mfx::piapi::PluginDescInterface &desc);
-	static ::VstIntPtr
+	static ::VstIntPtr VSTCALLBACK
 	               vst_dispatch (::AEffect* e, ::VstInt32 opcode, ::VstInt32 index, ::VstIntPtr value, void* ptr, float opt);
-	static float   vst_get_param (::AEffect* e, ::VstInt32 index);
-	static void    vst_set_param (::AEffect* e, ::VstInt32 index, float value);
-	static void DECLARE_VST_DEPRECATED (
+	static float VSTCALLBACK
+	               vst_get_param (::AEffect* e, ::VstInt32 index);
+	static void VSTCALLBACK
+	               vst_set_param (::AEffect* e, ::VstInt32 index, float value);
+	static void VSTCALLBACK DECLARE_VST_DEPRECATED (
 	               vst_process) (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames);
-	static void    vst_process_replacing (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames);
+	static void VSTCALLBACK
+	               vst_process_replacing (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames);
 
 	const ::audioMasterCallback
 	               _audio_master;

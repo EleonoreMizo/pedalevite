@@ -456,7 +456,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 
 
-::VstIntPtr	PlugWrap::vst_dispatch (::AEffect* e, ::VstInt32 opcode, ::VstInt32 index, ::VstIntPtr value, void* ptr, float opt)
+::VstIntPtr VSTCALLBACK	PlugWrap::vst_dispatch (::AEffect* e, ::VstInt32 opcode, ::VstInt32 index, ::VstIntPtr value, void* ptr, float opt)
 {
 	PlugWrap *     wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
@@ -676,7 +676,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 
 
-float	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
+float VSTCALLBACK	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
 {
 	const PlugWrap * const  wrapper_ptr =
 		static_cast <const PlugWrap *> (e->object);
@@ -691,7 +691,7 @@ float	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
 
 
 
-void	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float value)
+void VSTCALLBACK	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float value)
 {
 	PlugWrap *  const wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
@@ -714,7 +714,7 @@ void	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float value)
 
 
 
-void	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
+void VSTCALLBACK	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
 {
 	PlugWrap * const  wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
@@ -758,7 +758,7 @@ void	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** input
 
 
 
-void	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
+void VSTCALLBACK	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
 {
 	PlugWrap * const  wrapper_ptr = static_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != nullptr);
@@ -1015,7 +1015,7 @@ VST_EXPORT ::AEffect * main_macho (::audioMasterCallback audioMaster)
 	return piapi2vst_PlugWrap_create_vst (audioMaster);
 }
 #elif WIN32
-VST_EXPORT ::AEffect * main_vst (::audioMasterCallback audioMaster)
+VST_EXPORT ::AEffect * __cdecl main_vst (::audioMasterCallback audioMaster)
 {
 	return piapi2vst_PlugWrap_create_vst (audioMaster);
 }
