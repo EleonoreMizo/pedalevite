@@ -423,7 +423,7 @@ void	Delay2Desc::init_line (int index)
 	lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Line %d pitch\nL%d pitch\nL%dP",
-		"%",
+		"st",
 		index + 1,
 		"%+6.2f"
 	);
