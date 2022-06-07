@@ -56,6 +56,9 @@
     <OutDir>$(ProjectDir)$(Configuration)$(Platform)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)$(Platform)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <TargetName>$(ProjectName)_x64</TargetName>
+  </PropertyGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>../../pv-code.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
