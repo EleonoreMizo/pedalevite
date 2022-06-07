@@ -668,6 +668,66 @@ Vs32	Vs32::zero () noexcept
 
 
 
+Vs32	Vs32::all1 () noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vs32 { -1, -1, -1, -1 };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_set1_epi32 (-1);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vdupq_n_s32 (-1);
+#endif // fstb_ARCHI
+}
+
+
+
+// "true" must be 1 and nothing else.
+Vs32	Vs32::set_mask (bool m0, bool m1, bool m2, bool m3) noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vs32 {
+		-int32_t (m0),
+		-int32_t (m1),
+		-int32_t (m2),
+		-int32_t (m3),
+	};
+#elif 1 // Fast version
+# if fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_sub_epi32 (
+		_mm_setzero_si128 (),
+		_mm_set_epi32 (m3, m2, m1, m0)
+	);
+# elif fstb_ARCHI == fstb_ARCHI_ARM
+	float32x2_t    v01 = vdup_n_f32 (m0);
+	float32x2_t    v23 = vdup_n_f32 (m2);
+	v01 = vset_lane_f32 (m1, v01, 1);
+	v23 = vset_lane_f32 (m3, v23, 1);
+	return vnegq_s32 (vreinterpretq_s32_f32 (
+		vcombine_f32 (v01, v23)
+	));
+# endif // fstb_ARCHI
+#else // Safer but slower version
+# if fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_sub_epi32 (
+		_mm_set_epi32 (!m3, !m2, !m1, !m0),
+		_mm_set1_epi32 (1)
+	);
+# elif fstb_ARCHI == fstb_ARCHI_ARM
+	float32x2_t    v01 = vdup_n_f32 (!m0);
+	float32x2_t    v23 = vdup_n_f32 (!m2);
+	v01 = vset_lane_f32 (!m1, v01, 1);
+	v23 = vset_lane_f32 (!m3, v23, 1);
+	const auto     one  = vdupq_n_s32 (1);
+	return vsubq_s32 (
+		vreinterpretq_s32_f32 (vcombine_f32 (v01, v23)),
+		one
+	);
+# endif // fstb_ARCHI
+#endif // Versions
+}
+
+
+
 // Extracts the vector at the position SHIFT from the double-width vector {a b}
 // Concatenates a [SHIFT...3] with b [0...3-SHIFT]
 template <int POS>

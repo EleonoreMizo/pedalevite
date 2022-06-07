@@ -127,6 +127,11 @@ public:
 	fstb_FORCEINLINE std::tuple <uint32_t, uint32_t, uint32_t, uint32_t>
 	               explode () const noexcept;
 
+	static fstb_FORCEINLINE Vu32
+	               zero () noexcept;
+	static fstb_FORCEINLINE Vu32
+	               all1 () noexcept;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

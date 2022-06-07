@@ -1173,6 +1173,24 @@ Vf32	Vf32::zero () noexcept
 
 
 
+Vf32	Vf32::all1 () noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	Combo          c;
+	c._s32 [0] = -1;
+	c._s32 [1] = -1;
+	c._s32 [2] = -1;
+	c._s32 [3] = -1;
+	return Vf32 { c._vf32 };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_castsi128_ps (_mm_set1_epi32 (-1));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vreinterpretq_f32_s32 (vdupq_n_s32 (-1));
+#endif // fstb_ARCHI
+}
+
+
+
 // Returns a0 | a1 | ? | ?
 Vf32	Vf32::set_pair (float a0, float a1) noexcept
 {

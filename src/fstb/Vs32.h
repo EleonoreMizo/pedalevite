@@ -167,7 +167,10 @@ public:
 
 	static fstb_FORCEINLINE Vs32
 	               zero () noexcept;
-
+	static fstb_FORCEINLINE Vs32
+	               all1 () noexcept;
+	static fstb_FORCEINLINE Vs32
+	               set_mask (bool m0, bool m1, bool m2, bool m3) noexcept;
 	template <int POS>
 	static fstb_FORCEINLINE Vs32
 	               compose (Vs32 a, Vs32 b) noexcept;

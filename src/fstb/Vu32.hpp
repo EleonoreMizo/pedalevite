@@ -359,6 +359,32 @@ std::tuple <uint32_t, uint32_t, uint32_t, uint32_t>	Vu32::explode () const noexc
 
 
 
+Vu32	Vu32::zero () noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vu32 { 0, 0, 0, 0 };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_setzero_si128 ();
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vdupq_n_u32 (0);
+#endif // fstb_ARCHI
+}
+
+
+
+Vu32	Vu32::all1 () noexcept
+{
+#if ! defined (fstb_HAS_SIMD)
+	return Vu32 { ~Scalar (0), ~Scalar (0), ~Scalar (0), ~Scalar (0) };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_set1_epi32 (-1);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return vdupq_n_u32 (~Scalar (0));
+#endif // fstb_ARCHI
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

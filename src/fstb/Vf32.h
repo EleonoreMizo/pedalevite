@@ -217,6 +217,8 @@ public:
 	static fstb_FORCEINLINE Vf32
 	               zero () noexcept;
 	static fstb_FORCEINLINE Vf32
+	               all1 () noexcept;
+	static fstb_FORCEINLINE Vf32
 	               set_pair (float a0, float a1) noexcept;
 	static fstb_FORCEINLINE Vf32
 	               set_pair_fill (float a02, float a13) noexcept;
