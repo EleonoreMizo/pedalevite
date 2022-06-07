@@ -134,14 +134,14 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_inv_fs      = float (1 / sample_freq);
 
 	compute_fft_var (sample_freq);
-	_fft.set_length (_fft_len_l2);
-	_buf_pcm.resize (_fft_len);
-	_buf_bins.resize (_fft_len);
-	_weight_arr.resize (_nbr_bins);
+	_fft.set_length (_p._fft_len_l2);
+	_buf_pcm.resize (_p._fft_len);
+	_buf_bins.resize (_p._fft_len);
+	_weight_arr.resize (_p._nbr_bins);
 
 	// Makes sure the PCM buffer can be recycled to precompute the magnitudes
 	// for the crystalise effect.
-	assert (_fft_len >= _nbr_bins + _cryst_rad * 2);
+	assert (_p._fft_len >= _p._nbr_bins + _cryst_rad * 2);
 
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
@@ -160,26 +160,26 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 		// We have no real latency issue for a freeze, so we can interleave
 		// analysis and synthesis too.
 		// Ideally we should use bit reversal if _max_nbr_chn is high.
-		if (max_buf_len < _hop_size)
+		if (max_buf_len < _p._hop_size)
 		{
-			ofs_com = _hop_size * chn_idx / _max_nbr_chn;
+			ofs_com = _p._hop_size * chn_idx / _max_nbr_chn;
 			ofs_syn = max_buf_len;
 		}
 
-		chn._fo_ana.setup (_fft_len, _hop_size, ofs_com);
-		chn._fo_syn.setup (_fft_len, _hop_size, ofs_com + ofs_syn);
+		chn._fo_ana.setup (_p._fft_len, _p._hop_size, ofs_com);
+		chn._fo_syn.setup (_p._fft_len, _p._hop_size, ofs_com + ofs_syn);
 
 		for (auto &slot : chn._slot_arr)
 		{
-			slot._buf_freeze.resize (_fft_len);
+			slot._buf_freeze.resize (_p._fft_len);
 			slot._frz_state = FreezeState::NONE;
 			slot._nbr_hops  = 0;
 		}
 
-		chn._vol_dry.set_time (_fft_len / 2, 2.f / _fft_len);
+		chn._vol_dry.set_time (_p._fft_len / 2, 2.f / _p._fft_len);
 	}
 
-	_frame_win.setup (_fft_len);
+	_frame_win.setup (_p._fft_len);
 
 	for (int slot_idx = 0; slot_idx < Cst::_nbr_slots; ++slot_idx)
 	{
@@ -362,7 +362,7 @@ void	SpectralFreeze::update_param (bool force_flag)
 
 			const float   speed   =
 				float (_state_set.get_val_end_nat (Param_PHASE));
-			const float   hop_dur = _inv_fs * _hop_size;
+			const float   hop_dur = _inv_fs * _p._hop_size;
 			// * 0.5f because the phase difference is set in both directions
 			_phasing   = speed * hop_dur * 0.5f;
 
@@ -376,47 +376,11 @@ void	SpectralFreeze::update_param (bool force_flag)
 
 void	SpectralFreeze::compute_fft_var (double sample_freq) noexcept
 {
-	constexpr auto fs_thr   = 50'000.0; // Hz
-	constexpr auto proc_thr = 20'000.0; // Hz
-
-	// Computes the FFT length for the given sampling rate.
-	// Over 50 kHz, we double the default length each octave, so the bandwidth
-	// per bin is kept more or less constant.
-	_fft_len_l2 = _fft_len_l2_min;
-	while (   _fft_len_l2 < _fft_len_l2_max
-	       && sample_freq > fs_thr * double (1 << (_fft_len_l2 - _fft_len_l2_min)))
-	{
-		++ _fft_len_l2;
-	}
-
-	_fft_len  = 1 << _fft_len_l2;
-
-	// Range for all bins. DC is 0 and Nyquist is _bin_top
-	_nbr_bins = _fft_len / 2;
-	_bin_top  = _nbr_bins;
-
-	// Base-2 log of the hop size, in samples. Must be <= _fft_len_l2 - 2
-	_hop_size_l2 = _fft_len_l2 - 2;
-	_hop_size    = 1 << _hop_size_l2;
-	_hop_ratio   = 1 << (_fft_len_l2 - _hop_size_l2);
-
-	// FFT normalisation factor combined with window scaling to compensate
-	// for the amplitude change caused by the overlap.
-	const float   scale_win =
-		(_hop_ratio <= 2) ? 1.f : 8.f / float (3 * _hop_ratio);
-	const auto    scale_fft = 1.f / _fft_len;
-	_scale_amp   =  scale_fft * scale_win;
-
-	// Last bin + 1 being processed. Other bins (ultrasonic content) are cleared
-	const auto     nyquist_freq = sample_freq * 0.5;
-	const int      bin_end_raw = fstb::ceil_int (
-		double (_bin_top) * proc_thr / nyquist_freq
-	);
-	_bin_end     = std::min (bin_end_raw, _bin_top);
+	_p.update (sample_freq, _fft_len_l2_min);
 
 #if defined (fstb_HAS_SIMD)
 	// Vector and scalar ranges and indexes
-	_bin_end_vec = _bin_beg + ((_bin_end - _bin_beg) & ~(_simd_w - 1));
+	_bin_end_vec = _p._bin_beg + ((_p._bin_end - _p._bin_beg) & ~(_simd_w - 1));
 	_bin_beg_sca = _bin_end_vec;
 #endif
 }
@@ -428,7 +392,7 @@ int	SpectralFreeze::conv_freq_to_bin (float f) const noexcept
 	assert (f >= 0);
 	assert (f < _sample_freq * 0.5f);
 
-	return fstb::round_int (f * _inv_fs * _fft_len);
+	return fstb::round_int (f * _inv_fs * _p._fft_len);
 }
 
 
@@ -457,9 +421,9 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 
 	const auto     eps = fstb::Vf32 (1e-9f);
 	const auto     one = fstb::Vf32 (1.f);
-	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
+	for (int bin_idx = _p._bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
-		const int      img_idx = bin_idx + _nbr_bins;
+		const int      img_idx = bin_idx + _p._nbr_bins;
 		auto           b_r  = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
 		auto           b_i  = fstb::Vf32::loadu (&_buf_bins [img_idx]);
 
@@ -477,9 +441,9 @@ void	SpectralFreeze::analyse_capture1 (Slot &slot) noexcept
 
 #endif // fstb_HAS_SIMD
 
-	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+	for (int bin_idx = _bin_beg_sca; bin_idx < _p._bin_end; ++bin_idx)
 	{
-		const int      img_idx = bin_idx + _nbr_bins;
+		const int      img_idx = bin_idx + _p._nbr_bins;
 		std::complex <float> bin { _buf_bins [bin_idx], _buf_bins [img_idx] };
 
 		const float    mag = std::abs (bin);
@@ -512,9 +476,9 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 #if defined (fstb_HAS_SIMD)
 
 	const auto     angle_norm_v = fstb::Vf32 (angle_norm);
-	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
+	for (int bin_idx = _p._bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
-		const int      img_idx = bin_idx + _nbr_bins;
+		const int      img_idx = bin_idx + _p._nbr_bins;
 		auto           b1r = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
 		auto           b1i = fstb::Vf32::loadu (&_buf_bins [img_idx]);
 		const auto     b0r = fstb::Vf32::loadu (&slot._buf_freeze [bin_idx]);
@@ -533,9 +497,9 @@ void	SpectralFreeze::analyse_capture2 (Slot &slot) noexcept
 
 #endif // fstb_HAS_SIMD
 
-	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+	for (int bin_idx = _bin_beg_sca; bin_idx < _p._bin_end; ++bin_idx)
 	{
-		const int      img_idx = bin_idx + _nbr_bins;
+		const int      img_idx = bin_idx + _p._nbr_bins;
 		const std::complex <float> bin {
 			_buf_bins [bin_idx], _buf_bins [img_idx]
 		};
@@ -631,23 +595,23 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 	constexpr float   gain_thr = 1e-6f; // -120 dB
 	if (gain >= gain_thr)
 	{
-		const float       gain_sc   = gain * _scale_amp;
+		const float       gain_sc   = gain * _p._scale_amp;
 
 #if defined (fstb_HAS_SIMD)
 
 		const auto     gain_sc_v   = fstb::Vf32 (gain_sc);
-		const int      sign        = ((_bin_beg & 1) * 2 - 1);
+		const int      sign        = ((_p._bin_beg & 1) * 2 - 1);
 		const auto     phase_val_v =
 			  fstb::Vf32 (slot._phase_acc)
 			* fstb::Vf32::set_pair_fill (sign, -sign);
 		const auto     nbr_hops    = fstb::Vf32 (float (slot._nbr_hops));
 		auto           omega_v     = fstb::Vf32 (0.5f) * fstb::Vf32 (
-			_bin_beg, _bin_beg + 1, _bin_beg + 2, _bin_beg + 3
+			_p._bin_beg, _p._bin_beg + 1, _p._bin_beg + 2, _p._bin_beg + 3
 		);
 		const auto     omega_step  = fstb::Vf32 (0.5f * _simd_w);
-		for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
+		for (int bin_idx = _p._bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 		{
-			const int      img_idx = bin_idx + _nbr_bins;
+			const int      img_idx = bin_idx + _p._nbr_bins;
 			const auto     mag   = fstb::Vf32::loadu (&slot._buf_freeze [bin_idx]);
 			auto           arg_n = fstb::Vf32::loadu (&slot._buf_freeze [img_idx]);
 			auto           sum_r = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
@@ -676,9 +640,9 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 #endif // fstb_HAS_SIMD
 
 		float          phase_val = slot._phase_acc * ((_bin_beg_sca & 1) * 2 - 1);
-		for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+		for (int bin_idx = _bin_beg_sca; bin_idx < _p._bin_end; ++bin_idx)
 		{
-			const int      img_idx = bin_idx + _nbr_bins;
+			const int      img_idx = bin_idx + _p._nbr_bins;
 			const float    mag     = slot._buf_freeze [bin_idx];
 			float          arg_n   = slot._buf_freeze [img_idx];
 
@@ -728,21 +692,21 @@ void	SpectralFreeze::crystalise_precomp_mag () noexcept
 	const auto     it_sq_mag_beg = _buf_pcm.begin ();
 	std::fill (
 		it_sq_mag_beg,
-		it_sq_mag_beg + _cryst_ofs + _bin_beg,
+		it_sq_mag_beg + _cryst_ofs + _p._bin_beg,
 		0.f
 	);
 	std::fill (
-		it_sq_mag_beg + _cryst_ofs + _bin_end,
-		it_sq_mag_beg + _cryst_ofs + _bin_end + _cryst_rad,
+		it_sq_mag_beg + _cryst_ofs + _p._bin_end,
+		it_sq_mag_beg + _cryst_ofs + _p._bin_end + _cryst_rad,
 		0.f
 	);
 
 	// Precomputes the squared bin magnitudes
-	const int      img_ofs = _nbr_bins;
+	const int      img_ofs = _p._nbr_bins;
 
 #if defined (fstb_HAS_SIMD)
 
-	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
+	for (int bin_idx = _p._bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
 		const auto     img_idx = bin_idx + img_ofs;
 		const auto     re = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
@@ -753,7 +717,7 @@ void	SpectralFreeze::crystalise_precomp_mag () noexcept
 
 #endif // fstb_HAS_SIMD
 
-	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+	for (int bin_idx = _bin_beg_sca; bin_idx < _p._bin_end; ++bin_idx)
 	{
 		const auto     img_idx = bin_idx + img_ofs;
 		const auto     mag_sq  =
@@ -774,7 +738,7 @@ void	SpectralFreeze::crystalise_analyse () noexcept
 	using Vf32 = fstb::Vf32;
 	using Vs32 = fstb::Vs32;
 
-	for (int main_idx = _bin_beg; main_idx < _bin_end_vec; main_idx += _simd_w)
+	for (int main_idx = _p._bin_beg; main_idx < _bin_end_vec; main_idx += _simd_w)
 	{
 		const auto     bin_mag_sq =
 			Vf32::loadu (&_buf_pcm [_cryst_ofs + main_idx]);
@@ -813,7 +777,7 @@ void	SpectralFreeze::crystalise_analyse () noexcept
 
 #endif // fstb_HAS_SIMD
 
-	for (int main_idx = _bin_beg_sca; main_idx < _bin_end; ++main_idx)
+	for (int main_idx = _bin_beg_sca; main_idx < _p._bin_end; ++main_idx)
 	{
 		const auto     bin_mag_sq = _buf_pcm [_cryst_ofs + main_idx];
 
@@ -861,7 +825,7 @@ void	SpectralFreeze::crystalise_decimate () noexcept
 	constexpr auto max_dia = float (_cryst_rad * 2);
 	const auto     amt_map = _cryst_amt * (_cryst_amt * curve + (1.f - curve));
 	const auto     thr     = amt_map * max_dia;
-	const auto     img_ofs = _nbr_bins;
+	const auto     img_ofs = _p._nbr_bins;
 
 #if defined (fstb_HAS_SIMD)
 
@@ -875,7 +839,7 @@ void	SpectralFreeze::crystalise_decimate () noexcept
 	const auto     thr_v = Vf32 (thr);
 	const auto     scx_v = Vf32 (scale_x);
 
-	for (int bin_idx = _bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
+	for (int bin_idx = _p._bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 	{
 		const auto     img_idx = bin_idx + img_ofs;
 
@@ -896,7 +860,7 @@ void	SpectralFreeze::crystalise_decimate () noexcept
 
 #endif // fstb_HAS_SIMD
 
-	for (int bin_idx = _bin_beg_sca; bin_idx < _bin_end; ++bin_idx)
+	for (int bin_idx = _bin_beg_sca; bin_idx < _p._bin_end; ++bin_idx)
 	{
 		const auto     weight = float (_weight_arr [bin_idx]);
 		if (weight < thr)

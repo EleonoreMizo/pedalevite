@@ -5607,6 +5607,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\crysta\Param.h">
       <Filter>mfx\pi\crysta</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FftParam.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FftParam.hpp">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

@@ -30,6 +30,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/spec/FrameOverlapAna.h"
 #include "mfx/dsp/spec/FrameOverlapSyn.h"
 #include "mfx/dsp/wnd/ProcHann.h"
+#include "mfx/pi/cdsp/FftParam.h"
 #include "mfx/pi/cdsp/FFTRealRange.h"
 #include "mfx/pi/crysta/CrystaliseDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
@@ -83,11 +84,8 @@ private:
 
 	// Base-2 log of the FFT length, in samples
 	// _fft_len_l2_min is used at standard rates (< 50 kHz)
-	static constexpr int _fft_len_l2_min = 8;
+	static constexpr int _fft_len_l2_min = 12;
 	static constexpr int _fft_len_l2_max = 16;
-
-	// Range for all bins. DC is 0 and Nyquist is _bin_top
-	static constexpr int _bin_beg   = 1;
 
 	// Radius for the crystalise effect, in bins.
 	static constexpr int _cryst_rad = 16;
@@ -139,32 +137,15 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	// Base-2 log of the FFT length, in samples
-	int            _fft_len_l2  = 0;
-	int            _fft_len     = 0;
-
-	// Range for all bins. DC is 0 and Nyquist is _bin_top
-	int            _nbr_bins    = 0;
-	int            _bin_top     = 0;
-
-	// Base-2 log of the hop size, in samples. Must be <= _fft_len_l2
-	int            _hop_size_l2 = 0;
-	int            _hop_size    = 0;
-	int            _hop_ratio   = 0;
-
-	// FFT normalisation factor combined with window scaling to compensate
-	// for the amplitude change caused by the overlap.
-	float          _scale_amp   = 0;
-
-	// Last bin + 1 being processed. Other bins (ultrasonic content) are cleared
-	int            _bin_end     = 0;
+	cdsp::FftParam <_fft_len_l2_min, _fft_len_l2_max>
+	               _p;
 
 	// Vector and scalar ranges and indexes
 #if defined (fstb_HAS_SIMD)
 	int            _bin_end_vec = 0;
 	int            _bin_beg_sca = 0;
 #else
-	int            _bin_beg_sca = _bin_beg;
+	int            _bin_beg_sca = _p._bin_beg;
 #endif
 
 	ChannelArray   _chn_arr;
