@@ -213,8 +213,12 @@ void	Crystalise::do_process_block (piapi::ProcInfo &proc)
 				// Synthesis
 				synthesise_bins (chn);
 
+				// Scale fix for the unnormalised FFT+IFFT and window overlapping
+				dsp::mix::Generic::scale_1_v (
+					&chn._buf_bins [0], int (chn._buf_bins.size ()), _p._scale_amp
+				);
+
 				// Frequency bins -> PCM
-				_fft.rescale (chn._buf_bins.data ());
 				_fft.do_ifft (chn._buf_bins.data (), _buf_pcm.data ());
 
 				// Output frame windowing and overlap
