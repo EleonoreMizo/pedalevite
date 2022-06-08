@@ -248,6 +248,16 @@ void	Crystalise::do_process_block (piapi::ProcInfo &proc)
 
 
 
+constexpr int	Crystalise::_fft_len_l2_min;
+constexpr int	Crystalise::_fft_len_l2_max;
+constexpr int	Crystalise::_cryst_rad;
+constexpr int	Crystalise::_cryst_ofs;
+#if defined (fstb_HAS_SIMD)
+constexpr int	Crystalise::_simd_w;
+#endif // fstb_HAS_SIMD
+
+
+
 void	Crystalise::clear_buffers ()
 {
 	for (auto &chn : _chn_arr)

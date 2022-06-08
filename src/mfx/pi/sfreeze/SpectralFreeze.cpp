@@ -308,6 +308,16 @@ void	SpectralFreeze::do_process_block (piapi::ProcInfo &proc)
 
 
 
+constexpr int	SpectralFreeze::_fft_len_l2_min;
+constexpr int	SpectralFreeze::_fft_len_l2_max;
+constexpr int	SpectralFreeze::_cryst_rad;
+constexpr int	SpectralFreeze::_cryst_ofs;
+#if defined (fstb_HAS_SIMD)
+constexpr int	SpectralFreeze::_simd_w;
+#endif // fstb_HAS_SIMD
+
+
+
 void	SpectralFreeze::clear_buffers ()
 {
 	for (auto &chn : _chn_arr)
