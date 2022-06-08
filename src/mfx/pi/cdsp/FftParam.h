@@ -68,7 +68,7 @@ public:
 	FftParam &     operator = (const FftParam &other)        = default;
 	FftParam &     operator = (FftParam &&other)             = default;
 
-	void           update (double sample_freq, int target_ll2);
+	void           update (double sample_freq, int target_ll2, int hop_ratio);
 
 	// Base-2 log of the FFT length, in samples
 	int            _fft_len_l2  = 0;
@@ -78,8 +78,7 @@ public:
 	int            _nbr_bins    = 0;
 	int            _bin_top     = 0;
 
-	// Base-2 log of the hop size, in samples. Must be <= _fft_len_l2
-	int            _hop_size_l2 = 0;
+	// Hop size between two transforms, in samples.
 	int            _hop_size    = 0;
 	int            _hop_ratio   = 0;
 

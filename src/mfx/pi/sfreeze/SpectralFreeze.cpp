@@ -386,7 +386,7 @@ void	SpectralFreeze::update_param (bool force_flag)
 
 void	SpectralFreeze::compute_fft_var (double sample_freq) noexcept
 {
-	_p.update (sample_freq, _fft_len_l2_min);
+	_p.update (sample_freq, _fft_len_l2_min, 4);
 
 #if defined (fstb_HAS_SIMD)
 	// Vector and scalar ranges and indexes

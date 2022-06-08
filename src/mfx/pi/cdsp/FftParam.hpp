@@ -58,17 +58,18 @@ constexpr int FftParam <LL2_MIN, LL2_MAX>::_fft_len_l2_max;
 template <int LL2_MIN, int LL2_MAX>
 FftParam <LL2_MIN, LL2_MAX>::FftParam ()
 {
-	update (44100, _fft_len_l2_min);
+	update (44100, _fft_len_l2_min, 4);
 }
 
 
 
 template <int LL2_MIN, int LL2_MAX>
-void	FftParam <LL2_MIN, LL2_MAX>::update (double sample_freq, int target_ll2)
+void	FftParam <LL2_MIN, LL2_MAX>::update (double sample_freq, int target_ll2, int hop_ratio)
 {
 	assert (sample_freq > 0);
 	assert (target_ll2 >= _fft_len_l2_min);
 	assert (target_ll2 <= _fft_len_l2_max);
+	assert (hop_ratio >= 2);
 
 	// Computes the FFT length for the given sampling rate.
 	// Over 50 kHz, we double the default length each octave, so the bandwidth
@@ -88,10 +89,10 @@ void	FftParam <LL2_MIN, LL2_MAX>::update (double sample_freq, int target_ll2)
 	_nbr_bins = _fft_len / 2;
 	_bin_top  = _nbr_bins;
 
-	// Base-2 log of the hop size, in samples. Must be <= _fft_len_l2 - 2
-	_hop_size_l2 = _fft_len_l2 - 2;
-	_hop_size    = 1 << _hop_size_l2;
-	_hop_ratio   = 1 << (_fft_len_l2 - _hop_size_l2);
+	// Hop size between two transforms, in samples.
+	_hop_ratio = hop_ratio;
+	_hop_size  = fstb::div_ceil (_fft_len, _hop_ratio);
+	assert (_hop_size > 0);
 
 	// FFT normalisation factor combined with window scaling to compensate
 	// for the amplitude change caused by the overlap.
