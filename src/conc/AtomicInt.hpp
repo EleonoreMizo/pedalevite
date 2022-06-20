@@ -56,7 +56,7 @@ AtomicInt <T>::AtomicInt () noexcept
 :	_val ()
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
-	assert (is_ptr_aligned_nz ((const void *) (&_val), sizeof (_val)));
+	assert (is_ptr_aligned_nz ((const void *) (&_val), int (sizeof (_val))));
 #endif // conc_ARCHI
 }
 
@@ -67,7 +67,7 @@ AtomicInt <T>::AtomicInt (T val) noexcept
 :	_val (val)
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
-	assert (is_ptr_aligned_nz ((const void *) (&_val), sizeof (_val)));
+	assert (is_ptr_aligned_nz ((const void *) (&_val), int (sizeof (_val))));
 #endif // conc_ARCHI
 }
 
@@ -78,7 +78,7 @@ AtomicInt <T>::AtomicInt (const AtomicInt <T> &other) noexcept
 :	_val (T (other))
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
-	assert (is_ptr_aligned_nz ((const void *) (&_val), sizeof (_val)));
+	assert (is_ptr_aligned_nz ((const void *) (&_val), int (sizeof (_val))));
 #endif // conc_ARCHI
 }
 

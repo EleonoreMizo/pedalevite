@@ -45,7 +45,7 @@ AtomicPtr <T>::AtomicPtr () noexcept
 :	_ptr ()
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
-	assert (is_ptr_aligned_nz ((const void *) (&_ptr), sizeof (_ptr)));
+	assert (is_ptr_aligned_nz ((const void *) (&_ptr), int (sizeof (_ptr))));
 #endif // conc_ARCHI
 }
 
@@ -60,7 +60,7 @@ AtomicPtr <T>::AtomicPtr (T *ptr) noexcept
 #endif // conc_ARCHI
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
-	assert (is_ptr_aligned_nz ((const void *) (&_ptr), sizeof (_ptr)));
+	assert (is_ptr_aligned_nz ((const void *) (&_ptr), int (sizeof (_ptr))));
 	_ptr._void_ptr = ptr;
 #endif // conc_ARCHI
 }

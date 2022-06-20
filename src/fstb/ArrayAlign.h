@@ -91,7 +91,7 @@ protected:
 
 private:
 
-	static const int  ELT_SIZE_BYTE = sizeof (Element) * CHAR_BIT / 8;
+	static const int  ELT_SIZE_BYTE = int (sizeof (Element) * CHAR_BIT / 8);
 
 	uint8_t        _data [NBR_ELT * ELT_SIZE_BYTE + ALIGNMENT - 1];
 	Element *      _data_ptr;

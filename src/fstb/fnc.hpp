@@ -1046,7 +1046,7 @@ constexpr T	rotl (T x, int k) noexcept
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
 	static_assert (std::is_unsigned <T>::value, "T must be unsigned");
-	constexpr int  bitdepth = sizeof (T) * CHAR_BIT;
+	constexpr auto bitdepth = int (sizeof (T) * CHAR_BIT);
 	assert (k >= 0);
 	assert (k < bitdepth);
 
@@ -1061,7 +1061,7 @@ constexpr T	rotr (T x, int k) noexcept
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
 	static_assert (std::is_unsigned <T>::value, "T must be unsigned");
-	constexpr int  bitdepth = sizeof (T) * CHAR_BIT;
+	constexpr auto bitdepth = int (sizeof (T) * CHAR_BIT);
 	assert (k >= 0);
 	assert (k < bitdepth);
 

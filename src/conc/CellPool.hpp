@@ -252,10 +252,11 @@ typename CellPool <T>::CellType *	CellPool <T>::alloc_cells (size_t n)
 		sizeof (AliAllo) + (n + 1) * sizeof (CellType);
 	const int      align     = std::alignment_of <CellType>::value;
 	uint8_t *      raw_ptr   = new uint8_t [nbr_bytes];
-	const intptr_t cell_zone =
-		(  reinterpret_cast <intptr_t> (raw_ptr)
-		 + sizeof (AliAllo)
-		 + sizeof (CellType)) & -align;
+	const intptr_t cell_zone = (
+		  reinterpret_cast <intptr_t> (raw_ptr)
+		+ intptr_t (sizeof (AliAllo ))
+		+ intptr_t (sizeof (CellType))
+	) & -align;
 	CellType *     cell_ptr  = reinterpret_cast <CellType *> (cell_zone);
 	AliAllo *      info_ptr  = reinterpret_cast <AliAllo *> (cell_zone) - 1;
 

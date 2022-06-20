@@ -53,7 +53,7 @@ bool	is_ptr_aligned_nz (const T *ptr, int align) noexcept
 template <class T>
 bool	is_ptr_aligned_nz (const T *ptr) noexcept
 {
-	return (is_ptr_aligned_nz (ptr, sizeof (T)));
+	return (is_ptr_aligned_nz (ptr, int (sizeof (T))));
 }
 
 

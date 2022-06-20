@@ -78,7 +78,7 @@ inline constexpr uint64_t	Hash_find_inverse (uint64_t x) noexcept
 template <typename T>
 static inline constexpr T	Hash_reverse_xor_shift (T y, int shift) noexcept
 {
-	constexpr int  resol    = CHAR_BIT * sizeof (T);
+	constexpr auto resol    = int (CHAR_BIT * sizeof (T));
 	assert (shift < resol);
 
 	int            delta    = resol - shift;
