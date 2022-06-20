@@ -338,7 +338,7 @@ Vs32 &	Vs32::operator >>= (int imm) noexcept
 
 
 
-// Undefined behaviour for -(1<<31)
+// -(1<<31) stays constant
 Vs32	Vs32::operator - () const noexcept
 {
 #if ! defined (fstb_HAS_SIMD)
@@ -351,7 +351,7 @@ Vs32	Vs32::operator - () const noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_sub_epi32 (_mm_setzero_si128 (), _x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vqnegq_s32 (_x);
+	return vnegq_s32 (_x);
 #endif // fstb_ARCHI
 }
 

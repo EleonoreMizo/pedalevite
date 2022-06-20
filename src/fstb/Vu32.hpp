@@ -373,7 +373,7 @@ Vu32	Vu32::operator - () const noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_sub_epi32 (_mm_setzero_si128 (), _x);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vqnegq_u32 (_x);
+	return vreinterpretq_u32_s32 (vnegq_s32 (vreinterpretq_s32_u32 (_x)));
 #endif // fstb_ARCHI
 }
 
@@ -744,9 +744,9 @@ Vu32	Vu32::set_mask (bool m0, bool m1, bool m2, bool m3) noexcept
 	float32x2_t    v23 = vdup_n_f32 (m2);
 	v01 = vset_lane_f32 (m1, v01, 1);
 	v23 = vset_lane_f32 (m3, v23, 1);
-	return vnegq_u32 (vreinterpretq_u32_f32 (
+	return vreinterpretq_u32_s32 (vnegq_s32 (vreinterpretq_s32_f32 (
 		vcombine_f32 (v01, v23)
-	));
+	)));
 # endif // fstb_ARCHI
 #else // Safer but slower version
 # if fstb_ARCHI == fstb_ARCHI_X86
@@ -1119,9 +1119,9 @@ std::tuple <Vu32, Vu32> swap_if (const Vu32 &cond, Vu32 lhs, Vu32 rhs) noexcept
 		Vu32 (_mm_xor_si128 (rhs, inv))
 	);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-=	return std::make_tuple (
-		Vu32 (vbslq_u32 (cond=, rhs, lhs)),
-		Vu32 (vbslq_u32 (cond=, lhs, rhs))
+	return std::make_tuple (
+		Vu32 (vbslq_u32 (cond, rhs, lhs)),
+		Vu32 (vbslq_u32 (cond, lhs, rhs))
 	);
 #endif // fstb_ARCHI
 }
