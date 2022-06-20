@@ -102,6 +102,8 @@ public:
 
 	fstb_FORCEINLINE
 	               operator Vu32Native () const noexcept { return _x; }
+	fstb_FORCEINLINE explicit
+	               operator bool () const noexcept;
 
 	fstb_FORCEINLINE Vu32 &
 	               operator += (const Vu32Native &other) noexcept;
@@ -124,13 +126,63 @@ public:
 	fstb_FORCEINLINE Vu32 &
 	               operator >>= (int imm) noexcept;
 
+	fstb_FORCEINLINE Vu32
+	               operator - () const noexcept;
+	fstb_FORCEINLINE Vu32
+	               operator ~ () const noexcept;
+	fstb_FORCEINLINE Vu32
+	               reverse () const noexcept;
+
+	template <int SHIFT>
+	fstb_FORCEINLINE Vu32
+	               rotate () const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE uint32_t
+	               extract () const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE Vu32
+	               insert (uint32_t val) const noexcept;
+	template <int POS>
+	fstb_FORCEINLINE Vu32
+	               spread () const noexcept;
+
 	fstb_FORCEINLINE std::tuple <uint32_t, uint32_t, uint32_t, uint32_t>
 	               explode () const noexcept;
+
+	fstb_FORCEINLINE uint32_t
+	               sum_h () const noexcept;
+	fstb_FORCEINLINE uint32_t
+	               min_h () const noexcept;
+	fstb_FORCEINLINE uint32_t
+	               max_h () const noexcept;
+
+	fstb_FORCEINLINE bool
+	               and_h () const noexcept;
+	fstb_FORCEINLINE bool
+	               or_h () const noexcept;
+	fstb_FORCEINLINE unsigned int
+	               movemask () const noexcept;
+	fstb_FORCEINLINE int
+	               count_bits () const noexcept;
 
 	static fstb_FORCEINLINE Vu32
 	               zero () noexcept;
 	static fstb_FORCEINLINE Vu32
 	               all1 () noexcept;
+	static fstb_FORCEINLINE Vu32
+	               set_mask (bool m0, bool m1, bool m2, bool m3) noexcept;
+	template <int POS>
+	static fstb_FORCEINLINE Vu32
+	               compose (Vu32 a, Vu32 b) noexcept;
+	static fstb_FORCEINLINE Vu32
+	               flip_msb (Vu32 x) noexcept;
+
+	template <typename MEM>
+	static fstb_FORCEINLINE Vu32
+	               load (const MEM *ptr) noexcept;
+	template <typename MEM>
+	static fstb_FORCEINLINE Vu32
+	               loadu (const MEM *ptr) noexcept;
 
 
 
@@ -156,9 +208,6 @@ private:
 
 private:
 
-	bool           operator == (const Vu32 &other) const = delete;
-	bool           operator != (const Vu32 &other) const = delete;
-
 }; // class Vu32
 
 
@@ -179,6 +228,19 @@ template <typename T>
 fstb_FORCEINLINE Vu32 operator << (Vu32 lhs, T rhs) noexcept;
 template <typename T>
 fstb_FORCEINLINE Vu32 operator >> (Vu32 lhs, T rhs) noexcept;
+
+fstb_FORCEINLINE Vu32 operator == (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator != (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator <  (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator <= (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator >  (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 operator >= (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+
+fstb_FORCEINLINE Vu32 min (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 max (const Vu32 &lhs, const Vu32 &rhs) noexcept;
+fstb_FORCEINLINE Vu32 limit (const Vu32 &v, const Vu32 &mi, const Vu32 &ma) noexcept;
+fstb_FORCEINLINE Vu32 select (const Vu32 &cond, const Vu32 &v_t, const Vu32 &v_f) noexcept;
+fstb_FORCEINLINE std::tuple <Vu32, Vu32> swap_if (const Vu32 &cond, Vu32 lhs, Vu32 rhs) noexcept;
 
 
 
