@@ -218,9 +218,21 @@ Vs32 &	Vs32::operator *= (const Vs32Native &other) noexcept
 	_x [2] *= other [2];
 	_x [3] *= other [3];
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	// mullo_epi32
+	// Emulation of _mm_mullo_epi32 (SSE4.1)
+# if fstb_COMPILER == fstb_COMPILER_MSVC
+	// For some reason this code is slightly faster on MSVC
+	auto           p02_64 = _mm_mul_epu32 (_x, other);
+	auto           p13_64 = _mm_mul_epu32 (
+		_mm_srli_si128 (_x   , 4),
+		_mm_srli_si128 (other, 4)
+	);
+	p02_64 = _mm_shuffle_epi32 (p02_64, (0 << 0) | (2 << 2));
+	p13_64 = _mm_shuffle_epi32 (p13_64, (0 << 0) | (2 << 2));
+	_x     = _mm_unpacklo_epi32 (p02_64, p13_64);
+# else
 	// Code of this function shamelessly borrowed from tp7
 	// https://github.com/tp7/masktools/blob/16bit/masktools/common/simd.h
+	// This code is faster on GCC/Clang
 	const __m128i  lhs13  = _mm_shuffle_epi32 (_x, 0xF5);        // (-,a3,-,a1)
 	const __m128i  rhs13  = _mm_shuffle_epi32 (other, 0xF5);     // (-,b3,-,b1)
 	const __m128i  prod02 = _mm_mul_epu32 (_x, other);           // (-,a2*b2,-,a0*b0)
@@ -228,6 +240,7 @@ Vs32 &	Vs32::operator *= (const Vs32Native &other) noexcept
 	const __m128i  prod01 = _mm_unpacklo_epi32 (prod02, prod13); // (-,-,a1*b1,a0*b0)
 	const __m128i  prod23 = _mm_unpackhi_epi32 (prod02, prod13); // (-,-,a3*b3,a2*b2)
 	_x                    = _mm_unpacklo_epi64 (prod01 ,prod23); // (ab3,ab2,ab1,ab0)
+# endif // fstb_COMPILER
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	_x = vmulq_s32 (_x, other);
 #endif // fstb_ARCHI
