@@ -434,9 +434,9 @@ int32_t	Vs32::extract () const noexcept
 	auto           a = _x;
 	switch (POS & 3)
 	{
-	case 1:  a = _mm_shuffle_epi32 (a, 1);	break;
-	case 2:  a = _mm_shuffle_epi32 (a, 2);	break;
-	case 3:  a = _mm_shuffle_epi32 (a, 3);	break;
+	case 1:  a = _mm_shuffle_epi32 (a, 1); break;
+	case 2:  a = _mm_shuffle_epi32 (a, 2); break;
+	case 3:  a = _mm_shuffle_epi32 (a, 3); break;
 	default: /* Nothing */                 break;
 	}
 	return _mm_cvtsi128_si32 (a);
@@ -1104,14 +1104,14 @@ std::tuple <Vs32, Vs32> swap_if (const Vs32 &cond, Vs32 lhs, Vs32 rhs) noexcept
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     inv = _mm_and_si128 (_mm_xor_si128 (lhs, rhs), cond);
 	return std::make_tuple (
-		_mm_xor_si128 (lhs, inv),
-		_mm_xor_si128 (rhs, inv)
+		Vs32 (_mm_xor_si128 (lhs, inv)),
+		Vs32 (_mm_xor_si128 (rhs, inv))
 	);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const auto     cond_u = vreinterpretq_u32_s32 (cond);
 	return std::make_tuple (
-		vbslq_s32 (cond_u, rhs, lhs),
-		vbslq_s32 (cond_u, lhs, rhs)
+		Vs32 (vbslq_s32 (cond_u, rhs, lhs)),
+		Vs32 (vbslq_s32 (cond_u, lhs, rhs))
 	);
 #endif // fstb_ARCHI
 }
