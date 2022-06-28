@@ -705,7 +705,12 @@ But at least one end is required to make the shielding work.</li>
 either naturally in the case of non-insulated jacks (audio output),
 either by soldering the ground lug to the lug in contact with the enclosure
 in the case of isolated combos.
-This is also true for the combo XLR part from the first input.</li>
+This is also true for the combo XLR part from the first input.
+Be careful with the latter&#8239;: I added a terminal between the combo and
+the enclosure, making the combo imperfectly pressed against the side.
+Therefore the small metal teeth on the combo were not making a good contact
+(1&#8239;Ω is already too much), leading to a ground buzz.
+So I had to add another terminal linked to the G pin with a wire.</li>
 <li>All power supply units are isolated and should not cause any explicit
 link to the ground or earth.</li>
 <li>The earth coming from the mains is tied to the enclosure, and consequently
@@ -740,8 +745,8 @@ Check with a multimeter that each ear is actually insulated.</li>
 One directly with the HDMI cable, the other one with the female GPIO port.
 Pins from this port are connected to the Pi via the main board for the
 touchscreen signals.
-There is a ground wire here, so maybe it should not be connected when the HDMI
-port is connected.</li>
+It could be tempting to disconnect the power supply ground, unfortunately
+the HDMI wires are way too thin, so keep it connected.</li>
 <li>On the audio board, both analogue and digital grounds are not explicitely
 connected.
 It is possible to connect them with a jumper on JP2, located near the power

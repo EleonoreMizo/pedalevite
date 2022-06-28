@@ -816,7 +816,15 @@ masse assure l’efficacité du blindage.</li>
 soit naturellement dans le cas des prises jack non-isolées, soit en soudant
 la broche de masse à la broche en contact avec le chassis dans le cas des
 combo en plastique.
-Ceci est aussi valable pour la partie XLR du combo de la première entrée.</li>
+Ceci est aussi valable pour la partie XLR du combo de la première entrée.
+Attention d’ailleurs à celle-ci&#8239;: j’avais intercalé une cosse entre
+le combo et le boîtier, rendant le combo imparfaitement plaqué contre la
+paroi.
+Du coup les petites dents reliées à la borne G et censées mordre dans le
+boîtier faisaient mauvais contact, entraînant un bourdonnement (1&#8239;Ω,
+c’est déjà trop).
+J’ai dû rajouter une deuxième cosse pour faire la liaison explicitement par
+câble.</li>
 <li>Toutes les alimentations sont isolées et n’induisent pas de liaison
 explicite à la masse ou à la terre.</li>
 <li>La terre venant de la prise secteur est reliée au chassis, et donc à
@@ -853,8 +861,10 @@ Vérifier au multimètre que chaque oreille se retrouve bien isolée.</li>
 <li>L’écran a une double connexion avec le Pi&#8239;: une directement par le
 câble HDMI, qui véhicule une masse, et l’autre par les câbles d’alimentation
 et de signaux pour le capteur tactile (via la carte principale).
-Là aussi une masse est véhiculée, il est préférable de ne pas la
-connecter.</li>
+Bien qu’il soit tentant de déconnecter la masse d’alimentation pour ne laisser
+que celle du HDMI, il vaut mieux garder les deux.
+En effet les fils HDMI sont probablement trop fins pour véhiculer correctement
+le courant de retour servant pour le rétroéclairage et le contrôleur.</li>
 <li>Sur la carte son, les deux masses analogique et numérique ne sont pas
 explicitement reliées.
 Il est possible de le faire avec un cavalier au niveau de JP2, situé près du
