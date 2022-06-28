@@ -335,6 +335,14 @@ inline float conv_t_to_s (fstb::Vf32 x)
 
 
 
+template <typename T, typename S>
+static inline S round_to_t (S x)
+{
+	return conv_t_to_s <S> (conv_s_to_t <T> (x));
+}
+
+
+
 template <typename T>
 static inline bool check_all_elt_same (T x) { fstb::unused (x); return true; }
 
@@ -452,10 +460,24 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (int &ret_val, const OPREF
 	int            count   = 0;
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		const double   val_src = pos * mul + add;
-		const T        src_t = conv_s_to_t <T> (S (val_src));
+		double         val_src = pos * mul + add;
+		const T        src_t   = conv_s_to_t <T> (S (val_src));
 
-		const double   val_ref = op_ref (val_src);
+		// src_t may have a lower resolution than val_src, so we make sure
+		// val_src matches the src_t value for reference calculations.
+		val_src = double (conv_t_to_s <S> (src_t));
+
+		double         val_ref = op_ref (val_src);
+
+#if 0
+		// Matches val_ref with the tested type. This would cancel any error
+		// caused by the lower resolution of the target type, which is
+		// impossible to cancel otherwise.
+		// However this could worsen the results because rounding errors may
+		// accumulate instead of cancel each others.
+		// Observed effect: better average error, but worse maximum error
+		val_ref = double (round_to_t <T> (S (val_ref)));
+#endif
 
 		const T        dst_t = op_tst (src_t);
 		if (! check_all_elt_same (dst_t))
@@ -534,16 +556,30 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (int &ret_val, const OPREF
 	long long      count   = 0;
 	for (int pos1 = 0; pos1 < nbr_spl; ++pos1)
 	{
-		const double   val_src1 = pos1 * mul1 + add1;
+		double         val_src1 = pos1 * mul1 + add1;
 		const T        src_t1   = conv_s_to_t <T> (S (val_src1));
+
+		// src_t may have a lower resolution than val_src, so we make sure
+		// val_src matches the src_t value for reference calculations.
+		val_src1 = double (conv_t_to_s <S> (src_t1));
 
 		for (int pos2 = 0; pos2 < nbr_spl; ++pos2)
 		{
-			const double   val_src2 = pos2 * mul2 + add2;
+			double         val_src2 = pos2 * mul2 + add2;
 			const T        src_t2   = conv_s_to_t <T> (S (val_src2));
+			val_src2 = double (conv_t_to_s <S> (src_t2));
 
+			double         val_ref = op_ref (val_src1, val_src2);
 
-			const double   val_ref = op_ref (val_src1, val_src2);
+#if 0
+			// Matches val_ref with the tested type. This would cancel any error
+			// caused by the lower resolution of the target type, which is
+			// impossible to cancel otherwise.
+			// However this could worsen the results because rounding errors may
+			// accumulate instead of cancel each others.
+			// Observed effect: better average error, but worse maximum error
+			val_ref = double (round_to_t <T> (S (val_ref)));
+#endif
 
 			const T        dst_t = op_tst (src_t1, src_t2);
 			if (! check_all_elt_same (dst_t))
