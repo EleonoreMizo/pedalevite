@@ -100,8 +100,6 @@ int	TestApprox::perform_test ()
 		"cos_sin_rbj sin", -3 * fstb::PI, 3 * fstb::PI, 1e-6
 	);
 
-
-
 	// log2
 
 	test_op1_all_flt <false> (ret_val,
@@ -129,7 +127,7 @@ int	TestApprox::perform_test ()
 		[] (double x) { return log2 (x); },
 		[] (float x) { return fstb::Approx::log2_7th (x); },
 		[] (Vf32 x) { return fstb::Approx::log2_7th (x); },
-		"log2_7th", 1e-3, 1e3, 7e-06
+		"log2_7th", 1e-3, 1e3, 3e-06
 	);
 
 	test_op1_all_flt_v <false> (ret_val,

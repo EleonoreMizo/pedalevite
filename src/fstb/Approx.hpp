@@ -80,30 +80,29 @@ constexpr T	Approx::log2_poly5 (T x) noexcept
 }
 
 /*
-n=20
-FindFit[Table[
-  Log[x]/Log[2], {x, 1, 2, 1/n}], {c0 + c1 (1 + (x - 1)/n) + 
-   c2 (1 + (x - 1)/n)^2 + c3 (1 + (x - 1)/n)^3 + 
-   c4 (1 + (x - 1)/n)^4 + c5 (1 + (x - 1)/n)^5 + 
-   c6 (1 + (x - 1)/n)^6 + 
-   c7 (1 + (x - 1)/n)^7, {c0 + c1 + c2 + c3 + c4 + c5 + c6 + c7 == 0, 
-   c0 + 2 c1 + 4 c2 + 8 c3 + 16 c4 + 32 c5 + 64 c6 + 128 c7 == 1, 
-   c1 + 2 c2 + 3 c3 + 4 c4 + 5 c5 + 6 c6 + 7 c7 == 
-    2 (c1 + 4 c2 + 12 c3 + 24 c4 + 80 c5 + 192 c6 + 448 c7)}}, {c0, 
-  c1, c2, c3, c4, c5, c6, c7}, x]
+n=10000
+FindFit[
+	Table[Log[x + 10^-50 + 1]/((x + 10^-50) Log[2]), {x, 0, 1, 1/n}],
+	{	  1/Log[2] + c1 ((x - 1)/n) + c2 ((x - 1)/n)^2
+		+ c3 ((x - 1)/n)^3 + c4 ((x - 1)/n)^4
+		+ c5 ((x - 1)/n)^5 + c6 ((x - 1)/n)^6,
+		{	1/Log[2] + c1 + c2 + c3 + c4 + c5 + c6 == 1, 
+			1/Log[2] + 2 c1 + 3 c2 + 4 c3 + 5 c4 + 6 c5 + 7 c6 == 0.5/Log[2] }
+	}, {c1, c2, c3, c4, c5, c6}, x
+]
 */
 template <typename T>
 constexpr T	Approx::log2_poly7 (T x) noexcept
 {
-	return Poly::estrin (x,
-		T (-2.88240401363533),
-		T ( 5.33677339735672),
-		T (-3.72166286493998),
-		T ( 1.42721785195822),
-		T (-8.62639500355707e-6),
-		T (-0.237597672916119),
-		T ( 0.0884727724765693),
-		T (-0.0107908439050664)
+	x -= T (1);
+	return x * Poly::estrin (x,
+		T ( 1 / fstb::LN2),
+		T (-0.7211387950779122),
+		T ( 0.4771378300542432),
+		T (-0.3362788591112742),
+		T ( 0.2091714453949908),
+		T (-0.0898814240618324),
+		T ( 0.01829476191282143)
 	);
 }
 
@@ -401,8 +400,8 @@ Vf32	Approx::log2_5th (Vf32 val) noexcept
 
 
 
-// C1 continuity
-// Max error: 5.6e-6
+// C1 continuity, exact 1st derivative at 2^N
+// Max error: 2.69e-6
 float	Approx::log2_7th (float val) noexcept
 {
 	return log2_base (val, log2_poly7 <float>);
