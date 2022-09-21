@@ -284,6 +284,28 @@ void	Approx::sin_rbj_halfpi_pi (float &sx, float &s2x, float x) noexcept
 
 
 
+/*
+The following "nick" approximations can be defined in its simplest expression
+in the [-2 ; 2] range, equivalent to sin (x * pi/2):
+
+	y = x * (2 - abs (x));
+	z = d * (y * abs (y) - y) + y;
+
+d is a curvature constant allowing error optimization:
+
+	0.2240: maximum absolute error
+	0.2175: maximum relative error
+	0.2248: absolute error RMS
+	0.2195: relative error RMS
+
+The formula is equivalent to:
+
+	t2 = fstb::sq (1 - abs (x));
+	z  = std::copysign (Poly::horner (t2, 1, -1-d, d), x);
+
+Same number of add, mul and signbit operations
+*/
+
 // f1(x) ~ sin (x)
 // x in [-pi ; pi]
 // Max error: 0.919e-3
