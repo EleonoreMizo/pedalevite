@@ -15,13 +15,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
-
-
-
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/txt/utf8/fnc.h"
@@ -32,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cctype>
 #include <cerrno>
 #include <cmath>
 #include <cstdio>
@@ -78,105 +72,105 @@ void	HelperDispNum::set_preset (Preset preset)
 
 	switch (preset)
 	{
-	case	Preset_FLOAT_STD:
+	case Preset_FLOAT_STD:
 		_type         = Type_FLOAT;
 		_log_flag     = false;
 		_scale        = 1;
 		_offset       = 0;
 		break;
 
-	case	Preset_FLOAT_PERCENT:
+	case Preset_FLOAT_PERCENT:
 		_type         = Type_FLOAT;
 		_log_flag     = false;
 		_scale        = 100;
 		_offset       = 0;
 		break;
 
-	case	Preset_FLOAT_MILLI:
+	case Preset_FLOAT_MILLI:
 		_type         = Type_FLOAT;
 		_log_flag     = false;
 		_scale        = 1000;
 		_offset       = 0;
 		break;
 
-	case	Preset_FLOAT_MICRO:
+	case Preset_FLOAT_MICRO:
 		_type         = Type_FLOAT;
 		_log_flag     = false;
 		_scale        = 1000*1000;
 		_offset       = 0;
 		break;
 
-	case	Preset_DB:
+	case Preset_DB:
 		_type         = Type_FLOAT;
 		_log_flag     = true;
 		_scale        = 20 / fstb::LN10;
 		_offset       = 0;
 		break;
 
-	case	Preset_DB_FROM_LOG2:
+	case Preset_DB_FROM_LOG2:
 		_type         = Type_FLOAT;
 		_log_flag     = false;
 		_scale        = 20 * fstb::LOG10_2;
 		_offset       = 0;
 		break;
 
-	case	Preset_INT_BASE_0:
+	case Preset_INT_BASE_0:
 		_type         = Type_INT;
 		_log_flag     = false;
 		_scale        = 1;
 		_offset       = 0;
 		break;
 
-	case	Preset_INT_BASE_1:
+	case Preset_INT_BASE_1:
 		_type         = Type_INT;
 		_log_flag     = false;
 		_scale        = 1;
 		_offset       = 1;
 		break;
 
-	case	Preset_MIDI_NOTE:
+	case Preset_MIDI_NOTE:
 		_type         = Type_NOTE;
 		_log_flag     = false;
 		_scale        = 1;
 		_offset       = 0;
 		break;
 
-	case	Preset_MULT_SEMITONES:
+	case Preset_MULT_SEMITONES:
 		_type         = Type_FLOAT;
 		_log_flag     = true;
 		_scale        = 12 / fstb::LN2;
 		_offset       = 0;
 		break;
 
-	case	Preset_MULT_CENTS:
+	case Preset_MULT_CENTS:
 		_type         = Type_FLOAT;
 		_log_flag     = true;
 		_scale        = 1200 / fstb::LN2;
 		_offset       = 0;
 		break;
 
-	case	Preset_FREQ_NOTE:
+	case Preset_FREQ_NOTE:
 		_type         = Type_NOTE;
 		_log_flag     = true;
 		_scale        = 12 / fstb::LN2;
 		_offset       = 69 - log (440.0) * _scale;	// MIDI note 69 is A440
 		break;
 
-	case	Preset_FRAC_STD:
+	case Preset_FRAC_STD:
 		_type         = Type_FRAC;
 		_log_flag     = false;
 		_scale        = 1;
 		_offset       = 0;
 		break;
 
-	case	Preset_RATIO_STD:
+	case Preset_RATIO_STD:
 		_type         = Type_RATIO;
 		_log_flag     = false;
 		_scale        = 1;
 		_offset       = 0;
 		break;
 
-	case	Preset_RATIO_INV:
+	case Preset_RATIO_INV:
 		_type         = Type_RATIO_INV;
 		_log_flag     = false;
 		_scale        = 1;
@@ -268,7 +262,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 	char           tmp2_0 [1023+1];
 	bool           log_zero_flag = false;
 
-	double			val_p = val;
+	double         val_p = val;
 	if (_log_flag)
 	{
 		if (val == 0)
@@ -285,7 +279,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 
 	if (log_zero_flag)
 	{
-		const char *		sign_0 = (_scale < 0) ? "+" : "-";
+		const char *   sign_0 = (_scale < 0) ? "+" : "-";
 		fstb::txt::utf8::strncpy_0 (txt_0, sign_0, max_len + 1);
 		fstb::txt::utf8::strncat_0 (txt_0, _inf_0_list [0], max_len + 1);
 	}
@@ -293,7 +287,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 	else if (   (_type == Type_RATIO || _type == Type_RATIO_INV)
 	         && val_p == 0)
 	{
-		const char *	val_0 = "0";
+		const char *   val_0 = "0";
 		if (_type == Type_RATIO_INV)
 		{
 			val_0 = _inf_0_list [0];
@@ -308,7 +302,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 
 		tmp_0 [0] = '\0';
 
-		bool			ratio_l_flag = false;
+		bool           ratio_l_flag = false;
 		if (_type == Type_RATIO || _type == Type_RATIO_INV)
 		{
 			ratio_l_flag = (val_p < 1);
@@ -324,19 +318,15 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 		{
 		case	Type_FLOAT:
 			fstb::snprintf4all (
-				tmp2_0,
-				sizeof (tmp2_0),
-				_print_format.c_str (),
-				val_p
+				tmp2_0, sizeof (tmp2_0),
+				_print_format.c_str (), val_p
 			);
 			break;
 
 		case	Type_INT:
 			fstb::snprintf4all (
-				tmp2_0,
-				sizeof (tmp2_0),
-				_print_format.c_str (),
-				double (fstb::round_int64 (val_p))
+				tmp2_0, sizeof (tmp2_0),
+				_print_format.c_str (), double (fstb::round_int64 (val_p))
 			);
 			break;
 
@@ -365,7 +355,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 
 		case	Type_FRAC:
 			{
-				const std::string	tmp = print_frac (val_p, max_len);
+				const std::string tmp = print_frac (val_p, max_len);
 				fstb::txt::utf8::strncpy_0 (tmp2_0, tmp.c_str (), sizeof (tmp2_0));
 			}
 			break;
@@ -373,7 +363,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 		case	Type_RATIO:
 		case	Type_RATIO_INV:
 			{
-				double			ratio = fabs (val_p);
+				double         ratio = fabs (val_p);
 				if (ratio_l_flag)
 				{
 					assert (ratio > 0);
@@ -381,10 +371,8 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 				}
 				assert (ratio >= 1);
 				fstb::snprintf4all (
-					tmp2_0,
-					sizeof (tmp2_0),
-					_print_format.c_str (),
-					ratio
+					tmp2_0, sizeof (tmp2_0),
+					_print_format.c_str (), ratio
 				);
 			}
 			break;
@@ -417,9 +405,9 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 	assert (is_ok ());
 	assert (txt_0 != nullptr);
 
-	int				ret_val = Err_OK;
+	int            ret_val = Err_OK;
 
-	bool				log_zero_flag = false;
+	bool           log_zero_flag = false;
 	if (_log_flag)
 	{
 		log_zero_flag = find_infinite (txt_0);
@@ -433,13 +421,13 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 
 	else
 	{
-		double			val_p = 0;
+		double         val_p = 0;
 
 		switch (_type)
 		{
-		case	Type_FLOAT:
+		case Type_FLOAT:
 			{
-				char *			end_ptr;
+				char *         end_ptr;
 				val_p = strtod (txt_0, &end_ptr);
 				if (end_ptr == txt_0 || fabs (val_p) == HUGE_VAL)
 				{
@@ -448,7 +436,7 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 			}
 			break;
 
-		case	Type_INT:
+		case Type_INT:
 			{
 				char *            end_0   = nullptr;
 				const long long   val_int = strtoll (txt_0, &end_0, 10);
@@ -465,10 +453,10 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 			}
 			break;
 
-		case	Type_NOTE:
+		case Type_NOTE:
 			{
-				const char *	octave_0;
-				const int		note = detect_note (txt_0, octave_0);
+				const char *   octave_0;
+				const int      note = detect_note (txt_0, octave_0);
 				if (note < 0)
 				{
 					ret_val = Err_CANNOT_CONVERT_VALUE;
@@ -476,15 +464,15 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 
 				else
 				{
-					char *			end_0;
-					const long		octave = strtol (octave_0, &end_0, 0);
+					char *         end_0;
+					const long     octave = strtol (octave_0, &end_0, 0);
 					if (end_0 == octave_0 || octave == LONG_MIN || octave == LONG_MAX)
 					{
 						ret_val = Err_CANNOT_CONVERT_VALUE;
 					}
 					else
 					{
-						const long		      midi_note = octave * 12 + note;
+						const long           midi_note = octave * 12 + note;
 						val_p = double (midi_note);
 						const char * const   cents_0   = end_0;
 						long                 cents     = strtol (cents_0, &end_0, 0);
@@ -502,15 +490,15 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 			}
 			break;
 
-		case	Type_FRAC:
+		case Type_FRAC:
 			if (! scan_frac (txt_0, val_p))
 			{
 				ret_val = Err_CANNOT_CONVERT_VALUE;
 			}
 			break;
 
-		case	Type_RATIO:
-		case	Type_RATIO_INV:
+		case Type_RATIO:
+		case Type_RATIO_INV:
 			if (! scan_ratio (txt_0, val_p, _type))
 			{
 				ret_val = Err_CANNOT_CONVERT_VALUE;
@@ -564,7 +552,7 @@ int	HelperDispNum::detect_note (const char *txt_0, const char * &stop_0) const
 	// Goes backward to make sure we catch the notes with a sharp.
 	for (int pos = 12-1; pos >= 0 && note < 0; --pos)
 	{
-		const char *		test_0 = _note_0_list [pos];
+		const char *   test_0 = _note_0_list [pos];
 		stop_0 = strstr (txt_0, test_0);
 		if (stop_0 != nullptr)
 		{
@@ -625,9 +613,9 @@ std::string	HelperDispNum::print_frac (double val, long max_len) const
 	bool           int_flag = false;
 	if (val_abs_int > 0 || num == 0)
 	{
-		const long		val_int = (val < 0) ? -val_abs_int : val_abs_int;
+		const long     val_int = (val < 0) ? -val_abs_int : val_abs_int;
 		fstb::snprintf4all (tmp_0, sizeof (tmp_0), "%d", val_int);
-		result += tmp_0;
+		result  += tmp_0;
 		int_flag = true;
 	}
 
@@ -653,7 +641,7 @@ bool	HelperDispNum::find_infinite (const char *txt_0)
 	const int      nbr_inf  = sizeof (_inf_0_list) / sizeof (_inf_0_list [0]);
 	for (int k = 0; k < nbr_inf && ! inf_flag; ++k)
 	{
-		const char *	test_0 = strstr (txt_0, _inf_0_list [k]);
+		const char *   test_0 = strstr (txt_0, _inf_0_list [k]);
 		inf_flag = (test_0 != nullptr);
 	}
 
@@ -780,14 +768,14 @@ bool	HelperDispNum::scan_frac (const char txt_0 [], double &val)
 	switch (nbr_conv)
 	{
 	//	Integer only
-	case	1:
-	case	2:
+	case 1:
+	case 2:
 		val = res [0];
 		break;
 
 	// Fraction only
-	case	3:
-	case	4:
+	case 3:
+	case 4:
 		if (fstb::is_null (res [1]))
 		{
 			ok_flag = false;
@@ -796,7 +784,7 @@ bool	HelperDispNum::scan_frac (const char txt_0 [], double &val)
 		break;
 
 	// Integer + fraction
-	case	5:
+	case 5:
 		if (fstb::is_null (res [2]))
 		{
 			ok_flag = false;
