@@ -528,6 +528,45 @@ int	conv_int_fast (T x) noexcept
 
 
 
+/*
+==============================================================================
+Name: divmod_floor
+Description:
+	Integer division and remainder, rounds towards -oo (instead of towards 0).
+	The remainder is always of the same sign as den.
+	Examples:
+	 23,  4 =>  5,  3
+	-23,  4 => -6,  1
+	 23, -4 => -6, -1
+	-23, -4 =>  5, -3
+	Result is undefined if not representable. Ex: (INT_MIN, -1)
+Input parameters:
+- num: dividend
+- den: divisor, != 0
+Returns: { quotient, remainder }
+Throws: Nothing
+==============================================================================
+*/
+
+template <class T>
+constexpr std::array <T, 2>	divmod_floor (T num, T den) noexcept
+{
+	static_assert (std::is_integral <T>::value, "T must be an integer");
+	assert (den != T (0));
+
+	auto           d = num / den;
+	auto           r = num % den;
+	if (r != T (0) && (num < T (0)) != (den < T (0)))
+	{
+		r += den;
+		d -= T (1);
+	}
+
+	return { d, r };
+}
+
+
+
 template <class T>
 constexpr bool	is_null (T val, T eps) noexcept
 {

@@ -67,6 +67,8 @@ inline int     trunc_int (T x) noexcept;
 template <class T>
 inline int     conv_int_fast (T x) noexcept;
 template <class T>
+inline constexpr std::array <T, 2> divmod_floor (T num, T den) noexcept;
+template <class T>
 inline constexpr bool    is_null (T val, T eps = T (1e-9)) noexcept;
 template <class T>
 inline constexpr bool    is_eq (T v1, T v2, T eps = T (1e-9)) noexcept;
