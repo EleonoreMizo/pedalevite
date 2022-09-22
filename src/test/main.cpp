@@ -72,6 +72,7 @@
 #include "test/TestFfft.h"
 #include "test/TestHardclipBl.h"
 #include "test/TestHash.h"
+#include "test/TestHelperDispNum.h"
 #include "test/TestHiir.h"
 #include "test/TestHiirDesigner.h"
 #include "test/TestInterpFtor.h"
@@ -1880,6 +1881,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #define main_TEST_SPEED 0
+
+#if 1
+	if (ret_val == 0) ret_val = TestHelperDispNum::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestMulloEpi32::perform_test ();

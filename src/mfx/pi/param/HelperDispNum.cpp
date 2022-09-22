@@ -332,13 +332,20 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 
 		case	Type_NOTE:
 			{
-				const int		midi_note = fstb::round_int (val_p);
-				const int		margin    = 1000;
-				assert (midi_note >= margin * -12);
-				const int		octave    = (midi_note + 12 * margin) / 12 - margin;	// Rounds towards -oo
-				const int		note      = midi_note - octave * 12;
-				const int      cents     =
-					fstb::round_int ((val_p - midi_note) * 100);
+				const auto     cents_tot = fstb::round_int (val_p * 100);
+				const auto     midi_both = fstb::divmod_floor (cents_tot, 100);
+				auto           midi_note = midi_both [0];
+				auto           cents     = midi_both [1];
+				// > and not >= because we prefer displaying "+50" instead of
+				// "-50" for pitches close to a quarter-tone.
+				if (cents > +50)
+				{
+					cents -= 100;
+					++ midi_note;
+				}
+				const auto     noct_both = fstb::divmod_floor (midi_note, 12);
+				const auto     octave    = noct_both [0];
+				const auto     note      = noct_both [1];
 				char           tmp3_0 [1023+1];
 				tmp3_0 [0] = '\0';
 				if (cents != 0)
@@ -485,6 +492,17 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 							ret_val = Err_CANNOT_CONVERT_VALUE;
 						}
 						val_p += double (cents) / 100.f;
+					}
+
+					// Checks if there is garbage between end_0 and the actual
+					// end of the string
+					if (ret_val == Err_OK)
+					{
+						const auto     c = *end_0;
+						if (c != '\0' && ! isspace (c))
+						{
+							ret_val = Err_CANNOT_CONVERT_VALUE;
+						}
 					}
 				}
 			}
