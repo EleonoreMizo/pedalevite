@@ -1796,6 +1796,10 @@ void test_mult_cplx_vect ()
 
 
 
+#endif // fstb_ARCHI_X86
+
+
+
 /*** To do: move this class in a separate file, make it more generic ***/
 class TestMulloEpi32
 {
@@ -1865,10 +1869,6 @@ public:
 		return 0;
 	}
 };
-
-
-
-#endif // fstb_ARCHI_X86
 
 
 
