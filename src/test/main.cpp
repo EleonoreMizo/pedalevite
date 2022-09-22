@@ -1702,6 +1702,8 @@ int	test_conv_int_fast ()
 
 #if fstb_ARCHI == fstb_ARCHI_X86
 
+
+
 #define RES __restrict
 
 void multiply1 (std::complex <float> * RES dst_ptr, const std::complex <float> * RES lhs_ptr, const std::complex <float> * RES rhs_ptr, int n)
@@ -1791,6 +1793,80 @@ void test_mult_cplx_vect ()
 	printf ("Speed: %12.3f Mop/s.\n", mega_sps);
 }
 
+
+
+/*** To do: move this class in a separate file, make it more generic ***/
+class TestMulloEpi32
+{
+public:
+	static int perform_test ()
+	{
+		constexpr int  buf_len   = 1 << 8; // Must be a power of 2
+		constexpr int  nbr_loops = 1'000'000;
+		constexpr int  buf_msk   = buf_len - 1;
+		alignas (16) std::array <fstb::Vu32, buf_len> buf_dst;
+		alignas (16) std::array <fstb::Vu32, buf_len> buf_s1;
+		alignas (16) std::array <fstb::Vu32, buf_len> buf_s2;
+
+		// Init the source buffers
+		for (int k = 0; k < buf_len; ++k)
+		{
+			const auto     kv = fstb::Vu32 (k * 8);
+			buf_s1 [k] = fstb::Hash::hash (fstb::Vu32 (1, 2, 3, 4) + kv);
+			buf_s2 [k] = fstb::Hash::hash (fstb::Vu32 (5, 6, 7, 8) + kv);
+		}
+
+		printf ("Testing fstb::Vu32::operator *...\n");
+		fflush (stdout);
+
+		uint32_t    sum = 0;
+
+		TimerAccurate  tim;
+		tim.reset ();
+
+		const fstb::Vu32 * fstb_RESTRICT s1_ptr  = buf_s1.data ();
+		const fstb::Vu32 * fstb_RESTRICT s2_ptr  = buf_s2.data ();
+		fstb::Vu32 * fstb_RESTRICT       dst_ptr = buf_dst.data ();
+
+		tim.start ();
+		for (int t = 0; t < nbr_loops; ++t)
+		{
+			for (int k = 0; k < buf_len; k += 4)
+			{
+				const auto     a0 = fstb::Vu32::load (s1_ptr + k    );
+				const auto     a1 = fstb::Vu32::load (s1_ptr + k + 1);
+				const auto     a2 = fstb::Vu32::load (s1_ptr + k + 2);
+				const auto     a3 = fstb::Vu32::load (s1_ptr + k + 3);
+				const auto     b0 = fstb::Vu32::load (s2_ptr + k    );
+				const auto     b1 = fstb::Vu32::load (s2_ptr + k + 1);
+				const auto     b2 = fstb::Vu32::load (s2_ptr + k + 2);
+				const auto     b3 = fstb::Vu32::load (s2_ptr + k + 3);
+				const auto     p0 = a0 * b0;
+				const auto     p1 = a1 * b1;
+				const auto     p2 = a2 * b2;
+				const auto     p3 = a3 * b3;
+				p0.store (dst_ptr + k    );
+				p1.store (dst_ptr + k + 1);
+				p2.store (dst_ptr + k + 2);
+				p3.store (dst_ptr + k + 3);
+			}
+
+			sum += uint32_t (fstb::Vs32 (buf_dst [t & buf_msk]).template extract <0> ());
+		}
+		tim.stop ();
+
+		const double   spl_per_s =
+			  tim.get_best_rate (buf_len * nbr_loops) + sum * 1e-300;
+		const double   mega_sps  = spl_per_s / 1e6;
+		printf ("Speed: %12.3f Mop/s.\n", mega_sps);
+		fflush (stdout);
+
+		return 0;
+	}
+};
+
+
+
 #endif // fstb_ARCHI_X86
 
 
@@ -1805,7 +1881,11 @@ int main (int argc, char *argv [])
 
 #define main_TEST_SPEED 0
 
-#if 1
+#if 0
+	if (ret_val == 0) ret_val = TestMulloEpi32::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestSpectralFreeze::perform_test ();
 #endif
 
