@@ -90,8 +90,8 @@ void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &p
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (_loc_edit._slot_id);
 
 	// Back from name prompt
 	if (_state == State_EDIT_NAME)
@@ -250,7 +250,7 @@ MsgHandlerInterface::EvtProp	PresetList::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	PresetList::do_activate_preset (int index)
+void	PresetList::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -299,8 +299,8 @@ void	PresetList::do_add_settings (std::string model, int index, std::string name
 {
 	fstb::unused (index, name, s_main, s_mix);
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (_loc_edit._slot_id);
 	if (model == slot._pi_model)
 	{
 		update_display ();
@@ -313,8 +313,8 @@ void	PresetList::do_remove_settings (std::string model, int index)
 {
 	fstb::unused (index);
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (_loc_edit._slot_id);
 	if (model == slot._pi_model)
 	{
 		update_display ();
@@ -343,8 +343,8 @@ void	PresetList::update_display ()
 	PageMgrInterface::NavLocList  nav_list;
 
 	const doc::Setup &   setup   = _view_ptr->use_setup ();
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot    = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot    = prog.use_slot (_loc_edit._slot_id);
 	const auto           it_mps  =
 		setup._map_plugin_settings.find (slot._pi_model);
 	bool                 last_empty_flag = false;
@@ -422,10 +422,10 @@ bool	PresetList::load (int set_idx)
 {
 	bool                 set_flag = false;
 
-	const doc::Setup &   setup    = _view_ptr->use_setup ();
-	const doc::Preset &  preset   = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot     = preset.use_slot (_loc_edit._slot_id);
-	const auto           it_mps   =
+	const doc::Setup &   setup  = _view_ptr->use_setup ();
+	const doc::Program & prog   = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot   = prog.use_slot (_loc_edit._slot_id);
+	const auto           it_mps =
 		setup._map_plugin_settings.find (slot._pi_model);
 	if (it_mps != setup._map_plugin_settings.end ())
 	{
@@ -452,10 +452,10 @@ void	PresetList::store_1 (int set_idx)
 {
 	// Gets the name of the previous preset
 	std::string          name;
-	const doc::Setup &   setup    = _view_ptr->use_setup ();
-	const doc::Preset &  preset   = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot     = preset.use_slot (_loc_edit._slot_id);
-	const auto           it_mps   =
+	const doc::Setup &   setup  = _view_ptr->use_setup ();
+	const doc::Program & prog   = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot   = prog.use_slot (_loc_edit._slot_id);
+	const auto           it_mps =
 		setup._map_plugin_settings.find (slot._pi_model);
 	if (it_mps != setup._map_plugin_settings.end ())
 	{
@@ -490,8 +490,8 @@ void	PresetList::store_2 ()
 {
 	assert (_state_set_idx >= 0);
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (_loc_edit._slot_id);
 	_model_ptr->add_settings (
 		slot._pi_model,
 		_state_set_idx,
@@ -517,9 +517,9 @@ void	PresetList::store_2 ()
 
 void	PresetList::swap (int set_idx)
 {
-	const doc::Setup &   setup    = _view_ptr->use_setup ();
-	const doc::Preset &  preset   = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot     = preset.use_slot (_loc_edit._slot_id);
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+	const doc::Program & prog  = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot  = prog.use_slot (_loc_edit._slot_id);
 	doc::CatalogPluginSettings::Cell cur;
 	cur._name  = "Untitled";
 	cur._main  = slot.use_settings (PiType_MAIN);
@@ -569,10 +569,10 @@ void	PresetList::swap (int set_idx)
 void	PresetList::rename_1 (int set_idx)
 {
 	// Gets the name of the preset
-	const doc::Setup &   setup    = _view_ptr->use_setup ();
-	const doc::Preset &  preset   = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot     = preset.use_slot (_loc_edit._slot_id);
-	const auto           it_mps   =
+	const doc::Setup &   setup  = _view_ptr->use_setup ();
+	const doc::Program & prog   = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot   = prog.use_slot (_loc_edit._slot_id);
+	const auto           it_mps =
 		setup._map_plugin_settings.find (slot._pi_model);
 	if (it_mps != setup._map_plugin_settings.end ())
 	{
@@ -608,8 +608,8 @@ void	PresetList::rename_2 ()
 
 	bool           done_flag    = false;
 	const doc::Setup &   setup  = _view_ptr->use_setup ();
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog   = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot   = prog.use_slot (_loc_edit._slot_id);
 	const auto           it_mps =
 		setup._map_plugin_settings.find (slot._pi_model);
 	if (it_mps != setup._map_plugin_settings.end ())
@@ -648,8 +648,8 @@ void	PresetList::rename_2 ()
 
 void	PresetList::del (int set_idx)
 {
-	const doc::Preset &  preset   = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot     = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (_loc_edit._slot_id);
 	_model_ptr->remove_settings (slot._pi_model, set_idx);
 
 	const int      ret_val = _model_ptr->save_to_disk ();

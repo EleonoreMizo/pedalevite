@@ -97,9 +97,9 @@ void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterf
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
 	const int            slot_id = _loc_edit._slot_id;
-	const doc::Slot &    slot    = preset.use_slot (slot_id);
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
 	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
 	if (it_cls == settings._map_param_ctrl.end ())
@@ -191,7 +191,7 @@ MsgHandlerInterface::EvtProp	ParamControllers::do_handle_evt (const NodeEvt &evt
 
 
 
-void	ParamControllers::do_activate_preset (int index)
+void	ParamControllers::do_activate_prog (int index)
 {
 	fstb::unused (index);
 

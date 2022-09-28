@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionPreset.h
+        ActionProg.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_doc_ActionPreset_HEADER_INCLUDED)
-#define mfx_doc_ActionPreset_HEADER_INCLUDED
+#if ! defined (mfx_doc_ActionProg_HEADER_INCLUDED)
+#define mfx_doc_ActionProg_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -41,7 +41,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionPreset final
+class ActionProg final
 :	public PedalActionSingleInterface
 {
 
@@ -49,15 +49,15 @@ class ActionPreset final
 
 public:
 
-	explicit       ActionPreset (bool relative_flag, int val);
-	explicit       ActionPreset (SerRInterface &ser);
-	               ActionPreset (const ActionPreset &other) = default;
-	               ActionPreset (ActionPreset &&other)      = default;
+	explicit       ActionProg (bool relative_flag, int val);
+	explicit       ActionProg (SerRInterface &ser);
+	               ActionProg (const ActionProg &other) = default;
+	               ActionProg (ActionProg &&other)      = default;
 
-	               ~ActionPreset ()                         = default;
+	               ~ActionProg ()                       = default;
 
-	ActionPreset & operator = (const ActionPreset &other)   = default;
-	ActionPreset & operator = (ActionPreset &&other)        = default;
+	ActionProg &   operator = (const ActionProg &other) = default;
+	ActionProg &   operator = (ActionProg &&other)      = default;
 
 	// PedalActionSingleInterface
 	void           ser_write (SerWInterface &ser) const final;
@@ -90,11 +90,11 @@ private:
 
 private:
 
-	               ActionPreset ()                               = delete;
-	bool           operator == (const ActionPreset &other) const = delete;
-	bool           operator != (const ActionPreset &other) const = delete;
+	               ActionProg ()                               = delete;
+	bool           operator == (const ActionProg &other) const = delete;
+	bool           operator != (const ActionProg &other) const = delete;
 
-}; // class ActionPreset
+}; // class ActionProg
 
 
 
@@ -103,11 +103,11 @@ private:
 
 
 
-//#include "mfx/doc/ActionPreset.hpp"
+//#include "mfx/doc/ActionProg.hpp"
 
 
 
-#endif   // mfx_doc_ActionPreset_HEADER_INCLUDED
+#endif   // mfx_doc_ActionProg_HEADER_INCLUDED
 
 
 

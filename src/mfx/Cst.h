@@ -52,7 +52,7 @@ public:
 	static const int  _format_version  =  12;
 
 	static const int  _nbr_pedals      =  12;
-	static const int  _nbr_presets_per_bank = 16;
+	static const int  _nbr_prog_per_bank = 16;
 	static const int  _nbr_banks       =  64;  // Per setup
 
 	static const int  _nbr_pot         =   3;
@@ -127,7 +127,7 @@ public:
 	               _plugin_tuner;
 
 	static const std::string
-	               _empty_preset_name;
+	               _empty_prog_name;
 
 	static const std::string
 	               _config_current;

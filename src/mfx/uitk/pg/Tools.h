@@ -55,7 +55,7 @@ namespace doc
 	class PedalActionSingleInterface;
 	class PedalboardLayout;
 	class PluginSettings;
-	class Preset;
+	class Program;
 }
 
 namespace piapi
@@ -97,7 +97,7 @@ public:
 
 	static double  get_param_nat (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index);
 	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
-	static void    print_param_with_pres (std::string &val_s, std::string &unit, const Model &model, const View &view, const doc::Preset &preset, int slot_id, PiType type, int index, float val);
+	static void    print_param_with_pres (std::string &val_s, std::string &unit, const Model &model, const View &view, const doc::Program &prog, int slot_id, PiType type, int index, float val);
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_id, PiType type, int index, double step, int step_index, int dir);
 	static double  change_param (double val_nrm, const Model &model, const View &view, int slot_id, PiType type, int index, double step, int step_index, int dir);
@@ -111,7 +111,7 @@ public:
 	static int     change_plugin (Model &model, const View &view, int slot_id, int dir, const std::vector <std::string> &fx_list, bool chain_flag);
 	static int     change_plugin (Model &model, const View &view, int slot_id, std::string model_id, bool chain_flag);
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page);
-	static bool    get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, const Model &model);
+	static bool    get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Program &prog, const Model &model);
 
 	static std::string
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalActionGroup &group, const Model &model, const View &view);
@@ -120,14 +120,14 @@ public:
 	static std::string
 	               conv_pedal_action_to_short_txt (const doc::PedalActionSingleInterface &action, const Model &model, const View &view);
 
-	static int     extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Preset &preset, const Model &model);
+	static int     extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Program &prog, const Model &model);
 	static std::string
 	               build_slot_name_with_index (const NodeEntry &entry);
 	static int     find_linear_index_audio_graph (const View &view, int slot_id);
 	static std::string
 	               find_fx_type (const doc::FxId &fx_id, const View &view);
 	static std::string
-	               find_fx_type_in_preset (const std::string &label, const doc::Preset &preset);
+	               find_fx_type_in_prog (const std::string &label, const doc::Program &prog);
 	static void    print_action_toggle_fx (std::string &model_name, const doc::ActionToggleFx &action, const Model &model, const View &view);
 	static void    print_action_param (std::string &model_name, std::string &param_name, const doc::ActionParam &action, const Model &model, const View &view);
 	static void    print_cnx_name (NText &txtbox, int width, const std::vector <Tools::NodeEntry> &entry_list, piapi::Dir dir, const doc::CnxEnd &cnx_end, const char prefix_0 [], int nbr_pins);
@@ -153,7 +153,7 @@ protected:
 
 private:
 
-	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_id, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo);
+	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Program &prog, int slot_id, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo);
 	static bool    is_pedal_empty (const doc::PedalActionGroup &group);
 	static bool    is_pedal_simple_action (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
 	static bool    is_pedal_momentary_button (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);

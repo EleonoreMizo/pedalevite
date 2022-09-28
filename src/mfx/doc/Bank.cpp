@@ -51,7 +51,7 @@ void	Bank::ser_write (SerWInterface &ser) const
 	_layout.ser_write (ser);
 
 	ser.begin_list ();
-	for (const auto &p : _preset_arr)
+	for (const auto &p : _prog_arr)
 	{
 		p.ser_write (ser);
 	}
@@ -71,8 +71,8 @@ void	Bank::ser_read (SerRInterface &ser)
 
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);
-	assert (nbr_elt == int (_preset_arr.size ()));
-	for (auto &p : _preset_arr)
+	assert (nbr_elt == int (_prog_arr.size ()));
+	for (auto &p : _prog_arr)
 	{
 		p.ser_read (ser);
 	}

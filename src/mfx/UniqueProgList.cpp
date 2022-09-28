@@ -55,16 +55,16 @@ UniqueProgList::ProgList	UniqueProgList::build (const View &view)
 	{
 		const doc::Bank & bank = setup._bank_arr [bank_cnt];
 
-		for (int prog_cnt = 0; prog_cnt < Cst::_nbr_presets_per_bank; ++prog_cnt)
+		for (int prog_cnt = 0; prog_cnt < Cst::_nbr_prog_per_bank; ++prog_cnt)
 		{
-			const doc::Preset &  prog = bank._preset_arr [prog_cnt];
+			const doc::Program & prog = bank._prog_arr [prog_cnt];
 			if (prog.use_routing ().has_slots ())
 			{
 				bool          eq_flag = false;
 				for (auto &coord : prog_list)
 				{
-					const doc::Preset &  prog_cmp =
-						setup._bank_arr [coord._bank]._preset_arr [coord._prog];
+					const doc::Program & prog_cmp =
+						setup._bank_arr [coord._bank]._prog_arr [coord._prog];
 					if (is_prog_eq (prog, prog_cmp))
 					{
 						eq_flag = true;
@@ -115,7 +115,7 @@ Note (for information, not required here):
 https://en.wikipedia.org/wiki/Graph_isomorphism_problem
 */
 
-bool	UniqueProgList::is_prog_eq (const doc::Preset &lhs, const doc::Preset &rhs) const
+bool	UniqueProgList::is_prog_eq (const doc::Program &lhs, const doc::Program &rhs) const
 {
 	SlotMap        slot_map_lhs;
 	SlotMap        slot_map_rhs;
@@ -154,7 +154,7 @@ bool	UniqueProgList::is_prog_eq (const doc::Preset &lhs, const doc::Preset &rhs)
 
 
 
-void	UniqueProgList::build_slot_map (SlotMap &slot_map, const doc::Preset &prog) const
+void	UniqueProgList::build_slot_map (SlotMap &slot_map, const doc::Program &prog) const
 {
 	slot_map.clear ();
 
@@ -231,7 +231,7 @@ bool	UniqueProgList::merge_slot_maps (SlotSetPairSet &slot_set_pair_set, const S
 
 
 
-bool	UniqueProgList::check_connections (const SlotSetPairSet &slot_set_pair_set, const doc::Preset &lhs, const doc::Preset &rhs) const
+bool	UniqueProgList::check_connections (const SlotSetPairSet &slot_set_pair_set, const doc::Program &lhs, const doc::Program &rhs) const
 {
 	const doc::Routing::CnxSet &  cs_l = lhs.use_routing ()._cnx_audio_set;
 	const doc::Routing::CnxSet &  cs_r = rhs.use_routing ()._cnx_audio_set;

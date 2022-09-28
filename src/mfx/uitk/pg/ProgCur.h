@@ -82,8 +82,8 @@ protected:
 	void           do_set_tempo (double bpm) final;
 	void           do_select_bank (int index) final;
 	void           do_set_bank_name (std::string name) final;
-	void           do_set_preset_name (std::string name) final;
-	void           do_activate_preset (int index) final;
+	void           do_set_prog_name (std::string name) final;
+	void           do_activate_prog (int index) final;
 	void           do_set_param (int slot_id, int index, float val, PiType type) final;
 
 
@@ -145,7 +145,7 @@ private:
 	int            _size_max_bank_name;
 
 	int            _bank_index;
-	int            _preset_index;
+	int            _prog_index;
 
 	std::chrono::microseconds
 	               _tempo_date;

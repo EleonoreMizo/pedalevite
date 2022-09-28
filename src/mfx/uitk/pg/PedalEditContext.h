@@ -63,7 +63,7 @@ public:
 
 		Type_GLOBAL  = 0,
 		Type_BANK,
-		Type_PRESET,
+		Type_PROG,
 
 		Type_NBR_ELT
 	};

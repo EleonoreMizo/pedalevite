@@ -1,9 +1,7 @@
 /*****************************************************************************
 
-        Preset.h
+        Program.h
         Author: Laurent de Soras, 2016
-
-This is actually a "Program", as named in the user interface and user manual.
 
 --- Legal stuff ---
 
@@ -18,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_doc_Preset_HEADER_INCLUDED)
-#define mfx_doc_Preset_HEADER_INCLUDED
+#if ! defined (mfx_doc_Program_HEADER_INCLUDED)
+#define mfx_doc_Program_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -51,7 +49,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class Preset
+class Program
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -62,13 +60,13 @@ public:
 	typedef std::map <int, SlotSPtr> SlotMap; // [slot_id] = SlotSPtr
 	typedef std::map <int, SignalPort> PortMap; // [port_index] = SignalPort
 
-	               Preset ();
-	               Preset (const Preset &other);
-	               Preset (Preset &&other)     = default;
-	               ~Preset ()                  = default;
+	               Program ();
+	               Program (const Program &other);
+	               Program (Program &&other)    = default;
+	               ~Program ()                  = default;
 
-	Preset &       operator = (const Preset &other);
-	Preset &       operator = (Preset &&other) = default;
+	Program &      operator = (const Program &other);
+	Program &      operator = (Program &&other) = default;
 
 	bool           is_slot_empty (int slot_id) const;
 	bool           is_slot_empty (SlotMap::const_iterator it) const;
@@ -117,10 +115,10 @@ private:
 
 private:
 
-	bool           operator == (const Preset &other) const = delete;
-	bool           operator != (const Preset &other) const = delete;
+	bool           operator == (const Program &other) const = delete;
+	bool           operator != (const Program &other) const = delete;
 
-}; // class Preset
+}; // class Program
 
 
 
@@ -129,11 +127,11 @@ private:
 
 
 
-//#include "mfx/doc/Preset.hpp"
+//#include "mfx/doc/Program.hpp"
 
 
 
-#endif   // mfx_doc_Preset_HEADER_INCLUDED
+#endif   // mfx_doc_Program_HEADER_INCLUDED
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionPreset.cpp
+        ActionProg.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionProg.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
@@ -43,7 +43,7 @@ namespace doc
 
 
 
-ActionPreset::ActionPreset (bool relative_flag, int val)
+ActionProg::ActionProg (bool relative_flag, int val)
 :	_relative_flag (relative_flag)
 ,	_val (val)
 {
@@ -52,14 +52,14 @@ ActionPreset::ActionPreset (bool relative_flag, int val)
 
 
 
-ActionPreset::ActionPreset (SerRInterface &ser)
+ActionProg::ActionProg (SerRInterface &ser)
 {
 	ser_read (ser);
 }
 
 
 
-void	ActionPreset::ser_write (SerWInterface &ser) const
+void	ActionProg::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();
 
@@ -71,7 +71,7 @@ void	ActionPreset::ser_write (SerWInterface &ser) const
 
 
 
-void	ActionPreset::ser_read (SerRInterface &ser)
+void	ActionProg::ser_read (SerRInterface &ser)
 {
 	ser.begin_list ();
 
@@ -87,17 +87,17 @@ void	ActionPreset::ser_read (SerRInterface &ser)
 
 
 
-ActionType	ActionPreset::do_get_type () const
+ActionType	ActionProg::do_get_type () const
 {
-	return ActionType_PRESET;
+	return ActionType_PROG;
 }
 
 
 
-std::shared_ptr <PedalActionSingleInterface>	ActionPreset::do_duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	ActionProg::do_duplicate () const
 {
 	return std::static_pointer_cast <PedalActionSingleInterface> (
-		std::make_shared <ActionPreset> (*this)
+		std::make_shared <ActionProg> (*this)
 	);
 }
 

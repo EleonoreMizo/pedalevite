@@ -73,9 +73,9 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	void           do_select_bank (int index) final;
-	void           do_set_preset_name (std::string name) final;
-	void           do_set_preset (int bank_index, int preset_index, const doc::Preset &preset) final;
-	void           do_store_preset (int preset_index, int bank_index) final;
+	void           do_set_prog_name (std::string name) final;
+	void           do_set_prog (int bank_index, int prog_index, const doc::Program &prog) final;
+	void           do_store_prog (int prog_index, int bank_index) final;
 
 
 

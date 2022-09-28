@@ -133,44 +133,44 @@ void	ModelObserverInterface::set_bank_name (std::string name)
 
 
 
-void	ModelObserverInterface::set_preset_name (std::string name)
+void	ModelObserverInterface::set_prog_name (std::string name)
 {
-	do_set_preset_name (name);
+	do_set_prog_name (name);
 }
 
 
 
-void	ModelObserverInterface::set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+void	ModelObserverInterface::set_prog (int bank_index, int prog_index, const doc::Program &prog)
 {
 	assert (bank_index >= 0);
 	assert (bank_index < Cst::_nbr_banks);
-	assert (preset_index >= 0);
-	assert (preset_index < Cst::_nbr_presets_per_bank);
+	assert (prog_index >= 0);
+	assert (prog_index < Cst::_nbr_prog_per_bank);
 
-	do_set_preset (bank_index, preset_index, preset);
+	do_set_prog (bank_index, prog_index, prog);
 }
 
 
 
-// set_slot_info_for_current_preset to be called later
-void	ModelObserverInterface::activate_preset (int preset)
+// set_slot_info_for_current_prog to be called later
+void	ModelObserverInterface::activate_prog (int index)
 {
-	assert (preset >= 0);
-	assert (preset < Cst::_nbr_presets_per_bank);
+	assert (index >= 0);
+	assert (index < Cst::_nbr_prog_per_bank);
 
-	do_activate_preset (preset);
+	do_activate_prog (index);
 }
 
 
 
 // bank_index < 0: use the current bank
-void	ModelObserverInterface::store_preset (int preset_index, int bank_index)
+void	ModelObserverInterface::store_prog (int prog_index, int bank_index)
 {
-	assert (preset_index >= 0);
-	assert (preset_index < Cst::_nbr_presets_per_bank);
+	assert (prog_index >= 0);
+	assert (prog_index < Cst::_nbr_prog_per_bank);
 	assert (bank_index < Cst::_nbr_banks);
 
-	do_store_preset (preset_index, bank_index);
+	do_store_prog (prog_index, bank_index);
 }
 
 
@@ -219,9 +219,9 @@ void	ModelObserverInterface::set_tuner_freq (float freq)
 
 
 // Reference lifetime is the call. Please make a copy.
-void	ModelObserverInterface::set_slot_info_for_current_preset (const SlotInfoMap &info_map)
+void	ModelObserverInterface::set_slot_info_for_current_prog (const SlotInfoMap &info_map)
 {
-	do_set_slot_info_for_current_preset (info_map);
+	do_set_slot_info_for_current_prog (info_map);
 }
 
 
@@ -252,7 +252,7 @@ void	ModelObserverInterface::set_param_beats (int slot_id, int index, float beat
 
 
 
-// set_slot_info_for_current_preset to be called later
+// set_slot_info_for_current_prog to be called later
 void	ModelObserverInterface::add_slot (int slot_id)
 {
 	assert (slot_id >= 0);
@@ -288,7 +288,7 @@ void	ModelObserverInterface::set_slot_label (int slot_id, std::string name)
 
 
 
-// set_slot_info_for_current_preset to be called later
+// set_slot_info_for_current_prog to be called later
 void	ModelObserverInterface::set_plugin (int slot_id, const PluginInitData &pi_data)
 {
 	assert (slot_id >= 0);
@@ -298,7 +298,7 @@ void	ModelObserverInterface::set_plugin (int slot_id, const PluginInitData &pi_d
 
 
 
-// set_slot_info_for_current_preset to be called later
+// set_slot_info_for_current_prog to be called later
 void	ModelObserverInterface::remove_plugin (int slot_id)
 {
 	assert (slot_id >= 0);

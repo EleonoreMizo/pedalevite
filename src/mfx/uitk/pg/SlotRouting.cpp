@@ -160,7 +160,7 @@ PageInterface::EvtProp	SlotRouting::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	SlotRouting::do_activate_preset (int index)
+void	SlotRouting::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -235,7 +235,7 @@ void	SlotRouting::update_display ()
 	{
 		PageMgrInterface::add_nav (nav_list, Entry_MOVE);
 
-		const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+		const doc::Program & prog = _view_ptr->use_prog_cur ();
 		std::vector <Tools::NodeEntry>   entry_list;
 		Tools::extract_slot_list (entry_list, prog, *_model_ptr);
 

@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionClick.h"
 #include "mfx/doc/ActionParam.h"
-#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionProg.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionTempoSet.h"
@@ -78,14 +78,14 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_sample_freq (0)
 ,	_setup ()
 ,	_bank_index (0)
-,	_preset_index (0)
-,	_preset_cur ()
+,	_prog_index (0)
+,	_prog_cur ()
 ,	_layout_cur ()
 ,	_pi_id_map ()
 ,	_pedal_state_arr ()
 ,	_hold_time (std::chrono::seconds (1))
 ,	_edit_flag (false)
-,	_edit_preset_flag (false)
+,	_edit_prog_flag (false)
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)
 ,	_tuner_ptr (nullptr)
@@ -330,7 +330,7 @@ int	Model::load_from_disk (std::string pathname)
 		set_master_vol (sss_uptr->_master_vol);
 
 		select_bank (0);
-		activate_preset (0);
+		activate_prog (0);
 	}
 
 	return ret_val;
@@ -354,9 +354,9 @@ void	Model::set_edit_mode (bool edit_flag)
 {
 	if (edit_flag != _edit_flag)
 	{
-		if (! edit_flag && _edit_flag && _edit_preset_flag)
+		if (! edit_flag && _edit_flag && _edit_prog_flag)
 		{
-			store_preset (_preset_index, -1);
+			store_prog (_prog_index, -1);
 		}
 
 		_edit_flag = edit_flag;
@@ -420,16 +420,16 @@ void	Model::set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content
 		layout_ptr = &_setup._bank_arr [loc._bank_index]._layout;
 		break;
 
-	case PedalLoc::Type_PRESET:
+	case PedalLoc::Type_PROG:
 		assert (loc._bank_index >= 0);
 		assert (loc._bank_index < Cst::_nbr_banks);
-		assert (loc._preset_index >= 0);
-		assert (loc._preset_index < Cst::_nbr_presets_per_bank);
-		layout_ptr = &_setup._bank_arr [loc._bank_index]._preset_arr [loc._preset_index]._layout;
+		assert (loc._prog_index >= 0);
+		assert (loc._prog_index < Cst::_nbr_prog_per_bank);
+		layout_ptr = &_setup._bank_arr [loc._bank_index]._prog_arr [loc._prog_index]._layout;
 		break;
 
-	case PedalLoc::Type_PRESET_CUR:
-		layout_ptr = &_preset_cur._layout;
+	case PedalLoc::Type_PROG_CUR:
+		layout_ptr = &_prog_cur._layout;
 		break;
 
 	default:
@@ -466,14 +466,14 @@ void	Model::set_bank (int index, const doc::Bank &bank)
 
 	if (_edit_flag && index == _bank_index)
 	{
-		_edit_preset_flag = false;
-		activate_preset (_preset_index);
+		_edit_prog_flag = false;
+		activate_prog (_prog_index);
 	}
 }
 
 
 
-// In edit mode, current preset is automatically activated upon bank change.
+// In edit mode, current program is automatically activated upon bank change.
 void	Model::select_bank (int index)
 {
 	assert (index >= 0);
@@ -481,10 +481,10 @@ void	Model::select_bank (int index)
 
 	if (index != _bank_index)
 	{
-		if (_edit_flag && _edit_preset_flag)
+		if (_edit_flag && _edit_prog_flag)
 		{
-			store_preset (_preset_index, -1);
-			_edit_preset_flag = false;
+			store_prog (_prog_index, -1);
+			_edit_prog_flag = false;
 		}
 
 		_bank_index = index;
@@ -498,7 +498,7 @@ void	Model::select_bank (int index)
 
 		if (_edit_flag)
 		{
-			activate_preset (_preset_index);
+			activate_prog (_prog_index);
 		}
 	}
 }
@@ -516,58 +516,58 @@ void	Model::set_bank_name (std::string name)
 
 
 
-void	Model::set_preset_name (std::string name)
+void	Model::set_prog_name (std::string name)
 {
-	_preset_cur._name = name;
+	_prog_cur._name = name;
 	if (_obs_ptr != nullptr)
 	{
-		_obs_ptr->set_preset_name (name);
+		_obs_ptr->set_prog_name (name);
 	}
 }
 
 
 
-void	Model::set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+void	Model::set_prog (int bank_index, int prog_index, const doc::Program &prog)
 {
 	assert (bank_index >= 0);
 	assert (bank_index < Cst::_nbr_banks);
-	assert (preset_index >= 0);
-	assert (preset_index < Cst::_nbr_presets_per_bank);
+	assert (prog_index >= 0);
+	assert (prog_index < Cst::_nbr_prog_per_bank);
 
-	_setup._bank_arr [preset_index]._preset_arr [preset_index] = preset;
+	_setup._bank_arr [prog_index]._prog_arr [prog_index] = prog;
 
 	if (_obs_ptr != nullptr)
 	{
-		_obs_ptr->set_preset (bank_index, preset_index, preset);
+		_obs_ptr->set_prog (bank_index, prog_index, prog);
 	}
 
 	if (   _edit_flag
-	    && _edit_preset_flag
-	    && bank_index   == _bank_index
-	    && preset_index == _preset_index)
+	    && _edit_prog_flag
+	    && bank_index == _bank_index
+	    && prog_index == _prog_index)
 	{
-		activate_preset (_preset_index);
+		activate_prog (_prog_index);
 	}
 }
 
 
 
-void	Model::activate_preset (int preset_index)
+void	Model::activate_prog (int prog_index)
 {
-	assert (preset_index >= 0);
-	assert (preset_index < Cst::_nbr_presets_per_bank);
+	assert (prog_index >= 0);
+	assert (prog_index < Cst::_nbr_prog_per_bank);
 
 	reset_all_overridden_param_ctrl ();
 
-	if (_edit_flag && _edit_preset_flag && preset_index != _preset_index)
+	if (_edit_flag && _edit_prog_flag && prog_index != _prog_index)
 	{
-		store_preset (_preset_index, -1);
+		store_prog (_prog_index, -1);
 	}
 
-	_preset_index = preset_index;
-	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
+	_prog_index = prog_index;
+	_prog_cur   = _setup._bank_arr [_bank_index]._prog_arr [_prog_index];
 
-	_edit_preset_flag = true;
+	_edit_prog_flag = true;
 
 	update_layout ();
 
@@ -586,26 +586,26 @@ void	Model::activate_preset (int preset_index)
 
 	if (_obs_ptr != nullptr)
 	{
-		_obs_ptr->activate_preset (preset_index);
+		_obs_ptr->activate_prog (prog_index);
 	}
 }
 
 
 
 // bank_index < 0: use the current bank
-void	Model::store_preset (int preset_index, int bank_index)
+void	Model::store_prog (int prog_index, int bank_index)
 {
-	assert (preset_index >= 0);
-	assert (preset_index < Cst::_nbr_presets_per_bank);
+	assert (prog_index >= 0);
+	assert (prog_index < Cst::_nbr_prog_per_bank);
 	assert (bank_index < Cst::_nbr_banks);
 
 	const int         bank_index2 = (bank_index < 0) ? _bank_index : bank_index;
 
-	_setup._bank_arr [bank_index2]._preset_arr [preset_index] = _preset_cur;
+	_setup._bank_arr [bank_index2]._prog_arr [prog_index] = _prog_cur;
 
 	if (_obs_ptr != nullptr)
 	{
-		_obs_ptr->store_preset (preset_index, bank_index);
+		_obs_ptr->store_prog (prog_index, bank_index);
 	}
 }
 
@@ -616,7 +616,7 @@ void	Model::set_prog_switch_mode (doc::ProgSwitchMode mode)
 	assert (int (mode) >= 0);
 	assert (mode < doc::ProgSwitchMode::NBR_ELT);
 
-	_preset_cur._prog_switch_mode = mode;
+	_prog_cur._prog_switch_mode = mode;
 	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_prog_switch_mode (mode);
@@ -714,10 +714,10 @@ void	Model::set_tempo (double bpm)
 
 int	Model::add_slot ()
 {
-	const int      slot_id = _preset_cur.gen_slot_id ();
-	_preset_cur._slot_map.insert (std::make_pair (
+	const int      slot_id = _prog_cur.gen_slot_id ();
+	_prog_cur._slot_map.insert (std::make_pair (
 		slot_id,
-		doc::Preset::SlotSPtr ()
+		doc::Program::SlotSPtr ()
 	));
 
 	update_layout ();
@@ -736,10 +736,10 @@ int	Model::add_slot ()
 void	Model::remove_slot (int slot_id)
 {
 	assert (slot_id >= 0);
-	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
+	assert (_prog_cur._slot_map.find (slot_id) != _prog_cur._slot_map.end ());
 
 	// Removes the slot from the routing
-	doc::Routing   routing     = _preset_cur.use_routing (); // Makes a copy
+	doc::Routing   routing     = _prog_cur.use_routing (); // Makes a copy
 	bool           change_flag = false;
 
 	auto           it     = routing._cnx_audio_set.begin ();
@@ -766,9 +766,9 @@ void	Model::remove_slot (int slot_id)
 	remove_plugin (slot_id);
 
 	// Finally removes the slot
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
-	_preset_cur._slot_map.erase (it_slot);
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
+	_prog_cur._slot_map.erase (it_slot);
 
 	update_layout ();
 
@@ -782,7 +782,7 @@ void	Model::remove_slot (int slot_id)
 
 void	Model::set_routing (const doc::Routing &routing)
 {
-	_preset_cur.set_routing (routing);
+	_prog_cur.set_routing (routing);
 
 	update_layout ();
 
@@ -798,10 +798,10 @@ void	Model::set_slot_label (int slot_id, std::string name)
 {
 	assert (slot_id >= 0);
 
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
 
-	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
+	doc::Program::SlotSPtr &   slot_sptr = it_slot->second;
 	if (slot_sptr.get () == nullptr)
 	{
 		slot_sptr = std::make_shared <doc::Slot> ();
@@ -824,10 +824,10 @@ void	Model::set_plugin (int slot_id, std::string model)
 	clear_all_signal_ports_for_slot (slot_id);
 	reset_all_overridden_param_ctrl (slot_id);
 
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
 
-	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
+	doc::Program::SlotSPtr &   slot_sptr = it_slot->second;
 	if (slot_sptr.get () == nullptr)
 	{
 		slot_sptr = std::make_shared <doc::Slot> ();
@@ -865,10 +865,10 @@ void	Model::remove_plugin (int slot_id)
 	clear_all_signal_ports_for_slot (slot_id);
 	reset_all_overridden_param_ctrl (slot_id);
 
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
 
-	const doc::Preset::SlotSPtr & slot_sptr = it_slot->second;
+	const doc::Program::SlotSPtr & slot_sptr = it_slot->second;
 	if (slot_sptr.get () != nullptr)
 	{
 		slot_sptr->_pi_model.clear ();
@@ -888,7 +888,7 @@ void	Model::set_plugin_mono (int slot_id, bool mono_flag)
 {
 	assert (slot_id >= 0);
 
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 
 	settings._force_mono_flag = mono_flag;
@@ -906,7 +906,7 @@ void	Model::set_plugin_reset (int slot_id, bool reset_flag)
 {
 	assert (slot_id >= 0);
 
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 
 	settings._force_reset_flag = reset_flag;
@@ -942,7 +942,7 @@ void	Model::set_param_pres (int slot_id, PiType type, int index, const doc::Para
 
 void	Model::set_param (int slot_id, PiType type, int index, float val)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -960,7 +960,7 @@ void	Model::set_param (int slot_id, PiType type, int index, float val)
 	// This avoids clicks when switching back and forth between configurations
 	// with and without mixer. The removal will be effective at the next call
 	// to apply_settings.
-	if (pi_id == _dummy_mix_id && has_mixer_plugin (_preset_cur, slot_id))
+	if (pi_id == _dummy_mix_id && has_mixer_plugin (_prog_cur, slot_id))
 	{
 		apply_settings (); // pi_id not valid after this
 	}
@@ -978,7 +978,7 @@ void	Model::set_param_beats (int slot_id, int index, float beats)
 	assert (index >= 0);
 	assert (beats >= 0);
 
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	assert (index < int (settings._param_list.size ()));
 
@@ -1015,7 +1015,7 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	set_preset_ctrl (_preset_cur, slot_id, type, index, cls);
+	set_prog_ctrl (_prog_cur, slot_id, type, index, cls);
 
 	auto           it_id_map = _pi_id_map.find (slot_id);
 	assert (it_id_map != _pi_id_map.end ());
@@ -1029,7 +1029,7 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 			apply_settings ();
 		}
 	}
-	else if (! has_mixer_plugin (_preset_cur, slot_id))
+	else if (! has_mixer_plugin (_prog_cur, slot_id))
 	{
 		apply_settings ();
 	}
@@ -1047,15 +1047,15 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 
 
 
-// Removes all ControlSource occurrences from the current presets.
+// Removes all ControlSource occurrences from the current program.
 // Does not handle the memory of the previous plugins
 void	Model::remove_ctrl_src (const ControlSource &src)
 {
-	for (auto it_slot = _preset_cur._slot_map.begin ()
-	;	it_slot != _preset_cur._slot_map.end ()
+	for (auto it_slot = _prog_cur._slot_map.begin ()
+	;	it_slot != _prog_cur._slot_map.end ()
 	;	++ it_slot)
 	{
-		if (! _preset_cur.is_slot_empty (it_slot))
+		if (! _prog_cur.is_slot_empty (it_slot))
 		{
 			const doc::Slot & slot = *(it_slot->second);
 
@@ -1136,7 +1136,7 @@ void	Model::remove_ctrl_src (const ControlSource &src)
 // _setup._auto_assign_rotenc_flag is set.
 void	Model::override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -1213,7 +1213,7 @@ void	Model::reset_and_override_param_ctrl_multi (const std::vector <RotEncOverri
 		const OverrideLoc &  loc     = _override_map.begin ()->first;
 		int                  slot_id = -1;
 		PiType               type    = PiType_INVALID;
-		find_slot_type_cur_preset (slot_id, type, loc._pi_id);
+		find_slot_type_cur_prog (slot_id, type, loc._pi_id);
 		if (slot_id >= 0)
 		{
 			RotEncOverride reo;
@@ -1267,12 +1267,12 @@ void	Model::reset_and_override_param_ctrl_multi (const std::vector <RotEncOverri
 
 void	Model::set_signal_port (int port_id, const doc::SignalPort &port)
 {
-	assert (_preset_cur._slot_map.find (port._slot_id) != _preset_cur._slot_map.end ());
+	assert (_prog_cur._slot_map.find (port._slot_id) != _prog_cur._slot_map.end ());
 
 	// Not strictly necessary, but helps to ensure global consistency.
 	clear_signal_port (port_id, false);
 
-	_preset_cur._port_map [port_id] = port;
+	_prog_cur._port_map [port_id] = port;
 
 	apply_settings ();
 
@@ -1293,8 +1293,8 @@ void	Model::clear_signal_port (int port_id)
 
 void	Model::clear_all_signal_ports_for_slot (int slot_id)
 {
-	auto           it_port = _preset_cur._port_map.begin ();
-	while (it_port != _preset_cur._port_map.end ())
+	auto           it_port = _prog_cur._port_map.begin ();
+	while (it_port != _prog_cur._port_map.end ())
 	{
 		// The element pointed by the iterator might be subject to deletion,
 		// so we step first before doing anything.
@@ -1462,7 +1462,7 @@ std::chrono::microseconds	Model::get_cur_date () const
 // Gets the final parameter value, after modulation.
 float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -1483,7 +1483,7 @@ float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
 
 Model::CpuMeter	Model::get_plugin_cpu_meter (int slot_id) const
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 
 	const PluginDetails & details = use_plugin_details (slot_id, PiType_MAIN);
 
@@ -1536,14 +1536,14 @@ void	Model::do_process_msg_audio_to_cmd (const WaMsg &msg)
 
 		int            slot_id = -1;
 		PiType         type    = PiType_INVALID;
-		find_slot_type_cur_preset (slot_id, type, pi_id);
+		find_slot_type_cur_prog (slot_id, type, pi_id);
 		if (slot_id >= 0)
 		{
-			auto           it_slot = _preset_cur._slot_map.find (slot_id);
-			assert (it_slot != _preset_cur._slot_map.end ());
+			auto           it_slot = _prog_cur._slot_map.find (slot_id);
+			assert (it_slot != _prog_cur._slot_map.end ());
 
 			const bool     ok_flag =
-				set_preset_param (_preset_cur, it_slot, type, index, val);
+				set_prog_param (_prog_cur, it_slot, type, index, val);
 
 			if (ok_flag)
 			{
@@ -1622,7 +1622,7 @@ void	Model::update_layout ()
 {
 	_layout_cur = _setup._layout;
 	_layout_cur.merge_layout (_setup._bank_arr [_bank_index]._layout);
-	_layout_cur.merge_layout (_preset_cur._layout);
+	_layout_cur.merge_layout (_prog_cur._layout);
 
 	apply_settings ();
 }
@@ -1640,27 +1640,27 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 	std::map <std::string, CountState>   pi_cnt_bank;
 	int            max_nbr_slots = 0;
 
-	for (size_t preset_index = 0
-	;	preset_index < bank._preset_arr.size ()
-	;	++preset_index)
+	for (size_t prog_index = 0
+	;	prog_index < bank._prog_arr.size ()
+	;	++prog_index)
 	{
-		// Count for this preset
-		const doc::Preset &  preset = bank._preset_arr [preset_index];
+		// Count for this program
+		const doc::Program & prog = bank._prog_arr [prog_index];
 
 		// Slots (potential Dry/Wet/Mix plug-ins)
-		const int      nbr_slots = int (preset._slot_map.size ());
+		const int      nbr_slots = int (prog._slot_map.size ());
 		max_nbr_slots = std::max (max_nbr_slots, nbr_slots);
 
 		// Standard plug-ins
-		std::map <std::string, CountState>  pi_cnt_preset;
-		for (const auto &node : preset._slot_map)
+		std::map <std::string, CountState>  pi_cnt_prog;
+		for (const auto &node : prog._slot_map)
 		{
 			const auto &   slot_sptr = node.second;
 			if (slot_sptr.get () != nullptr && ! slot_sptr->is_empty ())
 			{
 				const doc::Slot & slot = *slot_sptr;
-				auto           it = pi_cnt_preset.find (slot._pi_model);
-				if (it != pi_cnt_preset.end ())
+				auto           it = pi_cnt_prog.find (slot._pi_model);
+				if (it != pi_cnt_prog.end ())
 				{
 					++ it->second.first;
 				}
@@ -1677,13 +1677,13 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 					{
 						state._param_list.push_back (val);
 					}
-					pi_cnt_preset.insert (std::make_pair (slot._pi_model, cs));
+					pi_cnt_prog.insert (std::make_pair (slot._pi_model, cs));
 				}
 			}
 		}
 
 		// Merge with bank results
-		for (const auto &elt : pi_cnt_preset)
+		for (const auto &elt : pi_cnt_prog)
 		{
 			auto           it = pi_cnt_bank.find (elt.first);
 			if (it == pi_cnt_bank.end ())
@@ -1712,8 +1712,8 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 
 
 
-// Transmit to _central a preset built from scratch,
-// based on _preset_cur and _layout_cur
+// Transmit to _central a program built from scratch,
+// based on _prog_cur and _layout_cur
 void	Model::apply_settings ()
 {
 	_central.clear ();
@@ -1749,12 +1749,12 @@ void	Model::apply_settings_normal ()
 	_slot_info.clear ();
 	SlotIdToPosMap slot_pos_map;
 
-	_central.set_prog_switch_mode (_preset_cur._prog_switch_mode);
+	_central.set_prog_switch_mode (_prog_cur._prog_switch_mode);
 
 	// Audio graph last, signal plug-ins before
 	std::vector <int> onl;
 	const int      audio_pos = ToolsRouting::build_ordered_node_list (
-		onl, false, _preset_cur, use_aud_pi_list ()
+		onl, false, _prog_cur, use_aud_pi_list ()
 	);
 	const int      nbr_slots = int (onl.size ());
 
@@ -1770,14 +1770,14 @@ void	Model::apply_settings_normal ()
 
 		auto           it_id_map  =
 			_pi_id_map.insert (std::make_pair (slot_id, SlotPiId ())).first;
-		auto           it_slot    = _preset_cur._slot_map.find (slot_id);
-		assert (it_slot != _preset_cur._slot_map.end ());
+		auto           it_slot    = _prog_cur._slot_map.find (slot_id);
+		assert (it_slot != _prog_cur._slot_map.end ());
 
 		// Adds a slot in central
 		_central.insert_slot (slot_index_central);
 
 		// Empty slot
-		if (_preset_cur.is_slot_empty (it_slot))
+		if (_prog_cur.is_slot_empty (it_slot))
 		{
 			_central.remove_mixer (slot_index_central);
 		}
@@ -1809,15 +1809,15 @@ void	Model::apply_settings_normal ()
 			{
 				int            port_id = -1;
 				const auto     it_sig = std::find_if (
-					_preset_cur._port_map.begin (),
-					_preset_cur._port_map.end (),
-					[slot_id, sig_index] (const doc::Preset::PortMap::value_type &node)
+					_prog_cur._port_map.begin (),
+					_prog_cur._port_map.end (),
+					[slot_id, sig_index] (const doc::Program::PortMap::value_type &node)
 					{
 						return (   node.second._slot_id   == slot_id
 						        && node.second._sig_index == sig_index);
 					}
 				);
-				if (it_sig != _preset_cur._port_map.end ())
+				if (it_sig != _prog_cur._port_map.end ())
 				{
 					port_id = it_sig->first;
 				}
@@ -1847,7 +1847,7 @@ void	Model::apply_settings_normal ()
 		++ slot_index_central;
 	}
 
-	assert (_preset_cur._slot_map.size () == _pi_id_map.size ());
+	assert (_prog_cur._slot_map.size () == _pi_id_map.size ());
 
 	// Now, the routing
 	apply_routing (slot_pos_map);
@@ -1900,7 +1900,7 @@ void	Model::apply_routing (const SlotIdToPosMap &pos_map)
 {
 	_central.clear_routing ();
 
-	for (const doc::Cnx &cnx_d : _preset_cur.use_routing ()._cnx_audio_set)
+	for (const doc::Cnx &cnx_d : _prog_cur.use_routing ()._cnx_audio_set)
 	{
 		const cmd::Cnx cnx_c { convert_connection (cnx_d, pos_map) };
 		_central.add_cnx (cnx_c);
@@ -1909,7 +1909,7 @@ void	Model::apply_routing (const SlotIdToPosMap &pos_map)
 
 
 
-// slot_id can be negative if the slot isn't part of _preset_cur,
+// slot_id can be negative if the slot isn't part of _prog_cur,
 // same for it_id_map that should be _pi_id_map.end () in this case.
 int	Model::insert_plugin_main (doc::Slot &slot, int slot_id, PiIdMap::iterator it_id_map, int slot_index_central, bool gen_audio_flag)
 {
@@ -1968,15 +1968,15 @@ int	Model::insert_plugin_main (doc::Slot &slot, int slot_id, PiIdMap::iterator i
 // We need it if there is an automation or if it is set to something
 // different of 100% wet at 0 dB.
 // Does not commit anything
-// The slot should exist in the current preset.
+// The slot should exist in the current program.
 void	Model::check_mixer_plugin (int slot_id, int slot_index_central, int chain_flag)
 {
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
 	assert (it_slot->second.get () != nullptr);
 
 	const bool        use_flag =
-		chain_flag && has_mixer_plugin (_preset_cur, slot_id);
+		chain_flag && has_mixer_plugin (_prog_cur, slot_id);
 	const doc::Slot & slot     = *(it_slot->second);
 	int &             id_ref   = _pi_id_map [slot_id]._pi_id_arr [PiType_MIX];
 
@@ -2007,9 +2007,9 @@ void	Model::check_mixer_plugin (int slot_id, int slot_index_central, int chain_f
 
 
 // Slot must exist
-bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_id)
+bool	Model::has_mixer_plugin (const doc::Program &prog, int slot_id)
 {
-	const doc::Slot & slot = preset.use_slot (slot_id);
+	const doc::Slot & slot = prog.use_slot (slot_id);
 	const doc::PluginSettings::ParamList & plist =
 		slot._settings_mixer._param_list;
 
@@ -2254,8 +2254,8 @@ void	Model::process_action (const doc::PedalActionSingleInterface &action, std::
 		process_action_param (dynamic_cast <const doc::ActionParam &> (action));
 		break;
 
-	case doc::ActionType_PRESET:
-		process_action_preset (dynamic_cast <const doc::ActionPreset &> (action));
+	case doc::ActionType_PROG:
+		process_action_prog (dynamic_cast <const doc::ActionProg &> (action));
 		break;
 
 	case doc::ActionType_TOGGLE_FX:
@@ -2309,7 +2309,7 @@ void	Model::process_action_param (const doc::ActionParam &action)
 {
 	std::array <int, Cst::_max_named_targets> result_arr;
 	int            nbr_results = 0;
-	find_slot_cur_preset (result_arr, nbr_results, action._fx_id);
+	find_slot_cur_prog (result_arr, nbr_results, action._fx_id);
 
 	for (int res_cnt = 0; res_cnt < nbr_results; ++res_cnt)
 	{
@@ -2355,18 +2355,18 @@ void	Model::process_action_param (const doc::ActionParam &action)
 
 
 
-void	Model::process_action_preset (const doc::ActionPreset &action)
+void	Model::process_action_prog (const doc::ActionProg &action)
 {
 	int            new_index = action._val;
 	if (action._relative_flag)
 	{
-		new_index += _preset_index;
-		new_index += Cst::_nbr_presets_per_bank;
+		new_index += _prog_index;
+		new_index += Cst::_nbr_prog_per_bank;
 		assert (new_index >= 0);
-		new_index %= Cst::_nbr_presets_per_bank;
+		new_index %= Cst::_nbr_prog_per_bank;
 	}
 
-	activate_preset (new_index);
+	activate_prog (new_index);
 }
 
 
@@ -2375,7 +2375,7 @@ void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 {
 	std::array <int, Cst::_max_named_targets> result_arr;
 	int            nbr_results = 0;
-	find_slot_cur_preset (result_arr, nbr_results, action._fx_id);
+	find_slot_cur_prog (result_arr, nbr_results, action._fx_id);
 
 	float          bypass_val = 0;
 	for (int res_cnt = 0; res_cnt < nbr_results; ++res_cnt)
@@ -2385,7 +2385,7 @@ void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 		// Retrieves the state of the plug-in's bypass and flips it
 		if (res_cnt == 0)
 		{
-			const doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+			const doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 			const doc::PluginSettings &   settings =
 				slot.use_settings (PiType_MIX);
 			if (settings._param_list [pi::dwm::Param_BYPASS] < 0.5f)
@@ -2460,15 +2460,15 @@ void	Model::process_action_settings (const doc::ActionSettings &action)
 
 	std::array <int, Cst::_max_named_targets> result_arr;
 	int            nbr_results = 0;
-	find_slot_cur_preset (result_arr, nbr_results, action._fx_id);
+	find_slot_cur_prog (result_arr, nbr_results, action._fx_id);
 
 	for (int res_cnt = 0; res_cnt < nbr_results; ++res_cnt)
 	{
 		const int      slot_id = result_arr [res_cnt];
 
-		// Finds the preset
-		auto           it_slot = _preset_cur._slot_map.find (slot_id);
-		assert (it_slot != _preset_cur._slot_map.end ());
+		// Finds the program
+		auto           it_slot = _prog_cur._slot_map.find (slot_id);
+		assert (it_slot != _prog_cur._slot_map.end ());
 		const std::string &  pi_model = it_slot->second->_pi_model;
 
 		const auto     it_cat = _setup._map_plugin_settings.find (pi_model);
@@ -2574,7 +2574,7 @@ void	Model::notify_slot_info ()
 	assert (_obs_ptr != nullptr);
 	assert (_slot_info.size () == _pi_id_map.size ());
 
-	_obs_ptr->set_slot_info_for_current_preset (_slot_info);
+	_obs_ptr->set_slot_info_for_current_prog (_slot_info);
 }
 
 
@@ -2582,17 +2582,17 @@ void	Model::notify_slot_info ()
 // result_arr is filled with found slot_id.
 // nbr_results is the number of slot_id found, limited by the array size.
 // Returns false if not all slots were scanned (limit reached before).
-bool	Model::find_slot_cur_preset (std::array <int, Cst::_max_named_targets> &result_arr, int &nbr_results, const doc::FxId &fx_id) const
+bool	Model::find_slot_cur_prog (std::array <int, Cst::_max_named_targets> &result_arr, int &nbr_results, const doc::FxId &fx_id) const
 {
 	assert (fx_id._location_type >= 0);
 	assert (fx_id._location_type < doc::FxId::LocType_NBR_ELT);
 
 	nbr_results = 0;
-	auto           it = _preset_cur._slot_map.begin ();
-	while (   it != _preset_cur._slot_map.end ()
+	auto           it = _prog_cur._slot_map.begin ();
+	while (   it != _prog_cur._slot_map.end ()
 	       && nbr_results < Cst::_max_named_targets)
 	{
-		if (! _preset_cur.is_slot_empty (it))
+		if (! _prog_cur.is_slot_empty (it))
 		{
 			const doc::Slot & slot = *(it->second);
 
@@ -2618,13 +2618,13 @@ bool	Model::find_slot_cur_preset (std::array <int, Cst::_max_named_targets> &res
 	}
 
 	return (   nbr_results < Cst::_max_named_targets
-	        || it == _preset_cur._slot_map.end ());
+	        || it == _prog_cur._slot_map.end ());
 }
 
 
 
 // Returns -1 in slot_id if not found
-void	Model::find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const
+void	Model::find_slot_type_cur_prog (int &slot_id, PiType &type, int pi_id) const
 {
 	assert (pi_id >= 0);
 	assert (pi_id != _dummy_mix_id);
@@ -2650,7 +2650,7 @@ void	Model::find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) co
 
 const PluginDetails &	Model::use_plugin_details (int slot_id, PiType type) const
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 
@@ -2668,7 +2668,7 @@ const PluginDetails &	Model::use_plugin_details (int slot_id, PiType type) const
 
 bool	Model::set_param_pre_commit (int slot_id, int pi_id, PiType type, int index, float val)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (pi_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
@@ -2681,21 +2681,21 @@ bool	Model::set_param_pre_commit (int slot_id, int pi_id, PiType type, int index
 		_central.set_param (pi_id, index, val);
 	}
 
-	return set_preset_param (_preset_cur, slot_id, type, index, val);
+	return set_prog_param (_prog_cur, slot_id, type, index, val);
 }
 
 
 
 bool	Model::set_param_beats_pre_commit (int slot_id, int pi_id, int index, float val_beats, doc::ParamPresentation &pres, const piapi::PluginDescInterface &pi_desc, float &val_nrm)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (pi_id >= 0);
 	assert (index >= 0);
 	assert (val_beats > 0);
-	assert (&pres == _preset_cur.use_slot (slot_id)
-	                            .use_settings (PiType_MAIN)
-	                            .use_pres_if_tempo_ctrl (index));
-	assert (&pi_desc == &get_model_desc (_preset_cur.use_slot (slot_id)._pi_model));
+	assert (&pres == _prog_cur.use_slot (slot_id)
+	                          .use_settings (PiType_MAIN)
+	                          .use_pres_if_tempo_ctrl (index));
+	assert (&pi_desc == &get_model_desc (_prog_cur.use_slot (slot_id)._pi_model));
 
 	// Stores the beat value in the document
 	pres._ref_beats = val_beats;
@@ -2723,7 +2723,7 @@ bool	Model::set_param_pres_pre_commit (int slot_id, PiType type, int index, cons
 
 	bool           ok_flag = true;
 
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 
 	if (index >= int (settings._param_list.size ()))
@@ -2754,7 +2754,7 @@ bool	Model::set_param_pres_pre_commit (int slot_id, PiType type, int index, cons
 
 void	Model::push_set_param (int slot_id, PiType type, int index, float val, bool beat_flag, float val_beats)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -2776,7 +2776,7 @@ void	Model::push_set_param (int slot_id, PiType type, int index, float val, bool
 
 void	Model::push_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -2794,7 +2794,7 @@ void	Model::push_set_param_ctrl (int slot_id, PiType type, int index, const doc:
 
 void	Model::push_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -2814,19 +2814,19 @@ void	Model::push_set_param_pres (int slot_id, PiType type, int index, const doc:
 
 
 
-bool	Model::set_preset_param (doc::Preset &preset, int slot_id, PiType type, int index, float val)
+bool	Model::set_prog_param (doc::Program &prog, int slot_id, PiType type, int index, float val)
 {
-	auto           it_slot = preset._slot_map.find (slot_id);
+	auto           it_slot = prog._slot_map.find (slot_id);
 
-	return set_preset_param (preset, it_slot, type, index, val);
+	return set_prog_param (prog, it_slot, type, index, val);
 }
 
 
 
-bool	Model::set_preset_param (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val)
+bool	Model::set_prog_param (doc::Program &prog, doc::Program::SlotMap::iterator it_slot, PiType type, int index, float val)
 {
 	bool           ok_flag = true;
-	if (preset.is_slot_empty (it_slot))
+	if (prog.is_slot_empty (it_slot))
 	{
 		ok_flag = false;
 		assert (false);
@@ -2854,9 +2854,9 @@ bool	Model::set_preset_param (doc::Preset &preset, doc::Preset::SlotMap::iterato
 
 
 
-void	Model::set_preset_ctrl (doc::Preset &preset, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	Model::set_prog_ctrl (doc::Program &prog, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	doc::Slot &    slot = preset.use_slot (slot_id);
+	doc::Slot &    slot = prog.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	assert (index < int (settings._param_list.size ()));
 
@@ -2898,7 +2898,7 @@ void	Model::commit_cumulated_changes ()
 
 			// Condition for any change
 			if (   pi_id_mix == _dummy_mix_id
-			    && has_mixer_plugin (_preset_cur, slot_id))
+			    && has_mixer_plugin (_prog_cur, slot_id))
 			{
 				apply_settings_flag = true;
 			}
@@ -2971,7 +2971,7 @@ void	Model::commit_cumulated_changes ()
 
 void	Model::fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitData &pi_data)
 {
-	const doc::Slot & slot = _preset_cur.use_slot (slot_id);
+	const doc::Slot & slot = _prog_cur.use_slot (slot_id);
 	pi_data._model = slot._pi_model;
 
 	const int      pi_id = _pi_id_map [slot_id]._pi_id_arr [PiType_MAIN];
@@ -3002,11 +3002,11 @@ bool	Model::update_all_beat_parameters ()
 
 	bool           need_commit_flag = false;
 
-	for (auto it_slot = _preset_cur._slot_map.begin ()
-	;	it_slot != _preset_cur._slot_map.end ()
+	for (auto it_slot = _prog_cur._slot_map.begin ()
+	;	it_slot != _prog_cur._slot_map.end ()
 	;	++ it_slot)
 	{
-		if (! _preset_cur.is_slot_empty (it_slot))
+		if (! _prog_cur.is_slot_empty (it_slot))
 		{
 			const int      slot_id = it_slot->first;
 			doc::Slot &    slot    = *(it_slot->second);
@@ -3057,7 +3057,7 @@ void	Model::update_all_overriden_param_ctrl ()
 // Requires commit if true is returned
 bool	Model::override_param_ctrl_no_commit (int slot_id, PiType type, int index, int rotenc_index)
 {
-	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (! _prog_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -3101,13 +3101,13 @@ void	Model::update_param_ctrl (const OverrideLoc &loc)
 	const int      index      = loc._index;
 	int            slot_id    = -1;
 	PiType         type       = PiType_INVALID;
-	find_slot_type_cur_preset (slot_id, type, pi_id);
+	find_slot_type_cur_prog (slot_id, type, pi_id);
 
 	if (slot_id >= 0)
 	{
-		auto           it_slot = _preset_cur._slot_map.find (slot_id);
-		assert (it_slot != _preset_cur._slot_map.end ());
-		if (! _preset_cur.is_slot_empty (it_slot))
+		auto           it_slot = _prog_cur._slot_map.find (slot_id);
+		assert (it_slot != _prog_cur._slot_map.end ());
+		if (! _prog_cur.is_slot_empty (it_slot))
 		{
 			doc::CtrlLinkSet  cls;
 
@@ -3168,7 +3168,7 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	assert (index < int (settings._param_list.size ()));
 
@@ -3206,7 +3206,7 @@ void	Model::add_default_ctrl (int selected_slot_id)
 	// First, lists the slots in the processing order
 	std::vector <int> slot_id_list;
 	ToolsRouting::build_ordered_node_list (
-		slot_id_list, true, _preset_cur, use_aud_pi_list ()
+		slot_id_list, true, _prog_cur, use_aud_pi_list ()
 	);
 
 	std::set <int> used_pot_set;
@@ -3222,9 +3222,9 @@ void	Model::add_default_ctrl (int selected_slot_id)
 	for (int slot_pos = 0; slot_pos < nbr_slots; ++slot_pos)
 	{
 		const int      slot_id = slot_id_list [slot_pos];
-		const auto     it_slot = _preset_cur._slot_map.find (slot_id);
-		assert (it_slot != _preset_cur._slot_map.end ());
-		if (! _preset_cur.is_slot_empty (it_slot))
+		const auto     it_slot = _prog_cur._slot_map.find (slot_id);
+		assert (it_slot != _prog_cur._slot_map.end ());
+		if (! _prog_cur.is_slot_empty (it_slot))
 		{
 			const doc::Slot & slot = *(it_slot->second);
 			for (int type = 0; type < PiType_NBR_ELT; ++type)
@@ -3311,7 +3311,7 @@ void	Model::add_default_ctrl (int selected_slot_id)
 			doc::CtrlLinkSet  cls;
 
 			// Retrieves the existing controllers for this parameter
-			const doc::Slot & slot = _preset_cur.use_slot (slot_id);
+			const doc::Slot & slot = _prog_cur.use_slot (slot_id);
 			const doc::PluginSettings &   settings =
 				slot.use_settings (PiType_MAIN);
 			const auto     it_ctrl =
@@ -3339,8 +3339,8 @@ void	Model::add_default_ctrl (int selected_slot_id)
 
 void	Model::clear_signal_port (int port_id, bool req_exist_flag)
 {
-	const auto     it_port = _preset_cur._port_map.find (port_id);
-	if (it_port == _preset_cur._port_map.end ())
+	const auto     it_port = _prog_cur._port_map.find (port_id);
+	if (it_port == _prog_cur._port_map.end ())
 	{
 		if (req_exist_flag)
 		{
@@ -3356,7 +3356,7 @@ void	Model::clear_signal_port (int port_id, bool req_exist_flag)
 		src._type  = ControllerType_FX_SIG;
 		remove_ctrl_src (src);
 
-		_preset_cur._port_map.erase (it_port);
+		_prog_cur._port_map.erase (it_port);
 
 		apply_settings ();
 
@@ -3374,7 +3374,7 @@ void	Model::clear_signal_port (int port_id, bool req_exist_flag)
 // Requires commit
 void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings, bool ctrl_flag, bool pres_flag)
 {
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 
 	const int      nbr_param = int (settings._param_list.size ());
 	const doc::CtrlLinkSet cls_empty {};
@@ -3437,8 +3437,8 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 			{
 				if (index == it_ctrl->first)
 				{
-					set_preset_ctrl (
-						_preset_cur, slot_id, type, index, it_ctrl->second
+					set_prog_ctrl (
+						_prog_cur, slot_id, type, index, it_ctrl->second
 					);
 					push_set_param_ctrl (slot_id, type, index, it_ctrl->second);
 					ctrl_set_flag = true;
@@ -3456,7 +3456,7 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 		}
 		if (ctrl_flag && ! ctrl_set_flag)
 		{
-			set_preset_ctrl (_preset_cur, slot_id, type, index, cls_empty);
+			set_prog_ctrl (_prog_cur, slot_id, type, index, cls_empty);
 			push_set_param_ctrl (slot_id, type, index, cls_empty);
 		}
 		if (pres_flag && ! pres_set_flag)

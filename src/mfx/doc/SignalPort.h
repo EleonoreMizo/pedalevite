@@ -3,6 +3,8 @@
         SignalPort.h
         Author: Laurent de Soras, 2016
 
+Identifies a signal within the program
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -61,8 +63,8 @@ public:
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
-	int            _slot_id   = -1;
-	int            _sig_index = -1;
+	int            _slot_id   = -1; // Slot emitting the signal
+	int            _sig_index = -1; // Signal index in the slot
 
 
 

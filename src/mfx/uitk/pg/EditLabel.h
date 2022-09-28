@@ -64,7 +64,7 @@ public:
 	{
 	public:
 		std::string    _label;                 // Input/output
-		bool           _sep_cur_flag = false;  // Input: labels from the current preset are separated
+		bool           _sep_cur_flag = false;  // Input: labels from the current program are separated
 		bool           _ok_flag      = false;  // Output: OK or cancel
 	};
 

@@ -52,7 +52,7 @@ void	LocEdit::fix_audio_flag (const View &view, const Model &model)
 {
 	if (_slot_id >= 0)
 	{
-		const doc::Preset &  prog    = view.use_preset_cur ();
+		const doc::Program & prog    = view.use_prog_cur ();
 		const auto           it_slot = prog._slot_map.find (_slot_id);
 		if (it_slot != prog._slot_map.end ())
 		{

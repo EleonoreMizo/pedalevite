@@ -63,8 +63,8 @@ const doc::PedalboardLayout &	PedalEditContext::use_layout (const View &view) co
 		}
 		break;
 
-	case PedalEditContext::Type_PRESET:
-		return view.use_preset_cur ()._layout;
+	case PedalEditContext::Type_PROG:
+		return view.use_prog_cur ()._layout;
 		break;
 
 	default:
@@ -95,8 +95,8 @@ PedalLoc	PedalEditContext::conv_to_loc (const View &view) const
 		loc._bank_index = view.get_bank_index ();
 		break;
 
-	case Type_PRESET:
-		loc._type = PedalLoc::Type_PRESET_CUR;
+	case Type_PROG:
+		loc._type = PedalLoc::Type_PROG_CUR;
 		break;
 
 	default:

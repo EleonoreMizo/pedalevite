@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
-#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionProg.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempoSet.h"
 #include "mfx/doc/ActionToggleFx.h"
@@ -97,13 +97,13 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	std::string    txt_val; 
 	std::string    txt_unit; 
 
-	const doc::Preset &   preset = view.use_preset_cur ();
+	const doc::Program &  prog = view.use_prog_cur ();
 	if (val < 0)
 	{
-		val = view.get_param_val (preset, slot_id, type, index);
+		val = view.get_param_val (prog, slot_id, type, index);
 	}
 
-	const doc::Slot &    slot     = preset.use_slot (slot_id);
+	const doc::Slot &    slot     = prog.use_slot (slot_id);
 	const std::string &  pi_model =
 		(type == PiType_MIX) ? Cst::_plugin_dwm : slot._pi_model;
 	const piapi::PluginDescInterface &  desc_pi =
@@ -122,7 +122,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	const double   tempo = view.get_tempo ();
 	print_param_with_pres (
 		val_s, unit,
-		preset, slot_id, type, index, val, desc, tempo
+		prog, slot_id, type, index, val, desc, tempo
 	);
 
 	// Value
@@ -223,9 +223,9 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 
 
-void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const Model &model, const View &view, const doc::Preset &preset, int slot_id, PiType type, int index, float val)
+void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const Model &model, const View &view, const doc::Program &prog, int slot_id, PiType type, int index, float val)
 {
-	const doc::Slot &    slot     = preset.use_slot (slot_id);
+	const doc::Slot &    slot     = prog.use_slot (slot_id);
 	const std::string &  pi_model =
 		(type == PiType_MIX) ? Cst::_plugin_dwm : slot._pi_model;
 	const piapi::PluginDescInterface &  desc_pi =
@@ -236,7 +236,7 @@ void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const 
 	const double   tempo = view.get_tempo ();
 	print_param_with_pres (
 		val_s, unit,
-		preset, slot_id, type, index, val, desc, tempo
+		prog, slot_id, type, index, val, desc, tempo
 	);
 }
 
@@ -250,9 +250,8 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 	assert (index >= 0);
 	assert (dir != 0);
 
-	const doc::Preset &  preset = view.use_preset_cur ();
-	double         val_nrm =
-		view.get_param_val (preset, slot_id, type, index);
+	const doc::Program & prog = view.use_prog_cur ();
+	double         val_nrm    = view.get_param_val (prog, slot_id, type, index);
 
 	val_nrm = change_param (
 		val_nrm, model, view, slot_id, type, index, step, step_index, dir
@@ -262,7 +261,7 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 	bool           set_flag = false;
 	if (type == PiType_MAIN)
 	{
-		const doc::Slot &    slot = preset.use_slot (slot_id);
+		const doc::Slot &    slot = prog.use_slot (slot_id);
 		const doc::PluginSettings& settings = slot.use_settings (PiType_MAIN);
 		const doc::ParamPresentation *   pres_ptr =
 			settings.use_pres_if_tempo_ctrl (index);
@@ -301,8 +300,8 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 	assert (index >= 0);
 	assert (dir != 0);
 
-	const doc::Preset &  preset = view.use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (slot_id);
+	const doc::Program & prog = view.use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (slot_id);
 	const doc::PluginSettings & settings = slot.use_settings (type);
 
 	const std::string &  pi_model =
@@ -449,14 +448,14 @@ std::string	Tools::find_ctrl_name (const ControlSource &src, const std::vector <
 
 std::vector <CtrlSrcNamed>	Tools::make_port_list (const Model &model, const View &view)
 {
-	const doc::Preset &  preset = view.use_preset_cur ();
+	const doc::Program & prog = view.use_prog_cur ();
 	std::vector <CtrlSrcNamed> port_list;
-	port_list.reserve (preset._port_map.size ());
+	port_list.reserve (prog._port_map.size ());
 
 	std::vector <NodeEntry>   entry_list;
-	Tools::extract_slot_list (entry_list, preset, model);
+	Tools::extract_slot_list (entry_list, prog, model);
 
-	for (const auto &node_port : preset._port_map)
+	for (const auto &node_port : prog._port_map)
 	{
 		CtrlSrcNamed   csn;
 		csn._src._type  = ControllerType_FX_SIG;
@@ -464,9 +463,9 @@ std::vector <CtrlSrcNamed>	Tools::make_port_list (const Model &model, const View
 		char           txt_0 [127+1];
 
 		const int      slot_id = node_port.second._slot_id;
-		const auto     it_slot = preset._slot_map.find (slot_id);
+		const auto     it_slot = prog._slot_map.find (slot_id);
 
-		if (it_slot == preset._slot_map.end () || preset.is_slot_empty (it_slot))
+		if (it_slot == prog._slot_map.end () || prog.is_slot_empty (it_slot))
 		{
 			fstb::snprintf4all (
 				txt_0, sizeof (txt_0),
@@ -489,7 +488,7 @@ std::vector <CtrlSrcNamed>	Tools::make_port_list (const Model &model, const View
 			std::string    multilabel = pi_info._name;
 			std::string    txt_post;
 
-			// Checks if there are multiple instance of this model in the preset
+			// Checks if there are multiple instance of this model in the program
 			const auto     it_entry = std::find_if (
 				entry_list.begin (),
 				entry_list.end (),
@@ -552,10 +551,10 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	int            pi_index  = nbr_types;
 	if (slot_id >= 0)
 	{
-		const doc::Preset &  preset = view.use_preset_cur ();
-		if (! preset.is_slot_empty (slot_id))
+		const doc::Program & prog = view.use_prog_cur ();
+		if (! prog.is_slot_empty (slot_id))
 		{
-			const doc::Slot & slot = preset.use_slot (slot_id);
+			const doc::Slot & slot = prog.use_slot (slot_id);
 			const std::string type = slot._pi_model;
 			auto          it_type =
 				std::find (fx_list.begin (), fx_list.end (), type);
@@ -607,7 +606,7 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, std::stri
 		}
 	}
 
-	const doc::Preset &  preset = view.use_preset_cur ();
+	const doc::Program & prog = view.use_prog_cur ();
 
 	// We need to add a slot at the end?
 	if (! model_id.empty ())
@@ -616,7 +615,7 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, std::stri
 		{
 			slot_id = model.add_slot ();
 
-			doc::Routing   routing = preset.use_routing (); // Makes a copy
+			doc::Routing   routing = prog.use_routing (); // Makes a copy
 			ToolsRouting::insert_slot_before (
 				routing._cnx_audio_set,
 				slot_id,
@@ -659,12 +658,12 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, std::stri
 			{
 				const ToolsRouting::NodeMap & graph = view.use_graph ();
 				del_flag = (
-					   preset.is_slot_empty (slot_id)
+					   prog.is_slot_empty (slot_id)
 					&& ToolsRouting::is_slot_last_and_neutral (graph, slot_id)
 				);
 				if (del_flag)
 				{
-					doc::Routing   routing = preset.use_routing (); // Copy
+					doc::Routing   routing = prog.use_routing (); // Copy
 					ToolsRouting::disconnect_slot (routing._cnx_audio_set, slot_id);
 					model.set_routing (routing);
 					model.remove_slot (slot_id);
@@ -700,7 +699,7 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 {
 	std::vector <Model::RotEncOverride> ovr_arr;
 
-	const doc::Preset &  preset = view.use_preset_cur ();
+	const doc::Program & prog = view.use_prog_cur ();
 
 	// Makes sure the slot really exists. Such a case could happen
 	// when we clear the last slot (by changing the plug-in type), and
@@ -708,8 +707,8 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 	// automatically, therefore _loc_edit._slot_id points to an
 	// inexisting slot during the various model notifications sends
 	// during the process.
-	const auto     it_slot = preset._slot_map.find (slot_id);
-	if (it_slot != preset._slot_map.end () && ! preset.is_slot_empty (it_slot))
+	const auto     it_slot = prog._slot_map.find (slot_id);
+	if (it_slot != prog._slot_map.end () && ! prog.is_slot_empty (it_slot))
 	{
 		const doc::Slot & slot = *(it_slot->second);
 		const auto        it_s = slot._settings_all.find (slot._pi_model);
@@ -741,7 +740,7 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 
 // Returns true if data is available (slot not empty)
 // Otherwise data is left as it is
-bool	Tools::get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, const Model &model)
+bool	Tools::get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Program &prog, const Model &model)
 {
 	const bool     exist_flag = ! prog.is_slot_empty (slot_id);
 	if (exist_flag)
@@ -835,20 +834,20 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 		}
 		break;
 
-	case doc::ActionType_PRESET:
+	case doc::ActionType_PROG:
 		{
-			const doc::ActionPreset &  preset =
-				dynamic_cast <const doc::ActionPreset &> (action);
-			if (preset._relative_flag)
+			const doc::ActionProg & prog =
+				dynamic_cast <const doc::ActionProg &> (action);
+			if (prog._relative_flag)
 			{
 				fstb::snprintf4all (
-					txt_0, sizeof (txt_0), "%s", (preset._val < 0) ? "-" : "+"
+					txt_0, sizeof (txt_0), "%s", (prog._val < 0) ? "-" : "+"
 				);
 			}
 			else
 			{
 				fstb::snprintf4all (
-					txt_0, sizeof (txt_0), "%d", preset._val
+					txt_0, sizeof (txt_0), "%d", prog._val
 				);
 			}
 			name = "Prog ";
@@ -945,19 +944,19 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 
 
 
-int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Preset &preset, const Model &model)
+int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Program &prog, const Model &model)
 {
 	slot_list.clear ();
 
 	std::vector <int> slot_id_list;
 	const int     audio_len = ToolsRouting::build_ordered_node_list (
-		slot_id_list, true, preset, model.use_aud_pi_list ()
+		slot_id_list, true, prog, model.use_aud_pi_list ()
 	);
 	std::map <std::string, int>   type_map;      // [type   ] = count
 	std::map <int, NodeEntry>     instance_map;  // [slot_id] = data
 
-	for (auto it_slot = preset._slot_map.begin ()
-	;	it_slot != preset._slot_map.end ()
+	for (auto it_slot = prog._slot_map.begin ()
+	;	it_slot != prog._slot_map.end ()
 	;	++ it_slot)
 	{
 		NodeEntry      entry;
@@ -965,7 +964,7 @@ int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Pre
 		const int      slot_id = it_slot->first;
 		entry._slot_id = slot_id;
 
-		if (! preset.is_slot_empty (it_slot))
+		if (! prog.is_slot_empty (it_slot))
 		{
 			const doc::Slot & slot = *(it_slot->second);
 			entry._type = slot._pi_model;
@@ -1044,13 +1043,13 @@ std::string	Tools::find_fx_type (const doc::FxId &fx_id, const View &view)
 	{
 		const doc::Setup &   setup = view.use_setup ();
 
-		// First, search in the current preset
+		// First, search in the current program
 		{
-			const int      preset_index = view.get_preset_index ();
-			const int      bank_index   = view.get_bank_index ();
-			const doc::Preset &  preset =
-				setup._bank_arr [bank_index]._preset_arr [preset_index];
-			type = find_fx_type_in_preset (fx_id._label_or_model, preset);
+			const int      prog_index = view.get_prog_index ();
+			const int      bank_index = view.get_bank_index ();
+			const doc::Program & prog =
+				setup._bank_arr [bank_index]._prog_arr [prog_index];
+			type = find_fx_type_in_prog (fx_id._label_or_model, prog);
 		}
 
 		if (type.empty ())
@@ -1058,9 +1057,9 @@ std::string	Tools::find_fx_type (const doc::FxId &fx_id, const View &view)
 			bool           found_flag = false;
 			for (auto & bank : setup._bank_arr)
 			{
-				for (auto & preset : bank._preset_arr)
+				for (auto & prog : bank._prog_arr)
 				{
-					type = find_fx_type_in_preset (fx_id._label_or_model, preset);
+					type = find_fx_type_in_prog (fx_id._label_or_model, prog);
 					if (! type.empty ())
 					{
 						found_flag = true;
@@ -1082,16 +1081,16 @@ std::string	Tools::find_fx_type (const doc::FxId &fx_id, const View &view)
 
 // Gives only the main plug-in type
 // Returns an empty string if not found
-std::string	Tools::find_fx_type_in_preset (const std::string &label, const doc::Preset &preset)
+std::string	Tools::find_fx_type_in_prog (const std::string &label, const doc::Program &prog)
 {
 	std::string    type;
 
 	bool           found_flag = false;
-	for (auto it_slot = preset._slot_map.begin ()
-	;	it_slot != preset._slot_map.end () && ! found_flag
+	for (auto it_slot = prog._slot_map.begin ()
+	;	it_slot != prog._slot_map.end () && ! found_flag
 	;	++ it_slot)
 	{
-		if (! preset.is_slot_empty (it_slot))
+		if (! prog.is_slot_empty (it_slot))
 		{
 			const doc::Slot & slot = *(it_slot->second);
 			if (slot._label == label)
@@ -1306,16 +1305,16 @@ void	Tools::create_prog_list (TxtArray &prog_list, ContainerInterface &menu, Pag
 	const int      bank_index  = view.get_bank_index ();
 	const doc::Bank &    bank  = setup._bank_arr [bank_index];
 
-	for (int prog_index = 0; prog_index < Cst::_nbr_presets_per_bank; ++prog_index)
+	for (int prog_index = 0; prog_index < Cst::_nbr_prog_per_bank; ++prog_index)
 	{
 		const int      node_id   = prog_index;
 		TxtSPtr        name_sptr = std::make_shared <NText> (node_id);
 
 		char           txt_0 [255+1];
-		const doc::Preset &  preset = bank._preset_arr [prog_index];
+		const doc::Program & prog = bank._prog_arr [prog_index];
 
 		fstb::snprintf4all (
-			txt_0, sizeof (txt_0), "%02d %s", prog_index, preset._name.c_str ()
+			txt_0, sizeof (txt_0), "%02d %s", prog_index, prog._name.c_str ()
 		);
 
 		name_sptr->set_font (fnt);
@@ -1393,7 +1392,7 @@ std::array <const char *, piapi::Dir_NBR_ELT>	Tools::_dir_txt_arr =
 
 
 
-void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_id, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo)
+void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const doc::Program &prog, int slot_id, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo)
 {
 	val_s.clear ();
 	unit.clear ();
@@ -1406,7 +1405,7 @@ void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const 
 		const piapi::ParamDescInterface::Categ categ = desc.get_categ ();
 		if (categ != piapi::ParamDescInterface::Categ_UNDEFINED)
 		{
-			const doc::Slot & slot = preset.use_slot (slot_id);
+			const doc::Slot & slot = prog.use_slot (slot_id);
 			const auto     it_settings = slot._settings_all.find (slot._pi_model);
 			assert (it_settings != slot._settings_all.end ());
 			const doc::PluginSettings &	settings = it_settings->second;
@@ -1773,8 +1772,8 @@ std::string	Tools::print_action_param (const doc::ActionParam &action, const Mod
 
 void	Tools::create_missing_signal_ports (Model &model, const View &view, int slot_id)
 {
-	const doc::Preset &  preset = view.use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (slot_id);
+	const doc::Program & prog = view.use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (slot_id);
 	const piapi::PluginDescInterface &  desc =
 		model.get_model_desc (slot._pi_model);
 	int            nbr_i = 1;
@@ -1785,7 +1784,7 @@ void	Tools::create_missing_signal_ports (Model &model, const View &view, int slo
 	{
 		// First, checks if there are existing ports
 		uint64_t       exist_mask = 0;
-		for (auto it_node : preset._port_map)
+		for (auto it_node : prog._port_map)
 		{
 			if (it_node.second._slot_id == slot_id)
 			{
@@ -1798,7 +1797,7 @@ void	Tools::create_missing_signal_ports (Model &model, const View &view, int slo
 		{
 			if ((exist_mask & (uint64_t (1)) << sig_index) == 0)
 			{
-				const int      port_index = preset.find_free_port ();
+				const int      port_index = prog.find_free_port ();
 				doc::SignalPort   port;
 				port._slot_id   = slot_id;
 				port._sig_index = sig_index;

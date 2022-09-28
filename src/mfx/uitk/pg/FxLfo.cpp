@@ -175,7 +175,7 @@ MsgHandlerInterface::EvtProp	FxLfo::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	FxLfo::do_activate_preset (int index)
+void	FxLfo::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -226,8 +226,8 @@ void	FxLfo::update_display ()
 	memset (disp_ptr, 0, _page_size [0] * _page_size [1]);
 
 	const int            slot_id = _loc_edit._slot_id;
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot    = preset.use_slot (slot_id);
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
 
 	const float    len_cycles  = _nbr_cycles_arr [_nbr_cycles_idx];
 
@@ -270,8 +270,8 @@ void	FxLfo::update_param_txt ()
 	char           txt_0 [127+1];
 
 	const int            slot_id = _loc_edit._slot_id;
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot    = preset.use_slot (slot_id);
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
 
 	// Nbr cycles
 	if (_cur_param == Param_NBR_CYCLES)

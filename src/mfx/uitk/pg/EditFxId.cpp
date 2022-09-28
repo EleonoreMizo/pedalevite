@@ -186,7 +186,7 @@ void	EditFxId::handle_menu ()
 			{
 				_arg_label._label = "";
 			}
-			_arg_label._sep_cur_flag = _param_ptr->_cur_preset_flag;
+			_arg_label._sep_cur_flag = _param_ptr->_cur_prog_flag;
 
 			_state = State_LABEL;
 			_page_switcher.call_page (

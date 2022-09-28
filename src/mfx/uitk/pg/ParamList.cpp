@@ -223,7 +223,7 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	ParamList::do_activate_preset (int index)
+void	ParamList::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -323,9 +323,9 @@ void	ParamList::set_param_info ()
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
 
-	const int      slot_id = _loc_edit._slot_id;
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot & slot = preset.use_slot (slot_id);
+	const int            slot_id = _loc_edit._slot_id;
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
 
 	check_gui (slot._pi_model);
 

@@ -1023,9 +1023,6 @@
     <ClInclude Include="..\..\..\src\mfx\doc\Slot.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\doc\Preset.h">
-      <Filter>mfx\doc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\cmd\Central.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
@@ -1069,9 +1066,6 @@
       <Filter>mfx\doc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\doc\ActionBank.h">
-      <Filter>mfx\doc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\doc\ActionPreset.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\doc\PedalActionSingleInterface.h">
@@ -2998,9 +2992,6 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgEdit.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PresetList.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PresetMenu.h">
@@ -5613,6 +5604,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FftParam.hpp">
       <Filter>mfx\pi\cdsp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\Program.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PresetList.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionProg.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -5756,9 +5756,6 @@
     <ClCompile Include="..\..\..\src\mfx\doc\ActionParam.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\doc\ActionPreset.cpp">
-      <Filter>mfx\doc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\ActionToggleFx.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
@@ -5775,9 +5772,6 @@
       <Filter>mfx\doc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\PedalboardLayout.cpp">
-      <Filter>mfx\doc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\doc\Preset.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp">
@@ -6704,9 +6698,6 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgEdit.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PresetList.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PresetMenu.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
@@ -7108,6 +7099,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\crysta\CrystaliseDesc.cpp">
       <Filter>mfx\pi\crysta</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\Program.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PresetList.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionProg.cpp">
+      <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

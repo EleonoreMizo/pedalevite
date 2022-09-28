@@ -73,7 +73,7 @@ protected:
 	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	void           do_activate_preset (int index) final;
+	void           do_activate_prog (int index) final;
 	void           do_remove_slot (int slot_id) final;
 	void           do_set_plugin (int slot_id, const PluginInitData &pi_data) final;
 	void           do_remove_plugin (int slot_id) final;

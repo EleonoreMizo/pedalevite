@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionClick.h"
 #include "mfx/doc/ActionParam.h"
-#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionProg.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionTempoSet.h"
@@ -290,8 +290,8 @@ void	PedalEditAction::update_display ()
 	case doc::ActionType_BANK:
 		display_bank (nav_list, dynamic_cast <const doc::ActionBank &> (action));
 		break;
-	case doc::ActionType_PRESET:
-		display_preset (nav_list, dynamic_cast <const doc::ActionPreset &> (action));
+	case doc::ActionType_PROG:
+		display_prog (nav_list, dynamic_cast <const doc::ActionProg &> (action));
 		break;
 	case doc::ActionType_TOGGLE_TUNER:
 		display_tuner ();
@@ -385,7 +385,7 @@ void	PedalEditAction::display_bank (PageMgrInterface::NavLocList &nav_list, cons
 
 
 
-void	PedalEditAction::display_preset (PageMgrInterface::NavLocList &nav_list, const doc::ActionPreset &action)
+void	PedalEditAction::display_prog (PageMgrInterface::NavLocList &nav_list, const doc::ActionProg &action)
 {
 	// Action type
 	_type_sptr->set_text ("Program");
@@ -408,13 +408,13 @@ void	PedalEditAction::display_preset (PageMgrInterface::NavLocList &nav_list, co
 	_page_ptr->push_back (_index_sptr);
 	PageMgrInterface::add_nav (nav_list, Entry_INDEX);
 
-	// Preset name if the value is absolute
+	// Program name if the value is absolute
 	if (! action._relative_flag)
 	{
 		const doc::Setup &   setup      = _view_ptr->use_setup ();
 		const int            bank_index = _view_ptr->get_bank_index ();
 		std::string          name       = "Name  : ";
-		name += setup._bank_arr [bank_index]._preset_arr [action._val]._name;
+		name += setup._bank_arr [bank_index]._prog_arr [action._val]._name;
 		_value_sptr->set_text (name);
 		_value_sptr->set_coord (Vec2d (0, 3 * h_m));
 		_value_sptr->show (true);
@@ -800,8 +800,8 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_value (int node_id, int dir
 		case doc::ActionType_BANK:
 			ret_val = change_bank (node_id, dir);
 			break;
-		case doc::ActionType_PRESET:
-			ret_val = change_preset (node_id, dir);
+		case doc::ActionType_PROG:
+			ret_val = change_prog (node_id, dir);
 			break;
 		case doc::ActionType_TOGGLE_FX:
 			ret_val = change_fx (node_id, dir);
@@ -843,7 +843,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 	static const std::array <doc::ActionType, 10>  type_list =
 	{{
 		doc::ActionType_BANK,
-		doc::ActionType_PRESET,
+		doc::ActionType_PROG,
 		doc::ActionType_TOGGLE_TUNER,
 		doc::ActionType_TOGGLE_FX,
 		doc::ActionType_PARAM,
@@ -884,10 +884,10 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 					std::make_shared <doc::ActionBank> (false, 0)
 				);
 			break;
-		case doc::ActionType_PRESET:
+		case doc::ActionType_PROG:
 			action_sptr =
 				std::static_pointer_cast <doc::PedalActionSingleInterface> (
-					std::make_shared <doc::ActionPreset> (false, 0)
+					std::make_shared <doc::ActionProg> (false, 0)
 				);
 			break;
 		case doc::ActionType_TOGGLE_TUNER:
@@ -998,7 +998,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_bank (int node_id, int dir)
 
 
 
-MsgHandlerInterface::EvtProp	PedalEditAction::change_preset (int node_id, int dir)
+MsgHandlerInterface::EvtProp	PedalEditAction::change_prog (int node_id, int dir)
 {
 	fstb::unused (node_id);
 
@@ -1008,30 +1008,29 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_preset (int node_id, int di
 		cycle._cycle [_ctx._step_index];
 	doc::PedalActionCycle::ActionSPtr & action_sptr =
 		step [_ctx._action_index];
-	assert (action_sptr->get_type () == doc::ActionType_PRESET);
-	doc::ActionPreset &  action =
-		dynamic_cast <doc::ActionPreset &> (*action_sptr);
+	assert (action_sptr->get_type () == doc::ActionType_PROG);
+	doc::ActionProg & action = dynamic_cast <doc::ActionProg &> (*action_sptr);
 
 	int            index = action._val;
 	if (action._relative_flag)
 	{
 		index = (action._val < 0) ? 0 : 1;
-		index += Cst::_nbr_presets_per_bank;
+		index += Cst::_nbr_prog_per_bank;
 	}
 
-	const int      total_size = Cst::_nbr_presets_per_bank + 2;
+	const int      total_size = Cst::_nbr_prog_per_bank + 2;
 	index += dir;
 	index += total_size;
 	index %= total_size;
 
-	if (index < Cst::_nbr_presets_per_bank)
+	if (index < Cst::_nbr_prog_per_bank)
 	{
 		action._val           = index;
 		action._relative_flag = false;
 	}
 	else
 	{
-		action._val           = (index == Cst::_nbr_presets_per_bank) ? -1 : 1;
+		action._val           = (index == Cst::_nbr_prog_per_bank) ? -1 : 1;
 		action._relative_flag = true;
 	}
 
@@ -1061,9 +1060,9 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_fx (int node_id, int dir)
 	{
 		if (dir == 0)
 		{
-			_arg_edit_fxid._cur_preset_flag = true;
-			_arg_edit_fxid._fx_id           = action._fx_id;
-			_state                          = State_EDIT_FXID;
+			_arg_edit_fxid._cur_prog_flag = true;
+			_arg_edit_fxid._fx_id         = action._fx_id;
+			_state                        = State_EDIT_FXID;
 			_page_switcher.call_page (
 				PageType_EDIT_FXID, &_arg_edit_fxid, node_id
 			);
@@ -1099,9 +1098,9 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_param (int node_id, int dir
 	{
 		if (dir == 0)
 		{
-			_arg_edit_fxid._cur_preset_flag = true;
-			_arg_edit_fxid._fx_id           = action._fx_id;
-			_state                          = State_EDIT_FXID;
+			_arg_edit_fxid._cur_prog_flag = true;
+			_arg_edit_fxid._fx_id         = action._fx_id;
+			_state                        = State_EDIT_FXID;
 			_page_switcher.call_page (
 				PageType_EDIT_FXID, &_arg_edit_fxid, node_id
 			);
@@ -1249,9 +1248,9 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_settings (int node_id, int 
 	{
 		if (dir == 0)
 		{
-			_arg_edit_fxid._cur_preset_flag = true;
-			_arg_edit_fxid._fx_id           = action._fx_id;
-			_state                          = State_EDIT_FXID;
+			_arg_edit_fxid._cur_prog_flag = true;
+			_arg_edit_fxid._fx_id         = action._fx_id;
+			_state                        = State_EDIT_FXID;
 			_page_switcher.call_page (
 				PageType_EDIT_FXID, &_arg_edit_fxid, node_id
 			);

@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/PedalboardLayout.h"
-#include "mfx/doc/Preset.h"
+#include "mfx/doc/Program.h"
 #include "mfx/Cst.h"
 
 #include <array>
@@ -55,8 +55,8 @@ public:
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
-	std::array <Preset, Cst::_nbr_presets_per_bank>
-                  _preset_arr;
+	std::array <Program, Cst::_nbr_prog_per_bank>
+                  _prog_arr;
 	std::string    _name;
 	PedalboardLayout
 	               _layout;

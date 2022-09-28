@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionClick.h"
 #include "mfx/doc/ActionParam.h"
-#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionProg.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionTempoSet.h"
@@ -235,8 +235,8 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 			ser.read (type);
 			switch (type)
 			{
-			case ActionType_PRESET:
-				a_sptr = std::make_shared <ActionPreset> (ser);
+			case ActionType_PROG:
+				a_sptr = std::make_shared <ActionProg> (ser);
 				break;
 			case ActionType_TOGGLE_FX:
 				a_sptr = std::make_shared <ActionToggleFx> (ser);

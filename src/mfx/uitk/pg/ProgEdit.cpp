@@ -72,7 +72,7 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_rout_list ()
 ,	_state (State_NORMAL)
 ,	_save_bank_index (-1)
-,	_save_preset_index (-1)
+,	_save_prog_index (-1)
 ,	_name_param ()
 ,	_slot_id_list ()
 ,	_audio_list_len (0)
@@ -118,10 +118,10 @@ void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	if (_state == State_EDIT_NAME)
 	{
 		if (   _name_param._ok_flag
-			 && _view_ptr->get_bank_index ()   == _save_bank_index
-		    && _view_ptr->get_preset_index () == _save_preset_index)
+			 && _view_ptr->get_bank_index () == _save_bank_index
+		    && _view_ptr->get_prog_index () == _save_prog_index)
 		{
-			_model_ptr->set_preset_name (_name_param._text);
+			_model_ptr->set_prog_name (_name_param._text);
 		}
 	}
 	_state = State_NORMAL;
@@ -150,20 +150,20 @@ void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_page_ptr->push_back (_menu_sptr);
 
-	const int      bank_index   = _view_ptr->get_bank_index ();
-	const int      preset_index = _view_ptr->get_preset_index ();
-	if (   bank_index   != _save_bank_index
-	    || preset_index != _save_preset_index)
+	const int      bank_index = _view_ptr->get_bank_index ();
+	const int      prog_index = _view_ptr->get_prog_index ();
+	if (   bank_index != _save_bank_index
+	    || prog_index != _save_prog_index)
 	{
 		_reset_end_curs_flag = true;
 	}
 
-	set_preset_info ();
+	set_prog_info ();
 	_page_ptr->jump_to (conv_loc_edit_to_node_id ());
 
 	_reset_end_curs_flag = false;
 	_save_bank_index     = bank_index;
-	_save_preset_index   = preset_index;
+	_save_prog_index     = prog_index;
 }
 
 
@@ -209,19 +209,19 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_PROG_NAME)
 			{
-				const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+				const doc::Program &   prog = _view_ptr->use_prog_cur ();
 				_name_param._title = "Program name:";
-				if (preset._name == Cst::_empty_preset_name)
+				if (prog._name == Cst::_empty_prog_name)
 				{
 					_name_param._text.clear ();
 				}
 				else
 				{
-					_name_param._text  = preset._name;
+					_name_param._text  = prog._name;
 				}
-				_state             = State_EDIT_NAME;
-				_save_bank_index   = _view_ptr->get_bank_index ();
-				_save_preset_index = _view_ptr->get_preset_index ();
+				_state           = State_EDIT_NAME;
+				_save_bank_index = _view_ptr->get_bank_index ();
+				_save_prog_index = _view_ptr->get_prog_index ();
 				_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
 				_reset_end_curs_flag = true;
 			}
@@ -237,9 +237,9 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 			}
 			else if (is_node_id_from_slot_list (node_id))
 			{
-				const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
+				const doc::Program & prog    = _view_ptr->use_prog_cur ();
 				const int            slot_id = conv_node_id_to_slot_id (node_id);
-				if (slot_id >= 0 && ! preset.is_slot_empty (slot_id))
+				if (slot_id >= 0 && ! prog.is_slot_empty (slot_id))
 				{
 					// Full slot
 					update_loc_edit (node_id);
@@ -277,22 +277,22 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	ProgEdit::do_activate_preset (int index)
+void	ProgEdit::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
 	_reset_end_curs_flag = true;
-	set_preset_info ();
+	set_prog_info ();
 	_page_ptr->jump_to (conv_loc_edit_to_node_id ());
 }
 
 
 
-void	ProgEdit::do_set_preset_name (std::string name)
+void	ProgEdit::do_set_prog_name (std::string name)
 {
 	fstb::unused (name);
 
-	set_preset_info ();
+	set_prog_info ();
 }
 
 
@@ -301,7 +301,7 @@ void	ProgEdit::do_add_slot (int slot_id)
 {
 	fstb::unused (slot_id);
 
-	set_preset_info ();
+	set_prog_info ();
 }
 
 
@@ -310,7 +310,7 @@ void	ProgEdit::do_remove_slot (int slot_id)
 {
 	fstb::unused (slot_id);
 
-	set_preset_info ();
+	set_prog_info ();
 }
 
 
@@ -319,7 +319,7 @@ void	ProgEdit::do_set_routing (const doc::Routing &routing)
 {
 	fstb::unused (routing);
 
-	set_preset_info ();
+	set_prog_info ();
 }
 
 
@@ -328,7 +328,7 @@ void	ProgEdit::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
 	fstb::unused (slot_id, pi_data);
 
-	set_preset_info ();
+	set_prog_info ();
 }
 
 
@@ -337,7 +337,7 @@ void	ProgEdit::do_remove_plugin (int slot_id)
 {
 	fstb::unused (slot_id);
 
-	set_preset_info ();
+	set_prog_info ();
 }
 
 
@@ -346,7 +346,7 @@ void	ProgEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 {
 	fstb::unused (slot_id, type, index, cls);
 
-	set_preset_info ();
+	set_prog_info ();
 }
 
 
@@ -379,7 +379,7 @@ ProgEdit::SlotDispParam::SlotDispParam (int pos_list, int chain_size, const ui::
 
 
 
-void	ProgEdit::set_preset_info ()
+void	ProgEdit::set_prog_info ()
 {
 	if (_spi_flag)
 	{
@@ -392,8 +392,8 @@ void	ProgEdit::set_preset_info ()
 
 	update_cached_pi_list ();
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	_prog_name_sptr->set_text (preset._name);
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
+	_prog_name_sptr->set_text (prog._name);
 
 	const int      nbr_slots = int (_slot_id_list.size ());
 	PageMgrInterface::NavLocList  nav_list;
@@ -411,7 +411,7 @@ void	ProgEdit::set_preset_info ()
 	PageMgrInterface::add_nav (nav_list, Entry_SAVE);
 
 	std::vector <Tools::NodeEntry>   entry_list;
-	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
+	Tools::extract_slot_list (entry_list, prog, *_model_ptr);
 	assert (nbr_slots == int (entry_list.size ()));
 
 	const int      scr_w = _page_size [0];
@@ -468,10 +468,10 @@ void	ProgEdit::update_display ()
 
 	update_rotenc_mapping ();
 
-	const int      nbr_slots = int (_slot_id_list.size ());
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const int      nbr_slots  = int (_slot_id_list.size ());
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	std::vector <Tools::NodeEntry>   entry_list;
-	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
+	Tools::extract_slot_list (entry_list, prog, *_model_ptr);
 	assert (nbr_slots == int (entry_list.size ()));
 
 	std::vector <Link>   link_list (find_chain_links (entry_list));
@@ -483,8 +483,8 @@ void	ProgEdit::update_display ()
 		assert (entry._slot_id == _slot_id_list [slot_index]);
 
 		bool           ctrl_flag  = false;
-		const auto     it_slot    = preset._slot_map.find (entry._slot_id);
-		assert (it_slot != preset._slot_map.end ());
+		const auto     it_slot    = prog._slot_map.find (entry._slot_id);
+		assert (it_slot != prog._slot_map.end ());
 		if (! entry._type.empty ())
 		{
 			const doc::Slot & slot = *(it_slot->second);
@@ -634,7 +634,7 @@ void	ProgEdit::find_broken_links (std::vector <Link> &link_list, const std::vect
 	assert (_audio_list_len <= int (entry_list.size ()));
 
 	const ToolsRouting::NodeMap & graph = _view_ptr->use_graph ();
-	const doc::Preset &           prog  = _view_ptr->use_preset_cur ();
+	const doc::Program &          prog  = _view_ptr->use_prog_cur ();
 
 	for (int slot_cnt = 0; slot_cnt < _audio_list_len; ++slot_cnt)
 	{

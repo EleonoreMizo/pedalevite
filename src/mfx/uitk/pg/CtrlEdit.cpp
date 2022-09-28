@@ -139,8 +139,8 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_curve_mode_flag = false;
 
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot    = preset.use_slot (_loc_edit._slot_id);
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot = prog.use_slot (_loc_edit._slot_id);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
 	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
 	if (it_cls == settings._map_param_ctrl.end ())
@@ -344,7 +344,7 @@ MsgHandlerInterface::EvtProp	CtrlEdit::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	CtrlEdit::do_activate_preset (int index)
+void	CtrlEdit::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -582,8 +582,8 @@ void	CtrlEdit::update_display ()
 			_minmax [1]._val_unit_sptr->show (false);
 			_minmax [1]._label_sptr->show (false);
 
-			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-			const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+			const doc::Program & prog = _view_ptr->use_prog_cur ();
+			const doc::Slot &    slot = prog.use_slot (_loc_edit._slot_id);
 			std::string    val_str;
 			std::string    unit;
 			const doc::PluginSettings &   settings =
@@ -597,7 +597,7 @@ void	CtrlEdit::update_display ()
 				);
 				Tools::print_param_with_pres (
 					val_str, unit,
-					*_model_ptr, *_view_ptr, preset, _loc_edit._slot_id,
+					*_model_ptr, *_view_ptr, prog, _loc_edit._slot_id,
 					_loc_edit._pi_type, _loc_edit._param_index, val_rel
 				);
 				const std::string tit = (mm == 0) ? "Min  :" : "Max  :";
@@ -675,7 +675,7 @@ void	CtrlEdit::update_display ()
 
 void	CtrlEdit::update_cur_mod_val ()
 {
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	std::string    val_str;
 	std::string    unit;
 	const float    val_mod = _model_ptr->get_param_val_mod (
@@ -685,7 +685,7 @@ void	CtrlEdit::update_cur_mod_val ()
 	);
 	Tools::print_param_with_pres (
 		val_str, unit,
-		*_model_ptr, *_view_ptr, preset, _loc_edit._slot_id,
+		*_model_ptr, *_view_ptr, prog, _loc_edit._slot_id,
 		_loc_edit._pi_type, _loc_edit._param_index, val_mod
 	);
 	std::string    txt = "Final: " + val_str + " " + unit;

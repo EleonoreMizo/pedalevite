@@ -173,7 +173,7 @@ PageInterface::EvtProp	SlotRoutingAction::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	SlotRoutingAction::do_activate_preset (int index)
+void	SlotRoutingAction::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -344,7 +344,7 @@ void	SlotRoutingAction::build_possible_cnx_set (PageMgrInterface::NavLocList &na
 	}
 
 	const piapi::Dir  dir_opp = piapi::Dir_invert (_arg_ptr->_dir);
-	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	std::vector <Tools::NodeEntry>   entry_list;
 	Tools::extract_slot_list (entry_list, prog, *_model_ptr);
 	int            nid = Entry_TARGET;
@@ -431,7 +431,7 @@ void	SlotRoutingAction::del_cur_cnx ()
 	assert (_model_ptr != nullptr);
 	assert (_arg_ptr   != nullptr);
 
-	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	doc::Routing   routing = prog.use_routing (); // Copy
 
 	routing._cnx_audio_set.erase (_arg_ptr->_cnx);
@@ -454,7 +454,7 @@ void	SlotRoutingAction::add_or_replace_cnx (int node_id)
 	assert (cnx_idx < int (_cnx_end_arr.size ()));
 	const doc::CnxEnd &  cnx_end_tgt = _cnx_end_arr [cnx_idx]._cnx_end;
 
-	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	doc::Routing   routing = prog.use_routing (); // Copy
 
 	doc::CnxEnd    cnx_end_org;

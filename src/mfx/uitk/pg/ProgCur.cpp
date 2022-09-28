@@ -112,7 +112,7 @@ ProgCur::ProgCur (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 ,	_ip_sptr (        std::make_shared <NText> (Entry_IP))
 ,	_size_max_bank_name (0)
 ,	_bank_index (0)
-,	_preset_index (0)
+,	_prog_index (0)
 ,	_tempo_date (INT64_MIN)
 ,	_esc_count (0)
 {
@@ -212,14 +212,14 @@ void	ProgCur::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_page_ptr->push_back (_modlist_sptr);
 	_page_ptr->push_back (_ip_sptr);
 
-	const int      bank_index   = _view_ptr->get_bank_index ();
-	const int      preset_index = _view_ptr->get_preset_index ();
-	const doc::Setup &   setup  = _view_ptr->use_setup ();
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const int      bank_index  = _view_ptr->get_bank_index ();
+	const int      prog_index  = _view_ptr->get_prog_index ();
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+	const doc::Program & prog  = _view_ptr->use_prog_cur ();
 	i_set_bank_nbr (bank_index);
-	i_set_prog_nbr (preset_index);
+	i_set_prog_nbr (prog_index);
 	i_set_bank_name (setup._bank_arr [bank_index]._name);
-	i_set_prog_name (preset._name);
+	i_set_prog_name (prog._name);
 	i_set_param (false, 0, 0, 0, PiType (0));
 	i_show_mod_list ();
 
@@ -246,18 +246,18 @@ MsgHandlerInterface::EvtProp	ProgCur::do_handle_evt (const NodeEvt &evt)
 		{
 		case Button_U:
 			{
-				const int   preset_index =
-					  (_preset_index + Cst::_nbr_presets_per_bank - 1)
-					% Cst::_nbr_presets_per_bank;
-				_model_ptr->activate_preset (preset_index);
+				const int   prog_index =
+					  (_prog_index + Cst::_nbr_prog_per_bank - 1)
+					% Cst::_nbr_prog_per_bank;
+				_model_ptr->activate_prog (prog_index);
 				ret_val = EvtProp_CATCH;
 			}
 			break;
 		case Button_D:
 			{
-				const int   preset_index =
-					(_preset_index + 1) % Cst::_nbr_presets_per_bank;
-				_model_ptr->activate_preset (preset_index);
+				const int   prog_index =
+					(_prog_index + 1) % Cst::_nbr_prog_per_bank;
+				_model_ptr->activate_prog (prog_index);
 				ret_val = EvtProp_CATCH;
 			}
 			break;
@@ -323,19 +323,19 @@ void	ProgCur::do_set_bank_name (std::string name)
 
 
 
-void	ProgCur::do_set_preset_name (std::string name)
+void	ProgCur::do_set_prog_name (std::string name)
 {
 	i_set_prog_name (name);
 }
 
 
 
-void	ProgCur::do_activate_preset (int index)
+void	ProgCur::do_activate_prog (int index)
 {
 	i_set_prog_nbr (index);
 	if (_view_ptr != nullptr)
 	{
-		i_set_prog_name (_view_ptr->use_preset_cur ()._name);
+		i_set_prog_name (_view_ptr->use_prog_cur ()._name);
 	}
 	i_set_param (false, 0, 0, 0, PiType (0));
 	i_show_mod_list ();
@@ -371,7 +371,7 @@ void	ProgCur::i_set_bank_nbr (int index)
 
 void	ProgCur::i_set_prog_nbr (int index)
 {
-	_preset_index = index;
+	_prog_index = index;
 	char           txt_0 [255+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0), "%02d", index);
 	_prog_nbr_sptr->set_text (txt_0);
@@ -487,7 +487,7 @@ void	ProgCur::retrieve_all_unique_mod_src (std::set <ControlSource> &src_list) c
 {
 	src_list.clear ();
 
-	const mfx::doc::Preset &   cur = _view_ptr->use_preset_cur ();
+	const mfx::doc::Program &  cur = _view_ptr->use_prog_cur ();
 	std::vector <int> slot_list;
 	_view_ptr->build_ordered_node_list (slot_list, true);
 	for (int slot_id : slot_list)

@@ -40,7 +40,7 @@ enum ActionType
 {
 
 	ActionType_BANK = 0,
-	ActionType_PRESET,
+	ActionType_PROG,
 	ActionType_TOGGLE_TUNER,
 	ActionType_TOGGLE_FX,
 	ActionType_LOOP_REC,

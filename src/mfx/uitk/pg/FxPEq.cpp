@@ -176,7 +176,7 @@ MsgHandlerInterface::EvtProp	FxPEq::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	FxPEq::do_activate_preset (int index)
+void	FxPEq::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -237,8 +237,8 @@ void	FxPEq::update_display ()
 
 	// Curve
 	const int            slot_id = _loc_edit._slot_id;
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot    = preset.use_slot (slot_id);
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
 
 	if (_nbr_bands > 0)
 	{
@@ -483,8 +483,8 @@ void	FxPEq::update_param_txt ()
 	char           txt_0 [127+1];
 
 	const int            slot_id = _loc_edit._slot_id;
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot    = preset.use_slot (slot_id);
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
 
 	// Range
 	if (_cur_param == Param_RANGE)
@@ -610,8 +610,8 @@ void	FxPEq::update_param_txt ()
 void	FxPEq::update_band_info ()
 {
 	const int            slot_id = _loc_edit._slot_id;
-	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot    = preset.use_slot (slot_id);
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
 
 	auto           it_settings = slot._settings_all.find (slot._pi_model);
 	if (it_settings == slot._settings_all.end ())

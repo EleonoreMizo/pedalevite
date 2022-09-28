@@ -111,7 +111,7 @@ void	ProgMove::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	update_display ();
 
-	const int      node_id = _view_ptr->get_preset_index ();
+	const int      node_id = _view_ptr->get_prog_index ();
 	_page_ptr->jump_to (node_id);
 }
 
@@ -135,7 +135,7 @@ MsgHandlerInterface::EvtProp	ProgMove::do_handle_evt (const NodeEvt &evt)
 		if (   _state == State_MOV
 		    && ! _moving_flag
 		    && evt.get_cursor () == NodeEvt::Curs_ENTER
-		    && node_id >= 0 && node_id < Cst::_nbr_presets_per_bank)
+		    && node_id >= 0 && node_id < Cst::_nbr_prog_per_bank)
 		{
 			move_prog (node_id);
 		}
@@ -147,7 +147,7 @@ MsgHandlerInterface::EvtProp	ProgMove::do_handle_evt (const NodeEvt &evt)
 		switch (but)
 		{
 		case Button_S:
-			if (node_id >= 0 && node_id < Cst::_nbr_presets_per_bank)
+			if (node_id >= 0 && node_id < Cst::_nbr_prog_per_bank)
 			{
 				if (_state == State_MOV)
 				{
@@ -188,7 +188,7 @@ void	ProgMove::do_select_bank (int index)
 
 
 
-void	ProgMove::do_set_preset_name (std::string name)
+void	ProgMove::do_set_prog_name (std::string name)
 {
 	fstb::unused (name);
 
@@ -197,9 +197,9 @@ void	ProgMove::do_set_preset_name (std::string name)
 
 
 
-void	ProgMove::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+void	ProgMove::do_set_prog (int bank_index, int prog_index, const doc::Program &prog)
 {
-	fstb::unused (preset_index, preset);
+	fstb::unused (prog_index, prog);
 
 	if (bank_index == _view_ptr->get_bank_index ())
 	{
@@ -209,9 +209,9 @@ void	ProgMove::do_set_preset (int bank_index, int preset_index, const doc::Prese
 
 
 
-void	ProgMove::do_store_preset (int preset_index, int bank_index)
+void	ProgMove::do_store_prog (int prog_index, int bank_index)
 {
-	fstb::unused (preset_index);
+	fstb::unused (prog_index);
 
 	if (bank_index < 0 || bank_index == _view_ptr->get_bank_index ())
 	{
@@ -269,11 +269,11 @@ MsgHandlerInterface::EvtProp	ProgMove::move_prog (int index_new)
 		const doc::Bank &    bank       = setup._bank_arr [bank_index];
 
 		// Make a copy
-		const doc::Preset prog_old = bank._preset_arr [_prog_index];
-		const doc::Preset prog_new = bank._preset_arr [index_new  ];
+		const doc::Program   prog_old   = bank._prog_arr [_prog_index];
+		const doc::Program   prog_new   = bank._prog_arr [index_new  ];
 
-		_model_ptr->set_preset (bank_index, index_new  , prog_old);
-		_model_ptr->set_preset (bank_index, _prog_index, prog_new);
+		_model_ptr->set_prog (bank_index, index_new  , prog_old);
+		_model_ptr->set_prog (bank_index, _prog_index, prog_new);
 
 		_moving_flag = false;
 		_moved_flag  = true;

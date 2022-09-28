@@ -321,8 +321,8 @@ commonsrc = \
         ../../src/mfx/doc/ActionClick.h \
         ../../src/mfx/doc/ActionParam.cpp \
         ../../src/mfx/doc/ActionParam.h \
-        ../../src/mfx/doc/ActionPreset.cpp \
-        ../../src/mfx/doc/ActionPreset.h \
+        ../../src/mfx/doc/ActionProg.cpp \
+        ../../src/mfx/doc/ActionProg.h \
         ../../src/mfx/doc/ActionSettings.cpp \
         ../../src/mfx/doc/ActionSettings.h \
         ../../src/mfx/doc/ActionTempo.cpp \
@@ -364,8 +364,8 @@ commonsrc = \
         ../../src/mfx/doc/PedalboardLayout.h \
         ../../src/mfx/doc/PluginSettings.cpp \
         ../../src/mfx/doc/PluginSettings.h \
-        ../../src/mfx/doc/Preset.cpp \
-        ../../src/mfx/doc/Preset.h \
+        ../../src/mfx/doc/Program.cpp \
+        ../../src/mfx/doc/Program.h \
         ../../src/mfx/doc/ProgSwitchMode.h \
         ../../src/mfx/doc/Routing.cpp \
         ../../src/mfx/doc/Routing.h \

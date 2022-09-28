@@ -238,7 +238,7 @@ MsgHandlerInterface::EvtProp	PresetMenu::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	PresetMenu::do_activate_preset (int index)
+void	PresetMenu::do_activate_prog (int index)
 {
 	fstb::unused (index);
 

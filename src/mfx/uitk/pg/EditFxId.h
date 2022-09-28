@@ -62,7 +62,7 @@ public:
 	{
 	public:
 		doc::FxId      _fx_id;           // Input/output
-		bool           _cur_preset_flag = false; // Input: if the FX id is possibly related to the current preset
+		bool           _cur_prog_flag = false; // Input: if the FX id is possibly related to the current program
 		bool           _ok_flag = false; // Output: OK or cancel
 	};
 

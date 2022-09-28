@@ -834,7 +834,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\ActionBank.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionClick.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionParam.h" />
-    <ClInclude Include="..\..\..\src\mfx\doc\ActionPreset.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionProg.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionSettings.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionTempo.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionTempoSet.h" />
@@ -857,7 +857,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\PedalActionSingleInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\PedalboardLayout.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\PluginSettings.h" />
-    <ClInclude Include="..\..\..\src\mfx\doc\Preset.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Program.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ProgSwitchMode.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Routing.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SerRInterface.h" />
@@ -1920,7 +1920,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\ActionBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionClick.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionParam.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\doc\ActionPreset.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionSettings.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTempo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTempoSet.cpp" />
@@ -1940,7 +1940,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\PedalActionSingleInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\PedalboardLayout.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\PluginSettings.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\doc\Preset.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\Program.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Routing.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SerRInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SerRText.cpp" />

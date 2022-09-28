@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "fstb/fnc.h"
-#include "mfx/doc/Preset.h"
+#include "mfx/doc/Program.h"
 #include "mfx/uitk/pg/ProgSettings.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -170,7 +170,7 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 			switch (node_id)
 			{
 			case Entry_LAYOUT:
-				_pedal_ctx._type     = PedalEditContext::Type_PRESET;
+				_pedal_ctx._type     = PedalEditContext::Type_PROG;
 				_pedal_ctx._ret_page = pg::PageType_PROG_SETTINGS;
 				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, nullptr);
 				break;
@@ -236,7 +236,7 @@ void	ProgSettings::do_set_prog_switch_mode (doc::ProgSwitchMode mode)
 void	ProgSettings::update_display ()
 {
 	std::string    txt = "Switch: ";
-	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	const doc::Program &  prog = _view_ptr->use_prog_cur ();
 	switch (prog._prog_switch_mode)
 	{
 	case doc::ProgSwitchMode::DIRECT:
@@ -258,7 +258,7 @@ MsgHandlerInterface::EvtProp	ProgSettings::change_switch (int dir)
 {
 	assert (dir == -1 || dir == +1);
 
-	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	int            mode = int (prog._prog_switch_mode);
 
 	mode += dir;
@@ -298,7 +298,7 @@ void	ProgSettings::change_all_plugin_state_modes ()
 
 void	ProgSettings::change_all_plugin_state_modes (bool force_reset_flag)
 {
-	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	for (auto it = prog._slot_map.begin (); it != prog._slot_map.end (); ++it)
 	{
 		if (! prog.is_slot_empty (it))
@@ -334,8 +334,8 @@ void	ProgSettings::add_slots ()
 			slot_id_prev = slot_id;
 		}
 
-		const doc::Preset prog = _view_ptr->use_preset_cur ();
-		doc::Routing   routing = prog.use_routing ();
+		const doc::Program & prog = _view_ptr->use_prog_cur ();
+		doc::Routing   routing = prog.use_routing (); // Copy
 
 		// We remove direct audio I/O at this point, because there is no way to
 		// remove the connections in the slot/routing options, and this is

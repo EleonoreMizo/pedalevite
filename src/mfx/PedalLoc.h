@@ -47,16 +47,16 @@ public:
 
 		Type_GLOBAL  = 0,
 		Type_BANK,
-		Type_PRESET,
-		Type_PRESET_CUR,
+		Type_PROG,
+		Type_PROG_CUR,
 
 		Type_NBR_ELT
 	};
 
-	Type           _type         = Type_INVALID;
-	int            _bank_index   = -1;
-	int            _preset_index = -1;
-	int            _pedal_index  = -1;
+	Type           _type        = Type_INVALID;
+	int            _bank_index  = -1;
+	int            _prog_index  = -1;
+	int            _pedal_index = -1;
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Preset.cpp
+        Program.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/Preset.h"
+#include "mfx/doc/Program.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 #include "mfx/ToolsRouting.h"
@@ -48,7 +48,7 @@ namespace doc
 
 
 
-Preset::Preset ()
+Program::Program ()
 {
 	_routing._cnx_audio_set.insert (Cnx (
 		CnxEnd (CnxEnd::Type_IO, 0, 0),
@@ -58,7 +58,7 @@ Preset::Preset ()
 
 
 
-Preset::Preset (const Preset &other)
+Program::Program (const Program &other)
 :	_slot_map (other._slot_map)
 ,	_name (other._name)
 ,	_layout (other._layout)
@@ -71,7 +71,7 @@ Preset::Preset (const Preset &other)
 
 
 
-Preset &	Preset::operator = (const Preset &other)
+Program &	Program::operator = (const Program &other)
 {
 	if (&other != this)
 	{
@@ -89,7 +89,7 @@ Preset &	Preset::operator = (const Preset &other)
 
 
 
-bool	Preset::is_slot_empty (int slot_id) const
+bool	Program::is_slot_empty (int slot_id) const
 {
 	assert (slot_id >= 0);
 	const auto     it = _slot_map.find (slot_id);
@@ -99,7 +99,7 @@ bool	Preset::is_slot_empty (int slot_id) const
 
 
 
-bool	Preset::is_slot_empty (SlotMap::const_iterator it) const
+bool	Program::is_slot_empty (SlotMap::const_iterator it) const
 {
 	assert (it != _slot_map.end ());
 
@@ -108,7 +108,7 @@ bool	Preset::is_slot_empty (SlotMap::const_iterator it) const
 
 
 
-bool	Preset::is_slot_empty (SlotMap::value_type vt) const
+bool	Program::is_slot_empty (SlotMap::value_type vt) const
 {
 	return (   vt.second.get () == nullptr
 	        || vt.second->is_empty ());
@@ -116,7 +116,7 @@ bool	Preset::is_slot_empty (SlotMap::value_type vt) const
 
 
 
-Slot &	Preset::use_slot (int slot_id)
+Slot &	Program::use_slot (int slot_id)
 {
 	const auto     it = _slot_map.find (slot_id);
 	if (it == _slot_map.end ())
@@ -135,7 +135,7 @@ Slot &	Preset::use_slot (int slot_id)
 
 
 
-const Slot &	Preset::use_slot (int slot_id) const
+const Slot &	Program::use_slot (int slot_id) const
 {
 	const auto     it = _slot_map.find (slot_id);
 	if (it == _slot_map.end ())
@@ -154,7 +154,7 @@ const Slot &	Preset::use_slot (int slot_id) const
 
 
 
-int	Preset::gen_slot_id () const
+int	Program::gen_slot_id () const
 {
 	int            slot_id = 0;
 
@@ -181,7 +181,7 @@ int	Preset::gen_slot_id () const
 
 
 
-int	Preset::find_free_port () const
+int	Program::find_free_port () const
 {
 	int            port_index = 0;
 	auto           it_port    = _port_map.begin ();
@@ -196,7 +196,7 @@ int	Preset::find_free_port () const
 
 
 
-bool	Preset::check_routing (const Routing &routing) const
+bool	Program::check_routing (const Routing &routing) const
 {
 	// Checks that all referenced nodes exist
 	for (const auto &cnx : routing._cnx_audio_set)
@@ -233,7 +233,7 @@ bool	Preset::check_routing (const Routing &routing) const
 
 
 
-void	Preset::set_routing (const Routing &routing)
+void	Program::set_routing (const Routing &routing)
 {
 	assert (check_routing (routing));
 
@@ -242,14 +242,14 @@ void	Preset::set_routing (const Routing &routing)
 
 
 
-const Routing &	Preset::use_routing () const
+const Routing &	Program::use_routing () const
 {
 	return _routing;
 }
 
 
 
-void	Preset::ser_write (SerWInterface &ser) const
+void	Program::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();
 
@@ -295,7 +295,7 @@ void	Preset::ser_write (SerWInterface &ser) const
 
 
 
-void	Preset::ser_read (SerRInterface &ser)
+void	Program::ser_read (SerRInterface &ser)
 {
 	const int      doc_ver = ser.get_doc_version ();
 	static const int  inc  = 11;
@@ -400,7 +400,7 @@ void	Preset::ser_read (SerRInterface &ser)
 
 
 
-void	Preset::duplicate_slot_list ()
+void	Program::duplicate_slot_list ()
 {
 	for (auto & node : _slot_map)
 	{
@@ -413,7 +413,7 @@ void	Preset::duplicate_slot_list ()
 
 
 
-bool	Preset::check_routing_cnx_audio_end (const CnxEnd &cnx_end) const
+bool	Program::check_routing_cnx_audio_end (const CnxEnd &cnx_end) const
 {
 	if (cnx_end.get_type () == CnxEnd::Type_NORMAL)
 	{
@@ -430,7 +430,7 @@ bool	Preset::check_routing_cnx_audio_end (const CnxEnd &cnx_end) const
 
 
 
-void	Preset::fix_routing_converted_from_chain ()
+void	Program::fix_routing_converted_from_chain ()
 {
 	// Finds the slot requiring a fix
 	std::set <int> slot_fix_set;
@@ -501,7 +501,7 @@ void	Preset::fix_routing_converted_from_chain ()
 
 
 // These plug-ins have no audio output and are listed in the audio plug-ins.
-bool	Preset::is_plugin_requiring_routing_fix (const std::string &pi_model)
+bool	Program::is_plugin_requiring_routing_fix (const std::string &pi_model)
 {
 	return (
 		   pi_model == "envf"

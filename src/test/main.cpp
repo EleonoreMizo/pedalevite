@@ -968,9 +968,9 @@ int	patch_setup_file ()
 
 		for (auto &bank : sss_uptr->_bank_arr)
 		{
-			for (auto &preset : bank._preset_arr)
+			for (auto &prog : bank._prog_arr)
 			{
-				for (auto &slot_node : preset._slot_map)
+				for (auto &slot_node : prog._slot_map)
 				{
 					if (slot_node.second.get () != nullptr)
 					{

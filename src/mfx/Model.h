@@ -62,7 +62,7 @@ namespace doc
 	class ActionBank;
 	class ActionClick;
 	class ActionParam;
-	class ActionPreset;
+	class ActionProg;
 	class ActionSettings;
 	class ActionToggleFx;
 	class ActionToggleTuner;
@@ -155,10 +155,10 @@ public:
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);
 	void           set_bank_name (std::string name);
-	void           set_preset_name (std::string name);
-	void           set_preset (int bank_index, int preset_index, const doc::Preset &preset);
-	void           activate_preset (int preset_index);
-	void           store_preset (int preset_index, int bank_index);
+	void           set_prog_name (std::string name);
+	void           set_prog (int bank_index, int prog_index, const doc::Program &prog);
+	void           activate_prog (int prog_index);
+	void           store_prog (int prog_index, int bank_index);
 	void           set_prog_switch_mode (doc::ProgSwitchMode mode);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
@@ -294,7 +294,7 @@ private:
 	void           apply_routing (const SlotIdToPosMap &pos_map);
 	int            insert_plugin_main (doc::Slot &slot, int slot_id, PiIdMap::iterator it_id_map, int slot_index_central, bool gen_audio_flag);
 	void           check_mixer_plugin (int slot_id, int slot_index_central, int chain_flag);
-	bool           has_mixer_plugin (const doc::Preset &preset, int slot_id);
+	bool           has_mixer_plugin (const doc::Program &prog, int slot_id);
 	void           send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings);
 	bool           process_msg_ui ();
 	int            find_pedal (int switch_index) const;
@@ -303,7 +303,7 @@ private:
 	void           process_action (const doc::PedalActionSingleInterface &action, std::chrono::microseconds ts);
 	void           process_action_bank (const doc::ActionBank &action);
 	void           process_action_param (const doc::ActionParam &action);
-	void           process_action_preset (const doc::ActionPreset &action);
+	void           process_action_prog (const doc::ActionProg &action);
 	void           process_action_toggle_fx (const doc::ActionToggleFx &action);
 	void           process_action_toggle_tuner (const doc::ActionToggleTuner &action);
 	void           process_action_tempo_tap (const doc::ActionTempo &action, std::chrono::microseconds ts);
@@ -313,8 +313,8 @@ private:
 	void           process_action_tempo (double tempo);
 	void           build_slot_info ();
 	void           notify_slot_info ();
-	bool           find_slot_cur_preset (std::array <int, Cst::_max_named_targets> &result_arr, int &nbr_results, const doc::FxId &fx_id) const;
-	void           find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const;
+	bool           find_slot_cur_prog (std::array <int, Cst::_max_named_targets> &result_arr, int &nbr_results, const doc::FxId &fx_id) const;
+	void           find_slot_type_cur_prog (int &slot_id, PiType &type, int pi_id) const;
 	const PluginDetails &
 	               use_plugin_details (int slot_id, PiType type) const;
 	bool           set_param_pre_commit (int slot_id, int pi_id, PiType type, int index, float val);
@@ -323,9 +323,9 @@ private:
 	void           push_set_param (int slot_id, PiType type, int index, float val, bool beat_flag, float val_beats);
 	void           push_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
 	void           push_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr);
-	bool           set_preset_param (doc::Preset &preset, int slot_id, PiType type, int index, float val);
-	bool           set_preset_param (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val);
-	void           set_preset_ctrl (doc::Preset &preset, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	bool           set_prog_param (doc::Program &prog, int slot_id, PiType type, int index, float val);
+	bool           set_prog_param (doc::Program &prog, doc::Program::SlotMap::iterator it_slot, PiType type, int index, float val);
+	void           set_prog_ctrl (doc::Program &prog, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
 	void           commit_cumulated_changes ();
 	void           fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitData &pi_data);
 	bool           update_all_beat_parameters ();
@@ -349,10 +349,10 @@ private:
 	// Global data
 	doc::Setup     _setup;
 	int            _bank_index;
-	int            _preset_index;
+	int            _prog_index;
 
 	// Current and cached settings
-	doc::Preset    _preset_cur;         // Current preset and settings, as known by cmd::Central (but does not feature the parameter override). Layout is without inherited layouts.
+	doc::Program   _prog_cur;           // Current program and settings, as known by cmd::Central (but does not feature the parameter override). Layout is without inherited layouts.
 	doc::PedalboardLayout               // Final layout
 	               _layout_cur;
 
@@ -362,7 +362,7 @@ private:
 	std::chrono::microseconds
 	               _hold_time;          // Pedal minimum hold time. Microseconds.
 	bool           _edit_flag;          // Changes must be mirrored to _setup
-	bool           _edit_preset_flag;   // _preset_cur corresonds to _bank_index/_preset_index
+	bool           _edit_prog_flag;     // _prog_cur corresonds to _bank_index/_prog_index
 	bool           _tuner_flag;
 	int            _tuner_pi_id;
 	pi::tuner::Tuner *

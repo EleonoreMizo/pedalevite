@@ -79,8 +79,8 @@ protected:
 	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	void           do_activate_preset (int index) final;
-	void           do_set_preset_name (std::string name) final;
+	void           do_activate_prog (int index) final;
+	void           do_set_prog_name (std::string name) final;
 	void           do_add_slot (int slot_id) final;
 	void           do_remove_slot (int slot_id) final;
 	void           do_set_routing (const doc::Routing &routing) final;
@@ -139,7 +139,7 @@ private:
 		const int      _margin;
 	};
 
-	void           set_preset_info ();
+	void           set_prog_info ();
 	void           update_display ();
 	std::vector <Link>
 	               find_chain_links (const std::vector <Tools::NodeEntry> &entry_list) const;
@@ -180,14 +180,14 @@ private:
 
 	State          _state;
 	int            _save_bank_index;
-	int            _save_preset_index;
+	int            _save_prog_index;
 	EditText::Param
 	               _name_param;
 	std::vector <int>             // Ordered list of the edited slots
 	               _slot_id_list;
 	int            _audio_list_len;  // Cached size of the audio part of the list
-	bool           _spi_flag;     // Indicates we're in set_preset_info(); avoids recursion.
-	bool           _reset_end_curs_flag; // When switching to a new preset and the cursor is on an <End> entry, put it at the beginning of the list
+	bool           _spi_flag;     // Indicates we're in set_prog_info(); avoids recursion.
+	bool           _reset_end_curs_flag; // When switching to a new prog and the cursor is on an <End> entry, put it at the beginning of the list
 
 
 

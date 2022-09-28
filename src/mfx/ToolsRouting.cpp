@@ -24,7 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/Preset.h"
+#include "mfx/doc/Program.h"
 #include "mfx/doc/Routing.h"
 #include "mfx/ToolsRouting.h"
 
@@ -131,7 +131,7 @@ ToolsRouting::NodeMap::const_iterator	ToolsRouting::find_return_send (const Node
 
 // graph must be consistent with prog: it should not contains node that are
 // not in prog.
-void	ToolsRouting::build_ordered_node_lists (std::vector <int> &audio_list, std::vector <int> &sig_list, const doc::Preset &prog, const NodeMap &graph, const std::set <std::string> &aud_pi_list)
+void	ToolsRouting::build_ordered_node_lists (std::vector <int> &audio_list, std::vector <int> &sig_list, const doc::Program &prog, const NodeMap &graph, const std::set <std::string> &aud_pi_list)
 {
 #if ! defined (NDEBUG)
 	// Consistency check
@@ -224,7 +224,7 @@ void	ToolsRouting::build_ordered_node_lists (std::vector <int> &audio_list, std:
 
 
 
-int	ToolsRouting::build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag, const doc::Preset &prog, const std::vector <std::string> &pi_aud_list)
+int	ToolsRouting::build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag, const doc::Program &prog, const std::vector <std::string> &pi_aud_list)
 {
 	slot_id_list.clear ();
 

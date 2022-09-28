@@ -215,7 +215,7 @@ MsgHandlerInterface::EvtProp	ParamEdit::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	ParamEdit::do_activate_preset (int index)
+void	ParamEdit::do_activate_prog (int index)
 {
 	fstb::unused (index);
 
@@ -254,10 +254,10 @@ void	ParamEdit::do_remove_plugin (int slot_id)
 
 void	ParamEdit::update_display ()
 {
-	const doc::Preset &  preset     = _view_ptr->use_preset_cur ();
-	const int            slot_id    = _loc_edit._slot_id;
-	const doc::Slot &    slot       = preset.use_slot (slot_id);
-	const PiType         type       = _loc_edit._pi_type;
+	const doc::Program & prog    = _view_ptr->use_prog_cur ();
+	const int            slot_id = _loc_edit._slot_id;
+	const doc::Slot &    slot    = prog.use_slot (slot_id);
+	const PiType         type    = _loc_edit._pi_type;
 	assert (slot._settings_all.find (slot._pi_model) != slot._settings_all.end ());
 	const doc::PluginSettings &  settings = slot.use_settings (type);
 	const int      index = _loc_edit._param_index;

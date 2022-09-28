@@ -103,8 +103,8 @@ void	ProgCatalog::do_connect (Model &model, const View &view, PageMgrInterface &
 		const int      node_id = conv_index_to_node_id (int (pos));
 		TxtSPtr        txt_sptr { std::make_shared <NText> (node_id) };
 		const UniqueProgList::ProgCoord &   coord = _prog_coord_list [pos];
-		const doc::Preset &   prog =
-			setup._bank_arr [coord._bank]._preset_arr [coord._prog];
+		const doc::Program &  prog =
+			setup._bank_arr [coord._bank]._prog_arr [coord._prog];
 
 		txt_sptr->set_font (*_fnt_ptr);
 		txt_sptr->set_coord (Vec2d (0, int (pos) * h_m));
@@ -143,7 +143,7 @@ MsgHandlerInterface::EvtProp	ProgCatalog::do_handle_evt (const NodeEvt &evt)
 		const UniqueProgList::ProgCoord &   coord = _prog_coord_list [prog_pos];
 
 		_model_ptr->select_bank (coord._bank);
-		_model_ptr->activate_preset (coord._prog);
+		_model_ptr->activate_prog (coord._prog);
 			
 		_active_node_id = node_id;
 	}

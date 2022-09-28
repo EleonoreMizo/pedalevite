@@ -144,7 +144,7 @@ MsgHandlerInterface::EvtProp	SlotMove::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	SlotMove::do_activate_preset (int /*index*/)
+void	SlotMove::do_activate_prog (int /*index*/)
 {
 	_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 }
@@ -177,10 +177,10 @@ void	SlotMove::update_display ()
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const doc::Program & prog = _view_ptr->use_prog_cur ();
 	std::vector <Tools::NodeEntry>   entry_list;
 	const int      audio_size =
-		Tools::extract_slot_list (entry_list, preset, *_model_ptr);
+		Tools::extract_slot_list (entry_list, prog, *_model_ptr);
 	assert (audio_size <= int (entry_list.size ()));
 
 	PageMgrInterface::NavLocList nav_list;
@@ -240,8 +240,8 @@ MsgHandlerInterface::EvtProp	SlotMove::move_slot (int pos)
 	{
 		_moving_flag = true;
 
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-		doc::Routing   routing      = preset.use_routing (); // Copy
+		const doc::Program & prog = _view_ptr->use_prog_cur ();
+		doc::Routing   routing    = prog.use_routing (); // Copy
 		const ToolsRouting::NodeMap & graph      = _view_ptr->use_graph ();
 		const std::vector <int> &  slot_list_aud =
 			_view_ptr->use_slot_list_aud ();

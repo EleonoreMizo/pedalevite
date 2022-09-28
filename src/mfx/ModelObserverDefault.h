@@ -53,16 +53,16 @@ public:
 	void           do_set_bank (int /*index*/, const doc::Bank &/*bank*/) override {}
 	void           do_select_bank (int /*index*/) override {}
 	void           do_set_bank_name (std::string /*name*/) override {}
-	void           do_set_preset_name (std::string /*name*/) override {}
-	void           do_set_preset (int /*bank_index*/, int /*preset_index*/, const doc::Preset &/*preset*/) override {}
-	void           do_activate_preset (int /*index*/) override {}
-	void           do_store_preset (int /*preset_index*/, int /*bank_index*/) override {}
+	void           do_set_prog_name (std::string /*name*/) override {}
+	void           do_set_prog (int /*bank_index*/, int /*prog_index*/, const doc::Program &/*prog*/) override {}
+	void           do_activate_prog (int /*index*/) override {}
+	void           do_store_prog (int /*prog_index*/, int /*bank_index*/) override {}
 	void           do_set_prog_switch_mode (doc::ProgSwitchMode /*mode*/) override {}
 	void           do_set_chn_mode (ChnMode /*mode*/) override {}
 	void           do_set_master_vol (float /*vol*/) override {}
 	void           do_set_tuner (bool /*active_flag*/) override {}
 	void           do_set_tuner_freq (float /*freq*/) override {}
-	void           do_set_slot_info_for_current_preset (const SlotInfoMap &/*info_map*/) override {}
+	void           do_set_slot_info_for_current_prog (const SlotInfoMap &/*info_map*/) override {}
 	void           do_set_param (int /*slot_id*/, int /*index*/, float /*val*/, PiType /*type*/) override {}
 	void           do_set_param_beats (int /*slot_id*/, int /*index*/, float /*beats*/) override {}
 	void           do_add_slot (int /*slot_id*/) override {}

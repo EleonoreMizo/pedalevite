@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "fstb/fnc.h"
-#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionProg.h"
 #include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/pg/PedalEditStep.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -183,7 +183,7 @@ MsgHandlerInterface::EvtProp	PedalEditStep::do_handle_evt (const NodeEvt &evt)
 					// Creates and add a non-empty action
 					doc::PedalActionCycle::ActionSPtr   action_sptr {
 						std::static_pointer_cast <doc::PedalActionSingleInterface> (
-							std::make_shared <doc::ActionPreset> (false, 0)
+							std::make_shared <doc::ActionProg> (false, 0)
 						)
 					};
 					step.push_back (action_sptr);

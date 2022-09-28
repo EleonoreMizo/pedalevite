@@ -70,7 +70,7 @@ const std::string	Cst::_plugin_dwm     = "\?drywetmix";
 const std::string	Cst::_plugin_dly     = "\?delay0";
 const std::string	Cst::_plugin_tuner   = "\?tuner";
 
-const std::string	Cst::_empty_preset_name = "<Empty prog>";
+const std::string	Cst::_empty_prog_name = "<Empty prog>";
 
 const std::string	Cst::_config_current = "current";
 const std::string	Cst::_config_factory = "factory-default";

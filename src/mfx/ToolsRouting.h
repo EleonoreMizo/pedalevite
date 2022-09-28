@@ -40,7 +40,7 @@ namespace mfx
 
 namespace doc
 {
-	class Preset;
+	class Program;
 	class Routing;
 }
 
@@ -89,8 +89,8 @@ public:
 	               find_audio_io (const NodeMap &graph) noexcept;
 	static NodeMap::const_iterator
 	               find_return_send (const NodeMap &graph) noexcept;
-	static void    build_ordered_node_lists (std::vector <int> &audio_list, std::vector <int> &sig_list, const doc::Preset &prog, const NodeMap &graph, const std::set <std::string> &aud_pi_list);
-	static int     build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag, const doc::Preset &prog, const std::vector <std::string> &pi_aud_list);
+	static void    build_ordered_node_lists (std::vector <int> &audio_list, std::vector <int> &sig_list, const doc::Program &prog, const NodeMap &graph, const std::set <std::string> &aud_pi_list);
+	static int     build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag, const doc::Program &prog, const std::vector <std::string> &pi_aud_list);
 	static void    insert_slot_before (CnxSet &cnx_set, int slot_id_new, int slot_id_aft);
 	static void    insert_slot_after (CnxSet &cnx_set, int slot_id_new, int slot_id_bfr);
 	static void    disconnect_slot (CnxSet &cnx_set, int slot_id);

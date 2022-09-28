@@ -66,7 +66,7 @@ ProgSave::ProgSave (PageSwitcher &page_switcher)
 ,	_prog_list ()
 ,	_state (State_NORMAL)
 ,	_save_bank_index (-1)
-,	_save_preset_index (-1)
+,	_save_prog_index (-1)
 ,	_name_param ()
 {
 	// Nothing
@@ -88,31 +88,31 @@ void	ProgSave::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
-	const int      cur_preset_index = _view_ptr->get_preset_index ();
-	const int      cur_bank_index   = _view_ptr->get_bank_index ();
+	const int      cur_prog_index = _view_ptr->get_prog_index ();
+	const int      cur_bank_index = _view_ptr->get_bank_index ();
 
 	if (_state == State_EDIT_NAME)
 	{
 		_state = State_NORMAL;
 		if (_name_param._ok_flag)
 		{
-			const std::string old_name = _view_ptr->use_preset_cur ()._name;
-			_model_ptr->set_preset_name (_name_param._text);
-			_model_ptr->store_preset (_save_preset_index, _save_bank_index);
+			const std::string old_name = _view_ptr->use_prog_cur ()._name;
+			_model_ptr->set_prog_name (_name_param._text);
+			_model_ptr->store_prog (_save_prog_index, _save_bank_index);
 			if (cur_bank_index == _save_bank_index)
 			{
-				// We need to restore the name because during activate_preset()
-				// in edit mode, the current preset is automatically saved into
-				// the bank before the new preset activation.
+				// We need to restore the name because during activate_prog()
+				// in edit mode, the current program is automatically saved into
+				// the bank before the new program activation.
 				if (   _view_ptr->is_editing ()
-				    && _save_preset_index != cur_preset_index)
+				    && _save_prog_index != cur_prog_index)
 				{
-					_model_ptr->set_preset_name (old_name);
-					// Makes sure the current preset is not overwritten by
-					// the activation of the saved preset
-					_model_ptr->activate_preset (cur_preset_index);
+					_model_ptr->set_prog_name (old_name);
+					// Makes sure the current program is not overwritten by
+					// the activation of the saved program
+					_model_ptr->activate_prog (cur_prog_index);
 				}
-				_model_ptr->activate_preset (_save_preset_index);
+				_model_ptr->activate_prog (_save_prog_index);
 			}
 
 			const int      ret_val = _model_ptr->save_to_disk ();
@@ -127,8 +127,8 @@ void	ProgSave::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		}
 	}
 
-	_save_preset_index = cur_preset_index;
-	_save_bank_index   = cur_bank_index;
+	_save_prog_index = cur_prog_index;
+	_save_bank_index = cur_bank_index;
 
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
@@ -158,7 +158,7 @@ void	ProgSave::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr->set_nav_layout (nav_list);
 
 	update_display ();
-	_page_ptr->jump_to (Entry_PROG_LIST + _save_preset_index);
+	_page_ptr->jump_to (Entry_PROG_LIST + _save_prog_index);
 }
 
 
@@ -182,7 +182,7 @@ MsgHandlerInterface::EvtProp	ProgSave::do_handle_evt (const NodeEvt &evt)
 		    && node_id >= Entry_PROG_LIST
 		    && node_id < int (Entry_PROG_LIST + _prog_list.size ()))
 		{
-			_save_preset_index = node_id - Entry_PROG_LIST;
+			_save_prog_index = node_id - Entry_PROG_LIST;
 		}
 	}
 
@@ -196,28 +196,28 @@ MsgHandlerInterface::EvtProp	ProgSave::do_handle_evt (const NodeEvt &evt)
 			if (   node_id >= Entry_PROG_LIST
 			    && node_id < int (Entry_PROG_LIST + _prog_list.size ()))
 			{
-				_save_preset_index = node_id - Entry_PROG_LIST;
+				_save_prog_index = node_id - Entry_PROG_LIST;
 				const doc::Bank & bank =
 					_view_ptr->use_setup ()._bank_arr [_save_bank_index];
-				const doc::Preset &  preset_overwritten =
-					bank._preset_arr [_save_preset_index];
+				const doc::Program & prog_overwritten =
+					bank._prog_arr [_save_prog_index];
 				char           txt_0 [255+1];
 				fstb::snprintf4all (
 					txt_0,
 					sizeof (txt_0),
 					"Save to %02d %s:",
-					_save_preset_index,
-					preset_overwritten._name.c_str ()
+					_save_prog_index,
+					prog_overwritten._name.c_str ()
 				);
-				const doc::Preset &  preset_saved = _view_ptr->use_preset_cur ();
+				const doc::Program & prog_saved = _view_ptr->use_prog_cur ();
 				_name_param._title = txt_0;
-				if (preset_saved._name == Cst::_empty_preset_name)
+				if (prog_saved._name == Cst::_empty_prog_name)
 				{
 					_name_param._text.clear ();
 				}
 				else
 				{
-					_name_param._text  = preset_saved._name;
+					_name_param._text  = prog_saved._name;
 				}
 				_state  = State_EDIT_NAME;
 				_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
@@ -255,7 +255,7 @@ MsgHandlerInterface::EvtProp	ProgSave::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	ProgSave::do_set_preset_name (std::string name)
+void	ProgSave::do_set_prog_name (std::string name)
 {
 	fstb::unused (name);
 
@@ -264,9 +264,9 @@ void	ProgSave::do_set_preset_name (std::string name)
 
 
 
-void	ProgSave::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+void	ProgSave::do_set_prog (int bank_index, int prog_index, const doc::Program &prog)
 {
-	fstb::unused (preset_index, preset);
+	fstb::unused (prog_index, prog);
 
 	if (bank_index == _save_bank_index)
 	{
@@ -297,18 +297,18 @@ void	ProgSave::update_display ()
 
 	const bool     this_bank_flag =
 		(_save_bank_index == _view_ptr->get_bank_index ());
-	const int      cur_preset_index = _view_ptr->get_preset_index ();
+	const int      cur_prog_index = _view_ptr->get_prog_index ();
 	for (int p = 0; p < int (_prog_list.size ()); ++p)
 	{
-		const doc::Preset &  preset = bank._preset_arr [p];
-		const bool     this_flag = (this_bank_flag && p == cur_preset_index);
+		const doc::Program & prog = bank._prog_arr [p];
+		const bool     this_flag = (this_bank_flag && p == cur_prog_index);
 		_prog_list [p]->set_bold (this_flag, false);
 
 		fstb::snprintf4all (
 			txt_0, sizeof (txt_0),
 			"%02d %s",
 			p,
-			preset._name.c_str ()
+			prog._name.c_str ()
 		);
 		_prog_list [p]->set_text (txt_0);
 	}

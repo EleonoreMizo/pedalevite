@@ -40,7 +40,7 @@ namespace mfx
 
 namespace doc
 {
-	class Preset;
+	class Program;
 }
 
 
@@ -91,10 +91,10 @@ private:
 	typedef std::map <doc::Slot, SlotIdSet> SlotMap;
 	typedef std::set <SlotIdSetPair> SlotSetPairSet;
 
-	bool           is_prog_eq (const doc::Preset &lhs, const doc::Preset &rhs) const;
-	void           build_slot_map (SlotMap &slot_map, const doc::Preset &prog) const;
+	bool           is_prog_eq (const doc::Program &lhs, const doc::Program &rhs) const;
+	void           build_slot_map (SlotMap &slot_map, const doc::Program &prog) const;
 	bool           merge_slot_maps (SlotSetPairSet &slot_set_pair_set, const SlotMap &slot_map_1, const SlotMap &slot_map_2) const;
-	bool           check_connections (const SlotSetPairSet &slot_set_pair_set, const doc::Preset &lhs, const doc::Preset &rhs) const;
+	bool           check_connections (const SlotSetPairSet &slot_set_pair_set, const doc::Program &lhs, const doc::Program &rhs) const;
 
 
 

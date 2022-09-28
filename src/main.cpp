@@ -414,7 +414,7 @@ fprintf (stderr, "Reading ESC button...\n");
 			_model.set_bank (b, bank);
 		}
 		_model.select_bank (0);
-		_model.activate_preset (0);
+		_model.activate_prog (0);
 	}
 
 #if 0
@@ -453,7 +453,7 @@ fprintf (stderr, "Reading ESC button...\n");
 /**********************************************************************************************************************************************************************************************************************************/
 // Debugging code
 //	_model.select_bank (2);
-//	_model.activate_preset (3);
+//	_model.activate_prog (3);
 /**********************************************************************************************************************************************************************************************************************************/
 }
 
@@ -509,9 +509,9 @@ void	Context::do_request_exit () noexcept
 
 void	Context::init_empty_bank (mfx::doc::Bank &bank)
 {
-	for (auto &preset : bank._preset_arr)
+	for (auto &prog : bank._prog_arr)
 	{
-		preset._name = mfx::Cst::_empty_preset_name;
+		prog._name = mfx::Cst::_empty_prog_name;
 	}
 }
 

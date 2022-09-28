@@ -45,7 +45,7 @@ namespace doc
 	class ActionBank;
 	class ActionClick;
 	class ActionParam;
-	class ActionPreset;
+	class ActionProg;
 	class ActionSettings;
 	class ActionTempo;
 	class ActionTempoSet;
@@ -125,7 +125,7 @@ private:
 	void           update_display ();
 	void           hide_all ();
 	void           display_bank (PageMgrInterface::NavLocList &nav_list, const doc::ActionBank &action);
-	void           display_preset (PageMgrInterface::NavLocList &nav_list, const doc::ActionPreset &action);
+	void           display_prog (PageMgrInterface::NavLocList &nav_list, const doc::ActionProg &action);
 	void           display_tuner ();
 	void           display_fx (PageMgrInterface::NavLocList &nav_list, const doc::ActionToggleFx &action);
 	void           display_loop_rec (PageMgrInterface::NavLocList &nav_list);
@@ -141,7 +141,7 @@ private:
 	EvtProp        change_value (int node_id, int dir);
 	EvtProp        change_type (int dir);
 	EvtProp        change_bank (int node_id, int dir);
-	EvtProp        change_preset (int node_id, int dir);
+	EvtProp        change_prog (int node_id, int dir);
 	EvtProp        change_fx (int node_id, int dir);
 	EvtProp        change_param (int node_id, int dir);
 	EvtProp        change_settings (int node_id, int dir);

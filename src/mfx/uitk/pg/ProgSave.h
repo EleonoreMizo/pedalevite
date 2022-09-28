@@ -77,8 +77,8 @@ protected:
 	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	void           do_set_preset_name (std::string name) final;
-	void           do_set_preset (int bank_index, int preset_index, const doc::Preset &preset) final;
+	void           do_set_prog_name (std::string name) final;
+	void           do_set_prog (int bank_index, int prog_index, const doc::Program &prog) final;
 
 
 
@@ -101,7 +101,7 @@ private:
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::array <TxtSPtr, Cst::_nbr_presets_per_bank> TxtArray;
+	typedef std::array <TxtSPtr, Cst::_nbr_prog_per_bank> TxtArray;
 
 	void           update_display ();
 	EvtProp        change_bank (int dir);
@@ -121,7 +121,7 @@ private:
 
 	State          _state;
 	int            _save_bank_index;
-	int            _save_preset_index;
+	int            _save_prog_index;
 	EditText::Param
 	               _name_param;
 

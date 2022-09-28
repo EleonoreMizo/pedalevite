@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 #include "mfx/doc/ActionBank.h"
-#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionProg.h"
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionToggleTuner.h"
 
@@ -134,7 +134,7 @@ void	PedalboardLayout::ser_read (SerRInterface &ser)
 
 void	PedalboardLayout::set_default_conf ()
 {
-	// Presets
+	// Programs
 	for (int p = 0; p < 7; ++p)
 	{
 		const int      pedal = (p < 4) ? p + 1 : p + 3;
@@ -143,7 +143,7 @@ void	PedalboardLayout::set_default_conf ()
 		PedalActionCycle::ActionArray   action_arr;
 		action_arr.push_back (
 			std::static_pointer_cast <PedalActionSingleInterface> (
-				std::make_shared <ActionPreset> (false, p)
+				std::make_shared <ActionProg> (false, p)
 			)
 		);
 		cycle._cycle.push_back (action_arr);
@@ -187,7 +187,7 @@ void	PedalboardLayout::set_default_conf ()
 				PedalActionCycle::ActionArray   action_arr;
 				action_arr.push_back (
 					std::static_pointer_cast <PedalActionSingleInterface> (
-						std::make_shared <ActionPreset> (true, d)
+						std::make_shared <ActionProg> (true, d)
 					)
 				);
 				cycle._cycle.push_back (action_arr);

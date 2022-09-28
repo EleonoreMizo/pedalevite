@@ -122,9 +122,9 @@ const doc::Setup &	View::use_setup () const
 
 
 
-const doc::Preset &	View::use_preset_cur () const
+const doc::Program &	View::use_prog_cur () const
 {
-	return _preset_cur;
+	return _prog_cur;
 }
 
 
@@ -143,9 +143,9 @@ int	View::get_bank_index () const
 
 
 
-int	View::get_preset_index () const
+int	View::get_prog_index () const
 {
-	return _preset_index;
+	return _prog_index;
 }
 
 
@@ -157,19 +157,19 @@ const View::OverrideMap &	View::use_param_ctrl_override_map () const
 
 
 
-std::set <std::string>	View::collect_labels (bool cur_preset_flag) const
+std::set <std::string>	View::collect_labels (bool cur_prog_flag) const
 {
 	std::set <std::string>  labels;
 
-	collect_labels (labels, _preset_cur);
+	collect_labels (labels, _prog_cur);
 
-	if (! cur_preset_flag)
+	if (! cur_prog_flag)
 	{
 		for (const auto &bank : _setup._bank_arr)
 		{
-			for (const auto &preset : bank._preset_arr)
+			for (const auto &prog : bank._prog_arr)
 			{
-				collect_labels (labels, preset);
+				collect_labels (labels, prog);
 			}
 
 			collect_labels (labels, bank._layout);
@@ -248,10 +248,10 @@ int	View::build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_f
 
 
 
-void	View::update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val)
+void	View::update_parameter (doc::Program &prog, int slot_id, PiType type, int index, float val)
 {
-	auto           it_slot = preset._slot_map.find (slot_id);
-	if (preset.is_slot_empty (it_slot))
+	auto           it_slot = prog._slot_map.find (slot_id);
+	if (prog.is_slot_empty (it_slot))
 	{
 		assert (false);
 	}
@@ -275,13 +275,13 @@ void	View::update_parameter (doc::Preset &preset, int slot_id, PiType type, int 
 
 
 
-float	View::get_param_val (const doc::Preset &preset, int slot_id, PiType type, int index)
+float	View::get_param_val (const doc::Program &prog, int slot_id, PiType type, int index)
 {
 	float          val = 0;
 
-	auto           it_slot = preset._slot_map.find (slot_id);
-	assert (it_slot != preset._slot_map.end ());
-	if (preset.is_slot_empty (it_slot))
+	auto           it_slot = prog._slot_map.find (slot_id);
+	assert (it_slot != prog._slot_map.end ());
+	if (prog.is_slot_empty (it_slot))
 	{
 		assert (false);
 	}
@@ -378,16 +378,16 @@ void	View::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &conte
 		layout_ptr = &_setup._bank_arr [loc._bank_index]._layout;
 		break;
 
-	case PedalLoc::Type_PRESET:
+	case PedalLoc::Type_PROG:
 		assert (loc._bank_index >= 0);
 		assert (loc._bank_index < Cst::_nbr_banks);
-		assert (loc._preset_index >= 0);
-		assert (loc._preset_index < Cst::_nbr_presets_per_bank);
-		layout_ptr = &_setup._bank_arr [loc._bank_index]._preset_arr [loc._preset_index]._layout;
+		assert (loc._prog_index >= 0);
+		assert (loc._prog_index < Cst::_nbr_prog_per_bank);
+		layout_ptr = &_setup._bank_arr [loc._bank_index]._prog_arr [loc._prog_index]._layout;
 		break;
 
-	case PedalLoc::Type_PRESET_CUR:
-		layout_ptr = &_preset_cur._layout;
+	case PedalLoc::Type_PROG_CUR:
+		layout_ptr = &_prog_cur._layout;
 		break;
 		
 	default:
@@ -429,45 +429,45 @@ void	View::do_set_bank_name (std::string name)
 
 
 
-void	View::do_set_preset_name (std::string name)
+void	View::do_set_prog_name (std::string name)
 {
-	_preset_cur._name = name;
-	mfx_View_PROPAGATE (set_preset_name (name));
+	_prog_cur._name = name;
+	mfx_View_PROPAGATE (set_prog_name (name));
 }
 
 
 
-void	View::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+void	View::do_set_prog (int bank_index, int prog_index, const doc::Program &prog)
 {
-	_setup._bank_arr [bank_index]._preset_arr [preset_index] = preset;
-	mfx_View_PROPAGATE (set_preset (bank_index, preset_index, preset));
+	_setup._bank_arr [bank_index]._prog_arr [prog_index] = prog;
+	mfx_View_PROPAGATE (set_prog (bank_index, prog_index, prog));
 }
 
 
 
-void	View::do_activate_preset (int index)
+void	View::do_activate_prog (int index)
 {
-	_preset_index = index;
-	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
+	_prog_index = index;
+	_prog_cur   = _setup._bank_arr [_bank_index]._prog_arr [_prog_index];
 	_slot_info_map.clear ();
 	update_graph_info ();
-	mfx_View_PROPAGATE (activate_preset (index));
+	mfx_View_PROPAGATE (activate_prog (index));
 }
 
 
 
-void	View::do_store_preset (int preset_index, int bank_index)
+void	View::do_store_prog (int prog_index, int bank_index)
 {
 	const int      bank_index2 = (bank_index < 0) ? _bank_index : bank_index;
-	_setup._bank_arr [bank_index2]._preset_arr [preset_index] = _preset_cur;
-	mfx_View_PROPAGATE (store_preset (preset_index, bank_index));
+	_setup._bank_arr [bank_index2]._prog_arr [prog_index] = _prog_cur;
+	mfx_View_PROPAGATE (store_prog (prog_index, bank_index));
 }
 
 
 
 void	View::do_set_prog_switch_mode (doc::ProgSwitchMode mode)
 {
-	_preset_cur._prog_switch_mode = mode;
+	_prog_cur._prog_switch_mode = mode;
 	mfx_View_PROPAGATE (set_prog_switch_mode (mode));
 }
 
@@ -506,17 +506,17 @@ void	View::do_set_tuner_freq (float freq)
 
 
 
-void	View::do_set_slot_info_for_current_preset (const SlotInfoMap &info_map)
+void	View::do_set_slot_info_for_current_prog (const SlotInfoMap &info_map)
 {
 	_slot_info_map = info_map;
-	mfx_View_PROPAGATE (set_slot_info_for_current_preset (info_map));
+	mfx_View_PROPAGATE (set_slot_info_for_current_prog (info_map));
 }
 
 
 
 void	View::do_set_param (int slot_id, int index, float val, PiType type)
 {
-	update_parameter (_preset_cur, slot_id, type, index, val);
+	update_parameter (_prog_cur, slot_id, type, index, val);
 	mfx_View_PROPAGATE (set_param (slot_id, index, val, type));
 }
 
@@ -524,7 +524,7 @@ void	View::do_set_param (int slot_id, int index, float val, PiType type)
 
 void	View::do_set_param_beats (int slot_id, int index, float beats)
 {
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	assert (index < int (settings._param_list.size ()));
 
@@ -540,11 +540,11 @@ void	View::do_set_param_beats (int slot_id, int index, float beats)
 
 void	View::do_add_slot (int slot_id)
 {
-	assert (_preset_cur._slot_map.find (slot_id) == _preset_cur._slot_map.end ());
+	assert (_prog_cur._slot_map.find (slot_id) == _prog_cur._slot_map.end ());
 
-	_preset_cur._slot_map.insert (std::make_pair (
+	_prog_cur._slot_map.insert (std::make_pair (
 		slot_id,
-		doc::Preset::SlotSPtr ()
+		doc::Program::SlotSPtr ()
 	));
 	_slot_info_map.clear ();
 	update_graph_info ();
@@ -556,12 +556,12 @@ void	View::do_add_slot (int slot_id)
 
 void	View::do_remove_slot (int slot_id)
 {
-	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
-	assert (! _preset_cur.use_routing ().is_referencing_slot (slot_id));
+	assert (_prog_cur._slot_map.find (slot_id) != _prog_cur._slot_map.end ());
+	assert (! _prog_cur.use_routing ().is_referencing_slot (slot_id));
 
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
-	_preset_cur._slot_map.erase (it_slot);
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
+	_prog_cur._slot_map.erase (it_slot);
 	_slot_info_map.clear ();
 	update_graph_info ();
 
@@ -572,7 +572,7 @@ void	View::do_remove_slot (int slot_id)
 
 void	View::do_set_routing (const doc::Routing &routing)
 {
-	_preset_cur.set_routing (routing);
+	_prog_cur.set_routing (routing);
 	update_graph_info ();
 
 	mfx_View_PROPAGATE (set_routing (routing));
@@ -582,9 +582,9 @@ void	View::do_set_routing (const doc::Routing &routing)
 
 void	View::do_set_slot_label (int slot_id, std::string name)
 {
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
-	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
+	doc::Program::SlotSPtr &   slot_sptr = it_slot->second;
 	if (slot_sptr.get () == nullptr)
 	{
 		slot_sptr = std::make_shared <doc::Slot> ();
@@ -598,9 +598,9 @@ void	View::do_set_slot_label (int slot_id, std::string name)
 
 void	View::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
-	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
+	doc::Program::SlotSPtr &   slot_sptr = it_slot->second;
 	if (slot_sptr.get () == nullptr)
 	{
 		slot_sptr = std::make_shared <doc::Slot> ();
@@ -618,9 +618,9 @@ void	View::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 void	View::do_remove_plugin (int slot_id)
 {
-	auto           it_slot = _preset_cur._slot_map.find (slot_id);
-	assert (it_slot != _preset_cur._slot_map.end ());
-	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
+	auto           it_slot = _prog_cur._slot_map.find (slot_id);
+	assert (it_slot != _prog_cur._slot_map.end ());
+	doc::Program::SlotSPtr &   slot_sptr = it_slot->second;
 	if (slot_sptr.get () != nullptr)
 	{
 		slot_sptr->_pi_model.clear ();
@@ -634,7 +634,7 @@ void	View::do_remove_plugin (int slot_id)
 
 void	View::do_set_plugin_mono (int slot_id, bool mono_flag)
 {
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	settings._force_mono_flag = mono_flag;
 	update_graph_info ();
@@ -646,7 +646,7 @@ void	View::do_set_plugin_mono (int slot_id, bool mono_flag)
 
 void	View::do_set_plugin_reset (int slot_id, bool reset_flag)
 {
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	settings._force_reset_flag = reset_flag;
 
@@ -657,7 +657,7 @@ void	View::do_set_plugin_reset (int slot_id, bool reset_flag)
 
 void	View::do_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr)
 {
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 
 	if (pres_ptr == nullptr)
@@ -680,7 +680,7 @@ void	View::do_set_param_pres (int slot_id, PiType type, int index, const doc::Pa
 
 void	View::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _prog_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	settings._map_param_ctrl [index] = cls;
 
@@ -712,9 +712,9 @@ void	View::do_override_param_ctrl (int slot_id, PiType type, int index, int rote
 
 void	View::do_set_signal_port (int port_id, const doc::SignalPort &port)
 {
-	assert (_preset_cur._slot_map.find (port._slot_id) != _preset_cur._slot_map.end ());
+	assert (_prog_cur._slot_map.find (port._slot_id) != _prog_cur._slot_map.end ());
 
-	_preset_cur._port_map [port_id] = port;
+	_prog_cur._port_map [port_id] = port;
 
 	mfx_View_PROPAGATE (set_signal_port (port_id, port));
 }
@@ -723,9 +723,9 @@ void	View::do_set_signal_port (int port_id, const doc::SignalPort &port)
 
 void	View::do_clear_signal_port (int port_id)
 {
-	const auto     it_port = _preset_cur._port_map.find (port_id);
-	assert (it_port != _preset_cur._port_map.end ());
-	_preset_cur._port_map.erase (it_port);
+	const auto     it_port = _prog_cur._port_map.find (port_id);
+	assert (it_port != _prog_cur._port_map.end ());
+	_prog_cur._port_map.erase (it_port);
 
 	mfx_View_PROPAGATE (clear_signal_port (port_id));
 }
@@ -794,9 +794,9 @@ void	View::do_enable_auto_rotenc_override (bool ovr_flag)
 
 
 
-void	View::collect_labels (std::set <std::string> &labels, const doc::Preset &preset) const
+void	View::collect_labels (std::set <std::string> &labels, const doc::Program &prog) const
 {
-	for (const auto &node_slot : preset._slot_map)
+	for (const auto &node_slot : prog._slot_map)
 	{
 		if (node_slot.second.get () != nullptr)
 		{
@@ -808,7 +808,7 @@ void	View::collect_labels (std::set <std::string> &labels, const doc::Preset &pr
 		}
 	}
 
-	collect_labels (labels, preset._layout);
+	collect_labels (labels, prog._layout);
 }
 
 
@@ -849,7 +849,7 @@ void	View::collect_labels (std::set <std::string> &labels, const doc::Pedalboard
 
 					// These ones don't
 					case doc::ActionType_BANK:
-					case doc::ActionType_PRESET:
+					case doc::ActionType_PROG:
 					case doc::ActionType_TOGGLE_TUNER:
 					case doc::ActionType_LOOP_REC:
 					case doc::ActionType_LOOP_PLAY_STOP:
@@ -899,13 +899,13 @@ bool	View::OverrideLoc::operator < (const OverrideLoc &rhs) const
 void	View::update_graph_info ()
 {
 	const doc::Routing::CnxSet &  cnx_set =
-		_preset_cur.use_routing ()._cnx_audio_set;
+		_prog_cur.use_routing ()._cnx_audio_set;
 	ToolsRouting::build_node_graph (_graph, cnx_set);
 
 	ToolsRouting::build_ordered_node_lists (
 		_slot_list_aud,
 		_slot_list_sig,
-		_preset_cur,
+		_prog_cur,
 		_graph,
 		_pi_aud_set
 	);
