@@ -1206,7 +1206,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_param (int node_id, int dir
 						_page_ptr->get_shift (PageMgrInterface::Shift::R) ? 1 : 0;
 					action._val = float (Tools::change_param (
 						action._val, pi_desc, action._index,
-						Cst::_step_param * pow (10, step_scale), dir
+						Cst::_step_param / pow (10, step_scale), dir
 					));
 					done_flag = true;
 				}
