@@ -1054,7 +1054,11 @@ I will try later to do it to simplify the task.</p>
 <p>Download
 <a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi
 OS</a>, <strong>light version</strong>.
-Minimum recommended version is from 2019-09-26 (32-bit Buster).
+Minimum recommended version is Buster (listed as Legacy) from 2019-09-26.
+Further OS families (like Bullseye) are not tested yet but should work with
+minor modifications.
+Take a 32-bit OS because some dependencies (namely WiringPi) may not be
+supported for 64-bit programs.
 Unpack somewhere the <code>.img</code> file contained in the archive.</p>
 
 <p>First format the card, if not previously done&#8239;:</p>
@@ -1218,14 +1222,17 @@ gpio -v</pre>
 This step is optional, but Clang allows a significant speed-up (about
 +25&#8239;%) of the Pédale Vite application, relative to the default GCC
 compiler.
-Here, we’re going to install Clang 13.0.0, the latest version at the time of
+Here, we’re going to install Clang 14.0.6, the latest version at the time of
 writing, but more recent versions may exist.
-If so, you can replace the <code>13.0.0</code> in the first of the following
+If so, you can replace the <code>14.0.6</code> in the first of the following
 lines with the newer version identifiers.
-Anyway you could also keep Clang 13.0.0 which does perfectly the job.</p>
-<p>Note that Clang requires about 3&#8239;GB on the drive.
+Anyway you could also keep Clang 14.0.6 which does perfectly the job.</p>
+<p>Note&#8239;: 14.0.6 is the latest version working on Buster.
+Subsequent versions require a more recent <code>libc6</code> version which is
+not available as an update.</p>
+<p>Note also that Clang requires about 3&#8239;GB on the drive.
 Make sure you’re not going to run short on space.</p>
-<pre class="term">clangversion="13.0.0"
+<pre class="term">clangversion="14.0.6"
 cd ~
 wget https://github.com/llvm/llvm-project/releases/download/llvmorg-$clangversion/clang+llvm-$clangversion-armv7a-linux-gnueabihf.tar.xz
 tar -xvf clang+llvm-$clangversion-armv7a-linux-gnueabihf.tar.xz
@@ -1732,9 +1739,14 @@ connectors.</p>
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
 
+<p><b>r11, 2022-11-15</b></p>
+<ul>
+<li>Notes about OS and Clang versions.</li>
+</ul>
+
 <p><b>r10, 2022-05-24</b></p>
 <ul>
-<li>Changed the <code>configure</<code> options to compile with Clang.</li>
+<li>Changed the <code>configure</code> options to compile with Clang.</li>
 </ul>
 
 <p><b>r9, 2021-03-26</b></p>

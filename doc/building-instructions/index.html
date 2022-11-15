@@ -1193,7 +1193,12 @@ somme de travail.</p>
 <p>Télécharger
 <a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi
 OS</a> <strong>en version Lite</strong>.
-La version minimum recommandée est datée du 2019-09-26 (Buster, 32 bits).
+La version minimum recommandée est Buster (catégorisée comme Legacy), datée du
+2019-09-26.
+En fait les familles suivantes comme Bullseye n’ont pas encore été testées mais
+devraient fonctionner avec possiblement des adaptations mineures.
+Prenez une version 32 bits car certaines dépendances ne sont pas forcément
+maintenues en 64 bits (WiringPi en particulier).
 Décompresser quelque part le fichier <code>.img</code> contenu dans
 l’archive.</p>
 
@@ -1365,17 +1370,20 @@ Clang.
 Cette étape est facultative, mais Clang permet une accélération substantielle
 (environ +25&#8239;% selon mes mesures) du programme Pédale Vite par rapport à
 GCC, le compilateur installé par défaut.
-Ici, nous allons installer Clang 13.0.0, la dernière version en date, mais il
+Ici, nous allons installer Clang 14.0.6, la dernière version en date, mais il
 est probable que des versions plus récentes soient
 <a href="http://releases.llvm.org">disponibles</a> à l’heure où vous lisez
 ces lignes.
-Si c’est le cas, remplacer le <code>13.0.0</code> à la première des lignes
+Si c’est le cas, remplacer le <code>14.0.6</code> à la première des lignes
 suivantes par le numéro de version en question.
-Il est aussi possible de rester sur Clang 13.0.0, qui conviendra très bien.</p>
+Il est aussi possible de rester sur Clang 14.0.6, qui conviendra très bien.</p>
+<p>Note&#8239;: 14.0.6 est la dernière version qui fonctionne sous Buster.
+Les versions suivantes nécessitent une version plus récente de la
+<code>libc6</code> que celle disponible via le système de mise à jour.</p>
 <p>Vérifier au préalable qu’il y a suffisamment d’espace sur le disque si
 celui-ci est de faible capacité&#8239;: installer Clang nécessite environ
 3&#8239;Go de libre.</p>
-<pre class="term">clangversion="13.0.0"
+<pre class="term">clangversion="14.0.6"
 cd ~
 wget https://github.com/llvm/llvm-project/releases/download/llvmorg-$clangversion/clang+llvm-$clangversion-armv7a-linux-gnueabihf.tar.xz
 tar -xvf clang+llvm-$clangversion-armv7a-linux-gnueabihf.tar.xz
@@ -1928,9 +1936,14 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
 
+<p><b>r11, 2022-11-15</b></p>
+<ul>
+<li>Notes sur les systèmes et les versions de Clang.</li>
+</ul>
+
 <p><b>r10, 2022-05-24</b></p>
 <ul>
-<li>Dans <code>configure</<code>, changement de l’option permettant de
+<li>Dans <code>configure</code>, changement de l’option permettant de
 compiler avec Clang.</li>
 </ul>
 
