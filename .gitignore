@@ -1,18 +1,4 @@
-*.dll
-*.sdf
-*.suo
-*.user
-*.rar
-*.opensdf
-*.o
-*.out
-*~
-*.pkf
-[Dd]ebug*/
-[Rr]elease*/
-Win32*/
-Win64*/
-[Rr]eleases/
+# Autotools/Make
 Makefile
 Makefile.in
 aclocal.m4
@@ -23,24 +9,45 @@ config.log
 config.status
 config.sub
 configure
-depcomp
 install-sh
 libtool
 ltmain.sh
 missing
-.deps
-.dirstamp
-build/unix/pedalevite
-build/unix/mfxtest
-build/unix/results/
+depcomp
 build/unix/m4/libtool.m4
 build/unix/m4/lt*.m4
+.deps
+.dirstamp
+
+# Clang/GCC
+*.o
+*.out
+build/unix/pedalevite*
+build/unix/mfxtest*
+
+# MSVC
+*.dll
+*.sdf
+*.suo
+*.opensdf
+*.user
+[Dd]ebug*/
+[Rr]elease*/
+Win32*/
+Win64*/
+build/win/.vs/
+
+# Freetype lib
+build/win/fontgen/freetype/
+
+# Tests
+build/unix/results/
 **/test/results/
+
+# GIMP
 art/*.h
-etc/config/current*
-var/
-legacy/
-doc/internal/
+
+# KiCAD
 doc/v1/exported/
 doc/v1/pcb-v1_1/*-backup*
 doc/v1/pcb*/*.bak
@@ -51,5 +58,22 @@ doc/boards/*/*-bak
 doc/boards/*/*.bck
 doc/boards/*/*-rescue.lib
 doc/boards/*/*-backup*
-build/win/.vs/
-build/win/fontgen/freetype/
+
+# Backup files
+*~
+
+# LibreCAD
+\#*.dxf
+
+# Peak files
+*.pkf
+
+# Pedalevite settings and output
+etc/config/current*
+etc/config/*.xz
+var/
+
+# Private
+legacy/
+doc/internal/
+src/test/samples/more/
