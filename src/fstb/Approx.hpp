@@ -487,7 +487,7 @@ Vf32	Approx::exp2 (Vf32 val) noexcept
 
 
 
-// C1 continuity
+// C0 continuity
 // max error on [0; 1]: 2.44e-7.
 // Measured on [-20; +20]: 8.15e-7
 float	Approx::exp2_5th (float val) noexcept
@@ -502,7 +502,7 @@ Vf32	Approx::exp2_5th (Vf32 val) noexcept
 
 
 
-// C1 continuity
+// C0 continuity
 // max error on [0; 1]: 1.64e-7.
 // Measured on [-20; +20]: 7.91e-7
 float	Approx::exp2_7th (float val) noexcept
