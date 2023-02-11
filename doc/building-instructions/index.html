@@ -1190,15 +1190,37 @@ somme de travail.</p>
 
 <h3><a id="soft-prepare"></a>Préparation du système</h3>
 
+<p>La version minimum de Raspberry Pi OS recommandée est Buster (catégorisée
+comme <span lang="en"><i>Legacy</i></span>), datée du 2019-09-26.
+Prenez une version 32 bits car certaines dépendances ne sont pas forcément
+maintenues en 64 bits (WiringPi en particulier), et quoi qu’il arrive,
+<strong>en version Lite</strong>.</p>
+
+<h4>Bullseye (2022) et versions supérieures</h4>
+
+<p>Il est préférable de passer par le <a href="https://www.raspberrypi.com/software/">Raspberry
+Pi Imager</a> afin de personnaliser l’image du système avec un compte utilisateur
+accessible en SSH.
+Télécharger et installer l’Imager.
+Choisir «&#8239;Raspberry Pi OS (32-bit)&#8239;» comme
+<span lang="en"><i>Operating System</i></span>, ou
+«&#8239;<span lang="en"><i>Use custom</i></span>&#8239;»
+tout à la fin de la liste si vous avez précédemment téléchargé une version
+particulière.<p>
+<p>Cliquer sur l’icône représentant un pignon (<span lang="en"><i>Avanced
+Options</i></span>), cocher <span lang="en"><i>Enable SSH</i></span> en
+autorisant le mode par mot de passe, cocher <span lang="en"><i>Set username
+and password</i></span> et remplir les deux champs juste en dessous.
+Sauver.</p>
+<p>Dans <span lang="en"><i>Choose storage</i></span>, sélectionner le lecteur
+de la carte micro-SD à écrire.
+Finalement, cliquer sur <span lang="en"><i>Write</i></span>.</p>
+
+<h4>Buster</h4>
+
 <p>Télécharger
 <a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi
-OS</a> <strong>en version Lite</strong>.
-La version minimum recommandée est Buster (catégorisée comme Legacy), datée du
-2019-09-26.
-En fait les familles suivantes comme Bullseye n’ont pas encore été testées mais
-devraient fonctionner avec possiblement des adaptations mineures.
-Prenez une version 32 bits car certaines dépendances ne sont pas forcément
-maintenues en 64 bits (WiringPi en particulier).
+OS</a>.
 Décompresser quelque part le fichier <code>.img</code> contenu dans
 l’archive.</p>
 
@@ -1214,8 +1236,8 @@ lancer.</li>
 <li>Cliquer sur Format et attendre que ce soit fini. En principe c’est rapide.</li>
 </ul>
 <p>Sous Windows, télécharger
-<a href="https://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a>,
-l’installer et le lancer.
+<a href="https://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a>
+(ImageWriter), l’installer et le lancer.
 Sélectionner l’image (fichier <code>.img</code>) Raspbian décompressée.
 S’assurer que Device pointe sur le bon lecteur.
 Cliquer sur Write, confirmer et attendre que l’image finisse d’être copiée sur
@@ -1224,8 +1246,10 @@ la carte.</p>
 Pour cela, aller à la racine de la partition nommée boot et créer un fichier
 vierge (son contenu n’a pas d’importance) intitulé <code>ssh</code>.</p>
 
+<h4>Tronc commun</h4>
+
 <p>Le système est maintenant prêt à être lancé pour la première fois.
-Retirer la carte Micro-SD de la machine et l’insérer dans le lecteur du Pi.
+Retirer la carte micro-SD de la machine et l’insérer dans le lecteur du Pi.
 Cette étape peut être difficile si le Pi est déjà monté dans le boîtier.
 Si c’est le cas, tenir la carte à l’envers à la toute extrémité d’une paire de
 fines pinces à long bec.
@@ -1245,7 +1269,8 @@ En principe le Pi est prévu pour se faire attribuer une adresse IP par DHCP,
 Si ce n’est pas possible, il faut brancher un écran et un clavier avant le
 premier démarrage et commencer depuis le terminal local.</p>
 <p>Se loguer avec les identifiants de base (<code>pi</code> /
-<code>raspberry</code>).</p>
+<code>raspberry</code>, ou ce que vous avez choisi avec le Raspberry Pi
+Imager).</p>
 
 <p>Si nécessaire, on peut commencer par régler les préférences de langue et de
 clavier&#8239;:</p>
@@ -1297,7 +1322,8 @@ hdmi_mode=87
 hdmi_timings=480 0 40 10 80 800 0 13 3 32 0 0 0 60 0 32000000 3
 disable_overscan=1
 framebuffer_priority=2
-dtoverlay=ads7846,cs=1,penirq=12,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900
+# Looks like the touchscreen driver uses the SPI interface exclusively
+#dtoverlay=ads7846,cs=1,penirq=12,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900
 display_hdmi_rotate=1
 
 # No Bluetooth, no WiFi
@@ -1341,10 +1367,9 @@ modifications&#8239;:</p>
 
 <p>Installer git, Jack2, ALSA et autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev \
-    wiringpi git git-core autoconf \
-    raspberrypi-kernel raspberrypi-kernel-headers</pre>
-<p>En principe wiringPi est maintenant livré en standard, mais la version
-incluse dans le système ne supporte pas forcément correctement le Pi 4.
+    git autoconf raspberrypi-kernel raspberrypi-kernel-headers</pre>
+<p>WiringPi est probablement livré en standard, mais la version incluse dans
+le système ne supporte pas forcément correctement le Pi 4.
 Taper&#8239;:</p>
 <pre class="term">gpio -v</pre>
 <p>Si la commande ne peut être trouvée ou que la version indiquée est
@@ -1520,20 +1545,19 @@ sudo mount -o remount,rw /boot</pre>
 
 <p>Retirer les choses qui ne sont pas nécessaire ni même adaptées
 à des opérations en lecture seule:</p>
-<pre class="term">sudo apt-get remove -y --force-yes --purge triggerhappy logrotate \
-    dphys-swapfile fake-hwclock
-sudo apt-get -y --force-yes autoremove --purge</pre>
+<pre class="term">sudo apt-get remove -y --purge triggerhappy logrotate dphys-swapfile fake-hwclock
+sudo apt-get -y autoremove --purge</pre>
 <p>Installer busybox syslog à la place de rsyslog&#8239;:</p>
-<pre class="term">sudo apt-get -y --force-yes install busybox-syslogd
+<pre class="term">sudo apt-get -y install busybox-syslogd
 sudo dpkg --purge rsyslog</pre>
 
 <p>On édite les paramètres de boot&#8239;:</p>
 <pre class="term">sudo nano /boot/cmdline.txt</pre>
 <p>Ajouter
-<code>fsck.mode=skip noswap ro logo.nologo</code>
+<code>fsck.mode=skip ro logo.nologo</code>
 tout à la fin de la
 ligne (il n’y en a qu’une seule dans le texte qui suit)&#8239;:</p>
-<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fsck.mode=skip noswap ro logo.nologo</span></pre>
+<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fsck.mode=skip ro logo.nologo</span></pre>
 
 <p>Remplacer certains sous-répertoires de <code>var</code> par des liens
 symboliques sur le lecteur RAM&#8239;:</p>
@@ -1591,6 +1615,22 @@ mount -o remount,ro /boot</pre>
 
 <p>Redémarrer.
 Pédale Vite est à présent opérationnel.</p>
+<p>À ce point, il est toutefois conseillé de vérifier si la date se met à jour
+correctement une fois connecté à internet.
+Si ce n’est pas le cas, voir la section <a href="#trouble-date">dépannage</a>.</p>
+
+<h4>Quelques scripts pratiques</h4>
+
+<p>Facultatif.
+Attation aux sauts de ligne.</p>
+<pre class="term">cd ~
+echo '#!/bin/sh'$'\n\n''sudo mount -o remount,rw /'$'\n''sudo mount -o remount,rw /boot' > fs-rw.sh ; chmod +x fs-rw.sh
+echo '#!/bin/sh'$'\n\n''sudo timedatectl set-ntp 1' > updatedate.sh ; chmod +x updatedate.sh
+cd ~/Documents/pedalevite/build/unix
+echo '#!/bin/sh'$'\n\n''sudo cp /opt/pedalevite/etc/config/current /opt/pedalevite/etc/config/current.bak-`date --utc +%Y-%m-%d-%H%M`' > backup-config.sh ; chmod +x backup-config.sh
+echo '#!/bin/sh'$'\n\n''sudo jackd -P70 -p16 -t2000 -dalsa -p64 -n3 -r44100 -s &' > run-jack.sh ; chmod +x run-jack.sh
+echo '#!/bin/sh'$'\n\n''sudo mount -t vfat /dev/sda1 /mnt/sda1' > usb-mount.sh ; chmod +x usb-mount.sh
+echo '#!/bin/sh'$'\n\n''sudo umount /mnt/sda1' > usb-umount.sh ; chmod +x usb-umount.sh</pre>
 
 
 
@@ -1635,7 +1675,7 @@ sudo systemctl restart rpi-eeprom-update.service</pre>
 <p>On peut vérifier que l’opération s’est bien passée&#8239;:</p>
 <pre class="term">sudo systemctl status rpi-eeprom-update.service</pre>
 
-<h5>La date n’est pas mise à jour quand la machine est connectée à internet</h5>
+<h5><a id="trouble-date"></a>La date n’est pas mise à jour quand la machine est connectée à internet</h5>
 
 <p>Quand bien même correctement configuré, <code>timesyncd</code> peut avoir
 des difficultés à se connecter à un serveurs NTP.
@@ -1935,6 +1975,11 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r12, 2023-02-11</b></p>
+<ul>
+<li>Mise à jour des instructions d’installation de RPiOS (Bullseye).</li>
+</ul>
 
 <p><b>r11, 2022-11-15</b></p>
 <ul>

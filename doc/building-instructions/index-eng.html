@@ -1051,14 +1051,33 @@ I will try later to do it to simplify the task.</p>
 
 <h3><a id="soft-prepare"></a>Preparing the system</h3>
 
-<p>Download
-<a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi
-OS</a>, <strong>light version</strong>.
-Minimum recommended version is Buster (listed as Legacy) from 2019-09-26.
-Further OS families (like Bullseye) are not tested yet but should work with
-minor modifications.
+<p>Minimum recommended version for Raspberry Pi OS is Buster (listed as
+Legacy) from 2019-09-26.
 Take a 32-bit OS because some dependencies (namely WiringPi) may not be
 supported for 64-bit programs.
+Whatever OS you pick, make sure it is a <strong>Lite version</strong>.</p>
+
+<h4>Bullseye and later</h4>
+
+<p>Using the <a href="https://www.raspberrypi.com/software/">Raspberry
+Pi Imager</a> is preferred in order to customize the system image with
+a default user account on which you can log on with SSH.
+Download and install the Imager.
+Select “Raspberry Pi OS (32-bit)” ad comme Operating System, or “Use custom”.
+at the very end of the list if you previously downloaded a specific version.<p>
+<p>Click on the gear icon (Avanced Options), check Enable SSH while allowing
+the password mode, check Set username and password and fill both fields just
+below.
+Save.</p>
+<p>In Choose storage, select the drive where the micro-SD card will be
+written.
+Finally, click on Write to start the operation.</p>
+
+<h4>Buster</h4>
+
+<p>Download
+<a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi
+OS</a>.
 Unpack somewhere the <code>.img</code> file contained in the archive.</p>
 
 <p>First format the card, if not previously done&#8239;:</p>
@@ -1073,14 +1092,16 @@ Downloads &gt; SD Card Formatter &gt; SD Formatter for Windows Download
 It should be quick.</li>
 </ul>
 <p>On Windows, download
-<a href="https://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a>,
-install and run it.
+<a href="https://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a>
+(ImageWriter), install and run it.
 Select the unpacked Raspbian image (the <code>.img</code> file).
 Make sure that Device points on the right drive.
 Click on Write, confirm and wait for the image to be copied on the card.</p>
 <p>Then allow SSH accès during the first boot.
 To do so, go to the partition root named <code>boot</code> and create an empty
 file (its content doesn’t care) named <code>ssh</code>.</p>
+
+<h4>Commmon instructions</h4>
 
 <p>The system is now ready to be run for the first time.
 Remove the micro-SD car from the computer and insert it in the Pi socket.
@@ -1101,7 +1122,7 @@ Check this address with your network devices.
 If not possible, you must plug a display and a keyboard before the first
 start up and use the local terminal.</p>
 <p>Log in with the default identifiers (<code>pi</code> /
-<code>raspberry</code>).</p>
+<code>raspberry</code>) or the user specified during installation.</p>
 
 <p>If required, you can set your language and keyboard preferences
 (optional)&#8239;:</p>
@@ -1152,7 +1173,8 @@ hdmi_mode=87
 hdmi_timings=480 0 40 10 80 800 0 13 3 32 0 0 0 60 0 32000000 3
 disable_overscan=1
 framebuffer_priority=2
-dtoverlay=ads7846,cs=1,penirq=12,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900
+# Looks like the touchscreen driver uses the SPI interface exclusively
+#dtoverlay=ads7846,cs=1,penirq=12,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900
 display_hdmi_rotate=1
 
 # No Bluetooth, no WiFi
@@ -1194,10 +1216,9 @@ blacklist hci_uart</pre>
 
 <p>Install git, Jack2, ALSA and autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev \
-wiringpi git git-core autoconf \
-raspberrypi-kernel raspberrypi-kernel-headers</pre>
+   git autoconf raspberrypi-kernel raspberrypi-kernel-headers</pre>
 
-<p>WiringPi should be in the standard system distribution, but the included
+<p>WiringPi may be in the standard system distribution, but the included
 version may not support the Pi 4 correctly.
 Type&#8239;:</p>
 <pre class="term">gpio -v</pre>
@@ -1367,19 +1388,18 @@ sudo mount -o remount,rw /boot</pre>
 
 <p>Let’s remove tasks that are not required nor adapted to read-only
 operations&#8239;:</p>
-<pre class="term">sudo apt-get remove -y --force-yes --purge triggerhappy logrotate \
-    dphys-swapfile fake-hwclock
-sudo apt-get -y --force-yes autoremove --purge</pre>
+<pre class="term">sudo apt-get remove -y --purge triggerhappy logrotate dphys-swapfile fake-hwclock
+sudo apt-get -y autoremove --purge</pre>
 <p>Replace log management with busybox (use logread if needed)&#8239;:</p>
-<pre class="term">sudo apt-get -y --force-yes install busybox-syslogd
+<pre class="term">sudo apt-get -y install busybox-syslogd
 sudo dpkg --purge rsyslog</pre>
 
 <p>Edit the boot parameters&#8239;:</p>
 <pre class="term">sudo nano /boot/cmdline.txt</pre>
 <p>Add
-<code>fsck.mode=skip noswap ro logo.nologo</code>
+<code>fsck.mode=skip ro logo.nologo</code>
 at the very end of the line&#8239;:</p>
-<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fsck.mode=skip noswap ro logo.nologo</span></pre>
+<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fsck.mode=skip ro logo.nologo</span></pre>
 
 <p>Replace some <code>var</code> subfolders with symbolic links on the
 RAM-disk&#8239;:</p>
@@ -1436,8 +1456,23 @@ mount -o remount,ro /boot</pre>
 
 <p>Reboot.
 Pédale Vite is now functional.</p>
+<p>At this point, it is recommended to check if the system date is updated
+correctly when connected to the internet.
+If it isn’t, check the <a href="#trouble-date">troubleshooting</a>
+section.</p>
 
+<h4>A few handy scripts</h4>
 
+<p>Optional.
+Watch out for the linebreaks.</p>
+<pre class="term">cd ~
+echo '#!/bin/sh'$'\n\n''sudo mount -o remount,rw /'$'\n''sudo mount -o remount,rw /boot' > fs-rw.sh ; chmod +x fs-rw.sh
+echo '#!/bin/sh'$'\n\n''sudo timedatectl set-ntp 1' > updatedate.sh ; chmod +x updatedate.sh
+cd ~/Documents/pedalevite/build/unix
+echo '#!/bin/sh'$'\n\n''sudo cp /opt/pedalevite/etc/config/current /opt/pedalevite/etc/config/current.bak-`date --utc +%Y-%m-%d-%H%M`' > backup-config.sh ; chmod +x backup-config.sh
+echo '#!/bin/sh'$'\n\n''sudo jackd -P70 -p16 -t2000 -dalsa -p64 -n3 -r44100 -s &' > run-jack.sh ; chmod +x run-jack.sh
+echo '#!/bin/sh'$'\n\n''sudo mount -t vfat /dev/sda1 /mnt/sda1' > usb-mount.sh ; chmod +x usb-mount.sh
+echo '#!/bin/sh'$'\n\n''sudo umount /mnt/sda1' > usb-umount.sh ; chmod +x usb-umount.sh</pre>
 
 <h2><a id="maintenance"></a>V.&emsp;Maintenance</h2>
 
@@ -1477,7 +1512,7 @@ sudo systemctl restart rpi-eeprom-update.service</pre>
 <p>One can check everything worked fine&#8239;:</p>
 <pre class="term">sudo systemctl status rpi-eeprom-update.service</pre>
 
-<h5>When connected to the Internet, the date is not updated even if timesyncd is active</h5>
+<h5><a id="trouble-date"></a>When connected to the Internet, the date is not updated even if timesyncd is active</h5>
 
 <p>Sometimes the timesyncd services cannot synchronise to NTP servers.
 Check with&#8239;:</p>
@@ -1738,6 +1773,11 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r12, 2023-02-11</b></p>
+<ul>
+<li>Updated RPiOS installation instructions (Bullseye support).</li>
+</ul>
 
 <p><b>r11, 2022-11-15</b></p>
 <ul>
