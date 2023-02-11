@@ -234,7 +234,16 @@ private:
 	               exp2_poly5 (T x) noexcept;
 	template <typename T>
 	static fstb_FORCEINLINE constexpr T
-	               exp2_poly7 (T x) noexcept;
+	               exp2_poly7c1 (T x) noexcept;
+	template <typename T>
+	static fstb_FORCEINLINE constexpr T
+	               exp2_poly7c2 (T x) noexcept;
+	template <typename T>
+	static fstb_FORCEINLINE constexpr T
+	               exp2_frac32 (T x) noexcept;
+	template <typename T>
+	static fstb_FORCEINLINE constexpr T
+	               exp2_frac33 (T x) noexcept;
 
 	template <typename T>
 	static fstb_FORCEINLINE T

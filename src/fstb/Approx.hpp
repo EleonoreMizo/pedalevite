@@ -115,6 +115,8 @@ constexpr T	Approx::exp2_poly2 (T x) noexcept
 	return Poly::horner (x, T (1), T (2.0 / 3.0), T (1.0 / 3.0));
 }
 
+// C0 continuity
+// Relative error below 1e-7
 // Coefficients found by Andrew Simper
 // https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
 template <typename T>
@@ -130,9 +132,31 @@ constexpr T	Approx::exp2_poly5 (T x) noexcept
 	);
 }
 
+// C1 continuity
+// Relative error below 1e-10
 // Coefficients found by Andrew Simper
+// https://discord.com/channels/507604115854065674/507630527847596046/1073792844852109354
 template <typename T>
-constexpr T	Approx::exp2_poly7 (T x) noexcept
+constexpr T	Approx::exp2_poly7c1 (T x) noexcept
+{
+	return Poly::estrin (x,
+		T (1                ),
+		T (0.693147180559945),
+		T (0.2402264513153  ),
+		T (0.055504846557   ),
+		T (0.00961452393    ),
+		T (0.00134189347    ),
+		T (0.00014355398    ),
+		T (0.000021550183   )
+	);
+}
+
+// C2 continuity
+// Relative error below 4e-10
+// Coefficients found by Andrew Simper
+// https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
+template <typename T>
+constexpr T	Approx::exp2_poly7c2 (T x) noexcept
 {
 	return Poly::estrin (x,
 		T (1                 ),
@@ -144,6 +168,52 @@ constexpr T	Approx::exp2_poly7 (T x) noexcept
 		T (0.000143623130    ),
 		T (0.000021615988    )
 	);
+}
+
+// C0 continuity
+// Relative error below 1e-8
+// Coefficients found by Andrew Simper
+// https://discord.com/channels/507604115854065674/507630527847596046/1073401190752211044
+template <typename T>
+constexpr T	Approx::exp2_frac32 (T x) noexcept
+{
+	const auto     num = Poly::horner (x,
+		T ( 1                       ),
+		T ( 0.43001011963406321481  ),
+		T ( 0.078781691204622431024 ),
+		T ( 0.0068412398808644541218)
+	);
+	const auto     den = Poly::horner (x,
+		T ( 1                       ),
+		T (-0.26313747880277266189  ),
+		T ( 0.020954004157248858065 )
+	);
+
+	return num / den;
+}
+
+// C1 continuity
+// Relative error below 3e-10, but useless for 32-bit float because of the
+// numerical accuracy.
+// Coefficients found by Andrew Simper
+// https://discord.com/channels/507604115854065674/507630527847596046/1073399579254472785
+template <typename T>
+constexpr T	Approx::exp2_frac33 (T x) noexcept
+{
+	const auto     num = Poly::horner (x,
+		T ( 1                       ),
+		T ( 0.35857922101497249378  ), // Fixed, was: 0.35857922102065181713
+		T ( 0.052334448171287628253 ), // Fixed, was: 0.052334448175807304904
+		T ( 0.0033039755853799162091)
+	);
+	const auto     den = Poly::horner (x,
+		T ( 1                       ),
+		T (-0.33456795953679829836  ),
+		T ( 0.044012850754226687244 ),
+		T (-0.0023360688316083697630)  // Fixed, was: -0.0023360688316084363657
+	);
+
+	return num / den;
 }
 
 
@@ -487,7 +557,6 @@ Vf32	Approx::exp2 (Vf32 val) noexcept
 
 
 
-// C0 continuity
 // max error on [0; 1]: 2.44e-7.
 // Measured on [-20; +20]: 8.15e-7
 float	Approx::exp2_5th (float val) noexcept
@@ -502,17 +571,16 @@ Vf32	Approx::exp2_5th (Vf32 val) noexcept
 
 
 
-// C0 continuity
-// max error on [0; 1]: 1.64e-7.
+// max error on [0; 1]: 1.64e-7
 // Measured on [-20; +20]: 7.91e-7
 float	Approx::exp2_7th (float val) noexcept
 {
-	return exp2_base (val, exp2_poly7 <float>);
+	return exp2_base (val, exp2_poly7c2 <float>);
 }
 
 Vf32	Approx::exp2_7th (Vf32 val) noexcept
 {
-	return val.exp2_base (Approx::exp2_poly7 <Vf32>);
+	return val.exp2_base (Approx::exp2_poly7c2 <Vf32>);
 }
 
 
