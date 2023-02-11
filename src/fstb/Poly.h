@@ -62,6 +62,10 @@ public:
 	fstb_FORCEINLINE static constexpr T
 	               horner (T x, T c0, T c1, T c2, T c3, T c4, T c5, T c6, T c7) noexcept;
 
+	template <class T, int N>
+	fstb_FORCEINLINE static constexpr T
+	               horner (T x, const T (&c) [N]) noexcept;
+
 	template <class T>
 	fstb_FORCEINLINE static constexpr T
 	               estrin (T x, T c0, T c1, T c2, T c3) noexcept;
@@ -77,6 +81,10 @@ public:
 	template <class T>
 	fstb_FORCEINLINE static constexpr T
 	               estrin (T x, T c0, T c1, T c2, T c3, T c4, T c5, T c6, T c7) noexcept;
+
+	template <class T, int N>
+	fstb_FORCEINLINE static constexpr T
+	               estrin (T x, const T (&c) [N]) noexcept;
 
 
 
