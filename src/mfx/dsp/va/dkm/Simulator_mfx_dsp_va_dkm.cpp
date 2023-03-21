@@ -1420,6 +1420,25 @@ void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, Jun
 {
 	fstb::unused (it_cnt);
 
+#if 0
+	// Simplified reverse model, i = 0 when v < 0
+	// Results are looking right, but more use cases have to be tested if we
+	// want to adopt it.
+	if (v < 0)
+	{
+		i  = 0;
+		di = 0;
+	}
+	else
+	{
+		const JuncDataType   is = junc._is;
+		const JuncDataType   va = v * junc._mul_v;
+		const JuncDataType   e  = is * fstb::Approx::exp2_5th (float (va));
+		i  = e - is;
+		di = e * junc._nvt_inv;
+	}
+#else
+	// Standard model
 	const JuncDataType   is = junc._is;
 	const JuncDataType   va = v * junc._mul_v;
 	const JuncDataType   e  =
@@ -1430,6 +1449,7 @@ void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, Jun
 	// When v is negative, di/dv is very tiny. So we use the "line through the
 	// origin" method to avoid too small or null derivative.
 	di = (v < 0) ? i / v : e * junc._nvt_inv;
+#endif
 }
 
 
