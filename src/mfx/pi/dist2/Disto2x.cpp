@@ -433,7 +433,7 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		for (int chn = 0; chn < nbr_chn_src; ++chn)
 		{
 			dsp::mix::Align::scale_1_vlrauto (
-				stage_io_arr [chn] [0], nbr_spl, _fixgain_old, _fixgain_cur
+				stage_io_arr [0] [chn], nbr_spl, _fixgain_old, _fixgain_cur
 			);
 		}
 	}
