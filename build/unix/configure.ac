@@ -60,7 +60,7 @@ AS_IF(
     [test "x$CXX" = "xclang++"],
     [
         CLG="true"
-        MFLAGS="$MFLAGS -fexperimental-new-pass-manager -mllvm -inline-threshold=1000"
+        MFLAGS="$MFLAGS -mllvm -inline-threshold=1000"
         COMPWARNFLAGS=""
         AC_MSG_NOTICE([Using clang as compiler.])
         AS_IF(
