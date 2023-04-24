@@ -469,10 +469,6 @@ void	LatticeReverb <T, N, MAXDT>::update_internal_parameters () noexcept
 template <typename T, int N, typename MAXDT>
 void	LatticeReverb <T, N, MAXDT>::update_lfos () noexcept
 {
-	static int cnt = 0;
-
-	++ cnt;
-
 	const T        time_mul_base   = _time._mul_arr [Stereo_BASE  ];
 	const T        time_mul_spread = _time._mul_arr [Stereo_SPREAD];
 

@@ -176,7 +176,7 @@ int	SpectralFreeze::do_reset (double sample_freq, int max_buf_len, int &latency)
 			slot._nbr_hops  = 0;
 		}
 
-		chn._vol_dry.set_time (_p._fft_len / 2, 2.f / _p._fft_len);
+		chn._vol_dry.set_time (_p._fft_len / 2, 2.f / float (_p._fft_len));
 	}
 
 	_frame_win.setup (_p._fft_len);
@@ -372,7 +372,7 @@ void	SpectralFreeze::update_param (bool force_flag)
 
 			const float   speed   =
 				float (_state_set.get_val_end_nat (Param_PHASE));
-			const float   hop_dur = _inv_fs * _p._hop_size;
+			const float   hop_dur = _inv_fs * float (_p._hop_size);
 			// * 0.5f because the phase difference is set in both directions
 			_phasing   = speed * hop_dur * 0.5f;
 
@@ -402,7 +402,7 @@ int	SpectralFreeze::conv_freq_to_bin (float f) const noexcept
 	assert (f >= 0);
 	assert (f < _sample_freq * 0.5f);
 
-	return fstb::round_int (f * _inv_fs * _p._fft_len);
+	return fstb::round_int (f * _inv_fs * float (_p._fft_len));
 }
 
 
@@ -602,15 +602,15 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 		slot._phase_acc -= 1;
 	}
 
-	constexpr float   gain_thr = 1e-6f; // -120 dB
+	constexpr auto    gain_thr = 1e-6f; // -120 dB
 	if (gain >= gain_thr)
 	{
-		const float       gain_sc   = gain * _p._scale_amp;
+		const auto     gain_sc     = gain * _p._scale_amp;
 
 #if defined (fstb_HAS_SIMD)
 
 		const auto     gain_sc_v   = fstb::Vf32 (gain_sc);
-		const int      sign        = ((_p._bin_beg & 1) * 2 - 1);
+		const auto     sign        = ((_p._bin_beg & 1) * 2 - 1);
 		const auto     phase_val_v =
 			  fstb::Vf32 (slot._phase_acc)
 			* fstb::Vf32::set_pair_fill (sign, -sign);
@@ -621,7 +621,7 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 		const auto     omega_step  = fstb::Vf32 (0.5f * _simd_w);
 		for (int bin_idx = _p._bin_beg; bin_idx < _bin_end_vec; bin_idx += _simd_w)
 		{
-			const int      img_idx = bin_idx + _p._nbr_bins;
+			const auto     img_idx = bin_idx + _p._nbr_bins;
 			const auto     mag   = fstb::Vf32::loadu (&slot._buf_freeze [bin_idx]);
 			auto           arg_n = fstb::Vf32::loadu (&slot._buf_freeze [img_idx]);
 			auto           sum_r = fstb::Vf32::loadu (&_buf_bins [bin_idx]);
@@ -649,12 +649,13 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 
 #endif // fstb_HAS_SIMD
 
-		float          phase_val = slot._phase_acc * ((_bin_beg_sca & 1) * 2 - 1);
+		auto           phase_val =
+			slot._phase_acc * float ((_bin_beg_sca & 1) * 2 - 1);
 		for (int bin_idx = _bin_beg_sca; bin_idx < _p._bin_end; ++bin_idx)
 		{
-			const int      img_idx = bin_idx + _p._nbr_bins;
-			const float    mag     = slot._buf_freeze [bin_idx];
-			float          arg_n   = slot._buf_freeze [img_idx];
+			const auto     img_idx = bin_idx + _p._nbr_bins;
+			const auto     mag     = slot._buf_freeze [bin_idx];
+			auto           arg_n   = slot._buf_freeze [img_idx];
 
 			// Reports the phase difference between the two initial frames
 			arg_n *= float (slot._nbr_hops);
@@ -664,16 +665,16 @@ void	SpectralFreeze::synthesise_playback (Slot &slot, float gain) noexcept
 
 			// Why 0.5? Got this by trial & error. Maths behind this are clear
 			// like mud
-			const float    omega = 0.5f * float (bin_idx);
+			const auto     omega = 0.5f * float (bin_idx);
 			arg_n += omega;
 
 			// Keeps [-1/2; +1/2] range
 			arg_n -= float (fstb::round_int (arg_n));
 
-			const float    mag_gain = mag * gain_sc;
+			const auto     mag_gain = mag * gain_sc;
 			const auto     cs = fstb::Approx::cos_sin_nick_2pi (arg_n);
-			const float    br = cs [0] * mag_gain;
-			const float    bi = cs [1] * mag_gain;
+			const auto     br = cs [0] * mag_gain;
+			const auto     bi = cs [1] * mag_gain;
 
 			_buf_bins [bin_idx] += br;
 			_buf_bins [img_idx] += bi;
@@ -712,7 +713,7 @@ void	SpectralFreeze::crystalise_precomp_mag () noexcept
 	);
 
 	// Precomputes the squared bin magnitudes
-	const int      img_ofs = _p._nbr_bins;
+	const auto     img_ofs = _p._nbr_bins;
 
 #if defined (fstb_HAS_SIMD)
 

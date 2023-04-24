@@ -78,7 +78,7 @@ protected:
 
 private:
 
-	inline void    step_z_eq (const float inc_b [3], const float inc_a [3]) noexcept;
+	inline void    step_z_eq (const float inc_b [2], const float inc_a [2]) noexcept;
 
 	std::array <float, 2>      // Direct coefficients, order z^(-n)
 						_eq_z_b;

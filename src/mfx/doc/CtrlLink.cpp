@@ -180,7 +180,7 @@ void	CtrlLink::ser_read (SerRInterface &ser)
 	_notch_list.clear ();
 	for (int k = 0; k < nbr_elt; ++k)
 	{
-		float          n;
+		float          n {};
 		ser.read (n);
 		_notch_list.insert (n);
 	}

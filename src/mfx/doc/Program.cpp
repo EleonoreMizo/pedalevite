@@ -365,7 +365,7 @@ void	Program::ser_read (SerRInterface &ser)
 		{
 			ser.begin_list ();
 
-			int            port_index;
+			int            port_index {};
 			ser.read (port_index);
 
 			SignalPort     port;

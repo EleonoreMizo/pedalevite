@@ -723,6 +723,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 /********************************************* TEMP *********************************/
 
 		++ loop_count;
+		fstb::unused (loop_count);
 	}
 
 	fprintf (stderr, "Exiting main loop.\n");

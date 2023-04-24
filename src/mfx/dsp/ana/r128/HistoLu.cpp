@@ -154,9 +154,9 @@ float	HistoLu::compute_lufs_nth (int thr_idx, int nbr_blocks, float fractile) co
 	assert (fractile >= 0);
 	assert (fractile <= 1);
 
-	const int      cnt_stop = fstb::round_int (fractile * nbr_blocks);
-	int            count = 0;
-	int            idx   = thr_idx;
+	const int      cnt_stop = fstb::round_int (fractile * float (nbr_blocks));
+	int            count    = 0;
+	int            idx      = thr_idx;
 	while (count < cnt_stop && idx < _hist_size)
 	{
 		count += _occ_arr [idx];

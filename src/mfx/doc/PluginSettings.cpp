@@ -334,7 +334,7 @@ void	PluginSettings::ser_read (SerRInterface &ser, std::string model_id)
 	{
 		ser.begin_list ();
 
-		int            index;
+		int            index {};
 		ser.read (index);
 		_map_param_ctrl [index].ser_read (ser);
 
@@ -348,7 +348,7 @@ void	PluginSettings::ser_read (SerRInterface &ser, std::string model_id)
 	{
 		ser.begin_list ();
 
-		int            index;
+		int            index {};
 		ser.read (index);
 		_map_param_pres [index].ser_read (ser);
 

@@ -98,7 +98,7 @@ void	FftParam <LL2_MIN, LL2_MAX>::update (double sample_freq, int target_ll2, in
 	// for the amplitude change caused by the overlap.
 	const auto    scale_win =
 		(_hop_ratio <= 2) ? 1.f : 8.f / float (3 * _hop_ratio);
-	const auto    scale_fft = 1.f / _fft_len;
+	const auto    scale_fft = 1.f / float (_fft_len);
 	_scale_amp   =  scale_fft * scale_win;
 
 	// Last bin + 1 being processed. Other bins (ultrasonic content) are cleared

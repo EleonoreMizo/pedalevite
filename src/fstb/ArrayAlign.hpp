@@ -22,10 +22,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <new>
+#include <type_traits>
 
 #include <cassert>
-#include <cstddef>
 
 
 
@@ -52,9 +54,10 @@ class DestroyAux <true>
 public:
 	template <typename T>
 	static inline void
-	               destroy_elt (T * /*ptr*/)
+	               destroy_elt (T *ptr)
 	{
 		// Nothing
+		fstb::unused (ptr);
 	}
 };
 
@@ -107,7 +110,7 @@ ArrayAlign <T, LEN, AL>::~ArrayAlign ()
 	{
 		Element *   ptr =
 			reinterpret_cast <Element *> (&_data_ptr [pos]);
-		typedef	DestroyAux <__has_trivial_destructor (Element)>	Destr;
+		typedef DestroyAux <std::is_trivially_destructible <Element>::value> Destr;
 		Destr::destroy_elt (ptr);
 	}
 }
