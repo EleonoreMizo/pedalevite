@@ -165,7 +165,7 @@ void	UniqueProgList::build_slot_map (SlotMap &slot_map, const doc::Program &prog
 			const int         slot_id =  vt_slot.first;
 			const doc::Slot & slot    = *vt_slot.second;
 
-			bool        ins_flag = false;
+			bool           ins_flag = false;
 			if (! slot_map.empty ())
 			{
 				// Try with the first element >= and the one just <.
@@ -191,7 +191,7 @@ void	UniqueProgList::build_slot_map (SlotMap &slot_map, const doc::Program &prog
 			if (! ins_flag)
 			{
 				slot_map [slot].insert (slot_id);
-				ins_flag = true;
+				//ins_flag = true; // Commented to avoid compiler warning
 			}
 		}
 	}
