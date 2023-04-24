@@ -70,6 +70,7 @@
 #include "test/TestDiodeClipScreamer.h"
 #include "test/TestDkmSimulator.h"
 #include "test/TestFfft.h"
+#include "test/TestFstbFnc.h"
 #include "test/TestHardclipBl.h"
 #include "test/TestHash.h"
 #include "test/TestHelperDispNum.h"
@@ -1883,6 +1884,10 @@ int main (int argc, char *argv [])
 #define main_TEST_SPEED 0
 
 #if 1
+	if (ret_val == 0) ret_val = TestFstbFnc::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestHelperDispNum::perform_test ();
 #endif
 

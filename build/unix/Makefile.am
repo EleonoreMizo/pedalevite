@@ -1983,6 +1983,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestDkmSimulator.h \
         ../../src/test/TestFfft.cpp \
         ../../src/test/TestFfft.h \
+        ../../src/test/TestFstbFnc.cpp \
+        ../../src/test/TestFstbFnc.h \
         ../../src/test/TestHardclipBl.cpp \
         ../../src/test/TestHardclipBl.h \
         ../../src/test/TestHash.cpp \
