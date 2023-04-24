@@ -55,6 +55,27 @@ namespace fstb
 
 
 
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+namespace detail
+{
+
+
+
+template <typename T, std::size_t... IS>
+constexpr std::array <T, sizeof... (IS)>	make_array (const T &init_val, std::index_sequence <IS...>)
+{
+	return {{ (static_cast <void> (IS), init_val)... }};
+}
+
+
+
+} // namespace detail
+
+
+
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -1109,16 +1130,6 @@ constexpr T	rotr (T x, int k) noexcept
 
 
 
-namespace detail
-{
-	template <typename T, std::size_t... IS>
-	constexpr std::array <T, sizeof... (IS)>
-	make_array (const T &init_val, std::index_sequence <IS...>)
-	{
-		return {{ (static_cast <void> (IS), init_val)... }};
-	}
-}
-
 // Default-initializes an array with a specified value
 // Source: https://stackoverflow.com/a/41259045
 template <std::size_t N, typename T>
@@ -1189,14 +1200,6 @@ bool	is_ptr_align_nz (const T *ptr, int a) noexcept
 		&& (reinterpret_cast <intptr_t> (ptr) & (a - 1)) == 0
 	);
 }
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
