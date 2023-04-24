@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pedalevite", "pedalevite\pedalevite.vcxproj", "{4ECD73F9-7BF9-4B6F-95F0-F671660588AA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -68,6 +68,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvvid2raw", "pvvid2raw\pvvid2raw.vcxproj", "{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}"
 	ProjectSection(ProjectDependencies) = postProject
 		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pv_bmp1", "pvvst\pv_bmp1\pv_bmp1.vcxproj", "{390B3FE0-74D1-4176-A024-CA582D865CE7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
+		{3A8EC9DB-9E71-4330-9682-52D6CAA05578} = {3A8EC9DB-9E71-4330-9682-52D6CAA05578}
 	EndProjectSection
 EndProject
 Global
@@ -174,6 +180,14 @@ Global
 		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Release|Win32.Build.0 = Release|Win32
 		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Release|x64.ActiveCfg = Release|x64
 		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Release|x64.Build.0 = Release|x64
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Debug|Win32.Build.0 = Debug|Win32
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Debug|x64.ActiveCfg = Debug|x64
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Debug|x64.Build.0 = Debug|x64
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Release|Win32.ActiveCfg = Release|Win32
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Release|Win32.Build.0 = Release|Win32
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Release|x64.ActiveCfg = Release|x64
+		{390B3FE0-74D1-4176-A024-CA582D865CE7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
