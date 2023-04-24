@@ -1272,7 +1272,11 @@ found.
 The following lines will fix the problem&#8239;:</p>
 <pre class="term">echo '/usr/local/clang_'$clangversion'/lib/' > ./clang.conf
 sudo mv ./clang.conf /etc/ld.so.conf.d/
+echo '/usr/local/clang_'$clangversion'/lib/armv7l-unknown-linux-gnueabihf/' > ./libc.conf
+sudo mv ./libc.conf /etc/ld.so.conf.d/
 sudo ldconfig</pre>
+<p>It seems that updating <code>libc.conf</code> is only required from Clang
+15.</p>
 
 
 
