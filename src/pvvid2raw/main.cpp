@@ -231,9 +231,11 @@ int	VidDecomp::read_comp_frame (bool &cont_flag)
 
 	if (ret_val == 0 && cont_flag)
 	{
+#if ! defined (NDEBUG)
 		const size_t   raw_size =
 			mfx::CompressSimple::compute_raw_frame_size (_cmp_buf.data ());
 		assert (raw_size <= _raw_buf.size ());
+#endif
 		mfx::CompressSimple::decompress_frame (
 			_raw_buf.data (), _cmp_buf.data ()
 		);
