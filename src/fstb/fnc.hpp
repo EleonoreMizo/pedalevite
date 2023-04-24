@@ -64,6 +64,63 @@ namespace detail
 
 
 
+template <int OFFSET>
+int	get_prev_pow_2_internal (uint32_t x) noexcept
+{
+	assert (x > 0);
+
+#if (fstb_ARCHI == fstb_ARCHI_X86) && defined (_MSC_VER)
+
+  #if ((_MSC_VER / 100) < 14)
+
+	int            p;
+	__asm
+	{
+		xor            eax, eax
+		bsr            eax, x
+		mov            p, eax
+	}
+
+  #else
+
+	unsigned long	p;
+	_BitScanReverse (&p, x);
+
+  #endif
+
+	p += OFFSET;
+
+#elif (fstb_COMPILER == fstb_COMPILER_GCC)
+
+	const auto     p = 31 + OFFSET - __builtin_clz (x);
+
+#else
+
+	int            p = OFFSET - 1;
+
+	while ((x & ~(uint32_t (0xFFFF))) != 0)
+	{
+		p += 16;
+		x >>= 16;
+	}
+	while ((x & ~(uint32_t (0xF))) != 0)
+	{
+		p += 4;
+		x >>= 4;
+	}
+	while (x > 0)
+	{
+		++p;
+		x >>= 1;
+	}
+
+#endif
+
+	return int (p);
+}
+
+
+
 // C++14 implementation for constexpr LUT
 // source: https://stackoverflow.com/a/56207376
 template <typename T>
@@ -679,7 +736,7 @@ constexpr bool	is_eq_ulp (float v1, float v2, int32_t tol) noexcept
 
 /*
 ==============================================================================
-Name: get_prev_pow2
+Name: get_prev_pow_2
 Description:
 	Computes the exponent of the power of two equal to or immediately lower
 	than the parameter. It is the base-2 log rounded toward minus infinity.
@@ -692,57 +749,18 @@ Throws: Nothing
 
 int	get_prev_pow_2 (uint32_t x) noexcept
 {
-	assert (x > 0);
+	const auto     p = detail::get_prev_pow_2_internal <0> (x);
+	assert ((uint64_t (1) << p      ) <= uint64_t (x));
+	assert ((uint64_t (1) << (p + 1)) >  uint64_t (x));
 
-#if (fstb_ARCHI == fstb_ARCHI_X86) && defined (_MSC_VER)
-
-  #if ((_MSC_VER / 100) < 14)
-
-	int            p;
-	__asm
-	{
-		xor            eax, eax
-		bsr            eax, x
-		mov            p, eax
-	}
-
-  #else
-
-	unsigned long	p;
-	_BitScanReverse (&p, x);
-
-  #endif
-
-#else
-
-	int            p = -1;
-
-	while ((x & ~(uint32_t (0xFFFF))) != 0)
-	{
-		p += 16;
-		x >>= 16;
-	}
-	while ((x & ~(uint32_t (0xF))) != 0)
-	{
-		p += 4;
-		x >>= 4;
-	}
-	while (x > 0)
-	{
-		++p;
-		x >>= 1;
-	}
-
-#endif
-
-	return int (p);
+	return p;
 }
 
 
 
 /*
 ==============================================================================
-Name: get_next_pow2
+Name: get_next_pow_2
 Description:
 	Computes the exponent of the power of two equal to or immediately greater
 	than the parameter. It is the base-2 log rounded toward plus infinity.
@@ -757,66 +775,21 @@ int	get_next_pow_2 (uint32_t x) noexcept
 {
 	assert (x > 0);
 
-#if (fstb_ARCHI == fstb_ARCHI_X86) && defined (_MSC_VER)
-
-  #if ((_MSC_VER / 100) < 14)
+	const auto     x_org = x;
+	fstb::unused (x_org);
 
 	-- x;
-	int				p;
-
 	if (x == 0)
 	{
-		p = 0;
-	}
-	else
-	{
-		__asm
-		{
-			xor				eax, eax
-			bsr				eax, x
-			inc				eax
-			mov				p, eax
-		}
+		return 0;
 	}
 
-  #else
+	const auto     p = detail::get_prev_pow_2_internal <1> (x);
+	assert (p > 0);
+	assert ((uint64_t (1) <<  p     ) >= uint64_t (x_org));
+	assert ((uint64_t (1) << (p - 1)) <  uint64_t (x_org));
 
-	unsigned long	p;
-	if (_BitScanReverse (&p, x - 1) == 0)
-	{
-		p = 0;
-	}
-	else
-	{
-		++ p;
-	}
-
-  #endif
-
-#else
-
-	--x;
-	int				p = 0;
-
-	while ((x & ~(uint32_t (0xFFFFL))) != 0)
-	{
-		p += 16;
-		x >>= 16;
-	}
-	while ((x & ~(uint32_t (0xFL))) != 0)
-	{
-		p += 4;
-		x >>= 4;
-	}
-	while (x > 0)
-	{
-		++p;
-		x >>= 1;
-	}
-
-#endif
-
-	return int (p);
+	return p;
 }
 
 
