@@ -770,7 +770,7 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 
 
 /*
-H (z) = (b0 + b1 * z^-1 + b2 * z^-2) / (1 + a1 * z^-1 + a2 * z^-2)
+H (z) = (b0 + b1 * z^-1 + b2 * z^-2) / (a0 + a1 * z^-1 + a2 * z^-2)
 
 z -> exp (j * w)
 
@@ -778,10 +778,24 @@ c1 = cos (w)
 s1 = sin (w)
 
 |H (z)|^2 = H (z) * H*(z)
-= (((b0 + b2) * c1 + b1)^2 + ((b0 - b2) * s1)^2) / (((1 + a2) * c1 + a1)^2 + ((1 - a2) * s1)^2)
+          =   (((b0 + b2) * c1 + b1)^2 + ((b0 - b2) * s1)^2)
+            / (((a0 + a2) * c1 + a1)^2 + ((a0 - a2) * s1)^2)
+
+Cosine problem: at low frequencies, cos (w) can be very close to 1, possibly
+causing issues in the response calculation in single precision (thanks to RBJ).
+https://dsp.stackexchange.com/a/16911
+
+phi = (sin (w / 2))^2
+|H (z)|^2 =
+	  (((b0 + b1 + b2) / 2)^2 - phi * (4 * b0 * b1 * (1 - phi) + b1 * (b0 + b2))
+	/ (((a0 + a1 + a2) / 2)^2 - phi * (4 * a0 * a1 * (1 - phi) + a1 * (a0 + a2))
+
 */
+
 void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <float> &puls_arr, const Biq &biq) const
 {
+#define mfx_uitk_pg_FxPEq_COSFIX
+
 	const int      nbr_freq = int (puls_arr.size ());
 	assert (int (lvl_arr.size ()) == nbr_freq);
 
@@ -789,8 +803,19 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 	const auto     b0   = fstb::Vf32 (biq._b [0]);
 	const auto     b1   = fstb::Vf32 (biq._b [1]);
 	const auto     b2   = fstb::Vf32 (biq._b [2]);
+	const auto     a0   = one;
 	const auto     a1   = fstb::Vf32 (biq._a [1]);
 	const auto     a2   = fstb::Vf32 (biq._a [2]);
+#if defined (mfx_uitk_pg_FxPEq_COSFIX)
+	const auto     half = fstb::Vf32 (0.5f);
+	const auto     four = fstb::Vf32 (4.0f);
+	const auto     b_c0 = fstb::sq ((b0 + b1 + b2) * half);
+	const auto     a_c0 = fstb::sq ((a0 + a1 + a2) * half);
+	const auto     b_c1 = four * b0 * b2;
+	const auto     a_c1 = four * a0 * a2;
+	const auto     b_c2 = b1 * (b0 + b2);
+	const auto     a_c2 = a1 * (a0 + a2);
+#endif // mfx_uitk_pg_FxPEq_COSFIX
 
 	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
 	{
@@ -798,16 +823,25 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 
 		const auto     w  = fstb::Vf32::loadu_part (&puls_arr [f_idx], ns);
 
+#if defined (mfx_uitk_pg_FxPEq_COSFIX)
+		const auto     s_hw  = fstb::Approx::sin_rbj (w * half);
+		const auto     phi   = s_hw * s_hw;
+		const auto     omphi = one - phi;
+		const auto     h2_n  = b_c0 - phi * (b_c1 * omphi + b_c2);
+		const auto     h2_d  = a_c0 - phi * (a_c1 * omphi + a_c2);
+#else // mfx_uitk_pg_FxPEq_COSFIX
 		fstb::Vf32     c1;
 		fstb::Vf32     s1;
 		fstb::Approx::cos_sin_rbj (c1, s1, w);
 
-		const auto     h2_nc = (b0  + b2) * c1 + b1;
-		const auto     h2_dc = (one + a2) * c1 + a1;
-		const auto     h2_ns = (b0  - b2) * s1;
-		const auto     h2_ds = (one - a2) * s1;
+		const auto     h2_nc = (b0 + b2) * c1 + b1;
+		const auto     h2_dc = (a0 + a2) * c1 + a1;
+		const auto     h2_ns = (b0 - b2) * s1;
+		const auto     h2_ds = (a0 - a2) * s1;
 		const auto     h2_n  = h2_nc * h2_nc + h2_ns * h2_ns;
 		const auto     h2_d  = h2_dc * h2_dc + h2_ds * h2_ds;
+#endif // mfx_uitk_pg_FxPEq_COSFIX
+
 		const auto     h2    = h2_n / h2_d;
 		const auto     h_abs = fstb::sqrt (h2);
 
@@ -815,6 +849,8 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 		l *= h_abs;
 		l.storeu_part (&lvl_arr [f_idx], ns);
 	}
+
+#undef mfx_uitk_pg_FxPEq_COSFIX
 }
 
 
