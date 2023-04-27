@@ -15,13 +15,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
-
-
-
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/Approx.h"
@@ -726,7 +719,7 @@ std::vector <float>	FxPEq::create_freq_map (int nbr_freq, float f_beg, float f_e
 	const auto     v_base    = fstb::Vf32 (base);
 	const auto     v_mul     = fstb::Vf32 (mul);
 	const auto     v_linstep = fstb::Vf32 (0, 1, 2, 3);
-	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
+	for (int f_idx = 0; f_idx < nbr_freq; f_idx += fstb::Vf32::_length)
 	{
 		auto          v_idx  = fstb::Vf32 (float (f_idx));
 		v_idx += v_linstep;
@@ -753,7 +746,7 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 	));
 	const auto     ofs   = fstb::Vf32 (hh);
 	const auto     secu  = fstb::Vf32 (1e-15f);
-	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
+	for (int f_idx = 0; f_idx < nbr_freq; f_idx += fstb::Vf32::_length)
 	{
 		const int      ns    = nbr_freq - f_idx;
 
@@ -817,7 +810,7 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 	const auto     a_c2 = a1 * (a0 + a2);
 #endif // mfx_uitk_pg_FxPEq_COSFIX
 
-	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
+	for (int f_idx = 0; f_idx < nbr_freq; f_idx += fstb::Vf32::_length)
 	{
 		const int      ns = nbr_freq - f_idx;
 
