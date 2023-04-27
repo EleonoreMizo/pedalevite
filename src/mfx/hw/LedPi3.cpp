@@ -62,7 +62,7 @@ const int	LedPi3::_gpio_pin_arr [_nbr_led] =
 
 
 // Before calling:
-// ::wiringPiSetupPhys ()
+// ::wiringPiSetup* ()
 LedPi3::LedPi3 ()
 :	_gpio_pwm (_pwm_resol)
 ,	_state_arr ()

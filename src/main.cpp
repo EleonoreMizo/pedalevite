@@ -801,7 +801,7 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 #endif
 
 #if fstb_SYS == fstb_SYS_LINUX && ! defined (MAIN_USE_VOID)
-	::wiringPiSetupPhys ();
+	::wiringPiSetupGpio ();
 
 	::pinMode (mfx::hw::GpioPin::_nav_cancel, INPUT);
 	if (::digitalRead (mfx::hw::GpioPin::_nav_cancel) == LOW)

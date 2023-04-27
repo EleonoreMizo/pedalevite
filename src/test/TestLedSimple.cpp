@@ -54,7 +54,7 @@ int	TestLedSimple::perform_test ()
 		mfx::hw::GpioPin::_led_2
 	};
 
-	::wiringPiSetupPhys ();
+	::wiringPiSetupGpio ();
 
 	for (int i = 0; i < nbr_leds; ++i)
 	{

@@ -98,10 +98,10 @@ public:
 	virtual        ~GpioPwm () = default;
 	int            init_chn (int chn, int subcycle_time);
 	void           clear (int chn);
-	void           clear (int chn, int pin);
-	void           set_pulse (int chn, int pin, int start, int width);
-	void           add_pulse (int chn, int pin, int start, int width);
-	float          set_multilevel (int chn, int pin, int nbr_cycles, int nbr_phases, int phase, float level);
+	void           clear (int chn, int gpio);
+	void           set_pulse (int chn, int gpio, int start, int width);
+	void           add_pulse (int chn, int gpio, int start, int width);
+	float          set_multilevel (int chn, int gpio, int nbr_cycles, int nbr_phases, int phase, float level);
 
 
 
@@ -127,14 +127,14 @@ private:
 		virtual        ~Channel ();
 
 		void           clear ();
-		void           clear (int pin);
-		void           add_pulse (int pin, int start, int width);
-		void           set_pulse (int pin, int start, int width);
-		float          set_multilevel (int pin, int nbr_cycles, int nbr_phases, int phase, float level);
-		int            find_free_front_pos (int pin, int pos, bool up_flag, bool fwd_flag);
+		void           clear (int gpio);
+		void           add_pulse (int gpio, int start, int width);
+		void           set_pulse (int gpio, int start, int width);
+		float          set_multilevel (int gpio, int nbr_cycles, int nbr_phases, int phase, float level);
+		int            find_free_front_pos (int gpio, int pos, bool up_flag, bool fwd_flag);
 
 		static bool    is_gpio_ready (int gpio);
-		static void    init_gpio (int pin, int gpio);
+		static void    init_gpio (int gpio);
 
 		int            _index;
 		MmapPtr        _dma_reg;

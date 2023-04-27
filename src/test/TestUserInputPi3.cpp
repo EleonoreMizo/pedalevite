@@ -45,7 +45,7 @@ int	TestUserInputPi3::perform_test ()
 
 	const int      pin_rst = mfx::hw::GpioPin::_reset;
 
-	::wiringPiSetupPhys ();
+	::wiringPiSetupGpio ();
 	::pinMode (pin_rst, OUTPUT);
 	::digitalWrite (pin_rst, LOW);
 	::delay (100);

@@ -52,7 +52,7 @@ namespace hw
 
 
 // Before calling:
-// ::wiringPiSetupPhys ()
+// ::wiringPiSetup* ()
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);

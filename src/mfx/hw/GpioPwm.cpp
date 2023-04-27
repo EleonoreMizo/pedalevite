@@ -160,19 +160,19 @@ void	GpioPwm::clear (int chn)
 
 
 
-void	GpioPwm::clear (int chn, int pin)
+void	GpioPwm::clear (int chn, int gpio)
 {
 	assert (chn >= 0);
 	assert (chn < _nbr_dma_chn);
 	assert (_chn_arr [chn].get () != nullptr);
 
 	Channel &      channel = *(_chn_arr [chn]);
-	channel.clear (pin);
+	channel.clear (gpio);
 }
 
 
 
-void	GpioPwm::add_pulse (int chn, int pin, int start, int width)
+void	GpioPwm::add_pulse (int chn, int gpio, int start, int width)
 {
 	assert (chn >= 0);
 	assert (chn < _nbr_dma_chn);
@@ -182,12 +182,12 @@ void	GpioPwm::add_pulse (int chn, int pin, int start, int width)
 	const int      width_spl = (width + (_granularity >> 1)) / _granularity;
 
 	Channel &      channel   = *(_chn_arr [chn]);
-	channel.add_pulse (pin, start_spl, width_spl);
+	channel.add_pulse (gpio, start_spl, width_spl);
 }
 
 
 
-void	GpioPwm::set_pulse (int chn, int pin, int start, int width)
+void	GpioPwm::set_pulse (int chn, int gpio, int start, int width)
 {
 	assert (chn >= 0);
 	assert (chn < _nbr_dma_chn);
@@ -197,7 +197,7 @@ void	GpioPwm::set_pulse (int chn, int pin, int start, int width)
 	const int      width_spl = (width + (_granularity >> 1)) / _granularity;
 
 	Channel &      channel   = *(_chn_arr [chn]);
-	channel.set_pulse (pin, start_spl, width_spl);
+	channel.set_pulse (gpio, start_spl, width_spl);
 }
 
 
@@ -320,9 +320,10 @@ void	GpioPwm::Channel::clear ()
 
 
 
-void	GpioPwm::Channel::clear (int pin)
+void	GpioPwm::Channel::clear (int gpio)
 {
-	const int      gpio  = ::physPinToGpio (pin);
+	assert (gpio >= 0);
+
 	uint32_t *     d_ptr = _dma.use_buf <uint32_t> ();
 
 	// Remove this gpio from all samples
@@ -331,7 +332,7 @@ void	GpioPwm::Channel::clear (int pin)
 		d_ptr [i] &= ~(1 << gpio);
 	}
 
-	::digitalWrite (pin, 0);
+	::digitalWrite (gpio, 0);
 }
 
 
@@ -344,16 +345,16 @@ void	GpioPwm::Channel::clear (int pin)
 // point in time, only the last added action (eg. set-to-low) will be executed on all pins.
 // To create these kinds of inverted signals on two GPIOs, either offset them by 1 step, or
 // use multiple DMA channels.
-void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
+void	GpioPwm::Channel::add_pulse (int gpio, int start, int width)
 {
+	assert (gpio >= 0);
 	assert (width <= int (_nbr_samples));
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
 
-	const int      gpio = ::physPinToGpio (pin);
 	if (! is_gpio_ready (gpio))
 	{
-		init_gpio (pin, gpio);
+		init_gpio (gpio);
 	}
 
 	int            pos    = start;
@@ -395,16 +396,16 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 
 
 
-void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
+void	GpioPwm::Channel::set_pulse (int gpio, int start, int width)
 {
+	assert (gpio >= 0);
 	assert (width <= int (_nbr_samples));
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
 
-	const int      gpio = ::physPinToGpio (pin);
 	if (! is_gpio_ready (gpio))
 	{
-		init_gpio (pin, gpio);
+		init_gpio (gpio);
 	}
 
 	int            pos    = start;
@@ -446,7 +447,7 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 
 	if (width == 0)
 	{
-		::digitalWrite (pin, 0);
+		::digitalWrite (gpio, 0);
 	}
 }
 
@@ -467,8 +468,9 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 // For a given DMA channel, this function must be called with the
 // same "physical" parameters (nbr_cycles, nbr_phases).
 // Returns the level error.
-float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases, int phase, float level)
+float	GpioPwm::Channel::set_multilevel (int gpio, int nbr_cycles, int nbr_phases, int phase, float level)
 {
+	assert (gpio >= 0);
 	assert (nbr_cycles > 0);
 	assert (nbr_cycles * nbr_phases * 2 <= int (_nbr_samples));
 	assert (nbr_phases > 0);
@@ -477,10 +479,9 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 	assert (level >= 0);
 	assert (level <= 1);
 
-	const int      gpio = ::physPinToGpio (pin);
 	if (! is_gpio_ready (gpio))
 	{
-		init_gpio (pin, gpio);
+		init_gpio (gpio);
 	}
 
 	DmaCtrlBlock * cb_ptr = &_dma.use_cb (0);
@@ -577,7 +578,7 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 
 	if (level == 0)
 	{
-		::digitalWrite (pin, 0);
+		::digitalWrite (gpio, 0);
 	}
 
 	return duty / float (nbr_cycles);
@@ -585,9 +586,9 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 
 
 
-int	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool fwd_flag)
+int	GpioPwm::Channel::find_free_front_pos (int gpio, int pos, bool up_flag, bool fwd_flag)
 {
-	const int      gpio = ::physPinToGpio (pin);
+	assert (gpio >= 0);
 	const DmaCtrlBlock * cb_ptr = &_dma.use_cb (0);
 	const uint32_t *     d_ptr  = _dma.use_buf <const uint32_t> ();
 
@@ -618,10 +619,10 @@ bool	GpioPwm::Channel::is_gpio_ready (int gpio)
 }
 
 
-void	GpioPwm::Channel::init_gpio (int pin, int gpio)
+void	GpioPwm::Channel::init_gpio (int gpio)
 {
-	::pinMode (pin, OUTPUT);
-	::digitalWrite (pin, 0);
+	::pinMode (gpio, OUTPUT);
+	::digitalWrite (gpio, 0);
 	_gpio_init |= 1 << gpio;
 }
 

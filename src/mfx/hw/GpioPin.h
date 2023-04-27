@@ -46,29 +46,26 @@ class GpioPin
 public:
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-	// Physical numbering
+	// BCM numbering (GPIO)
 
 	// Shared
-	static constexpr int _reset      = 18; // GPIO 24 / phys 18
+	static constexpr int _reset      = 24; // GPIO 24 / phys 18
 
 	// Switches
-	static constexpr int _nav_ok     =  7; // GPIO  4 / phys  7
-	static constexpr int _nav_cancel = 22; // GPIO 25 / phys 22
+	static constexpr int _nav_ok     =  4; // GPIO  4 / phys  7
+	static constexpr int _nav_cancel = 25; // GPIO 25 / phys 22
 
 	// LEDs
-	static constexpr int _led_0      = 11; // GPIO 17 / phys 11
-	static constexpr int _led_1      = 13; // GPIO 27 / phys 13
-	static constexpr int _led_2      = 15; // GPIO 22 / phys 15
+	static constexpr int _led_0      = 17; // GPIO 17 / phys 11
+	static constexpr int _led_1      = 27; // GPIO 27 / phys 13
+	static constexpr int _led_2      = 22; // GPIO 22 / phys 15
 
 	// Small Nokia display (never acually used)
-	static constexpr int _pcd8544_dc = 12; // GPIO 18 / phys 12
-	static constexpr int _pcd8544_cs = 16; // GPIO 23 / phys 16
+	static constexpr int _pcd8544_dc = 18; // GPIO 18 / phys 12
+	static constexpr int _pcd8544_cs = 23; // GPIO 23 / phys 16
 
 	// 128x64 display (SPI)
-	static constexpr int _st7920_cs  = 16; // GPIO 23 / phys 16
-
-	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-	// BCM numbering (GPIO)
+	static constexpr int _st7920_cs  = 23; // GPIO 23 / phys 16
 
 	// Audio interface (I2S)
 	static constexpr int _snd_reset  =  5; // GPIO  5 / phys 29
