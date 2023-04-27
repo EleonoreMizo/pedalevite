@@ -64,7 +64,7 @@ protected:
 
 private:
 
-	enum {			NBR_ACC_TESTS	= 10 * 1000 * 1000	};
+	enum {			NBR_ACC_TESTS	= 10'000'000	};
    enum {         MAX_NBR_TESTS  = 10000  };
 
    static void		compute_tf (DataType s [], const DataType x [], long length);

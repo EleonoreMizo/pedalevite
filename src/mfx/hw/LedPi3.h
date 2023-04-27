@@ -82,9 +82,9 @@ private:
 
 	typedef std::array <LedState, _nbr_led> StateArray;
 
-	static const int  _pwm_resol =        25; // Microseconds
-	static const int  _pwm_cycle = 10 * 1000; // Microseconds
-	static const int  _pwm_chn   =         5; // Must be a free channel (see GpioPwm.h)
+	static const int  _pwm_resol =     25; // Microseconds
+	static const int  _pwm_cycle = 10'000; // Microseconds
+	static const int  _pwm_chn   =      5; // Must be a free channel (see GpioPwm.h)
 
 	void           refresh_loop ();
 

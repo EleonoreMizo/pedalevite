@@ -49,7 +49,7 @@ int	TestOscSample::perform_test ()
 	using namespace mfx::dsp::osc;
 	using namespace mfx::dsp::rspl;
 
-	const int		spl_len   = 10L * 1000L * 1000L;
+	const int		spl_len   = 10'000'000L;
 	const int		block_len = 64;
 	const int		dest_len  = 44100 * 12;
 
@@ -91,7 +91,7 @@ int	TestOscSample::perform_test ()
 	tim.stop ();
 
 	double	      spl_per_s = tim.get_best_rate (dest_len);
-	const double   mega_sps  = spl_per_s / 1000000.0;
+	const double   mega_sps  = spl_per_s / 1'000'000.0;
 	printf ("Speed: %12.3f Mspl/s.\n", mega_sps);
 
 	// Format conversion

@@ -195,7 +195,7 @@ UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 	_polling_thread = std::thread (&UserInputPi3::polling_loop, this);
 	_thread_spi.register_cb (
 		*this,
-		std::chrono::microseconds (1000 * 1000 / 100) // 100 Hz refresh rate
+		std::chrono::microseconds (1'000'000 / 100) // 100 Hz refresh rate
 	);
 }
 
@@ -570,7 +570,7 @@ std::chrono::nanoseconds	UserInputPi3::read_clock_ns () const
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
-	const long     ns_mul = 1000L * 1000L * 1000L;
+	const long     ns_mul = 1'000'000'000L;
 
 	return std::chrono::nanoseconds (int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec);
 }

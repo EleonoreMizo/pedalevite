@@ -242,7 +242,7 @@ private:
 		State_NBR_ELT
 	};
 
-	static const int  _bclk_timeout = 1 * 1000 * 1000 * 1000; // Number of loops
+	static const int  _bclk_timeout = 1'000'000'000;          // Number of loops
 	static const int  _block_size_a = (_block_size + 3) & ~3; // Aligned block size
 
 	void           main_loop () noexcept;

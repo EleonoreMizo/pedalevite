@@ -2444,7 +2444,7 @@ void	Model::process_action_tempo_tap (const doc::ActionTempo &action, std::chron
 	if (   dist <= Cst::_tempo_detection_max
 	    && dist >= Cst::_tempo_detection_min)
 	{
-		const double   tempo = (60.0 * 1000*1000) / double (dist.count ());
+		const double   tempo = (60.0 * 1'000'000) / double (dist.count ());
 
 		process_action_tempo (tempo);
 	}

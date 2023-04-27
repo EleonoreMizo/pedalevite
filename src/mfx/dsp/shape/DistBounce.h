@@ -70,7 +70,7 @@ private:
 	float          _sample_freq   = 44100;
 	float          _pos           = 0;
 	float          _speed         = 0;
-	float          _grav          = 25000000.0f / (_sample_freq * _sample_freq);
+	float          _grav          = 25e6f / (_sample_freq * _sample_freq);
 	float          _bounce_rate   = 0.5f;  // [0 ; 1[
 	float          _prev_val      = 0;
 	float          _speed_max     = 2000.0f / _sample_freq;

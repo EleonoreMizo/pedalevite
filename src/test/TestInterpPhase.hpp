@@ -168,7 +168,7 @@ int	TestInterpPhase <T, NPL2>::perform_test_performance ()
 
 		double	      spl_per_s = tim.get_best_rate (dest_len * nbr_loops);
 		spl_per_s += fstb::limit (acc_dummy, -1e-300, 1e-300); // Anti-optimizer trick
-		const double   mega_sps  = spl_per_s / 1000000.0;
+		const double   mega_sps  = spl_per_s / 1'000'000.0;
 		printf (
 			"interpolate()          , FIR length %d, %d sample-blocks            : %12.3f Mspl/s.\n",
 			PHASE_LEN,
@@ -213,7 +213,7 @@ int	TestInterpPhase <T, NPL2>::perform_test_performance ()
 
 		double	      spl_per_s = tim.get_best_rate (dest_len * nbr_loops);
 		spl_per_s += fstb::limit (acc_dummy, -1e-300, 1e-300); // Anti-optimizer trick
-		const double   mega_sps  = spl_per_s / 1000000.0;
+		const double   mega_sps  = spl_per_s / 1'000'000.0;
 		printf (
 			"interpolate_multi_chn(), FIR length %d, %d sample-blocks, %d channels: %12.3f Mspl/s.\n",
 			PHASE_LEN,

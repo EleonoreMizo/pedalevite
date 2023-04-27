@@ -725,7 +725,7 @@ bool	Central::process_queue_audio_to_cmd ()
 {
 	bool           proc_flag = false;
 
-	const std::chrono::microseconds  timeout (150 * 1000);
+	const std::chrono::microseconds  timeout (150'000);
 	std::chrono::microseconds        t_beg = get_cur_date ();
 
 	int            a2c_cnt          = 0;

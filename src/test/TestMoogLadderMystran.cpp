@@ -187,7 +187,7 @@ int	TestMoogLadderMystran::perform_test ()
 		chrono.stop ();
 		double	      spl_per_s = chrono.get_best_rate (len * nbr_passes);
 		spl_per_s += fstb::limit (acc_dummy, -1e-30f, 1e-30f); // Anti-optimizer trick
-		const double   mega_sps  = spl_per_s / 1000000.0;
+		const double   mega_sps  = spl_per_s / 1'000'000.0;
 		printf ("Speed (reso = %4.2f):%9.3f Mspl/s\n", reso, mega_sps);
 	}
 

@@ -69,7 +69,7 @@ private:
 
 	static constexpr int _lap_len       = 1 << 18;
 
-	static constexpr int _nbr_spd_tests = 10 * 1000 * 1000;
+	static constexpr int _nbr_spd_tests = 10'000'000;
    static constexpr int _nbr_tests_max = 10000;
 
 

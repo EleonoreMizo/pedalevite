@@ -69,7 +69,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaM
 ,	_lvl_meter ()
 ,	_meter_result ()
 ,	_period_now (1)
-,	_rate_expected (44100.f / (64 * 1000000))
+,	_rate_expected (44100.f / (64 * 1'000'000))
 ,	_evt_arr ()
 ,	_evt_ptr_arr ()
 ,	_tempo_new (0)

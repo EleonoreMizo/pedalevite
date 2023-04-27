@@ -81,7 +81,7 @@ private:
 	enum Entry
 	{
 		Entry_BASE   = 0,
-		Entry_WINDOW = 1000000,
+		Entry_WINDOW = 1'000'000,
 
 		Entry_NBR_ELT
 	};

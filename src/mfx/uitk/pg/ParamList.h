@@ -90,7 +90,7 @@ private:
 
 	enum Entry
 	{
-		Entry_WINDOW = 1000000,
+		Entry_WINDOW = 1'000'000,
 		Entry_FX_SETUP,
 		Entry_GUI
 	};

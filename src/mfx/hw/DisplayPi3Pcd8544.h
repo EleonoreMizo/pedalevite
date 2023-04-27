@@ -68,7 +68,7 @@ public:
 	static const int  _scr_h    = 48;
 
 	static const int  _spi_port = 1;
-	static const int  _spi_rate = 1 * 1000*1000; // Hz
+	static const int  _spi_rate = 1'000'000; // Hz
 
 	static const int  _pin_dc   = GpioPin::_pcd8544_dc;
 	static const int  _pin_cs   = GpioPin::_pcd8544_cs;

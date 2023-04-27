@@ -428,7 +428,7 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const std::stri
 
 	double	      spl_per_s = tim.get_best_rate (block_len_s * nbr_blocks);
 	spl_per_s += fstb::limit (double (dummy_val), -1e-300, 1e-300);
-	const double   mega_sps  = spl_per_s / 1000000.0;
+	const double   mega_sps  = spl_per_s / 1'000'000.0;
 	printf ("%12.3f Mspl/s.\n", mega_sps);
 }
 

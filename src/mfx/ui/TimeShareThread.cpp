@@ -207,7 +207,7 @@ std::chrono::nanoseconds	TimeShareThread::get_time ()
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
-	const long     ns_mul = 1000L * 1000L * 1000L;
+	const long     ns_mul = 1'000'000'000L;
 	return std::chrono::nanoseconds (int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec);
 
 #elif fstb_SYS == fstb_SYS_WIN

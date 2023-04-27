@@ -81,7 +81,7 @@ GpioPwm::GpioPwm (int granularity)
 		(bcm2711_flag) ? bcm2837::_plld_freq_2711 : bcm2837::_plld_freq_2835;
 
 	// PWM divisor to obtain 10 MHz
-	const int      target_freq  = 10 * 1000 * 1000; // 10 MHz
+	const int      target_freq  = 10'000'000; // 10 MHz
 	const int      clk_div      = plld_freq / target_freq;
 
 	_reg_pwm.at (bcm2837pwm::_ctl   ) = 0;

@@ -95,7 +95,7 @@ void	SpeedTester <AP>::perform_test (const char *classname_0, const char *funcna
 	// Displays result
 	const double   spl_per_s =
 		tim.get_best_rate (this->_block_len * this->_nbr_blocks);
-	const double   mega_sps  = spl_per_s / 1000000.0;
+	const double   mega_sps  = spl_per_s / 1'000'000.0;
 	printf ("%10.3f Mspl/s\n", mega_sps);
 	fflush (stdout);
 }

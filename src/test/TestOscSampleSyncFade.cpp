@@ -49,7 +49,7 @@ int	TestOscSampleSyncFade::perform_test ()
 	std::vector <float>  result_m;
 
 	// We use it as an easy sample source.
-	const int		spl_len = 10 * 1000 * 1000;
+	const int		spl_len = 10'000'000;
 	TestSampleMipMapper	tsmm (spl_len);
 
 	// Oscillator setup
@@ -133,7 +133,7 @@ int	TestOscSampleSyncFade::perform_test ()
 	printf ("done.\n");
 
 	const int		speed_test_block_len  = 1024;
-	const int		speed_test_nbr_blocks = 100L * 1000L;
+	const int		speed_test_nbr_blocks = 100'000L;
 
 	std::vector <OscType::CalcDataType>	dummy_result (speed_test_block_len);
 
@@ -155,7 +155,7 @@ int	TestOscSampleSyncFade::perform_test ()
 	double	      spl_per_s = tim.get_best_rate (
 		speed_test_block_len * speed_test_nbr_blocks
 	);
-	const double   mega_sps  = spl_per_s / 1000000.0;
+	const double   mega_sps  = spl_per_s / 1'000'000.0;
 	printf ("%12.3f Mspl/s.\n", mega_sps);
 
 	return 0;

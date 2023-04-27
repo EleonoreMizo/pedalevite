@@ -99,7 +99,7 @@ public:
 	static const int  _nbr_adc         = 8;
 	static const int  _res_adc         = 10;            // Bits
 	static const int  _spi_port        = 0;             // For the ADC
-	static const int  _spi_rate        = 1 * 1000*1000; // Hz
+	static const int  _spi_rate        = 1'000'000;     // Hz
 
 	static const int  _nbr_switches    = _nbr_sw_gpio + _nbr_sw_23017 + 2;
 	static const SwitchSrc

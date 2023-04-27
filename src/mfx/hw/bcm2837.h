@@ -51,12 +51,12 @@ static const uint32_t   _phys_base_2837 = 0x3F000000;
 static const uint32_t   _phys_base_2711 = 0xFE000000;
 
 // PLLD clock frequency, in Hz
-static const int        _plld_freq_2835 = 500 * 1000 * 1000; // 500 MHz
-static const int        _plld_freq_2711 = 750 * 1000 * 1000; // 750 MHz
+static const int        _plld_freq_2835 = 500'000'000; // 500 MHz
+static const int        _plld_freq_2711 = 750'000'000; // 750 MHz
 
 // Oscillator frequency, in Hz
-static const int        _osc_freq_2835  = 19200 * 1000; // 19.2 MHz
-static const int        _osc_freq_2711  = 54000 * 1000; // 54 MHz (experimental data)
+static const int        _osc_freq_2835  =  19'200'000; // 19.2 MHz
+static const int        _osc_freq_2711  =  54'000'000; // 54 MHz (experimental data)
 
 
 

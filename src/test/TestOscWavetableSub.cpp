@@ -251,7 +251,7 @@ void	TestOscWavetableSub::test_speed ()
 
 	double	      spl_per_s = tim.get_best_rate (block_len * nbr_blocks);
 	spl_per_s += fstb::limit (acc_dummy, -1e-300, 1e-300); // Anti-optimizer trick
-	const double   mega_sps  = spl_per_s / 1000000.0;
+	const double   mega_sps  = spl_per_s / 1'000'000.0;
 	printf ("Speed: %12.3f Mspl/s.\n\n", mega_sps);
 }
 
