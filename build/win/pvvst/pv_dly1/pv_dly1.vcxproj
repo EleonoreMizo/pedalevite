@@ -114,7 +114,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\..\..\..\src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus /Zc:externConstexpr /Zc:lambda %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>

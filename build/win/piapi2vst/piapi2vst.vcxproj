@@ -110,7 +110,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\vstsdk24;..\..\..\src\vstsdk24\pluginterfaces\vst2.x;..\..\..\src\vstsdk24\public.sdk\source\vst2.x</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus /Zc:externConstexpr /Zc:lambda %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>

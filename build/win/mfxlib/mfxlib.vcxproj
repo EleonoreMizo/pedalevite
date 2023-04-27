@@ -111,7 +111,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\asiosdk2\common;..\..\..\src\asiosdk2\host;..\..\..\src\asiosdk2\host\pc</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:__cplusplus /Zc:externConstexpr /Zc:lambda %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
