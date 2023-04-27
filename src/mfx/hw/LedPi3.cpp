@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/hw/GpioPin.h"
 #include "mfx/hw/LedPi3.h"
 
 #include <wiringPi.h>
@@ -53,9 +54,9 @@ namespace hw
 
 const int	LedPi3::_gpio_pin_arr [_nbr_led] =
 #if defined (mfx_hw_LedPi3_REVERSE_ORDER)
-	{ 15, 13, 11 };
+	{ GpioPin::_led_2, GpioPin::_led_1, GpioPin::_led_0 };
 #else
-	{ 11, 13, 15 };
+	{ GpioPin::_led_0, GpioPin::_led_1, GpioPin::_led_2 };
 #endif
 
 

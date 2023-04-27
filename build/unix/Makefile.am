@@ -1839,6 +1839,7 @@ commonsrc += \
         ../../src/mfx/hw/GpioAccess.cpp \
         ../../src/mfx/hw/GpioAccess.h \
         ../../src/mfx/hw/GpioAccess.hpp \
+        ../../src/mfx/hw/GpioPin.h \
         ../../src/mfx/hw/GpioPwm.cpp \
         ../../src/mfx/hw/GpioPwm.h \
         ../../src/mfx/hw/LedPi3.cpp \

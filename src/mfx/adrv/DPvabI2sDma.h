@@ -35,6 +35,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/AllocAlign.h"
 #include "mfx/adrv/DriverInterface.h"
 #include "mfx/hw/GpioAccess.h"
+#include "mfx/hw/GpioPin.h"
 #include "mfx/hw/MmapPtr.h"
 #include "mfx/hw/RPiDmaBlocks.h"
 
@@ -97,22 +98,22 @@ public:
 	// GPIO pins (BCM numbering, not WiringPi)
 
 	// W - Reset pin (0 = reset, 1 = working)
-	static constexpr int _pin_rst      =  5;
+	static constexpr int _pin_rst      = hw::GpioPin::_snd_reset;
 
 	// W - Sampling rate selection (see _fs_code)
-	static constexpr int _pin_freq     =  6;
+	static constexpr int _pin_freq     = hw::GpioPin::_snd_sfreq;
 
 	// R - I2S bit clock
-	static constexpr int _pin_bclk     = 18;
+	static constexpr int _pin_bclk     = hw::GpioPin::_snd_bclk;
 
 	// R - I2S word selection (0 = L, 1 = R)
-	static constexpr int _pin_lrck     = 19;
+	static constexpr int _pin_lrck     = hw::GpioPin::_snd_lrck;
 
 	// R - I2S data input (codec to CPU)
-	static constexpr int _pin_din      = 20;
+	static constexpr int _pin_din      = hw::GpioPin::_snd_din;
 
 	// W - I2S data output (CPU to codec)
-	static constexpr int _pin_dout     = 21;
+	static constexpr int _pin_dout     = hw::GpioPin::_snd_dout;
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 

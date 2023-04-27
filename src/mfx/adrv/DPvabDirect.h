@@ -54,6 +54,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/AllocAlign.h"
 #include "mfx/adrv/DriverInterface.h"
+#include "mfx/hw/GpioPin.h"
 
 #include <atomic>
 #include <condition_variable>
@@ -95,12 +96,12 @@ public:
 #endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 	// GPIO pins (BCM numbering, not WiringPi)
-	static const int  _pin_rst      =  5; // W - Reset pin (0 = reset, 1 = working)
-	static const int  _pin_freq     =  6; // W - Frequency selection (0 = 48 kHz, 1 = 44.1 kHz)
-	static const int  _pin_bclk     = 18; // R - I2S bit clock
-	static const int  _pin_lrck     = 19; // R - I2S word selection (0 = L, 1 = R)
-	static const int  _pin_din      = 20; // R - I2S data input (codec to cpu)
-	static const int  _pin_dout     = 21; // W - I2S data output (cpu to codec)
+	static const int  _pin_rst      = hw::GpioPin::_snd_reset; // W - Reset pin (0 = reset, 1 = working)
+	static const int  _pin_freq     = hw::GpioPin::_snd_sfreq; // W - Frequency selection (0 = 48 kHz, 1 = 44.1 kHz)
+	static const int  _pin_bclk     = hw::GpioPin::_snd_bclk;  // R - I2S bit clock
+	static const int  _pin_lrck     = hw::GpioPin::_snd_lrck;  // R - I2S word selection (0 = L, 1 = R)
+	static const int  _pin_din      = hw::GpioPin::_snd_din;   // R - I2S data input (codec to cpu)
+	static const int  _pin_dout     = hw::GpioPin::_snd_dout;  // W - I2S data output (cpu to codec)
 
 	               DPvabDirect ();
 	virtual        ~DPvabDirect ();

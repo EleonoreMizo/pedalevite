@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/hw/GpioPin.h"
 #include "mfx/hw/UserInputPi3.h"
 #include "mfx/ui/TimeShareThread.h"
 #include "test/TestUserInputPi3.h"
@@ -42,7 +43,7 @@ int	TestUserInputPi3::perform_test ()
 {
 	int            ret_val = 0;
 
-	const int      pin_rst = 18;
+	const int      pin_rst = mfx::hw::GpioPin::_reset;
 
 	::wiringPiSetupPhys ();
 	::pinMode (pin_rst, OUTPUT);

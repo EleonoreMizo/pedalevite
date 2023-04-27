@@ -29,11 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/TimeShareCbInterface.h"
 #include "mfx/ui/TimeShareThread.h"
 
-#if fstb_SYS == fstb_SYS_LINUX
-	#include <wiringPi.h>
-#elif fstb_SYS == fstb_SYS_WIN
+#if fstb_SYS == fstb_SYS_WIN
 	#include <Windows.h>
-#else
+#elif fstb_SYS != fstb_SYS_LINUX
 	#error Unsupported system
 #endif
 

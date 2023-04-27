@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/hw/GpioPin.h"
 #include "test/TestLedSimple.h"
 
 #include <unistd.h>
@@ -46,7 +47,12 @@ int	TestLedSimple::perform_test ()
 	int            ret_val = 0;
 
 	static const int  nbr_leds = 3;
-	static const int  led_pin_arr [nbr_leds] = { 11, 13, 15 }; // GPIO 17, 27, 22
+	static const int  led_pin_arr [nbr_leds] =
+	{
+		mfx::hw::GpioPin::_led_0,
+		mfx::hw::GpioPin::_led_1,
+		mfx::hw::GpioPin::_led_2
+	};
 
 	::wiringPiSetupPhys ();
 

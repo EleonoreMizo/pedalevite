@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/hw/GpioPin.h"
 #include "mfx/hw/mcp23017.h"
 #include "mfx/hw/UserInputPi3.h"
 #include "mfx/ui/TimeShareThread.h"
@@ -72,7 +73,10 @@ const int	UserInputPi3::_i2c_dev_23017_arr [_nbr_dev_23017] =
 	0x20 + 1
 };
 
-const int	UserInputPi3::_gpio_pin_arr [_nbr_sw_gpio] = { 7, 22 };
+const int	UserInputPi3::_gpio_pin_arr [_nbr_sw_gpio] =
+{
+	GpioPin::_nav_ok, GpioPin::_nav_cancel
+};
 
 const UserInputPi3::SwitchSrc	UserInputPi3::_switch_arr [_nbr_switches] =
 {

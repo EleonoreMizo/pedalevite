@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "conc/CellPool.h"
 #include "conc/LockFreeCell.h"
 #include "conc/LockFreeQueue.h"
+#include "mfx/hw/GpioPin.h"
 #include "mfx/ui/DisplayInterface.h"
 #include "mfx/ui/TimeShareCbInterface.h"
 
@@ -69,9 +70,9 @@ public:
 	static const int  _spi_port = 1;
 	static const int  _spi_rate = 1 * 1000*1000; // Hz
 
-	static const int  _pin_dc   = 12;
-	static const int  _pin_cs   = 16;
-	static const int  _pin_rst  = 18;
+	static const int  _pin_dc   = GpioPin::_pcd8544_dc;
+	static const int  _pin_cs   = GpioPin::_pcd8544_cs;
+	static const int  _pin_rst  = GpioPin::_reset;
 
 
 

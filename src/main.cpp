@@ -112,6 +112,7 @@
   #else
 	#include "mfx/hw/DisplayPi3St7920.h"
   #endif
+	#include "mfx/hw/GpioPin.h"
 	#include "mfx/hw/LedPi3.h"
 	#include "mfx/hw/UserInputPi3.h"
 
@@ -180,12 +181,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-
-
-
-#if (fstb_SYS == fstb_SYS_LINUX) && ! defined (MAIN_USE_VOID)
-static const int  MAIN_pin_reset = 18;
-#endif // fstb_SYS_LINUX, MAIN_USE_VOID
 
 
 
@@ -808,18 +803,18 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 #if fstb_SYS == fstb_SYS_LINUX && ! defined (MAIN_USE_VOID)
 	::wiringPiSetupPhys ();
 
-	::pinMode (22, INPUT);
-	if (::digitalRead (22) == LOW)
+	::pinMode (mfx::hw::GpioPin::_nav_cancel, INPUT);
+	if (::digitalRead (mfx::hw::GpioPin::_nav_cancel) == LOW)
 	{
 		fprintf (stderr, "Emergency exit\n");
 		throw 0;
 	}
 
-	::pinMode (MAIN_pin_reset, OUTPUT);
+	::pinMode (mfx::hw::GpioPin::_reset, OUTPUT);
 
-	::digitalWrite (MAIN_pin_reset, LOW);
+	::digitalWrite (mfx::hw::GpioPin::_reset, LOW);
 	std::this_thread::sleep_for (std::chrono::milliseconds (100));
-	::digitalWrite (MAIN_pin_reset, HIGH);
+	::digitalWrite (mfx::hw::GpioPin::_reset, HIGH);
 	std::this_thread::sleep_for (std::chrono::milliseconds (100));
 #endif
 
