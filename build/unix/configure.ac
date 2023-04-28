@@ -20,6 +20,7 @@ AS_IF(
 AC_DEFINE_UNQUOTED([PV_VERSION], [($pv_version)], [Pedale Vite version. 1 or 2.])
 
 AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [Compilation options required for debugging. [default=no]]))
+AC_ARG_ENABLE([wiringpi], AS_HELP_STRING([--enable-wiringpi], [Uses the wiringPi library to access the Raspberry Pi GPIO. [default=yes]]))
 
 
 
@@ -91,8 +92,19 @@ AS_IF(
         AS_IF(
             [test "x$ARM" = "xtrue"],
             [
-                AC_CHECK_LIB([wiringPi], [wiringPiSetupPhys])
-                LIBS="$LIBS -lwiringPi -lbcm_host"
+                AS_IF(
+                    [test "x$enable_wiringpi" = "xyes"],
+                    [
+                        AC_CHECK_LIB([wiringPi], [wiringPiSetupPhys])
+                        LIBS="$LIBS -lwiringPi"
+                        AC_DEFINE([PV_USE_WIRINGPI])
+                    ],
+                    [
+                        AC_CHECK_LIB([pigpio], [gpioInitialise])
+                        LIBS="$LIBS -lpigpio"
+                    ]
+                )
+                LIBS="$LIBS -lbcm_host"
                 LDFLAGS="$LDFLAGS -L/opt/vc/lib"
                 EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -I/opt/vc/include"
             ]
