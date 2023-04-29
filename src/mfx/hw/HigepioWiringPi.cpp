@@ -132,6 +132,9 @@ HigepioWiringPi::Spi::Spi (const HigepioWiringPi &io, int chn, int speed, const 
 // Returns 0 on success, negative on failure
 int   HigepioWiringPi::Spi::rw_data (uint8_t *data_ptr, int len) const noexcept
 {
+	assert (data_ptr != nullptr);
+	assert (len > 0);
+
 	return ::wiringPiSPIDataRW (
 		_chn, reinterpret_cast <unsigned char *> (data_ptr), len
 	);
