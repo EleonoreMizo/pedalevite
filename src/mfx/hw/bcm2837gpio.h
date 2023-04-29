@@ -40,29 +40,29 @@ namespace bcm2837gpio
 
 
 
-static const int        _nbr_gpio = 54;    // Number of GPIO pins (0-based)
+static constexpr int       _nbr_gpio = 54;    // Number of GPIO pins (0-based)
 
 // GPIO registers relative to the base address (p. 90)
-static const uint32_t   _gpio_ofs = 0x00200000;
-static const uint32_t   _gpio_len = 0x1000; // Bytes
+static constexpr uint32_t  _gpio_ofs = 0x00200000;
+static constexpr uint32_t  _gpio_len = 0x1000; // Bytes
 
 // Register map
-static const uint32_t   _gpfsel   = 0x00;  // W, 6 words, 10 pins per word
-static const uint32_t   _gpset    = 0x1C;  // W, 2 words
-static const uint32_t   _gpclr    = 0x28;  // W, 2 words
-static const uint32_t   _gplev    = 0x34;  // R, 2 words
-static const uint32_t   _gpeds    = 0x40;  // R/W, 2 words
-static const uint32_t   _gpren    = 0x4C;  // R/W, 2 words
-static const uint32_t   _gpfen    = 0x58;  // R/W, 2 words
-static const uint32_t   _gphen    = 0x64;  // R/W, 2 words
-static const uint32_t   _gplen    = 0x70;  // R/W, 2 words
-static const uint32_t   _gparen   = 0x7C;  // R/W, 2 words
-static const uint32_t   _gpafen   = 0x88;  // R/W, 2 words
-static const uint32_t   _gppud    = 0x94;  // R/W
-static const uint32_t   _gppudclk = 0x98;  // R/W, 2 words
+static constexpr uint32_t  _gpfsel   = 0x00;  // W, 6 words, 10 pins per word
+static constexpr uint32_t  _gpset    = 0x1C;  // W, 2 words
+static constexpr uint32_t  _gpclr    = 0x28;  // W, 2 words
+static constexpr uint32_t  _gplev    = 0x34;  // R, 2 words
+static constexpr uint32_t  _gpeds    = 0x40;  // R/W, 2 words
+static constexpr uint32_t  _gpren    = 0x4C;  // R/W, 2 words
+static constexpr uint32_t  _gpfen    = 0x58;  // R/W, 2 words
+static constexpr uint32_t  _gphen    = 0x64;  // R/W, 2 words
+static constexpr uint32_t  _gplen    = 0x70;  // R/W, 2 words
+static constexpr uint32_t  _gparen   = 0x7C;  // R/W, 2 words
+static constexpr uint32_t  _gpafen   = 0x88;  // R/W, 2 words
+static constexpr uint32_t  _gppud    = 0x94;  // R/W
+static constexpr uint32_t  _gppudclk = 0x98;  // R/W, 2 words
 
 // Registers specific to BCM2711
-static const uint32_t   _gppuppdn = 0xE4;  // R/W, 4 words, 16 pins per word
+static constexpr uint32_t  _gppuppdn = 0xE4;  // R/W, 4 words, 16 pins per word
 
 enum PinFnc
 {
@@ -77,7 +77,7 @@ enum PinFnc
 
 	PinFnc_NBR_ELT,
 };
-static const int        _fnc_field_size = 3; // Bits
+static constexpr int       _fnc_field_size = 3; // Bits
 
 enum Pull
 {

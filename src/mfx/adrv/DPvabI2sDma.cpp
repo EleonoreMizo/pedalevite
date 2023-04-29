@@ -191,14 +191,14 @@ int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface 
 	_cb_ptr        = &callback;
 
 	// Custom pins
-	_gpio.set_fnc (_pin_rst , hw::GpioAccess::PinFnc_OUT  );
-	_gpio.set_fnc (_pin_freq, hw::GpioAccess::PinFnc_OUT  );
+	_gpio.set_fnc (_pin_rst , hw::bcm2837gpio::PinFnc_OUT  );
+	_gpio.set_fnc (_pin_freq, hw::bcm2837gpio::PinFnc_OUT  );
 
 	// I2S pins, mode ALT0 (p. 102)
-	_gpio.set_fnc (_pin_bclk, hw::GpioAccess::PinFnc_ALT0);
-	_gpio.set_fnc (_pin_lrck, hw::GpioAccess::PinFnc_ALT0);
-	_gpio.set_fnc (_pin_din , hw::GpioAccess::PinFnc_ALT0);
-	_gpio.set_fnc (_pin_dout, hw::GpioAccess::PinFnc_ALT0);
+	_gpio.set_fnc (_pin_bclk, hw::bcm2837gpio::PinFnc_ALT0);
+	_gpio.set_fnc (_pin_lrck, hw::bcm2837gpio::PinFnc_ALT0);
+	_gpio.set_fnc (_pin_din , hw::bcm2837gpio::PinFnc_ALT0);
+	_gpio.set_fnc (_pin_dout, hw::bcm2837gpio::PinFnc_ALT0);
 
 	_gpio.write (_pin_freq, _fs_code);
 

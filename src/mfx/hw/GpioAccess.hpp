@@ -43,7 +43,7 @@ void	GpioAccess::clear (int gpio) const
 	assert (gpio < _nbr_gpio);
 
 	const uint32_t mask = uint32_t (1) << gpio;
-	_gpio_ptr [_ofs_reg_clr] = mask;
+	_gpio_ptr [_reg_clr] = mask;
 }
 
 
@@ -54,7 +54,7 @@ void	GpioAccess::set (int gpio) const
 	assert (gpio < _nbr_gpio);
 
 	const uint32_t mask = uint32_t (1) << gpio;
-	_gpio_ptr [_ofs_reg_set] = mask;
+	_gpio_ptr [_reg_set] = mask;
 }
 
 
@@ -81,16 +81,7 @@ int	GpioAccess::read (int gpio) const
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
 
-	_last_read = _gpio_ptr [_ofs_reg_lvl];
-
-	return read_cached (gpio);
-}
-
-
-
-int	GpioAccess::read_cached (int gpio) const
-{
-	return (_last_read >> gpio) & 1;
+	return (_gpio_ptr [_reg_lvl] >> gpio) & 1;
 }
 
 
@@ -111,7 +102,8 @@ void	GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio)
 	const int      nbr_gpio_per_reg = 10;
 
 	ofs_reg =  gpio / nbr_gpio_per_reg;
-	shf_bit = (gpio - (ofs_reg * nbr_gpio_per_reg)) * _fnc_field_size;
+	shf_bit =
+		  (gpio - (ofs_reg * nbr_gpio_per_reg)) * bcm2837gpio::_fnc_field_size;
 }
 
 
