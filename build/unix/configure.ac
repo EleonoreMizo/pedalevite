@@ -93,7 +93,7 @@ AS_IF(
             [test "x$ARM" = "xtrue"],
             [
                 AS_IF(
-                    [test "x$enable_wiringpi" = "xyes"],
+                    [test "x$enable_wiringpi" != "xno"],
                     [
                         AC_CHECK_LIB([wiringPi], [wiringPiSetupPhys])
                         LIBS="$LIBS -lwiringPi"
@@ -180,6 +180,7 @@ AM_CONDITIONAL([ARM], [test "x$ARM" = "xtrue"])
 AM_CONDITIONAL([UNX], [test "x$UNX" = "xtrue"])
 AM_CONDITIONAL([WIN], [test "x$WIN" = "xtrue"])
 AM_CONDITIONAL([CLG], [test "x$CLG" = "xtrue"])
+AM_CONDITIONAL([WPI], [test "x$enable_wiringpi" != "xno"])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
