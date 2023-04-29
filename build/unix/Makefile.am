@@ -1805,6 +1805,14 @@ endif
 
 if UNX
 
+if WPI
+
+commonsrc += \
+        ../../src/mfx/hw/HigepioWiringPi.cpp \
+        ../../src/mfx/hw/HigepioWiringPi.h
+
+endif
+
 commonsrc += \
         ../../src/jack/jack.h \
         ../../src/jack/systemdeps.h \
@@ -1842,6 +1850,7 @@ commonsrc += \
         ../../src/mfx/hw/GpioPin.h \
         ../../src/mfx/hw/GpioPwm.cpp \
         ../../src/mfx/hw/GpioPwm.h \
+        ../../src/mfx/hw/Higepio.h \
         ../../src/mfx/hw/LedPi3.cpp \
         ../../src/mfx/hw/LedPi3.h \
         ../../src/mfx/hw/MBox.cpp \

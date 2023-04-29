@@ -1360,6 +1360,8 @@
     <ClInclude Include="..\..\..\src\mfx\hw\GpioAccess.hpp" />
     <ClInclude Include="..\..\..\src\mfx\hw\GpioPin.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\GpioPwm.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\Higepio.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\HigepioWiringPi.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\IoWindows.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\LedPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MBox.h" />
@@ -2081,6 +2083,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\GpioPwm.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\HigepioWiringPi.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\IoWindows.cpp" />

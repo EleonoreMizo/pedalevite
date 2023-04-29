@@ -19,15 +19,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if ! defined (mfx_hw_LedPi3_HEADER_INCLUDED)
 #define mfx_hw_LedPi3_HEADER_INCLUDED
 
-#if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
-#endif
-
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/GpioPwm.h"
+#include "mfx/hw/Higepio.h"
 #include "mfx/ui/LedInterface.h"
 
 #include <array>
@@ -51,7 +48,7 @@ class LedPi3 final
 
 public:
 
-	               LedPi3 ();
+	explicit       LedPi3 (Higepio &io);
 	virtual        ~LedPi3 ();
 
 	static const int  _nbr_led = 3;
@@ -88,6 +85,7 @@ private:
 
 	void           refresh_loop ();
 
+	Higepio &      _io;
 	GpioPwm        _gpio_pwm;
 	StateArray     _state_arr;
 
@@ -101,8 +99,11 @@ private:
 
 private:
 
+	               LedPi3 ()                               = delete;
 	               LedPi3 (const LedPi3 &other)            = delete;
+	               LedPi3 (LedPi3 &&other)                 = delete;
 	LedPi3 &       operator = (const LedPi3 &other)        = delete;
+	LedPi3 &       operator = (LedPi3 &&other)             = delete;
 	bool           operator == (const LedPi3 &other) const = delete;
 	bool           operator != (const LedPi3 &other) const = delete;
 

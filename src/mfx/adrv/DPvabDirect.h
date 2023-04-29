@@ -55,6 +55,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "mfx/adrv/DriverInterface.h"
 #include "mfx/hw/GpioPin.h"
+#include "mfx/hw/Higepio.h"
 
 #include <atomic>
 #include <condition_variable>
@@ -103,7 +104,7 @@ public:
 	static const int  _pin_din      = hw::GpioPin::_snd_din;   // R - I2S data input (codec to cpu)
 	static const int  _pin_dout     = hw::GpioPin::_snd_dout;  // W - I2S data output (cpu to codec)
 
-	               DPvabDirect ();
+	explicit       DPvabDirect (hw::Higepio &io);
 	virtual        ~DPvabDirect ();
 
 
@@ -296,7 +297,8 @@ private:
 	State          _state;
 
 #if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvabDirect_TEST)
-	int            _i2c_hnd;
+	hw::Higepio::I2c
+	               _i2c;
 #endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 
@@ -305,6 +307,7 @@ private:
 
 private:
 
+	               DPvabDirect ()                               = delete;
 	               DPvabDirect (const DPvabDirect &other)       = delete;
 	               DPvabDirect (DPvabDirect &&other)            = delete;
 	DPvabDirect &  operator = (const DPvabDirect &other)        = delete;

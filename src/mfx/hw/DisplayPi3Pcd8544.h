@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "conc/LockFreeCell.h"
 #include "conc/LockFreeQueue.h"
 #include "mfx/hw/GpioPin.h"
+#include "mfx/hw/Higepio.h"
 #include "mfx/ui/DisplayInterface.h"
 #include "mfx/ui/TimeShareCbInterface.h"
 
@@ -61,7 +62,7 @@ class DisplayPi3Pcd8544 final
 
 public:
 
-	explicit       DisplayPi3Pcd8544 (ui::TimeShareThread &thread_spi);
+	explicit       DisplayPi3Pcd8544 (ui::TimeShareThread &thread_spi, Higepio &io);
 	virtual        ~DisplayPi3Pcd8544 ();
 
 	static const int  _scr_w    = 84;
@@ -165,7 +166,8 @@ private:
 
 	std::array <uint8_t, _scr_w * _scr_h>
 	               _screen_buf;
-	int            _hnd_spi;
+	Higepio &      _io;
+	Higepio::Spi   _spi;
 
 	MsgPool        _msg_pool;
 	MsgQueue       _msg_queue;

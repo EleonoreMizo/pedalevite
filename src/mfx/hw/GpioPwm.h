@@ -44,10 +44,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if ! defined (mfx_hw_GpioPwm_HEADER_INCLUDED)
 #define mfx_hw_GpioPwm_HEADER_INCLUDED
 
-#if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
-#endif
-
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -56,6 +52,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/hw/bcm2837dma.h"
 #include "mfx/hw/bcm2837gpio.h"
 #include "mfx/hw/bcm2837pwm.h"
+#include "mfx/hw/Higepio.h"
 #include "mfx/hw/MmapPtr.h"
 #include "mfx/hw/RPiDmaBlocks.h"
 
@@ -94,14 +91,14 @@ public:
 	static const int  _nbr_dma_chn       = 15;
 	static const int  _min_subcycle_time = 3000; // Microseconds
 
-	explicit       GpioPwm (int granularity);
+	explicit       GpioPwm (int granularity, Higepio &io);
 	virtual        ~GpioPwm () = default;
 	int            init_chn (int chn, int subcycle_time);
 	void           clear (int chn);
 	void           clear (int chn, int gpio);
 	void           set_pulse (int chn, int gpio, int start, int width);
 	void           add_pulse (int chn, int gpio, int start, int width);
-	float          set_multilevel (int chn, int gpio, int nbr_cycles, int nbr_phases, int phase, float level);
+//	float          set_multilevel (int chn, int gpio, int nbr_cycles, int nbr_phases, int phase, float level);
 
 
 
@@ -123,7 +120,7 @@ private:
 
 		static constexpr int _nbr_blk_per_spl = 2;
 
-		explicit       Channel (int index, uint32_t periph_base_addr, uint32_t subcycle_time, int granularity);
+		explicit       Channel (Higepio &io, int index, uint32_t periph_base_addr, uint32_t subcycle_time, int granularity);
 		virtual        ~Channel ();
 
 		void           clear ();
@@ -132,9 +129,11 @@ private:
 		void           set_pulse (int gpio, int start, int width);
 		float          set_multilevel (int gpio, int nbr_cycles, int nbr_phases, int phase, float level);
 		int            find_free_front_pos (int gpio, int pos, bool up_flag, bool fwd_flag);
+		void           init_gpio (int gpio);
 
 		static bool    is_gpio_ready (int gpio);
-		static void    init_gpio (int gpio);
+
+		Higepio &      _io;
 
 		int            _index;
 		MmapPtr        _dma_reg;
@@ -154,6 +153,7 @@ private:
 	typedef std::array <ChannelSPtr, _nbr_dma_chn> ChannelArray;
 
 	int            _granularity;        // Granularity in microseconds
+	Higepio &      _io;
 	uint32_t       _periph_base_addr;   // Value depends on the Pi version
 	MmapPtr        _reg_pwm;
 	MmapPtr        _reg_clk;

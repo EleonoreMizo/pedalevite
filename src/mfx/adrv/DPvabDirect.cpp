@@ -45,11 +45,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #if ! defined (mfx_adrv_DPvabDirect_TEST)
 
-	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
-		#include <wiringPi.h>
-		#include <wiringPiI2C.h>
-	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
-
 	#include <bcm_host.h>
 
 	#include <sys/mman.h>
@@ -78,7 +73,7 @@ namespace adrv
 
 
 
-DPvabDirect::DPvabDirect ()
+DPvabDirect::DPvabDirect (hw::Higepio &io)
 :	_gpio ()
 ,	_cb_ptr (nullptr)
 ,	_lrclk_cur (0)
@@ -103,7 +98,7 @@ DPvabDirect::DPvabDirect ()
 ,	_proc_now_flag (false)
 ,	_state (State_STOP)
 #if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvabDirect_TEST)
-,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
+,	_i2c (io, _i2c_addr, "DPvabDirect: cannot open I2C port")
 #endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE, mfx_adrv_DPvabDirect_TEST
 {
 	// Nothing
@@ -118,14 +113,6 @@ DPvabDirect::~DPvabDirect ()
 		_exit_flag = true;
 		_thread_main.join ();
 	}
-
-#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvabDirect_TEST)
-	if (_i2c_hnd != -1)
-	{
-		close (_i2c_hnd);
-		_i2c_hnd = -1;
-	}
-#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE, mfx_adrv_DPvabDirect_TEST
 }
 
 
@@ -959,16 +946,12 @@ void	DPvabDirect::proc_loop ()
 
 void	DPvabDirect::write_reg (uint8_t reg, uint8_t val) noexcept
 {
-	assert (_i2c_hnd != -1);
-
-	::wiringPiI2CWriteReg8 (_i2c_hnd, reg, val);
+	_i2c.write_reg_8 (reg, val);
 }
 
 
 
 	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
-
-
 
 #endif // mfx_adrv_DPvabDirect_TEST
 

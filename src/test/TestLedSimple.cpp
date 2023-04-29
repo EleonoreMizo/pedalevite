@@ -25,11 +25,11 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/GpioPin.h"
+#include "mfx/hw/Higepio.h"
 #include "test/TestLedSimple.h"
 
-#include <unistd.h>
-
-#include <wiringPi.h>
+#include <chrono>
+#include <thread>
 
 #include <cassert>
 #include <cstdint>
@@ -54,12 +54,12 @@ int	TestLedSimple::perform_test ()
 		mfx::hw::GpioPin::_led_2
 	};
 
-	::wiringPiSetupGpio ();
+	mfx::hw::Higepio io;
 
 	for (int i = 0; i < nbr_leds; ++i)
 	{
-		::pinMode  (led_pin_arr [i], OUTPUT);
-		::digitalWrite (led_pin_arr [i], LOW);
+		io.set_pin_mode (led_pin_arr [i], mfx::hw::bcm2837gpio::PinFnc_OUT);
+		io.write_pin (led_pin_arr [i], 0);
 	}
 
 	int            active = 0;
@@ -67,9 +67,9 @@ int	TestLedSimple::perform_test ()
 	double         r      = 0.99;
 	while (true)
 	{
-		::digitalWrite (led_pin_arr [active], HIGH);
-		::delay (int (t + 0.5));
-		::digitalWrite (led_pin_arr [active], LOW);
+		io.write_pin (led_pin_arr [active], 1);
+		std::this_thread::sleep_for (std::chrono::milliseconds (int (t + 0.5)));
+		io.write_pin (led_pin_arr [active], 0);
 
 		active = (active + 1) % nbr_leds;
 		t *= r;
@@ -78,7 +78,6 @@ int	TestLedSimple::perform_test ()
 			r = 1 / r;
 		}
 	}
-
 
 	return ret_val;
 }

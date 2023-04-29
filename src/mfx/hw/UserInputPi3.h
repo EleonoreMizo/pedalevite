@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/RotEnc.h"
 #include "mfx/ui/TimeShareCbInterface.h"
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/hw/Higepio.h"
 #include "mfx/Cst.h"
 
 #include <array>
@@ -110,7 +111,7 @@ public:
 
 	static const int  _pot_arr [Cst::_nbr_pot];
 
-	explicit       UserInputPi3 (ui::TimeShareThread &thread_spi);
+	explicit       UserInputPi3 (ui::TimeShareThread &thread_spi, Higepio &io);
 	virtual        ~UserInputPi3 ();
 
 
@@ -171,15 +172,16 @@ private:
 	void           handle_rotenc (int index, bool f0, bool f1, std::chrono::nanoseconds cur_time);
 	void           handle_pot (int index, int val, std::chrono::nanoseconds cur_time);
 	void           enqueue_val (std::chrono::nanoseconds date, ui::UserInputType type, int index, float val);
-	int            read_adc (int port, int chn);
+	int            read_adc (Higepio::Spi &port, int chn);
 	std::chrono::nanoseconds
 	               read_clock_ns () const;
 
 	ui::TimeShareThread &
 	               _thread_spi;
-	std::array <int, _nbr_dev_23017>
+	Higepio &      _io;
+	std::array <Higepio::I2c, _nbr_dev_23017>
 	               _hnd_23017_arr;      // MCP23017: Port expander
-	int            _hnd_3008;           // MCP3008 : ADC
+	Higepio::Spi   _hnd_3008;           // MCP3008 : ADC
 
 	RecipientList  _recip_list;
 	SwitchStateArray

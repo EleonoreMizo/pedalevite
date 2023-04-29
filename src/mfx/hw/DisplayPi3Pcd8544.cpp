@@ -27,9 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/hw/DisplayPi3Pcd8544.h"
 #include "mfx/ui/TimeShareThread.h"
 
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
-
 #include <unistd.h>
 
 #include <algorithm>
@@ -52,23 +49,18 @@ namespace hw
 
 
 // Before calling:
-// ::wiringPiSetup* ()
-// ::pinMode (_pin_rst, OUTPUT);
-// ::digitalWrite (_pin_rst, LOW);  ::delay (100);
-// ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-DisplayPi3Pcd8544::DisplayPi3Pcd8544 (ui::TimeShareThread &thread_spi)
+// io.set_pin_mode (_pin_rst, bcm2837gpio::PinFnc_OUT);
+// io.write_pin (_pin_rst, 0); ::delay (100);
+// io.write_pin (_pin_rst, 1); ::delay (1);
+DisplayPi3Pcd8544::DisplayPi3Pcd8544 (ui::TimeShareThread &thread_spi, Higepio &io)
 :	_thread_spi (thread_spi)
 ,	_state (State_INIT)
 ,	_screen_buf ()
-,	_hnd_spi (::wiringPiSPISetup (_spi_port, _spi_rate))
+,	_io (io)
+,	_spi (io, _spi_port, _spi_rate, "DisplayPi3Pcd8544: cannot open SPI port.")
 ,	_msg_pool ()
 ,	_msg_queue ()
 {
-	if (_hnd_spi == -1)
-	{
-		throw std::runtime_error ("DisplayPi3Pcd8544: cannot open SPI port.");
-	}
-
 	_msg_pool.expand_to (256);
 
 	_thread_spi.register_cb (
@@ -93,9 +85,6 @@ DisplayPi3Pcd8544::~DisplayPi3Pcd8544 ()
 		}
 	}
 	while (cell_ptr != nullptr);
-
-	close (_hnd_spi);
-	_hnd_spi = -1;
 }
 
 
@@ -190,27 +179,27 @@ bool	DisplayPi3Pcd8544::do_process_timeshare_op ()
 void	DisplayPi3Pcd8544::send_spi (uint8_t x)
 {
 	uint8_t        buffer [1] = { x };
-	::wiringPiSPIDataRW (_spi_port, &buffer [0], 1);
+	_spi.rw_data (&buffer [0], 1);
 }
 
 
 
 void	DisplayPi3Pcd8544::send_cmd (uint8_t c)
 {
-	::digitalWrite (_pin_dc, LOW);
-	::digitalWrite (_pin_cs, LOW);
+	_io.write_pin (_pin_dc, 0);
+	_io.write_pin (_pin_cs, 0);
 	send_spi (c);
-	::digitalWrite (_pin_cs, HIGH);
+	_io.write_pin (_pin_cs, 1);
 }
 
 
 
 void	DisplayPi3Pcd8544::send_data (uint8_t a)
 {
-	::digitalWrite (_pin_dc, HIGH);
-	::digitalWrite (_pin_cs, LOW);
+	_io.write_pin (_pin_dc, 1);
+	_io.write_pin (_pin_cs, 0);
 	send_spi (a);
-	::digitalWrite (_pin_cs, HIGH);
+	_io.write_pin (_pin_cs, 1);
 }
 
 
@@ -221,10 +210,10 @@ void	DisplayPi3Pcd8544::send_line (int x, int row, uint8_t data_ptr [], int len)
 	send_cmd (uint8_t (Cmd_SET_Y | row));
 	send_cmd (uint8_t (Cmd_SET_X | x  ));
 
-	::digitalWrite (_pin_dc, HIGH);
-	::digitalWrite (_pin_cs, LOW);
-	::wiringPiSPIDataRW (_spi_port, &data_ptr [0], len);
-	::digitalWrite (_pin_cs, HIGH);
+	_io.write_pin (_pin_dc, 1);
+	_io.write_pin (_pin_cs, 0);
+	_spi.rw_data (&data_ptr [0], len);
+	_io.write_pin (_pin_cs, 1);
 }
 
 
@@ -238,8 +227,8 @@ void	DisplayPi3Pcd8544::return_cell (MsgCell &cell)
 
 void	DisplayPi3Pcd8544::init_device ()
 {
-	::pinMode  (_pin_dc , OUTPUT);
-	::pinMode  (_pin_cs , OUTPUT);
+	_io.set_pin_mode  (_pin_dc , bcm2837gpio::PinFnc_OUT);
+	_io.set_pin_mode  (_pin_cs , bcm2837gpio::PinFnc_OUT);
 
 	send_cmd (Cmd_FUNC_SET  | Cmd_H);
 	send_cmd (Cmd_TEMP_CTRL | 0x00);  // See 7.8

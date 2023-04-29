@@ -113,12 +113,10 @@
 	#include "mfx/hw/DisplayPi3St7920.h"
   #endif
 	#include "mfx/hw/GpioPin.h"
+   #include "mfx/hw/Higepio.h"
 	#include "mfx/hw/LedPi3.h"
 	#include "mfx/hw/UserInputPi3.h"
 
-	#include <wiringPi.h>
-	#include <wiringPiI2C.h>
-	#include <wiringPiSPI.h>
  #endif // MAIN_USE_VOID
 
 	#include <arpa/inet.h>
@@ -193,6 +191,8 @@ public:
 	double         _sample_freq;
 	int            _max_block_size;
 #if (fstb_SYS == fstb_SYS_LINUX)
+	mfx::hw::Higepio &
+	               _io;
 	mfx::ui::TimeShareThread
 	               _thread_spi;
 #endif // fstb_SYS_LINUX
@@ -259,7 +259,11 @@ public:
 	mfx::View      _view;
 	mfx::PageSet   _page_set;
 
+#if (fstb_SYS == fstb_SYS_LINUX)
+	explicit       Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop, mfx::hw::Higepio &io);
+#else // fstb_SYS_LINUX
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop);
+#endif // fstb_SYS_LINUX
 	void           set_proc_info (double sample_freq, int max_block_size);
 protected:
 	// mfx::ModelObserverDefault
@@ -289,11 +293,16 @@ void	Context::signal_handler (int sig)
 
 #endif
 
+#if (fstb_SYS == fstb_SYS_LINUX)
+Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop, mfx::hw::Higepio &io)
+#else // fstb_SYS_LINUX
 Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
+#endif // fstb_SYS_LINUX
 :	_stop (stop)
 ,	_sample_freq (0)
 ,	_max_block_size (0)
 #if (fstb_SYS == fstb_SYS_LINUX)
+,	_io (io)
 ,	_thread_spi (std::chrono::milliseconds (10))
 #endif // fstb_SYS_LINUX
 ,	_proc_ctx ()
@@ -308,10 +317,10 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
  #if (MAIN_DISP == MAIN_DISP_LINUXFB)
 ,	_display ("/dev/fb0")
  #else // MAIN_DISP
-,	_display (_thread_spi)
+,	_display (_thread_spi, _io)
  #endif // MAIN_DISP
-,	_user_input (_thread_spi)
-,	_leds ()
+,	_user_input (_thread_spi, _io)
+,	_leds (_io)
 #else // fstb_SYS
 ,	_all_io (_stop)
 ,	_display (_all_io)
@@ -801,21 +810,23 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 #endif
 
 #if fstb_SYS == fstb_SYS_LINUX && ! defined (MAIN_USE_VOID)
-	::wiringPiSetupGpio ();
 
-	::pinMode (mfx::hw::GpioPin::_nav_cancel, INPUT);
-	if (::digitalRead (mfx::hw::GpioPin::_nav_cancel) == LOW)
+	mfx::hw::Higepio  io;
+
+	io.set_pin_mode (mfx::hw::GpioPin::_nav_cancel, mfx::hw::bcm2837gpio::PinFnc_IN);
+	if (io.read_pin (mfx::hw::GpioPin::_nav_cancel) == 0)
 	{
 		fprintf (stderr, "Emergency exit\n");
 		throw 0;
 	}
 
-	::pinMode (mfx::hw::GpioPin::_reset, OUTPUT);
+	io.set_pin_mode (mfx::hw::GpioPin::_reset, mfx::hw::bcm2837gpio::PinFnc_OUT);
 
-	::digitalWrite (mfx::hw::GpioPin::_reset, LOW);
+	io.write_pin (mfx::hw::GpioPin::_reset, 0);
 	std::this_thread::sleep_for (std::chrono::milliseconds (100));
-	::digitalWrite (mfx::hw::GpioPin::_reset, HIGH);
+	io.write_pin (mfx::hw::GpioPin::_reset, 1);
 	std::this_thread::sleep_for (std::chrono::milliseconds (100));
+
 #endif
 
 	mfx::dsp::mix::Align::setup ();
@@ -833,17 +844,22 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 #elif (MAIN_API == MAIN_API_MANUAL)
 	mfx::adrv::DManual   snd_drv;
 #elif (MAIN_API == MAIN_API_PVAB)
-	mfx::adrv::DPvabI2sDma  snd_drv;
+	mfx::adrv::DPvabI2sDma  snd_drv (io);
 #else
 	#error
 #endif
 
 
 #if __cplusplus >= 201402
-	auto           ctx_uptr (std::make_unique <Context> (snd_drv, stop));
+	auto           ctx_uptr (std::make_unique <Context> (
 #else // __cplusplus
-	std::unique_ptr <Context>  ctx_uptr (new Context (snd_drv, stop));
+	std::unique_ptr <Context>  ctx_uptr (new Context (
 #endif // __cplusplus
+		snd_drv, stop
+#if fstb_SYS == fstb_SYS_LINUX
+		, io
+#endif // fstb_SYS_LINUX
+	));
 	Context &      ctx = *ctx_uptr;
 
 	if (! ctx._stop.is_exit_requested ())

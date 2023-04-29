@@ -118,6 +118,7 @@
 #if fstb_SYS == fstb_SYS_LINUX
 	#include "mfx/adrv/CbInterface.h"
 	#include "mfx/adrv/DPvabDirect.h"
+	#include "mfx/hw/Higepio.h"
 	#include "test/TestDisplayFrameBufSimple.h"
 	#include "test/TestLedSimple.h"
 	#include "test/TestUserInputPi3.h"
@@ -1413,7 +1414,8 @@ protected:
 
 int	test_adrv_dpvab ()
 {
-	mfx::adrv::DPvabDirect  pvab;
+	mfx::hw::Higepio        io;
+	mfx::adrv::DPvabDirect  pvab (io);
 	CbDPvabDirect           cb;
 
 	double            sample_freq;

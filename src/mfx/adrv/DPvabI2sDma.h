@@ -36,6 +36,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/adrv/DriverInterface.h"
 #include "mfx/hw/GpioAccess.h"
 #include "mfx/hw/GpioPin.h"
+#include "mfx/hw/Higepio.h"
 #include "mfx/hw/MmapPtr.h"
 #include "mfx/hw/RPiDmaBlocks.h"
 
@@ -117,7 +118,7 @@ public:
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-	               DPvabI2sDma ();
+	explicit       DPvabI2sDma (hw::Higepio &io);
 	virtual        ~DPvabI2sDma ();
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -191,7 +192,6 @@ private:
 		State_NBR_ELT
 	};
 
-	void           close_i2c () noexcept;
 	void           main_loop () noexcept;
 	void           build_dma_ctrl_block_list () noexcept;
 	void           process_block (int buf_idx) noexcept;
@@ -213,7 +213,8 @@ private:
 	hw::GpioAccess _gpio;
 
 	// Handle on I2C communications
-	int            _i2c_hnd;
+	hw::Higepio::I2c
+	               _i2c;
 
 	// Audio processing callback. 0 = not set
 	CbInterface *  _cb_ptr;
@@ -266,6 +267,7 @@ private:
 
 private:
 
+	               DPvabI2sDma ()                               = delete;
 	               DPvabI2sDma (const DPvabI2sDma &other)       = delete;
 	               DPvabI2sDma (DPvabI2sDma &&other)            = delete;
 	DPvabI2sDma &  operator = (const DPvabI2sDma &other)        = delete;

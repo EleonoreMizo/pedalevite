@@ -29,14 +29,17 @@ http://www.wtfpl.net/ for more details.
 #if fstb_SYS == fstb_SYS_WIN
 	#include "mfx/adrv/DAsio.h"
 	#define Testadrv_DRV_T mfx::adrv::DAsio
+	#define Testadrv_DRV_CTOR_ARG
 	constexpr int Testadrv_chn_idx_i = 2;
 	constexpr int Testadrv_chn_idx_o = 0;
 #elif fstb_SYS == fstb_SYS_LINUX
 	#include "mfx/adrv/DPvabI2sDma.h"
 	#include "mfx/hw/bcm2837dma.h"
 	#include "mfx/hw/bcm2837pcm.h"
+	#include "mfx/hw/Higepio.h"
 	#include "mfx/hw/ThreadLinux.h"
 	#define Testadrv_DRV_T mfx::adrv::DPvabI2sDma
+	#define Testadrv_DRV_CTOR_ARG (io)
 	constexpr int Testadrv_chn_idx_i = 0;
 	constexpr int Testadrv_chn_idx_o = 0;
 #else
@@ -75,7 +78,11 @@ int	Testadrv::perform_test ()
 #undef Testadrv_PRINT_MACRO
 #undef Testadrv_EXPAND_MACRO
 
-#if 0 && fstb_SYS == fstb_SYS_LINUX
+#if fstb_SYS == fstb_SYS_LINUX
+
+	mfx::hw::Higepio  io;
+
+#if 0
 	printf ("\nPreliminary test: nanosleep() resolution.\n");
 
 	std::thread nt (&test_nanosleep);
@@ -85,10 +92,12 @@ int	Testadrv::perform_test ()
 	printf ("\nDriver test beginning now.\n");
 #endif
 
+#endif // fstb_SYS_LINUX
+
 	// Filters out repeated errors flooding the output
 	constexpr bool filter_diarrhea_flag = false;
 
-	Testadrv_DRV_T snd_drv;
+	Testadrv_DRV_T snd_drv Testadrv_DRV_CTOR_ARG;
 	AdrvCallback   callback;
 	auto           sample_freq    = double {};
 	auto           max_block_size = int {};

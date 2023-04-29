@@ -33,6 +33,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/adrv/DriverInterface.h"
 #include "mfx/hw/GpioAccess.h"
 #include "mfx/hw/GpioPin.h"
+#include "mfx/hw/Higepio.h"
 #include "mfx/hw/MmapPtr.h"
 
 #include <atomic>
@@ -76,8 +77,8 @@ public:
 	static const int  _pin_din      = hw::GpioPin::_snd_din;   // R - I2S data input (codec to cpu)
 	static const int  _pin_dout     = hw::GpioPin::_snd_dout;  // W - I2S data output (cpu to codec)
 
-	               DPvabI2s ();
-	virtual        ~DPvabI2s ();
+	explicit       DPvabI2s (hw::Higepio &io);
+	               ~DPvabI2s () = default;
 
 
 
@@ -120,7 +121,6 @@ private:
 		State_NBR_ELT
 	};
 
-	void           close_i2c () noexcept;
 	void           main_loop () noexcept;
 	void           proc_loop ();
 	inline void    write_reg (uint8_t reg, uint8_t val) noexcept;
@@ -128,7 +128,8 @@ private:
 	uint32_t       _periph_base_addr;   // Virtual base address for the peripherals
 	hw::MmapPtr    _pcm_mptr;           // Virtual base address for the PCM registers
 	hw::GpioAccess _gpio;
-	int            _i2c_hnd;
+	hw::Higepio::I2c
+	               _i2c;
 	CbInterface *  _cb_ptr;       // 0 = not set
 	State          _state;
 
@@ -155,6 +156,7 @@ private:
 
 private:
 
+	               DPvabI2s ()                               = delete;
 	               DPvabI2s (const DPvabI2s &other)          = delete;
 	               DPvabI2s (DPvabI2s &&other)               = delete;
 	DPvabI2s &     operator = (const DPvabI2s &other)        = delete;

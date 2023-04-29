@@ -95,7 +95,7 @@ AS_IF(
                 AS_IF(
                     [test "x$enable_wiringpi" != "xno"],
                     [
-                        AC_CHECK_LIB([wiringPi], [wiringPiSetupPhys])
+                        AC_CHECK_LIB([wiringPi], [wiringPiSetupGpio])
                         LIBS="$LIBS -lwiringPi"
                         AC_DEFINE([PV_USE_WIRINGPI])
                     ],

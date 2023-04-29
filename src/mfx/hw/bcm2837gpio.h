@@ -40,6 +40,8 @@ namespace bcm2837gpio
 
 
 
+static const int        _nbr_gpio = 54;    // Number of GPIO pins (0-based)
+
 // GPIO registers relative to the base address (p. 90)
 static const uint32_t   _gpio_ofs = 0x00200000;
 static const uint32_t   _gpio_len = 0x1000; // Bytes

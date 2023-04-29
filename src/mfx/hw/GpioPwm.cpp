@@ -15,13 +15,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
-
-
-
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/bcm2837clk.h"
@@ -33,8 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
-
-#include <wiringPi.h>
 
 #include <algorithm>
 #include <memory>
@@ -59,8 +50,9 @@ namespace hw
 
 
 
-GpioPwm::GpioPwm (int granularity)
+GpioPwm::GpioPwm (int granularity, Higepio &io)
 :	_granularity (granularity)
+,	_io (io)
 ,	_periph_base_addr (::bcm_host_get_peripheral_address ())
 ,	_reg_pwm (
 		_periph_base_addr + bcm2837pwm::_pwm_ofs,
@@ -85,25 +77,25 @@ GpioPwm::GpioPwm (int granularity)
 	const int      clk_div      = plld_freq / target_freq;
 
 	_reg_pwm.at (bcm2837pwm::_ctl   ) = 0;
-	::delayMicroseconds (10);
+	_io.sleep (10);
 	_reg_clk.at (bcm2837clk::_pwmctl) = // Source = PLLD (500 or 750 MHz)
 		bcm2837clk::_passwd | bcm2837clk::_src_plld;
-	::delayMicroseconds (100);
+	_io.sleep (100);
 	_reg_clk.at (bcm2837clk::_pwmdiv) =
 		bcm2837clk::_passwd | (clk_div << bcm2837clk::_divi);
-	::delayMicroseconds (100);
+	_io.sleep (100);
 	_reg_clk.at (bcm2837clk::_pwmctl) =
 		bcm2837clk::_passwd | bcm2837clk::_src_plld | bcm2837clk::_enab; // Source = PLLD and enable
-	::delayMicroseconds (100);
+	_io.sleep (100);
 	_reg_pwm.at (bcm2837pwm::_rng1  ) = _granularity * 10;
-	::delayMicroseconds (10);
+	_io.sleep (10);
 	_reg_pwm.at (bcm2837pwm::_dmac  ) =
 		bcm2837pwm::_enab | (15 << bcm2837pwm::_panic) | (15 << bcm2837pwm::_dreq);
-	::delayMicroseconds (10);
+	_io.sleep (10);
 	_reg_pwm.at (bcm2837pwm::_ctl   ) = bcm2837pwm::_clrf1;
-	::delayMicroseconds (10);
+	_io.sleep (10);
 	_reg_pwm.at (bcm2837pwm::_ctl   ) = bcm2837pwm::_usef1 | bcm2837pwm::_pwen1;
-	::delayMicroseconds (10);
+	_io.sleep (10);
 }
 
 
@@ -123,7 +115,7 @@ int	GpioPwm::init_chn (int chn, int subcycle_time)
 	try
 	{
 		_chn_arr [chn] = ChannelSPtr (new Channel (
-			chn, _periph_base_addr, subcycle_time, _granularity
+			_io, chn, _periph_base_addr, subcycle_time, _granularity
 		));
 	}
 	catch (MBox::Error &err)
@@ -210,8 +202,9 @@ void	GpioPwm::set_pulse (int chn, int gpio, int start, int width)
 
 
 
-GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcycle_time, int granularity)
-:	_index (index)
+GpioPwm::Channel::Channel (Higepio &io, int index, uint32_t periph_base_addr, uint32_t subcycle_time, int granularity)
+:	_io (io)
+,	_index (index)
 ,	_dma_reg (
 		periph_base_addr + bcm2837dma::_dma_ofs,
 		index * bcm2837dma::_dma_chn_inc + bcm2837dma::_dma_chn_len,
@@ -269,7 +262,7 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	// Initialize the DMA channel (p46, 47)
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
 		bcm2837dma::_reset;
-	::delayMicroseconds (10);
+	_io.sleep (10);
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
 		bcm2837dma::_int | bcm2837dma::_end;
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_conblk_ad) =
@@ -289,10 +282,10 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 GpioPwm::Channel::~Channel ()
 {
 	clear ();
-	::delayMicroseconds (_subcycle_time);
+	_io.sleep (_subcycle_time);
 	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs) =
 		bcm2837dma::_reset;
-	::delayMicroseconds (10);
+	_io.sleep (10);
 }
 
 
@@ -309,7 +302,7 @@ void	GpioPwm::Channel::clear ()
 	}
 
 	// Let DMA do one cycle to actually clear them
-	::delayMicroseconds (_subcycle_time);
+	_io.sleep (_subcycle_time);
 
 	// Finally set all samples to 0 (instead of gpio_mask)
 	for (int i = 0; i < int (_nbr_samples); i++)
@@ -332,7 +325,7 @@ void	GpioPwm::Channel::clear (int gpio)
 		d_ptr [i] &= ~(1 << gpio);
 	}
 
-	::digitalWrite (gpio, 0);
+	_io.write_pin (gpio, 0);
 }
 
 
@@ -447,7 +440,7 @@ void	GpioPwm::Channel::set_pulse (int gpio, int start, int width)
 
 	if (width == 0)
 	{
-		::digitalWrite (gpio, 0);
+		_io.write_pin (gpio, 0);
 	}
 }
 
@@ -578,7 +571,7 @@ float	GpioPwm::Channel::set_multilevel (int gpio, int nbr_cycles, int nbr_phases
 
 	if (level == 0)
 	{
-		::digitalWrite (gpio, 0);
+		_io.write_pin (gpio, 0);
 	}
 
 	return duty / float (nbr_cycles);
@@ -613,19 +606,19 @@ int	GpioPwm::Channel::find_free_front_pos (int gpio, int pos, bool up_flag, bool
 
 
 
+void	GpioPwm::Channel::init_gpio (int gpio)
+{
+	_io.set_pin_mode (gpio, bcm2837gpio::PinFnc_OUT);
+	_io.write_pin (gpio, 0);
+	_gpio_init |= 1 << gpio;
+}
+
+
+
 bool	GpioPwm::Channel::is_gpio_ready (int gpio)
 {
 	return ((_gpio_init & (1 << gpio)) != 0);
 }
-
-
-void	GpioPwm::Channel::init_gpio (int gpio)
-{
-	::pinMode (gpio, OUTPUT);
-	::digitalWrite (gpio, 0);
-	_gpio_init |= 1 << gpio;
-}
-
 
 
 uint32_t	GpioPwm::Channel::_gpio_init = 0;

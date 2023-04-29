@@ -41,8 +41,6 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/hw/ThreadLinux.h"
 
 #include <bcm_host.h>
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
 
 #include <fcntl.h>
 
@@ -65,7 +63,7 @@ namespace adrv
 
 
 
-DPvabI2s::DPvabI2s ()
+DPvabI2s::DPvabI2s (hw::Higepio &io)
 :	_periph_base_addr (::bcm_host_get_peripheral_address ())
 ,	_pcm_mptr (
 		_periph_base_addr + hw::bcm2837pcm::_pcm_ofs,
@@ -74,7 +72,7 @@ DPvabI2s::DPvabI2s ()
 		O_RDWR | O_SYNC
 	)
 ,	_gpio ()
-,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
+,	_i2c (io, _i2c_addr, "DPvabI2s: cannot open I2C port")
 ,	_cb_ptr (nullptr)
 ,	_state (State_STOP)
 ,	_exit_flag (false)
@@ -94,18 +92,10 @@ DPvabI2s::DPvabI2s ()
 	    || ! _cur_buf.is_lock_free ()
 	    || ! _proc_now_flag.is_lock_free ())
 	{
-		close_i2c ();
 		throw std::runtime_error (
 			"std::atomic is not lock-free on this system."
 		);
 	}
-}
-
-
-
-DPvabI2s::~DPvabI2s ()
-{
-	close_i2c ();
 }
 
 
@@ -254,17 +244,6 @@ std::string	DPvabI2s::do_get_last_error () const
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-void	DPvabI2s::close_i2c () noexcept
-{
-	if (_i2c_hnd != -1)
-	{
-		close (_i2c_hnd);
-		_i2c_hnd = -1;
-	}
-}
 
 
 
@@ -584,9 +563,7 @@ void	DPvabI2s::proc_loop ()
 
 void	DPvabI2s::write_reg (uint8_t reg, uint8_t val) noexcept
 {
-	assert (_i2c_hnd != -1);
-
-	::wiringPiI2CWriteReg8 (_i2c_hnd, reg, val);
+	_i2c.write_reg_8 (reg, val);
 }
 
 

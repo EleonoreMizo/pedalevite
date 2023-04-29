@@ -25,11 +25,13 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/GpioPin.h"
+#include "mfx/hw/Higepio.h"
 #include "mfx/hw/UserInputPi3.h"
 #include "mfx/ui/TimeShareThread.h"
 #include "test/TestUserInputPi3.h"
 
-#include <wiringPi.h>
+#include <chrono>
+#include <thread>
 
 #include <cassert>
 
@@ -45,17 +47,17 @@ int	TestUserInputPi3::perform_test ()
 
 	const int      pin_rst = mfx::hw::GpioPin::_reset;
 
-	::wiringPiSetupGpio ();
-	::pinMode (pin_rst, OUTPUT);
-	::digitalWrite (pin_rst, LOW);
-	::delay (100);
-	::digitalWrite (pin_rst, HIGH);
-	::delay (1);
+	mfx::hw::Higepio io;
+	io.set_pin_mode (pin_rst, mfx::hw::bcm2837gpio::PinFnc_OUT);
+	io.write_pin (pin_rst, 0);
+	std::this_thread::sleep_for (std::chrono::milliseconds (100));
+	io.write_pin (pin_rst, 1);
+	std::this_thread::sleep_for (std::chrono::milliseconds (1));
 
 	typedef mfx::ui::UserInputInterface::MsgQueue MQueue;
 	mfx::ui::UserInputInterface::MsgQueue  queue_input;
 	mfx::ui::TimeShareThread   thread_spi (std::chrono::milliseconds (10));
-	mfx::hw::UserInputPi3   user_input (thread_spi);
+	mfx::hw::UserInputPi3   user_input (thread_spi, io);
 	user_input.assign_queues_to_input_dev (queue_input, queue_input, queue_input);
 
 	do

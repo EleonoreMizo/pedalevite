@@ -15,20 +15,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
-
-
-
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
 #include "mfx/hw/GpioPin.h"
 #include "mfx/hw/LedPi3.h"
-
-#include <wiringPi.h>
 
 #include <chrono>
 #include <stdexcept>
@@ -61,10 +52,9 @@ const int	LedPi3::_gpio_pin_arr [_nbr_led] =
 
 
 
-// Before calling:
-// ::wiringPiSetup* ()
-LedPi3::LedPi3 ()
-:	_gpio_pwm (_pwm_resol)
+LedPi3::LedPi3 (Higepio &io)
+:	_io (io)
+,	_gpio_pwm (_pwm_resol, io)
 ,	_state_arr ()
 ,	_quit_flag (false)
 ,	_refresher ()
@@ -75,10 +65,10 @@ LedPi3::LedPi3 ()
 		throw std::runtime_error ("Cannot initialize DMA channel");
 	}
 
-	for (int i = 0; i < _nbr_led; ++i)
+	for (auto gpio : _gpio_pin_arr)
 	{
-		::pinMode  (_gpio_pin_arr [i], OUTPUT);
-		::digitalWrite (_gpio_pin_arr [i], LOW);
+		io.set_pin_mode (gpio, bcm2837gpio::PinFnc_OUT);
+		io.write_pin (gpio, 0);
 	}
 
 	_refresher = std::thread (&LedPi3::refresh_loop, this);
@@ -92,6 +82,12 @@ LedPi3::~LedPi3 ()
 	{
 		_quit_flag = true;
 		_refresher.join ();
+	}
+
+	for (auto gpio : _gpio_pin_arr)
+	{
+		_io.write_pin (gpio, 0);
+		_io.set_pin_mode (gpio, bcm2837gpio::PinFnc_IN);
 	}
 }
 

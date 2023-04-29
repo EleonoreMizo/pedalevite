@@ -35,12 +35,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/hw/UserInputPi3.h"
 #include "mfx/ui/TimeShareThread.h"
 
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
-#include <wiringPiI2C.h>
-
 #include <unistd.h>
 
+#include <array>
 #include <chrono>
 #include <stdexcept>
 #include <thread>
@@ -132,14 +129,17 @@ const int UserInputPi3::_pot_arr [Cst::_nbr_pot] =
 
 
 // Before calling:
-// ::wiringPiSetup* ()
-// ::pinMode (_pin_rst, OUTPUT);
-// ::digitalWrite (_pin_rst, LOW);  ::delay (100);
-// ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
+// io.set_pin_mode (_pin_rst, bcm2837gpio::PinFnc_OUT);
+// io.write_pin (_pin_rst, 0); ::delay (100);
+// io.write_pin (_pin_rst, 1); ::delay (1);
+UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi, Higepio &io)
 :	_thread_spi (thread_spi)
-,	_hnd_23017_arr ()
-,	_hnd_3008 (::wiringPiSPISetup (_spi_port, _spi_rate))
+,	_io (io)
+,	_hnd_23017_arr {
+		Higepio::I2c { io, _i2c_dev_23017_arr [0], "Cannot open I2C for MCP23017 unit 0" },
+		Higepio::I2c { io, _i2c_dev_23017_arr [1], "Cannot open I2C for MCP23017 unit 1" }
+	}
+,	_hnd_3008 (io, _spi_port, _spi_rate, "Cannot open SPI for MCP3008")
 ,	_recip_list ()
 ,	_switch_state_arr ()
 ,	_pot_state_arr ()
@@ -151,22 +151,7 @@ UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 {
 	for (int i = 0; i < _nbr_sw_gpio; ++i)
 	{
-		::pinMode  (_gpio_pin_arr [i], INPUT);
-	}
-
-	for (int p = 0; p < _nbr_dev_23017; ++p)
-	{
-		_hnd_23017_arr [p] = ::wiringPiI2CSetup (_i2c_dev_23017_arr [p]);
-		if (_hnd_23017_arr [p] == -1)
-		{
-			close_everything ();
-			throw std::runtime_error ("Error initializing I2C");
-		}
-	}
-	if (_hnd_3008 == -1)
-	{
-		close_everything ();
-		throw std::runtime_error ("Error initializing SPI");
+		io.set_pin_mode (_gpio_pin_arr [i], bcm2837gpio::PinFnc_IN);
 	}
 
 	_msg_pool.expand_to (256);
@@ -177,16 +162,12 @@ UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 		_recip_list [i].resize (nbr_dev, nullptr);
 	}
 
-	for (int p = 0; p < _nbr_dev_23017; ++p)
+	for (auto &hnd : _hnd_23017_arr)
 	{
-		::wiringPiI2CWriteReg8 (
-			_hnd_23017_arr [p], mcp23017::cmd_iocona, mcp23017::iocon_mirror
-		);
+		hnd.write_reg_8 (mcp23017::cmd_iocona, mcp23017::iocon_mirror);
 
 		// All the pins are set in read mode.
-		::wiringPiI2CWriteReg16 (
-			_hnd_23017_arr [p], mcp23017::cmd_iodira, 0xFFFF
-		);
+		hnd.write_reg_16 (mcp23017::cmd_iodira, 0xFFFF);
 	}
 
 	// Initial read
@@ -311,7 +292,7 @@ bool	UserInputPi3::do_process_timeshare_op ()
 	for (int i = 0; i < Cst::_nbr_pot; ++i)
 	{
 		const int      adc_index = _pot_arr [i];
-		const int      val       = read_adc (_spi_port, adc_index);
+		const int      val       = read_adc (_hnd_3008, adc_index);
 		if (val >= 0)
 		{
 			handle_pot (i, val, cur_time);
@@ -333,20 +314,6 @@ void	UserInputPi3::close_everything ()
 	{
 		_quit_flag = true;
 		_polling_thread.join ();
-	}
-
-	if (_hnd_3008 != -1)
-	{
-		close (_hnd_3008);
-		_hnd_3008 = -1;
-	}
-	for (int p = 0; p < _nbr_dev_23017; ++p)
-	{
-		if (_hnd_23017_arr [p] != -1)
-		{
-			close (_hnd_23017_arr [p]);
-			_hnd_23017_arr [p] = -1;
-		}
 	}
 }
 
@@ -382,7 +349,7 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 	);
 
 	const std::chrono::nanoseconds   cur_time (read_clock_ns ());
-		
+
 	// Reads all binary inputs first
 	InputState     input_state_arr [BinSrc_NBR_ELT] = { 0, 0 };
 
@@ -390,7 +357,7 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 	for (int p = 0; p < _nbr_dev_23017; ++p)
 	{
 		InputState     dev_state = InputState (
-			::wiringPiI2CReadReg16 (_hnd_23017_arr [p], mcp23017::cmd_gpioa)
+			_hnd_23017_arr [p].read_reg_16 (mcp23017::cmd_gpioa)
 		);
 		dev_state ^= mask;
 		input_state_arr [BinSrc_PORT_EXP] |= dev_state << (p * _nbr_sw_23017);
@@ -401,7 +368,7 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 		for (int p = 0; p < _nbr_sw_gpio; ++p)
 		{
 			InputState     sw_val = InputState (
-				::digitalRead (_gpio_pin_arr [p]) & 1
+				_io.read_pin (_gpio_pin_arr [p]) & 1
 			);
 			sw_val ^= 1;
 			input_state_arr [BinSrc_GPIO] |= sw_val << p;
@@ -530,12 +497,10 @@ void	UserInputPi3::enqueue_val (std::chrono::nanoseconds date, ui::UserInputType
 
 
 
-// Returns -1 on error
+// Returns negative number on error
 // Valid results are in range 0-1023
-int	UserInputPi3::read_adc (int port, int chn)
+int	UserInputPi3::read_adc (Higepio::Spi &port, int chn)
 {
-	assert (port >= 0);
-	assert (port < 2);
 	assert (chn >= 0);
 	assert (chn < 8);
 
@@ -543,19 +508,18 @@ int	UserInputPi3::read_adc (int port, int chn)
 
 	// Amount of bit shifting, from 0 to 7.
 	// Only 2 and 3 are compatible with the 12864ZH (ST7920) Chip Select bug.
-	static const int  s = 3;
+	constexpr int  s = 3;
 
-	const int      msg_len = 3;
+	constexpr int  msg_len = 3;
 	const int      chns4   = chn << (s + 4);
-	uint8_t        buffer [msg_len] =
-	{
+	std::array <uint8_t, msg_len> buffer {
 		uint8_t ((0x01 << s) + (chns4 >> 8)),
 		uint8_t (chns4),
 		0
 	};
 
-	int            ret_val = ::wiringPiSPIDataRW (port, &buffer [0], msg_len);
-	if (ret_val != -1)
+	int            ret_val = port.rw_data (&buffer [0], msg_len);
+	if (ret_val == 0)
 	{
 		ret_val = (((buffer [1] << 8) + buffer [2]) >> s) & 0x3FF;
 	}
@@ -570,7 +534,7 @@ std::chrono::nanoseconds	UserInputPi3::read_clock_ns () const
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
-	const long     ns_mul = 1'000'000'000L;
+	constexpr long ns_mul = 1'000'000'000L;
 
 	return std::chrono::nanoseconds (int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec);
 }

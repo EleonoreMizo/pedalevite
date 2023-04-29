@@ -27,9 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/hw/DisplayPi3St7920.h"
 #include "mfx/ui/TimeShareThread.h"
 
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
-
 #include <unistd.h>
 
 #include <algorithm>
@@ -52,24 +49,19 @@ namespace hw
 
 
 // Before calling:
-// ::wiringPiSetup* ()
-// ::pinMode (_pin_rst, OUTPUT);
-// ::digitalWrite (_pin_rst, LOW);  ::delay (100);
-// ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-DisplayPi3St7920::DisplayPi3St7920 (ui::TimeShareThread &thread_spi)
+// io.set_pin_mode (_pin_rst, bcm2837gpio::PinFnc_OUT);
+// io.write_pin (_pin_rst, 0); ::delay (100);
+// io.write_pin (_pin_rst, 1); ::delay (1);
+DisplayPi3St7920::DisplayPi3St7920 (ui::TimeShareThread &thread_spi, Higepio &io)
 :	_thread_spi (thread_spi)
 ,	_state (State_INIT)
 ,	_screen_buf ()
-,	_hnd_spi (::wiringPiSPISetupMode (_spi_port, _spi_rate, 0))
+,	_io (io)
+,	_spi (io, _spi_port, _spi_rate, "DisplayPi3St7920: cannot open SPI port")
 ,	_msg_pool ()
 ,	_msg_queue ()
 ,	_redraw ()
 {
-	if (_hnd_spi == -1)
-	{
-		throw std::runtime_error ("DisplayPi3St7920: cannot open SPI port.");
-	}
-
 	_msg_pool.expand_to (256);
 
 	_thread_spi.register_cb (
@@ -94,9 +86,6 @@ DisplayPi3St7920::~DisplayPi3St7920 ()
 		}
 	}
 	while (cell_ptr != nullptr);
-
-	close (_hnd_spi);
-	_hnd_spi = -1;
 }
 
 
@@ -203,13 +192,13 @@ void	DisplayPi3St7920::init_device ()
 {
 	assert (_state == State_INIT);
 
-	::pinMode  (_pin_cs , OUTPUT);
+	_io.set_pin_mode (_pin_cs , bcm2837gpio::PinFnc_OUT);
 
 	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // Twice because RE cannot be set
 	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // at the same time as other bits.
 
 	send_cmd (Cmd_CLEAR);
-	::delayMicroseconds (_delay_clr);
+	_io.sleep (_delay_clr);
 	send_cmd (Cmd_ENTRY     | Cmd_ENTRY_ID);
 	send_cmd (Cmd_DISPLAY   | Cmd_DISPLAY_DISP);
 
@@ -331,7 +320,7 @@ void	DisplayPi3St7920::redraw_part ()
 void	DisplayPi3St7920::send_mode (Mode mode)
 {
 	uint8_t        buffer [1] = { uint8_t (mode) };
-	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
+	_spi.rw_data (&buffer [0], sizeof (buffer));
 }
 
 
@@ -343,7 +332,7 @@ void	DisplayPi3St7920::send_byte_raw (uint8_t a)
 		uint8_t (a & 0xF0),
 		uint8_t (a << 4)
 	};
-	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
+	_spi.rw_data (&buffer [0], sizeof (buffer));
 }
 
 
@@ -356,27 +345,27 @@ void	DisplayPi3St7920::send_byte_header (uint8_t rwrs, uint8_t a)
 		uint8_t (a & 0xF0),
 		uint8_t (a << 4)
 	};
-	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
+	_spi.rw_data (&buffer [0], sizeof (buffer));
 }
 
 
 
 void	DisplayPi3St7920::send_cmd (uint8_t x)
 {
-	::digitalWrite (_pin_cs, HIGH);
+	_io.write_pin (_pin_cs, 1);
 	send_byte_header (0, x);
-	::digitalWrite (_pin_cs, LOW);
-	::delayMicroseconds (_delay_std);
+	_io.write_pin (_pin_cs, 0);
+	_io.sleep (_delay_std);
 }
 
 
 
 void	DisplayPi3St7920::send_data (uint8_t x)
 {
-	::digitalWrite (_pin_cs, HIGH);
+	_io.write_pin (_pin_cs, 1);
 	send_byte_header (Serial_RS, x);
-	::digitalWrite (_pin_cs, LOW);
-	::delayMicroseconds (_delay_std);
+	_io.write_pin (_pin_cs, 0);
+	_io.sleep (_delay_std);
 }
 
 
@@ -404,7 +393,7 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 	send_line_prologue (ofs_x, y + ofs_y, spibuf, spipos);
 
 	prepare_line_data (spibuf, spipos, pix_ptr, len);
-	::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
+	_spi.rw_data (&spibuf [0], spipos);
 
 	send_line_epilogue ();
 }
@@ -425,7 +414,7 @@ void	DisplayPi3St7920::send_2_full_lines (int y, const uint8_t pix1_ptr [], cons
 	const int       len = _scr_w >> 4;
 	prepare_line_data (spibuf, spipos, pix1_ptr, len);
 	prepare_line_data (spibuf, spipos, pix2_ptr, len);
-	::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
+	_spi.rw_data (&spibuf [0], spipos);
 
 	send_line_epilogue ();
 }
@@ -458,10 +447,10 @@ void	DisplayPi3St7920::prepare_line_data (SpiBuffer &buf, int &pos, const uint8_
 
 void	DisplayPi3St7920::send_line_prologue (int x, int y, SpiBuffer &spibuf, int &spipos)
 {
-	::digitalWrite (_pin_cs, HIGH);
+	_io.write_pin (_pin_cs, 1);
 	send_byte_header (0, uint8_t (Cmd_GDRAM_ADR | y));
 	send_byte_raw (      uint8_t (Cmd_GDRAM_ADR | x));
-	::delayMicroseconds (_delay_chg);
+	_io.sleep (_delay_chg);
 
 	spibuf [spipos] = Serial_HEADER | Serial_RS;
 	++ spipos;
@@ -471,7 +460,7 @@ void	DisplayPi3St7920::send_line_prologue (int x, int y, SpiBuffer &spibuf, int 
 
 void	DisplayPi3St7920::send_line_epilogue ()
 {
-	::delayMicroseconds (_delay_chg);
+	_io.sleep (_delay_chg);
 
 #if 1 // s = 2 or 3
 	// When we're done, we need to put the current address out of the screen
@@ -479,17 +468,17 @@ void	DisplayPi3St7920::send_line_epilogue ()
 	// devices even when it is not selected.
 	send_byte_header (0, Cmd_GDRAM_ADR | 63);
 	send_byte_raw (      Cmd_GDRAM_ADR |  0);
-//	::delayMicroseconds (_delay_chg);
+//	_io.sleep (_delay_chg);
 	send_byte_header (Serial_RS, 0);
 	send_byte_raw (              0);
 #elif 1
 	send_byte_header (0, Cmd_IRAM_ADR);
 	send_byte_header (0, Cmd_IRAM_ADR);
-	::delayMicroseconds (_delay_chg);
+	_io.sleep (_delay_chg);
 #endif
 
-	::digitalWrite (_pin_cs, LOW);
-	::delayMicroseconds (_delay_std);
+	_io.write_pin (_pin_cs, 0);
+	_io.sleep (_delay_std);
 }
 
 
