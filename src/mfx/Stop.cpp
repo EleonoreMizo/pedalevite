@@ -77,7 +77,9 @@ void	Stop::process_request ()
 	{
 	case Type::NONE:
 	case Type::QUIT:
-		// Nothing
+		// Restores the login prompt so we can do maintenance just by connecting
+		// a USB keyboard (and a HDMI display on version 1).
+		system ("sudo systemctl start getty@tty1.service");
 		break;
 	case Type::RESTART:
 		{
