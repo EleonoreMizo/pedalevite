@@ -1053,8 +1053,7 @@ I will try later to do it to simplify the task.</p>
 
 <p>Minimum recommended version for Raspberry Pi OS is Buster (listed as
 Legacy) from 2019-09-26.
-Take a 32-bit OS because some dependencies (namely WiringPi) may not be
-supported for 64-bit programs.
+Prefer a 32-bit OS because the 64-bit OS is not tested yet.
 Whatever OS you pick, make sure it is a <strong>Lite version</strong>.</p>
 
 <h4>Bullseye and later</h4>
@@ -1217,23 +1216,21 @@ blacklist hci_uart</pre>
 <p>Install git, Jack2, ALSA and autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev \
    git autoconf raspberrypi-kernel raspberrypi-kernel-headers</pre>
-
-<p>WiringPi may be in the standard system distribution, but the included
-version may not support the Pi 4 correctly.
-Type&#8239;:</p>
+<!--
+<p>WiringPi est probablement livré en standard, mais la version incluse dans
+le système ne supporte pas forcément correctement le Pi 4.
+Taper&#8239;:</p>
 <pre class="term">gpio -v</pre>
-<p>If the command cannot be found or if the displayed version is earlier than
-2.52, the latest version should be manally installed&#8239;:</p>
-<!-- pre class="term">cd /tmp
-wget https://project-downloads.drogon.net/wiringpi-latest.deb
-sudo dpkg -i wiringpi-latest.deb
-gpio -v</pre -->
+<p>Si la commande ne peut être trouvée ou que la version indiquée est
+antérieure à 2.52, il faut installer manuellement la dernière
+version&#8239;:</p>
 <pre class="term">cd /tmp
 git clone https://github.com/WiringPi/WiringPi.git
 cd WiringPi
 ./build
 gpio -v</pre>
-<p>Again, check that the version is 2.52 or later.</p>
+<p>Encore une fois, s’assurer que la version est bien 2.52 ou postérieure.</p>
+-->
 
 
 
@@ -1777,6 +1774,11 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r13, 2023-04-29</b></p>
+<ul>
+<li>Replaced the wiringPi library with a custom implementation.</li>
+</ul>
 
 <p><b>r12, 2023-02-11</b></p>
 <ul>

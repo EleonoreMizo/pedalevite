@@ -26,7 +26,7 @@ http://www.wtfpl.net/ for more details.
 #if defined (PV_USE_WIRINGPI)
 #	include "mfx/hw/HigepioWiringPi.h"
 #else
-#	include "mfx/hw/HigepioPigpio.h"
+#	include "mfx/hw/HigepioNative.h"
 #endif
 
 
@@ -41,7 +41,7 @@ namespace hw
 #if defined (PV_USE_WIRINGPI)
 typedef HigepioWiringPi Higepio;
 #else
-typedef HigepioPigpio   Higepio;
+typedef HigepioNative   Higepio;
 #endif
 
 

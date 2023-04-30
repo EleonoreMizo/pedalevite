@@ -1811,6 +1811,13 @@ commonsrc += \
         ../../src/mfx/hw/HigepioWiringPi.cpp \
         ../../src/mfx/hw/HigepioWiringPi.h
 
+else
+
+commonsrc += \
+        ../../src/mfx/hw/HigepioNative.cpp \
+        ../../src/mfx/hw/HigepioNative.h \
+        ../../src/mfx/hw/HigepioNative.hpp
+
 endif
 
 commonsrc += \

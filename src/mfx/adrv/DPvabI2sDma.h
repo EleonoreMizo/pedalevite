@@ -34,7 +34,10 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/AllocAlign.h"
 #include "mfx/adrv/DriverInterface.h"
-#include "mfx/hw/GpioAccess.h"
+#include "mfx/hw/bcm2837gpio.h"
+#if defined (PV_USE_WIRINGPI)
+#	include "mfx/hw/GpioAccess.h"
+#endif // PV_USE_WIRINGPI
 #include "mfx/hw/GpioPin.h"
 #include "mfx/hw/Higepio.h"
 #include "mfx/hw/MmapPtr.h"
@@ -195,10 +198,15 @@ private:
 	void           main_loop () noexcept;
 	void           build_dma_ctrl_block_list () noexcept;
 	void           process_block (int buf_idx) noexcept;
-	inline void    write_reg (uint8_t reg, uint8_t val) noexcept;
+	inline void    write_reg (uint8_t reg, uint8_t val) const noexcept;
+	inline void    write_gpio (int gpio, int val) const noexcept;
+	inline void    set_fnc_gpio (int gpio, hw::bcm2837gpio::PinFnc fnc) const noexcept;
 
 	static double  read_rt_ratio () noexcept;
 	static int     read_value_from_file (long long &val, const char *filename_0) noexcept;
+
+	// Object to access the GPIO and related functions (I2C/I2S)
+	hw::Higepio &  _io;
 
 	// Virtual base address for the peripherals
 	uint32_t       _periph_base_addr;
@@ -209,8 +217,12 @@ private:
 	// Virtual base address for the DMA registers
 	hw::MmapPtr    _dma_mptr;
 
-	// Object to read and write the GPIO pins
+#if defined (PV_USE_WIRINGPI)
+	// Object to quickly read and write the GPIO pins, as well as defining
+	// their function. Needed only when using wiringPi which does not offer
+	// this possibility.
 	hw::GpioAccess _gpio;
+#endif // PV_USE_WIRINGPI
 
 	// Handle on I2C communications
 	hw::Higepio::I2c

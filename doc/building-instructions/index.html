@@ -1192,9 +1192,8 @@ somme de travail.</p>
 
 <p>La version minimum de Raspberry Pi OS recommandée est Buster (catégorisée
 comme <span lang="en"><i>Legacy</i></span>), datée du 2019-09-26.
-Prenez une version 32 bits car certaines dépendances ne sont pas forcément
-maintenues en 64 bits (WiringPi en particulier), et quoi qu’il arrive,
-<strong>en version Lite</strong>.</p>
+Préférez une version 32 bits les versions 64 bits n’ont pas encore été
+testées, et quoi qu’il arrive, <strong>en version Lite</strong>.</p>
 
 <h4>Bullseye (2022) et versions supérieures</h4>
 
@@ -1368,23 +1367,6 @@ modifications&#8239;:</p>
 <p>Installer git, Jack2, ALSA et autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev \
     git autoconf raspberrypi-kernel raspberrypi-kernel-headers</pre>
-<p>WiringPi est probablement livré en standard, mais la version incluse dans
-le système ne supporte pas forcément correctement le Pi 4.
-Taper&#8239;:</p>
-<pre class="term">gpio -v</pre>
-<p>Si la commande ne peut être trouvée ou que la version indiquée est
-antérieure à 2.52, il faut installer manuellement la dernière
-version&#8239;:</p>
-<!-- pre class="term">cd /tmp
-wget https://project-downloads.drogon.net/wiringpi-latest.deb
-sudo dpkg -i wiringpi-latest.deb
-gpio -v</pre -->
-<pre class="term">cd /tmp
-git clone https://github.com/WiringPi/WiringPi.git
-cd WiringPi
-./build
-gpio -v</pre>
-<p>Encore une fois, s’assurer que la version est bien 2.52 ou postérieure.</p>
 
 
 
@@ -1393,12 +1375,12 @@ gpio -v</pre>
 <p>Il est possible d’installer une verion récente de la suite de compilation
 Clang.
 Cette étape est facultative, mais Clang permet une accélération substantielle
-(environ +25&#8239;% selon mes mesures) du programme Pédale Vite par rapport à
-GCC, le compilateur installé par défaut.
-Ici, nous allons installer Clang 14.0.6, la dernière version en date, mais il
-est probable que des versions plus récentes soient
-<a href="http://releases.llvm.org">disponibles</a> à l’heure où vous lisez
-ces lignes.
+(environ +25&#8239;% selon mes mesures faites à l’époque) du programme Pédale
+Vite par rapport à GCC, le compilateur installé par défaut.
+Ici, nous allons installer Clang 14.0.6, la dernière version en date
+d’écriture de ce texte, mais il est probable que des versions plus récentes
+soient <a href="http://releases.llvm.org">disponibles</a> à l’heure où vous
+lisez ces lignes.
 Si c’est le cas, remplacer le <code>14.0.6</code> à la première des lignes
 suivantes par le numéro de version en question.
 Il est aussi possible de rester sur Clang 14.0.6, qui conviendra très bien.</p>
@@ -1979,6 +1961,12 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r13, 2023-04-29</b></p>
+<ul>
+<li>La bibliothèque wiringPi (abandonnée) a été remplacée par une
+implémentation personnalisée.</li>
+</ul>
 
 <p><b>r12, 2023-02-11</b></p>
 <ul>

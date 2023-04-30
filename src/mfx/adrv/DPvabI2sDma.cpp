@@ -68,7 +68,8 @@ namespace adrv
 
 
 DPvabI2sDma::DPvabI2sDma (hw::Higepio &io)
-:	_periph_base_addr (::bcm_host_get_peripheral_address ())
+:	_io (io)
+,	_periph_base_addr (::bcm_host_get_peripheral_address ())
 ,	_pcm_mptr (
 		_periph_base_addr + hw::bcm2837pcm::_pcm_ofs,
 		hw::bcm2837pcm::_pcm_len,
@@ -79,7 +80,9 @@ DPvabI2sDma::DPvabI2sDma (hw::Higepio &io)
 		_dma_chn * hw::bcm2837dma::_dma_chn_inc + hw::bcm2837dma::_dma_chn_len,
 		"/dev/mem", O_RDWR | O_SYNC
 	)
+#if defined (PV_USE_WIRINGPI)
 ,	_gpio ()
+#endif // PV_USE_WIRINGPI
 ,	_i2c (io, _i2c_addr, "DPvabI2sDma: cannot open I2C port")
 ,	_cb_ptr (nullptr)
 ,	_state (State_STOP)
@@ -191,19 +194,19 @@ int	DPvabI2sDma::do_init (double &sample_freq, int &max_block_size, CbInterface 
 	_cb_ptr        = &callback;
 
 	// Custom pins
-	_gpio.set_fnc (_pin_rst , hw::bcm2837gpio::PinFnc_OUT  );
-	_gpio.set_fnc (_pin_freq, hw::bcm2837gpio::PinFnc_OUT  );
+	set_fnc_gpio (_pin_rst , hw::bcm2837gpio::PinFnc_OUT );
+	set_fnc_gpio (_pin_freq, hw::bcm2837gpio::PinFnc_OUT );
 
 	// I2S pins, mode ALT0 (p. 102)
-	_gpio.set_fnc (_pin_bclk, hw::bcm2837gpio::PinFnc_ALT0);
-	_gpio.set_fnc (_pin_lrck, hw::bcm2837gpio::PinFnc_ALT0);
-	_gpio.set_fnc (_pin_din , hw::bcm2837gpio::PinFnc_ALT0);
-	_gpio.set_fnc (_pin_dout, hw::bcm2837gpio::PinFnc_ALT0);
+	set_fnc_gpio (_pin_bclk, hw::bcm2837gpio::PinFnc_ALT0);
+	set_fnc_gpio (_pin_lrck, hw::bcm2837gpio::PinFnc_ALT0);
+	set_fnc_gpio (_pin_din , hw::bcm2837gpio::PinFnc_ALT0);
+	set_fnc_gpio (_pin_dout, hw::bcm2837gpio::PinFnc_ALT0);
 
-	_gpio.write (_pin_freq, _fs_code);
+	write_gpio (_pin_freq, _fs_code);
 
 	// Puts the chip in reset state
-	_gpio.write (_pin_rst, 0);
+	write_gpio (_pin_rst, 0);
 
 	// Allocates the memory used by the DMA
 	const int      nbr_blocks  = _nbr_buf * _block_size   * _nbr_chn * Dir_NBR_ELT;
@@ -244,12 +247,12 @@ int	DPvabI2sDma::do_start () noexcept
 	}
 
 	// Puts the chip in reset state
-	_gpio.write (_pin_rst, 0);
+	write_gpio (_pin_rst, 0);
 
 	// Waits a few ms for all clocks to be stable
 	std::this_thread::sleep_for (std::chrono::milliseconds (5));
 
-	_gpio.write (_pin_rst, 1);
+	write_gpio (_pin_rst, 1);
 
 	// If MCLK is internally generated, waits for it
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
@@ -757,9 +760,31 @@ void	DPvabI2sDma::process_block (int buf_idx) noexcept
 
 
 
-void	DPvabI2sDma::write_reg (uint8_t reg, uint8_t val) noexcept
+void	DPvabI2sDma::write_reg (uint8_t reg, uint8_t val) const noexcept
 {
 	_i2c.write_reg_8 (reg, val);
+}
+
+
+
+void	DPvabI2sDma::write_gpio (int gpio, int val) const noexcept
+{
+#if defined (PV_USE_WIRINGPI)
+	_gpio.write (gpio, val);
+#else // PV_USE_WIRINGPI
+	_io.write_pin (gpio, val);
+#endif // PV_USE_WIRINGPI
+}
+
+
+
+void	DPvabI2sDma::set_fnc_gpio (int gpio, hw::bcm2837gpio::PinFnc fnc) const noexcept
+{
+#if defined (PV_USE_WIRINGPI)
+	_gpio.set_fnc (gpio, fnc);
+#else // PV_USE_WIRINGPI
+	_io.set_pin_mode (gpio, fnc);
+#endif // PV_USE_WIRINGPI
 }
 
 

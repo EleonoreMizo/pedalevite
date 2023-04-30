@@ -20,7 +20,7 @@ AS_IF(
 AC_DEFINE_UNQUOTED([PV_VERSION], [($pv_version)], [Pedale Vite version. 1 or 2.])
 
 AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [Compilation options required for debugging. [default=no]]))
-AC_ARG_ENABLE([wiringpi], AS_HELP_STRING([--enable-wiringpi], [Uses the wiringPi library to access the Raspberry Pi GPIO. [default=yes]]))
+AC_ARG_ENABLE([wiringpi], AS_HELP_STRING([--enable-wiringpi], [Uses the wiringPi library to access the Raspberry Pi GPIO. Minimum required version: 2.52. [default=no]]))
 
 
 
@@ -93,15 +93,11 @@ AS_IF(
             [test "x$ARM" = "xtrue"],
             [
                 AS_IF(
-                    [test "x$enable_wiringpi" != "xno"],
+                    [test "x$enable_wiringpi" = "xyes"],
                     [
                         AC_CHECK_LIB([wiringPi], [wiringPiSetupGpio])
                         LIBS="$LIBS -lwiringPi"
                         AC_DEFINE([PV_USE_WIRINGPI])
-                    ],
-                    [
-                        AC_CHECK_LIB([pigpio], [gpioInitialise])
-                        LIBS="$LIBS -lpigpio"
                     ]
                 )
                 LIBS="$LIBS -lbcm_host"
@@ -180,7 +176,7 @@ AM_CONDITIONAL([ARM], [test "x$ARM" = "xtrue"])
 AM_CONDITIONAL([UNX], [test "x$UNX" = "xtrue"])
 AM_CONDITIONAL([WIN], [test "x$WIN" = "xtrue"])
 AM_CONDITIONAL([CLG], [test "x$CLG" = "xtrue"])
-AM_CONDITIONAL([WPI], [test "x$enable_wiringpi" != "xno"])
+AM_CONDITIONAL([WPI], [test "x$enable_wiringpi" = "xyes"])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
