@@ -102,6 +102,13 @@ public:
 	static const int  _spi_port        = 0;             // For the ADC
 	static const int  _spi_rate        = 1'000'000;     // Hz
 
+	// ADC: number of digital steps to clip at each end of the range, because
+	// the last steps may be unreachable (parasitic resistance preventing to
+	// obtain exactly 0 V or Vref at the converter input).
+	// Please use the test application to calibrate the following values:
+	static const int  _dead_zone_lo    = 1; // >= 0
+	static const int  _dead_zone_hi    = 0; // >= 0
+
 	static const int  _nbr_switches    = _nbr_sw_gpio + _nbr_sw_23017 + 2;
 	static const SwitchSrc
 	                  _switch_arr [_nbr_switches];

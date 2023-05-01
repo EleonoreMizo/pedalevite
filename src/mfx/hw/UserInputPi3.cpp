@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/hw/GpioPin.h"
 #include "mfx/hw/mcp23017.h"
 #include "mfx/hw/UserInputPi3.h"
@@ -464,7 +465,15 @@ void	UserInputPi3::handle_pot (int index, int val, std::chrono::nanoseconds cur_
 
 	if (new_flag)
 	{
-		const float    val_flt = float (val) * (1.0f / ((1 << _res_adc) - 1));
+		constexpr auto range_full = (1 << _res_adc) - 1;
+		constexpr auto range_real = range_full - _dead_zone_hi - _dead_zone_lo;
+		static_assert (range_real > 0, "Too large dead zones");
+		// We use a mult instead of a div, so we make sure to reach at least 1,
+		// not just 0.999... because of f32 rounding errors.
+		constexpr auto round_fix  = 5e-7f; // An arbitrary handful of FLT_EPSILON
+		constexpr auto scale      = (1.f + round_fix) / float (range_real);
+		const auto     val_flt    =
+			fstb::limit (float (val - _dead_zone_lo) * scale, 0.f, 1.f);
 		enqueue_val (cur_time, ui::UserInputType_POT, index, val_flt);
 	}
 }
