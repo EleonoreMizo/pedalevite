@@ -1,3 +1,15 @@
+### We have moved!
+
+**This page is now dead, there will not be any update anymore.**
+
+**The new page is hosted here: https://gitlab.com/eleonoremizo1/pedalevite/**  
+**Git repository address: https://gitlab.com/eleonoremizo1/pedalevite.git**
+
+Please update your bookmarks! Repository is kept here for consistency with other projects but probably not indefinitely.
+
+Pédale Vite — Multi-FX pedalboard
+=================================
+
 **Pédale Vite** is a DIY multi-FX pedalboard for guitar, bass or any other electric instrument.
 
 It is based on a Raspberry Pi 4 and uses a custom audio board.
